@@ -1,0 +1,28 @@
+<% if current_user && current_user.email==nil %>
+<%= form_for @user, url: { :controller => 'user', :action => 'create' }, html: {class:"form-horizontal", role:"form"} do |f| %>
+<div class="form-group">
+    <h4>你好! <%= current_user.name %></h4>
+	<p>
+    請輸入您的系上信箱(d2、工作站皆可)來認證
+	<br>
+	是為了防止有心人士來偷看檔案~~
+	<br>
+	註冊後會由管理員寄認證信給您
+	<br>
+	認證後即可上傳、下載檔案!
+    
+	</p>
+	
+<%= f.label :email, "Email", :class=>"col-sm-2 control-label" %>
+<div class="col-sm-10">
+<%= f.text_field :email, :class=>"form-control" %>
+</div>
+<br>
+<% f.label :grade_id, "年級" %>
+<% f.select :grade_id , options_from_collection_for_select(Grade.all, :id ,:name) %><!--Grade.where.not(:id=>1)-->
+<br>
+<%= f.submit "註冊", :class=>"btn btn-primary btn-lg" %>
+</div>
+<% end %>
+
+<% end %>	

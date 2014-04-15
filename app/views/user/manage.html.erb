@@ -1,0 +1,21 @@
+﻿<table class="table">
+<tr>
+<th>Name</th><th>年級</th><th>Email</th><th>狀態</th><th>功能</th>
+</tr>
+<%@users.each do |user| %>
+<tr>
+<td><%= user.name %></td>
+<td><%= Grade.find(user.grade_id).name %></td>
+<td><%= user.email %></td>
+<td>
+<% case user.activated %>
+<% when 0 %>註冊
+<% when 1 %>已寄認證信
+<% when 2 %>已啟用
+ 
+<% end %>
+</td>
+<td><%= link_to "啟用", :controller=>"user" , :action=>"activate", :id=>user %></td>
+</tr>
+<% end %>
+</table>

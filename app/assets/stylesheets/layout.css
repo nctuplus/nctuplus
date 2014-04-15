@@ -1,0 +1,14 @@
+body
+{
+	//width:800px;
+	height: 100%;
+	text-align:center;
+	padding-left:10%;
+	padding-right:10%;
+   /* padding-top: 60px;
+    background-color: #D4D4D4;*/
+}	
+
+.sidebar{
+	width:200px;
+}

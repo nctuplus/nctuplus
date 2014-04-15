@@ -1,0 +1,78 @@
+<div class="container span5">
+
+<%= form_for @file_info,:url =>{:controller=>"upload", :action=>"create"}, :html => { :multipart => true, :id=>"fileupload"  } do |f| %>
+    <span class="btn btn-success fileinput-button">
+        <i class="glyphicon glyphicon-plus"></i>
+        <span>Select files...</span>
+        <!-- The file input field used as target for the file upload widget -->
+         <%= f.file_field :path , :multiple=>""%>
+    </span>
+	<%= f.hidden_field :owner_id, :value => "0" %>
+	<%= f.hidden_field :course_id, :value => "5" %>
+	<button id="upload" class="btn btn-primary " type="button" >Upload</button>
+	<table class="table table-striped" id="file_queue">
+	<tr></tr>
+    </table>
+<% end %>
+
+</div>
+	 
+
+
+<script>
+
+  
+  $(function () {
+        'use strict';
+		
+
+		$("#fileupload").fileupload( {
+			
+			add: function (e, data) {
+				//alert(data.originalFiles[0]['size']);
+				var acceptFileTypes = /^.*\.*<%=FileInfo.support_types%>$/i;
+				if (data.originalFiles[0]['type'] && !acceptFileTypes.test(data.originalFiles[0]['name'])) {
+					//
+					//data="";
+				}
+				else if(data.originalFiles[0]['size'] > <%=FileInfo.max_upload_size%>){
+				    alert("!!!!");
+				}
+				else{
+					var progressbar=
+							'<div class="progress">'+
+							'<div class="progress-bar progress-bar-success"></div>'+
+							'</div>';
+						$('#file_queue tr:last').after("<tr ><td>"+data.originalFiles[0]['name']+"</td><td>"+progressbar+"</td></tr>")
+					$("#upload").click(function () {
+						data.submit();
+					});
+				}
+			},
+			
+			stop: function (e, data) {
+				$('#upload').off('click');
+				alert("上傳成功!");
+			},
+			progress:function (e, data) {
+				$.each(data.files, function (index, file) {
+					var progress = parseInt(data.loaded / data.total * 100, 10);
+					$("td:contains('"+file.name+"')").next("td").find("div").contents().css('width',progress + '%')	
+				});
+
+				
+			},
+
+    });
+	$("#fileupload").fileupload('option',{
+		maxFileSize:10000000,//10mb
+		//acceptFileTypes :/(\.|\/)(gif|jpe?g|png)$/i
+	});
+	
+  });
+
+
+</script>
+
+
+

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Csnote</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= csrf_meta_tags %>
+</head>
+
+<body>
+<div id="user-widget">
+  <% if current_user %>
+    <!--Welcome <strong><%= current_user.name %></strong>!
+    <%= link_to "Sign out", signout_path, id: "sign_out" %>-->
+  <% else %>
+    <!--<%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>-->
+  <% end %>
+</div>
+
+
+<!-- layouts/header start -->
+<%= render 'layouts/header' %>
+<!-- layouts/header end -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="purchaseLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<!--<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="purchaseLabel">Purchase</h4>
+			</div>-->
+			<div class="modal-body"></div>
+			<!--<div class="modal-footer">
+				
+				<button type="button" class="btn btn-primary">Purchase</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>-->
+		</div>
+	</div>
+</div>		
+<!-- layouts/pwd start -->
+<div class="pwd">
+  <%= render 'layouts/pwd' %>
+</div>
+<!-- layouts/pwd end -->
+
+
+<p class="notice"><%= notice %></p>
+<p class="alert"><%= alert %></p>
+
+<div class="container">
+<div class="row">
+
+
+  <%= yield %>
+</div>
+</div>
+</body>
+</html>

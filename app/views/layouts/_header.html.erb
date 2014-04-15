@@ -1,0 +1,72 @@
+<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+<nav class="navbar navbar-default" role="navigation">
+  <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="">CS notes</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <% Grade.all.each do |grade_name| %>
+  	    <li class="dropdown">
+          <a href="#" role="button" class="dropdown-toggle" data-toggle="dropdown"><%= grade_name.name %><b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <% grade_name.course.each do |_course| %>
+            <li>
+              
+			   <%= link_to(course_path(_course)) do %>
+			  <%=_course.ch_name%> <span class="badge pull-right">42</span>
+			  <% end %>
+              <!-- <ul class="dropdown-menu sub-menu">
+                <li>
+                  <a href="#"><span class="badge pull-right">42</span>投影片</a>
+                </li>
+                <li>
+                  <a href="#">作業<span class="badge pull-right">42</span></a>
+                </li>
+              </ul> -->
+            </li>
+            <!-- <li class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+            <li class="divider"></li>
+            <li><a href="#">One more separated link</a></li> -->
+            <% end %>
+          </ul>
+        </li>
+        <% end %>
+      <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
+        <ul class="dropdown-menu">
+		<% if current_user && current_user.activated==2 %>
+		  <li><a href="/files/index">檔案庫<span class="badge pull-right">42</span></a></li>
+		  <li><a href="/files/upload">上傳<span class="badge pull-right">42</span></a></li>
+          <li><a href="/user/manage">使用者<span class="badge pull-right">42</span></a></li>
+		  <li><a href="/course">課程<span class="badge pull-right">42</span></a></li>
+		<% end %>  
+        </ul>
+      </li>
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+	    <% if current_user.blank? %>
+	    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in", class:"btn btn-primary navbar-btn" %>
+		<% end %>
+		<% if current_user.activated==0 %>
+		<a class="btn btn-primary btn-large" href="/user/registry" data-toggle="modal" data-target="#myModal">註冊</a>
+		<% end %>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+</nav>
+
+
+
