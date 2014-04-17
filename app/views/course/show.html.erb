@@ -1,4 +1,11 @@
 中文名稱:<%= @course.ch_name %>
 英文名稱:<%= @course.eng_name %>
 
+<table class="table table-striped">
+<tr><th>提供者</th><th>檔名</th><th>檔案說明</th><th>大小</th><th>上傳時間</th><th>動作</th>
+</tr>
+<%= render :partial => "files/show_cell", :collection => @course.file_info, :as => :file, :locals=>{:course=>@course, :type=>"no_course_name"} %>
+
+</table>
+
 <p><%= link_to 'back to index', course_path %></p>

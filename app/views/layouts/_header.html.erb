@@ -24,7 +24,7 @@
             <li>
               
 			   <%= link_to(course_path(_course)) do %>
-			  <%=_course.ch_name%> <span class="badge pull-right">42</span>
+			  <%=_course.ch_name%> <span class="badge pull-right"><%=_course.file_info.all.count%></span>
 			  <% end %>
               <!-- <ul class="dropdown-menu sub-menu">
                 <li>
@@ -43,14 +43,23 @@
           </ul>
         </li>
         <% end %>
+	  <li class="dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
+        <ul class="dropdown-menu">
+		<% if current_user && current_user.activated==3 %>
+		  <li><a href="/files/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>
+		  
+		<% end %>  
+        </ul>
+      </li>
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
         <ul class="dropdown-menu">
-		<% if current_user && current_user.activated==2 %>
-		  <li><a href="/files/index">檔案庫<span class="badge pull-right">42</span></a></li>
-		  <li><a href="/files/upload">上傳<span class="badge pull-right">42</span></a></li>
-          <li><a href="/user/manage">使用者<span class="badge pull-right">42</span></a></li>
-		  <li><a href="/course">課程<span class="badge pull-right">42</span></a></li>
+		<% if current_user && current_user.activated==3 %>
+		  <li><a href="/files/all_users">檔案庫<span class="badge pull-right"><%=FileInfo.all.count%></span></a></li>
+		  <li><a href="/files/upload">上傳</li>
+          <li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+		  <li><a href="/course">課程<span class="badge pull-right"><%=Course.all.count%></span></a></li>
 		<% end %>  
         </ul>
       </li>
@@ -58,9 +67,9 @@
 
       <ul class="nav navbar-nav navbar-right">
 	    <% if current_user.blank? %>
-	    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in", class:"btn btn-primary navbar-btn" %>
+	    <%= link_to "Sign in", "/auth/facebook", id: "sign_in", class:"btn btn-primary navbar-btn" %>
 		<% end %>
-		<% if current_user.activated==0 %>
+		<% if current_user && current_user.activated==0 %>
 		<a class="btn btn-primary btn-large" href="/user/registry" data-toggle="modal" data-target="#myModal">註冊</a>
 		<% end %>
       </ul>

@@ -9,9 +9,10 @@
 <td><%= user.email %></td>
 <td>
 <% case user.activated %>
-<% when 0 %>註冊
-<% when 1 %>已寄認證信
-<% when 2 %>已啟用
+<% when 0 %>登入fb
+<% when 1 %>註冊
+<% when 2 %>已寄認證信
+<% when 3 %>已啟用
  
 <% end %>
 </td>

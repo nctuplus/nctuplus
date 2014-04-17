@@ -1,0 +1,40 @@
+<% type=local_assigns[:type]%>
+
+<tr>
+<% if type!="no_course_name" %>
+<td><%= Course.find(file.course_id).ch_name %></td>
+<% end %>
+<% if type!="no_user_name" %>
+<td><%= User.find(file.owner_id).name %></td>
+<% end %>
+<td><%= file.name %></td>
+<td>
+<input id="file_<%=file.id%>" rows="1" value="<%=file.description%>" />
+<script>$('#file_<%=file.id%>').bind('blur',function(){edit(<%=file.id%>);});</script>
+
+</td>
+
+<td><%= (file.size.to_i/1000).to_s %>Kb</td>
+<td><%= file.created_at.strftime("%Y-%m-%d %I:%M%p") %></td>
+<td><%= link_to "下載", files_download_path(:id=>file.id) %>
+<%= link_to "刪除", files_delete_path(:id=>file.id) %></td>
+</tr>
+
+<script>
+ //$(document).ready(function() { $('#textarea').blur() });
+function edit(id){
+	var text=$("#file_"+id).val();
+	//alert(text);
+	$.ajax({
+		type: "GET",
+		url: "/files/edit",
+		data: {_content: text,//main or sub
+			   _id: id, //comment id
+		},
+		success: function(data) {
+			$("#file_"+id).text(data);
+			
+		}
+	});
+}
+</script>

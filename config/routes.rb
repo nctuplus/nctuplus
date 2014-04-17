@@ -5,11 +5,14 @@ Csnote::Application.routes.draw do
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
   
   get "main/index"
-  get "files/index"
+  
+  get "files/all_users"
+  get "files/one_user"
   get "files/upload"
   get "files/download"
-  #get "upload/uploadfile"
-  post "upload/create"
+  get "files/delete"
+  get "files/edit"
+  post "files/create"
   
   
   #----------for user-------------------

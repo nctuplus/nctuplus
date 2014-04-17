@@ -5,11 +5,11 @@ class UserController < ApplicationController
     @user=User.where(:activate_token=>params[:key]).first
 	if(@user)
 	  case @user.activated
-	    when 1
-		  @user.activated=2
+	    when 2
+		  @user.activated=3
 		  @user.save
 		  @message = "認證成功!您可以開始上傳/下載檔案囉!"
-		when 2
+		when 3
 	      @message = "您已經認證過囉!"
 	    else
 		  @message = "認證失敗!"
@@ -24,10 +24,11 @@ class UserController < ApplicationController
   def activate
     
 	@user=User.find(params[:id])
-	
-    UserMailer.confirm(@user.name,@user.email,@user.activate_token).deliver
-	@user.activated=1
-	@user.save
+	if(@user.activated==1)
+      UserMailer.confirm(@user.name,@user.email,@user.activate_token).deliver
+	  @user.activated=2
+	  @user.save
+	end
     redirect_to "user/manage"
     
   end
