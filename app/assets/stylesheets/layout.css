@@ -1,14 +1,27 @@
 body
-{
+{	
+	
 	//width:800px;
 	height: 100%;
-	text-align:center;
-	padding-left:10%;
-	padding-right:10%;
-   /* padding-top: 60px;
-    background-color: #D4D4D4;*/
+	//text-align:center;
+	//padding-left:10%;
+	//padding-right:10%;
+    //padding-top: 60px;
+    //background-color: black;
 }	
-
+a:hover{
+text-decoration:none;
+}
 .sidebar{
-	width:200px;
+	//padding-top:200px;
+	//max-width:250px;
+}
+.maincontent{
+  //width :800px;
+  //position :relative;
+  //left :500px;
+  //top : 100px;
+}
+.searchstyle{
+  width :400px;
 }

@@ -1,0 +1,9 @@
+﻿<%= form_for @post, :url => { :controller => 'post', :action => 'update' } do |f| %>
+    <%= f.label :title, "標題" %>
+    <%= f.text_field :title , :value=>@post.title%>
+	
+
+    
+	<%= cktext_area :post, :content, :cols => 40, :value=>@post.content %>
+    <%= f.submit "Create" %>
+<% end %>

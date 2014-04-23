@@ -1,30 +1,35 @@
 Csnote::Application.routes.draw do
 
+  mount Ckeditor::Engine => '/ckeditor'
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
   
-  get "main/index"
   
+  resources :course
+  get "post/getcode"
+  resources :post
+  
+  
+  get "main/index"
+  #----------for files---------------
   get "files/all_users"
   get "files/one_user"
   get "files/upload"
   get "files/download"
-  get "files/delete"
+  get "files/delete_file"
   get "files/edit"
-  post "files/create"
-  
-  
-  #----------for user-------------------
+  post "files/create"  
+  #----------for user---------------
   get "user/mail_confirm"
   get "user/activate"
   get "user/manage"
   get "user/registry"
   post "user/create"
   #get "user/create"
-  resources :course
+  
  # resources :upload
-  root :to => "main#index"
+  root :to => "course#show", :id=>5
   
   
   

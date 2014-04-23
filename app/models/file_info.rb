@@ -5,6 +5,7 @@ class FileInfo < ActiveRecord::Base
   def self.max_upload_size
     "10000000"
   end
+  
   #has_attached_file :content,
   #:url => "./data_upload/:basename.:extension",
   #:path => "./data_upload/:courseid/:basename.:extension"

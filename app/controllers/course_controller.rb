@@ -5,6 +5,9 @@ class CourseController < ApplicationController
   end
   def show
     @course = Course.find(params[:id])
+	@posts = @course.posts
+	@post= Post.new #for create course form
+	@files=@course.file_info
   end
   def new
     @course=Course.new

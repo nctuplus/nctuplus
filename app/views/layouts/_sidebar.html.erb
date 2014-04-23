@@ -1,0 +1,21 @@
+<div class="sidebar panel-group" id="accordion">
+<% Grade.all.each do |grade| %>
+  <div class="panel panel-default ">
+    <div class="panel-heading ">
+		<h4 class="panel-title">
+		<a data-toggle="collapse" data-parent="#accordion" href="#collapse_<%=grade.id%>"><%= grade.name %></a>
+		</h4>
+	</div>
+	<div id="collapse_<%=grade.id%>" class="panel-collapse collapse">
+		<div class="panel-body">
+		  <% grade.course.each do |course| %>
+			<%= link_to(course_path(course)) do %>
+			  <%=course.ch_name%> <span class="badge pull-right"><%=course.file_info.all.count%></span>
+			<% end %>
+		  <% end %>
+		</div>
+	</div>
+    
+  </div>
+<% end %>
+</div>

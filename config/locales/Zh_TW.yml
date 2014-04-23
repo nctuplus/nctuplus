@@ -1,0 +1,4 @@
+zh_TW:
+  time:
+    formats:
+      short: "%Y-%m-%d"

@@ -1,11 +1,40 @@
-中文名稱:<%= @course.ch_name %>
-英文名稱:<%= @course.eng_name %>
+<h1><%= @course.ch_name %>(<%= @course.eng_name %>)</h1>
 
-<table class="table table-striped">
-<tr><th>提供者</th><th>檔名</th><th>檔案說明</th><th>大小</th><th>上傳時間</th><th>動作</th>
-</tr>
-<%= render :partial => "files/show_cell", :collection => @course.file_info, :as => :file, :locals=>{:course=>@course, :type=>"no_course_name"} %>
+<ul class="nav nav-tabs">
+  <li class="active" id="post-link"><a href="#" onclick="show_item('posts');">Notes</a></li>
+  <li class="" id="file-link"><a href="#" onclick="show_item('files');" >Files</a></li>
+</ul>
 
-</table>
+<div id="posts_list">
+	<%= render :partial=> "show_posts" %>
+</div>
+<div id="files_list" style="display:none;">
+	<%= render :partial=> "show_files" %>
+</div>
 
-<p><%= link_to 'back to index', course_path %></p>
+<script>
+function show_panelbody(id){
+	$(id).attr("class","panel-body");
+}
+
+function show_item(item){//change show files or notes
+
+  if(item=="files"){
+	$("#posts_list").hide();
+	$("#post-link").attr("class","");
+	$("#files_list").show();
+	$("#file-link").attr("class","active");	
+	show_post=0;
+  }
+  else if(item=="posts"){
+	$("#posts_list").show();
+	$("#post-link").attr("class","active");
+	$("#files_list").hide();
+	$("#file-link").attr("class","");
+	show_post=1;
+  }
+  else{
+	alert("Error Occurs!");
+  }
+}
+</script>

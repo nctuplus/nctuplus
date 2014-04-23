@@ -1,0 +1,26 @@
+
+<%= link_to '新增筆記', new_post_path, :class=>"btn btn-success" %>
+<% @posts.each do |post| %>
+<div class="panel panel-default">
+    <!---<div class="panel-heading">--->
+	<div class="panel-body">
+        <p><h3> <%=post.title%></h3></p>
+		<% user_url="https://www.facebook.com/"<<User.find(post.owner_id).uid %>
+		<p><%= link_to User.find(post.owner_id).name, user_url %> <%=post.updated_at%>	
+		
+		  <%post.courses.each do |course|%>
+			<%= link_to course.eng_name, course_path(course) %>
+		  <%end%>  
+	    </p>
+	<!---</div>--->
+		
+		<hr>
+		<% brief_length = 400 > post.content.length ? post.content.length : post.content.index('>',400) %>
+        <p><%=post.content.to_s[0..brief_length].html_safe%>......</p>
+		<p class="pull-right"><%=link_to "Enter this note", post_path(post) %>
+		<%= link_to '編輯', edit_post_path(post) %>
+        <%= link_to '刪除', post_path(post), :method => :delete %>
+		</p>
+    </div>
+</div>
+<% end %> 

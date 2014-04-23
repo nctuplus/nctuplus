@@ -3,20 +3,25 @@
 <head>
   <title>Csnote</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "run_prettify/run_prettify?skin=sons-of-obsidian", "data-turbolinks-track" => true %>
+  
+  
   <%= csrf_meta_tags %>
 </head>
 
 <body>
+<!--
 <div id="user-widget">
   <% if current_user %>
-    <!--Welcome <strong><%= current_user.name %></strong>!
-    <%= link_to "Sign out", signout_path, id: "sign_out" %>-->
+    Welcome <strong><%= current_user.name %></strong>!
+    <%= link_to "Sign out", signout_path, id: "sign_out" %>
   <% else %>
-    <!--<%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>-->
+    <%= link_to "Sign in with Facebook", "/auth/facebook", id: "sign_in" %>
   <% end %>
 </div>
-
+-->
 
 <!-- layouts/header start -->
 <%= render 'layouts/header' %>
@@ -39,20 +44,35 @@
 </div>		
 <!-- layouts/pwd start -->
 <div class="pwd">
-  <%= render 'layouts/pwd' %>
+  <% render 'layouts/pwd' %>
 </div>
 <!-- layouts/pwd end -->
 
 
-<p id="notice"><%= notice %></p>
-<p id="alert"><%= alert %></p>
-
-<div class="container">
-<div class="row">
 
 
-  <%= yield %>
-</div>
+
+<div class="maincontent container-fluid">
+	<div class="row">
+		<div class="col-md-3">
+			<%= render 'layouts/sidebar' %>
+		</div>
+		
+		<div class="col-md-7">
+		<div class="bs-callout bs-callout-info">
+		<% if flash[:notice] %>
+		<div id="notice" class="alert <%= flash[:notice][:style] %>">
+			<h4><%= flash[:notice][:title] %></h4>
+			<%= flash[:notice][:message] %>
+		</div>
+		<%end%>
+		
+		<%= yield %>
+	</div>
 </div>
 </body>
+<script>
+$("pre").attr("class","prettyprint linenums:1");//add highlighter for all pre
+
+</script>
 </html>

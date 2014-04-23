@@ -1,9 +1,9 @@
 class FilesController < ApplicationController
   include ApplicationHelper
-  
+  before_filter :checkOwner,  only: [:edit, :delete_file]
   def all_users
     @courses=Course.all
-	@files=FileInfo.new
+	#@files=FileInfo.all
   end
   
   def one_user
@@ -23,19 +23,18 @@ class FilesController < ApplicationController
      #render :file => 'app/views/upload/uploadfile.html.erb'
   end
   def upload
+    #id
      @file_info = FileInfo.new
      #render :file => 'app/views/upload/uploadfile.html.erb'
   end
   
   def create
 	  #owner_id=params[:file_info][:owner_id]
-	if request.post?
 	  course_id=params[:file_info][:course_id]
 	  params[:file_info][:path].each do |file|
 		name = file.original_filename
 		directory = "./data_upload/"<<Course.find(course_id).eng_name<<'/'
-		if !File.directory?(directory)
-		
+		if !File.directory?(directory)	
 		  Dir.mkdir(directory, 0700)
 		end
 		path = File.join(directory, name)
@@ -46,28 +45,20 @@ class FilesController < ApplicationController
 			@file_info.course_id=course_id
 			@file_info.name=file.original_filename
 			@file_info.size=File.size(path)
-			@file_info.save!		
-			@message="上傳成功!"#<<"</div>"div_notice<<
-			#@message=@message#.html_safe
+			if @file_info.save
+			  respond_to do |format|
+				format.html {
+				  j(render :partial => "show_cell", :locals=>{:file=>@file_info, :user_name=>"no", :course_name=>"no", :action=>"edit"})
+
+				}
+			  end
+			end			
 		else
 			@message="檔案已存在!"
 		end
 		#flash[:notice] = @message
-		
 	  end
-	  #respond_to do |format|
-	#	format.json  { render :json => :message=>@message }
-	 # end
-	   #render @message
-	  #redirect_to :action =>"upload" 
-	end
 	
-	#name = params[:data_file][:path].original_filename
-	#directory = "./data_upload/"
-    #path = File.join(directory, name)
-    #File.open(path, "wb") { |f| f.write(params[:data_file][:path].read) }
-    #flash[:notice] = "File uploaded"
-   
   end
   
   def download
@@ -76,16 +67,20 @@ class FilesController < ApplicationController
     send_file Rails.root.join('data_upload', @path), :x_sendfile=>true
   end
 
-  def delete
-    @file=FileInfo.find(params[:id])
-	@dir="./data_upload/"
-	@dir<<Course.find(@file.course_id).eng_name<<'/'
-	@name=File.join(@dir,@file.name)
-	if File.exist?(@name)
-	  File.delete(@name)
+  def delete_file
+
+	@file=FileInfo.find_by_id(params[:id]) #don't know why find raises null
+	if @file
+	  @dir="./data_upload/"
+	  @dir<<Course.find(@file.course_id).eng_name<<'/'
+	  @name=File.join(@dir,@file.name)
+	  if File.exist?(@name)
+	    File.delete(@name)
+	  end
+	  @file.destroy!
 	end
-	@file.destroy!
-	redirect_to :action => :index
+	redirect_to :action => :all_users
+	#redirect_to :root_url
   end
   
   

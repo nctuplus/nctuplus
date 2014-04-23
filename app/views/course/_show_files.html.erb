@@ -1,0 +1,11 @@
+<br>
+<%= render :partial => "/files/upload" %>
+<table class="table table-striped">
+	<tr>
+	<th>提供者</th><th>檔名</th><th>上傳時間</th><th>大小</th><th>檔案說明</th><th>動作</th>
+	</tr>
+
+	<%= render :partial => "files/show_cell", :collection => @files, :as => :file, :locals=>{:course=>@course, :course_name=>"no"} %>
+</table>
+
+<%= render :partial => "/files/edit_js" %>
