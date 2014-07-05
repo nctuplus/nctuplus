@@ -1,0 +1,38 @@
+<h1><%= @course.ch_name %>(<%= @course.eng_name %>)</h1>
+
+<ul class="nav nav-tabs">
+  <li class="active" id="infos-link"><a href="#" onclick="show_item('infos');">課程資訊</a></li>
+  <!--<li class="" id="posts-link"><a href="#" onclick="show_item('posts');">文章</a></li>-->
+  <li class="" id="files-link"><a href="#" onclick="show_item('files');" >檔案</a></li>
+</ul>
+
+<div id="infos_list" >
+	<%= render :partial=> "show_infos" %>
+</div>
+
+<div id="posts_list" style="display:none;">
+	<%= render :partial=> "show_posts" %>
+</div>
+<div id="files_list" style="display:none;">
+	<%= render :partial=> "show_files" %>
+</div>
+
+<script>
+function show_panelbody(id){
+	$(id).attr("class","panel-body");
+}
+
+function show_item(item){//change show files or notes
+  list=["files","posts","infos"]
+  
+  for(i=0;i<3;i++){
+    if(list[i]!=item){
+		$("#"+list[i]+"_list").hide();
+		$("#"+list[i]+"-link").attr("class","");
+	}
+  }
+  $("#"+item+"_list").show();
+  $("#"+item+"-link").attr("class","active");
+
+}
+</script>

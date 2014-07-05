@@ -1,0 +1,27 @@
+<script type="text/javascript">
+ //$(document).ready(function() { $('#textarea').blur() });
+function edit(id){
+	var text=$("#file_"+id).val();
+	//alert(text);
+	$.ajax({
+		type: "GET",
+		url: "/file_infos/edit",
+		data: {_content: text,//main or sub
+			   _id: id, //comment id
+		},
+		success: function(data) {
+			//$("#file_"+id).text(data);
+			alert("SUCCESS");
+		},
+		error :function(){
+			alert("ERROR");
+		}
+	});
+}
+function _edit(id){
+	$('#file_'+id).bind('blur',function(){edit(id);});
+}
+
+
+
+</script>

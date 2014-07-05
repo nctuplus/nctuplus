@@ -3,7 +3,7 @@
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
 
-      <a class="navbar-brand" href="<%=root_url%>">NCTUCS PipeLine</a>
+      <a class="navbar-brand" href="<%=root_url%>">NCTUCS Note</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -14,7 +14,7 @@
         <a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
         <ul class="dropdown-menu">
 		<% if current_user.activated==3 %>
-		  <li><a href="/files/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>
+		  <li><a href="/file_infos/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>
 		  
 		<% end %>  
         </ul>
@@ -31,19 +31,13 @@
 		  <li><a href="/post">筆記<span class="badge pull-right"><%=Post.all.count%></span></a></li>
 		  <li><a href="/files/all_users">檔案庫<span class="badge pull-right"><%=FileInfo.all.count%></span></a></li>
           <li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
-		  <li><a href="/course">課程<span class="badge pull-right"><%=Course.all.count%></span></a></li>
+		  <!--<li><a href="/courses">課程<span class="badge pull-right"><%=Course.all.count%></span></a></li>-->
+		  <li><a href="/departments">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 		<% end %>  
         </ul>
       </li>
       </ul>
-	   <form class="navbar-form " role="search">
-          <div class="input-group searchstyle">
-            <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term">
-            <div class="input-group-btn">
-              <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-            </div>
-          </div>
-        </form>
+
 		<!---
       <ul class="nav navbar-nav navbar-right">
 	    <% if current_user.blank? %>
@@ -61,7 +55,7 @@
 <script>
 $('#srch-term').tokenfield({
   autocomplete: {
-    source: [<%=course_tag.html_safe%>],
+    source: [<%course_tag.html_safe%>],
     delay: 100
   },
   showAutocompleteOnFocus: true,

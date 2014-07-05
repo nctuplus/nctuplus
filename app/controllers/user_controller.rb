@@ -1,6 +1,7 @@
 class UserController < ApplicationController
  require 'digest/sha1'
-
+  before_filter :checkTopManager
+  
   def mail_confirm
     @user=User.where(:activate_token=>params[:key]).first
 	if(@user)
@@ -36,6 +37,26 @@ class UserController < ApplicationController
     @users=User.all
 	
   end
+  
+  def permission
+    @user=User.find_by(params[:id])
+	@departments=Department.all
+    if request.post?
+	  CourseManager.destroy_all(:user_id=>@user.id)
+	  if params[:department]
+	    params[:department][:checked].each do |key,value|
+	      @course_manager=CourseManager.new(:user_id=>@user.id)
+		  @course_manager.department_id=key
+		  @course_manager.save!
+	    end
+	  end
+	  #@course_manager=
+	end
+	
+    
+	
+  end
+  
   def registry
     
     @user=User.new

@@ -1,0 +1,55 @@
+<table class="table" >
+<tr>
+<%= table_title.html_safe %>
+</tr>
+
+
+	<% @course_details.each do |cd|%>
+		<% course=cd.course %>
+		<tr>
+		<!--<td><%=course.semesters.first.name%></td>-->
+		<td><%=course.department.ch_name%></td>
+		<td><%= link_to course.real_id, course_path(course) %></td>
+		<td><%= link_to course.ch_name, course_path(course) %></td>
+		<td><%= cd.teacher.name %></td>
+		<% raty_id="rank_#{course.id}_#{cd.teacher_id}" %>
+		<td><div class="rank" id="<%=raty_id%>"></div></td>
+		<script>
+
+		$("#<%=raty_id%>").raty({
+			readOnly: <%= !current_user||!Rating.where(:target_type=>"course", :target_id=>course.id, :user_id=>current_user.id).empty? %>,
+			score:'2',//'<%=course.rate%>',
+			click: function(score, evt) {
+				//console.log("!!!");
+				//console.log('ID: ' + $(this).attr('id') + "\nscore: " + score + "\nevent: " + evt);
+				rate_course($(this).attr('id'),score);
+				
+			}
+	
+		});
+
+		</script>
+
+		</div>
+		</td>
+		</tr>
+	<% end %>
+
+
+</table>
+
+<div id="page-selection" class="text-center"></div>
+
+<script>
+$('#page-selection').bootpag({
+		total: <%=@page_numbers%>,
+		<% if params[:page] %>
+		page: <%=params[:page]%>,
+		<% end %>
+		maxVisible: 10
+	}).on("page", function(event, /* page number here */ num){
+		$("#search_result").load("/main/test_p?page="+num);
+});
+</script>
+
+

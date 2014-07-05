@@ -1,10 +1,10 @@
 class CoursePostship < ActiveRecord::Base
   belongs_to :course
   belongs_to :post
-  def self._create(post_id,list,attr) #eng_name's list
+  def self._create(post_id,list) #eng_name's list
     if !list.empty?
-	  list.each do|tag|
-	    @course=Course.where(:eng_name=>tag).first
+	  list.each do |tag|
+	    @course=Course.find_by_eng_name(tag)
 		if !@course.blank?
 	      @cp=CoursePostship.new
 		  @cp.post_id=post_id

@@ -29,9 +29,12 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'omniauth'
 gem 'omniauth-facebook', '1.4.0'
-
+gem "paperclip"
+gem "paperclip-dropbox", ">= 1.1.7"
 gem 'ckeditor'
-gem 'paperclip'
+gem "jquery-fileupload-rails"
+gem 'curb'
+gem 'jquery-raty-rails', github: 'bmc/jquery-raty-rails'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

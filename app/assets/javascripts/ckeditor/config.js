@@ -7,21 +7,17 @@ if(typeof(CKEDITOR) != 'undefined')
                         ['Undo', 'Redo', '-', 'SelectAll', 'RemoveFormat'],			    
 					    ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
 					    ['JustifyLeft', 'JustifyCenter', 'JustifyRight'],
-						['Link', 'Unlink', 'CreateDiv',],
+						[ 'Unlink', 'CreateDiv'],
 						['TextColor', 'BGColor'],
 						['Font', 'FontSize','Styles','Format'],
-						                          
-					    
-					    ['NumberedList', 'BulletedList', '-', 'Blockquote'],
-					    
-					    ['Image', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
+						['NumberedList', 'BulletedList', '-', 'Blockquote'],		    
+					    ['Link','Image','IMCE', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar'],
 					    ['Code']]; 
-    //config.extraPlugins = 'CodePlugin';
-
-    //config.toolbar = [ [ 'Source', 'Bold' ], ['CreatePlaceholder']];
-
-
+	 // The location of a script that handles file uploads in the Image dialog.
+  config.filebrowserImageUploadUrl = "/ckeditor/pictures";
+  config.filebrowserImageBrowseUrl = "/file_infos/pictures_show";
   }
+  
   
   //console.log("ckeditor not loaded");
 } else{

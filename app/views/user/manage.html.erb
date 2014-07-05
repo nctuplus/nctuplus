@@ -16,7 +16,8 @@
  
 <% end %>
 </td>
-<td><%= link_to "啟用", :controller=>"user" , :action=>"activate", :id=>user %></td>
+<!--<td><%= link_to "啟用", :controller=>"user" , :action=>"activate", :id=>user %></td>-->
+<td><%=link_to "權限","/user/"+user.id.to_s+"/permission"%></td>
 </tr>
 <% end %>
 </table>

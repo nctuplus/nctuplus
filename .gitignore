@@ -12,7 +12,7 @@
 /db/*.sqlite3
 /db/*.sqlite3-journal
 /config/database.yml
-
+/config/dropbox.yml
 /config/initializers/secret_token.rb
 
 /config/initializers/ominauth.rb

@@ -9,7 +9,7 @@ Ckeditor.setup do |config|
   # Allowed image file types for upload.
   # Set to nil or [] (empty array) for all file types
   # By default: %w(jpg jpeg png gif tiff)
-  # config.image_file_types = ["jpg", "jpeg", "png", "gif", "tiff"]
+  #config.image_file_types = ["jpg", "jpeg", "png", "gif", "tiff"]
 
   # Allowed attachment file types for upload.
   # Set to nil or [] (empty array) for all file types
@@ -33,7 +33,6 @@ Ckeditor.setup do |config|
   # config.asset_path = "http://www.example.com/assets/ckeditor/"
   config.asset_path = {
 	  "config.js" => "ckeditor/config.js"
-	  
-	  # ... etc
-	}
+	
+  }
 end

@@ -1,33 +1,304 @@
 ﻿
-<div class="jumbotron">
-      <div class="container">
-        <h1>Hello, world!</h1>
-        <p>歡迎來到交大資工PipeLine 這是一個資源共享的平台:D，</p>
-		<p>可以分享曾經修課寫過的作業、筆記、原文書解答，</p>
-		<p>但我們不是抄作業平台喔XD 所以有對學弟妹做一點限制</p>
-		<p>希望大家能夠一起討論、研究、嗨趴!</p>
-        <p><a class="btn btn-primary btn-lg" role="button">facebook登入 »</a></p>
-      </div>
-</div>
-<div class="thumbnail">
-          <div class="caption">
-            <h4>Hello, world!</h4>
-			<hr>
-            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
-            <p><a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a></p>
-          </div>
-</div>
+<script>
 
-<div class="alert alert-info">...</div>
-<div class="code-toolbar">
+var title="<tr><%=j table_title.html_safe %></tr>"
 
-<%=clippy("123").html_safe;%>
-<pre class="prettyprint linenums:1">
-public class HelloWorld {
-
-    public static void main (String[] args) {
-        System.out.println("Hello, world!");
-    }
+function find_by_label(array,value){
+	for(var i = 0 ; i < array.length;i++){
+		if(value==array[i].label){
+			return true;
+		}
+	}
+	return false;
 }
-</pre>
+
+$( document ).ready( function(){
+
+	$("#semester_select").val("103上");
+	
+	$("#search_result").load("/main/test_p?page=1");
+	
+	var department_select=<%=@departments_all_select.to_s.html_safe%>;
+	$( "#department_select" ).autocomplete({
+      source:  department_select,
+			minLength :0,
+			change: function (event, ui) {
+				if(!find_by_label(department_select,$(this).val()))
+					$(this).val("");
+					
+			},
+			select: function(event, ui){
+				event.preventDefault();
+				$(this).val(ui.item.label);
+				$(this).next().val(ui.item.walue);
+				search_dept(ui.item.walue);
+				$(this).blur();
+			}
+  }).on("focus",function(event){$(this).autocomplete("search", "");});
+	
+	var semester_select=<%=@semester_select.to_s.html_safe%>;
+	$( "#semester_select" ).autocomplete({
+      source: semester_select,
+			mustMatch :true,
+			minLength :0,
+			focus :function(event,ui){
+				return false;
+			},
+			change: function (event, ui) {
+				event.preventDefault();
+				if(!find_by_label(semester_select,$(this).val())){
+					$(this).val("");
+					
+				}
+			},
+			select: function(event, ui){
+				event.preventDefault();
+				$(this).val(ui.item.label);
+				$(this).next().val(ui.item.walue);
+				$( "#degree_select" ).trigger("focus");//();			
+			}
+  }).on("focus",function(event){$(this).autocomplete("search", "");});
+	var degree_select=<%=@degree_select.to_s.html_safe%>;
+	$( "#degree_select" ).autocomplete({
+      source:  degree_select,
+			//mustMatch :true,
+			minLength :0,
+			change: function (event, ui) {
+				//if(degree_select.indexOf($(this).val())==-1)
+				if(!find_by_label(degree_select,$(this).val())){
+					$(this).val("");
+					$(this).next().val("");
+				}
+			},
+			select: function(event, ui){
+				event.preventDefault();			
+				$(this).val(ui.item.label);
+				$(this).next().val(ui.item.walue);
+				var degree_select=[];
+				degree_select['3']=<%=@departments_under_grad_select.to_s.html_safe%>;
+				degree_select['2']=<%=@departments_grad_select.to_s.html_safe%>;
+				degree_select['0']=<%=@departments_common_select.to_s.html_safe%>;
+				$( "#department_select" ).val("");
+				$( "#department_select" ).autocomplete({
+					source: degree_select[ui.item.walue] 
+				});
+
+				$( "#department_select" ).trigger("focus");//();
+
+			}
+  }).on("focus",function(event){$(this).autocomplete("search", "");});
+	
+	$(document).keypress(function(e) {
+		var $focused = $(':focus');
+		if(!$focused[0]){
+			//console.log($focused[0]);
+			if(e.which == 13) {
+				// enter pressed
+				console.log("!!!");
+			}
+			if(e.which == 85||e.which==117 //U or u
+			 ||e.which==71||e.which==103 //G or g
+			 ||e.which==67||e.which==99){//C or c
+				//console.log();
+				$("#degree_select").focus();
+				//$("#degree_select").autocomplete("search", "");
+				
+			}
+		}
+	});	
+});
+
+function rate_course(course_id,score){
+	console.log(course_id);
+	$.ajax({
+		type: "GET",
+		url: "/main/rate_course",
+		data: {
+			_course_id: course_id.substring(5),
+			_score: score,   
+		},
+		success: function(data){
+			var d=JSON.parse(data);
+			console.log(d.new_score);
+			$("#"+course_id).raty({readOnly: true, score:d.new_score});
+			
+		},
+		
+		
+	});
+}
+function select_thing(type){
+	$( "#"+type+"_select" ).trigger("focus");
+}
+
+
+function change_search_type(obj){
+	
+	$("#search_action").html(obj.text()+" <span class='caret'></span>");
+	$("#search_type").val(obj.attr("id"));
+	//alert(_type);
+}
+
+function search_keyword(){
+	//$("#search_action").text("課號");
+	//alert("!!!");
+	var search_term=$("#search_term").val();
+	if(search_term==""){
+		$("#search_term").focus();
+		return false;
+	}
+	var search_type=$("#search_type").val();
+	var sem_id=$("#semester_id").val();
+	var dept_id=$("#department_id").val();
+	$("#search_result").load("/main/search_by_keyword?search_term="+search_term+
+					"&search_type="+search_type+"&sem_id="+sem_id+"&dept_id="+dept_id);
+}
+
+/*function search_keyword(){
+	//$("#search_action").text("課號");
+	//alert("!!!");
+	var search_term=$("#search_term").val();
+	if(search_term==""){
+		$("#search_term").focus();
+		return false;
+	}
+	
+	$.ajax({
+		type: "GET",
+		url: "/main/search_by_keyword",
+		data: {_search_term: search_term,//main or sub
+			   _search_type: $("#search_type").val(),
+				 _semester_id: $("#semester_id").val(),
+				 _dept_id: $("#department_id").val(),
+		},
+		success: function(data){
+			var courses=JSON.parse(data);
+			show_search_result(courses);
+			//console.log(courses[0].id);
+		}
+	});
+}*/
+function search_dept(dept_id){
+	
+	$("#search_result").load("/main/search_by_dept?dept_id="+
+													dept_id+"&sem_id="+$("#semester_id").val());
+}
+/*function search_dept(dept_id){
+	
+	$.ajax({
+		type: "GET",
+		url: "/main/search_by_dept",
+		data: {
+				 _dept_id: dept_id,
+				 _semester_id: $("#semester_id").val(),
+				 //_department_id: department_id
+
+		},
+		success: function(data){
+			var courses=JSON.parse(data);
+			show_search_result(courses);
+		}
+	});
+}*/
+function show_search_result(courses){
+	$("#search_result").html(title);
+	if(courses.length==0){
+		var row="<tr><th>查無結果!</th><tr>"
+		$("#search_result").append(row);
+		
+	}
+	else{
+		$.each(courses, function(index,courses_layer1){
+			//alert(course.id);
+			$.each(courses_layer1, function(index,course){
+			
+				var row="<tr><td>"+course.department_name+"</td><td>"+course.real_id+"</td><td><a href='/courses/"+course.id+"'>"+course.ch_name+"</a></td>"+
+					"<td>"+course.teacher_name+"</td>"+"</tr>"
+				$("#search_result").append(row);
+			});
+		});
+	}
+}
+
+</script>
+
+
+<div class="form-inline" ><!--role="form"-->
+	<div class="row">
+		<div class="form-group col-sm-2 col-sm-offset-1 ">
+			
+			<div class="input-group">
+				<!--<span class="input-group-addon">
+					<input type="checkbox" id="semester_check">
+				</span>-->
+				<input type="text" class="form-control" id="semester_select" placeholder="選擇學期..." >
+	      <input type="hidden" id="semester_id" value="<%=Semester.all.last.id%>" >
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default " id="semester" onclick="select_thing('semester')">
+						<span class="caret"></span>
+					</button>
+				</div>	<!-- /btn-group -->
+			</div>	<!-- /input-group --> 
+		</div>	<!-- /form-group -->
+		
+		<div class="form-group col-sm-2 ">
+			<div class="input-group">
+				<!--<span class="input-group-addon">
+					<input type="checkbox" id="department_check">
+				</span>-->
+				<input type="text" class="form-control" id="degree_select" placeholder="大學部/研究所/通識" ><!--readonly-->
+				<input type="hidden" id="degree_id" value="" >
+	      <div class="input-group-btn">
+					<button type="button" class="btn btn-default " id="department" onclick="select_thing('degree')">
+						<span class="caret"></span>
+					</button>
+
+				</div>	<!-- /btn-group -->
+			</div>	<!-- /input-group --> 
+		</div>	<!-- /form-group -->
+		
+	  <div class="form-group col-sm-3 ">
+			<div class="input-group">
+				<!--<span class="input-group-addon">
+					<input type="checkbox" id="department_check">
+				</span>-->
+				<input type="text" class="form-control" id="department_select" placeholder="選擇系所..." >
+				<input type="hidden" id="department_id" value="" >
+	      <div class="input-group-btn">
+					<button type="button" class="btn btn-default" id="department" onclick="select_thing('department')">
+						<span class="caret"></span>
+					</button>
+				</div>	<!-- /btn-group -->
+			</div>	<!-- /input-group --> 
+		</div>	<!-- /form-group -->
+		
+		<div class="form-group col-sm-3 ">
+			<div class="input-group">
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="search_action">課名 <span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="#" onclick="change_search_type($(this))" id="course_name">課名</a></li>
+						<li><a href="#" onclick="change_search_type($(this))" id="course_no">永久課號</a></li>
+						<!--<li><a href="#" onclick="change_action($(this))" id="course_teacher">老師</a></li>-->
+					</ul>
+				</div><!-- /btn-group -->
+				<input type="hidden" id="search_type" value="course_name">
+				<input type="text" class="form-control" id="search_term" placeholder="Search..." >
+				<span class="input-group-btn"><!--type="submit"-->
+					<button class="btn btn-default" onclick="search_keyword()"><span class="glyphicon glyphicon-search"></span></button>
+				</span>
+			</div><!-- /input-group -->
+		</div>
+		
+	</div><!-- /row -->
+	
+	
+</div>
+
+<p class="text-center">
+快速鍵: 選擇類別-[U]ndergraduate:大學部 [G]raduate:研究所 [C]ommon:通識 [D]epartment:系所
+</p>
+<div id="search_result">
+
+
 </div>

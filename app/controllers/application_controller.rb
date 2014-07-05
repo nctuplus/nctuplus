@@ -8,28 +8,78 @@ class ApplicationController < ActionController::Base
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
   helper_method :current_user
+  def checkLogin
+    unless current_user
+	  alertmesg("請先登入, 謝謝!")
+	  redirect_to root_url
+	  return false
+	end
+	return true
+  end
+  def checkTopManager
+    
+    if checkLogin
+	  @topmanager=TopManager.find_by_user_id(current_user.id)
+	  case params[:controller]
+		when 'user'
+		  unless @topmanager && @topmanager.all_users==1
+		  alertmesg("您沒有操作此動作的權限")     
+		  redirect_to root_url
+		  end
+		when 'departments'
+		  unless @topmanager && @topmanager.all_departments==1
+		  alertmesg("您沒有操作此動作的權限")     
+		  redirect_to root_url
+		  end
+	  end
+      
+    end    
+  end
+  
+  def checkCourseManager #(course_id)
+    
+    if checkLogin
+	  @departments=CourseManager.where(:user_id=>current_user.id)
+	  if @departments
+	    @departments.each do |department|
+		  
+		  department.courses.each do |course|
+		    return true if course.id==params[:id]#course_id
+		  end
+		end
+	  #else
+		
+	  end
+	  alertmesg("您沒有操作此動作的權限")     
+		  redirect_to root_url
+    end
+    
+  end
   
   def checkOwner
     case params[:controller] 
       when 'post'
 		if Post.find(params[:id]).owner_id!=current_user.id
-		  flash[:notice] = {
-			:style => "alert-danger",
-			:title => "Sorry!",
-			:message => "您沒有操作此動作的權限 "
-		  }        
+		  alertmesg("您沒有操作此動作的權限123")     
 		  redirect_to root_url
+		#else return true
 		end
 	  when 'files'
 	    @file=FileInfo.find_by_id(params[:id])
 	    if @file && @file.owner_id!=current_user.id
-		  flash[:notice] = {
-			:style => "alert-danger",
-			:title => "Sorry!",
-			:message => "您沒有操作此動作的權限 "
-		  }
+		  alertmesg("您沒有操作此動作的權限")
 		  redirect_to root_url
+		#else return true
 		end	  
     end
-  end 
+  end
+  
+  
+  def alertmesg(msg)
+    flash[:notice] = {
+			:style => "alert-danger",
+			:title => "Sorry!",
+			:message => msg
+		  }
+  end  
 end

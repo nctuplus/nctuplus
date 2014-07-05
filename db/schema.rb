@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140418135233) do
+ActiveRecord::Schema.define(version: 20140629213847) do
 
   create_table "ckeditor_assets", force: true do |t|
     t.string   "data_file_name",               null: false
@@ -29,6 +29,42 @@ ActiveRecord::Schema.define(version: 20140418135233) do
   add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
   add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
 
+  create_table "colleges", force: true do |t|
+    t.string   "name"
+    t.string   "real_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "course_details", force: true do |t|
+    t.integer  "course_id"
+    t.integer  "teacher_id"
+    t.integer  "semester_id"
+    t.string   "time_and_room"
+    t.string   "temp_cos_id"
+    t.string   "brief"
+    t.string   "memo"
+    t.string   "students_limit"
+    t.string   "cos_type"
+    t.string   "credit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_details", ["course_id"], name: "index_course_details_on_course_id", using: :btree
+  add_index "course_details", ["semester_id"], name: "index_course_details_on_semester_id", using: :btree
+  add_index "course_details", ["teacher_id"], name: "index_course_details_on_teacher_id", using: :btree
+
+  create_table "course_managers", force: true do |t|
+    t.integer  "department_id"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_managers", ["department_id"], name: "index_course_managers_on_department_id", using: :btree
+  add_index "course_managers", ["user_id"], name: "index_course_managers_on_user_id", using: :btree
+
   create_table "course_postships", force: true do |t|
     t.integer  "post_id"
     t.integer  "course_id"
@@ -40,23 +76,45 @@ ActiveRecord::Schema.define(version: 20140418135233) do
     t.string   "ch_name"
     t.string   "eng_name"
     t.integer  "grade_id"
+    t.integer  "department_id"
+    t.string   "real_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.float    "rate"
   end
+
+  add_index "courses", ["department_id"], name: "index_courses_on_department_id", using: :btree
+  add_index "courses", ["grade_id"], name: "index_courses_on_grade_id", using: :btree
+  add_index "courses", ["real_id"], name: "index_courses_on_real_id", using: :btree
+
+  create_table "departments", force: true do |t|
+    t.string   "ch_name"
+    t.string   "eng_name"
+    t.string   "real_id"
+    t.string   "degree"
+    t.integer  "college_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "viewable"
+  end
+
+  add_index "departments", ["college_id"], name: "index_departments_on_college_id", using: :btree
+  add_index "departments", ["degree"], name: "index_departments_on_degree", using: :btree
+  add_index "departments", ["real_id"], name: "index_departments_on_real_id", using: :btree
 
   create_table "file_infos", force: true do |t|
     t.integer  "owner_id"
     t.integer  "course_id"
-    t.integer  "size"
-    t.string   "name"
+    t.string   "description"
+    t.integer  "teacher_id"
+    t.integer  "semester_id"
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "types"
-    t.string   "description"
   end
-
-  add_index "file_infos", ["course_id"], name: "index_file_infos_on_course_id", using: :btree
-  add_index "file_infos", ["owner_id"], name: "index_file_infos_on_owner_id", using: :btree
 
   create_table "grades", force: true do |t|
     t.string "name"
@@ -66,6 +124,47 @@ ActiveRecord::Schema.define(version: 20140418135233) do
     t.string   "title"
     t.text     "content"
     t.integer  "owner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "ratings", force: true do |t|
+    t.integer  "target_id"
+    t.integer  "user_id"
+    t.integer  "score"
+    t.string   "target_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "semester_courseships", force: true do |t|
+    t.integer  "semester_id"
+    t.integer  "course_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "semester_courseships", ["course_id"], name: "index_semester_courseships_on_course_id", using: :btree
+  add_index "semester_courseships", ["semester_id"], name: "index_semester_courseships_on_semester_id", using: :btree
+
+  create_table "semesters", force: true do |t|
+    t.string   "name"
+    t.string   "real_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "teachers", force: true do |t|
+    t.string   "name"
+    t.integer  "department_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "top_managers", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "all_users"
+    t.integer  "all_departments"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,0 +1,36 @@
+<h2><%=@department.ch_name %></h2>
+<table class="table">
+<tr><th>永久課號</th><th>中文課名</th><th>英文課名</th><th>文章數</th><th>檔案數</th><th>功能</th></tr>
+<% @courses.each do |course| %>
+<tr>
+<td><%= link_to course.real_id, department_course_path(@department,course) %></td>
+<td><%= link_to course.ch_name, department_course_path(@department,course) %></td>
+<td><%= link_to course.eng_name, department_course_path(@department,course) %></td>
+<td>Not Done Yet</td>
+<td><%= course.file_infos.count %></td>
+<td>
+<%= link_to 'edit', edit_department_course_path(@department,course) %>
+<%= link_to 'delete', department_course_path(@department,course), :method => :delete %>
+</td>
+</tr>
+<% end %>
+</table>
+<br>
+<table class="table">
+<tr><th>教師姓名</th><th>功能</th></tr>
+<% @teachers.each do |teacher| %>
+<tr>
+<td><%= link_to teacher.name, teacher_path(teacher) %></td>
+
+<td>
+<%= link_to 'edit', edit_teacher_path(teacher, :department_id=>params[:id]) %>
+<%= link_to 'delete', teacher_path(teacher), :method => :delete %>
+</td>
+</tr>
+<% end %>
+</table>
+
+<%= render :partial=>"/file_infos/one_department" %>
+
+<%= link_to '新增課程', new_department_course_path(@department)  %>
+<%= link_to '新增老師', new_teacher_path(:department_id=>params[:id]) %>

@@ -1,0 +1,25 @@
+<table class="table " >
+	<tr class="row ">
+		<td class="col-md-1">永久課號</td>
+		<td class="col-md-2"><%= @course.real_id %></td>
+	</tr>
+	
+	<tr class="row">
+		<td class="col-md-1">授課老師</td>
+		<td class="col-md-2">
+			<% @teachers.each do |t|%>
+				<%=t.name %> 
+			<%end%>
+		</td>
+	</tr>
+
+	<tr class="row">
+		<td class="col-md-1">開課學期</td>
+		<td class="col-md-2">
+			<% @sems.each do |s|%>
+				<%=s.name %> 
+			<%end%>
+		</td>
+	</tr>
+	
+</table>

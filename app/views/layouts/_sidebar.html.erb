@@ -1,17 +1,21 @@
 <div class="sidebar panel-group" id="accordion">
-<% Grade.all.each do |grade| %>
+<% Department.all.each do |department| %>
+  <% break %>
+  <% next if department.viewable=='0' || department.real_id.match(/[A-Z]/) %>
   <div class="panel panel-default ">
     <div class="panel-heading ">
 		<h4 class="panel-title">
-		<a data-toggle="collapse" data-parent="#accordion" href="#collapse_<%=grade.id%>"><%= grade.name %></a>
+		<a data-toggle="collapse" data-parent="#accordion" href="#collapse_<%=department.id%>"><%= department.ch_name %></a>
 		</h4>
 	</div>
-	<div id="collapse_<%=grade.id%>" class="panel-collapse collapse">
+	<div id="collapse_<%=department.id%>" class="panel-collapse collapse">
 		<div class="panel-body">
-		  <% grade.course.each do |course| %>
-			<%= link_to(course_path(course)) do %>
-			  <%=course.ch_name%> <span class="badge pull-right"><%=course.file_info.all.count%></span>
+		  <% department.courses.each do |course| %>
+		  <li>
+			<%= link_to department_course_path(department, course) do %>
+			  <%=course.ch_name%> <span class="badge pull-right"><%=course.file_infos.all.count%></span>
 			<% end %>
+		  </li>
 		  <% end %>
 		</div>
 	</div>

@@ -1,10 +1,8 @@
 class PostController < ApplicationController
   #require 'coderay'
-  #def show_bycourse
-  #  @course=Course.find(params[:id])
-#	@posts=@course.posts
-#  end
+
   before_filter :checkOwner,  only: [:edit, :update, :destroy]
+  #before_filter :checkCourseManager,  only: [:edit, :update, :destroy]
   #def getcode
    #coderay = CodeRay.scan(params[:code], params[:lang]).div(:line_numbers => :table)
   # 
@@ -25,9 +23,10 @@ class PostController < ApplicationController
   def create
     @post = Post.new(post_param)
 	@post.owner_id=current_user.id
-    @post.save
-	@tagslist=params[:post][:tags].split(", ")
-	CoursePostship._create(@post.id,@tagslist,"zzz")
+    @post.save!
+	
+	handle_tag(@post)
+
 	redirect_to :action => :index
     #redirect_to :controller=>:course, :action => :show, :id=>params[:id]
   end
@@ -44,15 +43,10 @@ class PostController < ApplicationController
     @post = Post.find(params[:id])
 	@post.content = params[:post][:content]
 	@post.title = params[:post][:title]
+
+	handle_tag(@post)	
 	@post.save!
-	
-	CoursePostship._destroy_by_postid(params[:id])
-	
-	@tagslist=params[:post][:tags].split(", ")
-	CoursePostship._create(params[:id],@tagslist,"zzz")
-	
-    #@post.update_attributes()
-  
+
     redirect_to :action => :show, :id => @post.id
   end
   def destroy
@@ -64,6 +58,15 @@ class PostController < ApplicationController
   end
   
   private
+  
+  def handle_tag(post)
+    tagslist=params[:post][:tags].gsub(" ",'').split(",")
+	
+	CoursePostship.destroy_all(:post_id=>post.id) unless post.new_record?
+
+	CoursePostship._create(post.id,tagslist)
+  end
+  
   def post_param
     
 	params.require(:post).permit(:title, :content)

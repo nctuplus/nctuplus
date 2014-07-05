@@ -1,0 +1,88 @@
+<!-- The template to display files available for download -->
+<script>
+function update_select(id){
+	//$("select#file_info_teacher_id").val('3');
+	//alert($("td.teacher select").val());
+	//alert(id);
+}
+</script>
+
+<script id="template-download" type="text/x-tmpl">
+  {% for (var i=0, file; file=o.files[i]; i++) { %}
+   
+
+<tr class="template-download fade" id="download_{%=file.id%}">
+  {% if (file.error) { %}
+	<td class="name"><span>{%=file.name%}</span></td>
+	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+	<td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+	{% } else { %}
+	
+	<% if local_assigns[:show_course] %>
+	  <td>{%=file.course_name%}</td>
+	<% end %>
+	
+	<td class="teacher_{%=file.id%}"><span>
+	
+	
+	
+	{%= file.teacher_name %}
+	
+	</span></td>
+	<td class="semester_{%=file.id%}"><span>
+	{%= file.semester_name %}
+	</span></td>
+	<td class="description_{%=file.id%}">
+	{%= file.description %}
+	</td>
+	<td class="name">
+	<% if current_user %>
+	  <a href="{%=file.url%}" title="{%=file.name%}" rel="{%=file.thumbnail_url&&'gallery'%}" download="{%=file.name%}">{%=file.name%}</a>
+	<% else %>
+	  <a href="javascript: void(0)" title="{%=file.name%}" onclick='window.alert("請先登入!");'>{%=file.name%}</a>
+	<% end %>
+	</td>
+	
+	
+	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
+	<td>{%=file.owner_name%}</td>
+	<td>{%=file.create_time%}</td>
+	{% } %}
+	<td class="function ">
+	{% if (file.editable) { %}
+	<!--<div class="edit" id="edit_{%=file.id%}">-->
+	<!--<a href="javascript: void(0)" class="btn btn-default btn-xs" id="edit_but_{%=file.id%}" >-->
+	<a href="javascript: void(0)" class="btn btn-default btn-xs" id="edit_but_{%=file.id%}" onclick="change_to_edit({%=JSON.stringify(file, null, 4)%})" >
+	<span class="glyphicon glyphicon-pencil"></span></a>
+	<!--</a>-->
+
+	<!--<button class="btn btn-info btn-sm" onclick="edit_('{%=file.id%}');">編輯</button>-->
+	<!--</div>-->
+	
+	<!--<div id="111" class="change" >-->
+	
+	<!--<input id="save_but_{%=file.id%}" class="btn btn-default btn-xs" onclick="save_update({%=file.id%});" style="display:none;">!-->
+	<a href="javascript: void(0)"  class="btn btn-default btn-xs" id="save_but_{%=file.id%}" onclick="save_update({%=file.id%});" style="display:none;">
+	<span class="glyphicon glyphicon-saved"></span></a>
+	<!--</input>-->
+	<!--</div>-->
+	{% } %}
+	
+	<!--<div id="delete_{%=file.id%}" class="delete" >-->
+		<span class="delete">
+		<button id="delete_{%=file.id%}" class="btn btn-default btn-xs" data-type="{%=file.delete_type%}" data-url="/file_infos/{%=file.id%}" style="display:none;">
+		 <!--<a href="#" data-type="{%=file.delete_type%}" data-url="/file_infos/{%=file.id%}">-->
+		 <!--<i class="icon-trash icon-white"></i>-->
+		 <span class="glyphicon glyphicon-trash"></span>
+		  <!--<span>刪除</span></a>-->
+		</button>
+		<!---</span>
+		
+		<input type="checkbox" name="delete" value="1">
+		--->
+	<!--</div>-->
+	
+	</td>
+</tr>
+	{% } %}
+</script>

@@ -4,33 +4,58 @@ Csnote::Application.routes.draw do
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
+  resources :courses
+  
+   resources :departments do
+       #resources :comments, :sales
+       resources :courses #, :controller => 'department_courses'
+	  #resources :course
+	   
+   end
+  #resources
+  resources :teachers
   
   
-  resources :course
+  
   get "post/getcode"
   resources :post
-  
+	
+  get "main/search_by_dept"
+	get "main/search_by_keyword"
+	#get "main/search_by_keyword_load"
+	get "main/test_p"
+  get "main/rate_course"
   
   get "main/index"
   #----------for files---------------
-  get "files/all_users"
-  get "files/one_user"
-  get "files/upload"
-  get "files/download"
-  get "files/delete_file"
-  get "files/edit"
-  post "files/create"  
+  #get "file_info/all_users"
+  get "file_infos/one_user"
+  #get "file_info/upload"
+  #get "file_info/download"
+  #get "file_info/delete_file"
+  get "file_infos/edit"
+  get "file_infos/pictures_show"
+  resources :file_infos
+  
+ 
+  #post "files/create"
+  #get "files/show"  
   #----------for user---------------
-  get "user/mail_confirm"
+  #get "user/mail_confirm"
   get "user/activate"
   get "user/manage"
   get "user/registry"
+  
+  get "user/:id/permission", to: "user#permission"
+  
+  post "user/:id/permission", to: "user#permission"
+  
   post "user/create"
   #get "user/create"
   
  # resources :upload
-  root :to => "course#show", :id=>5
-  
+  #root :to => "courses#show", :id=>5
+  root :to => "main#index"
   
   
   

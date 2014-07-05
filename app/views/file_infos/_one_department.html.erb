@@ -1,0 +1,54 @@
+<div class="container">
+<%= form_for FileInfo.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
+<table class="table table-striped" >
+	<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+	<tr><th>課名</th><th>提供者</th><th>檔名</th><th>檔案說明</th><th>大小</th><th>上傳時間</th><th>動作</th></tr>
+	<tr id="loading"><td colspan="6" ><p class="text-center"><%=image_tag("/assets/loading.gif", size: '42x42')%></p></td></tr>
+	</tbody>
+</table>
+<%end%>
+</div>
+
+<script>
+  var fileUploadErrors = {
+  maxFileSize: 'File is too big',
+  minFileSize: 'File is too small',
+  acceptFileTypes: 'Filetype not allowed',
+  maxNumberOfFiles: 'Max number of files exceeded',
+  uploadedBytes: 'Uploaded bytes exceed file size',
+  emptyResult: 'Empty file upload result'
+  };
+</script>
+
+<%= render :partial=>"/file_infos/template_upload" %>
+<%= render :partial=>"/file_infos/template_download", :locals=>{:show_course=>"true"} %>
+
+<script type="text/javascript" charset="utf-8">
+  $(function () {
+      //$('#file_info_upload').attr('name','file_info[upload]')
+	  $('#fileupload').fileupload();
+      $('#fileupload').fileupload('option',{
+		  acceptFileTypes : /(\.|\/)<%=FileInfo.support_types%>$/i,
+		  maxFileSize: <%=FileInfo.max_upload_size%>
+	  });
+	  
+      // 
+      // Load existing files:
+      $.getJSON("/file_infos/?department_id=<%=params[:id]%>", function (files) {
+        var fu = $('#fileupload').data('blueimpFileupload'), 
+          template;
+        fu._adjustMaxNumberOfFiles(-files.length);
+        //console.log(files);
+        template = fu._renderDownload(files)
+          .appendTo($('#fileupload .files'));
+		
+        // Force reflow:
+        fu._reflow = fu._transition && template.length &&
+          template[0].offsetWidth;
+        template.addClass('in');
+        $('#loading').remove();
+      });
+	  
+	
+  });
+</script>

@@ -1,0 +1,18 @@
+<% if @course.new_record? %>
+<%= form_for @course do |f|%>
+<% else %>
+<%= form_for @course, :url => department_course_url, :html => { :method => :put } do |f| %> 
+<% end %>	
+	<%= f.hidden_field :department_id, :value=>@department.id  %>
+	
+	<%= f.label :ch_name, "中文名稱" %>
+    <%= f.text_field :ch_name %>
+	<br>
+	<%= f.label :eng_name, "英文名稱(縮寫即可)" %>
+    <%= f.text_field :eng_name %>
+	<br>
+	
+    <% f.select :grade_id, options_from_collection_for_select(Grade.all, :id, :name) %>
+	
+    <%= f.submit %>
+<% end %>

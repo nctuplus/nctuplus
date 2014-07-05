@@ -4,6 +4,7 @@ module ApplicationHelper
     Course.all.each do |course|
 	html<<'"'<<course.eng_name<<'",'
 	end
+	html=""
 	return html
   end
   def div_alert

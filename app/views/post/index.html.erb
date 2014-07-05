@@ -9,7 +9,7 @@
 		<p><%= link_to User.find(post.owner_id).name, user_url %> <%=post.updated_at%>	
 		
 		  <%post.courses.each do |course|%>
-			<%= link_to course.eng_name, course_path(course) %>
+			<%= link_to course.eng_name, department_course_path(course.department, course) %>
 		  <%end%>  
 	    </p>
 	<!---</div>--->
