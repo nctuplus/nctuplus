@@ -18,7 +18,7 @@ body
 	//padding-left:10%;
 	//padding-right:10%;
     //padding-top: 60px;
-    //background-color: black;
+  background-color: #eeeeee;
 }	
 a:hover{
 text-decoration:none;
@@ -35,4 +35,18 @@ text-decoration:none;
 }
 .searchstyle{
   width :400px;
+}
+
+.user-reg {
+    width: 280px !important;
+		padding-left :30px;
+		z-index :0 !important;
+    //height: 400px !important;
+}
+
+.ui-autocomplete { position: absolute; cursor: default;z-index:2000 !important;}  
+
+.row-condensed{
+	padding-left:0 !important;
+	padding-right:0 !important;
 }

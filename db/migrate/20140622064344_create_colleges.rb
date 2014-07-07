@@ -3,7 +3,7 @@ class CreateColleges < ActiveRecord::Migration
     create_table :colleges do |t|
 	  t.string :name
 	  t.string :real_id
-      t.timestamps
+    t.timestamps
     end
   end
 end

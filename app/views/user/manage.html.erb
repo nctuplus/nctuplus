@@ -5,14 +5,16 @@
 <%@users.each do |user| %>
 <tr>
 <td><%= user.name %></td>
+<% if user.grade_id %>
 <td><%= Grade.find(user.grade_id).name %></td>
+<% else %>
+<td>尚未填寫</td>
+<% end %>
 <td><%= user.email %></td>
 <td>
 <% case user.activated %>
 <% when 0 %>登入fb
-<% when 1 %>註冊
-<% when 2 %>已寄認證信
-<% when 3 %>已啟用
+<% when 1 %>已填資料
  
 <% end %>
 </td>

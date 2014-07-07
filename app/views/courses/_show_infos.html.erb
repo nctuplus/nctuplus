@@ -1,4 +1,106 @@
-<table class="table " >
+<br>
+
+<script>
+function gen_raty(type,ctr_id,show_score,rated){
+	$("#rating_"+ctr_id).raty({
+		score:show_score,
+		readOnly :rated,
+		click: function(score, evt) {
+			rate_course(ctr_id,score);
+		}
+	});
+}
+
+function rate_course(ctr_id,score){
+	//console.log(course_id);
+	$.ajax({
+		type: "GET",
+		url: "/courses/rate_cts",
+		data: {
+			ctr_id: ctr_id,
+			score: score,   
+		},
+		success: function(data){
+			var d=JSON.parse(data);
+			var new_count="<label>("+d.new_counts+")</label>";
+			$("#rating_"+ctr_id).raty({readOnly: true, score:d.new_score});
+			$("#rating_"+ctr_id+"_counts").html(new_count);
+		},
+		
+		
+	});
+}
+
+
+</script>
+
+<div class="row col-sm-offset-1">
+
+
+<% @teachers.each do |t| %>
+	<% cts=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>t.id).take %>
+	<% rating_cold = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"cold").take %>
+
+	<% rating_sweety = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"sweety").take %>
+	<% rating_hardness = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"hardness").take %>
+	<div class="col-sm-4 ">
+		<div class="panel">
+			<div class="panel-body">
+				<h4><%=t.name.to_s%></h4>
+				<div class="row col-sm-offset-1">
+					<% sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>cts.id) %>
+					<% Semester.where(:id=>sem_ids).each do |s| %>
+						<%= s.name %>
+					<% end %>
+				</div>
+				<div class="row">
+					<div class="col-sm-3 col-sm-offset-1 row-condensed">
+						<label>涼度</label>
+					</div>
+					<div class="col-sm-5 row-condensed">
+						<div id="rating_<%=rating_cold.id%>"></div>
+						<script>gen_raty("",<%=rating_cold.id%>,<%=rating_cold.avg_score%>,<%=has_rated(rating_cold.id)%>);</script>	
+					</div>	
+					<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
+						<label>(<%=rating_cold.total_rating_counts%>)</label>
+					</div>
+					
+				</div>
+				<div class="row">
+					<div class="col-sm-3 col-sm-offset-1 row-condensed">
+						<label>甜度</label>
+					</div>
+					<div class="col-sm-5 row-condensed">
+						<div id="rating_<%=rating_sweety.id%>"></div>
+						<script>gen_raty("",<%=rating_sweety.id%>,<%=rating_sweety.avg_score%>,<%=has_rated(rating_sweety.id)%>);</script>	
+					</div>
+					<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
+					<label>(<%=rating_sweety.total_rating_counts%>)</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-3 col-sm-offset-1 row-condensed">
+						<label>硬度</label>
+					</div>
+					<div class="col-sm-5 row-condensed">
+						<div id="rating_<%=rating_hardness.id%>"></div>
+						<script>gen_raty("",<%=rating_hardness.id%>,<%=rating_hardness.avg_score%>,<%=has_rated(rating_hardness.id)%>);</script>	
+					</div>
+					<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
+					<label>(<%=rating_hardness.total_rating_counts%>)</label>
+					</div>
+				</div>
+			</div>
+		</div>		
+	</div>
+<% end %>
+
+</div>
+
+
+		
+		
+<!--<table class="table " >
 	<tr class="row ">
 		<td class="col-md-1">永久課號</td>
 		<td class="col-md-2"><%= @course.real_id %></td>
@@ -23,3 +125,4 @@
 	</tr>
 	
 </table>
+-->

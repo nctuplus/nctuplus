@@ -3,11 +3,16 @@ class Course < ActiveRecord::Base
 	belongs_to :department
 	belongs_to :user
 	
-	has_many :course_details, :dependent => :destroy
-	has_many :teachers, :through => :course_details
-	
+#	has_many :teachers, :through => :course_details
 	has_many :semester_courseships, :dependent => :destroy
 	has_many :semesters, :through => :semester_courseships
+	
+	has_many :course_teacherships, :dependent => :destroy
+	has_many :teachers, :through => :course_teacherships
+	
+	#has_many :course_details, :through=>course_teacherships#, :dependent => :destroy
+
+	
 		
 	has_many :file_infos
 	

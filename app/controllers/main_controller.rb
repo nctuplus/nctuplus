@@ -3,103 +3,42 @@ class MainController < ApplicationController
   require 'open-uri'
   require 'net/http'
   require 'json'
-	layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
-	def test_p
-	  page=params[:page].to_i
-		id_begin=(page-1)*each_page_show
-		@course_details=CourseDetail.where(:id=>id_begin..id_begin+each_page_show)
-		#@course_details=@courses
-		@page_numbers=CourseDetail.all.count/each_page_show
-	  render "zz"
-	end
+	#layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
+	
   def index
 		#prepare_course_db
 	#@degree=['2','3']
 	#destroy_course
 	#prepare_course_db
-	@semesters=Semester.all
-	#@departments=Department.where(:degree=>'3')
-	@departments2=Department.where(:degree=>'2')
-	
-	@department=Department.find(1)#.take(30)
-	@courses=@department.courses.take(30)
-	
-	@departments=Department.where(:viewable=>'1')
-	@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-	@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-	@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-	@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-	
-	@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
-	
-	@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-	
-	
-	
+		@semesters=Semester.all
+		#@departments=Department.where(:degree=>'3')
+		@departments2=Department.where(:degree=>'2')
+		
+		@department=Department.find(1)#.take(30)
+		@courses=@department.courses.take(30)
+		
+		@departments=Department.where(:viewable=>'1')
+		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		
+		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
+		
+		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
 	
   end
 	
-	def search_by_dept
-		dept_id=params[:dept_id]
-		semester_id=params[:sem_id].to_i
+	def hidden_prepare
+	  prepare_course_db
 		
-		dept_ids=get_dept_ids(dept_id)
-		
-		semester=Semester.find(semester_id)
-		@courses=semester.courses.select{|c| join_dept(c,dept_ids)}
-		course_ids=@courses.map{|c| c.id}
-		@course_details=CourseDetail.where(:course_id=>course_ids)
-		@page_numbers=@course_details.count/each_page_show
-		render "zz"
 	end
 	
 	
-  def rate_course
-    course_id=params[:_course_id]
-		score=params[:_score]
-		Rating.create(:score=>score, :target_id=>course_id, :user_id=>current_user.id, :target_type=>"course")
-		#total=Rating.where(
-		result={:new_score=>'3'}
-		respond_to do |format|
-			format.html {
-				render :json => result.to_json,
-							 :content_type => 'text/html',
-							 :layout => false
-			}
-		end
-	end
-  def search_by_keyword
-	  search_term=params[:search_term]
-		search_type=params[:search_type]
-		semester_id=params[:sem_id].to_i
-		dept_id=params[:dept_id]
-		dept_ids= get_dept_ids(dept_id)
-		case search_type
-			when "course_no"
-				if !semester_id.nil?
-					@courses= Course.where(" id IN (:id) AND real_id LIKE :real_id ",
-							{ :id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :real_id => "%#{search_term}%" })	
-				else
-					@courses= Course.where("real_id LIKE :real_id ",
-																{:real_id => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
-				end
-				@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-				
-			when "course_name"
-				if !semester_id.nil?
-					@courses = Course.where("id IN (:id) AND ch_name LIKE :name ",
-						{:id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :name => "%#{search_term}%" })
-				else
-					@courses= Course.where("ch_name LIKE :name ",
-																{:name => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
-				end
-				@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-		end
-		course_ids=@courses.map{|c| c.id}
-		@course_details=CourseDetail.where(:course_id=>course_ids)
-		@page_numbers=@course_details.count/each_page_show
-		render "zz"
-	end
+	
+	
+  
+
 	# def search_by_keyword_ajax
     # search_term=params[:_search_term]
 		# search_type=params[:_search_type]
@@ -161,26 +100,8 @@ class MainController < ApplicationController
 	# end
 	
   private
-	def each_page_show
-	  30
-	end
-	def get_dept_ids(dept_id)
-	  return nil if dept_id==""
-		
-	  dept_ids=[]
-		dept_main=Department.find(dept_id)
-		dept_ids.append(dept_main.id)
-		dept_college=Department.where("degree = #{dept_main.degree} AND viewable = '1' AND real_id LIKE :real_id",{:real_id=>"#{dept_main.college.real_id}%"}).take
-		dept_ids.append(dept_college.id) if !dept_college.nil?
-		return dept_ids
-	end
 	
-	def join_dept(course,dept_ids)
-		dept_ids.each do |dept_id|
-		  return true if course.department_id==dept_id
-		end
-		return false
-	end
+	
 	
   def change_to_grad_degree(real_id)
     @old=Department.where(:degree=>'3', :real_id=>real_id).take.id
@@ -207,36 +128,50 @@ class MainController < ApplicationController
   end
   def save_sem_courseship(sem_id,course_id)
     #sem_id=Semester.find_by_real_id(sem_real_id).id
-	unless SemesterCourseship.where(:semester_id=>sem_id,:course_id=>course_id).take
-	  SemesterCourseship.create(:semester_id=>sem_id,:course_id=>course_id)
-	end
+		unless SemesterCourseship.where(:semester_id=>sem_id,:course_id=>course_id).take
+			SemesterCourseship.create(:semester_id=>sem_id,:course_id=>course_id)
+		end
   end
   def prepare_course_db
   
-    year=['103']
-		sem='1'
+    year=['102','101','100']
+		sem=['2','1']
 		year.each do |y|
-			data=parse_course(y,sem)
-			save_courses(data,y,sem)
-			change_to_grad_degree("12")
-			change_to_grad_degree("13")
-			set_department_viewable
+			sem.each do |s|
+				data=parse_course(y,s)
+				save_courses(data,y,s)
+				change_to_grad_degree("12")
+				change_to_grad_degree("13")
+				set_department_viewable
+			end
 		end
   end
   def do_save_courses(sem_id,data)
     data.each do |key1,value1|
 	#@html<<value1['cos_cname']<<value1['cos_ename']<<value1['teacher']<<"<br>"
-	
-	@dept=Department.find_by_real_id(value1['dep_id'])
-	next if @dept.nil?
-	dept_id=@dept.id
-	
-	teacher=save_teacher(value1['teacher'],dept_id)
-	course=save_course(value1['cos_code'],value1['cos_cname'],value1['cos_ename'],dept_id)
-	save_course_detail(teacher.id,course.id,sem_id,value1)
-	save_sem_courseship(sem_id,course.id)
+			@dept=Department.find_by_real_id(value1['dep_id'])
+			next if @dept.nil?
+			dept_id=@dept.id
+			teacher=save_teacher(value1['teacher'],dept_id)
+			course=save_course(value1['cos_code'],value1['cos_cname'],value1['cos_ename'],dept_id)
+			@cts=save_course_teacher(teacher.id,course.id)
+			save_course_teacher_rating(@cts.id)
+			save_course_detail(@cts.id,sem_id,value1)
+			save_sem_courseship(sem_id,course.id)
+		end
   end
-  end
+	def save_course_teacher_rating(cts_id)
+		_type=["cold","sweety","hardness"]
+		_type.each do |t|
+			CourseTeacherRating.create(:course_teachership_id=>cts_id, :rating_type=>t, :avg_score=>0, :total_rating_counts=>0)
+		end
+	end
+	def save_course_teacher(teacher_id,course_id)
+		@cts=CourseTeachership.where(:teacher_id=>teacher_id,:course_id=>course_id).take
+    @cts=CourseTeachership.create(:teacher_id=>teacher_id,:course_id=>course_id) if @cts.nil?
+		
+		return @cts
+	end
   def save_courses(data,year,sem)
     sem_id=Semester.find_by_real_id(year+sem).id
     data.each do |data1|
@@ -253,37 +188,36 @@ class MainController < ApplicationController
   end
   def parse_semester
     year=(98..103)
-	semester=(1..2)
-	name=['上','下']
-	year.each do |y|
-	  semester.each do |s|
-	    sem=Semester.new(:real_id=>y.to_s+s.to_s)
-		sem.name=y.to_s+name[s-1]
-		sem.save
-	  end
-	end
+		semester=(1..2)
+		name=['上','下']
+		year.each do |y|
+			semester.each do |s|
+				sem=Semester.new(:real_id=>y.to_s+s.to_s)
+				sem.name=y.to_s+name[s-1]
+				sem.save
+			end
+		end
   end
-  def save_course_detail(teacher_id,course_id,sem_id,raw_data)
-    @cd=CourseDetail.where(:teacher_id=>teacher_id,:course_id=>course_id, :semester_id=>sem_id).take
+  def save_course_detail(cts_id,sem_id,raw_data)
+    @cd=CourseDetail.where(:course_teachership_id=>cts_id, :semester_id=>sem_id).take
     if @cd.nil?
 	  #@department
-	  @cd=CourseDetail.new
-		@cd.teacher_id=teacher_id
-		@cd.course_id=course_id
-		@cd.semester_id=sem_id
-		@cd.credit=raw_data['cos_credit']
-		@cd.time_and_room=raw_data['cos_time']
-		@cd.memo=raw_data['memo']
-		@cd.students_limit=raw_data['num_limit']
-		@cd.cos_type=raw_data['cos_type']
-		@cd.temp_cos_id=raw_data['cos_id']
-		@cd.brief=raw_data['brief']
-	  @cd.save
+			@cd=CourseDetail.new
+			@cd.course_teachership_id=cts_id
+			@cd.semester_id=sem_id
+			@cd.credit=raw_data['cos_credit']
+			@cd.time_and_room=raw_data['cos_time']
+			@cd.memo=raw_data['memo']
+			@cd.students_limit=raw_data['num_limit']
+			@cd.cos_type=raw_data['cos_type']
+			@cd.temp_cos_id=raw_data['cos_id']
+			@cd.brief=raw_data['brief']
+			@cd.save
 	  
-	#else
-	#  return nil
-	end
-	return @cts
+		#else
+		#  return nil
+		end
+		return @cts
   end
   def save_course(code,ch_name,eng_name,dept_id)
     @course=Course.find_by_real_id(code)

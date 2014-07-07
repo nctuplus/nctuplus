@@ -24,29 +24,31 @@
 		<p>目前支援的格式有: c/cpp/docx/doc/pdf/jpg/jpeg/png/gif</p>
 		<p>每個檔案的大小限制為10mb</p>     
 		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-		<div class="fileupload-buttonbar">
-			<!-- The fileinput-button span is used to style the file input field as button -->
-			<span class="btn btn-success fileinput-button">		  
-			  <span class="glyphicon glyphicon-plus"></span>
-			  <span>Add files...</span>
-			  <%= f.file_field :upload, :multiple=>""%>
-			</span>
-			<button type="submit" class="btn btn-primary start">
-			  <span class="glyphicon glyphicon-arrow-up"></span>
-			  <span>Start upload</span>
-			</button>
-			<button type="reset" class="btn btn-warning cancel">
-			 
-			  <span class="glyphicon glyphicon-remove"></span>
-			  <span>Cancel upload</span>
-			</button>
-			<!---<button type="button" class="btn btn-danger delete">
-			  <span class="glyphicon glyphicon-trash"></span>
-			  <span>Delete</span>
-			</button>
-			<input type="checkbox" class="toggle">--->
-		</div>
-
+		<% if current_user %>
+			<div class="fileupload-buttonbar">
+				<!-- The fileinput-button span is used to style the file input field as button -->
+				<span class="btn btn-success fileinput-button">		  
+					<span class="glyphicon glyphicon-plus"></span>
+					<span>Add files...</span>
+					<%= f.file_field :upload, :multiple=>""%>
+				</span>
+				<button type="submit" class="btn btn-primary start">
+					<span class="glyphicon glyphicon-arrow-up"></span>
+					<span>Start upload</span>
+				</button>
+				<button type="reset" class="btn btn-warning cancel">
+				 
+					<span class="glyphicon glyphicon-remove"></span>
+					<span>Cancel upload</span>
+				</button>
+				<!---<button type="button" class="btn btn-danger delete">
+					<span class="glyphicon glyphicon-trash"></span>
+					<span>Delete</span>
+				</button>
+				<input type="checkbox" class="toggle">--->
+			</div>
+		<%end%>
+		請先登入後才能上傳檔案!
 		</div>
 	</div>
   <% end %>

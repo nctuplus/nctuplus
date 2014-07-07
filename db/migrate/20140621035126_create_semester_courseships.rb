@@ -5,7 +5,7 @@ class CreateSemesterCourseships < ActiveRecord::Migration
 	  t.integer :course_id
     t.timestamps
     end
-	add_index :semester_courseships, :semester_id
-	add_index :semester_courseships, :course_id	
+		add_index :semester_courseships, :semester_id
+		add_index :semester_courseships, :course_id	
   end
 end

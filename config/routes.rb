@@ -4,14 +4,21 @@ Csnote::Application.routes.draw do
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
-  resources :courses
+  
+	
+	get "courses/search_by_dept"
+	get "courses/search_by_keyword"
+	get "courses/list_all_courses"
+  get "courses/rate_cts"
+	
+	resources :courses
   
    resources :departments do
        #resources :comments, :sales
        resources :courses #, :controller => 'department_courses'
 	  #resources :course
 	   
-   end
+  end
   #resources
   resources :teachers
   
@@ -20,11 +27,9 @@ Csnote::Application.routes.draw do
   get "post/getcode"
   resources :post
 	
-  get "main/search_by_dept"
-	get "main/search_by_keyword"
-	#get "main/search_by_keyword_load"
-	get "main/test_p"
-  get "main/rate_course"
+	get "main/hidden_prepare"
+	
+
   
   get "main/index"
   #----------for files---------------
@@ -55,7 +60,7 @@ Csnote::Application.routes.draw do
   
  # resources :upload
   #root :to => "courses#show", :id=>5
-  root :to => "main#index"
+  root :to => "courses#index"
   
   
   

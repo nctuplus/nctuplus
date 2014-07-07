@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140629213847) do
+ActiveRecord::Schema.define(version: 20140707024837) do
 
   create_table "ckeditor_assets", force: true do |t|
     t.string   "data_file_name",               null: false
@@ -37,8 +37,7 @@ ActiveRecord::Schema.define(version: 20140629213847) do
   end
 
   create_table "course_details", force: true do |t|
-    t.integer  "course_id"
-    t.integer  "teacher_id"
+    t.integer  "course_teachership_id"
     t.integer  "semester_id"
     t.string   "time_and_room"
     t.string   "temp_cos_id"
@@ -51,9 +50,8 @@ ActiveRecord::Schema.define(version: 20140629213847) do
     t.datetime "updated_at"
   end
 
-  add_index "course_details", ["course_id"], name: "index_course_details_on_course_id", using: :btree
+  add_index "course_details", ["course_teachership_id"], name: "index_course_details_on_course_teachership_id", using: :btree
   add_index "course_details", ["semester_id"], name: "index_course_details_on_semester_id", using: :btree
-  add_index "course_details", ["teacher_id"], name: "index_course_details_on_teacher_id", using: :btree
 
   create_table "course_managers", force: true do |t|
     t.integer  "department_id"
@@ -71,6 +69,23 @@ ActiveRecord::Schema.define(version: 20140629213847) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "course_teacher_ratings", force: true do |t|
+    t.integer "course_teachership_id"
+    t.integer "total_rating_counts"
+    t.float   "avg_score"
+    t.string  "rating_type"
+  end
+
+  add_index "course_teacher_ratings", ["course_teachership_id"], name: "index_course_teacher_ratings_on_course_teachership_id", using: :btree
+
+  create_table "course_teacherships", force: true do |t|
+    t.integer "course_id"
+    t.integer "teacher_id"
+  end
+
+  add_index "course_teacherships", ["course_id"], name: "index_course_teacherships_on_course_id", using: :btree
+  add_index "course_teacherships", ["teacher_id"], name: "index_course_teacherships_on_teacher_id", using: :btree
 
   create_table "courses", force: true do |t|
     t.string   "ch_name"
@@ -102,6 +117,17 @@ ActiveRecord::Schema.define(version: 20140629213847) do
   add_index "departments", ["degree"], name: "index_departments_on_degree", using: :btree
   add_index "departments", ["real_id"], name: "index_departments_on_real_id", using: :btree
 
+  create_table "each_course_teacher_ratings", force: true do |t|
+    t.integer  "course_teacher_rating_id"
+    t.integer  "user_id"
+    t.integer  "score"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "each_course_teacher_ratings", ["course_teacher_rating_id"], name: "index_each_course_teacher_ratings_on_course_teacher_rating_id", using: :btree
+  add_index "each_course_teacher_ratings", ["user_id"], name: "index_each_course_teacher_ratings_on_user_id", using: :btree
+
   create_table "file_infos", force: true do |t|
     t.integer  "owner_id"
     t.integer  "course_id"
@@ -128,15 +154,6 @@ ActiveRecord::Schema.define(version: 20140629213847) do
     t.datetime "updated_at"
   end
 
-  create_table "ratings", force: true do |t|
-    t.integer  "target_id"
-    t.integer  "user_id"
-    t.integer  "score"
-    t.string   "target_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "semester_courseships", force: true do |t|
     t.integer  "semester_id"
     t.integer  "course_id"
@@ -150,6 +167,16 @@ ActiveRecord::Schema.define(version: 20140629213847) do
   create_table "semesters", force: true do |t|
     t.string   "name"
     t.string   "real_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "teacher_ratings", force: true do |t|
+    t.integer  "teacher_id"
+    t.integer  "course_id"
+    t.integer  "user_id"
+    t.integer  "score"
+    t.string   "rating_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -181,6 +208,9 @@ ActiveRecord::Schema.define(version: 20140629213847) do
     t.datetime "oauth_expires_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "department_id"
   end
+
+  add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree
 
 end

@@ -1,8 +1,7 @@
 class CreateCourseDetails < ActiveRecord::Migration
   def change
     create_table :course_details do |t|
-	  t.integer :course_id
-	  t.integer :teacher_id
+	  t.integer :course_teachership_id
 		t.integer :semester_id
 		t.string :time_and_room
 		t.string :temp_cos_id
@@ -15,7 +14,6 @@ class CreateCourseDetails < ActiveRecord::Migration
     t.timestamps
     end
 	add_index :course_details, :semester_id	
-	add_index :course_details, :course_id
-	add_index :course_details, :teacher_id
+	add_index :course_details, :course_teachership_id
   end
 end
