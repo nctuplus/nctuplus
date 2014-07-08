@@ -1,24 +1,51 @@
-<table class="table" >
+
+
+
+<table class="table" id="course_table" >
+
+
+
 <tr>
-<%= table_title.html_safe %>
+<th>評價
+<%= select_tag("sort_by", options_for_select([['綜合','all'],['涼度','cold'],['甜度','sweety'],['硬度','hardness']]),  :style=>"height :25px;width:60px; ", :onchange=>"reorder($(this))") %>
+</th>
+<th>系所</th>
+<!--<th>永久課號</th>-->
+<th>摘要</th>
+<th>課名</th>
+<th>老師</th>
+<th>簡介</th>
+<th>時間</th>
+<th>學分</th>
 
 </tr>
 
 
 	<% @course_details.each do |cd|%>
 		<% course=cd.course_teachership.course %>
-		<tr>
-		<!--<td><%=course.semesters.first.name%></td>-->
-		<td><%=course.department.ch_name%></td>
-		<td><%= link_to course.real_id, course_path(course) %></td>
-		<td><%= link_to course.ch_name, course_path(course) %></td>
-		<td><%= cd.course_teachership.teacher.name %></td>
-		<td><%= cd.time_and_room.partition("-")[0] %></td>
-		
-		
+			<% ctrs=cd.course_teachership.course_teacher_ratings %>
+			<% ctr_cold=ctrs.select{|ctr| ctr.rating_type=="cold"}[0] %>
+			<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
+			<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
+			<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
+			<tr id="<%=cd.id%>">
+				<td>
+					<p id="rating_all" class="rating all"><%= ctr_all_avg.round(1) %></p>
+					<p id="rating_cold" class="rating cold hidden"><%= ctr_cold.avg_score.round(1) %></p>
+					<p id="rating_sweety" class="rating sweety hidden"><%= ctr_sweety.avg_score.round(1) %></p>
+					<p id="rating_hardness" class="rating hardness hidden"><%= ctr_hardness.avg_score.round(1) %></p>
+				</td>
+				<!--<td><%=course.semesters.first.name%></td>-->
+				<td><%=course.department.ch_name%></td>
+				<td><%= cd.brief %></td>
+				<!--<td><%= link_to course.real_id, course_path(course) %></td>-->
+				<td><%= link_to course.ch_name, course_path(course) %></td>
+				<td><%= cd.course_teachership.teacher.name %></td>
+				<td><%= cd.memo %></td>
+				<td><%= cd.time_and_room.partition("-")[0] %></td>
+				<td><%= cd.credit %></td>
 
-		</td>
-		</tr>
+			</tr>
 	<% end %>
 
 
@@ -27,6 +54,38 @@
 <div id="page-selection" class="text-center"></div>
 
 <script>
+
+function reorder(obj){
+	
+	$(".rating").addClass("hidden");
+	$("."+obj.val()).removeClass("hidden");
+	var courses=[];
+	var title;
+
+	$("tr").each(function (index) {
+		if(index==0){
+			title=$.trim($(this).html());		
+			return;
+		}
+		var innerhash={};
+		var key=$.trim($(this).find('.'+obj.val()).text());
+		if(key=="NaN")key=0;
+		innerhash[key]=$.trim($(this).html());
+		courses.push(innerhash);
+		$.trim($(this).remove());
+
+	});
+	courses.sort(function(a, b){return Object.keys(b)[0]-Object.keys(a)[0]});
+
+	for(var i=0;i<courses.length;i++){
+		$("#course_table").append("<tr>"+courses[i][Object.keys(courses[i])[0]]+"</tr>");
+	}
+
+	
+}
+
+//$(".rating_avg").hide();
+
 $('#page-selection').bootpag({
 		total: <%=@page_numbers%>,
 		<% if params[:page] %>

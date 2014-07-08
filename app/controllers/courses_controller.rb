@@ -28,6 +28,7 @@ class CoursesController < ApplicationController
 	  page=params[:page].to_i
 		id_begin=(page-1)*each_page_show
 		@course_details=CourseDetail.where(:id=>id_begin..id_begin+each_page_show)
+		@course_details=@course_details.sort_by{|cd| cd.course_teachership.course_teacher_ratings.sum(:avg_score)}.reverse
 		#@course_details=@courses
 		@page_numbers=CourseDetail.all.count/each_page_show
 	  render "course_lists"
@@ -41,7 +42,7 @@ class CoursesController < ApplicationController
 		
 		semester=Semester.find(semester_id)
 		@courses=semester.courses.select{|c| join_dept(c,dept_ids)}
-		@course_details=join_course_detail(@courses)
+		@course_details=join_course_detail(@courses,semester_id)
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		render "course_lists"
@@ -74,7 +75,7 @@ class CoursesController < ApplicationController
 				end
 				@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
 		end
-		@course_details=join_course_detail(@courses)
+		@course_details=join_course_detail(@courses,semester_id)
 		@page_numbers=1#@course_details.count/each_page_show
 		render "course_lists"
 	end
@@ -147,10 +148,10 @@ class CoursesController < ApplicationController
   
   
   private
-	def join_course_detail(courses)
+	def join_course_detail(courses,semester_id)
 		course_ids=courses.map{|c| c.id}
 		ct_ids=CourseTeachership.where(:course_id=>course_ids)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
-		course_details=CourseDetail.where(:course_teachership_id=>ct_ids)#.flit_semester(semester_id)
+		course_details=CourseDetail.where(:course_teachership_id=>ct_ids).flit_semester(semester_id)
 		return course_details
 	end
 	

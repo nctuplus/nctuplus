@@ -22,7 +22,7 @@ function rate_course(ctr_id,score){
 		},
 		success: function(data){
 			var d=JSON.parse(data);
-			var new_count="<label>("+d.new_counts+")</label>";
+			var new_count="<label>"+d.new_score+"("+d.new_counts+")</label>";
 			$("#rating_"+ctr_id).raty({readOnly: true, score:d.new_score});
 			$("#rating_"+ctr_id+"_counts").html(new_count);
 		},
@@ -36,17 +36,36 @@ function rate_course(ctr_id,score){
 
 <div class="row col-sm-offset-1">
 
-
+<% rating_cold_arr =[]%>
+<% rating_sweety_arr =[]%>
+<% rating_hardness_arr =[]%>
 <% @teachers.each do |t| %>
 	<% cts=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>t.id).take %>
 	<% rating_cold = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"cold").take %>
-
 	<% rating_sweety = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"sweety").take %>
 	<% rating_hardness = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"hardness").take %>
+	
+	<% rating_cold_arr.append({:cts_id=>cts.id, :avg_score=>rating_cold.avg_score})%>
+	<% rating_sweety_arr.append({:cts_id=>cts.id, :avg_score=>rating_sweety.avg_score})%>
+	<% rating_hardness_arr.append({:cts_id=>cts.id, :avg_score=>rating_hardness.avg_score})%>
+
+	
 	<div class="col-sm-4 ">
 		<div class="panel">
 			<div class="panel-body">
-				<h4><%=t.name.to_s%></h4>
+				<!--<div class="row">
+					<div class="text-right" id="best_<%=cts.id%>">
+					<h4></h4>
+					</div>
+				</div>-->
+					<div class="row">
+						<div class="col-sm-6 col-md-5 col-sm-offset-1">
+						<h4><%=t.name.to_s%></h4>
+						</div>
+						<div class="text-right" id="best_<%=cts.id%>">
+						<h4></h4>
+						</div>
+					</div>
 				<div class="row col-sm-offset-1">
 					<% sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>cts.id) %>
 					<% Semester.where(:id=>sem_ids).each do |s| %>
@@ -62,7 +81,7 @@ function rate_course(ctr_id,score){
 						<script>gen_raty("",<%=rating_cold.id%>,<%=rating_cold.avg_score%>,<%=has_rated(rating_cold.id)%>);</script>	
 					</div>	
 					<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
-						<label>(<%=rating_cold.total_rating_counts%>)</label>
+						<label><%=rating_cold.avg_score%>(<%=rating_cold.total_rating_counts%>)</label>
 					</div>
 					
 				</div>
@@ -75,7 +94,7 @@ function rate_course(ctr_id,score){
 						<script>gen_raty("",<%=rating_sweety.id%>,<%=rating_sweety.avg_score%>,<%=has_rated(rating_sweety.id)%>);</script>	
 					</div>
 					<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
-					<label>(<%=rating_sweety.total_rating_counts%>)</label>
+					<label><%=rating_sweety.avg_score%>(<%=rating_sweety.total_rating_counts%>)</label>
 					</div>
 				</div>
 				<div class="row">
@@ -87,7 +106,7 @@ function rate_course(ctr_id,score){
 						<script>gen_raty("",<%=rating_hardness.id%>,<%=rating_hardness.avg_score%>,<%=has_rated(rating_hardness.id)%>);</script>	
 					</div>
 					<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
-					<label>(<%=rating_hardness.total_rating_counts%>)</label>
+					<label><%=rating_hardness.avg_score%>(<%=rating_hardness.total_rating_counts%>)</label>
 					</div>
 				</div>
 			</div>
@@ -98,31 +117,44 @@ function rate_course(ctr_id,score){
 </div>
 
 
-		
-		
-<!--<table class="table " >
-	<tr class="row ">
-		<td class="col-md-1">永久課號</td>
-		<td class="col-md-2"><%= @course.real_id %></td>
-	</tr>
-	
-	<tr class="row">
-		<td class="col-md-1">授課老師</td>
-		<td class="col-md-2">
-			<% @teachers.each do |t|%>
-				<%=t.name %> 
-			<%end%>
-		</td>
-	</tr>
+<% rating_cold_arr=rating_cold_arr.sort_by{|k| k[:avg_score]}.reverse%>
+<% rating_sweety_arr=rating_sweety_arr.sort_by{|k| k[:avg_score]}.reverse%>
+<% rating_hardness_arr=rating_hardness_arr.sort_by{|k| k[:avg_score]}.reverse%>
 
-	<tr class="row">
-		<td class="col-md-1">開課學期</td>
-		<td class="col-md-2">
-			<% @sems.each do |s|%>
-				<%=s.name %> 
-			<%end%>
-		</td>
+<script>
+<% if rating_cold_arr[0][:avg_score]!=0 %>
+$("#best_<%=rating_cold_arr[0][:cts_id]%> h4").append('<span class="label label-primary">涼</span>');
+<% end %>
+<% if rating_sweety_arr[0][:avg_score]!=0 %>
+$("#best_<%=rating_sweety_arr[0][:cts_id]%> h4").append('<span class="label label-info">甜</span>');
+<% end %>
+
+<% if rating_hardness_arr[0][:avg_score]!=0 %>
+$("#best_<%=rating_hardness_arr[0][:cts_id]%> h4").append('<span class="label label-success">硬</span>');
+<% end %>
+</script>
+
+<table class="table " >
+<tr>
+	<th class="col-md-1">開課學期</th>
+	<th>課號</th>
+	<th>老師</th>
+	<th>簡介</th>
+</tr>
+<% @teachers.each do |t| %>
+
+	<% cts=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>t.id).take %>
+	<% cds=CourseDetail.where(:course_teachership_id=>cts.id) %>
+	<% cds.each do |cd| %>
+	<tr>
+		<td class=""><%=Semester.find(cd.semester_id).name%></td>
+		<td class=""><%= cd.temp_cos_id %></td>
+		<td class=""><%=t.name %></td>
+		<td class=""><%=cd.memo %></td>
 	</tr>
+	<% end %>
+	
+<% end %>
+	
 	
 </table>
--->

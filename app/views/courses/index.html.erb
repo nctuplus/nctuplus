@@ -210,6 +210,8 @@ function show_search_result(courses){
 	}
 }
 
+
+
 </script>
 
 <% if current_user && current_user.activated==0 %>
@@ -288,16 +290,25 @@ function show_search_result(courses){
 				</span>
 			</div><!-- /input-group -->
 		</div>
-		
+
 	</div><!-- /row -->
 	
 	
 </div>
-
+<br>
+<div class="row">
+<div class="col-sm-6 col-sm-offset-3">
 <p class="text-center">
 快速鍵: 選擇類別-[U]ndergraduate:大學部 [G]raduate:研究所 [C]ommon:通識 [D]epartment:系所 [/]:關鍵字
 </p>
+</div>
+
+<!--<div class="col-sm-2 text-right col-sm-offset-1">
+
+<label>排序</label>
+<%= select_tag("sort_by", options_for_select(['綜合','甜度','涼度','硬度']),  :style=>"height :25px;width:80px; ", :onchange=>"reorder($(this))") %>
+</div>
+</div>
+-->
 <div id="search_result">
-
-
 </div>
