@@ -5,14 +5,14 @@ class CoursesController < ApplicationController
 	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept]
 	
 	
-	before_filter :checkLogin, :only=>[ :rate_cts]
+	before_filter :checkLogin, :only=>[ :rate_cts, :pre_schedule]
 	
 	def index
 
 		@semesters=Semester.all
 		
 
-		@departments=Department.where(:viewable=>'1')
+		@departments=Department.where("dept_type = 'dept' OR dept_type='common' ")#.merge(Department.where(:dept_type=>'common'))
 		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
 		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
 		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
@@ -21,7 +21,9 @@ class CoursesController < ApplicationController
 		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
 		
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-	
+		
+		@view_type=""
+		@preload_first_time=true;
   end
 	
 	def list_all_courses
@@ -45,25 +47,30 @@ class CoursesController < ApplicationController
 		@course_details=join_course_detail(@courses,semester_id)
 		
 		@page_numbers=1#@course_details.count/each_page_show
-		render "course_lists"
+		render "course_lists"+params[:view_type]
 	end
 	
-	  def search_by_keyword
+	def search_by_keyword
 	  search_term=params[:search_term]
 		search_type=params[:search_type]
 		semester_id=params[:sem_id].to_i
 		dept_id=params[:dept_id]
 		dept_ids= get_dept_ids(dept_id)
 		case search_type
-			when "course_no"
-				if !semester_id.nil?
-					@courses= Course.where(" id IN (:id) AND real_id LIKE :real_id ",
-							{ :id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :real_id => "%#{search_term}%" })	
-				else
-					@courses= Course.where("real_id LIKE :real_id ",
-																{:real_id => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
+			when "course_time"
+				course_ids=[]
+				cd_ids=[]
+
+				search_term.split(' ').each do |st|
+					st=st.upcase
+
+					cd_ids.append(CourseDetail.where("semester_id= ? AND time_and_room LIKE ?  ",semester_id,"%#{st}%").pluck(:id))
+					#course_ids.append(@cd.map{|cd|cd.course_teachership.course.id})
 				end
-				@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
+				@course_details=CourseDetail.where(:id=>cd_ids)
+				@course_details=@course_details.select{|cd|join_dept(cd.course_teachership.course,dept_ids)} if dept_ids
+				#@courses=Course.where(:id=>course_ids)
+				#@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
 				
 			when "course_name"
 				if !semester_id.nil?
@@ -74,10 +81,15 @@ class CoursesController < ApplicationController
 																{:name => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
 				end
 				@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
+				@course_details=join_course_detail(@courses,semester_id)
 		end
-		@course_details=join_course_detail(@courses,semester_id)
+		
 		@page_numbers=1#@course_details.count/each_page_show
-		render "course_lists"
+		#if params[:type]=="mini"
+		#	render
+		#else
+			render "course_lists"+params[:view_type]
+		#end
 	end
 	
 	def rate_cts
@@ -109,6 +121,22 @@ class CoursesController < ApplicationController
 		@teachers=@course.teachers#Teacher.where(:id=>course_details_tids)
 		@sems=@course.semesters
 	#@teachers=Teacher.where(:course_id=>@course.id)
+  end
+	
+	def pre_schedule
+    @semesters=Semester.all	
+
+		@departments=Department.where(:dept_type=>'dept')
+		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		
+		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
+		
+		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
+		
+		@view_type="_mini"
   end
 	
   def new
@@ -161,7 +189,7 @@ class CoursesController < ApplicationController
 	  dept_ids=[]
 		dept_main=Department.find(dept_id)
 		dept_ids.append(dept_main.id)
-		dept_college=Department.where("degree = #{dept_main.degree} AND viewable = '1' AND real_id LIKE :real_id",{:real_id=>"#{dept_main.college.real_id}%"}).take
+		dept_college=Department.where(:degree => dept_main.degree, :college_id=>dept_main.college_id, :dept_type => 'college').take
 		dept_ids.append(dept_college.id) if !dept_college.nil?
 		return dept_ids
 	end

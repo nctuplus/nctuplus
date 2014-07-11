@@ -1,0 +1,28 @@
+<table class="table table-hover clickable-hover">
+
+	<% @reviews.each do |r| %>
+		<tr class="clickable-row" href="<%=review_path(r)%>">
+		<th><%=r.title%></th>
+		
+		</tr>
+	<% end %>
+
+</table>
+<div id="page-selection" class="text-center"></div>
+<script>
+$(document).ready(function($) {
+	
+	$(".clickable-row").click(function() {
+				window.document.location = $(this).attr("href");
+	});
+	$('#page-selection').bootpag({
+		total: <%=@page_numbers%>,
+		<% if params[:page] %>
+		page: <%=params[:page]%>,
+		<% end %>
+		maxVisible: 10
+	}).on("page", function(event, /* page number here */ num){
+		$("#search_result").load("/reviews/list_all_reviews?page="+num);
+	});
+});
+</script>

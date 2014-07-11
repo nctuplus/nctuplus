@@ -24,7 +24,7 @@
 //= require jquery.raty
 //= require jquery.raty.min
 
-
+//= require jquery.bootpag.min.js
 
 
 //= require_directory .

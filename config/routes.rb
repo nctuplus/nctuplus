@@ -10,7 +10,7 @@ Csnote::Application.routes.draw do
 	get "courses/search_by_keyword"
 	get "courses/list_all_courses"
   get "courses/rate_cts"
-	
+	get "courses/pre_schedule"
 	resources :courses
   
    resources :departments do
@@ -20,9 +20,12 @@ Csnote::Application.routes.draw do
 	   
   end
   #resources
+	
   resources :teachers
   
-  
+	
+	get "reviews/list_all_reviews"
+  resources :reviews
   
   get "post/getcode"
   resources :post

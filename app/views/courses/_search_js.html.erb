@@ -1,0 +1,157 @@
+<script type="text/javascript">
+
+function find_by_label(array,value){
+	for(var i = 0 ; i < array.length;i++){
+		if(value==array[i].label){
+			return true;
+		}
+	}
+	return false;
+}
+
+function select_thing(type){
+	$( "#"+type+"_select" ).trigger("focus");
+}
+
+
+function change_search_type(obj){
+	$("#search_action").html(obj.text()+" <span class='caret'></span>");
+	$("#search_type").val(obj.attr("id"));
+	if(obj.attr("id")=="course_time"){
+		$("#search_term").attr("placeholder","例:1cd 5G 4c");
+	}
+}
+
+function search_keyword(){
+	var search_term=$("#search_term").val();//.html();
+	search_term=search_term.replace(/\s+/g,"%20");
+
+	if(search_term==""){
+		$("#search_term").focus();
+		return false;
+	}
+	var search_type=$("#search_type").val();
+	var sem_id=$("#semester_id").val();
+	var dept_id=$("#department_id").val();
+	$("#search_result").load("/courses/search_by_keyword?view_type=<%=@view_type%>&search_term="+search_term+
+					"&search_type="+search_type+"&sem_id="+sem_id+"&dept_id="+dept_id);
+}
+
+function search_dept(dept_id){
+	
+	$("#search_result").load("/courses/search_by_dept?view_type=<%=@view_type%>&dept_id="+
+													dept_id+"&sem_id="+$("#semester_id").val());
+}
+
+
+function show_tip(){
+	$("#search_tips").removeClass("hidden");
+}
+
+
+$( document ).ready( function(){
+
+	$("#semester_select").val("103上");
+	<% if @preload_first_time %>
+	$("#search_result").load("/courses/list_all_courses?page=1");
+	<% end %>
+	var department_select=<%=@departments_all_select.to_s.html_safe%>;
+	$( "#department_select" ).autocomplete({
+      source:  department_select,
+			minLength :0,
+			change: function (event, ui) {
+				if(!find_by_label(department_select,$(this).val())){
+					$(this).val("");
+					$(this).next().val("");
+				}
+					
+			},
+			select: function(event, ui){
+				event.preventDefault();
+				$(this).val(ui.item.label);
+				$(this).next().val(ui.item.walue);
+				search_dept(ui.item.walue);
+				$(this).blur();
+			}
+  }).on("focus",function(event){$(this).autocomplete("search", "");});
+	
+	<% if @semester_select %>
+	var semester_select=<%=@semester_select.to_s.html_safe%>;
+	$( "#semester_select" ).autocomplete({
+      source: semester_select,
+			mustMatch :true,
+			minLength :0,
+			focus :function(event,ui){
+				return false;
+			},
+			change: function (event, ui) {
+				event.preventDefault();
+				if(!find_by_label(semester_select,$(this).val())){
+					$(this).val("");
+					$(this).next().val("");
+					
+				}
+			},
+			select: function(event, ui){
+				event.preventDefault();
+				$(this).val(ui.item.label);
+				$(this).next().val(ui.item.walue);
+				$( "#degree_select" ).trigger("focus");//();			
+			}
+  }).on("focus",function(event){$(this).autocomplete("search", "");});
+	<% end %>
+	var degree_select=<%=@degree_select.to_s.html_safe%>;
+	$( "#degree_select" ).autocomplete({
+      source:  degree_select,
+			//mustMatch :true,
+			minLength :0,
+			change: function (event, ui) {
+				//if(degree_select.indexOf($(this).val())==-1)
+				if(!find_by_label(degree_select,$(this).val())){
+					$(this).val("");
+					$(this).next().val("");
+				}
+			},
+			select: function(event, ui){
+				event.preventDefault();			
+				$(this).val(ui.item.label);
+				$(this).next().val(ui.item.walue);
+				var degree_select=[];
+				degree_select['3']=<%=@departments_under_grad_select.to_s.html_safe%>;
+				degree_select['2']=<%=@departments_grad_select.to_s.html_safe%>;
+				degree_select['0']=<%=@departments_common_select.to_s.html_safe%>;
+				$( "#department_select" ).val("");
+				$( "#department_select" ).autocomplete({
+					source: degree_select[ui.item.walue] 
+				});
+
+				$( "#department_select" ).trigger("focus");//();
+
+			}
+  }).on("focus",function(event){$(this).autocomplete("search", "");});
+	
+	$(document).keypress(function(e) {
+		var $focused = $(':focus');
+		if(!$focused[0]){
+			//console.log($focused[0]);
+			if(e.which == 13) {
+				// enter pressed
+				console.log("!!!");
+			}
+			if(e.which == 85||e.which==117 //U or u
+			 ||e.which==71||e.which==103 //G or g
+			 ||e.which==67||e.which==99){//C or c
+				$("#degree_select").trigger("focus");
+			}
+			if(e.which == 68||e.which==100){ //D or d
+				e.preventDefault();
+				$("#department_select").trigger("focus");
+			}
+			if(e.which == 47){ // '/'
+				e.preventDefault();
+				$("#search_term").trigger("focus");
+			}
+		}
+	});	
+});
+</script>

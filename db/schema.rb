@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140707024837) do
+ActiveRecord::Schema.define(version: 20140710091637) do
 
   create_table "ckeditor_assets", force: true do |t|
     t.string   "data_file_name",               null: false
@@ -108,9 +108,9 @@ ActiveRecord::Schema.define(version: 20140707024837) do
     t.string   "real_id"
     t.string   "degree"
     t.integer  "college_id"
+    t.string   "dept_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "viewable"
   end
 
   add_index "departments", ["college_id"], name: "index_departments_on_college_id", using: :btree
@@ -146,6 +146,14 @@ ActiveRecord::Schema.define(version: 20140707024837) do
     t.string "name"
   end
 
+  create_table "phpbb_review", force: true do |t|
+    t.integer  "bbs_id"
+    t.string   "author",  limit: 513,        null: false
+    t.string   "title",   limit: 513,        null: false
+    t.datetime "date",                       null: false
+    t.text     "content", limit: 2147483647, null: false
+  end
+
   create_table "posts", force: true do |t|
     t.string   "title"
     t.text     "content"
@@ -153,6 +161,17 @@ ActiveRecord::Schema.define(version: 20140707024837) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "reviews", force: true do |t|
+    t.integer  "bbs_id"
+    t.string   "author"
+    t.string   "title"
+    t.text     "content",   limit: 2147483647
+    t.datetime "date"
+    t.integer  "course_id"
+  end
+
+  add_index "reviews", ["course_id"], name: "index_reviews_on_course_id", using: :btree
 
   create_table "semester_courseships", force: true do |t|
     t.integer  "semester_id"

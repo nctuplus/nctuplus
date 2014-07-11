@@ -6,32 +6,12 @@ class MainController < ApplicationController
 	#layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
 	
   def index
-		#prepare_course_db
-	#@degree=['2','3']
-	#destroy_course
-	#prepare_course_db
-		@semesters=Semester.all
-		#@departments=Department.where(:degree=>'3')
-		@departments2=Department.where(:degree=>'2')
 		
-		@department=Department.find(1)#.take(30)
-		@courses=@department.courses.take(30)
-		
-		@departments=Department.where(:viewable=>'1')
-		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		
-		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
-		
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-	
   end
 	
 	def hidden_prepare
-	  prepare_course_db
-		
+	  #prepare_course_db
+		#final_set_dept_type
 	end
 	
 	
@@ -101,27 +81,36 @@ class MainController < ApplicationController
 	
   private
 	
+	def final_set_dept_type
+		Department.all.each do |d|
+			if d.courses.count == 0
+				d.update_attributes(:dept_type=>"no_courses")
+			else
+				if d.real_id[0]<='Z'&&d.real_id>='A'
+					if d.real_id[0]=='U'
+						d.update_attributes(:dept_type=>"common")
+					else
+						d.update_attributes(:dept_type=>"college")
+					end
+				else
+					d.update_attributes(:dept_type=>"dept")
+				end
+			end
+		end
+	end
 	
 	
   def change_to_grad_degree(real_id)
     @old=Department.where(:degree=>'3', :real_id=>real_id).take.id
-	@new=Department.where(:degree=>'2', :real_id=>real_id).take.id
-	Course.where(:department_id=>@old).each do |c|
-	  c.update_attributes(:department_id=>@new)
-	end
-	Teacher.where(:department_id=>@old).each do |t|
-	  t.update_attributes(:department_id=>@new)
-	end
+		@new=Department.where(:degree=>'2', :real_id=>real_id).take.id
+		Course.where(:department_id=>@old).each do |c|
+			c.update_attributes(:department_id=>@new)
+		end
+		Teacher.where(:department_id=>@old).each do |t|
+			t.update_attributes(:department_id=>@new)
+		end
   end
-  def set_department_viewable
-    Department.all.each do |dept|
-	  if dept.courses.count==0
-	    dept.update_attribute(:viewable,'0')
-	  else 
-	    dept.update_attribute(:viewable,'1')
-	  end
-	end
-  end
+
   def destroy_course
     Course.destroy_all
     Teacher.destroy_all
@@ -142,7 +131,7 @@ class MainController < ApplicationController
 				save_courses(data,y,s)
 				change_to_grad_degree("12")
 				change_to_grad_degree("13")
-				set_department_viewable
+				#set_department_type
 			end
 		end
   end

@@ -38,7 +38,7 @@
 
 <script>
 $( document ).ready( function(){
-	<% dept_all=Department.where(:viewable=>'1').map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json %>
+	<% dept_all=Department.where(:dept_type=>'dept').map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json %>
 	var department_select = <%=dept_all.to_s.html_safe%>;
 	$( "#department_name_reg" ).autocomplete({
       source:  department_select,

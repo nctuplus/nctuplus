@@ -13,8 +13,8 @@
 				<% if current_user %>
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
 					<ul class="dropdown-menu">
-					<li><a href="#">課程地圖<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>
-					<li><a href="/file_infos/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>
+					<!--<li><a href="#">課程地圖<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
+					<!--<li><a href="/file_infos/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
 					</ul>
 				<% else %>
 					<%= link_to "facebook登入", "/auth/facebook", id: "sign_in" %>
@@ -32,16 +32,18 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 							
-								<li><a href="/post">筆記<span class="badge pull-right"><%=Post.all.count%></span></a></li>
+								<!--<li><a href="/post">筆記<span class="badge pull-right"><%=Post.all.count%></span></a></li>
 								<li><a href="/files/all_users">檔案庫<span class="badge pull-right"><%=FileInfo.all.count%></span></a></li>
-								<li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+								<li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>-->
 							<!--<li><a href="/courses">課程<span class="badge pull-right"><%=Course.all.count%></span></a></li>-->
-								<li><a href="/departments">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 								
+								<li><a href="/reviews">心得列表<span class="badge pull-right"><%=Review.all.count%></span></a></li>
+								<li><a href="/departments">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 						</ul>
 					</li>
 				<% end %>
 				<li><a href="/courses/">課程列表</a></li>
+				<li><a href="/courses/pre_schedule">預排課表</a></li>
       </ul>
 
     </div><!-- /.navbar-collapse -->

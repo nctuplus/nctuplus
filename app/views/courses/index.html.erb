@@ -1,218 +1,12 @@
 
+
 <script>
 
-var title="<tr><%=j table_title.html_safe %></tr>"
-
-function find_by_label(array,value){
-	for(var i = 0 ; i < array.length;i++){
-		if(value==array[i].label){
-			return true;
-		}
-	}
-	return false;
-}
-
-$( document ).ready( function(){
-
-	$("#semester_select").val("103上");
-	
-	$("#search_result").load("/courses/list_all_courses?page=1");
-	
-	var department_select=<%=@departments_all_select.to_s.html_safe%>;
-	$( "#department_select" ).autocomplete({
-      source:  department_select,
-			minLength :0,
-			change: function (event, ui) {
-				if(!find_by_label(department_select,$(this).val())){
-					$(this).val("");
-					$(this).next().val("");
-				}
-					
-			},
-			select: function(event, ui){
-				event.preventDefault();
-				$(this).val(ui.item.label);
-				$(this).next().val(ui.item.walue);
-				search_dept(ui.item.walue);
-				$(this).blur();
-			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
-	
-	var semester_select=<%=@semester_select.to_s.html_safe%>;
-	$( "#semester_select" ).autocomplete({
-      source: semester_select,
-			mustMatch :true,
-			minLength :0,
-			focus :function(event,ui){
-				return false;
-			},
-			change: function (event, ui) {
-				event.preventDefault();
-				if(!find_by_label(semester_select,$(this).val())){
-					$(this).val("");
-					$(this).next().val("");
-					
-				}
-			},
-			select: function(event, ui){
-				event.preventDefault();
-				$(this).val(ui.item.label);
-				$(this).next().val(ui.item.walue);
-				$( "#degree_select" ).trigger("focus");//();			
-			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
-	var degree_select=<%=@degree_select.to_s.html_safe%>;
-	$( "#degree_select" ).autocomplete({
-      source:  degree_select,
-			//mustMatch :true,
-			minLength :0,
-			change: function (event, ui) {
-				//if(degree_select.indexOf($(this).val())==-1)
-				if(!find_by_label(degree_select,$(this).val())){
-					$(this).val("");
-					$(this).next().val("");
-				}
-			},
-			select: function(event, ui){
-				event.preventDefault();			
-				$(this).val(ui.item.label);
-				$(this).next().val(ui.item.walue);
-				var degree_select=[];
-				degree_select['3']=<%=@departments_under_grad_select.to_s.html_safe%>;
-				degree_select['2']=<%=@departments_grad_select.to_s.html_safe%>;
-				degree_select['0']=<%=@departments_common_select.to_s.html_safe%>;
-				$( "#department_select" ).val("");
-				$( "#department_select" ).autocomplete({
-					source: degree_select[ui.item.walue] 
-				});
-
-				$( "#department_select" ).trigger("focus");//();
-
-			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
-	
-	$(document).keypress(function(e) {
-		var $focused = $(':focus');
-		if(!$focused[0]){
-			//console.log($focused[0]);
-			if(e.which == 13) {
-				// enter pressed
-				console.log("!!!");
-			}
-			if(e.which == 85||e.which==117 //U or u
-			 ||e.which==71||e.which==103 //G or g
-			 ||e.which==67||e.which==99){//C or c
-				$("#degree_select").trigger("focus");
-			}
-			if(e.which == 68||e.which==100){ //D or d
-				e.preventDefault();
-				$("#department_select").trigger("focus");
-			}
-			if(e.which == 47){ // '/'
-				e.preventDefault();
-				$("#search_term").trigger("focus");
-			}
-		}
-	});	
-});
-
-
-function select_thing(type){
-	$( "#"+type+"_select" ).trigger("focus");
-}
-
-
-function change_search_type(obj){
-	
-	$("#search_action").html(obj.text()+" <span class='caret'></span>");
-	$("#search_type").val(obj.attr("id"));
-	//alert(_type);
-}
-
-function search_keyword(){
-	//$("#search_action").text("課號");
-	//alert("!!!");
-	var search_term=$("#search_term").val();
-	if(search_term==""){
-		$("#search_term").focus();
-		return false;
-	}
-	var search_type=$("#search_type").val();
-	var sem_id=$("#semester_id").val();
-	var dept_id=$("#department_id").val();
-	$("#search_result").load("/courses/search_by_keyword?search_term="+search_term+
-					"&search_type="+search_type+"&sem_id="+sem_id+"&dept_id="+dept_id);
-}
-
-/*function search_keyword(){
-	//$("#search_action").text("課號");
-	//alert("!!!");
-	var search_term=$("#search_term").val();
-	if(search_term==""){
-		$("#search_term").focus();
-		return false;
-	}
-	
-	$.ajax({
-		type: "GET",
-		url: "/courses/search_by_keyword",
-		data: {_search_term: search_term,//main or sub
-			   _search_type: $("#search_type").val(),
-				 _semester_id: $("#semester_id").val(),
-				 _dept_id: $("#department_id").val(),
-		},
-		success: function(data){
-			var courses=JSON.parse(data);
-			show_search_result(courses);
-			//console.log(courses[0].id);
-		}
-	});
-}*/
-function search_dept(dept_id){
-	
-	$("#search_result").load("/courses/search_by_dept?dept_id="+
-													dept_id+"&sem_id="+$("#semester_id").val());
-}
-/*function search_dept(dept_id){
-	
-	$.ajax({
-		type: "GET",
-		url: "/courses/search_by_dept",
-		data: {
-				 _dept_id: dept_id,
-				 _semester_id: $("#semester_id").val(),
-				 //_department_id: department_id
-
-		},
-		success: function(data){
-			var courses=JSON.parse(data);
-			show_search_result(courses);
-		}
-	});
-}*/
-function show_search_result(courses){
-	$("#search_result").html(title);
-	if(courses.length==0){
-		var row="<tr><th>查無結果!</th><tr>"
-		$("#search_result").append(row);
-		
-	}
-	else{
-		$.each(courses, function(index,courses_layer1){
-			//alert(course.id);
-			$.each(courses_layer1, function(index,course){
-			
-				var row="<tr><td>"+course.department_name+"</td><td>"+course.real_id+"</td><td><a href='/courses/"+course.id+"'>"+course.ch_name+"</a></td>"+
-					"<td>"+course.teacher_name+"</td>"+"</tr>"
-				$("#search_result").append(row);
-			});
-		});
-	}
-}
-
-
-
+$("#search_result").load("/courses/list_all_courses?page=1");
 </script>
+
+<%= render :partial=>"search_js" %>
+
 
 <% if current_user && current_user.activated==0 %>
 <div class="row">
@@ -226,7 +20,8 @@ function show_search_result(courses){
 
 <div class="form-inline" ><!--role="form"-->
 	<div class="row">
-		<div class="form-group col-sm-2 col-sm-offset-1 ">
+
+		<div class="form-group col-sm-2  col-sm-offset-1">
 			
 			<div class="input-group">
 				<!--<span class="input-group-addon">
@@ -279,15 +74,20 @@ function show_search_result(courses){
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="search_action">課名 <span class="caret"></span></button>
 					<ul class="dropdown-menu">
 						<li><a href="#" onclick="change_search_type($(this))" id="course_name">課名</a></li>
-						<li><a href="#" onclick="change_search_type($(this))" id="course_no">永久課號</a></li>
+						<li><a href="#" onclick="change_search_type($(this))" id="course_time">時間</a></li>
+						
 						<!--<li><a href="#" onclick="change_action($(this))" id="course_teacher">老師</a></li>-->
 					</ul>
 				</div><!-- /btn-group -->
 				<input type="hidden" id="search_type" value="course_name">
 				<input type="text" class="form-control" id="search_term" placeholder="Search..." >
+				<div id="escape_search_term" class="hidden"></div>
 				<span class="input-group-btn"><!--type="submit"-->
 					<button class="btn btn-default" onclick="search_keyword()"><span class="glyphicon glyphicon-search"></span></button>
 				</span>
+				<button class="btn btn-primary btn-circle" onclick="show_tip()">
+				<span class="glyphicon glyphicon-question-sign "></span>
+				</button>
 			</div><!-- /input-group -->
 		</div>
 
@@ -295,20 +95,14 @@ function show_search_result(courses){
 	
 	
 </div>
-<br>
-<div class="row">
-<div class="col-sm-6 col-sm-offset-3">
-<p class="text-center">
-快速鍵: 選擇類別-[U]ndergraduate:大學部 [G]raduate:研究所 [C]ommon:通識 [D]epartment:系所 [/]:關鍵字
-</p>
+
+<div class="row hidden col-md-offset-1" id="search_tips">
+	<div id="" class=" bs-callout bs-callout-info ">
+		<!--<h4></h4>-->
+		<p>快速鍵: 選擇類別-[U]ndergraduate:大學部 [G]raduate:研究所 [C]ommon:通識 [D]epartment:系所 [/]:關鍵字</p>
+		<p>時間大小寫皆可 若要搜尋多個時間請用空白區隔 如:1cd 5g </p>
+	</div>
 </div>
 
-<!--<div class="col-sm-2 text-right col-sm-offset-1">
-
-<label>排序</label>
-<%= select_tag("sort_by", options_for_select(['綜合','甜度','涼度','硬度']),  :style=>"height :25px;width:80px; ", :onchange=>"reorder($(this))") %>
-</div>
-</div>
--->
-<div id="search_result">
+<div id="search_result" >
 </div>

@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
     case params[:controller] 
       when 'post'
 		if Post.find(params[:id]).owner_id!=current_user.id
-		  alertmesg("您沒有操作此動作的權限123")     
+		  alertmesg("您沒有操作此動作的權限")     
 		  redirect_to root_url
 		#else return true
 		end
@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
   
   def alertmesg(msg)
     flash[:notice] = {
-			:style => "alert-danger",
+			:style => "alert-info",
 			:title => "Sorry!",
 			:message => msg
 		  }

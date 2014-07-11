@@ -7,7 +7,8 @@
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "run_prettify/run_prettify?skin=sons-of-obsidian", "data-turbolinks-track" => true %>
   
-  
+  <% javascript_include_tag "#{params[:controller]}" %>
+	
   <%= csrf_meta_tags %>
 </head>
 
@@ -51,15 +52,16 @@
 		</div>-->
 		
 		<div class="col-md-9 col-md-offset-2">
-		<div class="bs-callout bs-callout-info">
-		<% if flash[:notice] %>
-		<div id="notice" class="alert <%= flash[:notice][:style] %>">
-			<h4><%= flash[:notice][:title] %></h4>
-			<%= flash[:notice][:message] %>
+			<% if flash[:notice] %>
+				
+				<div id="notice" class="alert <%= flash[:notice][:style] %>">
+					<h4><%= flash[:notice][:title] %></h4>
+					<%= flash[:notice][:message] %>
+				</div>
+
+			<%end%>
+			<%= yield %>
 		</div>
-		<%end%>
-		
-		<%= yield %>
 	</div>
 </div>
 </body>

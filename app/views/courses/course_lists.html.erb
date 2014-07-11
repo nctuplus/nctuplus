@@ -1,20 +1,20 @@
 
 
 
-<table class="table" id="course_table" >
+<table class="table table-hover clickable-hover " id="course_table" >
 
 
 
 <tr>
-<th>評價
+<th class="col-md-1">評價
 <%= select_tag("sort_by", options_for_select([['綜合','all'],['涼度','cold'],['甜度','sweety'],['硬度','hardness']]),  :style=>"height :25px;width:60px; ", :onchange=>"reorder($(this))") %>
 </th>
-<th>系所</th>
+<th class="col-md-2">系所</th>
 <!--<th>永久課號</th>-->
 <th>摘要</th>
-<th>課名</th>
-<th>老師</th>
-<th>簡介</th>
+<th class="col-md-2">課名</th>
+<th class="col-md-1">老師</th>
+<th class="col-md-3">簡介</th>
 <th>時間</th>
 <th>學分</th>
 
@@ -28,9 +28,13 @@
 			<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
 			<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
 			<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
-			<tr id="<%=cd.id%>">
+			<tr id="<%=cd.id%>" class="clickable-row" href="<%=course_path(course)%>">
 				<td>
-					<p id="rating_all" class="rating all"><%= ctr_all_avg.round(1) %></p>
+					<p id="rating_all" class="rating all">
+					<%if !ctr_all_avg.nan? %>
+					<%= ctr_all_avg.round(1) %>
+					<% end %>
+					</p>
 					<p id="rating_cold" class="rating cold hidden"><%= ctr_cold.avg_score.round(1) %></p>
 					<p id="rating_sweety" class="rating sweety hidden"><%= ctr_sweety.avg_score.round(1) %></p>
 					<p id="rating_hardness" class="rating hardness hidden"><%= ctr_hardness.avg_score.round(1) %></p>
@@ -54,6 +58,11 @@
 <div id="page-selection" class="text-center"></div>
 
 <script>
+$(document).ready(function($) {
+	$(".clickable-row").click(function() {
+				window.document.location = $(this).attr("href");
+	});
+});
 
 function reorder(obj){
 	
@@ -84,7 +93,7 @@ function reorder(obj){
 	
 }
 
-//$(".rating_avg").hide();
+
 
 $('#page-selection').bootpag({
 		total: <%=@page_numbers%>,

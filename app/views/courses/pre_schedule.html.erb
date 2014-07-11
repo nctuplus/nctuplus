@@ -1,0 +1,30 @@
+<%= render :partial=>"courses/search_js" %>
+
+<div class="row" >
+	<div class="col-md-3 " style="background-color:white;/*margin-top:50px;*/">
+		<%= render :partial=> "schedule_list" %>
+	</div>
+	
+	<div class="col-md-4 col-md-offset-1">
+		<table class="table table-bordered">
+			<tr>
+				<th class="col-md-1"></th>
+				<% days=['Mon','Tue','Wed','Thu','Fri','Sat'] %>
+				<% days.each do |day| %>
+					<th class="col-md-2"><%=day%></th>
+				<% end %>
+			</tr>
+			<% time=['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] %>
+			<% time.each do |t|%>
+				<tr>
+					<th class="schedule-grid"><%=t%></th>
+					<% i = 1 %>
+					<%  days.each do |day| %>
+						<td id="day_<%=i%>_time_<%=t%>" class="schedule-slot-empty" ></td>
+						<%i=i+1%>
+					<% end %>
+				</tr>
+			<% end %>
+		</table>
+	</div>
+</div>

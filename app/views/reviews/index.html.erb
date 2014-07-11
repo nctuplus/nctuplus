@@ -1,0 +1,12 @@
+<script>
+$(document).ready(function($) {
+	<% if params[:page] %>
+		$("#search_result").load("/reviews/list_all_reviews?page=<%=params[:page]%>");
+	<% else %>
+		$("#search_result").load("/reviews/list_all_reviews?page=1");
+	<% end %>
+});
+</script>
+
+<div id="search_result">
+</div>
