@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140710091637) do
+ActiveRecord::Schema.define(version: 20140711163818) do
 
   create_table "ckeditor_assets", force: true do |t|
     t.string   "data_file_name",               null: false
@@ -146,14 +146,6 @@ ActiveRecord::Schema.define(version: 20140710091637) do
     t.string "name"
   end
 
-  create_table "phpbb_review", force: true do |t|
-    t.integer  "bbs_id"
-    t.string   "author",  limit: 513,        null: false
-    t.string   "title",   limit: 513,        null: false
-    t.datetime "date",                       null: false
-    t.text     "content", limit: 2147483647, null: false
-  end
-
   create_table "posts", force: true do |t|
     t.string   "title"
     t.text     "content"
@@ -161,6 +153,16 @@ ActiveRecord::Schema.define(version: 20140710091637) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "pre_schedules", force: true do |t|
+    t.integer  "owner_id"
+    t.integer  "course_detail_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "pre_schedules", ["course_detail_id"], name: "index_pre_schedules_on_course_detail_id", using: :btree
+  add_index "pre_schedules", ["owner_id"], name: "index_pre_schedules_on_owner_id", using: :btree
 
   create_table "reviews", force: true do |t|
     t.integer  "bbs_id"
