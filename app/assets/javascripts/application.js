@@ -13,15 +13,14 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require ckeditor/init
 
-//= require jquery-fileupload
 //= require jquery-ui
+//= require jquery-fileupload
+
 
 //= require bootstrap.min
-//= require bootstrap-tokenfield.min
 
-//= require jquery.raty
+
 //= require jquery.raty.min
 
 //= require jquery.bootpag.min.js
