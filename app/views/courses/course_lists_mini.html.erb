@@ -1,54 +1,67 @@
 <table class="table table-hover courselist-hover " id="course_table" >
-	<% @course_details.each do |cd|%>
-		<% course=cd.course_teachership.course %>
-			<% ctrs=cd.course_teachership.course_teacher_ratings %>
-			<% ctr_cold=ctrs.select{|ctr| ctr.rating_type=="cold"}[0] %>
-			<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
-			<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
-			<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
-			
-			<tr id="cd_<%=cd.id%>" class="row clickable-row " href="<%=course_path(course)%>">
-				<td class="">
-					
-					<p id="rating_all" class="">
-						<%= link_to course.ch_name, course_path(course), :class=>"course_name" %>
-						<%= cd.course_teachership.teacher.name %>
-						<% if @table_type=="search" %>
-						<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add')">
-						<span class="glyphicon glyphicon-plus"></span>
-						</button>
-						<% else %>
+	<% credit_sum=0 %>
+	<% if @course_details %>
+		<% @course_details.each do |cd|  %>
+			<% course=cd.course_teachership.course %>
+				<% ctrs=cd.course_teachership.course_teacher_ratings %>
+				<% ctr_cold=ctrs.select{|ctr| ctr.rating_type=="cold"}[0] %>
+				<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
+				<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
+				<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
+				
+				<tr id="cd_<%=cd.id%>" class="row clickable-row " href="<%=course_path(course)%>">
+					<td class="">
 						
-						<button class="btn btn-danger btn-circle pull-right" onclick="add_class(<%=cd.id%>,'delete')">
-						<span class="glyphicon glyphicon-minus"></span>
-						</button>
+						<p id="rating_all" class="">
+							<%= link_to course.ch_name, course_path(course), :class=>"course_name" %>
+							<%= cd.course_teachership.teacher.name %>
+							<% if @table_type=="search" %>
+							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add')">
+							<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							<% else %>
+							
+							<button class="btn btn-danger btn-circle pull-right" onclick="add_class(<%=cd.id%>,'delete')">
+							<span class="glyphicon glyphicon-minus"></span>
+							</button>
+							<% end %>
+						</p>
+						<p class="text-right">
+						
+						<%if !ctr_all_avg.nan? %>
+						<span class="glyphicon glyphicon-star"></span> 
+						<%= ctr_all_avg.round(1) %> | 
 						<% end %>
-					</p>
-					<p class="text-right">
-					
-					<%if !ctr_all_avg.nan? %>
-					<span class="glyphicon glyphicon-star"></span> 
-					<%= ctr_all_avg.round(1) %> | 
-					<% end %>
-					<%course.department.ch_name%>
-					<strong class="course_time"><%= cd.time_and_room.partition("-")[0] %></strong>
-					| 學分: <strong><%= cd.credit %></strong>
-					
-					
-					</p>
-				</td>
-
-
-			</tr>
+						<%course.department.ch_name%>
+						<strong class="course_time"><%= cd.time_and_room.partition("-")[0] %></strong>
+						| 學分: <strong><%= cd.credit %></strong>
+						<% credit_sum=credit_sum+cd.credit.to_i%>
+						
+						</p>
+					</td>
+				</tr>
+		<% end %>
+	<% else %>
+		<% if @table_type=="search"%>
+			<tr class="row"><td><h4>查無結果!</h4></td></tr>
+		<% end %>
 	<% end %>
-
-
+	<% if @table_type!="search" %>
+		<tr class="row">
+			<td>
+				<p class="lead text-right">共 <strong><%=@course_details.count%></strong> 門課 <strong>
+				<%=credit_sum%></strong> 學分</p>
+			</td>
+		</tr>
+	<% end %>
 </table>
 
 
 <script>
 <% if @table_type!="search" %>
+$(document).ready(function() {
 add_time_slot(<%=@cd_jsons.to_s.html_safe%>);
+});
 <% end %>
 /*$(document).ready(function($) {
 

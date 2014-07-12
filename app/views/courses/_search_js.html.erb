@@ -53,7 +53,7 @@ $( document ).ready( function(){
 
 	$("#semester_select").val("103上");
 	<% if @preload_first_time %>
-	$("#search_result").load("/courses/list_all_courses?page=1");
+		$("#search_result").load("/courses/list_all_courses?page=1");
 	<% end %>
 	var department_select=<%=@departments_all_select.to_s.html_safe%>;
 	$( "#department_select" ).autocomplete({

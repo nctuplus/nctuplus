@@ -11,14 +11,14 @@ class CoursesController < ApplicationController
 
 		@semesters=Semester.all
 		
-
-		@departments=Department.where("dept_type = 'dept' OR dept_type='common' ")#.merge(Department.where(:dept_type=>'common'))
-		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		get_autocomplete_vars
+		#@departments=Department.where("dept_type = 'dept' OR dept_type='common' ")#.merge(Department.where(:dept_type=>'common'))
+		#@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		#@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		#@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		#@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
 		
-		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
+		#@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
 		
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
 		
@@ -83,15 +83,18 @@ class CoursesController < ApplicationController
 			when "course_time"
 				course_ids=[]
 				cd_ids=[]
-
+				#@course_details=nil
 				search_term.split(' ').each do |st|
 					st=st.upcase
-
-					cd_ids.append(CourseDetail.where("semester_id= ? AND time_and_room LIKE ?  ",semester_id,"%#{st}%").pluck(:id))
+					@cds=CourseDetail.where("semester_id= ? AND time_and_room LIKE ?  ",semester_id,"%#{st}%")
+					ids=@cds.map{|cd|cd.id}
+					cd_ids.append(ids) unless ids.empty?
 					#course_ids.append(@cd.map{|cd|cd.course_teachership.course.id})
 				end
-				@course_details=CourseDetail.where(:id=>cd_ids)
-				@course_details=@course_details.select{|cd|join_dept(cd.course_teachership.course,dept_ids)} if dept_ids
+				unless cd_ids.empty?
+					@course_details=CourseDetail.where(:id=>cd_ids)
+					@course_details=@course_details.select{|cd|join_dept(cd.course_teachership.course,dept_ids)} if dept_ids&&@course_details
+				end
 				#@courses=Course.where(:id=>course_ids)
 				#@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
 				
@@ -103,8 +106,10 @@ class CoursesController < ApplicationController
 					@courses= Course.where("ch_name LIKE :name ",
 																{:name => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
 				end
-				@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-				@course_details=join_course_detail(@courses,semester_id)
+				if @courses
+					@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
+					@course_details=join_course_detail(@courses,semester_id) unless @courses.empty?
+				end
 		end
 		
 		@page_numbers=1#@course_details.count/each_page_show
@@ -148,17 +153,17 @@ class CoursesController < ApplicationController
   end
 	
 	def simulation
-    @semesters=Semester.all	
-
-		@departments=Department.where(:dept_type=>'dept')
-		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+    #@semesters=Semester.all	
+		get_autocomplete_vars
+		#@departments=Department.where(:dept_type=>'dept')
+		#@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		#@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		#@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		#@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
 		
-		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
+		#@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
 		
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
+		#@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
 		
 		@view_type="_mini"
   end
@@ -200,6 +205,14 @@ class CoursesController < ApplicationController
   
   
   private
+	def get_autocomplete_vars
+		@departments=Department.where("dept_type = 'dept' OR dept_type='common' ")#.merge(Department.where(:dept_type=>'common'))
+		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
+		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
+	end
 	def join_course_detail(courses,semester_id)
 		course_ids=courses.map{|c| c.id}
 		ct_ids=CourseTeachership.where(:course_id=>course_ids)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
