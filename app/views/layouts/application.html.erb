@@ -12,7 +12,10 @@
   <%= csrf_meta_tags %>
 </head>
 
-<body>
+<body onload="onPageLoad()">
+<%= image_tag("bg_1.jpg", :id=>'bg1', :class=>"bg")%>
+<%= image_tag("bg_2.jpg", :id=>'bg2', :class=>"bg")%>
+<%= image_tag("bg_3.jpg", :id=>'bg3', :class=>"bg")%>
 <!--
 <div id="user-widget">
   <% if current_user %>

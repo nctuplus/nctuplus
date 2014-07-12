@@ -10,7 +10,9 @@ Csnote::Application.routes.draw do
 	get "courses/search_by_keyword"
 	get "courses/list_all_courses"
   get "courses/rate_cts"
-	get "courses/pre_schedule"
+	get "courses/simulation"
+	get "courses/add_simulated_course"
+	get "courses/get_user_simulated"
 	resources :courses
   
    resources :departments do

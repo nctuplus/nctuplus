@@ -1,4 +1,5 @@
 <table class="table table-hover courselist-hover " id="course_table" >
+
 	<% @course_details.each do |cd|%>
 		<% course=cd.course_teachership.course %>
 			<% ctrs=cd.course_teachership.course_teacher_ratings %>
@@ -13,16 +14,9 @@
 					<p id="rating_all" class="">
 						<%= link_to course.ch_name, course_path(course), :class=>"course_name" %>
 						<%= cd.course_teachership.teacher.name %>
-						<% if @table_type=="search" %>
-						<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add')">
+						<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>)">
 						<span class="glyphicon glyphicon-plus"></span>
 						</button>
-						<% else %>
-						
-						<button class="btn btn-danger btn-circle pull-right" onclick="add_class(<%=cd.id%>,'delete')">
-						<span class="glyphicon glyphicon-minus"></span>
-						</button>
-						<% end %>
 					</p>
 					<p class="text-right">
 					
@@ -47,9 +41,6 @@
 
 
 <script>
-<% if @table_type!="search" %>
-add_time_slot(<%=@cd_jsons.to_s.html_safe%>);
-<% end %>
 /*$(document).ready(function($) {
 
 	 var c = {};
@@ -90,7 +81,56 @@ add_time_slot(<%=@cd_jsons.to_s.html_safe%>);
     });
 });*/
 
-
+function add_class(id){
+	var this_row=$("#cd_"+id);
+	var name=this_row.find(".course_name").text();//
+	var time=this_row.find(".course_time").text();
+	//console.log(name);
+	var timearr=time.match(/[0-9][A-Z]+/g);
+	
+	var row_ids=[];
+	var conflict=false;
+	for(var i = 0 ; i < timearr.length ; i++){
+		var day=timearr[i][0];
+		
+		for(var j = 1 ; j < timearr[i].length ; j++){
+			
+			var row_id="#day_"+day+"_time_"+timearr[i][j];
+			row_ids.push(row_id);
+			if($(row_id).text()!=""){
+				$(row_id).removeClass("schedule-slot-empty");
+				$(row_id).addClass("danger");
+				conflict=true;
+			}
+		}
+	}
+	if(conflict){
+		alert("衝堂囉!");
+	}
+	else{
+		for(var i = 0 ; i < row_ids.length;i++){
+			$(row_ids[i]).text(name);
+			
+		}
+		save_course(id,"add");
+		this_row.remove();
+	}
+}
+function save_course(cd_id,type){
+	$.ajax({
+		type: "GET",
+		url: "/courses/add_simulated_course",
+		data: {
+			cd_id: cd_id,
+			type: type, 
+		},
+		success: function(data) {
+			
+			//alert("SUCCESS");
+		},
+		
+	});
+}
 
 </script>
 

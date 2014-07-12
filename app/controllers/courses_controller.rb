@@ -2,10 +2,10 @@ class CoursesController < ApplicationController
   #before_filter :find_department, :only=>[ :index, :new, :edit]
   
   
-	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept]
+	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated]
 	
 	
-	before_filter :checkLogin, :only=>[ :rate_cts, :pre_schedule]
+	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
 	
 	def index
 
@@ -26,6 +26,28 @@ class CoursesController < ApplicationController
 		@preload_first_time=true;
   end
 	
+	def get_user_simulated
+		cd_ids=current_user.pre_schedules.map{|ps| ps.course_detail.id}
+		@course_details=CourseDetail.where(:id=>cd_ids)
+		#respond_to do |format|
+    #  format.html # index.html.erb
+    #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
+    #end
+		@cd_jsons=@course_details.map{|cd|{"time"=>cd.time_and_room.partition('-')[0],"room"=>cd.time_and_room.partition('-')[2],"name"=>cd.course_teachership.course.ch_name}}.to_json
+		render "course_lists_mini"
+	end
+	
+	def add_simulated_course
+		cd_id=params[:cd_id].to_i
+		_type=params[:type]
+		
+		if _type=="add"
+			PreSchedule.create(:owner_id=>current_user.id, :course_detail_id=>cd_id)
+		else
+			PreSchedule.where(:owner_id=>current_user.id, :course_detail_id=>cd_id).destroy_all
+		end
+		render :nothing => true, :status => 200, :content_type => 'text/html'
+	end
 	def list_all_courses
 	  page=params[:page].to_i
 		id_begin=(page-1)*each_page_show
@@ -47,6 +69,7 @@ class CoursesController < ApplicationController
 		@course_details=join_course_detail(@courses,semester_id)
 		
 		@page_numbers=1#@course_details.count/each_page_show
+		@table_type="search" if params[:view_type]=="_mini"
 		render "course_lists"+params[:view_type]
 	end
 	
@@ -85,10 +108,11 @@ class CoursesController < ApplicationController
 		end
 		
 		@page_numbers=1#@course_details.count/each_page_show
-		#if params[:type]=="mini"
+		
 		#	render
 		#else
-			render "course_lists"+params[:view_type]
+		@table_type="search" if params[:view_type]=="_mini"
+		render "course_lists"+params[:view_type]
 		#end
 	end
 	
@@ -123,7 +147,7 @@ class CoursesController < ApplicationController
 	#@teachers=Teacher.where(:course_id=>@course.id)
   end
 	
-	def pre_schedule
+	def simulation
     @semesters=Semester.all	
 
 		@departments=Department.where(:dept_type=>'dept')
