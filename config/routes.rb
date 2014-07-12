@@ -1,4 +1,4 @@
-Csnote::Application.routes.draw do
+Nctuplus::Application.routes.draw do
 
   mount Ckeditor::Engine => '/ckeditor'
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]

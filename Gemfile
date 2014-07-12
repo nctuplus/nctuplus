@@ -35,7 +35,7 @@ gem 'ckeditor'
 gem "jquery-fileupload-rails"
 gem 'curb'
 gem 'jquery-raty-rails', github: 'bmc/jquery-raty-rails'
-
+gem 'rename'
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

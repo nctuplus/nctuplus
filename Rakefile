@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-Csnote::Application.load_tasks
+Nctuplus::Application.load_tasks
