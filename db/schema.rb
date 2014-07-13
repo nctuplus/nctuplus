@@ -39,7 +39,8 @@ ActiveRecord::Schema.define(version: 20140711163818) do
   create_table "course_details", force: true do |t|
     t.integer  "course_teachership_id"
     t.integer  "semester_id"
-    t.string   "time_and_room"
+    t.string   "time"
+    t.string   "room"
     t.string   "temp_cos_id"
     t.string   "brief"
     t.string   "memo"

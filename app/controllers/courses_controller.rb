@@ -33,7 +33,7 @@ class CoursesController < ApplicationController
     #  format.html # index.html.erb
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
     #end
-		@cd_jsons=@course_details.map{|cd|{"time"=>cd.time_and_room.partition('-')[0],"room"=>cd.time_and_room.partition('-')[2],"name"=>cd.course_teachership.course.ch_name}}.to_json
+		@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"color"=>cos_type_color(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
 		render "course_lists_mini"
 	end
 	
@@ -64,9 +64,15 @@ class CoursesController < ApplicationController
 		
 		dept_ids=get_dept_ids(dept_id)
 		
-		semester=Semester.find(semester_id)
-		@courses=semester.courses.select{|c| join_dept(c,dept_ids)}
-		@course_details=join_course_detail(@courses,semester_id)
+		semester=Semester.where(:id=>semester_id).take
+		if semester
+			@courses=semester.courses.select{|c| join_dept(c,dept_ids)}
+		
+		else
+			@courses=Course.where(:department_id=>dept_ids)
+			#@course_details=@courses.
+		end
+			@course_details=join_course_detail(@courses,semester_id)
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		@table_type="search" if params[:view_type]=="_mini"
@@ -77,8 +83,13 @@ class CoursesController < ApplicationController
 	  search_term=params[:search_term]
 		search_type=params[:search_type]
 		semester_id=params[:sem_id].to_i
-		dept_id=params[:dept_id]
-		dept_ids= get_dept_ids(dept_id)
+		dept_id=params[:dept_id].to_i
+		degree_id=params[:degree_id]
+		if dept_id!=0
+			dept_ids= get_dept_ids(dept_id)
+		else
+			dept_ids=Department.where(:degree=>degree_id.to_i).map{|d|d.id} if degree_id!=""
+		end
 		case search_type
 			when "course_time"
 				course_ids=[]
@@ -86,20 +97,24 @@ class CoursesController < ApplicationController
 				#@course_details=nil
 				search_term.split(' ').each do |st|
 					st=st.upcase
-					@cds=CourseDetail.where("semester_id= ? AND time_and_room LIKE ?  ",semester_id,"%#{st}%")
+					unless semester_id==0
+						@cds=CourseDetail.where("semester_id= ? AND time LIKE ?  ",semester_id,"%#{st}%")
+					else
+						@cds=CourseDetail.where("time LIKE ?  ","%#{st}%")
+					end
 					ids=@cds.map{|cd|cd.id}
 					cd_ids.append(ids) unless ids.empty?
 					#course_ids.append(@cd.map{|cd|cd.course_teachership.course.id})
 				end
 				unless cd_ids.empty?
 					@course_details=CourseDetail.where(:id=>cd_ids)
-					@course_details=@course_details.select{|cd|join_dept(cd.course_teachership.course,dept_ids)} if dept_ids&&@course_details
+					@course_details=@course_details.select{|cd|join_dept(cd.course_teachership.course,dept_ids)} if dept_ids
 				end
 				#@courses=Course.where(:id=>course_ids)
 				#@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
 				
 			when "course_name"
-				if !semester_id.nil?
+				unless semester_id==0
 					@courses = Course.where("id IN (:id) AND ch_name LIKE :name ",
 						{:id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :name => "%#{search_term}%" })
 				else
@@ -108,7 +123,7 @@ class CoursesController < ApplicationController
 				end
 				if @courses
 					@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-					@course_details=join_course_detail(@courses,semester_id) unless @courses.empty?
+					@course_details=join_course_detail(@courses,semester_id) unless @courses.empty? 
 				end
 		end
 		
@@ -205,6 +220,20 @@ class CoursesController < ApplicationController
   
   
   private
+	def cos_type_color(cos_type)
+		case cos_type
+			when "通識"
+				'#f0ad4e'
+			when "必修"
+				'#AFFFB0'
+			when "選修"
+				'#AFFFD8'
+			when "外語"
+				'#FEFFCD'
+		end
+	end
+	
+	
 	def get_autocomplete_vars
 		@departments=Department.where("dept_type = 'dept' OR dept_type='common' ")#.merge(Department.where(:dept_type=>'common'))
 		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
@@ -216,15 +245,19 @@ class CoursesController < ApplicationController
 	def join_course_detail(courses,semester_id)
 		course_ids=courses.map{|c| c.id}
 		ct_ids=CourseTeachership.where(:course_id=>course_ids)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
-		course_details=CourseDetail.where(:course_teachership_id=>ct_ids).flit_semester(semester_id)
+		if semester_id!=0
+			course_details=CourseDetail.where(:course_teachership_id=>ct_ids).flit_semester(semester_id)
+		else
+			course_details=CourseDetail.where(:course_teachership_id=>ct_ids)
+		end
 		return course_details
 	end
 	
 	def get_dept_ids(dept_id)
-	  return nil if dept_id==""
+	  return nil if dept_id==0
 		
 	  dept_ids=[]
-		dept_main=Department.find(dept_id)
+		dept_main=Department.where(:id=>dept_id).take
 		dept_ids.append(dept_main.id)
 		dept_college=Department.where(:degree => dept_main.degree, :college_id=>dept_main.college_id, :dept_type => 'college').take
 		dept_ids.append(dept_college.id) if !dept_college.nil?

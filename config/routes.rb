@@ -64,7 +64,7 @@ Nctuplus::Application.routes.draw do
   
  # resources :upload
   #root :to => "courses#show", :id=>5
-  root :to => "courses#index"
+  root :to => "main#index"
   
   
   

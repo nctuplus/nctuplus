@@ -3,7 +3,8 @@ class CreateCourseDetails < ActiveRecord::Migration
     create_table :course_details do |t|
 	  t.integer :course_teachership_id
 		t.integer :semester_id
-		t.string :time_and_room
+		t.string :time
+		t.string :room
 		t.string :temp_cos_id
 		t.string :brief
 		t.string :memo

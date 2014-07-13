@@ -14,6 +14,7 @@
 						
 						<p id="rating_all" class="">
 							<%= link_to course.ch_name, course_path(course), :class=>"course_name" %>
+							<%= course.department.ch_name %>
 							<%= cd.course_teachership.teacher.name %>
 							<% if @table_type=="search" %>
 							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add')">
@@ -32,8 +33,8 @@
 						<span class="glyphicon glyphicon-star"></span> 
 						<%= ctr_all_avg.round(1) %> | 
 						<% end %>
-						<%course.department.ch_name%>
-						<strong class="course_time"><%= cd.time_and_room.partition("-")[0] %></strong>
+						<%=cd.cos_type%> | 
+						<strong class="course_time"><%= cd.time %></strong>
 						| 學分: <strong><%= cd.credit %></strong>
 						<% credit_sum=credit_sum+cd.credit.to_i%>
 						

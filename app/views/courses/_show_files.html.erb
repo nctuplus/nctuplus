@@ -1,14 +1,14 @@
 <br>
 
 
-<div class="container">
+<!--<div class="container">-->
   
   <%= form_for FileInfo.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
     <!-- The table listing the files available for upload/download -->
     <table class="table">
 	<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
 	<tr><th>老師</th><th>年度</th><th>檔案說明</th><th>檔名</th><th>大小</th><th>提供者</th><th>上傳時間</th><th >動作</th></tr>
-	<tr id="loading"><td colspan="6" ><p class="text-center"><%=image_tag("/assets/loading.gif", size: '42x42')%></p></td></tr>
+	<tr id="loading"><td colspan="8" ><p class="text-center"><%=image_tag("/assets/loading.gif", size: '42x42')%></p></td></tr>
 	</tbody>
     </table>
   
@@ -55,7 +55,7 @@
 	</div>
   <% end %>
 
-</div>
+<!--</div>-->
 
 <script>
   var fileUploadErrors = {

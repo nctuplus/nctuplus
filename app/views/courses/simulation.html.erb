@@ -45,7 +45,7 @@
 			<!--<div class="panel-body">-->
 				<table class="table table-bordered" id="schedule_table">
 					<tr>
-						<th class="col-md-1" ></th>
+						<th class="col" ></th>
 						<% days=['Mon','Tue','Wed','Thu','Fri','Sat'] %>
 						<% days.each do |day| %>
 							<th class="col-md-2"><p class="text-center"><%=day%></p></th>
@@ -78,7 +78,8 @@ function add_time_slot(courses){
 			for(var k = 1 ; k < timearr[j].length ; k++){
 				var row_id="#day_"+day+"_time_"+timearr[j][k];
 				$(row_id).removeClass("schd-slot-empty");
-				$(row_id).addClass("success");
+				$(row_id).css("background-color",courses[i].color/*+" !important"*/);
+				//$(row_id).addClass("success");
 				$(row_id).text(courses[i].name);
 				$(row_id).popover({
 					content:"教室:"+courses[i].room,
@@ -103,7 +104,7 @@ $(document).ready(function(){
 		/* Get current row */
 		var row = $(this);//$(this).find('td');
 		row.addClass("schd-grid-selected");
-		alert(row.attr('id'));
+		//alert(row.attr('id'));
 	});
 	
 	/*$.getJSON("/courses/get_user_simulated", function (courses) {
@@ -141,7 +142,8 @@ function add_class(id,type){
 			slot_ids.push(row_id);
 			if(type=="add"&&$(row_id).text()!=""){
 				$(row_id).removeClass("schedule-slot-empty");
-				$(row_id).addClass("danger");
+				//$(row_id).addClass("danger");
+				$(row_id).css("background-color","#FFCECD");
 				conflict=true;
 			}
 		}
@@ -177,6 +179,7 @@ function save_course(cd_id,type){
 		},
 		success: function(data) {
 			//if(type=="add")
+			$("#has_seleted_courses").html(loading_img);
 				$("#has_seleted_courses").load("/courses/get_user_simulated");
 			//alert("SUCCESS");
 		},

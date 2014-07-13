@@ -1,5 +1,5 @@
 <script type="text/javascript">
-
+ var loading_img='<p class="text-center"><%=image_tag("/assets/loading.gif", size: '42x42')%></p>';
 function find_by_label(array,value){
 	for(var i = 0 ; i < array.length;i++){
 		if(value==array[i].label){
@@ -25,33 +25,43 @@ function change_search_type(obj){
 function search_keyword(){
 	var search_term=$("#search_term").val();//.html();
 	search_term=search_term.replace(/\s+/g,"%20");
-
+	
 	if(search_term==""){
 		$("#search_term").focus();
 		return false;
 	}
-	var search_type=$("#search_type").val();
 	var sem_id=$("#semester_id").val();
+	/*if (sem_id==""){
+		$("#semester_id").prev().focus();
+		return false;
+	}*/
+	var search_type=$("#search_type").val();
+	var degree_id=$("#degree_id").val();
 	var dept_id=$("#department_id").val();
+	$("#search_result").html(loading_img);
 	$("#search_result").load("/courses/search_by_keyword?view_type=<%=@view_type%>&search_term="+search_term+
-					"&search_type="+search_type+"&sem_id="+sem_id+"&dept_id="+dept_id);
+					"&search_type="+search_type+"&sem_id="+sem_id+"&dept_id="+dept_id+"&degree_id="+degree_id);
 }
 
 function search_dept(dept_id){
-	
+	$("#search_result").html(loading_img);
 	$("#search_result").load("/courses/search_by_dept?view_type=<%=@view_type%>&dept_id="+
 													dept_id+"&sem_id="+$("#semester_id").val());
 }
 
 
 function show_tip(){
-	$("#search_tips").removeClass("hidden");
+	if ($("#search_tips").hasClass("hidden"))
+		$("#search_tips").removeClass("hidden");
+	else
+		$("#search_tips").addClass("hidden");
+	
 }
 
 
 $( document ).ready( function(){
 
-	$("#semester_select").val("103上");
+	//$("#semester_select").val("103上");
 	<% if @preload_first_time %>
 		$("#search_result").load("/courses/list_all_courses?page=1");
 	<% end %>

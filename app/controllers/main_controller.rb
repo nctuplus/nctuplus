@@ -6,7 +6,10 @@ class MainController < ApplicationController
 	#layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
 	
   def index
-		
+		@course_detail_count=CourseDetail.all.count
+		@file_count=FileInfo.count
+		@review_count=Review.count
+		@user_count=User.count
   end
 	
 	def hidden_prepare
@@ -123,17 +126,18 @@ class MainController < ApplicationController
   end
   def prepare_course_db
   
-    year=['102','101','100']
-		sem=['2','1']
-		year.each do |y|
-			sem.each do |s|
-				data=parse_course(y,s)
-				save_courses(data,y,s)
-				change_to_grad_degree("12")
-				change_to_grad_degree("13")
-				#set_department_type
+    year=['103','102','101','100']
+	sem=['2','1']
+	year.each do |y|
+		sem.each do |s|
+			data=parse_course(y,s)
+			if save_courses(data,y,s)
+			change_to_grad_degree("12")
+			change_to_grad_degree("13")
 			end
+			#set_department_type
 		end
+	end
   end
   def do_save_courses(sem_id,data)
     data.each do |key1,value1|
@@ -162,7 +166,12 @@ class MainController < ApplicationController
 		return @cts
 	end
   def save_courses(data,year,sem)
-    sem_id=Semester.find_by_real_id(year+sem).id
+	@sem= Semester.find_by_real_id(year+sem)
+	if @sem
+		sem_id=@sem.id
+	else 
+		return false
+	end
     data.each do |data1|
 	  data1.each do |data2|#|key,value|
 	    next if data2.empty?
@@ -174,6 +183,7 @@ class MainController < ApplicationController
 		end
 	  end
 	end
+	return true
   end
   def parse_semester
     year=(98..103)
@@ -195,7 +205,8 @@ class MainController < ApplicationController
 			@cd.course_teachership_id=cts_id
 			@cd.semester_id=sem_id
 			@cd.credit=raw_data['cos_credit']
-			@cd.time_and_room=raw_data['cos_time']
+			@cd.time=raw_data['cos_time'].partition('-')[0]
+			@cd.room=raw_data['cos_time'].partition('-')[2]
 			@cd.memo=raw_data['memo']
 			@cd.students_limit=raw_data['num_limit']
 			@cd.cos_type=raw_data['cos_type']
