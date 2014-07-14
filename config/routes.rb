@@ -12,6 +12,8 @@ Nctuplus::Application.routes.draw do
 	get "courses/simulation"
 	get "courses/add_simulated_course"
 	get "courses/get_user_simulated"
+	get "courses/get_user_courses"
+	get "courses/get_sem_form"
 	resources :courses
   
    resources :departments do

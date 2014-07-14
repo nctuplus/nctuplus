@@ -1,0 +1,204 @@
+<%= render :partial=>"search_js" %>
+
+<div class="row">
+	<!--<div class="col-md-5" style="/*background-color:white;margin-top:50px;*/">-->
+		<div class="tabbable tabs-left col-md-5">
+			
+			<ul class="nav nav-tabs" style="margin-top:50px;">
+				<li class="active"><a href="#a" data-toggle="tab" class="vertical-text" >查詢</a></li>
+				<li><a href="#b" data-toggle="tab">已選</a></li>
+				<!--<li><a href="#c" data-toggle="tab">新增學期</a></li>
+				<br><br><br><br><br><br>
+				<li><a href="#1031" data-toggle="tab">103上</a></li>-->
+			</ul>
+			
+			<!--<div class="container">-->
+			<div class="tab-content" style="overflow:hidden;">
+			 <div class="tab-pane active" id="a">
+					<div class="panel panel-primary ">
+						<div class="panel-heading">
+							<h4 class="text-center">課程查詢</h4>
+						</div>
+						<div class="panel-body">
+							<div class="row schedule-search-bar">
+								<%= render :partial=> "schd_search_bar" %>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="b">
+					<div class="panel panel-primary" >
+						<div class="panel-heading" >
+							<h4 class="text-center">已選課程</h4>
+						</div>
+						<div class="panel-body" style="min-height:400px;">
+							<div id="has_seleted_courses"></div>
+						</div>
+					</div>
+				</div>
+				<div class="tab-pane" id="c">
+					<div class="panel panel-primary" >
+						<div class="panel-heading" >
+							<h4 class="text-center">新增學期</h4>
+						</div>
+						<div class="panel-body" style="min-height:400px;">
+							<select class="form-control"></select>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+		
+	<div class="col-md-6 ">
+		<div class="panel panel-primary ">
+			<div class="panel-heading" style="background-color:#4c66a4;">
+				<h4 class="text-center">課表</h4>
+			</div>
+			<!--<div class="panel-body">-->
+				<table class="table table-bordered" id="schedule_table">
+					<tr>
+						<th class="col" ></th>
+						<% days=['Mon','Tue','Wed','Thu','Fri','Sat'] %>
+						<% days.each do |day| %>
+							<th class="col-md-2"><p class="text-center"><%=day%></p></th>
+						<% end %>
+					</tr>
+					<% time=['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] %>
+					<% time.each do |t|%>
+						<tr>
+							<th class="schedule-grid"><p class="text-center"><%=t%></p></th>
+							<% i = 1 %>
+							<%  days.each do |day| %>
+								<td id="day_<%=i%>_time_<%=t%>" class="schd-slot-empty" ></td>
+								<%i=i+1%>
+							<% end %>
+						</tr>
+					<% end %>
+				</table>
+				
+			<!--</div>-->
+		</div>
+	</div>
+</div>
+<script>
+
+function add_time_slot(courses){
+	for(var i = 0 ; i < courses.length ; i++){
+		var timearr=courses[i].time.match(/[0-9][A-Z]+/g);
+		for(var j = 0 ; j < timearr.length ; j++){
+			var day=timearr[j][0];
+			for(var k = 1 ; k < timearr[j].length ; k++){
+				var row_id="#day_"+day+"_time_"+timearr[j][k];
+				$(row_id).removeClass("schd-slot-empty");
+				$(row_id).css("background-color",courses[i].color/*+" !important"*/);
+				//$(row_id).addClass("success");
+				$(row_id).text(courses[i].name);
+				$(row_id).popover({
+					content:"教室:"+courses[i].room,
+					//delay: { show: 500, hide: 100 },
+					placement:"auto",
+					trigger : "hover",
+					container :"body"
+				});
+			}
+		}
+	}
+}
+$(document).ready(function(){
+	<% if current_user %>
+		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>");
+	
+	<% end %>
+	
+	var rows = $('.schd-slot-empty');//.not(':first');
+	rows.on('click', function(e) {
+        
+		/* Get current row */
+		var row = $(this);//$(this).find('td');
+		row.addClass("schd-grid-selected");
+		//alert(row.attr('id'));
+	});
+	
+	/*$.getJSON("/courses/get_user_simulated", function (courses) {
+		for(var i = 0 ; i < courses.length ; i++){
+			var timearr=courses[i].time.match(/[0-9][A-Z]+/g);
+			for(var j = 0 ; j < timearr.length ; j++){
+				var day=timearr[j][0];
+				for(var k = 1 ; k < timearr[j].length ; k++){
+				var row_id="#day_"+day+"_time_"+timearr[j][k];
+				$(row_id).removeClass("schedule-slot-empty");
+				$(row_id).addClass("info");
+				$(row_id).text(courses[i].name);
+				}
+			}
+		}
+	});*/
+});
+
+
+function add_class(id,type){
+	var this_row=$("#cd_"+id);
+	var name=this_row.find(".course_name").text();
+	var time=this_row.find(".course_time").text();
+
+	var timearr=time.match(/[0-9][A-Z]+/g);
+	
+	var slot_ids=[];
+	var conflict=false;
+	for(var i = 0 ; i < timearr.length ; i++){
+		var day=timearr[i][0];
+		
+		for(var j = 1 ; j < timearr[i].length ; j++){
+			
+			var row_id="#day_"+day+"_time_"+timearr[i][j];
+			slot_ids.push(row_id);
+			if(type=="add"&&$(row_id).text()!=""){
+				$(row_id).removeClass("schedule-slot-empty");
+				//$(row_id).addClass("danger");
+				$(row_id).css("background-color","#FFCECD");
+				conflict=true;
+			}
+		}
+	}
+	if(conflict){
+		alert("衝堂囉!");
+	}
+	else{
+		for(var i = 0 ; i < slot_ids.length;i++){
+			if(type=="add"){
+				$(slot_ids[i]).text(name);
+				$(".danger").removeClass("danger");
+			}
+			else{
+				$(slot_ids[i]).text("");
+				$(slot_ids[i]).addClass("schedule-slot-empty");
+				$(slot_ids[i]).removeClass("success");
+				//$(row_id).addClass("danger");
+			}
+		}
+		save_course(id,type);
+		if(type=="add")
+			this_row.remove();
+	}
+}
+function save_course(cd_id,type){
+	$.ajax({
+		type: "GET",
+		url: "/courses/add_simulated_course",
+		data: {
+			cd_id: cd_id,
+			type: type,
+			sem_id: <%=@sem_id%>
+		},
+		success: function(data) {
+			//if(type=="add")
+			$("#has_seleted_courses").html(loading_img);
+			$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>");
+			//alert("SUCCESS");
+		},
+		
+	});
+}
+
+</script>

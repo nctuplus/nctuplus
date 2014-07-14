@@ -15,16 +15,17 @@
 //= require turbolinks
 
 //= require jquery-ui
-//= require jquery-fileupload
+
+//= require background
 
 
 //= require bootstrap.min
 
 
-//= require jquery.raty.min
+
 
 //= require jquery.bootpag.min.js
 
 
-//= require_directory .
+
 

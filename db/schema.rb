@@ -71,6 +71,18 @@ ActiveRecord::Schema.define(version: 20140711163818) do
     t.datetime "updated_at"
   end
 
+  create_table "course_simulations", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "semester_id"
+    t.integer  "course_detail_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_simulations", ["course_detail_id"], name: "index_course_simulations_on_course_detail_id", using: :btree
+  add_index "course_simulations", ["semester_id"], name: "index_course_simulations_on_semester_id", using: :btree
+  add_index "course_simulations", ["user_id"], name: "index_course_simulations_on_user_id", using: :btree
+
   create_table "course_teacher_ratings", force: true do |t|
     t.integer "course_teachership_id"
     t.integer "total_rating_counts"
@@ -154,16 +166,6 @@ ActiveRecord::Schema.define(version: 20140711163818) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "pre_schedules", force: true do |t|
-    t.integer  "owner_id"
-    t.integer  "course_detail_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "pre_schedules", ["course_detail_id"], name: "index_pre_schedules_on_course_detail_id", using: :btree
-  add_index "pre_schedules", ["owner_id"], name: "index_pre_schedules_on_owner_id", using: :btree
 
   create_table "reviews", force: true do |t|
     t.integer  "bbs_id"

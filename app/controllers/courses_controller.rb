@@ -2,7 +2,7 @@ class CoursesController < ApplicationController
   #before_filter :find_department, :only=>[ :index, :new, :edit]
   
   
-	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated]
+	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form]
 	
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
@@ -20,14 +20,18 @@ class CoursesController < ApplicationController
 		
 		#@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
 		
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
+		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
 		
 		@view_type=""
 		@preload_first_time=true;
   end
-	
-	def get_user_simulated
-		cd_ids=current_user.pre_schedules.map{|ps| ps.course_detail.id}
+	def get_sem_form
+		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id} 
+		render "sem_form"
+	end
+	def get_user_courses 
+		sem_id=params[:sem_id].to_i
+		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
 		@course_details=CourseDetail.where(:id=>cd_ids)
 		#respond_to do |format|
     #  format.html # index.html.erb
@@ -37,17 +41,26 @@ class CoursesController < ApplicationController
 		render "course_lists_mini"
 	end
 	
+	def get_user_simulated
+		@sem_id=params[:sem_id]
+		get_autocomplete_vars
+		@view_type="_mini"
+		
+		render "srch_and_schd"
+	end
+	
 	def add_simulated_course
 		cd_id=params[:cd_id].to_i
 		_type=params[:type]
-		
+		sem_id=params[:sem_id]
 		if _type=="add"
-			PreSchedule.create(:owner_id=>current_user.id, :course_detail_id=>cd_id)
+			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>sem_id, :course_detail_id=>cd_id)
 		else
-			PreSchedule.where(:owner_id=>current_user.id, :course_detail_id=>cd_id).destroy_all
+			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd_id).destroy_all
 		end
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
+	
 	def list_all_courses
 	  page=params[:page].to_i
 		id_begin=(page-1)*each_page_show
@@ -169,7 +182,7 @@ class CoursesController < ApplicationController
 	
 	def simulation
     #@semesters=Semester.all	
-		get_autocomplete_vars
+		
 		#@departments=Department.where(:dept_type=>'dept')
 		#@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
 		#@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
@@ -179,8 +192,10 @@ class CoursesController < ApplicationController
 		#@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
 		
 		#@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
+		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id} 
+		#@user_sem_ids.append(Semester.last.id)
 		
-		@view_type="_mini"
+		
   end
 	
   def new
