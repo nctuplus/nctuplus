@@ -26,7 +26,7 @@ module CourseHelper
 		else
 			return "default"
 		end	
-			
+	end		
 
 	def dimension_color(cos_type)
 		case cos_type
