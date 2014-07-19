@@ -28,7 +28,7 @@
 				<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
 				<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
 				<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
-				<tr id="<%=cd.id%>" class="clickable-row clickable-hover" href="<%=course_path(course)%>">
+				<tr id="<%=cd.id%>" class="clickable-row clickable-hover" href="<%=course_path(course, :tid=>cd.course_teachership.teacher.id)%>">
 					<td>
 						<p id="rating_all" class="rating all">
 						<%if !ctr_all_avg.nan? %>
@@ -43,7 +43,7 @@
 					<td><%=course.department.ch_name%></td>
 					<td><%= cd.brief %></td>
 					<!--<td><%= link_to course.real_id, course_path(course) %></td>-->
-					<td><%= link_to course.ch_name, course_path(course) %></td>
+					<td><%= link_to course.ch_name, course_path(course, :tid=>cd.course_teachership.teacher.id) %></td>
 					<td><%= cd.course_teachership.teacher.name %></td>
 					<td><%= cd.memo %></td>
 					<td><%= cd.time %></td>

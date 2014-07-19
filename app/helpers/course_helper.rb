@@ -6,6 +6,27 @@ module CourseHelper
 		return Semester.last
 	end
 	
+	def rankTag(rank)
+		if rank>=1 and rank<=2
+			return "success"
+		elsif rank>=3 and rank<=4	
+			return "primary"
+		else
+			return "default"
+		end	
+			
+	end
+	
+	def rankTagBar(rank)
+		if rank>=1 and rank<=2
+			return "success"
+		elsif rank>=3 and rank<=4
+			return "info"
+		else
+			return "default"
+		end	
+			
+	end
 	
 	
 end

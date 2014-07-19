@@ -66,6 +66,15 @@ text-decoration:none;
 .bs-callout-info {
 	border-left-color: #5bc0de;
 }
+.bs-callout-warning {
+	border-left-color: #FFFF00;
+}
+.bs-callout-success {
+	border-left-color: #5cb85c;
+}
+.bs-callout-default {
+	border-left-color: #999;
+}
 .bs-callout-danger {
 	border-left-color: #d9534f;
 }

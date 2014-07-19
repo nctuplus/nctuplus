@@ -60,7 +60,7 @@ function rate_course(ctr_id,score){
 				</div>-->
 					<div class="row">
 						<div class="col-sm-6 col-md-5 col-sm-offset-1">
-						<h4><%=t.name.to_s%></h4>
+						<h4><%=link_to t.name.to_s, course_path(@course, :tid=>t.id)%></h4>
 						</div>
 						<div class="text-right" id="best_<%=cts.id%>">
 						<h4></h4>
@@ -133,7 +133,7 @@ $("#best_<%=rating_sweety_arr[0][:cts_id]%> h4").append('<span class="label labe
 $("#best_<%=rating_hardness_arr[0][:cts_id]%> h4").append('<span class="label label-success">硬</span>');
 <% end %>
 </script>
-
+<!--
 <table class="table " >
 <tr>
 	<th class="col-md-1">開課學期</th>
@@ -158,3 +158,4 @@ $("#best_<%=rating_hardness_arr[0][:cts_id]%> h4").append('<span class="label la
 	
 	
 </table>
+-->

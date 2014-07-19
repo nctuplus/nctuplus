@@ -1,0 +1,73 @@
+<% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
+
+</br>
+
+<div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			<span class="glyphicon glyphicon-th-list"></span>			
+			課程教師： <%=@teacher_show.name%> 系別：<%=@teacher_show.department.ch_name%>
+		</h2>	
+	</div>
+	
+	<div class="panel-heading">
+      	<h2 class="panel-title">
+        	<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+				<span class="glyphicon glyphicon-th-list"></span> 
+			</a>	
+				課程時間/地點：    	
+      	</h2>  	
+	</div>
+    <div id="collapseOne" class="panel-collapse collapse in">
+      <div class="panel-body">
+		<table class="table">
+    		<tr>
+    			<td>學期</td>
+    			<td>地點</td>
+    			<td>學分</td>
+    			<td>時間</td>
+    			<td>註記</td>
+    		</tr>	
+<%courseTeacher.course_details.each do |t|%>  
+    		<tr>
+    			<td><%=Semester.find(t.semester_id).name%></td>
+    			<td><%=t.room%></td>
+    			<td><%=t.credit%></td>
+    			<td><%=t.time%></td>
+    		    <td><%=t.memo%></td>
+    		</tr>    
+<%end%>
+		</table>
+      </div>
+      
+    </div>
+    
+    <div class="panel-heading">
+		<h2 class="panel-title">
+			<span class="glyphicon glyphicon-th-list"></span>			
+			課程攻略：
+			<font class="text-right"><%=link_to "編輯", "#"%></font>
+		</h2>	
+	</div>
+   <div class="panel-body">
+	ssssss1
+   </div>
+   <div class="panel-heading">
+		<h2 class="panel-title">
+			<span class="glyphicon glyphicon-th-list"></span>			
+			歷年選課狀況：
+		</h2>	
+	</div>
+	<div class="panel-body">
+	ssssss1
+   </div>
+	<div class="panel-heading">
+		<h2 class="panel-title">
+			<span class="glyphicon glyphicon-th-list"></span>			
+			點評：
+		</h2>	
+	</div>
+   <div class="panel-body">
+	ssssss1
+   </div>
+</div>

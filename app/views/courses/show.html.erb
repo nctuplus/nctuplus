@@ -1,14 +1,23 @@
 <%= javascript_include_tag "courses", "data-turbolinks-track" => true %>
 
-<h1><%= @course.ch_name %>(<%= @course.eng_name %>)</h1>
+<h1>
+	<div class="col-md-9"><%= @course.ch_name %>(<%= @course.eng_name %>)</div>  	
+	<div class="col-md-3"><%=@teacher_show.name%> <small><span class="label label-<%=rankTag(@target_rank)%>"><%=@target_rank.to_s%></span></small></div>
+</h1>
 
 <ul class="nav nav-tabs">
-  <li class="active" id="infos-link"><a href="javascript:void(0);" onclick="show_item('infos');">教授比一比</a></li>
+  <li class="active" id="tc-link"><a href="javascript:void(0);" onclick="show_item('tc');">課程資訊</a></li>
+  <li class="" id="infos-link"><a href="javascript:void(0);" onclick="show_item('infos');">教授比一比</a></li>
   <!--<li class="" id="posts-link"><a href="#" onclick="show_item('posts');">文章</a></li>-->
   <li class="" id="files-link"><a href="javascript:void(0);" onclick="show_item('files');" >檔案</a></li>
 </ul>
 
-<div id="infos_list" >
+
+<div id="tc_list" >
+	<%= render :partial=> "show_teacherOnCourse" %>
+</div>
+
+<div id="infos_list" style="display:none;">
 	<%= render :partial=> "show_infos" %>
 </div>
 
@@ -23,9 +32,9 @@
 
 
 function show_item(item){//change show files or notes
-  list=["files","posts","infos"]
+  list=["files","posts","infos","tc"]
   
-  for(i=0;i<3;i++){
+  for(i=0;i<4;i++){
     if(list[i]!=item){
 		$("#"+list[i]+"_list").hide();
 		$("#"+list[i]+"-link").attr("class","");

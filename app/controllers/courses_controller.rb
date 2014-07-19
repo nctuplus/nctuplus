@@ -175,7 +175,25 @@ class CoursesController < ApplicationController
 		@post= Post.new #for create course form
 		@files=@course.file_infos
 		#course_details_tids=CourseDetail.where(:course_id=>@course.id).uniq.pluck(:teacher_id)
-		@teachers=@course.teachers#Teacher.where(:id=>course_details_tids)
+		
+		# for _teacher_info.html.erb
+		@teachers=@course.teachers.sort_by{
+			|cd| CourseTeachership.where(:course_id=>params[:id],:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
+		}.reverse
+		if params[:tid]
+			@teacher_show =  Teacher.find(params[:tid])
+			@target_rank = -1 ;
+			@teachers.each_with_index do | teacher, idx|
+				if teacher.id == @teacher_show.id
+					@target_rank = idx+1
+					break ;
+				end
+			end
+		else
+			@teacher_show =  @teachers.first
+			@target_rank = 1 
+		end
+		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters
 	#@teachers=Teacher.where(:course_id=>@course.id)
   end
