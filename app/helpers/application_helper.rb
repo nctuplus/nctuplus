@@ -1,8 +1,12 @@
 module ApplicationHelper
+	def loading_img
+		html='<br><p class="text-center">'<<image_tag("/assets/loading.gif", size: '42x42')<<'</p>'
+		html.html_safe
+	end
   def course_tag
     html=""
     Course.all.each do |course|
-	html<<'"'<<course.eng_name<<'",'
+		html<<'"'<<course.eng_name<<'",'
 	end
 	html=""
 	return html

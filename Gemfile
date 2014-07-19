@@ -35,6 +35,8 @@ gem "paperclip-dropbox", ">= 1.1.7"
 gem "jquery-fileupload-rails"
 gem 'curb'
 gem 'jquery-raty-rails', github: 'bmc/jquery-raty-rails'
+gem 'font-awesome-rails'
+#, github: 'bokmann/font-awesome-rails'
 #gem 'rename'
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

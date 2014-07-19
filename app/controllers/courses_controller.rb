@@ -2,7 +2,7 @@ class CoursesController < ApplicationController
   #before_filter :find_department, :only=>[ :index, :new, :edit]
   
   
-	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form]
+	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics]
 	
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
@@ -25,6 +25,17 @@ class CoursesController < ApplicationController
 		@view_type=""
 		@preload_first_time=true;
   end
+	
+	def get_user_statics
+		@css=current_user.course_simulations
+		sem_ids=@css.map{|s|s.semester_id}
+		@sems=Semester.where(:id=>sem_ids)
+		#@cds=CourseDetail.where(:id=>cd_ids).order(:semester_id)
+		@common_courses=@css.select{|cs|cs.course_detail.cos_type=="通識"}.map{|cs|cs.course_detail}
+		#@common_courses=CourseDetail.where(:id=>cd_ids)
+		render "statics"
+	end
+	
 	def get_sem_form
 		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id} 
 		render "sem_form"
@@ -253,6 +264,9 @@ class CoursesController < ApplicationController
   
   
   private
+	
+	
+	
 	def cos_type_color(cos_type)
 		case cos_type
 			when "通識"

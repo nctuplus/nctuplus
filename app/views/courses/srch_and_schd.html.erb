@@ -1,11 +1,12 @@
 <%= render :partial=>"search_js" %>
-
+<br>
 <div class="row">
+	
 	<!--<div class="col-md-5" style="/*background-color:white;margin-top:50px;*/">-->
 		<div class="tabbable tabs-left col-md-5">
 			
 			<ul class="nav nav-tabs" style="margin-top:50px;">
-				<li class="active"><a href="#a" data-toggle="tab" class="vertical-text" >查詢</a></li>
+				<li class="active"><a href="#a" data-toggle="tab" >查詢</a></li>
 				<li><a href="#b" data-toggle="tab">已選</a></li>
 				<!--<li><a href="#c" data-toggle="tab">新增學期</a></li>
 				<br><br><br><br><br><br>
@@ -65,9 +66,20 @@
 						<% end %>
 					</tr>
 					<% time=['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] %>
+					<% real_time=['6:00 ~ 6:50','7:00 ~ 7:50','8:00 ~ 8:50','9:00 ~ 9:50','10:10 ~ 11:00','11:10 ~ 12:00','12:20 ~ 13:10','13:20 ~ 14:10','14:20 ~ 15:10','15:30 ~ 16:20','16:30 ~ 17:20','17:30 ~ 18:20','18:30 ~ 19:20','19:30 ~ 20:20','20:30 ~ 21:20','21:30 ~ 22:20'] %>
+					<% time_index=0 %>
 					<% time.each do |t|%>
 						<tr>
-							<th class="schedule-grid"><p class="text-center"><%=t%></p></th>
+							<th id="time_<%=t%>" class="schedule-grid"><p class="text-center"><%=t%></p></th>
+							<script>
+								$('#time_<%=t%>').popover({
+									content: "<%= real_time[time_index] %>",
+									placement:"auto",
+									trigger : "hover",
+									container :"body"
+								});
+							</script>
+							<% time_index = time_index+1 %>
 							<% i = 1 %>
 							<%  days.each do |day| %>
 								<td id="day_<%=i%>_time_<%=t%>" class="schd-slot-empty" ></td>
@@ -85,6 +97,8 @@
 
 function add_time_slot(courses){
 	for(var i = 0 ; i < courses.length ; i++){
+		if(courses[i].time==" ")//for 藝文賞析
+			continue;
 		var timearr=courses[i].time.match(/[0-9][A-Z]+/g);
 		for(var j = 0 ; j < timearr.length ; j++){
 			var day=timearr[j][0];
@@ -108,7 +122,6 @@ function add_time_slot(courses){
 $(document).ready(function(){
 	<% if current_user %>
 		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>");
-	
 	<% end %>
 	
 	var rows = $('.schd-slot-empty');//.not(':first');
@@ -141,7 +154,12 @@ function add_class(id,type){
 	var this_row=$("#cd_"+id);
 	var name=this_row.find(".course_name").text();
 	var time=this_row.find(".course_time").text();
-
+	if(time==" "){//for 藝文賞析
+		save_course(id,type);
+		if(type=="add")
+			this_row.remove();
+		return;
+	}
 	var timearr=time.match(/[0-9][A-Z]+/g);
 	
 	var slot_ids=[];
@@ -173,7 +191,7 @@ function add_class(id,type){
 			else{
 				$(slot_ids[i]).text("");
 				$(slot_ids[i]).addClass("schedule-slot-empty");
-				$(slot_ids[i]).removeClass("success");
+				$(slot_ids[i]).css("background-color","");
 				//$(row_id).addClass("danger");
 			}
 		}
@@ -193,7 +211,7 @@ function save_course(cd_id,type){
 		},
 		success: function(data) {
 			//if(type=="add")
-			$("#has_seleted_courses").html(loading_img);
+			$("#has_seleted_courses").html('<%=loading_img%>');
 			$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>");
 			//alert("SUCCESS");
 		},

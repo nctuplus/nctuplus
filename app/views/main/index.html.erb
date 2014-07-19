@@ -1,20 +1,121 @@
-﻿<div class="row" style="background-color:black; ">
-<p style="font-size:72px;font-weight:900 !important;color:white !important;">NCTU+</p>
-<p style="font-size:48px;font-weight:900 !important;color:white !important; margin-left:100px;">
-共
-<%=number_with_delimiter(@course_detail_count)%> 門課
-<%=number_with_delimiter(@review_count)%> 篇心得
-<%=number_with_delimiter(@file_count)%> 個檔案
-<%=number_with_delimiter(@user_count)%> 位註冊
-</p>
-<p style="font-size:36px;font-weight:900 !important;color:white !important;">
-
-教授比一比－課程也有三圍!?爽課、好課、雷課一目暸然!
-<br>
-修課心得－
-<br>
-考古題系統－
-<br>
-預排課表－
-</p>
+﻿<div class="container" style="position:absolute; top: 50px;z-index:200;">
+		<div class="col-md-8 col-md-offset-1" style="/*height:300px; background-color:black;*/">
+			<p style="color:white; font-size:82px; font-weight:bold;font-family:Arial; display:inline-block;">NCTU<sup>+</sup></p>
+			<p style="color:white; font-size:46px; font-weight:bold;display:inline-block;">交大智慧選課系統</p>
+		</div>
 </div>
+
+<div id="head_bg" class="carousel slide" data-ride="carousel" style="width:100%;margin-top:-45px;">
+  <!-- Indicators -->
+  <ol class="carousel-indicators" style="position:fixed;z-index:5000; margin-top:500px;">
+    <li data-target="#head_bg" data-slide-to="0" class="active"></li>
+    <li data-target="#head_bg" data-slide-to="1"></li>
+    <li data-target="#head_bg" data-slide-to="2"></li>
+		<li data-target="#head_bg" data-slide-to="3"></li>
+  </ol>
+
+  <!-- Wrapper for slides -->
+  <div class="carousel-inner">
+    <div class="item active">
+      <%= image_tag("head_1.jpg", :class=>"header")%>
+    </div>
+    <div class="item">
+      <%= image_tag("head_2.jpg", :class=>"header")%>
+    </div>
+		<div class="item">
+      <%= image_tag("head_3.jpg", :class=>"header")%>
+    </div>
+		<div class="item">
+      <%= image_tag("head_4.jpg", :class=>"header")%>
+    </div>
+  </div>
+
+  <!-- Controls -->
+	
+  <a style="margin-top:20%;z-index:5000;" class="left carousel-control"href="#head_bg" role="button" data-slide="prev">
+		<%= fa_icon("chevron-left 4x")%>
+  </a>
+  <a style="margin-top:20%;z-index:5000;" class="right carousel-control" href="#head_bg" role="button" data-slide="next">
+    <%= fa_icon("chevron-right 4x")%>
+  </a>
+</div>
+
+
+	<div class="col-md-11" style="position:absolute;margin-top:30%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000; ">
+		<div class="row">
+		
+			<div class="container icon-container" style="margin-left:30%;" onclick="zzz();">
+				<div class="row row-margin" >
+				<div class="circle " style="//margin-left:30%;">
+					<%=fa_icon "search 5x" %>
+				</div>
+				</div>
+				
+				<p class="text-center function-desc" style="">找課程</p>
+				
+			</div>
+			<div class="container icon-container" >
+				<div class="row row-margin">
+				<div class="circle">	
+					<%=fa_icon "file-text-o 5x" %>
+					
+				</div>
+				<p class="text-center function-desc" >找考古題</p>
+
+				</div>
+			</div>
+			<div class="container icon-container" >
+				<div class="row row-margin">
+				<div class="circle">
+					<%=fa_icon "graduation-cap 5x" %>
+					
+					<!--<span class="glyphicon glyphicon-list-alt"style="font-size:70px;"></span>-->
+				</div>
+					<p class="text-center function-desc" >畢業!</p>
+				</div>
+			</div>
+			
+			<div class="container icon-container">
+				<div class="row row-margin">
+				<div class="circle">	
+					<%=fa_icon "user 5x" %>
+				</div>
+					<p class="text-center function-desc" >找同學</p>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	
+<!--
+<div class="container">
+	<div class="row" >
+		<div class="col-md-12"style="height:500px; background-color:white;">
+			6465456
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-3 index-grid" >45654</div>
+		<div class="col-md-3 index-grid">
+			<%=number_with_delimiter(@review_count)%>
+		</div>
+		<div class="col-md-3 index-grid">
+			<%=number_with_delimiter(@file_count)%>
+		</div>
+		<div class="col-md-3 index-grid">
+			<%=number_with_delimiter(@user_count)%>
+		</div>
+	</div>
+</div>
+-->
+
+<script>
+	$(document).ready(function() {
+			$("#content").attr("class","col-md-12");
+			$(".circle").hover(
+				function(){$(this).find("i").css("color","white");},
+				function(){$(this).find("i").css("color","");}
+				);
+	});
+</script>

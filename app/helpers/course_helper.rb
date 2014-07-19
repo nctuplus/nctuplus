@@ -6,6 +6,7 @@ module CourseHelper
 		return Semester.last
 	end
 	
+
 	def rankTag(rank)
 		if rank>=1 and rank<=2
 			return "success"
@@ -26,6 +27,22 @@ module CourseHelper
 			return "default"
 		end	
 			
+
+	def dimension_color(cos_type)
+		case cos_type
+			when "通識"
+				'#FF91FE'
+			when "歷史"
+				'#FFC991'
+			when "群已"
+				'#C7FF91'
+			when "公民"
+				'#91FFC9'
+			when "自然"
+				'#91C7FF'
+			when "文化"
+				'#C991FF'
+		end
 	end
 	
 	

@@ -26,6 +26,6 @@ function RotateImages(Start)
 
 function onPageLoad()
 {
-	window.setTimeout("RotateImages(1)",7500);
-	//$('#search').focus();
+	//window.setTimeout("RotateImages(1)",7500);
+
 }

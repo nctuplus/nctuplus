@@ -81,7 +81,7 @@ function rate_course(ctr_id,score){
 						<script>gen_raty("",<%=rating_cold.id%>,<%=rating_cold.avg_score%>,<%=has_rated(rating_cold.id)%>);</script>	
 					</div>	
 					<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
-						<label><%=rating_cold.avg_score%>(<%=rating_cold.total_rating_counts%>)</label>
+						<label><%=rating_cold.avg_score.round(1)%>(<%=rating_cold.total_rating_counts%>)</label>
 					</div>
 					
 				</div>
@@ -94,7 +94,7 @@ function rate_course(ctr_id,score){
 						<script>gen_raty("",<%=rating_sweety.id%>,<%=rating_sweety.avg_score%>,<%=has_rated(rating_sweety.id)%>);</script>	
 					</div>
 					<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
-					<label><%=rating_sweety.avg_score%>(<%=rating_sweety.total_rating_counts%>)</label>
+					<label><%=rating_sweety.avg_score.round(1)%>(<%=rating_sweety.total_rating_counts%>)</label>
 					</div>
 				</div>
 				<div class="row">
@@ -106,7 +106,7 @@ function rate_course(ctr_id,score){
 						<script>gen_raty("",<%=rating_hardness.id%>,<%=rating_hardness.avg_score%>,<%=has_rated(rating_hardness.id)%>);</script>	
 					</div>
 					<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
-					<label><%=rating_hardness.avg_score%>(<%=rating_hardness.total_rating_counts%>)</label>
+					<label><%=rating_hardness.avg_score.round(1)%>(<%=rating_hardness.total_rating_counts%>)</label>
 					</div>
 				</div>
 			</div>

@@ -14,6 +14,7 @@
 				<% if current_user %>
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
 					<ul class="dropdown-menu">
+					<li><a href="/courses/simulation">課表</a></li>
 					<!--<li><a href="#">課程地圖<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
 					<!--<li><a href="/file_infos/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
 					</ul>
@@ -44,7 +45,7 @@
 					</li>
 				<% end %>
 				<li><a href="/courses/">課程列表</a></li>
-				<li><a href="/courses/simulation">預排課表</a></li>
+				<!--<li><a href="/courses/simulation">預排課表</a></li>-->
       </ul>
 
     </div><!-- /.navbar-collapse -->
