@@ -33,7 +33,11 @@
 						<span class="glyphicon glyphicon-star"></span> 
 						<%= ctr_all_avg.round(1) %> | 
 						<% end %>
-						<%=cd.cos_type%> | 
+						<% if cd.cos_type=="通識"||cd.cos_type=="外語"%>
+							<%=cd.brief%> | 
+						<% else %>
+							<%=cd.cos_type%> | 
+						<% end %>
 						<strong class="course_time"><%= cd.time %></strong>
 						| 學分: <strong><%= cd.credit %></strong>
 						<% credit_sum=credit_sum+cd.credit.to_i%>

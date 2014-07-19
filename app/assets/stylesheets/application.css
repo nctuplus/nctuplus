@@ -11,21 +11,12 @@
  *= require_self
  *= require bootstrap
  *= require jquery.fileupload-ui
+ *= require font-awesome
  *= require_tree .
 
  */
  
-/* .input-group {
-    display: inline-table;
-    vertical-align: middle;
 
-    .input-group-addon,
-    .input-group-btn,
-    .form-control {
-        width: auto !important;
-    }
-}*/
-/* 'star-rating' component */
 
 
 .vcenter {

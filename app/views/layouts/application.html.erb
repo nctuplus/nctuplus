@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Csnote</title>
+  <title>NCTU+</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
@@ -11,10 +11,9 @@
   <%= csrf_meta_tags %>
 </head>
 
-<body onload="onPageLoad()">
-<%= image_tag("bg_1.jpg", :id=>'bg1', :class=>"bg")%>
-<%= image_tag("bg_2.jpg", :id=>'bg2', :class=>"bg")%>
-<%= image_tag("bg_3.jpg", :id=>'bg3', :class=>"bg")%>
+<body onload="onPageLoad();">
+<%= image_tag("head_1.jpg", :id=>'bg1', :class=>"bg")%>
+
 <!--
 <div id="user-widget">
   <% if current_user %>
@@ -47,13 +46,13 @@
 </div>
 
 
-<div class="maincontent container-fluid">
+<div class="container-fluid">
 	<div class="row">
 		<!--<div class="col-md-3">
 			<%= render 'layouts/sidebar' %>
 		</div>-->
 		
-		<div class="col-md-9 col-md-offset-2">
+		<div id="content" class="col-md-9 col-md-offset-2">
 			<% if flash[:notice] %>
 				
 				<div id="notice" class="alert <%= flash[:notice][:style] %>">
@@ -66,6 +65,8 @@
 		</div>
 	</div>
 </div>
+
+
 </body>
 
 </html>

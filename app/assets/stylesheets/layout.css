@@ -2,7 +2,8 @@
 
 body
 {	
-	font-family :Microsoft JhengHei;
+	font-family :Noto Sans T Chinese Medium ,Microsoft JhengHei;
+	//color :white;
 	//width:800px;
 	height: 100%;
 	//text-align:center;
@@ -75,6 +76,15 @@ text-decoration:none;
 	margin-left:0;
 }
 
+img.header{
+	min-width:1280px;
+	width : 100%;
+	position: fixed;
+	//padding-right:0px;
+  //top: 0;
+  //left: 0;
+	//z-index : 10;
+}
 img.bg {
   /* Set rules to fill background */
   min-height: 100%;

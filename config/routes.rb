@@ -5,8 +5,9 @@ Nctuplus::Application.routes.draw do
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
   
 	
-	get "courses/search_by_dept"
-	get "courses/search_by_keyword"
+	post "courses/search_by_dept"
+	post "courses/search_by_keyword"
+	
 	get "courses/list_all_courses"
   get "courses/rate_cts"
 	get "courses/simulation"
@@ -14,14 +15,15 @@ Nctuplus::Application.routes.draw do
 	get "courses/get_user_simulated"
 	get "courses/get_user_courses"
 	get "courses/get_sem_form"
+	get "courses/get_user_statics"
 	resources :courses
   
-   resources :departments do
+		resources :departments do
        #resources :comments, :sales
        resources :courses #, :controller => 'department_courses'
 	  #resources :course
 	   
-  end
+		end
   #resources
 	
   resources :teachers

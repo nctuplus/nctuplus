@@ -1,5 +1,6 @@
 class CourseDetail < ActiveRecord::Base
 	belongs_to :course_teachership
+	belongs_to :semester
   #belongs_to :course, :through => :course_teachership
   #belongs_to :teacher, :through => :course_teachership
 	def self.flit_semester(sem_id)

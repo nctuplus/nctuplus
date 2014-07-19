@@ -1,0 +1,101 @@
+﻿<br>
+<table class="table table-bordered table-condensed" style="background-color:white">
+
+
+<% common_dimension={'公民'=>[0,'civil'],'群已'=>[0,'youandme'],'自然'=>[0,'nature'],'歷史'=>[0,'histroy'],'文化'=>[0,'culture'],'通識'=>[0,'world']} %>
+
+<% total = 0 %>
+<tr class="row">
+	<td colspan="2">
+		<p class="text-center">共同必修<p>
+	</td>
+</tr>
+<tr class="row">
+	<td class="col-md-1" >
+	<p id="common" class="text-center">
+	通識 10/20
+	</p>
+	</td>
+	<td class="col-md-11">
+		<% common_dimension.each do |key,value| %>
+			<span class="common-tag" id="common_<%=value[1]%>" style=""><%=key%></span>
+		<% end %>
+		<% i = 0 %>
+		<% while i < 7 %>
+			<span class="common-tag" id="common_<%=i%>" ><span style="visibility:hidden">空的</span></span>
+		<% i+=1 %>
+		<% end %>
+	</td>
+</tr>
+<tr class="row">
+	<td class="col-md-1" >
+	<p id="foreign" class="text-center">
+	外語 4/6
+	</p>
+	</td>
+	<td class="col-md-11">
+		<span class="common-tag" id="foreign_basic_0" style="">基礎</span>
+		<span class="common-tag" id="foreign_basic_1" style="">基礎</span>
+		
+		<% i = 0 %>
+		<% while i < 5 %>
+			<span class="common-tag" id="foreign_<%=i%>" ><span style="visibility:hidden">空的</span></span>
+		<% i+=1 %>
+		<% end %>
+		
+	</td>
+</tr>
+
+
+<% i = 0 %>
+<% @common_courses.each do |cc| %>
+<% total = total + cc.credit.to_i %>
+	<% dimension= cc.brief.partition('/')[0] %>
+	
+	<script>
+		<% if common_dimension[dimension][0]==0 %>
+			$("#common_<%=common_dimension[dimension][1]%>").css("background-color","<%=dimension_color(dimension)%>");
+		<% else %>
+			$("#common_<%=i%>").css("background-color","<%=dimension_color(dimension)%>");
+			<% i +=1 %>
+		<% end %>
+	</script>
+	
+	
+	<% common_dimension[dimension][0]+=cc.credit.to_i%>
+
+<% end %>
+
+
+</table>
+
+
+
+<table class="table">
+
+<% @sems.each do |sem| %>
+	<% credits={'外語'=>0,'必修'=>0,'選修'=>0,'通識'=>0} %>
+	<% total=0 %>
+	<tr style="background-color:#4c66a4;"><th><%=sem.name%></th></tr>
+	<% cd_ids=@css.select{|cs|cs.semester_id==sem.id}.map{|cs|cs.course_detail_id} %>
+	<% CourseDetail.where(:id=>cd_ids).each do |cd| %>
+	
+	<tr>
+		<% ct=cd.course_teachership %>
+		<td><%=ct.course.ch_name%></td>
+		<td><%=ct.course.department.ch_name%></td>
+		<td><%=ct.teacher.name%></td>
+		<td><%=cd.cos_type%></td>
+		<td><%= cd.credit%></td>
+		<% credits[cd.cos_type]=credits[cd.cos_type]+cd.credit.to_i %>
+		<% total=total+cd.credit.to_i %>
+	</tr>
+	<% end %>
+	<tr><td>
+		<% credits.each do |key,value| %>
+			<%=key%> : <%=value%> 學分  
+		<% end %>
+		共 <%=total%> 學分
+	</td></tr>
+<% end %>
+</table>

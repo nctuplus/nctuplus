@@ -154,6 +154,7 @@ class MainController < ApplicationController
 		end
   end
 	def save_course_teacher_rating(cts_id)
+		return if CourseTeacherRating.where(:course_teachership_id=>cts_id).take
 		_type=["cold","sweety","hardness"]
 		_type.each do |t|
 			CourseTeacherRating.create(:course_teachership_id=>cts_id, :rating_type=>t, :avg_score=>0, :total_rating_counts=>0)
