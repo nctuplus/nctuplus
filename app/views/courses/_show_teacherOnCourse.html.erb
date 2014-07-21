@@ -1,5 +1,10 @@
 <% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
-
+<% periodAll = Array.new%>
+<%if Semester.find(courseTeacher.course_details.first.semester_id).name.include?("上")%>
+	<%periodAll.push(2,3,4,5,6)%> 
+<%else%>
+	<%periodAll.push(9,10,11,12,1)%>
+<%end%>
 </br>
 
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
@@ -50,7 +55,31 @@
 		</h2>	
 	</div>
    <div class="panel-body">
-	ssssss1
+   	<div class="well">
+  		
+
+<div class="row">
+考試月份：   		
+		<div class="btn-group">
+<%periodAll.each do |p|%>		
+        	<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test_num');"><span class="col-md-1"><%=p.to_s%></span></button>
+<%end%>        	
+        	
+      	</div>
+考試次數： <span id="test_num">0</span>      	
+</div>
+<div class="row">
+作業月份：   		
+		<div class="btn-group">
+<%periodAll.each do |p|%>		
+        	<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw_num');"><span class="col-md-1"><%=p.to_s%></span></button>
+<%end%>        	
+        	
+      	</div>
+作業次數： <span id="hw_num">0</span>      	
+</div> 
+
+	</div>
    </div>
    <div class="panel-heading">
 		<h2 class="panel-title">
@@ -59,15 +88,54 @@
 		</h2>	
 	</div>
 	<div class="panel-body">
-	ssssss1
+	<div class="well">
+	ssssss2
+	</div>
    </div>
 	<div class="panel-heading">
 		<h2 class="panel-title">
 			<span class="glyphicon glyphicon-th-list"></span>			
-			點評：
+			討論：
 		</h2>	
 	</div>
-   <div class="panel-body">
-	ssssss1
-   </div>
+	<div class="panel-body">
+		<div class="row">	
+			<div class="well col-sm-5 ">
+				<%=User.find(4).name%>：
+				<%=text_area_tag "comment","default",:class=>"form-control"%>
+			</div>
+		</div>
+		<div class="row well col-sm-8 background-color-well">
+			<table class="table table-bordered background-color-ptt">
+				<tr>
+					<td>
+						<font class="text-color-green">推</font> GGYY		:	skal;sdka;lsdka;lsdk;l
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font class="text-color-yellow">→</font> GGYY2		:	skal;sss;lsdka;lsdk;l
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<font class="text-color-red">噓</font> GGYY2		:	skal;sss;lsdka;lsdk;l
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </div>
+
+<script>
+	function changeColor(but,color,count_div){
+		//alert(num) ;
+		if(but.hasClass('active')){
+			$('#'+count_div).html((parseInt($('#hw_num').html())-1).toString()) ;
+			but.removeClass('active').switchClass('btn-'+color, 'btn-default') ;
+		}else{
+			$('#'+count_div).html((parseInt($('#hw_num').html())+1).toString()) ;
+			but.addClass('active').switchClass('btn-default', 'btn-'+color) ;
+		}
+	}
+</script>

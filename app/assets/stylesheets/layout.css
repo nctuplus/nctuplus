@@ -39,10 +39,29 @@ text-decoration:none;
 	height :600px;
 	overflow-y :scroll;
 }
+ 
+ 
+.test{
+background-color: black  ; 
+} 
+ 
+.global-background-color{  
+	background-color: white  ; 
+	opacity:0.85;
+}
 
-
-
-
+.background-color-ptt{
+	background-color: #868A08  ;
+}
+.text-color-red{
+	color: red;
+}
+.text-color-yellow{
+	color: yellow;
+}
+.text-color-green{
+	color: green;
+}
 
 
 
