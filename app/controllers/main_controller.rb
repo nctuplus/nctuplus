@@ -10,11 +10,19 @@ class MainController < ApplicationController
 		@file_count=FileInfo.count
 		@review_count=Review.count
 		@user_count=User.count
+		
   end
 	
 	def hidden_prepare
 	  #prepare_course_db
 		#final_set_dept_type
+		_type=["cold","sweety","hardness"]
+		
+		CourseTeachership.all.each do |ct|
+			_type.each do |t|
+				CourseTeacherRating.create(:course_teachership_id=>ct.id, :rating_type=>t, :avg_score=>0, :total_rating_counts=>0)
+			end
+		end
 	end
 	
 	
