@@ -8,9 +8,7 @@
 			<ul class="nav nav-tabs" style="margin-top:50px;">
 				<li class="active"><a href="#a" data-toggle="tab" >查詢</a></li>
 				<li><a href="#b" data-toggle="tab">已選</a></li>
-				<!--<li><a href="#c" data-toggle="tab">新增學期</a></li>
-				<br><br><br><br><br><br>
-				<li><a href="#1031" data-toggle="tab">103上</a></li>-->
+
 			</ul>
 			
 			<!--<div class="container">-->
@@ -37,116 +35,24 @@
 						</div>
 					</div>
 				</div>
-				<div class="tab-pane" id="c">
-					<div class="panel panel-primary" >
-						<div class="panel-heading" >
-							<h4 class="text-center">新增學期</h4>
-						</div>
-						<div class="panel-body" style="min-height:400px;">
-							<select class="form-control"></select>
-						</div>
-					</div>
-				</div>
+
 			</div>
 
 		</div>
 		
-	<div class="col-md-6 ">
-		<div class="panel panel-primary ">
-			<div class="panel-heading" style="background-color:#4c66a4;">
-				<h4 class="text-center">課表</h4>
-			</div>
-			<!--<div class="panel-body">-->
-				<table class="table table-bordered" id="schedule_table">
-					<tr>
-						<th class="col" ></th>
-						<% days=['Mon','Tue','Wed','Thu','Fri','Sat'] %>
-						<% days.each do |day| %>
-							<th class="col-md-2"><p class="text-center"><%=day%></p></th>
-						<% end %>
-					</tr>
-					<% time=['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] %>
-					<% real_time=['6:00 ~ 6:50','7:00 ~ 7:50','8:00 ~ 8:50','9:00 ~ 9:50','10:10 ~ 11:00','11:10 ~ 12:00','12:20 ~ 13:10','13:20 ~ 14:10','14:20 ~ 15:10','15:30 ~ 16:20','16:30 ~ 17:20','17:30 ~ 18:20','18:30 ~ 19:20','19:30 ~ 20:20','20:30 ~ 21:20','21:30 ~ 22:20'] %>
-					<% time_index=0 %>
-					<% time.each do |t|%>
-						<tr>
-							<th id="time_<%=t%>" class="schedule-grid"><p class="text-center"><%=t%></p></th>
-							<script>
-								$('#time_<%=t%>').popover({
-									content: "<%= real_time[time_index] %>",
-									placement:"auto",
-									trigger : "hover",
-									container :"body"
-								});
-							</script>
-							<% time_index = time_index+1 %>
-							<% i = 1 %>
-							<%  days.each do |day| %>
-								<td id="day_<%=i%>_time_<%=t%>" class="schd-slot-empty" ></td>
-								<%i=i+1%>
-							<% end %>
-						</tr>
-					<% end %>
-				</table>
-				
-			<!--</div>-->
-		</div>
+	<div class="col-md-6 " id="user_schedule">
+		
 	</div>
 </div>
 <script>
 
-function add_time_slot(courses){
-	for(var i = 0 ; i < courses.length ; i++){
-		if(courses[i].time==" ")//for 藝文賞析
-			continue;
-		var timearr=courses[i].time.match(/[0-9][A-Z]+/g);
-		for(var j = 0 ; j < timearr.length ; j++){
-			var day=timearr[j][0];
-			for(var k = 1 ; k < timearr[j].length ; k++){
-				var row_id="#day_"+day+"_time_"+timearr[j][k];
-				$(row_id).removeClass("schd-slot-empty");
-				$(row_id).css("background-color",courses[i].color/*+" !important"*/);
-				//$(row_id).addClass("success");
-				$(row_id).text(courses[i].name);
-				$(row_id).popover({
-					content:"教室:"+courses[i].room,
-					//delay: { show: 500, hide: 100 },
-					placement:"auto",
-					trigger : "hover",
-					container :"body"
-				});
-			}
-		}
-	}
-}
+
 $(document).ready(function(){
 	<% if current_user %>
-		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>");
+		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+		$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");
 	<% end %>
 	
-	var rows = $('.schd-slot-empty');//.not(':first');
-	rows.on('click', function(e) {
-        
-		/* Get current row */
-		var row = $(this);//$(this).find('td');
-		row.addClass("schd-grid-selected");
-		//alert(row.attr('id'));
-	});
-	
-	/*$.getJSON("/courses/get_user_simulated", function (courses) {
-		for(var i = 0 ; i < courses.length ; i++){
-			var timearr=courses[i].time.match(/[0-9][A-Z]+/g);
-			for(var j = 0 ; j < timearr.length ; j++){
-				var day=timearr[j][0];
-				for(var k = 1 ; k < timearr[j].length ; k++){
-				var row_id="#day_"+day+"_time_"+timearr[j][k];
-				$(row_id).removeClass("schedule-slot-empty");
-				$(row_id).addClass("info");
-				$(row_id).text(courses[i].name);
-				}
-			}
-		}
-	});*/
 });
 
 
@@ -212,7 +118,8 @@ function save_course(cd_id,type){
 		success: function(data) {
 			//if(type=="add")
 			$("#has_seleted_courses").html('<%=loading_img%>');
-			$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>");
+			$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+			$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");
 			//alert("SUCCESS");
 		},
 		

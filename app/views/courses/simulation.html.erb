@@ -59,6 +59,7 @@ function add_semester(){
 $(document).ready(function(){
 	$("#add_sem_form").hide();
 	$("#srch_and_schd").load("/courses/get_user_simulated?sem_id=<%=latest_semester.id%>");
+	
 });
 
 function change_sem(id){

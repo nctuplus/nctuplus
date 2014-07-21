@@ -1,7 +1,7 @@
 
 
 
-<table class="table table-hover  " id="course_table" >
+<table class="table table-hover table-bordered" id="course_table" >
 
 
 
@@ -9,15 +9,15 @@
 <th class="col-md-1">評價
 <% select_tag("sort_by", options_for_select([['綜合','all'],['涼度','cold'],['甜度','sweety'],['硬度','hardness']]),  :style=>"height :25px;width:60px; ", :onchange=>"reorder($(this))") %>
 </th>
-<th class="col-md-2">系所</th>
+<th class="col-md-2">系所/摘要</th>
 <!--<th>永久課號</th>-->
-<th class="col-md-1">摘要</th>
+
 <th class="col-md-2">課名</th>
 <th class="col-md-1">老師</th>
 <th class="col-md-3">簡介</th>
 <th class="col-md-1">時間</th>
 <th class="col-md-1">學分</th>
-
+<!--<th class="col-md-1"></th>-->
 </tr>
 
 	<% if @course_details %>
@@ -40,10 +40,15 @@
 						<p id="rating_hardness" class="rating hardness hidden"><%= ctr_hardness.avg_score.round(1) %></p>
 					</td>
 					<!--<td><%=course.semesters.first.name%></td>-->
-					<td><%=course.department.ch_name%></td>
-					<td><%= cd.brief %></td>
+					<td>
+						<%=course.department.ch_name%>
+						<% if cd.brief!=" " %>
+						/<%= cd.brief %>
+						<% end %>
+					</td>
+					<!--<td><%= cd.brief %></td>-->
 					<!--<td><%= link_to course.real_id, course_path(course) %></td>-->
-					<td><%= link_to course.ch_name, course_path(course, :tid=>cd.course_teachership.teacher.id) %></td>
+					<td><%= course.ch_name %></td>
 					<td><%= cd.course_teachership.teacher.name %></td>
 					<td><%= cd.memo %></td>
 					<td><%= cd.time %></td>
