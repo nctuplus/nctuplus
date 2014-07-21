@@ -1,9 +1,0 @@
-<%= form_for @course, :url => { :controller => 'course', :action => 'create' } do |f| %>
-    <%= f.label :ch_name, "中文名稱" %>
-    <%= f.text_field :ch_name %>
-	<%= f.label :eng_name, "英文名稱(縮寫即可)" %>
-    <%= f.text_field :eng_name %>
-    <%= f.select :grade_id, options_from_collection_for_select(Grade.all, :id, :name) %>
-	<%= cktext_area :eng_name, :info, :cols => 40, :ckeditor => {:uiColor => '#AADC6E', :toolbar => 'mini'} %>
-    <%= f.submit "Create" %>
-<% end %>

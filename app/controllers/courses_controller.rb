@@ -48,8 +48,14 @@ class CoursesController < ApplicationController
     #  format.html # index.html.erb
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
     #end
-		@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"color"=>cos_type_color(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
-		render "course_lists_mini"
+		if params[:type]=="schd"
+			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"color"=>cos_type_color(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
+			render "user_schedule"
+		elsif params[:type]=="list"
+			render "course_lists_mini"
+		else 
+			render ""
+		end
 	end
 	
 	def get_user_simulated

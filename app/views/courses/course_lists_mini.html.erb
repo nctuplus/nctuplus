@@ -62,54 +62,12 @@
 </table>
 
 
-<script>
-<% if @table_type!="search" %>
-$(document).ready(function() {
-add_time_slot(<%=@cd_jsons.to_s.html_safe%>);
-});
-<% end %>
-/*$(document).ready(function($) {
-
-	 var c = {};
-
-	$(".clickable-row").draggable({
-		helper: "clone",
-		start: function(event, ui) {
-				c.tr = this;
-				c.helper = ui.helper;
-		}
-	});
-	$(".schedule-slot").droppable({
-        drop: function(event, ui) {
-            var inventor = ui.draggable.text();
-						//console.log(ui.draggable.find("#course_time").text());
-						var name=ui.draggable.find("#course_name").text();
-						var time=ui.draggable.find("#course_time").text();
-						//console.log(time[0]);
-						timearr=time.match(/[0-9][A-Z]+/g);
-						//console.log(time.match(/[0-9][A-Z]+/g));
-						for(var i = 0 ; i < timearr.length ; i++){
-							var day=timearr[i][0];
-							for(var j = 1 ; j < timearr[i].length ; j++){
-								var row_id="#day_"+day+"_time_"+timearr[i][j];
-								if($(row_id).text()!=""){
-									alert("衝堂囉!");
-									return;
-								}
-								$(row_id).text(name);
-								
-							}
-						}
-
-
-            $(c.tr).remove();
-            $(c.helper).remove();
-        }
-    });
-});*/
 
 
 
-</script>
+
+
+
+
 
 
