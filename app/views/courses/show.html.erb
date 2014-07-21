@@ -1,8 +1,8 @@
 <%= javascript_include_tag "courses", "data-turbolinks-track" => true %>
 
-<h1>
+<h1 class="row">
 	<div class="col-md-9"><%= @course.ch_name %>(<%= @course.eng_name %>)</div>  	
-	<div class="col-md-3"><%=@teacher_show.name%> <small><span class="label label-<%=rankTag(@target_rank)%>"><%=@target_rank.to_s%></span></small></div>
+	<div class="col-md-3"><%=@teacher_show.name%> <small><span class=" label label-<%=rankTag(@target_rank)%>"><%=@target_rank.to_s%></span></small></div>
 </h1>
 
 <ul class="nav nav-tabs">

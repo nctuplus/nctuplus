@@ -46,7 +46,7 @@ background-color: black  ;
 } 
  
 .global-background-color{  
-	background-color: rgba(255,255,255,0.4); 
+	background-color: rgba(255,255,255,0.5); 
 	//opacity :0.75
 }
 
@@ -81,6 +81,11 @@ background-color: black  ;
 	border: 1px solid #eee;
 	border-left-width: 5px;
 	border-radius: 3px;
+}
+
+
+.test{
+//box-shadow:1px 1px 2px rgba(100%,0%,0%,0.4),1px -1px 2px rgba(0%,100%,0%,0.4),3px 4px 2px rgba(0%,0%,100%,0.4);
 }
 
 .bs-callout-info {
