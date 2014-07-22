@@ -1,10 +1,15 @@
 <br>
 
 <script>
-function gen_raty(type,ctr_id,show_score,rated){
+function gen_raty(type,ctr_id,show_score,not_login,rated){
 	$("#rating_"+ctr_id).raty({
 		score:show_score,
-		readOnly :rated,
+		readOnly :not_login,
+		cancel :rated,
+		cancelOff : 'cancel-custom-off.png',
+		cancelOn  : 'cancel-custom-on.png',
+		noRatedMsg : "請先登入!",
+		cancelHint : '取消評分',
 		click: function(score, evt) {
 			rate_course(ctr_id,score);
 		}
@@ -23,7 +28,8 @@ function rate_course(ctr_id,score){
 		success: function(data){
 			var d=JSON.parse(data);
 			var new_count="<label>"+d.new_score+"("+d.new_counts+")</label>";
-			$("#rating_"+ctr_id).raty({readOnly: true, score:d.new_score});
+			$("#rating_"+ctr_id).raty('set',{cancel: true, score:d.new_score});
+			//$("#rating_"+ctr_id).raty('reload');
 			$("#rating_"+ctr_id+"_counts").html(new_count);
 		},
 		
@@ -78,7 +84,7 @@ function rate_course(ctr_id,score){
 					</div>
 					<div class="col-sm-5 row-condensed">
 						<div id="rating_<%=rating_cold.id%>"></div>
-						<script>gen_raty("",<%=rating_cold.id%>,<%=rating_cold.avg_score%>,<%=has_rated(rating_cold.id)%>);</script>	
+						<script>gen_raty("",<%=rating_cold.id%>,<%=rating_cold.avg_score%>,<%=current_user.nil? %>,<%=has_rated(rating_cold.id)%>);</script>	
 					</div>	
 					<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
 						<label><%=rating_cold.avg_score.round(1)%>(<%=rating_cold.total_rating_counts%>)</label>
@@ -91,7 +97,7 @@ function rate_course(ctr_id,score){
 					</div>
 					<div class="col-sm-5 row-condensed">
 						<div id="rating_<%=rating_sweety.id%>"></div>
-						<script>gen_raty("",<%=rating_sweety.id%>,<%=rating_sweety.avg_score%>,<%=has_rated(rating_sweety.id)%>);</script>	
+						<script>gen_raty("",<%=rating_sweety.id%>,<%=rating_sweety.avg_score%>,<%= current_user.nil? %>,<%=has_rated(rating_sweety.id)%>);</script>	
 					</div>
 					<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
 					<label><%=rating_sweety.avg_score.round(1)%>(<%=rating_sweety.total_rating_counts%>)</label>
@@ -103,7 +109,7 @@ function rate_course(ctr_id,score){
 					</div>
 					<div class="col-sm-5 row-condensed">
 						<div id="rating_<%=rating_hardness.id%>"></div>
-						<script>gen_raty("",<%=rating_hardness.id%>,<%=rating_hardness.avg_score%>,<%=has_rated(rating_hardness.id)%>);</script>	
+						<script>gen_raty("",<%=rating_hardness.id%>,<%=rating_hardness.avg_score%>,<%= current_user.nil? %>,<%=has_rated(rating_hardness.id)%>);</script>	
 					</div>
 					<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
 					<label><%=rating_hardness.avg_score.round(1)%>(<%=rating_hardness.total_rating_counts%>)</label>

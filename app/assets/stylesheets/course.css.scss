@@ -2,6 +2,20 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+.course-common{
+	background-color:#F0AD4E;
+}
+	
+.course-elective{
+	background-color:#AFFFD8;
+}
+.course-foreign{
+	background-color:#FEFFCD;
+}
+.course-required{
+	background-color:#AFFFB0;
+}
+
 .course-tag{
   color:white;
 }

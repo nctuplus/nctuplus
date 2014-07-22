@@ -54,12 +54,10 @@
 		
 		<div id="content" class="col-md-9 col-md-offset-2">
 			<% if flash[:notice] %>
-				
-				<div id="notice" class="alert <%= flash[:notice][:style] %>">
+				<div id="notice" class="alert <%= flash[:notice][:style] %>"style="z-index:2000;">
 					<h4><%= flash[:notice][:title] %></h4>
 					<%= flash[:notice][:message] %>
 				</div>
-
 			<%end%>
 			<div id="global_bgcolor" class="well global-background-color">
 			<%= yield %>

@@ -1,9 +1,13 @@
 <%= javascript_include_tag "courses", "data-turbolinks-track" => true %>
 
 <h1>
-	<div class="col-md-9"><%= @course.ch_name %>(<%= @course.eng_name %>)</div>  	
+	<div class="col-md-9"><%= @course.ch_name %>(<%= @course.eng_name %>) <button class="btn btn-primary btn-lg" onclick="add_to_cart(<%=params[:id]%>,'add')">加入觀察名單</button></div>  	
 	<div class="col-md-3"><%=@teacher_show.name%> <small><span class="label label-<%=rankTag(@target_rank)%>"><%=@target_rank.to_s%></span></small></div>
+	
+	<br>
 </h1>
+
+
 
 <ul class="nav nav-tabs">
   <li class="active" id="tc-link"><a href="javascript:void(0);" onclick="show_item('tc');">課程資訊</a></li>
@@ -11,6 +15,9 @@
   <!--<li class="" id="posts-link"><a href="#" onclick="show_item('posts');">文章</a></li>-->
   <li class="" id="files-link"><a href="javascript:void(0);" onclick="show_item('files');" >檔案</a></li>
 </ul>
+
+
+<%= render :partial=> "user_side_bar" %>
 
 
 <div id="tc_list" >
@@ -31,17 +38,19 @@
 <script>
 
 
-function show_item(item){//change show files or notes
-  list=["files","posts","infos","tc"]
-  
-  for(i=0;i<4;i++){
-    if(list[i]!=item){
-		$("#"+list[i]+"_list").hide();
-		$("#"+list[i]+"-link").attr("class","");
-	}
-  }
-  $("#"+item+"_list").show();
-  $("#"+item+"-link").attr("class","active");
 
-}
+
+	function show_item(item){//change show files or notes
+		list=["files","posts","infos","tc"]
+		
+		for(i=0;i<4;i++){
+			if(list[i]!=item){
+				$("#"+list[i]+"_list").hide();
+				$("#"+list[i]+"-link").attr("class","");
+			}
+		}
+		$("#"+item+"_list").show();
+		$("#"+item+"-link").attr("class","active");
+
+	}
 </script>
