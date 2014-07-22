@@ -1,10 +1,9 @@
 <%= javascript_include_tag "courses", "data-turbolinks-track" => true %>
 
-<h1>
+<h1 class="row">
 	<div class="col-md-9"><%= @course.ch_name %>(<%= @course.eng_name %>) <button class="btn btn-primary btn-lg" onclick="add_to_cart(<%=params[:id]%>,'add')">加入觀察名單</button></div>  	
 	<div class="col-md-3"><%=@teacher_show.name%> <small><span class="label label-<%=rankTag(@target_rank)%>"><%=@target_rank.to_s%></span></small></div>
 	
-	<br>
 </h1>
 
 
