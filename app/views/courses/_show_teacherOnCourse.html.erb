@@ -15,13 +15,16 @@
 	
 	<div class="panel-heading">
       	<h2 class="panel-title">
-        	<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
-				<span class="glyphicon glyphicon-th-list"></span> 
-			</a>	
-				課程時間/地點：    	
+			<span class="glyphicon glyphicon-th-list"></span> 
+			課程時間/地點：  <%=courseTeacher.course_details.first.room.presence||'無資料'%>/<%=courseTeacher.course_details.first.time%>
+			<span class="col-xs-6">
+			<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >
+				<span class="glyphicon glyphicon-th-list"></span>
+			</a>
+			</span>
       	</h2>  	
 	</div>
-    <div id="collapseOne" class="panel-collapse collapse in">
+    <div id="collapseOne" class="panel-collapse collapse">
       <div class="panel-body">
 		<table class="table">
     		<tr>
@@ -101,36 +104,20 @@
 				<%=form_tag "/courses/comment_submit", :remote=>true do%>
 					<%=User.find(4).name%>：
 					<%=select_tag "type",options_for_select([["推",1],["->",2],["噓",3]])%>
-					<%=text_field_tag "comment","default",:class=>"form-control"%>
+					<%=text_field_tag "comment","推薦這篇文章",:class=>"form-control"%>
 					<%=submit_tag "go", :class=>"form-control", :id=>"submit_but"%>
 					<%=hidden_field_tag "ctship",courseTeacher.id %>
 				<% end %>	
 			</div>
 		</div>
 		<div class="row well col-sm-8 background-color-well" id="commentList">
-			<table class="table table-bordered background-color-ptt">
-				<tr>
-					<td>
-						<font class="text-color-green">推</font> GGYY		:	skal;sdka;lsdka;lsdk;l
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<font class="text-color-yellow">→</font> GGYY2		:	skal;sss;lsdka;lsdk;l
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<font class="text-color-red">噓</font> GGYY2		:	skal;sss;lsdka;lsdk;l
-					</td>
-				</tr>
-			</table>
+			<%=render :partial=>'comment_list', :locals => {:ct_id=>courseTeacher.id} %>
 		</div>
 	</div>
 </div>
 
 <script>
-/*
+
 $(document).ready(function(){
 	$("#submit_but").bind('ajax:success', function(){
  		alert("Success!");
@@ -138,7 +125,7 @@ $(document).ready(function(){
  		alert("error!");
 	});
 });
-*/
+
 
 	function commentShow(link){
 		if(link.html()=="留言"){
