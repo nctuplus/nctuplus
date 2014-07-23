@@ -2,10 +2,24 @@ class CoursesController < ApplicationController
   #before_filter :find_department, :only=>[ :index, :new, :edit]
   
   
-	layout false, :only => [:list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics]
+	layout false, :only => [:commentSubmit, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics]
 	
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
+	
+	def comment_submit
+		@com = Comment.new(:content=>params[:comment], :content_type=>params[:type].to_i)
+		@com.user_id = current_user.id
+		@com.course_teachership_id = params[:ctship]
+		
+		if @com.save
+			render 'comment_submit'	
+		else
+			render :nothing => true, :status => 200, :content_type => 'text/html'	
+		end
+		#render :nothing => true, :status => 200, :content_type => 'text/html'
+  	 	
+    end
 	
 	def index
 
@@ -186,6 +200,8 @@ class CoursesController < ApplicationController
 		end
 	end
 	
+	
+	
   def show
     @course = Course.find(params[:id])
 		@posts = @course.posts
@@ -263,6 +279,10 @@ class CoursesController < ApplicationController
     redirect_to :action => :index
   end
   
+  
+
+  
+  
   protected
   def find_department
     @department=Department.find(params[:department_id])
@@ -331,5 +351,6 @@ class CoursesController < ApplicationController
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)
   end
+  
   
 end

@@ -7,15 +7,18 @@ Nctuplus::Application.routes.draw do
 	
 	post "courses/search_by_dept"
 	post "courses/search_by_keyword"
-	
+	post "courses/comment_submit"
+
 	get "courses/list_all_courses"
-  get "courses/rate_cts"
+    get "courses/rate_cts"
 	get "courses/simulation"
 	get "courses/add_simulated_course"
 	get "courses/get_user_simulated"
 	get "courses/get_user_courses"
 	get "courses/get_sem_form"
-
+	
+		
+	
 	get "courses/get_user_statics"
 	resources :courses
 

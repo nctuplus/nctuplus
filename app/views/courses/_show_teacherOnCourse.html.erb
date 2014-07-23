@@ -48,8 +48,7 @@
     <div class="panel-heading">
 		<h2 class="panel-title">
 			<span class="glyphicon glyphicon-th-list"></span>			
-			課程攻略：
-			<font class="text-right"><%=link_to "編輯", "#"%></font>
+			課程攻略： <%=link_to "編輯", "javascript:void(0);"%>	
 		</h2>	
 	</div>
    <div class="panel-body">
@@ -93,17 +92,22 @@
 	<div class="panel-heading">
 		<h2 class="panel-title">
 			<span class="glyphicon glyphicon-th-list"></span>			
-			討論：
+			討論： <%=link_to "留言","javascript:void(0);",:onclick=>'commentShow($(this));'%>
 		</h2>	
 	</div>
 	<div class="panel-body">
 		<div class="row">	
-			<div class="well col-sm-5 ">
-				<%=User.find(4).name%>：
-				<%=text_area_tag "comment","default",:class=>"form-control"%>
+			<div class="well col-sm-7" id="commentNew" style="display:none;">
+				<%=form_tag "/courses/comment_submit", :remote=>true do%>
+					<%=User.find(4).name%>：
+					<%=select_tag "type",options_for_select([["推",1],["->",2],["噓",3]])%>
+					<%=text_field_tag "comment","default",:class=>"form-control"%>
+					<%=submit_tag "go", :class=>"form-control", :id=>"submit_but"%>
+					<%=hidden_field_tag "ctship",courseTeacher.id %>
+				<% end %>	
 			</div>
 		</div>
-		<div class="row well col-sm-8 background-color-well">
+		<div class="row well col-sm-8 background-color-well" id="commentList">
 			<table class="table table-bordered background-color-ptt">
 				<tr>
 					<td>
@@ -126,6 +130,27 @@
 </div>
 
 <script>
+/*
+$(document).ready(function(){
+	$("#submit_but").bind('ajax:success', function(){
+ 		alert("Success!");
+	}).bind('ajax:error', function(){
+ 		alert("error!");
+	});
+});
+*/
+
+	function commentShow(link){
+		if(link.html()=="留言"){
+			$("#commentNew").show();
+			link.html("收回");
+		}else{
+			$("#commentNew").hide();
+			link.html("留言");
+		}
+				
+	}
+
 	function changeColor(but,color,count_div){
 		//alert(num) ;
 		if(but.hasClass('active')){
