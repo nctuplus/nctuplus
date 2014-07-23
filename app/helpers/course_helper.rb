@@ -48,18 +48,42 @@ module CourseHelper
 		end
 	end
 	
+	def dimension_class(cos_type)
+		prefix='dimension-'
+		case cos_type
+			when "通識"
+				prefix<<'world'
+			when "歷史"
+				prefix<<'history'
+			when "群已"
+				prefix<<'youandme'
+			when "公民"
+				prefix<<'civil'
+			when "自然"
+				prefix<<'nature'
+			when "文化"
+				prefix<<'culture'
+		end
+	end
+	
 	def cos_type_class(cos_type)
 		prefix="course-"
 		case cos_type
+			when "共同必修"
+				type="common-required"
+			when "共同選修"
+				type="common-elective"
 			when "通識"
-				type='common'
+				type='general'
 			when "必修"
 				type='required'
 			when "選修"
 				type='elective'
 			when "外語"
 				type='foreign'
+			
 		end
+		#type=""
 		prefix<<type
 	end
 	

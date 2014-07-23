@@ -14,15 +14,15 @@ class MainController < ApplicationController
   end
 	
 	def hidden_prepare
-	  #prepare_course_db
-		#final_set_dept_type
-		_type=["cold","sweety","hardness"]
-		
-		CourseTeachership.all.each do |ct|
-			_type.each do |t|
-				CourseTeacherRating.create(:course_teachership_id=>ct.id, :rating_type=>t, :avg_score=>0, :total_rating_counts=>0)
-			end
-		end
+	  prepare_course_db
+		final_set_dept_type
+		#_type=["cold","sweety","hardness"]
+		#
+		#CourseTeachership.all.each do |ct|
+		#	_type.each do |t|
+		#		CourseTeacherRating.create(:course_teachership_id=>ct.id, :rating_type=>t, :avg_score=>0, :total_rating_counts=>0)
+		#	end
+		#end
 	end
 	
 	
@@ -133,7 +133,8 @@ class MainController < ApplicationController
 		end
   end
   def prepare_course_db
-  
+  #year=['103']
+	#sem=['1']
     year=['103','102','101','100']
 	sem=['2','1']
 	year.each do |y|
@@ -218,7 +219,13 @@ class MainController < ApplicationController
 			@cd.room=raw_data['cos_time'].partition('-')[2]
 			@cd.memo=raw_data['memo']
 			@cd.students_limit=raw_data['num_limit']
-			@cd.cos_type=raw_data['cos_type']
+			@cd.reg_num=raw_data['reg_num']
+			
+			if raw_data['degree']=="0"&&(raw_data['cos_type']=="必修"||raw_data['cos_type']=="選修")
+				@cd.cos_type="共同"<<raw_data['cos_type']
+			else
+				@cd.cos_type=raw_data['cos_type']
+			end
 			@cd.temp_cos_id=raw_data['cos_id']
 			@cd.brief=raw_data['brief']
 			@cd.save

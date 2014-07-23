@@ -5,9 +5,18 @@
   
   <%= form_for FileInfo.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
     <!-- The table listing the files available for upload/download -->
-    <table class="table">
-	<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
-	<tr><th>老師</th><th>年度</th><th>檔案說明</th><th>檔名</th><th>大小</th><th>提供者</th><th>上傳時間</th><th >動作</th></tr>
+    <table class="table well" >
+			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+			<tr>
+				<th class="col-md-1">老師</th>
+				<th class="col-md-1">年度</th>
+				<th class="col-md-2">檔案說明</th>
+				<th class="col-md-2">檔名</th>
+				<th class="col-md-1">大小</th>
+				<th class="col-md-1">提供者</th>
+				<th class="col-md-1">上傳時間</th>
+				<th class="col-md-1">動作</th>
+			</tr>
 	<tr id="loading"><td colspan="8" ><p class="text-center"><%=image_tag("/assets/loading.gif", size: '42x42')%></p></td></tr>
 	</tbody>
     </table>
@@ -21,7 +30,9 @@
 		
 	  </div>
 	  <div class="panel-body ">
-		<p>目前支援的格式有: c/cpp/docx/doc/pdf/jpg/jpeg/png/gif</p>
+		<h4>請尊重智慧財產權!</h4>
+		<p>本區只開放上傳考古題，若上傳非相關檔案或未授權檔案後果請自行負責!</p>
+		<p>目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip</p>
 		<p>每個檔案的大小限制為10mb</p>     
 		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 		<% if current_user %>

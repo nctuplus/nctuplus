@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   private
 	
 	def ajax_flash(_class,title,mesg)
-		html='<div id="ajax_notice" class="alert alert-'<<_class<<'" style="z-index:2000;">'
+		html='<div id="ajax_notice" class="alert alert-'<<_class<<'" style="width:500px;position:fixed;left:300;top:100;z-index:2000;">'
 		html<<'<h4>'<<title<<'</h4>'
 		html<<mesg
 		html<<'<div>'

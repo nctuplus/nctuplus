@@ -1,4 +1,4 @@
-<% if current_user %>
+
 <script>
 	$(document).ready(function(){
 		$("#schd_but").hover(
@@ -35,8 +35,11 @@
 	
 </script>
 <div  class="container" style="color:white;padding-top:8px;padding-bottom:8px;position:fixed;z-index:100;left:20px;margin-top:10%;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
+
+<% if current_user %>
 <%= fa_icon("list-alt 3x ", :id=>"schd_but") %>
 <br>
+<% end %>
 <%= fa_icon("shopping-cart 3x", :id=>"cart_but") %>
 <br>
 <%= fa_icon("question-circle 3x", :id=>"question_but", :style=>"margin-left:3px;") %>
@@ -60,4 +63,3 @@
 	</div>
 </div>
 
-<% end %>

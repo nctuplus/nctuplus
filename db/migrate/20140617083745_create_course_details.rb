@@ -7,7 +7,8 @@ class CreateCourseDetails < ActiveRecord::Migration
 		t.string :room
 		t.string :temp_cos_id
 		t.string :brief
-		t.string :memo
+		t.text :memo
+		t.string :reg_num
 		t.string :students_limit
 		t.string :cos_type
 		t.string :credit
