@@ -13,22 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20140721131823) do
 
-  create_table "ckeditor_assets", force: true do |t|
-    t.string   "data_file_name",               null: false
-    t.string   "data_content_type"
-    t.integer  "data_file_size"
-    t.integer  "assetable_id"
-    t.string   "assetable_type",    limit: 30
-    t.string   "type",              limit: 30
-    t.integer  "width"
-    t.integer  "height"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "ckeditor_assets", ["assetable_type", "assetable_id"], name: "idx_ckeditor_assetable", using: :btree
-  add_index "ckeditor_assets", ["assetable_type", "type", "assetable_id"], name: "idx_ckeditor_assetable_type", using: :btree
-
   create_table "colleges", force: true do |t|
     t.string   "name"
     t.string   "real_id"
@@ -50,7 +34,8 @@ ActiveRecord::Schema.define(version: 20140721131823) do
     t.string   "room"
     t.string   "temp_cos_id"
     t.string   "brief"
-    t.string   "memo"
+    t.text     "memo"
+    t.string   "reg_num"
     t.string   "students_limit"
     t.string   "cos_type"
     t.string   "credit"
@@ -198,16 +183,6 @@ ActiveRecord::Schema.define(version: 20140721131823) do
   create_table "semesters", force: true do |t|
     t.string   "name"
     t.string   "real_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "teacher_ratings", force: true do |t|
-    t.integer  "teacher_id"
-    t.integer  "course_id"
-    t.integer  "user_id"
-    t.integer  "score"
-    t.string   "rating_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -1,5 +1,20 @@
+
+<% if @table_type=="cart" %>
+
+
+	<div class="bs-callout bs-callout-info ">
+		<!--<h4></h4>-->
+		<p>此為觀察名單，並不會加入課表，若要加至課表請至模擬選課排課</p>
+		<p></p>
+	</div>
+
+
+<% end %>
+
+
 <table class="table table-hover courselist-hover " id="course_table" >
 	<% credit_sum=0 %>
+	<% cos_types=[] %>
 	<% if @course_details %>
 		<% @course_details.each do |cd|  %>
 			<% course=cd.course_teachership.course %>
@@ -9,6 +24,11 @@
 				<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
 				<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
 				
+				<% if !cos_types.include?(cd.cos_type) %>
+					<% cos_types.append(cd.cos_type) %>
+					<tr class="row"><th class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
+					
+				<% end %>
 				<tr id="cd_<%=cd.id%>" class="row clickable-row " href="<%=course_path(course)%>">
 					<td class="">
 						
@@ -20,10 +40,13 @@
 							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add')">
 							<span class="glyphicon glyphicon-plus"></span>
 							</button>
+							<% elsif @table_type=="cart" %>
+							<button class="btn btn-danger btn-circle pull-right" onclick="add_to_cart(<%=cd.id%>,'delete')">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
 							<% else %>
-							
 							<button class="btn btn-danger btn-circle pull-right" onclick="add_class(<%=cd.id%>,'delete')">
-							<span class="glyphicon glyphicon-minus"></span>
+								<span class="glyphicon glyphicon-minus"></span>
 							</button>
 							<% end %>
 						</p>
@@ -62,10 +85,84 @@
 </table>
 
 
+<script>
 
 
+	<% if @table_type!="cart" %>
+	function add_class(id,addordel){
+		var this_row=$("#cd_"+id);
+		var name=this_row.find(".course_name").text();
+		var time=this_row.find(".course_time").text();
+		if(time==" "){//for 藝文賞析
+			save_course(id,addordel);
+			if(addordel=="add")
+				this_row.remove();
+			return;
+		}
+		var timearr=time.match(/[0-9][A-Z]+/g);
+		
+		var slot_ids=[];
+		var conflict=false;
+		for(var i = 0 ; i < timearr.length ; i++){
+			var day=timearr[i][0];
+			
+			for(var j = 1 ; j < timearr[i].length ; j++){
+				
+				var row_id="#day_"+day+"_time_"+timearr[i][j];
+				slot_ids.push(row_id);
+				if(addordel=="add"&&$(row_id).text()!=""){
+					$(row_id).removeClass("schedule-slot-empty");
+					//$(row_id).addClass("danger");
+					$(row_id).css("background-color","#FFCECD");
+					conflict=true;
+				}
+			}
+		}
+		if(conflict){
+			alert("衝堂囉!");
+		}
+		else{
+			for(var i = 0 ; i < slot_ids.length;i++){
+				if(addordel=="add"){
+					$(slot_ids[i]).text(name);
+					$(".danger").removeClass("danger");
+				}
+				else{
+					$(slot_ids[i]).text("");
+					$(slot_ids[i]).attr("class","schedule-slot-empty");
+					
+					//$(slot_ids[i]).css("background-color","");
+					//$(row_id).addClass("danger");
+				}
+			}
+			save_course(id,addordel);
+			if(addordel=="add")
+				this_row.remove();
+		}
+	}
+	
+	function save_course(cd_id,addordel){
+		$.ajax({
+			type: "GET",
+			url: "/courses/add_simulated_course",
+			data: {
+				cd_id: cd_id,
+				type: addordel,
+				sem_id: <%=@sem_id%>
+			},
+			success: function(data) {
+				//if(type=="add")
+				$("#has_seleted_courses").html('<%=loading_img%>');
+				$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+				$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");
+				//alert("SUCCESS");
+			}
+			
+		});
+	}
 
-
+	<% end %>
+</script>
 
 
 

@@ -1,8 +1,8 @@
 <script>
   var fileUploadErrors = {
-  maxFileSize: 'File is too big',
+  maxFileSize: '檔案太大了!',
   minFileSize: 'File is too small',
-  acceptFileTypes: 'Filetype not allowed',
+  acceptFileTypes: '格式不支援',
   maxNumberOfFiles: 'Max number of files exceeded',
   uploadedBytes: 'Uploaded bytes exceed file size',
   emptyResult: 'Empty file upload result'
@@ -30,7 +30,7 @@
 	<input id="new_semester_id" type="hidden" name="file_info[semester_id]" value="<%=course.semesters.first.id %>">
 
 	</span></td>
-	<td class="description"><input name="file_info[description]" rows="1" ></td>
+	<td class="col-md-2 description"><input name="file_info[description]" rows="1" style="width:200px;"></td>
 	<td class="name"><span>{%=file.name%}</span></td>
 	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     {% if (file.error) { %}
@@ -39,20 +39,20 @@
     <td>
       <div class="progress progress-success progress-striped active"><div class="bar progress-bar" style="width:0%;"></div></div>
     </td>
-    <td class="function">
+    <td class="function col-md-1" colspan="2">
 	{% if (!o.options.autoUpload) { %}
-		<div class="start">
-		  <button class="btn btn-primary">
-			<i class="icon-upload icon-white"></i>
-			<span>{%=locale.fileupload.start%}</span>
+		<div class="start" style="display:inline-block;">
+		  <button class="btn btn-success btn-xs">
+			<span class="glyphicon glyphicon-arrow-up"></span>
+			<!--<span>{%=locale.fileupload.start%}</span>-->
 		  </button>
 		</div>
 	{% } %}
     {% if (!i) { %}
-		<div class="cancel">
-		  <button class="btn btn-warning">
-			<i class="icon-ban-circle icon-white"></i>
-			<span>{%=locale.fileupload.cancel%}</span>
+		<div class="cancel" style="display:inline-block;">
+		  <button class="btn btn-warning btn-xs">
+			<span class="glyphicon glyphicon-remove"></span>
+			<!--<span>{%=locale.fileupload.cancel%}</span>-->
 		  </button>
 		</div>
     {% } %}

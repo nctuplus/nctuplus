@@ -71,10 +71,83 @@
 
 
 
-<table class="table">
 
+<table class="table well">
+<% cos_subtypes={'外語'=>['基礎','進階'],'必修'=>[],'選修'=>[],'共同必修'=>['服務學習','物理','微積分'],'共同選修'=>[],'通識'=>[]} %>
+
+<% cos_subtypes.each do |key,value| %>
+	<tr><td colspan="100"><%=key%></td></tr>
+	<tr>
+		<% value.each do |v| %>
+			<td><%=v%></td>
+		<% end %>
+	</tr>
+	<tr>
+		<% value.each do |v| %>
+			<td>
+				<div class="progress">
+					<div class="progress-bar" role="progressbar" aria-valuemax="100" style="width: 60%;">
+						10/20
+					</div>
+				</div>
+			</td>
+		<% end %>
+	</tr>
+<% end %>
+
+<% cd_ids=current_user.course_simulations.map{|s|s.course_detail_id} %>
+<% cos_types=[] %>
+<% cos_credit=[] %>
+<% cos_count=[] %>
+<% CourseDetail.where(:id=>cd_ids).order(:cos_type, :brief).each do |cd| %>
+	<% if !cos_types.include?(cd.cos_type) %>
+		<% if cos_types.length!=0 %>
+			<tr class="row">
+				<td class="">
+					<p class="lead text-right">共 <strong><%=cos_count.last%></strong> 門課 
+					<strong><%=cos_credit.last%></strong> 學分
+					</p>
+				</td>
+			</tr>
+		<% end %>
+		
+		<% cos_count.append(1) %>
+		<% cos_credit.append(cd.credit.to_i) %>
+		<% cos_types.append(cd.cos_type) %>
+		<tr class="row"><th class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
+		
+	<% else %>
+		
+		<% cos_count[cos_credit.length-1]+=1 %>
+		<% cos_credit[cos_credit.length-1]+=cd.credit.to_i %>
+	<% end %>
+	
+	
+	<% course=cd.course_teachership.course %>
+	<tr class="row">
+		<td>
+		<%= link_to course.ch_name, course_path(course), :class=>"course_name" %>
+		
+		 | <% if course.department.ch_name!="通識" %> 
+				<%= course.department.ch_name %>
+			 <% else %>
+				<p class="label <%=dimension_class(cd.brief[0..1])%>"><%= cd.brief %></p>
+			 <% end %>
+		 | <%= cd.course_teachership.teacher.name %>
+		 | <%= cd.credit%>
+		</td>
+	</tr>
+<% end %>
+	<tr class="row">
+		<td class="">
+			<p class="lead text-right">共 <strong><%=cos_count.last%></strong> 門課 
+			<strong><%=cos_credit.last%></strong> 學分
+			</p>
+		</td>
+	</tr>
+<!--
 <% @sems.each do |sem| %>
-	<% credits={'外語'=>0,'必修'=>0,'選修'=>0,'通識'=>0} %>
+	<% credits={'外語'=>0,'必修'=>0,'選修'=>0,'共同必修'=>0,'共同選修'=>0,'通識'=>0} %>
 	<% total=0 %>
 	<tr style="background-color:#4c66a4;"><th><%=sem.name%></th></tr>
 	<% cd_ids=@css.select{|cs|cs.semester_id==sem.id}.map{|cs|cs.course_detail_id} %>
@@ -98,4 +171,5 @@
 		共 <%=total%> 學分
 	</td></tr>
 <% end %>
+-->
 </table>

@@ -2,6 +2,49 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+
+//for course_list and statics common course dimension grid color
+.dimension-world{
+	background-color:#E353E1;
+}
+.dimension-culture{
+	background-color:#E1E353;
+}
+.dimension-youandme{
+	background-color:#9D53E3;
+}
+.dimension-civil{
+	background-color:#E35553;
+}
+.dimension-nature{
+	background-color:#99E353;
+}
+.dimension-history{
+	background-color:#E39D53;
+}
+
+//for course_list and schdule grid color
+.course-common-required{
+	background-color:#AFFFD8;
+}
+.course-common-elective{
+	background-color:#B0AFFF;
+}
+.course-general{
+	background-color:#F0AD4E;
+}
+.course-elective{
+	background-color:#AFD6FF;
+}
+.course-foreign{
+	background-color:#FEFFCD;
+}
+.course-required{
+	background-color:#AFFFB0;
+}
+
+
+
 .course-tag{
   color:white;
 }

@@ -1,8 +1,10 @@
 class CoursesController < ApplicationController
   #before_filter :find_department, :only=>[ :index, :new, :edit]
   
+	include CourseHelper
   
-	layout false, :only => [:commentSubmit, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics]
+	layout false, :only => [:commentSubmit, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart]
+
 	
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
@@ -22,7 +24,7 @@ class CoursesController < ApplicationController
     end
 	
 	def index
-
+		#reset_session
 		@semesters=Semester.all
 		
 		get_autocomplete_vars
@@ -57,13 +59,14 @@ class CoursesController < ApplicationController
 	def get_user_courses 
 		sem_id=params[:sem_id].to_i
 		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
-		@course_details=CourseDetail.where(:id=>cd_ids)
+		@course_details=CourseDetail.where(:id=>cd_ids).order(:cos_type ,:brief)
+		@sem_id=sem_id
 		#respond_to do |format|
     #  format.html # index.html.erb
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
     #end
 		if params[:type]=="schd"
-			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"color"=>cos_type_color(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
+			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
 			render "user_schedule"
 		elsif params[:type]=="list"
 			render "course_lists_mini"
@@ -76,18 +79,25 @@ class CoursesController < ApplicationController
 		@sem_id=params[:sem_id]
 		get_autocomplete_vars
 		@view_type="_mini"
-		
+		@table_type="simulated"
 		render "srch_and_schd"
+	end
+	
+	def remove_cart
+		cd_id=params[:cd_id].to_i
+		session[:cd].delete(cd_id)
 	end
 	
 	def add_simulated_course
 		cd_id=params[:cd_id].to_i
 		_type=params[:type]
+		
 		sem_id=params[:sem_id]
 		if _type=="add"
 			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>sem_id, :course_detail_id=>cd_id)
 		else
 			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd_id).destroy_all
+				
 		end
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
@@ -104,11 +114,11 @@ class CoursesController < ApplicationController
 	
 	def search_by_dept
 		dept_id=params[:dept_id]
-		semester_id=params[:sem_id].to_i
+		@sem_id=params[:sem_id].to_i
 		
 		dept_ids=get_dept_ids(dept_id)
 		
-		semester=Semester.where(:id=>semester_id).take
+		semester=Semester.where(:id=>@sem_id).take
 		if semester
 			@courses=semester.courses.select{|c| join_dept(c,dept_ids)}
 		
@@ -116,7 +126,7 @@ class CoursesController < ApplicationController
 			@courses=Course.where(:department_id=>dept_ids)
 			#@course_details=@courses.
 		end
-			@course_details=join_course_detail(@courses,semester_id)
+			@course_details=join_course_detail(@courses,@sem_id)
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		@table_type="search" if params[:view_type]=="_mini"
@@ -185,10 +195,19 @@ class CoursesController < ApplicationController
 		score=params[:score].to_i
 
 		@ctr=CourseTeacherRating.find(ctr_id)#:course_teachership_id =>ctr_id, :rating_type=>type).take
-		EachCourseTeacherRating.create(:score=>score, :user_id=>current_user.id, :course_teacher_rating_id=>@ctr.id)
+		etr=EachCourseTeacherRating.where(:user_id=>current_user.id, :course_teacher_rating_id=>@ctr.id).take
+		if score!=0 && !etr
+			EachCourseTeacherRating.create(:score=>score, :user_id=>current_user.id, :course_teacher_rating_id=>@ctr.id)
+		elsif score==0
+			if etr
+				etr.destroy!
+			end
+		end
 		total_rating_counts=EachCourseTeacherRating.where(:course_teacher_rating_id=>@ctr.id).count
 		total_rating_sum=EachCourseTeacherRating.where(:course_teacher_rating_id=>@ctr.id).sum(:score)
-		@ctr.update_attributes(:total_rating_counts=>total_rating_counts, :avg_score=>total_rating_sum.to_f/total_rating_counts)
+		avg=total_rating_sum.to_f/total_rating_counts
+		avg=avg.nan? ? 0 :avg
+		@ctr.update_attributes(:total_rating_counts=>total_rating_counts, :avg_score=>avg)
 		
 		result={:new_score=>@ctr.avg_score, :new_counts=>@ctr.total_rating_counts}
 		respond_to do |format|
@@ -203,6 +222,9 @@ class CoursesController < ApplicationController
 	
 	
   def show
+		if !session[:cd]
+			session[:cd]=[]
+		end
     @course = Course.find(params[:id])
 		@posts = @course.posts
 		@post= Post.new #for create course form
@@ -219,7 +241,7 @@ class CoursesController < ApplicationController
 			@teachers.each_with_index do | teacher, idx|
 				if teacher.id == @teacher_show.id
 					@target_rank = idx+1
-					break ;
+					break 
 				end
 			end
 		else
@@ -253,12 +275,6 @@ class CoursesController < ApplicationController
     @course=@department.courses.build
   end
 	
-  #def create
-  #  @course = Course.new(course_param)
-  #  @course.save
-  #  redirect_to :action => :index
-  #end
-	
   def edit
     @course = Course.find(params[:id])
   end
@@ -279,10 +295,54 @@ class CoursesController < ApplicationController
     redirect_to :action => :index
   end
   
-  
 
-  
-  
+	def add_to_cart
+		
+		if params[:type]=="add"
+			ct_id=CourseTeachership.where(:course_id=>params[:cd_id], :teacher_id=>params[:tid]).take.id
+			cd_id=CourseDetail.where(:course_teachership_id=>ct_id, :semester_id=>Semester.last.id).take.id
+			
+			if !session[:cd].include?(cd_id)
+				session[:cd].append(cd_id) 
+				alt_class="success"
+				title='Success'
+				mesg="新增成功!"
+			else
+				alt_class="success"
+				title='Oops'
+				mesg="您已加入此課程!"		
+			end
+		else
+			cd_id=params[:cd_id].to_i
+			if session[:cd].include?(cd_id)
+				session[:cd].delete(cd_id) 
+				alt_class="success"
+				title='Success'
+				mesg="刪除成功!"
+			else
+				alt_class="success"
+				title='Oops'
+				mesg="你未加入此課程!"
+			end
+		end
+		
+		respond_to do |format|
+			format.html {
+				render :text => ajax_flash(alt_class,title,mesg),
+							 :content_type => 'text/html',
+							 :layout => false
+			}
+		end
+		#render :nothing => true, :status => 200, :content_type => 'text/html'
+
+		
+	end
+	def show_cart
+		@course_details=CourseDetail.where(:id=>session[:cd])
+		@table_type="cart"
+		render "course_lists_mini"
+	end
+	
   protected
   def find_department
     @department=Department.find(params[:department_id])
@@ -293,18 +353,18 @@ class CoursesController < ApplicationController
 	
 	
 	
-	def cos_type_color(cos_type)
-		case cos_type
-			when "通識"
-				'#f0ad4e'
-			when "必修"
-				'#AFFFB0'
-			when "選修"
-				'#AFFFD8'
-			when "外語"
-				'#FEFFCD'
-		end
-	end
+	#def cos_type_color(cos_type)
+	#	case cos_type
+	#		when "通識"
+	#			'#f0ad4e'
+	#		when "必修"
+	#			'#AFFFB0'
+	#		when "選修"
+	#			'#AFFFD8'
+	#		when "外語"
+	#			'#FEFFCD'
+	#	end
+	#end
 	
 	
 	def get_autocomplete_vars
@@ -319,7 +379,7 @@ class CoursesController < ApplicationController
 		course_ids=courses.map{|c| c.id}
 		ct_ids=CourseTeachership.where(:course_id=>course_ids)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
 		if semester_id!=0
-			course_details=CourseDetail.where(:course_teachership_id=>ct_ids).flit_semester(semester_id)
+			course_details=CourseDetail.where(:course_teachership_id=>ct_ids).order(:cos_type ,:brief).flit_semester(semester_id)
 		else
 			course_details=CourseDetail.where(:course_teachership_id=>ct_ids)
 		end

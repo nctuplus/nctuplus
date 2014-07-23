@@ -38,7 +38,7 @@ class FileInfo < ActiveRecord::Base
   end
   
   def self.support_types
-    "(gif|jpe?g|png|c|cpp|pdf|doc?x|ppt?x)"
+    "(jpe?g|png|pdf|docx?|pptx?|zip)"
   end
   def self.max_upload_size
     "10000000"
