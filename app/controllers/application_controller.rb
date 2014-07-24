@@ -19,8 +19,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_user
   def checkLogin
     unless current_user
-	  alertmesg("danger",'',"請先登入,謝謝!")
-	  redirect_to root_url
+	  alertmesg("info",'Sorry',"請先登入,謝謝!")
+	  redirect_to :back
 	  return false
 	end
 	return true
@@ -90,5 +90,11 @@ class ApplicationController < ActionController::Base
 			:title => title,
 			:message => msg
 		  }
-  end  
+  end
+	
+	def save_my_previous_url
+    # session[:previous_url] is a Rails built-in variable to save last url.
+    #session[:my_previouse_url] = URI(request.referer).path
+  end
+	
 end

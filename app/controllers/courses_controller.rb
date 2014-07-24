@@ -6,6 +6,7 @@ class CoursesController < ApplicationController
 	layout false, :only => [:commentSubmit, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart]
 
 	
+	#after_filter :save_my_previous_url, :except=>[]
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
 	

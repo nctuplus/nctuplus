@@ -12,9 +12,28 @@ body
     //padding-top: 60px;
   //background-color: #eeeeee;
 }	
-/*a:hover{
-text-decoration:none;
-}*/
+
+p.footer-text{
+	margin-top:10px;
+	margin-bottom:0px;
+}
+
+
+a.back-to-prev{
+	color:white;
+	font-size:24px;
+}
+
+a.back-to-prev:hover{
+	font-weight:bold;
+	text-decoration:none;
+}
+
+
+a:hover{
+	text-decoration:none;
+	
+}
 
 
 .user-reg {
@@ -46,7 +65,7 @@ background-color: black  ;
 } 
  
 .global-background-color{  
-	background-color: rgba(255,255,255,0.5); 
+	background-color: rgba(255,255,255,0.8); 
 	//opacity :0.75
 }
 

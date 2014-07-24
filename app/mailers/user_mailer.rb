@@ -8,8 +8,17 @@ class UserMailer < ActionMailer::Base
   #
   def confirm(name,email,key)
     @activate_url = "http://140.113.166.130:7711/user/mail_confirm?key="<<key
-	@name=name
+		@name=name
 	#@key=key
     mail(:to => email, :subject => "Registered")  
-  end  
+  end
+
+	def report(name,email,content)
+		@name=name
+		@name_url=name
+		@email=email
+		@content=content
+		mail(:to => "t6847kimo@gmail.com", :subject => "NCTU+ "<<@name)
+	end
+  
 end

@@ -13,9 +13,24 @@ class MainController < ApplicationController
 		
   end
 	
+	def send_report
+		@name=params[:report][:name]
+		@email=params[:report][:email]
+		
+		if current_user
+			@email='https://www.facebook.com/'<<current_user.uid
+		end
+		
+		@content=params[:report][:content]
+		UserMailer.report(@name,@email,@content).deliver
+		#render :nothing => true, :status => 200, :content_type => 'text/html'
+		render "send_success"
+	end
+	
+	
 	def hidden_prepare
-	  prepare_course_db
-		final_set_dept_type
+	  #prepare_course_db
+		#final_set_dept_type
 		#_type=["cold","sweety","hardness"]
 		#
 		#CourseTeachership.all.each do |ct|

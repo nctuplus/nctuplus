@@ -1,10 +1,10 @@
-<nav class="navbar navbar-inverse" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="/*position:absolute;z-index:3000;*/">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
 
       <a class="navbar-brand" href="<%=root_url%>" style="font-family:arial;">NCTU<sup>+</sup></a>
-			<% image_tag("logo.png", :size=>"80x50")%>
+			
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -12,12 +12,12 @@
       <ul class="nav navbar-nav">
 				<li class="dropdown">
 				<% if current_user %>
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
-					<ul class="dropdown-menu">
-					<li><a href="/courses/simulation">課表</a></li>
+					<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
+					<ul class="dropdown-menu">-->
+					<!--<li><a href="/courses/simulation">課表</a></li>-->
 					<!--<li><a href="#">課程地圖<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
 					<!--<li><a href="/file_infos/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
-					</ul>
+					<!--</ul>-->
 				<% else %>
 					<%= link_to "facebook登入", "/auth/facebook", id: "sign_in" %>
 				<% end %>  
@@ -45,11 +45,14 @@
 					</li>
 				<% end %>
 				<li><a href="/courses/">課程列表</a></li>
-				<!--<li><a href="/courses/simulation">預排課表</a></li>-->
+				<li><a href="/courses/simulation">摸擬選課</a></li>
+
+				
       </ul>
 
+				
     </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+  </div><!-- /.container -->
 </nav>
 
 

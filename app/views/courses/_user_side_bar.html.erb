@@ -1,16 +1,33 @@
 
 <script>
 	$(document).ready(function(){
-		$("#schd_but").hover(
+		$("#schd_but").click(
 			function(){
 				$("#user_modal").modal('show');
 				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
 			}
 		);
-		$("#cart_but").hover(
+		$("#schd_but").hover(
+			function(){
+				$(this).css("font-weight","bold");
+			},
+			function(){
+				$(this).css("font-weight","");
+			}
+		);
+		
+		$("#cart_but").click(
 			function(){
 				$("#user_modal").modal('show');
 				$("#user_modal .modal-body").load("/courses/show_cart");
+			}
+		);
+		$("#cart_but").hover(
+			function(){
+				$(this).css("font-weight","bold");
+			},
+			function(){
+				$(this).css("font-weight","");
 			}
 		);
 	});
@@ -34,7 +51,10 @@
 	}
 	
 </script>
-<div  class="container" style="color:white;padding-top:8px;padding-bottom:8px;position:fixed;z-index:100;left:20px;margin-top:10%;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
+<div  class="container" style="color:white;padding-top:8px;padding-bottom:8px;position:fixed;z-index:100;left:20px;top:150px;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
+<a href="<%=session[:my_previouse_url]%>" class="back-to-prev" style="">回上頁</a>
+</div>
+<div  class="container" style="color:white;padding-top:8px;padding-bottom:8px;position:fixed;z-index:100;left:20px;top:300px;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
 
 <% if current_user %>
 <%= fa_icon("list-alt 3x ", :id=>"schd_but") %>
@@ -42,11 +62,13 @@
 <% end %>
 <%= fa_icon("shopping-cart 3x", :id=>"cart_but") %>
 <br>
-<%= fa_icon("question-circle 3x", :id=>"question_but", :style=>"margin-left:3px;") %>
+
+<% fa_icon("question-circle 3x", :id=>"question_but", :style=>"margin-left:3px;") %>
+
 </div>
 
 
-<div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-labelledby="purchaseLabel" aria-hidden="true" >
+<div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" >
 		<div class="modal-content" >
 			<!--<div class="modal-header">

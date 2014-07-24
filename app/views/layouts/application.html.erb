@@ -28,25 +28,10 @@
 <!-- layouts/header start -->
 <%= render 'layouts/header' %>
 <!-- layouts/header end -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="purchaseLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<!--<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="purchaseLabel">Purchase</h4>
-			</div>-->
-			<div class="modal-body"></div>
-			<!--<div class="modal-footer">
-				
-				<button type="button" class="btn btn-primary">Purchase</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>-->
-		</div>
-	</div>
-</div>
 
 
-<div class="container-fluid">
+
+<div class="container-fluid" style="margin-top:55px;">
 	<div class="row">
 		<!--<div class="col-md-3">
 			<%= render 'layouts/sidebar' %>
@@ -54,18 +39,20 @@
 		
 		<div id="content" class="col-md-9 col-md-offset-2">
 			<% if flash[:notice] %>
-				<div id="notice" class="alert <%= flash[:notice][:style] %>"style="z-index:2000;">
-					<h4><%= flash[:notice][:title] %></h4>
-					<%= flash[:notice][:message] %>
-				</div>
-			<%end%>
+			<div id="notice" class="col-md-9 col-md-offset-2 alert <%= flash[:notice][:style] %>"style="z-index:2000;">
+				<h4><%= flash[:notice][:title] %></h4>
+				<%= flash[:notice][:message] %>
+			</div>
+			<% end %>
 			<div id="global_bgcolor" class="well global-background-color">
 			<%= yield %>
 			</div>
 		</div>
 	</div>
+	
 </div>
 
+<%= render 'layouts/footer' %>
 
 </body>
 

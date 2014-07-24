@@ -1,0 +1,49 @@
+﻿<div class="navbar navbar-inverse navbar-fixed-bottom " style="min-height:35px;">
+	<div class="container" >
+		<p class="navbar-text pull-left footer-text">© 2014 NCTU<sup>+</sup>交大網頁及系統優化小組
+		 
+		</p>
+		<p class="navbar-text pull-right footer-text" >
+			<a href="#">關於我們</a>
+			<a href="#" data-toggle="modal" data-target="#infoModal">聯絡我們</a>
+		</p>
+		<!--<a href="http://youtu.be/zJahlKPCL9g" class="navbar-btn btn-danger btn pull-right">
+		<span class="glyphicon glyphicon-star"></span>  Subscribe on YouTube</a>-->
+	</div>
+</div>
+
+<div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="purchaseLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" >聯絡我們</h4>
+				<p>歡迎提出任何建議或是回報Bug，我們會盡快與您聯絡!</p>
+			</div>
+			<div class="modal-body">
+				<%= form_tag '/main/send_report', :class=>"form-horizotal", :role=>"form", :remote=>"true" do %>
+						<div class="form-group ">
+							<% if current_user %>
+								<input type="text" class="form-control" name="report[name]" id="report_name" value="<%=current_user.name%>" readonly>
+							<% else %>
+								<input type="text" class="form-control" name="report[name]" id="report_name" placeholder="姓名..." required>
+							<% end %>	
+						</div>
+						<div class="form-group ">
+							<% if !current_user %>
+								<input type="text" class="form-control" name="report[email]" id="report_email" placeholder="Email..." required>
+							<% end %>
+						</div>
+						<div class="form-group ">
+								<textarea class="form-control" name="report[content]" id="report_content" rows="10" placeholder="內容..." required></textarea>
+						</div>
+				
+			</div>
+			<div class="modal-footer">
+				<%= submit_tag "送出", :class=>"btn btn-primary" %>
+				<button type="button" class="btn btn-default" onclick="$('#report_content').val('')">重填</button>
+			</div>
+			<% end %>
+		</div>
+	</div>
+</div>

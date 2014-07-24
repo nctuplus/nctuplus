@@ -10,7 +10,7 @@ Nctuplus::Application.routes.draw do
 	post "courses/comment_submit"
 
 	get "courses/list_all_courses"
-    get "courses/rate_cts"
+  get "courses/rate_cts"
 	get "courses/simulation"
 	get "courses/add_simulated_course"
 	get "courses/get_user_simulated"
@@ -41,11 +41,11 @@ Nctuplus::Application.routes.draw do
   get "post/getcode"
   resources :post
 	
+	post "main/send_report"
 	get "main/hidden_prepare"
-	
-
-  
   get "main/index"
+	
+	
   #----------for files---------------
   #get "file_info/all_users"
   get "file_infos/one_user"
