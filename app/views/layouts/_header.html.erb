@@ -1,5 +1,5 @@
 <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation" style="/*position:absolute;z-index:3000;*/">
-  <div class="container-fluid">
+  <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
 
@@ -10,18 +10,7 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-				<li class="dropdown">
-				<% if current_user %>
-					<!--<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%=current_user.name%><b class="caret"></b></a>
-					<ul class="dropdown-menu">-->
-					<!--<li><a href="/courses/simulation">課表</a></li>-->
-					<!--<li><a href="#">課程地圖<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
-					<!--<li><a href="/file_infos/one_user">檔案<span class="badge pull-right"><%=FileInfo.where(:owner_id=>current_user.id).count%></span></a></li>-->
-					<!--</ul>-->
-				<% else %>
-					<%= link_to "facebook登入", "/auth/facebook", id: "sign_in" %>
-				<% end %>  
-				</li>
+
 
 				<!--<li class="dropdown">
 					<a href="#"  class="dropdown-toggle" data-toggle="dropdown">facebook登入<b class="caret"></b></a>
@@ -39,17 +28,29 @@
 								<li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>-->
 							<!--<li><a href="/courses">課程<span class="badge pull-right"><%=Course.all.count%></span></a></li>-->
 								
-								<li><a href="/reviews">心得列表<span class="badge pull-right"><%=Review.all.count%></span></a></li>
+								
 								<li><a href="/departments">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 						</ul>
 					</li>
 				<% end %>
-				<li><a href="/courses/">課程列表</a></li>
-				<li><a href="/courses/simulation">摸擬選課</a></li>
-
-				
+				<li><a href="/courses/">全校課程</a></li>
+				<li><a href="/reviews">心得列表</a></li>
+				<li><a href="/courses/simulation">課程地圖</a></li>
       </ul>
-
+			
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+				<% if current_user %>
+					<%= link_to  "/courses/special_list" do %>
+					<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
+					<%=current_user.name%>
+					<% end %>
+					
+				<% else %>
+					<%= link_to "facebook登入", "/auth/facebook", id: "sign_in" %>
+				<% end %>  
+				</li>
+			</ul>
 				
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->

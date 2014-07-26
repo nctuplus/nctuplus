@@ -13,6 +13,21 @@ body
   //background-color: #eeeeee;
 }	
 
+.max-z{
+	z-index:50000;
+}
+.toolTipText {
+	display:none;
+	position:absolute;
+	border:1px solid #333;
+	background-color:#161616;
+	border-radius:5px;
+	padding:10px;
+	color:#fff;
+	//font-size:12px Arial;
+	
+}
+
 p.footer-text{
 	margin-top:10px;
 	margin-bottom:0px;
@@ -21,7 +36,7 @@ p.footer-text{
 
 a.back-to-prev{
 	color:white;
-	font-size:24px;
+	font-size:20px;
 }
 
 a.back-to-prev:hover{

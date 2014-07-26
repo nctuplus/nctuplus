@@ -4,8 +4,9 @@ class MainController < ApplicationController
   require 'net/http'
   require 'json'
 	#layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
-	
+	before_filter :redirect_to_user_index, :only=>[:index]
   def index
+		
 		@course_detail_count=CourseDetail.all.count
 		@file_count=FileInfo.count
 		@review_count=Review.count
@@ -29,8 +30,10 @@ class MainController < ApplicationController
 	
 	
 	def hidden_prepare
+		parse_semester
 	  #prepare_course_db
 		#final_set_dept_type
+		
 		#_type=["cold","sweety","hardness"]
 		#
 		#CourseTeachership.all.each do |ct|
@@ -166,7 +169,7 @@ class MainController < ApplicationController
   def do_save_courses(sem_id,data)
     data.each do |key1,value1|
 	#@html<<value1['cos_cname']<<value1['cos_ename']<<value1['teacher']<<"<br>"
-			@dept=Department.find_by_real_id(value1['dep_id'])
+			@dept=Department.where(:degree=>value1['degree'], :real_id=>value1['dep_id']).take
 			next if @dept.nil?
 			dept_id=@dept.id
 			teacher=save_teacher(value1['teacher'],dept_id)
@@ -211,12 +214,12 @@ class MainController < ApplicationController
 	return true
   end
   def parse_semester
-    year=(98..103)
+    year=(99..103)
 		semester=(1..2)
 		name=['上','下']
 		year.each do |y|
 			semester.each do |s|
-				sem=Semester.new(:real_id=>y.to_s+s.to_s)
+				sem=Semester.new(:year=>y.to_s, :half=>s.to_s)
 				sem.name=y.to_s+name[s-1]
 				sem.save
 			end

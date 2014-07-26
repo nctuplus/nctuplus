@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140721131823) do
+ActiveRecord::Schema.define(version: 20140726072105) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -74,6 +74,15 @@ ActiveRecord::Schema.define(version: 20140721131823) do
   add_index "course_simulations", ["course_detail_id"], name: "index_course_simulations_on_course_detail_id", using: :btree
   add_index "course_simulations", ["semester_id"], name: "index_course_simulations_on_semester_id", using: :btree
   add_index "course_simulations", ["user_id"], name: "index_course_simulations_on_user_id", using: :btree
+
+  create_table "course_teacher_page_contents", force: true do |t|
+    t.integer  "course_teachership_id"
+    t.integer  "exam_record"
+    t.integer  "homework_record"
+    t.text     "course_note"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "course_teacher_ratings", force: true do |t|
     t.integer "course_teachership_id"
@@ -182,7 +191,8 @@ ActiveRecord::Schema.define(version: 20140721131823) do
 
   create_table "semesters", force: true do |t|
     t.string   "name"
-    t.string   "real_id"
+    t.string   "year"
+    t.string   "half"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

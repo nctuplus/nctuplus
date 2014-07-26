@@ -10,6 +10,10 @@ class CoursesController < ApplicationController
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
 	
+	def special_list
+		cd_ids = CourseSimulation.select(:course_detail_id).where(:user_id=>current_user.id, :semester_id=>latest_semester.id)
+		@cds=CourseDetail.where(:id=>cd_ids)
+	end
 	def comment_submit
 		@com = Comment.new(:content=>params[:comment], :content_type=>params[:type].to_i)
 		@com.user_id = current_user.id
@@ -22,7 +26,7 @@ class CoursesController < ApplicationController
 		end
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
   	 	
-    end
+  end
 	
 	def index
 		#reset_session
@@ -61,7 +65,7 @@ class CoursesController < ApplicationController
 		sem_id=params[:sem_id].to_i
 		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
 		@course_details=CourseDetail.where(:id=>cd_ids).order(:cos_type ,:brief)
-		@sem_id=sem_id
+		@sem=Semester.find(sem_id)
 		#respond_to do |format|
     #  format.html # index.html.erb
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
@@ -116,7 +120,7 @@ class CoursesController < ApplicationController
 	def search_by_dept
 		dept_id=params[:dept_id]
 		@sem_id=params[:sem_id].to_i
-		
+		@sem=Semester.find(@sem_id)
 		dept_ids=get_dept_ids(dept_id)
 		
 		semester=Semester.where(:id=>@sem_id).take

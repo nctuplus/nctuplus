@@ -96,5 +96,11 @@ class ApplicationController < ActionController::Base
     # session[:previous_url] is a Rails built-in variable to save last url.
     #session[:my_previouse_url] = URI(request.referer).path
   end
+
+	def redirect_to_user_index
+		if current_user
+			redirect_to :action=> "special_list", :controller=> "courses"
+		end
+	end
 	
 end

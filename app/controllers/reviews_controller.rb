@@ -20,7 +20,7 @@ class ReviewsController < ApplicationController
 	def list_all_reviews
 	  page=params[:page].to_i
 		id_begin=(page-1)*each_page_show
-		@reviews=Review.where("id >= ? ",id_begin).take(each_page_show)
+		@reviews=Review.order("date DESC").limit(each_page_show).offset(id_begin)
 		#@reviews=@course_details.sort_by{|cd| cd.course_teachership.course_teacher_ratings.sum(:avg_score)}.reverse
 		#@course_details=@courses
 		@page_numbers=Review.all.count/each_page_show

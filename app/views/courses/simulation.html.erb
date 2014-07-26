@@ -1,6 +1,6 @@
 
 
-<ul class="nav nav-tabs" id="sem_selector">
+<ul class="nav nav-tabs " id="sem_selector">
 	<li class="sem_tab active" id="sem_<%=latest_semester.id%>"><a href="javascript:void(0);" onclick="change_sem(<%=latest_semester.id%>);"><%=latest_semester.name%></a></li>
 	
 	<% Semester.where(:id=>@user_sem_ids).reverse.each do |s| %>
@@ -19,12 +19,12 @@
 	</div>
 	</div>
 </div>
-
-<div id="srch_and_schd">
+<br>
+<div id="srch_and_schd" class="" style="background-color:rgba(221,221,221,0.8)">
 </div>
 <br>
 
-<div class="row " id="add_sem_form">
+<div class="row well" id="add_sem_form">
 	<div class="form-inline col-md-offset-5">
 		<div class="form-group">
 			<% sems=Semester.where("id not in (?)",@user_sem_ids).reverse %>

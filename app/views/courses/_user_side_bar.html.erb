@@ -1,5 +1,6 @@
 
 <script>
+
 	$(document).ready(function(){
 		$("#schd_but").click(
 			function(){
@@ -7,14 +8,14 @@
 				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
 			}
 		);
-		$("#schd_but").hover(
+		/*$("#schd_but").hover(
 			function(){
 				$(this).css("font-weight","bold");
 			},
 			function(){
 				$(this).css("font-weight","");
 			}
-		);
+		);*/
 		
 		$("#cart_but").click(
 			function(){
@@ -22,14 +23,14 @@
 				$("#user_modal .modal-body").load("/courses/show_cart");
 			}
 		);
-		$("#cart_but").hover(
+		/*$("#cart_but").hover(
 			function(){
 				$(this).css("font-weight","bold");
 			},
 			function(){
 				$(this).css("font-weight","");
 			}
-		);
+		);*/
 	});
 	function add_to_cart(id,type){
 		$.ajax({
@@ -51,20 +52,24 @@
 	}
 	
 </script>
-<div  class="container" style="color:white;padding-top:8px;padding-bottom:8px;position:fixed;z-index:100;left:20px;top:150px;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
-<a href="<%=session[:my_previouse_url]%>" class="back-to-prev" style="">回上頁</a>
-</div>
-<div  class="container" style="color:white;padding-top:8px;padding-bottom:8px;position:fixed;z-index:100;left:20px;top:300px;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
 
+<div class="container" style="color:white;padding-top:8px;/*padding-bottom:8px;*/position:fixed;z-index:100;left:20px;top:300px;background-color:rgba(0,0,0,0.5);/*width:50px;height:50px;*/">
+<p class="text-center">
+<a href="<%=session[:my_previouse_url]%>" class="masterTooltip " title="回上頁" style="color:white;"><%=fa_icon("arrow-left 3x", :style=>"margin-left:3px;margin-bottom:5px;") %></a>
+
+<br>
+<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" target="_blank" class="masterTooltip clickable-hover" title="必修科目表" style="color:white;"><%=fa_icon("file-text-o 3x", :style=>";margin-left:3px;margin-bottom:5px;") %></a>
+
+<br>
 <% if current_user %>
-<%= fa_icon("list-alt 3x ", :id=>"schd_but") %>
+<%= fa_icon("calendar 3x ", :id=>"schd_but", :class=>"masterTooltip clickable-hover", :title=>"預排課表") %>
 <br>
 <% end %>
-<%= fa_icon("shopping-cart 3x", :id=>"cart_but") %>
+<%= fa_icon("shopping-cart 3x", :class=>"masterTooltip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %>
 <br>
 
 <% fa_icon("question-circle 3x", :id=>"question_but", :style=>"margin-left:3px;") %>
-
+</p>
 </div>
 
 

@@ -1,28 +1,45 @@
-<table class="table table-hover clickable-hover">
-
+<table class="table table-hover clickable-hover table-bordered">
+	<tr>
+		<th>標題</th>
+		<th>作者</th>
+		<th>時間</th>
+	</tr>
 	<% @reviews.each do |r| %>
 		<tr class="clickable-row" href="<%=review_path(r)%>">
-		<th><%=r.title%></th>
-		
+		<th id="title"><%=r.title%></th>
+		<th id="author"><%=r.author%></th>
+		<th class="hidden" id="content"><span style="white-space: pre-line; font-size:16px;"><%=r.content%></span></th>
+		<th id="date"><%=r.date.strftime("%F")%></th>
 		</tr>
 	<% end %>
 
 </table>
 <div id="page-selection" class="text-center"></div>
+
+
+
 <script>
-$(document).ready(function($) {
-	
-	$(".clickable-row").click(function() {
-				window.document.location = $(this).attr("href");
+	$(document).ready(function() {
+		
+		$(".clickable-row").click(function() {
+					//window.document.location = $(this).attr("href");
+			but='<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
+			title="<h4>"+$(this).find("#title").text()+"</h4>"
+			author_time="<p>作者:"+$(this).find("#author").text()+" 時間: "+$(this).find("#date").text()+"</p>";
+			content=$(this).find("#content").html();
+			
+			$("#reviewModal").find(".modal-header").html(but+title+author_time);
+			$("#reviewModal .modal-body").html(content);
+			$("#reviewModal").modal("toggle");
+		});
+		$('#page-selection').bootpag({
+			total: <%=@page_numbers%>,
+			<% if params[:page] %>
+			page: <%=params[:page]%>,
+			<% end %>
+			maxVisible: 10
+		}).on("page", function(event, /* page number here */ num){
+			$("#search_result").load("/reviews/list_all_reviews?page="+num);
+		});
 	});
-	$('#page-selection').bootpag({
-		total: <%=@page_numbers%>,
-		<% if params[:page] %>
-		page: <%=params[:page]%>,
-		<% end %>
-		maxVisible: 10
-	}).on("page", function(event, /* page number here */ num){
-		$("#search_result").load("/reviews/list_all_reviews?page="+num);
-	});
-});
 </script>

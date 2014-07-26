@@ -1,0 +1,65 @@
+﻿<div class="panel panel-primary">
+	<div class="panel-heading" >
+		<h4 class="text-center">已選課程</h4>
+	</div>
+	
+
+<br>
+<table class="table table-hover ">
+
+	<% cos_types=[] %>
+	<% credits=[] %>
+	<% @cds.each do |cd|%>
+		<% if !cos_types.include?(cd.cos_type) %>
+			<% cos_types.append(cd.cos_type) %>
+			<tr class="row"><th colspan="3" class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
+			<% credits.append(cd.credit.to_i) %>
+		<% else %>
+			<% credits[credits.length-1]+=cd.credit.to_i %>
+		<% end %>
+	<% teacher=cd.course_teachership.teacher %>
+	<% course=cd.course_teachership.course %>	
+	<tr class="row ">
+	<td class="col-md-6">
+		<h4><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
+	
+			
+			<!--<%=latest_semester.name %> | -->
+			
+			<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 
+			
+			<%=teacher.name %> | 
+			<%= fa_icon "user" %> <strong><%=CourseSimulation.where(:course_detail_id=>cd.id).count%></strong> | 
+			<%= fa_icon "graduation-cap" %> <strong><%=cd.credit%></strong>
+			</h4>
+		</td>
+		<td class="col-md-6">
+		<p class="text-right">
+			<button class="btn btn-sm btn-default">考古題</button> | 
+			<button class="btn btn-sm btn-default">討論區</button>
+		</p>
+		</td>
+	</tr>
+	<% end %>
+	<tr class="row">
+		<td colspan="2">
+			<h4 class="text-righ">
+				<% i = 0 %>
+				<% cos_types.each do |t| %>
+					<%= t %> : <strong><%=credits[i]%></strong>
+					<% i +=1 %>
+				<% end %>
+				共 <strong><%= @cds.count %></strong> 門課 <strong><%=@cds.sum(:credit) %></strong> 學分
+			</h4>
+		</td>
+	</tr>
+	<tr class="row success">
+		<td colspan="2" class="info">
+			<h4 class="text-right">
+				目前學分: <strong>104</strong> 必修 : <strong>53</strong> 選修 : <strong>51</strong> 離畢業還差 <strong>24</strong> 學分
+			</h4>
+		</td>
+	</tr>
+</table>
+
+</div>
