@@ -3,11 +3,36 @@ class CoursesController < ApplicationController
   
 	include CourseHelper
   
-	layout false, :only => [:commentSubmit, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart]
+	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart]
 
 	
 	
 	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course]
+
+### for course_teacher_page_content	
+
+	def course_raider
+		ct = CourseTeachership.find(params[:ct_id])
+		@name = Semester.find(ct.course_details.first.semester_id).name
+		if @name.include? "上"
+			@start = 9 - 1
+		else
+			@start = 2 - 1
+		end
+		
+		if params[:type].to_i==1	
+			@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil
+			render "course_raider"
+		else
+			render "raider_form"	
+		end
+	end
+	
+	def raider_submit
+		#render :nothing => true, :status => 200, :content_type => 'text/html'
+		
+		render "raider_submit"
+	end
 	
 	def comment_submit
 		@com = Comment.new(:content=>params[:comment], :content_type=>params[:type].to_i)
@@ -22,7 +47,7 @@ class CoursesController < ApplicationController
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
   	 	
     end
-	
+####	
 	def index
 		#reset_session
 		@semesters=Semester.all
