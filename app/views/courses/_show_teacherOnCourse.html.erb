@@ -6,26 +6,35 @@
 	<%periodAll.push(9,10,11,12,1)%>
 <%end%>
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
+
+<!-- course's teacher and department --!>
+
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			<span class="glyphicon glyphicon-th-list"></span>			
-			課程教師： <%=@teacher_show.name%> 系別：<%=@teacher_show.department.ch_name%>
+			<p class="">
+				<i class="fa fa-user fa-6"></i> 			
+				課程教師： <%=@teacher_show.name%> 系別：<%=@teacher_show.department.ch_name%>
+			</p>
 		</h2>	
 	</div>
-	
+
+<!-- course time and classroom info --!>	
+
 	<div class="panel-heading">
       	<h2 class="panel-title">
-			<span class="glyphicon glyphicon-th-list"></span> 
-			課程時間/地點：  <%=courseTeacher.course_details.first.room.presence||'無資料'%>/<%=courseTeacher.course_details.first.time%>
-			<span class="col-xs-6">
-			<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >
-				<span class="glyphicon glyphicon-th-list"></span>
-			</a>
-			</span>
+      		<p>
+				<i class="fa fa-calendar fa-6"></i> 
+				課程時間/地點：  <%=courseTeacher.course_details.first.room.presence||'無地點資料'%> / <%=courseTeacher.course_details.first.time.presence||'無時間資料'%>			
+				<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >
+					<i class="fa fa-search-plus"></i>
+				</a>
+			</p>	
       	</h2>  	
 	</div>
+	
     <div id="collapseOne" class="panel-collapse collapse">
       <div class="panel-body">
+      
 		<table class="table">
     		<tr>
     			<td>學期</td>
@@ -44,88 +53,76 @@
     		</tr>    
 <%end%>
 		</table>
-      </div>
-      
+		
+      </div> 
     </div>
-    
-    <div class="panel-heading">
-		<h2 class="panel-title">
-			<span class="glyphicon glyphicon-th-list"></span>			
-			課程攻略： <%=link_to "編輯", "javascript:void(0);"%>	
-		</h2>	
-	</div>
-   <div class="panel-body">
-   	<div class="well">
-  		
-
-<div class="row">
-考試月份：   		
-		<div class="btn-group">
-<%periodAll.each do |p|%>		
-        	<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test_num');"><span class="col-md-1"><%=p.to_s%></span></button>
-<%end%>        	
-        	
-      	</div>
-考試次數： <span id="test_num">0</span>      	
-</div>
-<div class="row">
-作業月份：   		
-		<div class="btn-group">
-<%periodAll.each do |p|%>		
-        	<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw_num');"><span class="col-md-1"><%=p.to_s%></span></button>
-<%end%>        	
-        	
-      	</div>
-作業次數： <span id="hw_num">0</span>      	
-</div> 
-
-	</div>
-   </div>
+ 
+<!-- statistics --!>  
    <div class="panel-heading">
 		<h2 class="panel-title">
-			<span class="glyphicon glyphicon-th-list"></span>			
-			歷年選課狀況：
+			<p>
+				<i class="fa fa-align-left"></i>				
+				歷年選課狀況：
+			</p>	
 		</h2>	
 	</div>
 	<div class="panel-body">
-	<div class="well">
-	ssssss2
+		<div class="well">
+			統計圖
+		</div>
+   </div>  
+
+<!-- course's content and tick --!>    
+    <div class="panel-heading">
+		<h2 class="panel-title">
+			<p>
+				<i class="fa fa-gamepad"></i>			
+				課程攻略： <%=link_to "編輯", "javascript:void(0);"%>	
+			</p>
+		</h2>	
 	</div>
-   </div>
+	<div class="panel-body">
+		<div class="well">
+			<%=render :partial=>"course_raider", :locals=>{:periodAll=> periodAll}%>
+		</div>
+	</div>
+
+<!-- comment for the info in this page --!>
 	<div class="panel-heading">
 		<h2 class="panel-title">
-			<span class="glyphicon glyphicon-th-list"></span>			
-			討論： <%=link_to "留言","javascript:void(0);",:onclick=>'commentShow($(this));'%>
+			<p>
+				<i class="fa fa-weixin"></i>			
+				討論： 
+				<% if current_user %>
+					<%=link_to "留言","javascript:void(0);",:onclick=>'commentShow($(this));'%>
+				<% end %>
+			</p>	
 		</h2>	
 	</div>
 	<div class="panel-body">
 		<div class="row">	
-			<div class="well col-sm-7" id="commentNew" style="display:none;">
-				<%=form_tag "/courses/comment_submit", :remote=>true do%>
-					<%=User.find(4).name%>：
-					<%=select_tag "type",options_for_select([["推",1],["->",2],["噓",3]])%>
-					<%=text_field_tag "comment","推薦這篇文章",:class=>"form-control"%>
-					<%=submit_tag "go", :class=>"form-control", :id=>"submit_but"%>
-					<%=hidden_field_tag "ctship",courseTeacher.id %>
+		<%if current_user%>
+			<div class="well col-sm-7" id="commentNew" style="display:block;">
+				<%=form_tag "/courses/comment_submit", :remote=>true, :class=>"form-horizontal",:role=>"form" do%>
+					<div class="form-group">
+						<label class="control-label" for="comment"><%=current_user%>：</label>
+						<%=select_tag "type",options_for_select([["推",1],["->",2],["噓",3]])%>  
+						<%=text_field_tag "comment","推薦這篇文章", :class=>"form-control"%>
+						<%=submit_tag "POST", :class=>"form-control", :id=>"submit_but"%>  
+						<%=hidden_field_tag "ctship",courseTeacher.id %> 
+					</div>
 				<% end %>	
+			</div>	
+		<% end %>	
+			<div class="row well col-sm-8" id="commentList">
+				<%=render :partial=>'comment_list', :locals => {:ct_id=>courseTeacher.id} %>
 			</div>
 		</div>
-		<div class="row well col-sm-8 background-color-well" id="commentList">
-			<%=render :partial=>'comment_list', :locals => {:ct_id=>courseTeacher.id} %>
-		</div>
 	</div>
+	
 </div>
 
 <script>
-
-$(document).ready(function(){
-	$("#submit_but").bind('ajax:success', function(){
- 		alert("Success!");
-	}).bind('ajax:error', function(){
- 		alert("error!");
-	});
-});
-
 
 	function commentShow(link){
 		if(link.html()=="留言"){
@@ -134,12 +131,48 @@ $(document).ready(function(){
 		}else{
 			$("#commentNew").hide();
 			link.html("留言");
-		}
-				
+		}				
 	}
 
+	function colorGradient(but,startColor){
+		graDay = 1 ;
+		var tmp = but;
+		while(1){
+			tmp = tmp.prev() ;
+			if(!tmp){
+				//alert(1);
+				break ;
+			}else if(but.attr("id")){
+				//alert(2);
+				break ;
+			}else if(graDay>=4){
+				//alert(3);
+				break ;	
+			}	
+			graDay++ ;
+		}
+		alert(graDay);
+		startColor = 16711680 ;
+		var gap = ((16777215 - startColor)/graDay).toFixed(0);
+		alert(gap) ;
+		var butGra = but ;
+		var tmpColor = startColor + gap ;
+		alert(tmpColor.toString(16));
+		alert('linear-gradient(to right, #'+tmpColor.toString(16)+', #'+startColor.toString(16)+')');
+		but.css('background','linear-gradient(to right, #'+tmpColor.toString(16)+', #'+startColor.toString(16)+')');
+		for(var i=1;i<=graDay-1;i++){
+			butGra = butGra.prev() ;
+			if(butGra){
+				var change = (startColor+(gap*i)) ;
+				alert(change.toString(16));
+ 				butGra.css('background','linear-gradient(to right, #'+change.toString(16)+', #'+tmpColor.toString(16)+')' ) ;
+				tmpColor = change ;
+			}
+		}
+	}
+		
+	
 	function changeColor(but,color,count_div){
-		//alert(num) ;
 		if(but.hasClass('active')){
 			$('#'+count_div).html((parseInt($('#hw_num').html())-1).toString()) ;
 			but.removeClass('active').switchClass('btn-'+color, 'btn-default') ;
