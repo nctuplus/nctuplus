@@ -1,0 +1,31 @@
+<%=form_tag "/courses/raider_submit", :remote=>true do%>
+	<div class="row">
+	考試月份：   		
+			<div class="btn-group">
+	<%for i in @start..(@start+4) do%>		
+			<button type="button" class="btn" onclick="changeColor($(this), 'danger', 'test_num');">
+				<span class="col-md-1"><%=(i%12+1).to_s%></span>
+			</button>   
+	<%end%>      	
+			</div>    	
+	
+	
+	
+	作業月份： 		
+			<div class="btn-group">
+	<%for i in @start..(@start+4) do%>				
+			<button type="button" class="btn" onclick="changeColor($(this), 'warning', 'test_num');">
+				<span class="col-md-1"><%=(i%12+1).to_s%></span>
+			</button>
+	<%end%>      	       	
+			</div>    		
+	</div>
+	<hr>
+	<div class="row">
+		其他內容：</br>
+		<%= text_area :content, 'default value', :class=>"form-control" %>
+	</div>
+	<%=hidden_field_tag "ctship",params[:ct_id] %> 
+	<hr>
+	<%=submit_tag "確定修改", :class=>"btn btn-default", :confirm=>"確認資料無誤嗎 ? "%>
+<%end%>

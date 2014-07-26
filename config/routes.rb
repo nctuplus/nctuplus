@@ -1,5 +1,6 @@
 Nctuplus::Application.routes.draw do
 
+#  mount Ckeditor::Engine => '/ckeditor'
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
@@ -8,7 +9,9 @@ Nctuplus::Application.routes.draw do
 	post "courses/search_by_dept"
 	post "courses/search_by_keyword"
 	post "courses/comment_submit"
-
+	post "courses/raider_submit"
+	
+	get "courses/course_raider"
 	get "courses/list_all_courses"
   get "courses/rate_cts"
 	get "courses/simulation"
@@ -16,7 +19,9 @@ Nctuplus::Application.routes.draw do
 	get "courses/get_user_simulated"
 	get "courses/get_user_courses"
 	get "courses/get_sem_form"
+
   get "courses/special_list"
+
 	get "courses/get_user_statics"
 	
 	get "courses/add_to_cart"
