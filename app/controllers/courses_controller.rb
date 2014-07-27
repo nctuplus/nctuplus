@@ -32,14 +32,16 @@ class CoursesController < ApplicationController
 			if @page.save		
 				render "raider_submit"
 			else
-				render :nothing => true, :status => 200, :content_type => 'text/html'  #error handler page ?
+				render "raider_fail"  #error handler page 
 			end
 				
-		else
-			if params[:type].to_i==1	
-				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil
+		else			
+			if params[:type].to_i==1
+				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
 				render "course_raider"
 			else
+				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
+						CourseTeacherPageContent.new(:exam_record=>0, :homework_record=>0)
 				render "raider_form"	
 			end
 		end

@@ -1,31 +1,45 @@
 <%=form_tag "/courses/course_raider", :remote=>true do%>
 	<div class="row">
-	考試月份：   		
+	考試月份：（該月份可能有考試）  		
 			<div class="btn-group" id="test-btn-group">
+	<% cnt=0 %>		
 	<%for i in @start..(@start+4) do%>		
+		<%if 2**cnt & @page.exam_record !=0 %>
+			<button type="button" class="btn btn-danger" onclick="changeColor($(this), 'danger', 'test');">
+		<% else %>
 			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test');">
+		<%end%>	
 				<%=(i%12+1).to_s%>
-			</button>   
+			</button>  
+	<% cnt+=1 %>		 
 	<%end%>      	
 			</div>    	
-
-	作業月份： 		
+	&nbsp;&nbsp;&nbsp;&nbsp;	 	
+	作業月份：（該月份可能有作業）	
 			<div class="btn-group" id="hw-btn-group">
-	<%for i in @start..(@start+4) do%>				
+	<% cnt=0 %>			
+	<%for i in @start..(@start+4) do%>		
+		<%if 2**cnt & @page.homework_record !=0 %>	
+			<button type="button" class="btn btn-warning" onclick="changeColor($(this), 'warning', 'hw');">
+		<% else %>	
 			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw');">
+		<% end %>
 				<%=(i%12+1).to_s%>
 			</button>
+	<% cnt+=1 %>		
 	<%end%>      	       	
 			</div>    		
 	</div>
 	<hr>
 	<div class="row">
 		其他內容：</br>
-		<%= text_area_tag :content, 'default value', :class=>"form-control" %>
+		<%= text_area_tag :content, @page.course_note, :class=>"form-control", :cols => "30", :rows => "10" %>
 	</div>
 	<%=hidden_field_tag "ct_id",params[:ct_id] %> 
 	<input id="test" name="test" type="hidden" value="0">
 	<input id="hw" name="hw" type="hidden" value="0">
 	<hr>
-	<%=submit_tag "確定修改", :class=>"btn btn-default", :confirm=>"確認資料無誤嗎 ? ", :onclick=>"count_month();"%>
+	<p class="text-right">
+		<%=submit_tag "確定修改", :class=>"btn btn-primary", :confirm=>"確認資料無誤嗎 ? ", :onclick=>"count_month();"%>
+	</p>
 <%end%>
