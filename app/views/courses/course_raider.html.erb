@@ -1,6 +1,7 @@
 <div class="row">
 <%if @page%>
-考試月份：   		
+
+考試月份：（該月份可能有考試）   		
 		<div class="btn-group">
 <%cnt = 0%>		
 <%for i in @start..(@start+4) do%>		
@@ -13,12 +14,10 @@
         </button>
         
 <% cnt+=1 %>        
-<%end%>        	
-        	
+<%end%>        	 	
       	</div>    	
-</div>
-<div class="row">
-作業月份：		
+</br>
+作業月份：（該月份可能有作業）		
 		<div class="btn-group">
 <%cnt = 0%>		
 <%for i in @start..(@start+4) do%>	
@@ -31,10 +30,14 @@
         </button>
 <% cnt+=1 %>         
 <%end%>      	       	
-      	</div>    
+      	</div> 
+      	    	   
 <hr>
-<p><%=@page.course_note%></p>      	
-      	
+<div class="well">
+	<% @page.course_note.split("\n").each do |str|%>
+		<p><%=str%></p>      	
+	<%end%>      	
+</div>      	
       	
       	
       	
