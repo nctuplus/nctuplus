@@ -1,16 +1,21 @@
 <% if Comment.where(:course_teachership_id=>ct_id.to_i).count>0 %>
-<table class="table table-bordered background-color-ptt">
+<table class="table ptt-style">
 <%Comment.where(:course_teachership_id=>ct_id.to_i).each do |c|%>
 	<tr>
 		<td><p><b>
+<span class="col-sm-9">		
 <%if c.content_type==1%>
-			<font class="text-color-green">推</font> 
+			<font class="text-color-white">推</font> 
 <%elsif c.content_type==2%>
-			<font class="text-color-yellow">→</font> 
+			<font class="text-color-red">→</font> 
 <%else%>
 			<font class="text-color-red">噓</font> 
 <%end%>
-			<%=User.find(c.user_id).name%>		:	<%=c.content%> 
+			<font class="text-color-yellow"><%=User.find(c.user_id).name%></font> : <%=c.content%>
+</span>
+<span class="col-sm-3">			
+			<span class="text-right"><%=c.created_at.strftime('%Y/%m/%d %H:%S')%></span>
+</span>			
 		</p></td>
 	</tr>			
 <%end%>	

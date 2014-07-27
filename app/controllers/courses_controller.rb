@@ -14,6 +14,7 @@ class CoursesController < ApplicationController
 	def course_raider
 		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
+		@ct_id = ct.id
 		@name = Semester.find(ct.course_details.first.semester_id).name
 		if @name.include? "上"
 			@start = 9 - 1
@@ -22,7 +23,18 @@ class CoursesController < ApplicationController
 		end
 		
 		if request.post?
-			render "raider_submit"
+			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
+			@page.exam_record = params[:test]		
+			@page.homework_record = params[:hw]
+			@page.course_note = params[:content]
+			@page.course_teachership_id = params[:ct_id].to_i
+			@page.last_user_id = current_user.id
+			if @page.save		
+				render "raider_submit"
+			else
+				render :nothing => true, :status => 200, :content_type => 'text/html'  #error handler page ?
+			end
+				
 		else
 			if params[:type].to_i==1	
 				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil

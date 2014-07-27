@@ -1,21 +1,19 @@
 <%=form_tag "/courses/course_raider", :remote=>true do%>
 	<div class="row">
 	考試月份：   		
-			<div class="btn-group">
+			<div class="btn-group" id="test-btn-group">
 	<%for i in @start..(@start+4) do%>		
-			<button type="button" class="btn" onclick="changeColor($(this), 'danger', 'test_num');">
-				<span class="col-md-1"><%=(i%12+1).to_s%></span>
+			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test');">
+				<%=(i%12+1).to_s%>
 			</button>   
 	<%end%>      	
 			</div>    	
-	
-	
-	
+
 	作業月份： 		
-			<div class="btn-group">
+			<div class="btn-group" id="hw-btn-group">
 	<%for i in @start..(@start+4) do%>				
-			<button type="button" class="btn" onclick="changeColor($(this), 'warning', 'test_num');">
-				<span class="col-md-1"><%=(i%12+1).to_s%></span>
+			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw');">
+				<%=(i%12+1).to_s%>
 			</button>
 	<%end%>      	       	
 			</div>    		
@@ -23,9 +21,11 @@
 	<hr>
 	<div class="row">
 		其他內容：</br>
-		<%= text_area :content, 'default value', :class=>"form-control" %>
+		<%= text_area_tag :content, 'default value', :class=>"form-control" %>
 	</div>
 	<%=hidden_field_tag "ct_id",params[:ct_id] %> 
+	<input id="test" name="test" type="hidden" value="0">
+	<input id="hw" name="hw" type="hidden" value="0">
 	<hr>
-	<%=submit_tag "確定修改", :class=>"btn btn-default", :confirm=>"確認資料無誤嗎 ? "%>
+	<%=submit_tag "確定修改", :class=>"btn btn-default", :confirm=>"確認資料無誤嗎 ? ", :onclick=>"count_month();"%>
 <%end%>

@@ -2,23 +2,42 @@
 <%if @page%>
 考試月份：   		
 		<div class="btn-group">
+<%cnt = 0%>		
 <%for i in @start..(@start+4) do%>		
-        <button type="button" class="btn" onclick="changeColor($(this), 'danger', 'test_num');">
+	<%if 2**cnt & @page.exam_record !=0 %>
+        <button type="button" class="btn active btn-danger" >
+    <% else %>
+        <button type="button" class="btn btn-default" >
+    <% end %>
         	<span class="col-md-1"><%=(i%12+1).to_s%></span>
         </button>
+        
+<% cnt+=1 %>        
 <%end%>        	
         	
       	</div>    	
 </div>
 <div class="row">
-作業月份：</br>   		
+作業月份：		
 		<div class="btn-group">
+<%cnt = 0%>		
 <%for i in @start..(@start+4) do%>	
-        <button type="button" class="btn" onclick="changeColor($(this), 'warning', 'test_num');">
+	<%if 2**cnt & @page.homework_record !=0 %>
+		<button type="button" class="btn active btn-warning" >
+    <% else %>
+       	<button type="button" class="btn btn-default" >
+    <% end %>   	
         	<span class="col-md-1"><%=(i%12+1).to_s%></span>
         </button>
+<% cnt+=1 %>         
 <%end%>      	       	
       	</div>    
+<hr>
+<p><%=@page.course_note%></p>      	
+      	
+      	
+      	
+      	
 <% else %>
 	<p class="text-center"><strong>尚無資料</strong></p>	
 		

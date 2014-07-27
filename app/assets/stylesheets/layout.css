@@ -84,8 +84,15 @@ background-color: black  ;
 	//opacity :0.75
 }
 
-.background-color-ptt{
-	background-color: #868A08  ;
+.ptt-style{
+	background-color: black  ;
+	color: #DBA901;
+}
+.backgorund-color-grey{
+	background-color: #BDBDBD  ;
+}
+.text-color-white{
+	color: white;
 }
 .text-color-red{
 	color: red;
