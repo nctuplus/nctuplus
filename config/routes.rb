@@ -9,7 +9,8 @@ Nctuplus::Application.routes.draw do
 	post "courses/search_by_dept"
 	post "courses/search_by_keyword"
 	post "courses/comment_submit"
-	post "courses/raider_submit"
+	#post "courses/raider_submit"
+	post "courses/course_raider"
 	
 	get "courses/course_raider"
 	get "courses/list_all_courses"

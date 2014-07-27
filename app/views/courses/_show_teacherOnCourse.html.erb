@@ -18,12 +18,21 @@
 
 	<div class="panel-heading">
       	<h2 class="panel-title">
-      		<p>
+      		<p>   			
 				<i class="fa fa-calendar fa-6"></i> 
-				課程時間/地點：  <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
-				<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" >
-					<i class="fa fa-search-plus"></i>
-				</a>
+				課程時間/地點： 
+				<% first_name = Semester.find(courseTeacher.course_details.first.semester_id).name %>
+				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
+				 <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
+				<% else %>
+				 本學期無開課
+				<% end %>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<small class="">
+					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed" onclick="PMchange($(this).hasClass('collapsed'));">
+						查看歷年 <i class="fa fa-search-plus" id="imagePM"></i>
+					</a>
+				</small>
 			</p>	
       	</h2>  	
 	</div>
@@ -73,12 +82,15 @@
 		<h2 class="panel-title">
 			<p>
 				<i class="fa fa-gamepad"></i>			
-				課程攻略： <%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+");",  "data-toggle"=>"tooltip", "data-placement"=>"right", :title=>"為課程新增或修改內容"%>	
+				課程攻略： <%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this));",  "data-toggle"=>"tooltip", "data-placement"=>"right", :title=>"為課程新增或修改內容", :id=>"link_edit_raider"%>	
 			</p>
 		</h2>	
 	</div>
 	<div class="panel-body">
 		<div class="well" id="raider_content">
+			
+		</div>
+		<div class="well" id="raider_form">
 			
 		</div>
 	</div>
@@ -121,9 +133,18 @@
 <script>
 
 	$('#raider_content').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
-
-	function loadForm(id){
-		$('#raider_content').load('/courses/course_raider?ct_id='+id+'&type=2');
+	$('#raider_form').hide();
+	function loadForm(id, link){
+		if(link.html()=="編輯"){
+			link.html("取消");
+			$('#raider_form').load('/courses/course_raider?ct_id='+id+'&type=2');
+			$('#raider_form').show() ;
+			$('#raider_content').hide() ;
+		}else{
+			link.html("編輯");
+			$('#raider_form').hide() ;
+			$('#raider_content').show() ;
+		}	
 	}
 
 	function commentShow(link){
@@ -173,6 +194,13 @@
 		}
 	}
 */		
+	function PMchange(myclass){
+		if(myclass)
+			$('#imagePM').switchClass('fa-search-plus','fa-search-minus');				
+		else	
+			$('#imagePM').switchClass('fa-search-minus','fa-search-plus');				
+			
+	}
 	
 	function changeColor(but,color,count_div){
 		if(but.hasClass('active')){
