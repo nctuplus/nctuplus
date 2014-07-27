@@ -33,6 +33,15 @@ class CoursesController < ApplicationController
 		end
 	end
 	
+	def special_list
+		cd_ids = CourseSimulation.select(:course_detail_id).where(:user_id=>current_user.id, :semester_id=>latest_semester.id)
+		@cds=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_ids).references(:course_teachership, :semester)
+		@cd_all=get_mixed_info(@cds)
+		#@courses=Course.where(:id=>@cds.map{|cd|cd.course_teachership.course_id})
+		#@teachers=Teacher.where(:id=>@cds.map{|cd|cd.course_teachership.teacher_id})		
+		#@cd_all=@cds.zip(@courses,@teachers)
+		
+	end
 	def comment_submit
 		@com = Comment.new(:content=>params[:comment], :content_type=>params[:type].to_i)
 		@com.user_id = current_user.id
@@ -46,7 +55,7 @@ class CoursesController < ApplicationController
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
   	 	
     end
-####	
+###	
 	def index
 		#reset_session
 		@semesters=Semester.all
@@ -84,7 +93,12 @@ class CoursesController < ApplicationController
 		sem_id=params[:sem_id].to_i
 		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
 		@course_details=CourseDetail.where(:id=>cd_ids).order(:cos_type ,:brief)
+
 		@sem_id=sem_id
+
+		@cd_all=get_mixed_info(@course_details)
+		@sem=Semester.find(sem_id)
+
 		#respond_to do |format|
     #  format.html # index.html.erb
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
@@ -132,6 +146,7 @@ class CoursesController < ApplicationController
 		@course_details=CourseDetail.where(:id=>id_begin..id_begin+each_page_show)
 		@course_details=@course_details.sort_by{|cd| cd.course_teachership.course_teacher_ratings.sum(:avg_score)}.reverse
 		#@course_details=@courses
+		@cd_all=get_mixed_info(@course_details)
 		@page_numbers=CourseDetail.all.count/each_page_show
 	  render "course_lists"
 	end
@@ -150,7 +165,13 @@ class CoursesController < ApplicationController
 			@courses=Course.where(:department_id=>dept_ids)
 			#@course_details=@courses.
 		end
-			@course_details=join_course_detail(@courses,@sem_id)
+		
+		@course_details=join_course_detail(@courses,@sem_id)
+		#@course_details=@course_details.sort_by{|cd| cd.course_teachership.course_teacher_ratings.sum(:avg_score)}.reverse
+		#@courses=Course.where(:id=>@course_details.map{|cd|cd.course_teachership.course_id})
+		#@teachers=Teacher.where(:id=>@course_details.map{|cd|cd.course_teachership.teacher_id})		
+		#@cd_all=@course_details.zip(@courses,@teachers)
+		@cd_all = get_mixed_info(@course_details)
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		@table_type="search" if params[:view_type]=="_mini"
@@ -204,6 +225,8 @@ class CoursesController < ApplicationController
 					@course_details=join_course_detail(@courses,semester_id) unless @courses.empty? 
 				end
 		end
+		
+		@cd_all=get_mixed_info(@course_details)
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		
@@ -375,20 +398,14 @@ class CoursesController < ApplicationController
   
   private
 	
-	
-	
-	#def cos_type_color(cos_type)
-	#	case cos_type
-	#		when "通識"
-	#			'#f0ad4e'
-	#		when "必修"
-	#			'#AFFFB0'
-	#		when "選修"
-	#			'#AFFFD8'
-	#		when "外語"
-	#			'#FEFFCD'
-	#	end
-	#end
+	def get_mixed_info(cds)
+		#courses=Course.join(:course_teachership).where(:id=>cds.map{|cd|cd.course_teachership})
+		courses=Course.where(:id=>cds.map{|cd|cd.course_teachership.course_id})
+		courses_dulp=cds.map{|cd| courses.select{|c|c.id==cd.course_teachership.course_id}.first}
+		teachers=Teacher.where(:id=>cds.map{|cd|cd.course_teachership.teacher_id})
+		teachers_dulp=cds.map{|cd| teachers.select{|t|t.id==cd.course_teachership.teacher_id}.first}
+		return cds.zip(courses_dulp,teachers_dulp)
+	end
 	
 	
 	def get_autocomplete_vars
@@ -403,9 +420,9 @@ class CoursesController < ApplicationController
 		course_ids=courses.map{|c| c.id}
 		ct_ids=CourseTeachership.where(:course_id=>course_ids)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
 		if semester_id!=0
-			course_details=CourseDetail.where(:course_teachership_id=>ct_ids).order(:cos_type ,:brief).flit_semester(semester_id)
+			course_details=CourseDetail.includes(:course_teachership).where(:course_teachership_id=>ct_ids).references(:course_teachership).order(:cos_type ,:brief).flit_semester(semester_id)
 		else
-			course_details=CourseDetail.where(:course_teachership_id=>ct_ids)
+			course_details=CourseDetail.includes(:course_teachership).where(:course_teachership_id=>ct_ids).references(:course_teachership)
 		end
 		return course_details
 	end

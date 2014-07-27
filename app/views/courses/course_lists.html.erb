@@ -20,15 +20,14 @@
 <!--<th class="col-md-1"></th>-->
 </tr>
 
-	<% if @course_details %>
-		<% @course_details.each do |cd|%>
-			<% course=cd.course_teachership.course %>
+	<% if @cd_all %>
+		<% @cd_all.each do |cd,course,teacher| %>
 				<% ctrs=cd.course_teachership.course_teacher_ratings %>
 				<% ctr_cold=ctrs.select{|ctr| ctr.rating_type=="cold"}[0] %>
 				<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
 				<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
 				<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
-				<tr id="<%=cd.id%>" class="clickable-row clickable-hover" href="<%=course_path(course, :tid=>cd.course_teachership.teacher.id)%>">
+				<tr id="<%=cd.id%>" class="clickable-row clickable-hover" href="<%=course_path(course, :tid=>teacher.id)%>">
 					<td>
 						<p id="rating_all" class="rating all">
 						<%if !ctr_all_avg.nan? %>
@@ -39,7 +38,6 @@
 						<p id="rating_sweety" class="rating sweety hidden"><%= ctr_sweety.avg_score.round(1) %></p>
 						<p id="rating_hardness" class="rating hardness hidden"><%= ctr_hardness.avg_score.round(1) %></p>
 					</td>
-					<!--<td><%=course.semesters.first.name%></td>-->
 					<td>
 						<%=course.department.ch_name%>
 						<% if cd.brief!=" " %>
@@ -49,7 +47,7 @@
 					<!--<td><%= cd.brief %></td>-->
 					<!--<td><%= link_to course.real_id, course_path(course) %></td>-->
 					<td><%= course.ch_name %></td>
-					<td><%= cd.course_teachership.teacher.name %></td>
+					<td><%= teacher.name %></td>
 					<td><%= cd.memo %></td>
 					<td><%= cd.time %></td>
 					<td><%= cd.credit %></td>

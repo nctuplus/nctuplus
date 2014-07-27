@@ -9,7 +9,7 @@
 
 	<% cos_types=[] %>
 	<% credits=[] %>
-	<% @cds.each do |cd|%>
+	<% @cd_all.each do |cd,course,teacher|%>
 		<% if !cos_types.include?(cd.cos_type) %>
 			<% cos_types.append(cd.cos_type) %>
 			<tr class="row"><th colspan="3" class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
@@ -17,14 +17,14 @@
 		<% else %>
 			<% credits[credits.length-1]+=cd.credit.to_i %>
 		<% end %>
-	<% teacher=cd.course_teachership.teacher %>
-	<% course=cd.course_teachership.course %>	
+	
+	
 	<tr class="row ">
 	<td class="col-md-6">
 		<h4><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
 	
 			
-			<!--<%=latest_semester.name %> | -->
+
 			
 			<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 
 			
@@ -44,10 +44,9 @@
 	<tr class="row">
 		<td colspan="2">
 			<h4 class="text-righ">
-				<% i = 0 %>
-				<% cos_types.each do |t| %>
-					<%= t %> : <strong><%=credits[i]%></strong>
-					<% i +=1 %>
+				<%cos_all=cos_types.zip(credits)%>
+				<% cos_all.each do |t,c| %>
+					<%= t %> : <strong><%=c%></strong>		
 				<% end %>
 				共 <strong><%= @cds.count %></strong> 門課 <strong><%=@cds.sum(:credit) %></strong> 學分
 			</h4>

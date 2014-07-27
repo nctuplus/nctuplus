@@ -16,8 +16,8 @@
 	<% credit_sum=0 %>
 	<% cos_types=[] %>
 	<% if @course_details %>
-		<% @course_details.each do |cd|  %>
-			<% course=cd.course_teachership.course %>
+		<% @cd_all.each do |cd,course,teacher|  %>
+		
 				<% ctrs=cd.course_teachership.course_teacher_ratings %>
 				<% ctr_cold=ctrs.select{|ctr| ctr.rating_type=="cold"}[0] %>
 				<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
@@ -29,14 +29,14 @@
 					<tr class="row"><th class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
 					
 				<% end %>
-				<tr id="cd_<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(course, :tid=>cd.course_teachership.teacher.id)%>">
+				<tr id="cd_<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(course, :tid=>teacher.id)%>">
 					<td class="">
 						
 						<p id="rating_all" class="">
 							<% link_to course.ch_name, course_path(course), :class=>"course_name" %>
 							<%= course.ch_name %>
 							<%= course.department.ch_name %>
-							<%= cd.course_teachership.teacher.name %>
+							<%= teacher.name %>
 							<% if @table_type=="search" %>
 							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add')">
 							<span class="glyphicon glyphicon-plus"></span>
