@@ -21,7 +21,7 @@
 	
 	<tr class="row ">
 	<td class="col-md-6">
-		<h4><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
+		<h4 class="text-center"><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
 	
 			
 
@@ -34,10 +34,17 @@
 			</h4>
 		</td>
 		<td class="col-md-6">
-		<p class="text-right">
-			<button class="btn btn-sm btn-default">考古題</button> | 
+		<div class="container" style="display:inline-block;">
+			
+			<%= link_to "考古題", course_path(course, :tid=>teacher.id, :file_first=>"true"), :class=>"btn btn-sm btn-default" %>
+			<div class="number-right-top" ><%=course.file_infos.count%></div>
 			<button class="btn btn-sm btn-default">討論區</button>
-		</p>
+			<div class="number-right-top" >100</div>
+		</div>
+		<!--<p class="text-right">
+			
+			<button class="btn btn-sm btn-default">討論區</button>
+		</p>-->
 		</td>
 	</tr>
 	<% end %>

@@ -10,13 +10,16 @@
 <ul class="nav nav-tabs">
   <li class="active" id="tc-link"><a href="javascript:void(0);" onclick="show_item('tc');">課程資訊</a></li>
   <li class="" id="infos-link"><a href="javascript:void(0);" onclick="show_item('infos');">教授比一比</a></li>
-  <!--<li class="" id="posts-link"><a href="#" onclick="show_item('posts');">文章</a></li>-->
+
   <li class="" id="files-link"><a href="javascript:void(0);" onclick="show_item('files');" >檔案</a></li>
 </ul>
 
 
 <%= render :partial=> "user_side_bar" %>
 
+<div id="result">
+
+</div>
 
 <div id="tc_list" >
 	<%= render :partial=> "show_teacherOnCourse" %>
@@ -26,22 +29,26 @@
 	<%= render :partial=> "show_infos" %>
 </div>
 
-<div id="posts_list" style="display:none;">
-	<%= render :partial=> "show_posts" %>
-</div>
 <div id="files_list" style="display:none;">
 	<%= render :partial=> "show_files" %>
 </div>
 
+
+
 <script>
-
-
-
-
+	$(document).ready(function(){
+		<% if @file_first=="true" %>
+			show_item('files');
+		<% else %>
+			show_item('tc');
+		<% end %>
+	});
 	function show_item(item){//change show files or notes
-		list=["files","posts","infos","tc"]
-		
-		for(i=0;i<4;i++){
+		list=["files","infos","tc"]
+		if(item=="tc"){
+			prepare_raider();
+		}
+		for(i=0;i<3;i++){
 			if(list[i]!=item){
 				$("#"+list[i]+"_list").hide();
 				$("#"+list[i]+"-link").attr("class","");

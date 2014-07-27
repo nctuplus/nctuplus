@@ -152,51 +152,36 @@
   }
   
 
-  $(document).ready(function() {
-		
-      $('#file_info_upload').attr('name','file_info[upload]');
+  $(document).ready(function () {
+    $('#file_info_upload').attr('name','file_info[upload]');
 	  $('#fileupload').fileupload();
-      $('#fileupload').fileupload('option',{
+    $('#fileupload').fileupload('option',{
 		  acceptFileTypes : /(\.|\/)<%=FileInfo.support_types%>$/i,
-		  maxFileSize: <%=FileInfo.max_upload_size%>,
-
+		  maxFileSize: <%=FileInfo.max_upload_size%>
 	  });
 	  $('#fileupload').bind('fileuploadsubmit', function (e, data) {
-
-		var inputs = data.context.find(':input');//.val();
-
-		data.formData = inputs.serializeArray();
+			var inputs = data.context.find(':input');
+			data.formData = inputs.serializeArray();
 	  });
 
-	  
-      // 
-      // Load existing files:
-      $.getJSON("/file_infos/?course_id=<%= params[:id] %>", function (files) {
-        var fu = $('#fileupload').data('blueimpFileupload'), template;
-        fu._adjustMaxNumberOfFiles(-files.length);
-        //console.log(files);
-        template = fu._renderDownload(files)
-          .appendTo($('#fileupload .files'));
-		
-        // Force reflow:
-        fu._reflow = fu._transition && template.length &&
-          template[0].offsetWidth;
-        template.addClass('in');
-        $('#loading').remove();
-		//alert($("td.teacher select").val());
-		for (var i=0, file; file=files[i]; i++) {
-		//console.log('Added file: ' + file.id);
-			$("td.teacher_"+file.id+" select").val(file.teacher_id);
-			$("td.semester_"+file.id+" select").val(file.semester_id);
-			$("#edit_but_"+file.id).bind("click",{f:file},function(e){
-				//change_to_edit(e.data.f);
-			});
-
-		}
-		
-      });
-	  
-		
+    // Load existing files:
+		$.getJSON("/file_infos/?course_id=<%= @course.id %>&tid=<%=@teacher.id%>", function (files) {
+			var fu = $('#fileupload').data('blueimpFileupload'), 
+				template;
+			fu._adjustMaxNumberOfFiles(-files.length);
+			//console.log(files);
+			template = fu._renderDownload(files)
+				.appendTo($('#fileupload .files'));
+			// Force reflow:
+			fu._reflow = fu._transition && template.length &&
+				template[0].offsetWidth;
+			template.addClass('in');
+			$('#loading').remove();
+			for (var i=0, file; file=files[i]; i++) {
+				$("td.teacher_"+file.id+" select").val(file.teacher_id);
+				$("td.semester_"+file.id+" select").val(file.semester_id);
+			}
+		});
   });
 </script>
 

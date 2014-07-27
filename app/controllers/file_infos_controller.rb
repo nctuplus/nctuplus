@@ -1,39 +1,39 @@
 class FileInfosController < ApplicationController
   # GET /files
   # GET /files.json
-  layout false, :only => :pictures_show
+  layout false, :only =>[:list_by_course]
   
   before_filter :checkLogin, :only=>[ :new, :edit, :update, :create, :destroy, :one_user]
   #before_filter :checkCourseManager(params[:id]), :only=>[:edit, :update]
-  def index
-	if params[:course_id]
-      @files = FileInfo.where(:course_id=>params[:course_id])
-	elsif params[:department_id]
-	  @department=Department.find(params[:department_id])
-	  @files=Array.new
-	  @department.courses.each do |c|
-	    @files.concat c.file_infos
-	  end
-	  #@files = FileInfo.where(:course_id=>params[:course_id])
-	else
-	  @files = FileInfo.where(:owner_id=>current_user.id)
+  
+	
+	def index
+		if params[:course_id]
+				@files = FileInfo.where(:course_id=>params[:course_id])
+		elsif params[:department_id]
+			@department=Department.find(params[:department_id])
+			@files=Array.new
+			@department.courses.each do |c|
+				@files.concat c.file_infos
+			end
+			#@files = FileInfo.where(:course_id=>params[:course_id])
+		else
+			@files = FileInfo.where(:owner_id=>current_user.id)#.select(:file
+		end
+		respond_to do |format|
+			format.html # index.html.erb
+			format.json { render json: @files.map{|file| file.to_jq_upload(current_user) } }
+		end
+  end
+  
+	def list_by_course
+		@course=Course.find(params[:cid])
+		@teacher=Teacher.find(params[:tid])
+		#@files=@course.file_infos
+		
 	end
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @files.map{|file| file.to_jq_upload(current_user) } }
-    end
-  end
   
   
-  
-  def pictures_show
-    @files = FileInfo.where(:course_id=>params[:course_id])
-
-    respond_to do |format|
-      format.html # index.html.erb
-      format.json { render json: @files.map{|file| file.to_jq_upload(current_user) } }
-    end
-  end
   # GET /files/1
   # GET /files/1.json
   def show
@@ -64,7 +64,7 @@ class FileInfosController < ApplicationController
   # POST /files
   # POST /files.json
   def create
-    return if params[:teacher_id]==""||params[:semester_id]==""
+    return if params[:teacher_id]==""||params[:semester_id]==""||params[:file_info][:upload]==""
     @file = FileInfo.new(data_params)
 	#@file.course_id=5
 	@file.owner_id=current_user.id

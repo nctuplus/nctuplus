@@ -104,6 +104,25 @@ background-color: black  ;
 	color: green;
 }
 
+.number-right-top {
+
+	width: 20px;
+	height: 20px;
+	//padding: 6px 0;
+	border-radius: 10px;
+	text-align: center;
+	font-size: 10px;
+	padding-top:1px;
+	background-color:#5599FF;
+	color:white;
+	display:inline-block;
+	z-index:100;
+	position:relative;
+	left:-5px;
+	top:-20px;
+	font-weight:bold;
+	//line-height: 1.428571429;
+}
 
 
 .btn-circle {

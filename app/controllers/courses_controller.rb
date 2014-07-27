@@ -166,7 +166,7 @@ class CoursesController < ApplicationController
 	def search_by_dept
 		dept_id=params[:dept_id]
 		@sem_id=params[:sem_id].to_i
-		
+		@sem=Semester.find(@sem_id)
 		dept_ids=get_dept_ids(dept_id)
 		
 		semester=Semester.where(:id=>@sem_id).take
@@ -287,7 +287,10 @@ class CoursesController < ApplicationController
     @course = Course.find(params[:id])
 		@posts = @course.posts
 		@post= Post.new #for create course form
-		@files=@course.file_infos
+		
+		@file_first=params[:file_first]
+
+		
 		#course_details_tids=CourseDetail.where(:course_id=>@course.id).uniq.pluck(:teacher_id)
 		
 		# for _teacher_info.html.erb

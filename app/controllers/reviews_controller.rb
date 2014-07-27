@@ -1,5 +1,5 @@
 class ReviewsController < ApplicationController
-	before_filter :checkTopManager
+	before_filter :checkTopManager, :only=>[:update, :destroy]
 	
 	layout false, :only => [:list_all_reviews]
 
@@ -9,13 +9,15 @@ class ReviewsController < ApplicationController
 	
 	def show
 		@review=Review.find(params[:id])
-		@courses_all_select=Course.all.map{|c| {"walue"=>c.id, "label"=>c.ch_name}}.to_json
-		if @review.course_id
-			@course_name=@review.course.ch_name
-		else
-			@course_name=""
-		end
+		#@courses_all_select=Course.all.map{|c| {"walue"=>c.id, "label"=>c.ch_name}}.to_json
+		#if @review.course_id
+		#	@course_name=@review.course.ch_name
+		#else
+		#	@course_name=""
+		#end
 	end
+	
+	
 	
 	def list_all_reviews
 	  page=params[:page].to_i
