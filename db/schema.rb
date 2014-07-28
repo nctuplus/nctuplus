@@ -11,7 +11,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140728104309) do
+
+ActiveRecord::Schema.define(version: 20140728125713) do
+>>>>>>> f3f70488c23e36723f1be431e7e5612f7e5d090a
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -169,6 +171,15 @@ ActiveRecord::Schema.define(version: 20140728104309) do
     t.string   "title"
     t.text     "content"
     t.integer  "owner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "raider_content_lists", force: true do |t|
+    t.integer  "course_teacher_page_content_id"
+    t.integer  "user_id"
+    t.integer  "type"
+    t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
