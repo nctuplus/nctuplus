@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140727100311) do
+ActiveRecord::Schema.define(version: 20140728125713) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 20140727100311) do
     t.string   "degree"
     t.integer  "college_id"
     t.string   "dept_type"
+    t.integer  "credit"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -160,13 +161,23 @@ ActiveRecord::Schema.define(version: 20140727100311) do
   end
 
   create_table "grades", force: true do |t|
-    t.string "name"
+    t.string  "name"
+    t.integer "degree"
   end
 
   create_table "posts", force: true do |t|
     t.string   "title"
     t.text     "content"
     t.integer  "owner_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "raider_content_lists", force: true do |t|
+    t.integer  "course_teacher_page_content_id"
+    t.integer  "user_id"
+    t.integer  "type"
+    t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
