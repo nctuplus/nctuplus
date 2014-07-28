@@ -75,6 +75,7 @@
 		<div class="well" id="chart_div" style="width: 600px; height: 300px;">
 			
 		</div>
+		<%= render_chart(@chart, 'chart_div') %>
    </div>  
 
 <!-- course's content and tick -->    
@@ -250,23 +251,5 @@
 		$('#hw').attr('value',res);
 	}
 <% end %>	
-	google.load("visualization", "1", {packages:["corechart"]});
-	google.setOnLoadCallback(drawChart);
-      function drawChart() {
-        var data = google.visualization.arrayToDataTable([
-          ['學年度', '開課名額', '選課人數'],
-          ['99',  120,      100],
-          ['100',  120,     97],
-          ['101',  120,     100],
-          ['102',  60,      75]
-        ]);
 
-        var options = {
-          title: '歷年選課狀況',
-          hAxis: {title: '學年度', titleTextStyle: {color: 'green'}}
-        };
-
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
-        chart.draw(data, options);
-      }
 </script>
