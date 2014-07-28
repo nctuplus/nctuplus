@@ -1,32 +1,28 @@
 <%=form_tag "/courses/course_raider", :remote=>true do%>
 	<div class="row">
-	考試月份：（該月份可能有考試）  		
-			<div class="btn-group" id="test-btn-group">
-	<% cnt=0 %>		
-	<%for i in @start..(@start+4) do%>		
-		<%if 2**cnt & @page.exam_record !=0 %>
-			<button type="button" class="btn btn-danger" onclick="changeColor($(this), 'danger', 'test');">
+	考試週：（該週可能有考試）  		
+			<div class="btn-group" id="test-btn-group">	
+	<%for i in 1..18 do%>		
+		<%if 2**(i-1) & @page.exam_record !=0 %>
+			<button type="button" class="btn btn-danger" id="1" onclick="changeColor($(this), 'danger', 'test');">
 		<% else %>
 			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test');">
 		<%end%>	
-				<%=(i%12+1).to_s%>
-			</button>  
-	<% cnt+=1 %>		 
+				<%=i.to_s%>
+			</button>  		 
 	<%end%>      	
 			</div>    	
-	&nbsp;&nbsp;&nbsp;&nbsp;	 	
-	作業月份：（該月份可能有作業）	
-			<div class="btn-group" id="hw-btn-group">
-	<% cnt=0 %>			
-	<%for i in @start..(@start+4) do%>		
-		<%if 2**cnt & @page.homework_record !=0 %>	
-			<button type="button" class="btn btn-warning" onclick="changeColor($(this), 'warning', 'hw');">
+	</br>	 	
+	作業週：（該週可能有作業）	
+			<div class="btn-group" id="hw-btn-group">	
+	<%for i in 1..18 do%>		
+		<%if 2**(i-1) & @page.homework_record !=0 %>	
+			<button type="button" class="btn btn-warning" id="1" onclick="changeColor($(this), 'warning', 'hw');">
 		<% else %>	
 			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw');">
 		<% end %>
-				<%=(i%12+1).to_s%>
-			</button>
-	<% cnt+=1 %>		
+				<%=i.to_s%>
+			</button>	
 	<%end%>      	       	
 			</div>    		
 	</div>

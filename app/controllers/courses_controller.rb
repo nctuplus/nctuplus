@@ -15,13 +15,14 @@ class CoursesController < ApplicationController
 		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
 		@ct_id = ct.id
+=begin		
 		@name = Semester.find(ct.course_details.first.semester_id).name
 		if @name.include? "上"
 			@start = 9 - 1
 		else
 			@start = 2 - 1
 		end
-		
+=end		
 		if request.post?
 			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
 			@page.exam_record = params[:test]		
