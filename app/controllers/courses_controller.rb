@@ -15,7 +15,6 @@ class CoursesController < ApplicationController
 		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
 		@ct_id = ct.id
-
 =begin		
 		@name = Semester.find(ct.course_details.first.semester_id).name
 		if @name.include? "上"
@@ -50,12 +49,21 @@ class CoursesController < ApplicationController
 	end
 	
 	def special_list
-		cd_ids = CourseSimulation.select(:course_detail_id).where(:user_id=>current_user.id, :semester_id=>latest_semester.id)
-		@cds=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_ids).references(:course_teachership, :semester)
-		@cd_all=get_mixed_info(@cds)
-		#@courses=Course.where(:id=>@cds.map{|cd|cd.course_teachership.course_id})
-		#@teachers=Teacher.where(:id=>@cds.map{|cd|cd.course_teachership.teacher_id})		
-		#@cd_all=@cds.zip(@courses,@teachers)
+		ls=latest_semester
+		cs_all=current_user.course_simulations
+		cs_this=cs_all.select{|cs|cs.semester_id==ls.id}
+		cd_this_ids = cs_this.map{|cs|cs.course_detail_id}
+		cd_all_ids = cs_all.map{|cs|cs.course_detail_id}
+		#cd_ids = CourseSimulation.select(:course_detail_id).where(:user_id=>current_user.id, :semester_id=>latest_semester.id)
+		@cd_this=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_this_ids).order(:cos_type).references(:course_teachership, :semester)
+		@cd_this_mixed=get_mixed_info(@cd_this)
+		
+		@cd_all_sum=CourseDetail.where(:id=>cd_all_ids).sum(:credit).round
+		@cd_all_cos_type_credit=CourseDetail.where(:id=>cd_all_ids).group(:cos_type).sum(:credit)
+		
+		#Department.where(:dept_type=>"dept", :degree=>"3").each do |d|
+		#	d.update_attributes(:credit=>128)
+		#end
 		
 	end
 	def comment_submit
@@ -317,26 +325,6 @@ class CoursesController < ApplicationController
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters
 	#@teachers=Teacher.where(:course_id=>@course.id)
-	
-	data_table = GoogleVisualr::DataTable.new
-		# Add Column Headers
-	data_table.new_column('string', 'Year' )
-	data_table.new_column('number', 'Sales')
-	data_table.new_column('number', 'Expenses')
-
-		
-# Add Rows and Values
-	data_table.add_rows([
-    ['2004', 1000, 400],
-    ['2005', 1170, 460],
-    ['2006', 660, 1120],
-    ['2007', 1030, 540]
-	])
-	
-	option = { width: 400, height: 240, title: 'Company Performance' }
-	@chart = GoogleVisualr::Interactive::AreaChart.new(data_table, option)
-	
-	
   end
 	
 	def simulation
