@@ -41,7 +41,9 @@ Nctuplus::Application.routes.draw do
   resources :teachers
   
 	
+	post "reviews/search_by_keyword"
 	get "reviews/list_all_reviews"
+	
   resources :reviews
   
   get "post/getcode"

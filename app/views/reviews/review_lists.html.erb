@@ -33,13 +33,20 @@
 			$("#reviewModal").modal("toggle");
 		});
 		$('#page-selection').bootpag({
-			total: <%=@page_numbers%>,
-			<% if params[:page] %>
-			page: <%=params[:page]%>,
-			<% end %>
+			total: <%= @page_numbers %>,
+			page: <%= @page %>,
 			maxVisible: 10
-		}).on("page", function(event, /* page number here */ num){
-			$("#search_result").load("/reviews/list_all_reviews?page="+num);
+		}).on("page", function(event,num){
+			<% if @view_type=="all" %>
+				$("#search_result").load("/reviews/list_all_reviews?page="+num);
+			<% else %>
+				$("#search_result").load("/reviews/search_by_keyword",
+					{	page: num,
+						search_term: "<%=@search_term%>",
+						search_type: "<%=@search_type%>"
+					}
+				);
+			<% end %>
 		});
 	});
 </script>
