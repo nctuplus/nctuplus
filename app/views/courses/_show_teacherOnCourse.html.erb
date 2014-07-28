@@ -235,6 +235,7 @@
 		var res= 0 ;
 		$('#test-btn-group > button').each(function( index ) {			
   			if($(this).attr('id')=='1'){
+  				alert(index);
   				res = res | Math.pow(2,index) ;
   			}	
 		});
@@ -242,6 +243,7 @@
 		res = 0 ;
 		$('#hw-btn-group > button').each(function( index ) {			
   			if($(this).attr('id')=='1'){
+  				alert(index);
   				res = res | Math.pow(2,index) ;
   			}	
 		});

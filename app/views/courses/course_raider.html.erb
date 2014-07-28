@@ -1,34 +1,31 @@
 <div class="row">
 <%if @page%>
 
-考試月份：（該月份可能有考試）   		
+考試週：（該週可能有考試）    		
 		<div class="btn-group">
-<%cnt = 0%>		
-<%for i in @start..(@start+4) do%>		
-	<%if 2**cnt & @page.exam_record !=0 %>
+	
+<%for i in 1..18 do%>		
+	<%if 2**(i-1) & @page.exam_record !=0 %>
         <button type="button" class="btn active btn-danger" >
     <% else %>
         <button type="button" class="btn btn-default" >
     <% end %>
-        	<span class="col-md-1"><%=(i%12+1).to_s%></span>
-        </button>
-        
-<% cnt+=1 %>        
+        	<span><%=i.to_s%></span>
+        </button> 
 <%end%>        	 	
       	</div>    	
 </br>
-作業月份：（該月份可能有作業）		
+作業週：（該週可能有作業）  	
 		<div class="btn-group">
-<%cnt = 0%>		
-<%for i in @start..(@start+4) do%>	
-	<%if 2**cnt & @page.homework_record !=0 %>
+	
+<%for i in 1..18 do%>	
+	<%if 2**(i-1) & @page.homework_record !=0 %>
 		<button type="button" class="btn active btn-warning" >
     <% else %>
        	<button type="button" class="btn btn-default" >
     <% end %>   	
-        	<span class="col-md-1"><%=(i%12+1).to_s%></span>
-        </button>
-<% cnt+=1 %>         
+        	<span><%=i.to_s%></span>
+        </button>         
 <%end%>      	       	
       	</div> 
       	    	   
