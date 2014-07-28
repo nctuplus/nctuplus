@@ -1,12 +1,40 @@
-﻿<div class="panel panel-primary">
+﻿<script>
+	function show_form(){
+		if ($("#user_form").is(':visible')) {
+			$("#user_form").hide();
+			$("#user_info").show();
+		}
+		else{
+			$("#user_form").show();
+			$("#user_info").hide();
+		}
+	}
+</script>
+
+<div class="panel panel-primary">
 	<div class="panel-heading" >
-		<h4 class="text-center">已選課程</h4>
+		<h4 class="text-center"><%=latest_semester.name%></h4>
 	</div>
 	
 
-<br>
-<table class="table table-hover ">
 
+<table class="table table-hover ">
+	<tr class="row">
+		<td colspan="2" class="col-md-12">
+		
+			<%= render :partial=> "/user/dept_form"%>
+			
+			<h4 id="user_info">
+				<% unless current_user.department.nil? %>
+				<%=current_user.department.ch_name%> <%=current_user.grade.name%> <%=current_user.name %>
+				
+				<button class="btn btn-success" onclick="show_form();">修改</button>
+				<% end %>
+			</h4>
+			
+		
+		</td>
+	</tr>
 	<% cos_types=[] %>
 	<% credits=[] %>
 	<% @cd_all.each do |cd,course,teacher|%>
@@ -69,3 +97,5 @@
 </table>
 
 </div>
+
+<%= render :partial=>"user_side_bar"%>

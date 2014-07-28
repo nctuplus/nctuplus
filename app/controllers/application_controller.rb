@@ -3,8 +3,13 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   protect_from_forgery
-	
+	rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   private
+	
+	def record_not_found
+    redirect_to action: :index
+  end
 	
 	def ajax_flash(_class,title,mesg)
 		html='<div id="ajax_notice" class="alert alert-'<<_class<<'" style="width:500px;position:fixed;left:300;top:100;z-index:2000;">'

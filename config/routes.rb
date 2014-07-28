@@ -46,8 +46,8 @@ Nctuplus::Application.routes.draw do
 	
   resources :reviews
   
-  get "post/getcode"
-  resources :post
+  #get "post/getcode"
+  #resources :post
 	
 	post "main/send_report"
 	get "main/hidden_prepare"
@@ -78,6 +78,7 @@ Nctuplus::Application.routes.draw do
   
   post "user/:id/permission", to: "user#permission"
   
+	post "user/select_dept"
   post "user/create"
   #get "user/create"
   
