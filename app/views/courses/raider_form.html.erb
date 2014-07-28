@@ -4,7 +4,7 @@
 			<div class="btn-group" id="test-btn-group">	
 	<%for i in 1..18 do%>		
 		<%if 2**(i-1) & @page.exam_record !=0 %>
-			<button type="button" class="btn btn-danger" onclick="changeColor($(this), 'danger', 'test');">
+			<button type="button" class="btn btn-danger" id="1" onclick="changeColor($(this), 'danger', 'test');">
 		<% else %>
 			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test');">
 		<%end%>	
@@ -17,7 +17,7 @@
 			<div class="btn-group" id="hw-btn-group">	
 	<%for i in 1..18 do%>		
 		<%if 2**(i-1) & @page.homework_record !=0 %>	
-			<button type="button" class="btn btn-warning" onclick="changeColor($(this), 'warning', 'hw');">
+			<button type="button" class="btn btn-warning" id="1" onclick="changeColor($(this), 'warning', 'hw');">
 		<% else %>	
 			<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw');">
 		<% end %>
