@@ -8,7 +8,7 @@
 		<tr class="clickable-row" href="<%=review_path(r)%>">
 		<th id="title"><%=r.title%></th>
 		<th id="author"><%=r.author%></th>
-		<th class="hidden" id="content"><span style="white-space: pre-line; font-size:16px;"><%=r.content%></span></th>
+		<th class="hidden" id="content"><textcontent><%=r.content%></textcontent></th>
 		<th id="date"><%=r.date.strftime("%F")%></th>
 		</tr>
 	<% end %>

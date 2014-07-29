@@ -4,13 +4,18 @@ Nctuplus::Application.routes.draw do
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
-  
 	
+  post "courses/update_discuss"
+	post "courses/new_discuss"
+	post "courses/new_sub_discuss"
 	post "courses/search_by_dept"
 	post "courses/search_by_keyword"
 	post "courses/comment_submit"
 	#post "courses/raider_submit"
 	post "courses/course_raider"
+	
+	get "courses/get_compare"
+	get "courses/get_discuss"
 	
 	get "courses/course_raider"
 	get "courses/list_all_courses"
@@ -56,7 +61,7 @@ Nctuplus::Application.routes.draw do
 	
   #----------for files---------------
   #get "file_info/all_users"
-	#get "file_infos/list_by_course"
+	get "file_infos/list_by_course"
   get "file_infos/one_user"
   #get "file_info/upload"
   #get "file_info/download"

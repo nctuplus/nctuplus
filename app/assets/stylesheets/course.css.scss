@@ -3,6 +3,19 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
+//for discuss like and dislike
+
+.like-count{
+	font-family: arial;
+	font-size: 16px;
+	font-weight: bold;
+}
+.like{
+	color:green;
+}
+.dislike{
+	color:red;
+}
 //for course_list and statics common course dimension grid color
 .dimension-world{
 	background-color:#E353E1;

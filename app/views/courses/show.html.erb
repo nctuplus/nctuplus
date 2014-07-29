@@ -12,45 +12,56 @@
 
 <ul class="nav nav-tabs">
   <li class="active" id="tc-link"><a href="javascript:void(0);" onclick="show_item('tc');">課程資訊</a></li>
-  <li class="" id="infos-link"><a href="javascript:void(0);" onclick="show_item('infos');">教授比一比</a></li>
-
+  <li class="" id="compare-link"><a href="javascript:void(0);" onclick="show_item('compare');">教授比一比</a></li>
+	<li class="" id="discussion-link"><a href="javascript:void(0);" onclick="show_item('discussion');" >討論區</a></li>
   <li class="" id="files-link"><a href="javascript:void(0);" onclick="show_item('files');" >檔案</a></li>
 </ul>
 
 
-<div id="result">
-
+<div id="result" class="container">
+	
 </div>
 
 <div id="tc_list" >
-	<%= render :partial=> "show_teacherOnCourse" %>
+	
+</div>
+<!--
+<div id="compare_list" style="display:none;">
+	
 </div>
 
-<div id="infos_list" style="display:none;">
-	<%= render :partial=> "show_infos" %>
+<div id="discussion_list" class="container" style="display:none;">
+	
 </div>
 
 <div id="files_list" style="display:none;">
-	<%= render :partial=> "show_files" %>
+	<% render :partial=> "show_files" %>
 </div>
-
+-->
 
 
 
 <script>
 	$(document).ready(function(){
-		<% if @file_first=="true" %>
-			show_item('files');
-		<% else %>
-			show_item('tc');
-		<% end %>
+		show_item('<%=@first_show%>');
+
 	});
 	function show_item(item){//change show files or notes
-		list=["files","infos","tc"]
+		list=["files","compare","tc","discussion"]
 		if(item=="tc"){
-			prepare_raider();
+			//prepare_raider();
+			$("#result").html('<%=j render :partial=> "show_teacherOnCourse" %>');
 		}
-		for(i=0;i<3;i++){
+		else if(item=="discussion"){
+			$("#result").load("/courses/get_discuss?ct_id=<%=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>@teacher_show.id).take.id%>");
+		}
+		else if(item=="compare"){
+			$("#result").load("/courses/get_compare?c_id=<%=@course.id%>");
+		}
+		else if(item=="files"){
+			$("#result").load("/file_infos/list_by_course?cid=<%=@course.id%>&tid=<%=@teacher_show.id%>");
+		}
+		for(i=0;i<list.length;i++){
 			if(list[i]!=item){
 				$("#"+list[i]+"_list").hide();
 				$("#"+list[i]+"-link").attr("class","");

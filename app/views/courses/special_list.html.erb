@@ -81,10 +81,11 @@
 		<td class="col-md-6">
 		<div class="container" style="display:inline-block;">
 			
-			<%= link_to "考古題", course_path(course, :tid=>teacher.id, :file_first=>"true"), :class=>"btn btn-sm btn-default" %>
+			<%= link_to "考古題", course_path(course, :tid=>teacher.id, :first_show=>"files"), :class=>"btn btn-sm btn-default" %>
 			<div class="number-right-top" ><%=course.file_infos.count%></div>
-			<button class="btn btn-sm btn-default">討論區</button>
-			<div class="number-right-top" >100</div>
+			<%= link_to "討論區", course_path(course, :tid=>teacher.id, :first_show=>"discussion"), :class=>"btn btn-sm btn-default" %>
+			<%ct=CourseTeachership.where(:course_id=>course.id, :teacher_id=>teacher.id).take%>
+			<div class="number-right-top" ><%=ct.discusses.count%></div>
 		</div>
 
 		</td>
@@ -120,4 +121,3 @@
 
 </div>
 
-<% render :partial=>"user_side_bar"%>

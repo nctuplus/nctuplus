@@ -3,11 +3,11 @@ class CoursesController < ApplicationController
   
 	include CourseHelper
   
-	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart]
+	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_discuss, :get_compare, :update_discuss]
 
 	
 	
-	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course, :special_list]
+	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course, :special_list, :new_discuss, :new_sub_discuss, :update_discuss]
 
 ### for course_teacher_page_content	
 
@@ -27,7 +27,7 @@ class CoursesController < ApplicationController
 			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
 			@page.exam_record = params[:test]		
 			@page.homework_record = params[:hw]
-		#	@page.course_note = params[:content]
+			@page.course_note = params[:content]
 			@page.course_teachership_id = params[:ct_id].to_i
 			@page.last_user_id = current_user.id
 			if @page.save		
@@ -289,7 +289,14 @@ class CoursesController < ApplicationController
 			}
 		end
 	end
-	
+	def get_compare
+		@course = Course.find(params[:c_id])
+		@teachers=@course.teachers
+		#.sort_by{
+		#	|cd| CourseTeachership.where(:course_id=>@course,:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
+		#}.reverse
+		render "show_compare"
+	end
 	
 	
   def show
@@ -300,7 +307,8 @@ class CoursesController < ApplicationController
 		@posts = @course.posts
 		@post= Post.new #for create course form
 		
-		@file_first=params[:file_first]
+		 
+		@first_show=params[:first_show]||"tc"
 
 		
 		#course_details_tids=CourseDetail.where(:course_id=>@course.id).uniq.pluck(:teacher_id)
@@ -322,17 +330,16 @@ class CoursesController < ApplicationController
 			@teacher_show =  @teachers.first
 			@target_rank = 1 
 		end
+		@ct=CourseTeachership.where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters
-	#@teachers=Teacher.where(:course_id=>@course.id)
-	
-	data_table = GoogleVisualr::DataTable.new
-# Add Column Headers
+		data_table = GoogleVisualr::DataTable.new
+		# Add Column Headers
 	data_table.new_column('string', 'Year' )
 	data_table.new_column('number', 'Sales')
 	data_table.new_column('number', 'Expenses')
 
-		
+
 # Add Rows and Values
 	data_table.add_rows([
     ['2004', 1000, 400],
@@ -340,11 +347,11 @@ class CoursesController < ApplicationController
     ['2006', 660, 1120],
     ['2007', 1030, 540]
 	])
-	
+
 	option = { width: 400, height: 240, title: 'Company Performance' }
 	@chart = GoogleVisualr::Interactive::AreaChart.new(data_table, option)
-	
 
+	#@teachers=Teacher.where(:course_id=>@course.id)
   end
 	
 	def simulation
@@ -436,6 +443,51 @@ class CoursesController < ApplicationController
 		@cd_all=get_mixed_info(@course_details)
 		@table_type="cart"
 		render "course_lists_mini"
+	end
+	
+	def new_discuss
+		title=params[:main_title]
+		content=params[:main_content]
+		@ct_id=params[:ct_id]
+		@discuss=Discuss.new
+		@discuss.course_teachership_id=@ct_id
+		@discuss.user_id=current_user.id
+		@discuss.likes=0
+		@discuss.dislikes=0
+		@discuss.title=title
+		@discuss.content=content
+		@discuss.save!
+		render "new_discuss_ok"
+	end
+	
+	def new_sub_discuss
+
+		content=params[:sub_content]
+		discuss_id=params[:reply_discuss_id]
+		@ct_id=params[:ct_id]
+		@discuss=SubDiscuss.new
+		@discuss.discuss_id=discuss_id
+		@discuss.user_id=current_user.id
+		@discuss.likes=0
+		@discuss.dislikes=0
+
+		@discuss.content=content
+		@discuss.save!
+		render "new_discuss_ok"
+	end
+	
+	def get_discuss
+		@ct_id=params[:ct_id].to_i
+		@discusses=Discuss.includes(:sub_discusses, :user).where(:course_teachership_id=>@ct_id).order(:likes)
+		
+		render "show_discussion"
+	end
+	def update_discuss
+		@discuss=Discuss.find(params[:discuss_id])
+		@discuss.content=params[:content]
+		@discuss.title=params[:title]
+		@discuss.save!
+		redirect_to :action=> :get_discuss, :ct_id=>params[:ct_id]
 	end
 	
   protected
