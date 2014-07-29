@@ -3,7 +3,7 @@
 <% dept_grad=dept_all.select{|d|d.degree=='2'}.map{|d| [d.ch_name,d.id]}%>
 <%dept=current_user.department%>
 <%= form_tag "/user/select_dept", class:"form-inline", id:"user_form" do %>
-	<div class="form-group col-md-2">
+	<div class="form-group col-md-3">
 	
 	<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],dept.nil? ? 3 :dept.degree), class:'form-control', onChange:"change_degree();"%>
 	</div>
@@ -11,7 +11,7 @@
 	<%=select_tag 'dept_under_select', options_for_select(dept_undergrad,current_user.department_id), class:'form-control'%>
 	<%=select_tag 'dept_grad_select', options_for_select(dept_grad,current_user.department_id), class:'form-control'%>
 	</div>
-	<div class="form-group col-md-4">
+	<div class="form-group col-md-3">
 	<%=select_tag 'grade_under_select', options_from_collection_for_select(Grade.where(:degree=>3),:id,:name, current_user.grade_id), class:'form-control'%>
 	<%=select_tag 'grade_grad_select', options_from_collection_for_select(Grade.where(:degree=>2),:id,:name, current_user.grade_id), class:'form-control'%>
 	</div>

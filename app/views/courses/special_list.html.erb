@@ -3,7 +3,7 @@
 		if ($("#user_form").is(':visible')) {
 			$("#user_form").hide();
 			$("#user_info").show();
-			obj.text("修改");
+			obj.text("修改系級");
 		}
 		else{
 			$("#user_form").show();
@@ -37,7 +37,7 @@
 			
 		
 		</td>-->
-		<td  class="col-md-6">
+		<td  class="col-md-8">
 			<%= render :partial=> "/user/dept_form"%>
 			<h4 id="user_info" class="text-center">
 				<% unless current_user.department.nil? %>
@@ -47,11 +47,13 @@
 				<% end %>
 			</h4>
 		</td>
-		<td class="col-md-6">
-			<button class="btn btn-success" onclick="show_form($(this));">修改</button>
+		<td class="col-md-4"><% unless current_user.department.nil? %>
+			<button class="btn btn-success" onclick="show_form($(this));">修改系級</button>
+			<% end %>
 			<%=link_to "/courses/simulation", class:"btn btn-primary" do %>
 				<%=fa_icon "plus" %>新增課程
 			<% end %>
+			
 		</td>
 	</tr>
 	<% cos_types=[] %>
@@ -69,10 +71,6 @@
 	<tr class="row ">
 	<td class="col-md-6">
 		<h4 class="text-center"><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
-	
-			
-
-			
 			<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 
 			
 			<%=teacher.name %> | 
@@ -88,10 +86,7 @@
 			<button class="btn btn-sm btn-default">討論區</button>
 			<div class="number-right-top" >100</div>
 		</div>
-		<!--<p class="text-right">
-			
-			<button class="btn btn-sm btn-default">討論區</button>
-		</p>-->
+
 		</td>
 	</tr>
 	<% end %>
@@ -114,8 +109,10 @@
 				<% @cd_all_cos_type_credit.each do |type,credit| %>
 					<%=type%> : <strong><%=credit.round%></strong>
 				<% end %>
-				 <!--必修 : <strong>53</strong> 選修 : <strong>51</strong>-->
-				 離畢業還差 <strong><%=current_user.department.credit-@cd_all_sum%></strong> 學分
+				<!--必修 : <strong>53</strong> 選修 : <strong>51</strong>-->
+				<% unless current_user.department.nil? %>
+				離畢業還差 <strong><%=current_user.department.credit-@cd_all_sum%></strong> 學分
+				<% end %>
 			</h4>
 		</td>
 	</tr>
@@ -123,4 +120,4 @@
 
 </div>
 
-<%= render :partial=>"user_side_bar"%>
+<% render :partial=>"user_side_bar"%>

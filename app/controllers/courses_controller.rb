@@ -413,6 +413,7 @@ class CoursesController < ApplicationController
 	end
 	def show_cart
 		@course_details=CourseDetail.where(:id=>session[:cd])
+		@cd_all=get_mixed_info(@course_details)
 		@table_type="cart"
 		render "course_lists_mini"
 	end
