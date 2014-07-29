@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140729084526) do
+ActiveRecord::Schema.define(version: 20140729090500) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -25,6 +25,14 @@ ActiveRecord::Schema.define(version: 20140729084526) do
     t.integer  "course_teachership_id"
     t.integer  "content_type"
     t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "content_list_ranks", force: true do |t|
+    t.integer  "raider_content_list_id"
+    t.integer  "user_id"
+    t.integer  "rank"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

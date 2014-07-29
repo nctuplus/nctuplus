@@ -288,7 +288,19 @@
 	}
 	
 	function RemoveRow(){
-		$('#raider_content_table tr:last').remove() ;
+		$('#raider_content_table tr:last').remove() ;	
+	}
+	function preferClick(pre, id){
+		var str ="" ;
+		if(pre==1)
+			str = "你覺得這則內容有價值？" ;
+		else
+			str = "你覺得這是則廢文？" ;
+			
+		if(!confirm(str))
+			return false ;
+			
+			
 	}
 	
 <% end %>	
