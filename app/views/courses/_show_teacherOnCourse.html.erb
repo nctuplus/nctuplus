@@ -23,7 +23,7 @@
 				課程時間/地點： 
 				<% first_name = Semester.find(courseTeacher.course_details.first.semester_id).name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
-				 <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
+					(<%=first_name%>) <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
 				<% else %>
 				 本學期無開課
 				<% end %>
@@ -71,11 +71,9 @@
 			</p>	
 		</h2>	
 	</div>
-	<div class="panel-body">
-		<div class="well" id="chart_div" style="width: 600px; height: 300px;">	
-		</div>
-		<%= render_chart(@chart, 'chart_div') %>
-   </div>  
+	<div class="panel-body" id="chart">
+		<%=loading_img%>
+    </div>  
 
 <!-- course's content and tick -->    
     <div class="panel-heading">
@@ -92,7 +90,7 @@
 	</div>
 	<div class="panel-body">
 		<div class="well" id="raider_content">
-			
+			<%=loading_img%>
 		</div>
 		<div class="well" id="raider_form">
 			
@@ -150,6 +148,7 @@
 <script>
 
 	function prepare_raider(){
+		$('#chart').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2');
 		$('#raider_content').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
 		$('#raider_form').hide();
 	}

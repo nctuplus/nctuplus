@@ -12,17 +12,10 @@ class CoursesController < ApplicationController
 ### for course_teacher_page_content	
 
 	def course_raider
-		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
+		#Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
 		@ct_id = ct.id
-=begin		
-		@name = Semester.find(ct.course_details.first.semester_id).name
-		if @name.include? "上"
-			@start = 9 - 1
-		else
-			@start = 2 - 1
-		end
-=end		
+		
 		if request.post?
 			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
 			@page.exam_record = params[:test]		
@@ -40,6 +33,32 @@ class CoursesController < ApplicationController
 			if params[:type].to_i==1
 				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
 				render "course_raider"
+			elsif params[:type].to_i==2
+				data_table = GoogleVisualr::DataTable.new
+			# Add Column Headers
+				data_table.new_column('string', '年度' )
+				data_table.new_column('number', '開課人數')
+				data_table.new_column('number', '選課人數')
+				
+				row_list = Array.new
+				ct.course_details.each do |cd|
+					row = Array.new
+					sem_year = Semester.find(cd.semester_id).name
+					if latest_semester.name == sem_year 
+						sem_year += "(本學期)"
+					end	
+						
+					row.push(sem_year)
+					row.push(cd.students_limit.to_i)
+					row.push(cd.reg_num.to_i)
+					row_list.push(row)
+				end
+				#Rails.logger.debug "[debug] "+(row_list.to_s)
+				data_table.add_rows(row_list.reverse)
+				option = { width: 550, height: 250, title: '選課狀況 (9999為無上限)' }
+				@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
+				
+				render "course_chart"
 			else
 				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
 						CourseTeacherPageContent.new(:exam_record=>0, :homework_record=>0)
@@ -325,24 +344,6 @@ class CoursesController < ApplicationController
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters
 	#@teachers=Teacher.where(:course_id=>@course.id)
-	
-	data_table = GoogleVisualr::DataTable.new
-# Add Column Headers
-	data_table.new_column('string', 'Year' )
-	data_table.new_column('number', 'Sales')
-	data_table.new_column('number', 'Expenses')
-
-		
-# Add Rows and Values
-	data_table.add_rows([
-    ['2004', 1000, 400],
-    ['2005', 1170, 460],
-    ['2006', 660, 1120],
-    ['2007', 1030, 540]
-	])
-	
-	option = { width: 400, height: 240, title: 'Company Performance' }
-	@chart = GoogleVisualr::Interactive::AreaChart.new(data_table, option)
 	
 
   end
