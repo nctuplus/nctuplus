@@ -1,5 +1,6 @@
 <%=form_tag "/courses/course_raider", :remote=>true do%>
 	<div class="row">
+	<i class="fa fa-cube"></i> 作業/考試：</br></br>
 	考試週：（該週可能有考試）  		
 			<div class="btn-group" id="test-btn-group">	
 	<%for i in 1..18 do%>		
@@ -28,22 +29,24 @@
 	</div>
 	<hr>
 	<div class="row">
-		其他內容：</br></br>
-<!--		<%= text_area_tag :content, @page.course_note, :class=>"form-control", :cols => "30", :rows => "10" %>  -->
-		<table class="table">
-		<tr>
-			<td><%=fa_icon "heart"%>
-			<td><%= text_field_tag "content_list_1",  "list1", :class=>"form-control" %></br>
-		<tr>	
-			<td><%=fa_icon "heart"%>
-			<td><%= text_field_tag "content_list_1",  "list1", :class=>"form-control" %>
+		<i class="fa fa-cube"></i> 其他內容：
+		<div class="btn btn-success btn-circle" name="button" onclick="addRow();">＋</div>
+		<div class="btn btn-danger btn-circle" name="button" onclick="RemoveRow();">－</div>
+		</br></br>
+
+		<table class="table" id="raider_content_table">
+			<tbody>		
+
+			</tbody>
 		</table>
+		
+		<hr>
+
 	</div>
 	<%=hidden_field_tag "ct_id",params[:ct_id] %> 
 	<input id="test" name="test" type="hidden" value="0">
 	<input id="hw" name="hw" type="hidden" value="0">
-	<hr>
 	<p class="text-right">
-		<%=submit_tag "確定修改", :class=>"btn btn-primary", :confirm=>"確認資料無誤嗎 ? ", :onclick=>"count_month();"%>
+		<%=submit_tag "確定修改", :class=>"btn btn-primary", :onclick=>"return submit_check();"%>
 	</p>
 <%end%>

@@ -23,7 +23,7 @@
 				課程時間/地點： 
 				<% first_name = Semester.find(courseTeacher.course_details.first.semester_id).name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
-				 <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
+					(<%=first_name%>) <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
 				<% else %>
 				 本學期無開課
 				<% end %>
@@ -71,11 +71,9 @@
 			</p>	
 		</h2>	
 	</div>
-	<div class="panel-body">
-		<div class="well" id="chart_div" style="width: 600px; height: 300px;">	
-		</div>
-		<%= render_chart(@chart, 'chart_div') %>
-   </div>  
+	<div class="panel-body" id="chart">
+		<%=loading_img%>
+    </div>  
 
 <!-- course's content and tick -->    
     <div class="panel-heading">
@@ -92,7 +90,7 @@
 	</div>
 	<div class="panel-body">
 		<div class="well" id="raider_content">
-			
+			<%=loading_img%>
 		</div>
 		<div class="well" id="raider_form">
 			
@@ -150,13 +148,14 @@
 <script>
 
 	function prepare_raider(){
+		$('#chart').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2');
 		$('#raider_content').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
 		$('#raider_form').hide();
 	}
 	function loadForm(id, link){
 		if(link.html()=="編輯"){
 			link.html("取消");
-			$('#raider_form').load("/courses/course_raider?ct_id="+id+"&type=2");
+			$('#raider_form').load("/courses/course_raider?ct_id="+id+"&type=3");
 			$('#raider_form').show() ;
 			$('#raider_content').hide() ;
 		}else{
@@ -231,7 +230,20 @@
 		}
 	}
 	
-	function count_month(){
+	function submit_check(){
+		if(!confirm("確定資料無誤嗎？"))
+			return false ;
+		//check list blank?
+		var f = false ;
+		$('#raider_content_table input').each(function(index){
+			if($(this).val()==""){
+				alert("內容不可留白謝謝");	
+				f = true;	
+			}	
+		});
+		if(f)
+			return false ;
+	
 		var res= 0 ;
 		$('#test-btn-group > button').each(function( index ) {			
   			if($(this).attr('id')=='1'){
@@ -248,7 +260,50 @@
   			}	
 		});
 		$('#hw').attr('value',res);
+		
+		return true ;
 	}
+	
+	function addRow(){
+		var f = true ;
+		var cnt = 1 ;
+		$('#raider_content_table input').each(function(index){
+			if($(this).val()==""){
+				alert("請填完空白部分再新增謝謝");
+				f = false ;		
+			}	
+			cnt+=1 ;
+		});
+		if(f&&cnt<6)
+			$('#raider_content_table > tbody:last').append(
+			'<tr>'+
+			'<td><select class="form-control" id="content_list_type_'+cnt+'" name="content_list_type_'+cnt+'">'+
+			'<option value="1">[考試]</option>'+
+			'<option value="2">[作業]</option>'+
+			'<option value="3">[上課]</option>'+
+			'<option value="4">[其他]</option>'+
+			'</select></td>'+
+			'<td><input class="form-control" id="content_list_'+cnt+'" name="content_list_'+cnt+'" type="text" value=""></td>'+
+			'</tr>');
+	}
+	
+	function RemoveRow(){
+		$('#raider_content_table tr:last').remove() ;	
+	}
+	function preferClick(pre, id){
+		var str ="" ;
+		if(pre==1)
+			str = "你覺得這則內容有價值？" ;
+		else
+			str = "你覺得這是則廢文？" ;
+			
+		if(!confirm(str))
+			return false ;
+			
+			
+	}
+	
 <% end %>	
 
+	
 </script>
