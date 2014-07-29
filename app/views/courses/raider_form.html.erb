@@ -28,8 +28,16 @@
 	</div>
 	<hr>
 	<div class="row">
-		其他內容：</br>
-		<%= text_area_tag :content, @page.course_note, :class=>"form-control", :cols => "30", :rows => "10" %>
+		其他內容：</br></br>
+<!--		<%= text_area_tag :content, @page.course_note, :class=>"form-control", :cols => "30", :rows => "10" %>  -->
+		<table class="table">
+		<tr>
+			<td><%=fa_icon "heart"%>
+			<td><%= text_field_tag "content_list_1",  "list1", :class=>"form-control" %></br>
+		<tr>	
+			<td><%=fa_icon "heart"%>
+			<td><%= text_field_tag "content_list_1",  "list1", :class=>"form-control" %>
+		</table>
 	</div>
 	<%=hidden_field_tag "ct_id",params[:ct_id] %> 
 	<input id="test" name="test" type="hidden" value="0">

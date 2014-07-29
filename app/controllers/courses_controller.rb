@@ -28,7 +28,7 @@ class CoursesController < ApplicationController
 			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
 			@page.exam_record = params[:test]		
 			@page.homework_record = params[:hw]
-			@page.course_note = params[:content]
+		#	@page.course_note = params[:content]
 			@page.course_teachership_id = params[:ct_id].to_i
 			@page.last_user_id = current_user.id
 			if @page.save		
@@ -319,7 +319,7 @@ class CoursesController < ApplicationController
 	#@teachers=Teacher.where(:course_id=>@course.id)
 	
 	data_table = GoogleVisualr::DataTable.new
-		# Add Column Headers
+# Add Column Headers
 	data_table.new_column('string', 'Year' )
 	data_table.new_column('number', 'Sales')
 	data_table.new_column('number', 'Expenses')
