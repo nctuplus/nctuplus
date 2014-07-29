@@ -1,4 +1,6 @@
 class User < ActiveRecord::Base
+	belongs_to :department
+	belongs_to :grade
   has_many :file_infos
   has_many :posts
 	has_many :course_simulations#, :foreign_key=>:owner_id

@@ -1,15 +1,64 @@
-﻿<div class="panel panel-primary">
+﻿<script>
+	function show_form(obj){
+		if ($("#user_form").is(':visible')) {
+			$("#user_form").hide();
+			$("#user_info").show();
+			obj.text("修改系級");
+		}
+		else{
+			$("#user_form").show();
+			$("#user_info").hide();
+			obj.text("隱藏");
+		}
+	}
+</script>
+
+<div class="panel panel-primary">
 	<div class="panel-heading" >
-		<h4 class="text-center">已選課程</h4>
+		<h4 class="text-center"><%=latest_semester.name%></h4>
 	</div>
 	
 
-<br>
-<table class="table table-hover ">
 
+<table class="table table-hover ">
+	<tr class="row">
+	
+		<!--<td colspan="2" class="col-md-12">
+		
+			
+			
+			<h4 id="user_info">
+				<% unless current_user.department.nil? %>
+				<%=current_user.department.ch_name%> <%=current_user.grade.name%> <%=current_user.name %>
+				
+				<button class="btn btn-success" onclick="show_form();">修改</button>
+				<% end %>
+			</h4>
+			
+		
+		</td>-->
+		<td  class="col-md-8">
+			<%= render :partial=> "/user/dept_form"%>
+			<h4 id="user_info" class="text-center">
+				<% unless current_user.department.nil? %>
+				<%=current_user.department.ch_name%> <%=current_user.grade.name%> <%=current_user.name %>
+				
+				
+				<% end %>
+			</h4>
+		</td>
+		<td class="col-md-4"><% unless current_user.department.nil? %>
+			<button class="btn btn-success" onclick="show_form($(this));">修改系級</button>
+			<% end %>
+			<%=link_to "/courses/simulation", class:"btn btn-primary" do %>
+				<%=fa_icon "plus" %>新增課程
+			<% end %>
+			
+		</td>
+	</tr>
 	<% cos_types=[] %>
 	<% credits=[] %>
-	<% @cd_all.each do |cd,course,teacher|%>
+	<% @cd_this_mixed.each do |cd,course,teacher|%>
 		<% if !cos_types.include?(cd.cos_type) %>
 			<% cos_types.append(cd.cos_type) %>
 			<tr class="row"><th colspan="3" class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
@@ -22,10 +71,6 @@
 	<tr class="row ">
 	<td class="col-md-6">
 		<h4 class="text-center"><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
-	
-			
-
-			
 			<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 
 			
 			<%=teacher.name %> | 
@@ -41,10 +86,7 @@
 			<button class="btn btn-sm btn-default">討論區</button>
 			<div class="number-right-top" >100</div>
 		</div>
-		<!--<p class="text-right">
-			
-			<button class="btn btn-sm btn-default">討論區</button>
-		</p>-->
+
 		</td>
 	</tr>
 	<% end %>
@@ -55,17 +97,27 @@
 				<% cos_all.each do |t,c| %>
 					<%= t %> : <strong><%=c%></strong>		
 				<% end %>
-				共 <strong><%= @cds.count %></strong> 門課 <strong><%=@cds.sum(:credit) %></strong> 學分
+				共 <strong><%= @cd_this.count %></strong> 門課 <strong><%=@cd_this.sum(:credit) %></strong> 學分
 			</h4>
 		</td>
 	</tr>
 	<tr class="row success">
 		<td colspan="2" class="info">
 			<h4 class="text-right">
-				目前學分: <strong>104</strong> 必修 : <strong>53</strong> 選修 : <strong>51</strong> 離畢業還差 <strong>24</strong> 學分
+			
+				目前學分: <strong><%=@cd_all_sum%></strong>
+				<% @cd_all_cos_type_credit.each do |type,credit| %>
+					<%=type%> : <strong><%=credit.round%></strong>
+				<% end %>
+				<!--必修 : <strong>53</strong> 選修 : <strong>51</strong>-->
+				<% unless current_user.department.nil? %>
+				離畢業還差 <strong><%=current_user.department.credit-@cd_all_sum%></strong> 學分
+				<% end %>
 			</h4>
 		</td>
 	</tr>
 </table>
 
 </div>
+
+<% render :partial=>"user_side_bar"%>

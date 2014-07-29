@@ -1,10 +1,10 @@
 <table class="table">
-<tr><th>中文系名</th><!--<th>英文系名</th>--><th>課程數</th><th>老師數</th><th>管理</th></tr>
+<tr><th>中文系名</th><th>學分</th><th>課程數</th><th>老師數</th><th>管理</th></tr>
 <% @departments.each do |department| %>
   <tr>
   
   <td><%= link_to department.ch_name, department_path(department) %></td>
-  <td><% link_to department.eng_name, department_path(department) %></td>
+  <td> <%=department.credit %></td>
   <td><%= department.courses.count %></td>
   <td><%= department.teachers.count %></td>
   <td>

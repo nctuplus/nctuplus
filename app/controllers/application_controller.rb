@@ -3,8 +3,13 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   protect_from_forgery
-	
+	rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+
   private
+	
+	def record_not_found
+    redirect_to action: :index
+  end
 	
 	def ajax_flash(_class,title,mesg)
 		html='<div id="ajax_notice" class="alert alert-'<<_class<<'" style="width:500px;position:fixed;left:300;top:100;z-index:2000;">'
@@ -94,7 +99,7 @@ class ApplicationController < ActionController::Base
 	
 	def save_my_previous_url
     # session[:previous_url] is a Rails built-in variable to save last url.
-    #session[:my_previouse_url] = URI(request.referer).path
+    session[:my_previouse_url] = URI(request.referer).path
   end
 
 	def redirect_to_user_index

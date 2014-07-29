@@ -181,6 +181,8 @@ img.header{
 	min-width:1280px;
 	width : 100%;
 	position: fixed;
+	min-height: 900px;
+	height :100%;
 	//padding-right:0px;
   //top: 0;
   //left: 0;

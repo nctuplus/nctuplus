@@ -6,7 +6,7 @@ class CreateDepartments < ActiveRecord::Migration
 	  t.string :real_id
 	  t.string :degree
 	  t.integer :college_id
-      t.timestamps
+    t.timestamps
     end
 	add_index :departments, :real_id
 	add_index :departments, :degree

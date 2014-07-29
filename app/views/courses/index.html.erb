@@ -5,15 +5,6 @@
 <%= render :partial=>"search_js" %>
 
 
-<% if current_user && current_user.activated==0 %>
-<div class="row">
-	<div class="col-sm-4 col-sm-offset-3">
-		<% render "/user/registry" %>
-	</div>
-</div>
-
-<% end %>
-
 <div class="form-inline" ><!--role="form"-->
 	<div class="row">
 
@@ -92,7 +83,7 @@
 	
 </div>
 
-<%= render :partial=>"user_side_bar" %>
+
 
 <div class="row hidden " id="search_tips">
 	<div id="" class="col-md-10 col-md-offset-1">

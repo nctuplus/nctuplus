@@ -22,10 +22,4 @@
 //= require bootstrap.min
 
 
-
-
 //= require jquery.bootpag.min.js
-
-
-
-

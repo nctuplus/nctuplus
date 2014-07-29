@@ -22,7 +22,7 @@ class PostController < ApplicationController
   end
   def create
     @post = Post.new(post_param)
-	@post.owner_id=current_user.id
+		@post.owner_id=current_user.id
     @post.save!
 	
 	handle_tag(@post)
