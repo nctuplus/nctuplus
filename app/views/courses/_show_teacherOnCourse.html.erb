@@ -147,11 +147,11 @@
 
 <script>
 
-	function prepare_raider(){
+	$(document).ready(function(){
 		$('#chart').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2');
 		$('#raider_content').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
 		$('#raider_form').hide();
-	}
+	});
 	function loadForm(id, link){
 		if(link.html()=="編輯"){
 			link.html("取消");
