@@ -9,6 +9,20 @@ module CourseHelper
 		return Semester.last
 	end
 	
+	def content_type_to_html(id)
+		str = ""
+		case id
+			when 1 #考試
+				str = "[考試]"
+			when 2 #作業
+				str = "[作業]"
+			when 3 #上課
+				str= "[上課]"
+			when 4 #其他
+				str = "[其他]"
+		end	
+		return str.html_safe
+	end
 
 	def rankTag(rank)
 		if rank>=1 and rank<=2

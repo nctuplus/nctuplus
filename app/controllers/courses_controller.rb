@@ -20,7 +20,23 @@ class CoursesController < ApplicationController
 			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
 			@page.exam_record = params[:test]		
 			@page.homework_record = params[:hw]
-		#	@page.course_note = params[:content]
+		#	@page.course_note = params[:content].presence || "無內容"
+			cnt = 1
+			str = "content_list_"
+			while true do
+				if params[str+cnt.to_s].presence
+					@list = RaiderContentList.new(:course_teacher_page_content_id=>ct.course_teacher_page_content.id, :user_id=>current_user.id)
+					@list.content_type = params["content_list_type_"+cnt.to_s].to_i
+					@list.content = params[str+cnt.to_s]
+					unless @list.save
+						render "raider_fail" #error handler page
+					end
+				else
+					break ;
+				end
+				cnt+=1
+			end
+		
 			@page.course_teachership_id = params[:ct_id].to_i
 			@page.last_user_id = current_user.id
 			if @page.save		
@@ -59,7 +75,7 @@ class CoursesController < ApplicationController
 				@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
 				
 				render "course_chart"
-			else
+			else  #3  -> edit raider content
 				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
 						CourseTeacherPageContent.new(:exam_record=>0, :homework_record=>0)
 				render "raider_form"	

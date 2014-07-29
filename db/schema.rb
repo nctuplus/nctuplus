@@ -11,9 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20140728125713) do
->>>>>>> f3f70488c23e36723f1be431e7e5612f7e5d090a
+ActiveRecord::Schema.define(version: 20140729084526) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -137,6 +135,20 @@ ActiveRecord::Schema.define(version: 20140728125713) do
   add_index "departments", ["degree"], name: "index_departments_on_degree", using: :btree
   add_index "departments", ["real_id"], name: "index_departments_on_real_id", using: :btree
 
+  create_table "discusses", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "course_teachership_id"
+    t.integer  "likes"
+    t.integer  "dislikes"
+    t.string   "title"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
+  add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
+
   create_table "each_course_teacher_ratings", force: true do |t|
     t.integer  "course_teacher_rating_id"
     t.integer  "user_id"
@@ -178,7 +190,7 @@ ActiveRecord::Schema.define(version: 20140728125713) do
   create_table "raider_content_lists", force: true do |t|
     t.integer  "course_teacher_page_content_id"
     t.integer  "user_id"
-    t.integer  "type"
+    t.integer  "content_type"
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -212,6 +224,18 @@ ActiveRecord::Schema.define(version: 20140728125713) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "sub_discusses", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "discuss_id"
+    t.integer  "likes"
+    t.integer  "dislikes"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "sub_discusses", ["discuss_id"], name: "index_sub_discusses_on_discuss_id", using: :btree
 
   create_table "teachers", force: true do |t|
     t.string   "name"

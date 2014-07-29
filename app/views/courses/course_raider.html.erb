@@ -1,6 +1,6 @@
 <div class="row">
 <%if @page%>
-
+<i class="fa fa-cube"></i> 作業/考試：</br></br>
 考試週：（該週可能有考試）    		
 		<div class="btn-group">
 	
@@ -28,15 +28,25 @@
         </button>         
 <%end%>      	       	
       	</div> 
-      	    	   
+    	    	   
 <hr>
-<div class="well">
-	<% @page.course_note.split("\n").each do |str|%>
-		<p><%=str%></p>      	
-	<%end%>      	
-</div>      	
-      	
-      	
+
+<i class="fa fa-cube"></i> 其他內容：</br>
+<% if @page.raider_content_lists.presence %>
+<table class="table">
+	<% @page.raider_content_lists.order('content_type DESC').each do |c|%>
+	<tr>
+		<td><%=content_type_to_html(c.content_type)%></td>
+		<td>
+			<span class="col-sm-8"><%=c.content%></span>
+			<span class="col-sm-4"><%=c.created_at.strftime('%Y/%m/%d %H:%M')%> <%=c.user.name%></span>
+		</td>
+	</tr>
+	<% end %>	
+</table>      	
+<% else %>      	
+      	<p class="text-center"><strong>尚無資料</strong></p>	
+<% end %>      	
       	
 <% else %>
 	<p class="text-center"><strong>尚無資料</strong></p>	

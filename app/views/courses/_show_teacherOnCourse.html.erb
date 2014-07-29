@@ -155,7 +155,7 @@
 	function loadForm(id, link){
 		if(link.html()=="編輯"){
 			link.html("取消");
-			$('#raider_form').load("/courses/course_raider?ct_id="+id+"&type=2");
+			$('#raider_form').load("/courses/course_raider?ct_id="+id+"&type=3");
 			$('#raider_form').show() ;
 			$('#raider_content').hide() ;
 		}else{
@@ -230,7 +230,20 @@
 		}
 	}
 	
-	function count_month(){
+	function submit_check(){
+		if(!confirm("確定資料無誤嗎？"))
+			return false ;
+		//check list blank?
+		var f = false ;
+		$('#raider_content_table input').each(function(index){
+			if($(this).val()==""){
+				alert("內容不可留白謝謝");	
+				f = true;	
+			}	
+		});
+		if(f)
+			return false ;
+	
 		var res= 0 ;
 		$('#test-btn-group > button').each(function( index ) {			
   			if($(this).attr('id')=='1'){
@@ -247,7 +260,38 @@
   			}	
 		});
 		$('#hw').attr('value',res);
+		
+		return true ;
 	}
+	
+	function addRow(){
+		var f = true ;
+		var cnt = 1 ;
+		$('#raider_content_table input').each(function(index){
+			if($(this).val()==""){
+				alert("請填完空白部分再新增謝謝");
+				f = false ;		
+			}	
+			cnt+=1 ;
+		});
+		if(f&&cnt<6)
+			$('#raider_content_table > tbody:last').append(
+			'<tr>'+
+			'<td><select class="form-control" id="content_list_type_'+cnt+'" name="content_list_type_'+cnt+'">'+
+			'<option value="1">[考試]</option>'+
+			'<option value="2">[作業]</option>'+
+			'<option value="3">[上課]</option>'+
+			'<option value="4">[其他]</option>'+
+			'</select></td>'+
+			'<td><input class="form-control" id="content_list_'+cnt+'" name="content_list_'+cnt+'" type="text" value=""></td>'+
+			'</tr>');
+	}
+	
+	function RemoveRow(){
+		$('#raider_content_table tr:last').remove() ;
+	}
+	
 <% end %>	
 
+	
 </script>
