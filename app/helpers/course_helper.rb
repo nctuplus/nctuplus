@@ -1,10 +1,9 @@
 module CourseHelper
-	#def not_logined
-	#	return !current_user
-	#end
-	def has_rated(ctr_id)
-		return  (current_user && EachCourseTeacherRating.where(:course_teacher_rating_id=>ctr_id, :user_id=>current_user.id).take) ? "true":"false"
+	
+	def has_rated(ctr_id,ectr_arr)
+		return current_user && ectr_arr.include?(ctr_id)
 	end
+	
 	def latest_semester
 		return Semester.last
 	end

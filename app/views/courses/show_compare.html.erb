@@ -1,167 +1,171 @@
 <br>
 
+<% rating_cold_arr =[]%>
+<% rating_sweety_arr =[]%>
+<% rating_hardness_arr =[]%>
+<% r_cold_arr=[] %>
+<% r_sweety_arr=[] %>
+<% r_hardness_arr=[] %>
+<% if current_user %>
+	<% ectr_arr=EachCourseTeacherRating.select(:course_teacher_rating_id).where(:user_id=>current_user.id).pluck(:course_teacher_rating_id) %>
+<% else %>
+	<% ectr_arr=[]%>
+<% end %>
+<% sem=Semester.all %>
+<% i=0 %>
+<% @cts_mix.each do |cts,t| %>
+
+	<% rating_cold = cts.course_teacher_ratings.select{|ctr| ctr.rating_type=="cold"}.first %>
+	<% rating_sweety = cts.course_teacher_ratings.select{|ctr| ctr.rating_type=="sweety"}.first %>
+	<% rating_hardness = cts.course_teacher_ratings.select{|ctr| ctr.rating_type=="hardness"}.first %>
+	
+	<% r_cold_arr.append({:cts_id=>cts.id,:id=>rating_cold.id, :score=>rating_cold.avg_score, :has_rated=>has_rated(rating_cold.id,ectr_arr)})%>
+	<% r_sweety_arr.append({:cts_id=>cts.id,:id=>rating_sweety.id, :score=>rating_sweety.avg_score, :has_rated=>has_rated(rating_sweety.id,ectr_arr)})%>
+	<% r_hardness_arr.append({:cts_id=>cts.id,:id=>rating_hardness.id, :score=>rating_hardness.avg_score, :has_rated=>has_rated(rating_hardness.id,ectr_arr)})%>
+	<% if i%3==0 %>
+		<div class="row">
+	<% end %>
+		<div class="col-sm-4 ">
+			<div class="panel">
+				<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6 col-md-5 col-sm-offset-1">
+							<h4><%=link_to t.name.to_s, course_path(@course, :tid=>t.id)%></h4>
+							</div>
+							<div class="text-right" id="best_<%=cts.id%>">
+							<h4></h4>
+							</div>
+						</div>
+					<div class="row col-sm-offset-1">
+						<% sem_ids=cts.course_details.pluck(:semester_id) %>
+						<% sem_ids.each do |sem_id| %>
+							<%= sem.select{|s|s.id==sem_id}.first.name %>
+							<% sem.name %>
+						<% end %>
+					</div>
+					
+					<div class="row">
+						<div class="col-sm-3 col-sm-offset-1 row-condensed">
+							<label>涼度</label>
+						</div>
+						<div class="col-sm-5 row-condensed">
+							<div id="rating_<%=rating_cold.id%>"></div>
+						</div>	
+						<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
+							<label><%=rating_cold.avg_score.round(1)%>(<%=rating_cold.total_rating_counts%>)</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3 col-sm-offset-1 row-condensed">
+							<label>甜度</label>
+						</div>
+						<div class="col-sm-5 row-condensed">
+							<div id="rating_<%=rating_sweety.id%>"></div>
+							
+						</div>
+						<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
+						<label><%=rating_sweety.avg_score.round(1)%>(<%=rating_sweety.total_rating_counts%>)</label>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-sm-3 col-sm-offset-1 row-condensed">
+							<label>硬度</label>
+						</div>
+						<div class="col-sm-5 row-condensed">
+							<div id="rating_<%=rating_hardness.id%>"></div>
+							
+
+						</div>
+						<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
+						<label><%=rating_hardness.avg_score.round(1)%>(<%=rating_hardness.total_rating_counts%>)</label>
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	<%i+=1%>	
+	<% if i%3==0%>	
+		</div>
+	<% end %>
+	
+<% end %>
+
+<% if i%3!=0%>
+	</div>
+<% end %>
+
+
+<% r_cold_arr=r_cold_arr.sort_by{|k| k[:score]}.reverse%>
+<% r_sweety_arr=r_sweety_arr.sort_by{|k| k[:score]}.reverse%>
+<% r_hardness_arr=r_hardness_arr.sort_by{|k| k[:score]}.reverse%>
+
 <script>
-function gen_raty(type,ctr_id,show_score,not_login,rated){
+
+$(document).ready(function(){
+	var cold_arr=<%=r_cold_arr.to_json.to_s.html_safe%>;
+	var sweety_arr=<%=r_sweety_arr.to_json.to_s.html_safe%>;
+	var hardness_arr=<%=r_hardness_arr.to_json.to_s.html_safe%>;
+	for(i=0;i<cold_arr.length;i++){
+		gen_raty(cold_arr[i]['id'],cold_arr[i]['score'],cold_arr[i]['has_rated']);
+		gen_raty(sweety_arr[i]['id'],sweety_arr[i]['score'],sweety_arr[i]['has_rated']);
+		gen_raty(hardness_arr[i]['id'],hardness_arr[i]['score'],hardness_arr[i]['has_rated']);
+	}
+	<% if r_cold_arr[0][:score]!=0 %>
+		$("#best_<%=r_cold_arr[0][:cts_id]%> h4").append('<span class="label label-primary">涼</span>');
+	<% end %>
+	<% if r_sweety_arr[0][:score]!=0 %>
+		$("#best_<%=r_sweety_arr[0][:cts_id]%> h4").append('<span class="label label-info">甜</span>');
+	<% end %>
+	<% if r_hardness_arr[0][:score]!=0 %>
+		$("#best_<%=r_hardness_arr[0][:cts_id]%> h4").append('<span class="label label-success">硬</span>');
+	<% end %>
+
+});
+
+
+function gen_raty(ctr_id,show_score,rated){
 	$("#rating_"+ctr_id).raty({
 		score:show_score,
-		readOnly :not_login,
+		readOnly :<%=current_user.nil?%>,
 		cancel :rated,
 		cancelOff : 'cancel-custom-off.png',
 		cancelOn  : 'cancel-custom-on.png',
 		noRatedMsg : "請先登入!",
 		cancelHint : '取消評分',
 		click: function(score, evt) {
-			rate_course(ctr_id,score);
+			//alert($(this).raty('cancel'));
+			if((rated&&score==null)||!rated)
+				rate_course(ctr_id,score);
 		}
 	});
 }
+<% if current_user %>
+	function rate_course(ctr_id,score){
 
-function rate_course(ctr_id,score){
-	//console.log(course_id);
-	$.ajax({
-		type: "GET",
-		url: "/courses/rate_cts",
-		data: {
-			ctr_id: ctr_id,
-			score: score,   
-		},
-		success: function(data){
-			var d=JSON.parse(data);
-			var new_count="<label>"+d.new_score+"("+d.new_counts+")</label>";
-			$("#rating_"+ctr_id).raty('set',{cancel: true, score:d.new_score});
-			//$("#rating_"+ctr_id).raty('reload');
-			$("#rating_"+ctr_id+"_counts").html(new_count);
-		},
-		
-		
-	});
-}
+		$.ajax({
+			type: "GET",
+			url: "/courses/rate_cts",
+			data: {
+				ctr_id: ctr_id,
+				score: score,   
+			},
+			success: function(data){
+				var d=JSON.parse(data);
+				var new_count="<label>"+d.new_score+"("+d.new_counts+")</label>";
+				$("#rating_"+ctr_id).raty('set',{
+					cancel: d.score!=0,
+					score:d.new_score,
+					click: function(score, evt) {
+						//alert($(this).raty('cancel'));
+						if((d.score!=0&&score==null)||(d.score==0&&score))
+							rate_course(ctr_id,score);
+					}
+				});
 
-
-</script>
-
-<div class="row ">
-
-<% rating_cold_arr =[]%>
-<% rating_sweety_arr =[]%>
-<% rating_hardness_arr =[]%>
-<% @teachers.each do |t| %>
-	<% cts=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>t.id).take %>
-	<% rating_cold = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"cold").take %>
-	<% rating_sweety = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"sweety").take %>
-	<% rating_hardness = CourseTeacherRating.where(:course_teachership_id=>cts.id, :rating_type=>"hardness").take %>
-	
-	<% rating_cold_arr.append({:cts_id=>cts.id, :avg_score=>rating_cold.avg_score})%>
-	<% rating_sweety_arr.append({:cts_id=>cts.id, :avg_score=>rating_sweety.avg_score})%>
-	<% rating_hardness_arr.append({:cts_id=>cts.id, :avg_score=>rating_hardness.avg_score})%>
-
-	
-	<div class="col-sm-4 ">
-		<div class="panel">
-			<div class="panel-body">
-				<!--<div class="row">
-					<div class="text-right" id="best_<%=cts.id%>">
-					<h4></h4>
-					</div>
-				</div>-->
-					<div class="row">
-						<div class="col-sm-6 col-md-5 col-sm-offset-1">
-						<h4><%=link_to t.name.to_s, course_path(@course, :tid=>t.id)%></h4>
-						</div>
-						<div class="text-right" id="best_<%=cts.id%>">
-						<h4></h4>
-						</div>
-					</div>
-				<div class="row col-sm-offset-1">
-					<% sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>cts.id) %>
-					<% Semester.where(:id=>sem_ids).each do |s| %>
-						<%= s.name %>
-					<% end %>
-				</div>
-				<div class="row">
-					<div class="col-sm-3 col-sm-offset-1 row-condensed">
-						<label>涼度</label>
-					</div>
-					<div class="col-sm-5 row-condensed">
-						<div id="rating_<%=rating_cold.id%>"></div>
-						<script>gen_raty("",<%=rating_cold.id%>,<%=rating_cold.avg_score%>,<%=current_user.nil? %>,<%=has_rated(rating_cold.id)%>);</script>	
-					</div>	
-					<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
-						<label><%=rating_cold.avg_score.round(1)%>(<%=rating_cold.total_rating_counts%>)</label>
-					</div>
-					
-				</div>
-				<div class="row">
-					<div class="col-sm-3 col-sm-offset-1 row-condensed">
-						<label>甜度</label>
-					</div>
-					<div class="col-sm-5 row-condensed">
-						<div id="rating_<%=rating_sweety.id%>"></div>
-						<script>gen_raty("",<%=rating_sweety.id%>,<%=rating_sweety.avg_score%>,<%= current_user.nil? %>,<%=has_rated(rating_sweety.id)%>);</script>	
-					</div>
-					<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
-					<label><%=rating_sweety.avg_score.round(1)%>(<%=rating_sweety.total_rating_counts%>)</label>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-sm-3 col-sm-offset-1 row-condensed">
-						<label>硬度</label>
-					</div>
-					<div class="col-sm-5 row-condensed">
-						<div id="rating_<%=rating_hardness.id%>"></div>
-						<script>gen_raty("",<%=rating_hardness.id%>,<%=rating_hardness.avg_score%>,<%= current_user.nil? %>,<%=has_rated(rating_hardness.id)%>);</script>	
-					</div>
-					<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
-					<label><%=rating_hardness.avg_score.round(1)%>(<%=rating_hardness.total_rating_counts%>)</label>
-					</div>
-				</div>
-			</div>
-		</div>		
-	</div>
-<% end %>
-
-</div>
-
-
-<% rating_cold_arr=rating_cold_arr.sort_by{|k| k[:avg_score]}.reverse%>
-<% rating_sweety_arr=rating_sweety_arr.sort_by{|k| k[:avg_score]}.reverse%>
-<% rating_hardness_arr=rating_hardness_arr.sort_by{|k| k[:avg_score]}.reverse%>
-
-<script>
-<% if rating_cold_arr[0][:avg_score]!=0 %>
-$("#best_<%=rating_cold_arr[0][:cts_id]%> h4").append('<span class="label label-primary">涼</span>');
-<% end %>
-<% if rating_sweety_arr[0][:avg_score]!=0 %>
-$("#best_<%=rating_sweety_arr[0][:cts_id]%> h4").append('<span class="label label-info">甜</span>');
-<% end %>
-
-<% if rating_hardness_arr[0][:avg_score]!=0 %>
-$("#best_<%=rating_hardness_arr[0][:cts_id]%> h4").append('<span class="label label-success">硬</span>');
+				$("#rating_"+ctr_id+"_counts").html(new_count);
+			},
+		});
+	}
 <% end %>
 </script>
-<!--
-<table class="table " >
-<tr>
-	<th class="col-md-1">開課學期</th>
-	<th>課號</th>
-	<th>老師</th>
-	<th>簡介</th>
-</tr>
-<% @teachers.each do |t| %>
 
-	<% cts=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>t.id).take %>
-	<% cds=CourseDetail.where(:course_teachership_id=>cts.id) %>
-	<% cds.each do |cd| %>
-	<tr>
-		<td class=""><%=Semester.find(cd.semester_id).name%></td>
-		<td class=""><%= cd.temp_cos_id %></td>
-		<td class=""><%=t.name %></td>
-		<td class=""><%=cd.memo %></td>
-	</tr>
-	<% end %>
-	
-<% end %>
-	
-	
-</table>
--->

@@ -5,9 +5,9 @@ Nctuplus::Application.routes.draw do
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 	
-  post "courses/update_discuss"
-	post "courses/new_discuss"
-	post "courses/new_sub_discuss"
+  #post "courses/update_discuss"
+	#post "courses/new_discuss"
+	#post "courses/new_sub_discuss"
 	post "courses/search_by_dept"
 	post "courses/search_by_keyword"
 	post "courses/comment_submit"
@@ -15,7 +15,7 @@ Nctuplus::Application.routes.draw do
 	post "courses/course_raider"
 	
 	get "courses/get_compare"
-	get "courses/get_discuss"
+	#get "courses/get_discuss"
 	
 	get "courses/course_raider"
 	get "courses/list_all_courses"
@@ -36,6 +36,12 @@ Nctuplus::Application.routes.draw do
 
 	resources :courses
 
+	get "discusses/list_by_course"
+	get "discusses/like"
+	post "discusses/new_discuss"
+	post "discusses/new_sub_discuss"
+	post "discusses/update_discuss"
+	
 		resources :departments do
        #resources :comments, :sales
        resources :courses #, :controller => 'department_courses'
