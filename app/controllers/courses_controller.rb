@@ -76,7 +76,7 @@ class CoursesController < ApplicationController
 				end
 				#Rails.logger.debug "[debug] "+(row_list.to_s)
 				data_table.add_rows(row_list.reverse)
-				option = { width: 550, height: 250, title: '選課狀況 (9999為無上限)' }
+				option = { width: 550, height: 250, title: '選課狀況' }
 				@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
 				
 				render "course_chart"

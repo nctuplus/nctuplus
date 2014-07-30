@@ -11,7 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140730074138) do
+
+ActiveRecord::Schema.define(version: 20140730130907) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -29,6 +30,9 @@ ActiveRecord::Schema.define(version: 20140730074138) do
     t.datetime "updated_at"
   end
 
+  add_index "comments", ["course_teachership_id"], name: "index_comments_on_course_teachership_id", using: :btree
+  add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
+
   create_table "content_list_ranks", force: true do |t|
     t.integer  "raider_content_list_id"
     t.integer  "user_id"
@@ -36,6 +40,9 @@ ActiveRecord::Schema.define(version: 20140730074138) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "content_list_ranks", ["raider_content_list_id"], name: "index_content_list_ranks_on_raider_content_list_id", using: :btree
+  add_index "content_list_ranks", ["user_id"], name: "index_content_list_ranks_on_user_id", using: :btree
 
   create_table "course_details", force: true do |t|
     t.integer  "course_teachership_id"
@@ -94,6 +101,8 @@ ActiveRecord::Schema.define(version: 20140730074138) do
     t.datetime "updated_at"
     t.integer  "last_user_id"
   end
+
+  add_index "course_teacher_page_contents", ["course_teachership_id"], name: "index_course_teacher_page_contents_on_course_teachership_id", using: :btree
 
   create_table "course_teacher_ratings", force: true do |t|
     t.integer "course_teachership_id"
@@ -216,6 +225,9 @@ ActiveRecord::Schema.define(version: 20140730074138) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "raider_content_lists", ["course_teacher_page_content_id"], name: "index_raider_content_lists_on_course_teacher_page_content_id", using: :btree
+  add_index "raider_content_lists", ["user_id"], name: "index_raider_content_lists_on_user_id", using: :btree
 
   create_table "reviews", force: true do |t|
     t.integer  "bbs_id"
