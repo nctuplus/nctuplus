@@ -64,9 +64,13 @@ class CoursesController < ApplicationController
 					if latest_semester.name == sem_year 
 						sem_year += "(本學期)"
 					end	
-						
 					row.push(sem_year)
-					row.push(cd.students_limit.to_i)
+					if cd.students_limit.to_i == 9999
+						row.push(0)
+					else
+						row.push(cd.students_limit.to_i)
+					end		
+					
 					row.push(cd.reg_num.to_i)
 					row_list.push(row)
 				end
