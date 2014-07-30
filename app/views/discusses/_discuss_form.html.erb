@@ -1,0 +1,36 @@
+<%= form_tag '/discusses/new_discuss', :role=>"form", :remote=>"true" do %>
+<div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
+
+	<div class="panel-heading row no-margin-left">
+		<% if current_user %>
+			<div class="col-md-1">
+			<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "50x50", style:"display:inline-block" %>
+			</div>
+			<div class="col-md-11">
+			<br>
+			<input type="text" class="form-control" name="main_title" id="main_title" placeholder="標題..." style="" required>
+			<input type="hidden" value="<%=@ct_id%>" name="ct_id">
+			</div>
+		<% else %>
+			<input type="text" class="form-control" id="main_title" placeholder="請先登入">
+		<% end %>	
+	</div>
+
+	<div class="panel-body row">
+		<div class="col-md-12">
+			<textarea class="form-control " name="main_content" id="main_content" rows="5" placeholder="內容..." required></textarea>
+		</div>
+	</div>
+	<div class="panel-footer row no-margin-left">
+		<div class="col-md-12">
+		<% if current_user %>
+			<%= submit_tag "送出", :class=>"btn btn-primary pull-right" %>
+		<% else %>
+			<%=link_to "/auth/facebook", class:"btn btn-primary pull-right" do %>
+				<%=fa_icon "facebook"%> fb登入
+			<% end %>
+		<% end %>
+		</div>
+	</div>
+</div>
+<% end %>

@@ -3,11 +3,11 @@ class CoursesController < ApplicationController
   
 	include CourseHelper
   
-	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_discuss, :get_compare, :update_discuss]
+	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_compare]
 
 	
 	
-	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course, :special_list, :new_discuss, :new_sub_discuss, :update_discuss]
+	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course, :special_list]
 
 ### for course_teacher_page_content	
 
@@ -320,7 +320,7 @@ class CoursesController < ApplicationController
 		avg=avg.nan? ? 0 :avg
 		@ctr.update_attributes(:total_rating_counts=>total_rating_counts, :avg_score=>avg)
 		
-		result={:new_score=>@ctr.avg_score, :new_counts=>@ctr.total_rating_counts}
+		result={:new_score=>@ctr.avg_score, :new_counts=>@ctr.total_rating_counts, :score=>score}
 		respond_to do |format|
 			format.html {
 				render :json => result.to_json,
@@ -330,8 +330,11 @@ class CoursesController < ApplicationController
 		end
 	end
 	def get_compare
-		@course = Course.find(params[:c_id])
+		@course = Course.includes(:course_teacherships).find(params[:c_id])
 		@teachers=@course.teachers
+		@cts=@course.course_teacherships.includes(:course_teacher_ratings, :course_details)
+		#@zz=@cts
+		@cts_mix=@cts.zip(@teachers)
 		#.sort_by{
 		#	|cd| CourseTeachership.where(:course_id=>@course,:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
 		#}.reverse
@@ -470,51 +473,6 @@ class CoursesController < ApplicationController
 		@cd_all=get_mixed_info(@course_details)
 		@table_type="cart"
 		render "course_lists_mini"
-	end
-	
-	def new_discuss
-		title=params[:main_title]
-		content=params[:main_content]
-		@ct_id=params[:ct_id]
-		@discuss=Discuss.new
-		@discuss.course_teachership_id=@ct_id
-		@discuss.user_id=current_user.id
-		@discuss.likes=0
-		@discuss.dislikes=0
-		@discuss.title=title
-		@discuss.content=content
-		@discuss.save!
-		render "new_discuss_ok"
-	end
-	
-	def new_sub_discuss
-
-		content=params[:sub_content]
-		discuss_id=params[:reply_discuss_id]
-		@ct_id=params[:ct_id]
-		@discuss=SubDiscuss.new
-		@discuss.discuss_id=discuss_id
-		@discuss.user_id=current_user.id
-		@discuss.likes=0
-		@discuss.dislikes=0
-
-		@discuss.content=content
-		@discuss.save!
-		render "new_discuss_ok"
-	end
-	
-	def get_discuss
-		@ct_id=params[:ct_id].to_i
-		@discusses=Discuss.includes(:sub_discusses, :user).where(:course_teachership_id=>@ct_id).order(:likes)
-		
-		render "show_discussion"
-	end
-	def update_discuss
-		@discuss=Discuss.find(params[:discuss_id])
-		@discuss.content=params[:content]
-		@discuss.title=params[:title]
-		@discuss.save!
-		redirect_to :action=> :get_discuss, :ct_id=>params[:ct_id]
 	end
 	
   protected

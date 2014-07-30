@@ -53,7 +53,7 @@
 			$("#result").html('<%=j render :partial=> "show_teacherOnCourse" %>');
 		}
 		else if(item=="discussion"){
-			$("#result").load("/courses/get_discuss?ct_id=<%=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>@teacher_show.id).take.id%>");
+			$("#result").load("/discusses/list_by_course?ct_id=<%=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>@teacher_show.id).take.id%>");
 		}
 		else if(item=="compare"){
 			$("#result").load("/courses/get_compare?c_id=<%=@course.id%>");

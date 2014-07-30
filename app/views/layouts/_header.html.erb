@@ -47,7 +47,9 @@
 					<% end %>
 					
 				<% else %>
-					<%= link_to "facebook登入", "/auth/facebook", id: "sign_in" %>
+					<%= link_to  "/auth/facebook", id: "sign_in" do %>
+					<%=fa_icon "facebook-square " %> 登入
+					<% end %>
 				<% end %>  
 				</li>
 			</ul>

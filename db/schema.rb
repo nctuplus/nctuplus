@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20140729090500) do
+ActiveRecord::Schema.define(version: 20140730074138) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -143,6 +142,19 @@ ActiveRecord::Schema.define(version: 20140729090500) do
   add_index "departments", ["college_id"], name: "index_departments_on_college_id", using: :btree
   add_index "departments", ["degree"], name: "index_departments_on_degree", using: :btree
   add_index "departments", ["real_id"], name: "index_departments_on_real_id", using: :btree
+
+  create_table "discuss_likes", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "discuss_id"
+    t.integer  "sub_discuss_id"
+    t.boolean  "like"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "discuss_likes", ["discuss_id"], name: "index_discuss_likes_on_discuss_id", using: :btree
+  add_index "discuss_likes", ["sub_discuss_id"], name: "index_discuss_likes_on_sub_discuss_id", using: :btree
+  add_index "discuss_likes", ["user_id"], name: "index_discuss_likes_on_user_id", using: :btree
 
   create_table "discusses", force: true do |t|
     t.integer  "user_id"

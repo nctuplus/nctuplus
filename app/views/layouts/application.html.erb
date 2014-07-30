@@ -28,9 +28,9 @@
 <!-- layouts/header start -->
 <%= render 'layouts/header' %>
 <!-- layouts/header end -->
-
+<% if params[:controller]!="main" %>
 <%= render 'layouts/sidebar' %>
-
+<% end %>
 <div class="container-fluid" style="margin-top:55px;">
 	<div class="row">
 		
