@@ -50,7 +50,7 @@
     		</tr>	
 <%courseTeacher.course_details.each do |t|%>  
     		<tr>
-    			<td><%=Semester.find(t.semester_id).name%></td>
+    			<td><%=t.semester.name%></td>
     			<td><%=t.room%></td>
     			<td><%=t.credit%></td>
     			<td><%=t.time%></td>
@@ -299,7 +299,8 @@
 			
 		if(!confirm(str))
 			return false ;
-			
+		
+	//	$.ajax();		
 			
 	}
 	
