@@ -1,0 +1,7 @@
+$('#toggle-msg').addClass('text-color-green').html('給評成功').show().fadeOut(4000);
+
+$("#rank_span_<%=j params[:list_id].to_s%> > i").each(function(index){
+	$(this).removeAttr('onclick');
+});
+$("#rank_span_<%=j params[:list_id].to_s%> > span:first").html('<%=j RaiderContentList.find(params[:list_id]).content_list_ranks.where(:rank=>1).count.to_s%>');
+$("#rank_span_<%=j params[:list_id].to_s%> > span:last").html('<%=j RaiderContentList.find(params[:list_id]).content_list_ranks.where(:rank=>2).count.to_s%>');

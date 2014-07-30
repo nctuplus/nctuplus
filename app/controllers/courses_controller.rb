@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
 
 	
 	
-	before_filter :checkLogin, :only=>[ :rate_cts, :simulation, :add_simulated_course, :special_list, :new_discuss, :new_sub_discuss, :update_discuss]
+	before_filter :checkLogin, :only=>[:raider_list_like, :rate_cts, :simulation, :add_simulated_course, :special_list, :new_discuss, :new_sub_discuss, :update_discuss]
 
 ### for course_teacher_page_content	
 
@@ -86,6 +86,19 @@ class CoursesController < ApplicationController
 				render "raider_form"	
 			end
 		end
+	end
+	
+	def raider_list_like
+		if ContentListRank.where(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id]).first.presence
+			render :nothing => true, :status => 200, :content_type => 'text/html' #已給過評
+		else
+			@like = ContentListRank.new(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id],:rank=>params[:like_type])	
+			if @like.save
+				render "raider_list_like"
+			else
+				render :nothing => true, :status => 200, :content_type => 'text/html'
+			end				
+		end	
 	end
 	
 	def special_list

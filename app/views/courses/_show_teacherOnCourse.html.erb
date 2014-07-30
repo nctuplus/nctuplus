@@ -300,7 +300,16 @@
 		if(!confirm(str))
 			return false ;
 		
-	//	$.ajax();		
+		$.ajax({
+			type: "GET",
+			dataType: "script",
+  			url: "/courses/raider_list_like" ,
+  			data:{
+  				like_type: pre ,
+  				list_id : id 
+  			},
+  			success: function(){}
+  		});			
 			
 	}
 	
