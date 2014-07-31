@@ -11,8 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20140730130907) do
+ActiveRecord::Schema.define(version: 20140731124339) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -43,6 +42,30 @@ ActiveRecord::Schema.define(version: 20140730130907) do
 
   add_index "content_list_ranks", ["raider_content_list_id"], name: "index_content_list_ranks_on_raider_content_list_id", using: :btree
   add_index "content_list_ranks", ["user_id"], name: "index_content_list_ranks_on_user_id", using: :btree
+
+  create_table "course_content_heads", force: true do |t|
+    t.integer  "course_teachership_id"
+    t.integer  "exam_record"
+    t.integer  "homework_record"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "last_user_id"
+    t.integer  "course_rollcall"
+  end
+
+  add_index "course_content_heads", ["course_teachership_id"], name: "index_course_content_heads_on_course_teachership_id", using: :btree
+
+  create_table "course_content_lists", force: true do |t|
+    t.integer  "course_teachership_id"
+    t.integer  "user_id"
+    t.integer  "content_type"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_content_lists", ["course_teachership_id"], name: "index_course_content_lists_on_course_teachership_id", using: :btree
+  add_index "course_content_lists", ["user_id"], name: "index_course_content_lists_on_user_id", using: :btree
 
   create_table "course_details", force: true do |t|
     t.integer  "course_teachership_id"
@@ -91,18 +114,6 @@ ActiveRecord::Schema.define(version: 20140730130907) do
   add_index "course_simulations", ["course_detail_id"], name: "index_course_simulations_on_course_detail_id", using: :btree
   add_index "course_simulations", ["semester_id"], name: "index_course_simulations_on_semester_id", using: :btree
   add_index "course_simulations", ["user_id"], name: "index_course_simulations_on_user_id", using: :btree
-
-  create_table "course_teacher_page_contents", force: true do |t|
-    t.integer  "course_teachership_id"
-    t.integer  "exam_record"
-    t.integer  "homework_record"
-    t.text     "course_note"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "last_user_id"
-  end
-
-  add_index "course_teacher_page_contents", ["course_teachership_id"], name: "index_course_teacher_page_contents_on_course_teachership_id", using: :btree
 
   create_table "course_teacher_ratings", force: true do |t|
     t.integer "course_teachership_id"
@@ -192,10 +203,10 @@ ActiveRecord::Schema.define(version: 20140730130907) do
 
   create_table "file_infos", force: true do |t|
     t.integer  "owner_id"
-    t.integer  "course_id"
-    t.string   "description"
-    t.integer  "teacher_id"
+    t.integer  "course_teachership_id"
     t.integer  "semester_id"
+    t.string   "description"
+    t.integer  "download_times"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
     t.integer  "upload_file_size"
@@ -216,18 +227,6 @@ ActiveRecord::Schema.define(version: 20140730130907) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "raider_content_lists", force: true do |t|
-    t.integer  "course_teacher_page_content_id"
-    t.integer  "user_id"
-    t.integer  "content_type"
-    t.text     "content"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "raider_content_lists", ["course_teacher_page_content_id"], name: "index_raider_content_lists_on_course_teacher_page_content_id", using: :btree
-  add_index "raider_content_lists", ["user_id"], name: "index_raider_content_lists_on_user_id", using: :btree
 
   create_table "reviews", force: true do |t|
     t.integer  "bbs_id"

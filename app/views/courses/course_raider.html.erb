@@ -32,7 +32,7 @@
 <hr>
 
 <i class="fa fa-cube"></i> 其他內容：</br></br>
-<% if @page.raider_content_lists.presence %>
+<% if CourseContentList.where(:course_teachership_id=>@ct_id).presence %>
 <table class="table">
 	<% @page.raider_content_lists.order('content_type DESC').each do |c|%>
 	<tr>

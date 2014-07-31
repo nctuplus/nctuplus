@@ -1,5 +1,5 @@
 <% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
-<% page = CourseTeacherPageContent.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
+<% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
 
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
 

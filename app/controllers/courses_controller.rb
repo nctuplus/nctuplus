@@ -33,7 +33,7 @@ class CoursesController < ApplicationController
 					end
 				end
 			else # new one
-				@list = RaiderContentList.new(:user_id=>current_user.id, :course_teacher_page_content_id=>params[:])
+				#@list = RaiderContentList.new(:user_id=>current_user.id, :course_teacher_page_content_id=>params[:])
 				
 			end	
 
@@ -47,7 +47,7 @@ class CoursesController < ApplicationController
 				
 		else			
 			if params[:type].to_i==1
-				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
+				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
 				render "course_raider"
 			elsif params[:type].to_i==2
 				data_table = GoogleVisualr::DataTable.new
@@ -80,8 +80,8 @@ class CoursesController < ApplicationController
 				
 				render "course_chart"
 			else  #3  -> edit raider content
-				@page = CourseTeacherPageContent.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
-						CourseTeacherPageContent.new(:exam_record=>0, :homework_record=>0)
+				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
+						CourseContentHead.new(:exam_record=>0, :homework_record=>0)
 				render "raider_form"	
 			end
 		end
