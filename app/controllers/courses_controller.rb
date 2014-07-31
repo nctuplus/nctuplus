@@ -11,7 +11,7 @@ class CoursesController < ApplicationController
 ### for course_teacher_page_content	
 
 	def course_raider
-		#Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
+		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
 		@ct_id = ct.id
 		
@@ -21,21 +21,21 @@ class CoursesController < ApplicationController
 			@page.homework_record = params[:hw]
 
 		#	@page.course_note = params[:content].presence || "無內容"
-			cnt = 1
-			str = "content_list_"
-			while true do
-				if params[str+cnt.to_s].presence
-					@list = RaiderContentList.new(:course_teacher_page_content_id=>ct.course_teacher_page_content.id, :user_id=>current_user.id)
-					@list.content_type = params["content_list_type_"+cnt.to_s].to_i
-					@list.content = params[str+cnt.to_s]
-					unless @list.save
-						render "raider_fail" #error handler page
+			
+			if params[:id].to_i != 0 #updated old
+				@list = RaiderContentList.where(:id=>params[:old_id], :user_id=>current_user.id).first
+				if @list.presence
+					@list.content_type = params[:content_type].to_i
+					@list.content = params[:content]
+					if @list.save
+						Rails.logger.debug "[debug] "+"post ????"
+						render "update_content_list" and return
 					end
-				else
-					break ;
 				end
-				cnt+=1
-			end
+			else # new one
+				@list = RaiderContentList.new(:user_id=>current_user.id, :course_teacher_page_content_id=>params[:])
+				
+			end	
 
 			@page.course_teachership_id = params[:ct_id].to_i
 			@page.last_user_id = current_user.id
