@@ -1,5 +1,5 @@
 <% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
-<% page = CourseTeacherPageContent.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
+<% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
 
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
 
@@ -276,26 +276,33 @@
 		});
 		if(f&&cnt<6)
 			$('#raider_content_table > tbody:last').append(
-			'<tr>'+
+			'<tr id="content_list_new_0">'+
 			'<td><select class="form-control" id="content_list_type_'+cnt+'" name="content_list_type_'+cnt+'">'+
 			'<option value="1">[考試]</option>'+
 			'<option value="2">[作業]</option>'+
 			'<option value="3">[上課]</option>'+
 			'<option value="4">[其他]</option>'+
 			'</select></td>'+
-			'<td><input class="form-control" id="content_list_'+cnt+'" name="content_list_'+cnt+'" type="text" value=""></td>'+
+			'<td><span class="col-sm-10"><input class="form-control" id="content_list_'+cnt+'" name="content_list_'+cnt+'" type="text" value=""></span>'+
+			'<span class="col-sm-2">'+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return Submit($(this));">O</div> '+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow();">X</div>'+
+			'</span></td>'+
 			'</tr>');
 	}
 	
 	function RemoveRow(){
-		$('#raider_content_table tr:last').remove() ;	
+		var target = $('#raider_content_table tr:last') ;
+		if(target.attr('id')=="content_list_new_0")
+			target.remove() ;	
+			
 	}
 	function preferClick(pre, id){
 		var str ="" ;
 		if(pre==1)
-			str = "你覺得這則內容有價值？" ;
+			str = "你覺得這則內容有價值？\n[給評後不能反悔請注意]" ;
 		else
-			str = "你覺得這是則廢文？" ;
+			str = "你覺得這是則廢文？\n[給評後不能反悔請注意] " ;
 			
 		if(!confirm(str))
 			return false ;
@@ -311,6 +318,64 @@
   			success: function(){}
   		});			
 			
+	}
+	
+	function EditOld(thistd){
+		var id = thistd.parent('tr').attr('id').substring(17) ;
+		var content = "" ;
+		content = thistd.parent('tr').find('span').first().html();
+		thistd.parent('tr').children().hide() ;
+		thistd.parent('tr').append(
+			'<td>'+
+			'<select class="form-control" id="type_old'+id+'" name="type_old'+id+'">'+
+			'<option value="1">[考試]</option>'+
+			'<option value="2">[作業]</option>'+
+			'<option value="3">[上課]</option>'+
+			'<option value="4">[其他]</option>'+
+			'</select></td>'+
+			'<td><span class="col-sm-10"><input class="form-control" id="list_old'+id+'" name="list_old'+id+'" type="text" value="'+content+'"></span>'+
+			'<span class="col-sm-2">'+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return Submit($(this));">O</div> '+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return Cancel($(this));">X</div>'+
+			'</span>'+
+			'</td>'
+		);
+		
+		return false ;
+	}
+	
+	function Submit(tdiv){
+		var tr = tdiv.parent('span').parent('td').parent('tr');
+		var id = tr.attr('id').substring(17) ;
+		alert(id);
+		alert(tr.find('select').val());
+		alert(tr.find('input').val()) ;
+		
+		$.ajax({
+			type: "POST",
+			dataType: "script",
+  			url: "/courses/course_raider" ,
+  			data:{
+  				id: id ,
+  				content_type: tr.find('select').val(),
+  				content: tr.find('input').val(),
+  				ct_id : <%=j courseTeacher.id.to_s %>
+  			},
+  			success: function(){}
+		});
+		
+		return false ;
+	}
+	
+	function Cancel(tdiv){
+		var tr = tdiv.parent('span').parent('td').parent('tr');
+		tr.children().each(function(index){
+			if($(this).css('display')=='none')
+				$(this).show();
+			else
+				$(this).remove() ;	
+		});
+		return false ;
 	}
 	
 <% end %>	
