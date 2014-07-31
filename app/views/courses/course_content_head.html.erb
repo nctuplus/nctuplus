@@ -1,0 +1,48 @@
+<%if @page%>
+考試週：（該週可能有考試）    		
+		<div class="btn-group">
+<%for i in 1..18 do%>		
+	<%if 2**(i-1) & @page.exam_record !=0 %>
+        <button type="button" class="btn btn-danger" style="border-color: #fff;border-width: 0px;">
+    <% else %>
+        <button type="button" class="btn btn-default" style="border-color: #fff;border-width: 0px;">
+    <% end %>
+        	<span><%=i.to_s%></span>
+        </button> 
+<%end%>        	 	
+      	</div>    	
+</br></br>
+作業週：（該週可能有作業）  	
+		<div class="btn-group">
+	
+<%for i in 1..18 do%>	
+	<%if 2**(i-1) & @page.homework_record !=0 %>
+		<button type="button" class="btn btn-warning" style="border-color: #fff;border-width: 0px;" >
+    <% else %>
+       	<button type="button" class="btn btn-default" style="border-color: #fff;border-width: 0px;">
+    <% end %>   	
+        	<span><%=i.to_s%></span>
+        </button>         
+<%end%>      	       	
+      	</div> 
+      	
+<% else %>
+考試週：（該週可能有考試） 
+		<div class="btn-group">
+<%for i in 1..18 do%>		
+        <button type="button" class="btn btn-default" style="border-color: #fff;border-width: 0px;">
+        	<span><%=i.to_s%></span>
+        </button> 
+<%end%>        	 	
+      	</div>    	
+</br></br>
+作業週：（該週可能有作業）  	
+		<div class="btn-group">
+<%for i in 1..18 do%>		
+       	<button type="button" class="btn btn-default" style="border-color: #fff;border-width: 0px;">	
+        	<span><%=i.to_s%></span>
+        </button>         
+<%end%>      	       	
+      	</div> 
+      	
+<% end %>      	

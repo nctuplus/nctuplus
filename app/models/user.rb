@@ -3,7 +3,7 @@ class User < ActiveRecord::Base
 	belongs_to :grade
   has_many :file_infos
   has_many :posts
-  has_many :raider_content_lists
+  has_many :course_content_lists
   has_many :content_list_ranks
   has_many :comments
 	has_many :course_simulations#, :foreign_key=>:owner_id

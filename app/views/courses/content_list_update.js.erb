@@ -1,0 +1,18 @@
+//alert("target tr :  "+'<%=j @trid %>');
+
+
+
+$('#<%=j @trid %>').find('td').first().html('<%=j content_type_to_html(@list.content_type) %>');
+$('#<%=j @trid %>').find('td').eq(1).find('span').first().html('<%=j @list.content%>');
+$('#<%=j @trid %>').find('td').eq(1).find('span').eq(1).html("<%=j @list.updated_at.strftime('%Y/%m/%d %H:%M')%> <%=j @list.user.name%>");
+
+<%if @trid.include?("new")%>
+$('#<%=j @trid %>').removeAttr('id').attr('id','content_list_old_<%=j @list.id.to_s %>');
+<% end %>
+//alert('<%=j @list.id.to_s %>');
+$("#content_list_old_<%=j @list.id.to_s %>").children().each(function(index){
+	if($(this).css('display')=='none')
+		$(this).show();
+	else
+		$(this).remove() ;	
+});

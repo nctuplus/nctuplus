@@ -13,6 +13,7 @@ Nctuplus::Application.routes.draw do
 	post "courses/comment_submit"
 	#post "courses/raider_submit"
 	post "courses/course_raider"
+	post "courses/course_content_post"
 	
 	get "courses/get_compare"
 	#get "courses/get_discuss"
