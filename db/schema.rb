@@ -11,7 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
 ActiveRecord::Schema.define(version: 20140730130907) do
 
   create_table "colleges", force: true do |t|
@@ -192,10 +191,10 @@ ActiveRecord::Schema.define(version: 20140730130907) do
 
   create_table "file_infos", force: true do |t|
     t.integer  "owner_id"
-    t.integer  "course_id"
-    t.string   "description"
-    t.integer  "teacher_id"
+    t.integer  "course_teachership_id"
     t.integer  "semester_id"
+    t.string   "description"
+    t.integer  "download_times"
     t.string   "upload_file_name"
     t.string   "upload_content_type"
     t.integer  "upload_file_size"

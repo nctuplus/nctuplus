@@ -68,7 +68,7 @@ Nctuplus::Application.routes.draw do
 	
   #----------for files---------------
   #get "file_info/all_users"
-	get "file_infos/list_by_course"
+	get "file_infos/list_by_ct"
   get "file_infos/one_user"
   #get "file_info/upload"
   #get "file_info/download"

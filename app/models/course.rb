@@ -15,13 +15,6 @@ class Course < ActiveRecord::Base
 	
 	has_many :reviews
 	
-		
-	has_many :file_infos
-	
-	has_many :course_postships, :dependent => :destroy
-	has_many :posts, :through => :course_postships
-	
-	
 	def to_result(semester_name)
 	
     {

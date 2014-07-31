@@ -16,18 +16,12 @@
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-upload fade" >
     
-    <input type="hidden" name="file_info[course_id]" value="<%=@course.id%>">
+    <input type="hidden" name="file_info[course_teachership_id]" value="<%=@ct_id%>">
     <!--<td class="preview"><span class="fade"></span></td>-->
     
-	<td class="teacher">
-	<span>
-	<%=select_tag "new_select_teacher_id", options_from_collection_for_select(@course.teachers, "id", "name"), :onchange=>"update_input($(this));" %>
-	<input id="new_teacher_id" type="hidden" name="file_info[teacher_id]" value="<%=@course.teachers.first.id %>">
-	</span>
-	</td>
 	<td class="semester"><span>
-	<%=select_tag "file_info[semester_id]", options_from_collection_for_select(@course.semesters, "id", "name"), :onchange=>"update_input($(this));" %>
-	<input id="new_semester_id" type="hidden" name="file_info[semester_id]" value="<%=@course.semesters.first.id %>">
+	<%=select_tag "file_info[semester_id]", options_from_collection_for_select(@sems, "id", "name"), :onchange=>"update_input($(this));" %>
+	<input id="new_semester_id" type="hidden" name="file_info[semester_id]" value="<%=@sems.first.id %>">
 
 	</span></td>
 	<td class="col-md-2 description"><input name="file_info[description]" rows="1" style="width:200px;"></td>
