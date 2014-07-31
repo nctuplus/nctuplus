@@ -2,8 +2,8 @@ Paperclip::interpolates :coursename do |attachment, style|
   attachment.instance.course.eng_name # or whatever you've named your User's login/username/etc. attribute
 end
 
-Paperclip::interpolates :courseid do |attachment, style|
-  attachment.instance.course.id # or whatever you've named your User's login/username/etc. attribute
+Paperclip::interpolates :ct_id do |attachment, style|
+  attachment.instance.course_teachership_id # or whatever you've named your User's login/username/etc. attribute
 end
 
 Paperclip::interpolates :userid do |attachment, style|

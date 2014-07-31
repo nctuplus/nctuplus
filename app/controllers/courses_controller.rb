@@ -355,10 +355,7 @@ class CoursesController < ApplicationController
 			session[:cd]=[]
 		end
     @course = Course.find(params[:id])
-		@posts = @course.posts
-		@post= Post.new #for create course form
-		
-		 
+	 
 		@first_show=params[:first_show]||"tc"
 
 		

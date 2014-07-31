@@ -82,7 +82,7 @@
 		<div class="container" style="display:inline-block;">
 			
 			<%= link_to "考古題", course_path(course, :tid=>teacher.id, :first_show=>"files"), :class=>"btn btn-sm btn-default" %>
-			<div class="number-right-top" ><%=course.file_infos.count%></div>
+			<div class="number-right-top" ><%=cd.course_teachership.file_infos.count%></div>
 			<%= link_to "討論區", course_path(course, :tid=>teacher.id, :first_show=>"discussion"), :class=>"btn btn-sm btn-default" %>
 			<%ct=CourseTeachership.where(:course_id=>course.id, :teacher_id=>teacher.id).take%>
 			<div class="number-right-top" ><%=ct.discusses.count%></div>

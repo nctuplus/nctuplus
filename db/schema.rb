@@ -11,7 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20140731155315) do
+
+
+#ActiveRecord::Schema.define(version: 20140731124339) do
+
 
   create_table "colleges", force: true do |t|
     t.string   "name"

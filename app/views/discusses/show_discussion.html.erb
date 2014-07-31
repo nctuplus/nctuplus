@@ -12,21 +12,25 @@
 	
 </div>
 
+
+
 <% @discusses.each do |discuss| %>
 	<div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
 		<div class="panel-heading row no-margin-left" >
 			<div class="col-md-1">
 			<%= image_tag "http://graph.facebook.com/"<<discuss.user.uid<<"/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
 			</div>
-			<div class="col-md-8" id="main_title_<%=discuss.id%>">
-			<h4><%=discuss.title%></h4>
+			<div class="col-md-6" id="main_title_<%=discuss.id%>">
+			<h4 id="title_<%=discuss.id%>" ><%=discuss.title%></h4>
 			<p><%=discuss.updated_at.strftime("%Y/%m/%d %H:%M")%></p>
 			</div>
-			<div class="col-md-3">
-				<p class="text-right">
+			<div class="col-md-5">
+				<div class="row pull-right">
 					<br>
-					<% can_like=current_user && discuss.discuss_likes.select{|l|l.user_id==current_user.id}.empty? %>
-					
+					<% can_like=current_user && discuss.discuss_likes.select{|l|l.user_id==current_user.id}.empty? %>					
+					<div style="display:inline-block;margin-right:5px;">
+						<div class="share-button_<%=discuss.id%>" id="<%=discuss.id%>"></div>				
+					</div>
 					<% if can_like %>
 						<%= fa_icon "thumbs-o-up 2x", title:"讚", class:"clickable-hover", onclick:"like(1,'main',#{discuss.id},$(this));"%>
 					<% else %>
@@ -39,12 +43,14 @@
 						<%= fa_icon "thumbs-o-down 2x", title:"噓" %>
 					<% end %>			
 					<span class="like-count dislike"id="main_dislike_<%=discuss.id%>" ><%=discuss.dislikes%></span>	
-				</p>
+					
+					
+				</div>
 			</div>
 		</div>
 		<div class="panel-body row">
 			<div class="col-md-12" id="main_content_<%=discuss.id%>">
-			<textcontent><%=discuss.content%></textcontent>
+			<textcontent id="content_<%=discuss.id%>"><%=discuss.content%></textcontent>
 			<p class="text-right">
 				<%=link_to "回覆","javascript:void(0);" , onclick:"show_sub_form(#{discuss.id})", id:"reply_but_#{discuss.id}" %>
 				<% if current_user && discuss.user==current_user %>
@@ -62,7 +68,7 @@
 					</div>
 						<div class="col-md-8 ">
 							<p><%=sub_d.updated_at.strftime("%Y/%m/%d %H:%M")%></p>
-							<textcontent><%=sub_d.content%></textcontent>
+							<textcontent ><%=sub_d.content%></textcontent>
 						</div>
 						<div class="col-md-3">
 							<p class="text-righ">
@@ -97,6 +103,44 @@
 </div>
 
 <script>
+	$(document).ready(function(){
+		$("[class^=share-button]").each(function(){
+			 
+			new Share('.'+$(this).attr('class'), {
+			//title : $(this).closest("#title").text(),
+			ui: {
+				button_text :"分享",
+				button_font : false,
+				//icon_font : false
+			},
+			networks: {
+				facebook: {
+					app_id: "309270975792981",
+					title : $("#title_"+$(this).attr('id')).text(),
+					description: $("#content_"+$(this).attr('id')).text(),
+					url :'<%=root_url%>',
+					//before:
+				},
+				google_plus:{
+					enabled:false
+				},
+				twitter:{
+					enabled:false
+				},
+				pinterest:{
+					enabled:false
+				},
+				email:{
+					enabled:false
+				}
+			},
+			});
+		});
+
+		//alert(JSON.stringify(share, null, 4));
+		//$(".share-button").parent().parent().parent().prev().find("h4").text()
+		//alert();
+	});
 	function show_sub_form(id){
 		<% if current_user %>
 			$(".sub-form").html("");

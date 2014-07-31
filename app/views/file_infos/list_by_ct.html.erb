@@ -8,7 +8,7 @@
     <table class="table well" >
 			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
 			<tr>
-				<th class="col-md-1">老師</th>
+				<th class="col-md-1">下載次數</th>
 				<th class="col-md-1">年度</th>
 				<th class="col-md-2">檔案說明</th>
 				<th class="col-md-2">檔名</th>
@@ -93,10 +93,8 @@
   }
   function change_to_edit(file){
     //alert();
-	var teacher_select="<%=j select_tag("file_info[teacher_id]", options_from_collection_for_select(@course.teachers, "id", "name"))%>";
-	$("#download_"+file.id+" td[class=teacher_"+file.id+"]").html(teacher_select);
-	$("td.teacher_"+file.id+" select").val(file.teacher_id);
-	var semester_select="<%=j select_tag("file_info[semester_id]", options_from_collection_for_select(@course.semesters, "id", "name"))%>";
+
+	var semester_select="<%=j select_tag("file_info[semester_id]", options_from_collection_for_select(@sems, "id", "name"))%>";
 	$("#download_"+file.id+" td[class=semester_"+file.id+"]").html(semester_select);
 	$("td.semester_"+file.id+" select").val(file.semester_id);
 	
@@ -114,14 +112,13 @@
 	var description=$("td.description_"+id+" input").val();
 	//alert(description);
 	//return;
-	var teacher_id=$("td.teacher_"+id+" select").val();
+
 	var semester_id=$("td.semester_"+id+" select").val();
 	//alert(text);
 	$.ajax({
 		type: "GET",
 		url: "/file_infos/edit",
 		data: {_description: description,//main or sub
-			   _teacher_id: teacher_id,
 			   _semester_id: semester_id,
 			   _id: id, //comment id
 		},
@@ -131,7 +128,7 @@
 			//alert(zz[0].id);
 			//alert(JSON.stringify(file, null, 4));
 			$("#edit_but_"+file.id).attr("onclick","change_to_edit("+JSON.stringify(file, null, 4)+")");
-			$("#download_"+file.id+" td[class=teacher_"+file.id+"]").html(file.teacher_name);
+			//$("#download_"+file.id+" td[class=teacher_"+file.id+"]").html(file.teacher_name);
 	
 	
 			$("#download_"+file.id+" td[class=semester_"+file.id+"]").html(file.semester_name);
@@ -165,11 +162,11 @@
 	  });
 
     // Load existing files:
-		$.getJSON("/file_infos/?course_id=<%= @course.id %>&tid=<%=@teacher.id%>", function (files) {
+		$.getJSON("/file_infos/?ct_id=<%=@ct_id %>", function (files) {
 			var fu = $('#fileupload').data('blueimpFileupload'), 
 				template;
 			fu._adjustMaxNumberOfFiles(-files.length);
-			//console.log(files);
+
 			template = fu._renderDownload(files)
 				.appendTo($('#fileupload .files'));
 			// Force reflow:
@@ -177,15 +174,16 @@
 				template[0].offsetWidth;
 			template.addClass('in');
 			$('#loading').remove();
+			
+			
+			
 			for (var i=0, file; file=files[i]; i++) {
-				$("td.teacher_"+file.id+" select").val(file.teacher_id);
+				//$("td.teacher_"+file.id+" select").val(file.teacher_id);
 				$("td.semester_"+file.id+" select").val(file.semester_id);
 			}
+			
+			
 		});
   });
 </script>
 
-
-
-
-<%= render :partial => "/file_infos/edit_js" %>

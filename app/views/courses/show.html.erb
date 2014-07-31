@@ -22,25 +22,6 @@
 	
 </div>
 
-<div id="tc_list" >
-	
-</div>
-<!--
-<div id="compare_list" style="display:none;">
-	
-</div>
-
-<div id="discussion_list" class="container" style="display:none;">
-	
-</div>
-
-<div id="files_list" style="display:none;">
-	<% render :partial=> "show_files" %>
-</div>
--->
-
-
-
 <script>
 	$(document).ready(function(){
 		show_item('<%=@first_show%>');
@@ -53,13 +34,13 @@
 			$("#result").html('<%=j render :partial=> "show_teacherOnCourse" %>');
 		}
 		else if(item=="discussion"){
-			$("#result").load("/discusses/list_by_course?ct_id=<%=CourseTeachership.where(:course_id=>@course.id, :teacher_id=>@teacher_show.id).take.id%>");
+			$("#result").load("/discusses/list_by_course?ct_id=<%=@ct.id%>");
 		}
 		else if(item=="compare"){
 			$("#result").load("/courses/get_compare?c_id=<%=@course.id%>");
 		}
 		else if(item=="files"){
-			$("#result").load("/file_infos/list_by_course?cid=<%=@course.id%>&tid=<%=@teacher_show.id%>");
+			$("#result").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>");
 		}
 		for(i=0;i<list.length;i++){
 			if(list[i]!=item){
