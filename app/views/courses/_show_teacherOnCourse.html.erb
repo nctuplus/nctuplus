@@ -81,20 +81,37 @@
 			<p>
 				<i class="fa fa-gamepad"></i>				
 				課程攻略：
-				<%if current_user%>
-				 <%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this));",  "data-toggle"=>"tooltip", "data-placement"=>"right", :title=>"為課程新增或修改內容", :id=>"link_edit_raider"%>	
-				<% end %>
 				<span id="toggle-msg" style="display:none;"></span>
 			</p>
 		</h2>	
 	</div>
 	<div class="panel-body">
-		<div class="well" id="raider_content">
-			<%=loading_img%>
+		<div class="well">
+			<div class="row" >
+			<i class="fa fa-cube"></i> 作業/考試：
+			<%if current_user%>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'head');", :id=>"link_edit_head"%>	
+			<% end %>
+			</br></br>
+				<div id="course_content_head">
+					<%=loading_img%>
+				</div>
+			</div>
+			<div class="row" id="head_form"></div>
+			<hr>
+			<div class="row">
+			<i class="fa fa-cube"></i> 其他內容：
+			<%if current_user%>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>	
+			<% end %>
+			</br></br>
+				<div id="course_content_list">
+					<%=loading_img%>
+				</div>
+			</div>
+			<div class="row" id="list_form"></div>
 		</div>
-		<div class="well" id="raider_form">
-			
-		</div>
+		
 	</div>
 
 <!-- comment for the info in this page -->
@@ -148,23 +165,30 @@
 <script>
 
 	$(document).ready(function(){
-		$('#chart').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2');
-		$('#raider_content').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
-		$('#raider_form').hide();
+		$('#chart').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5');
+	    $('#course_content_head').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
+		$('#course_content_list').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2') ;
+		$('#head_form').hide() ;
+		$('#head_list').hide() ;
 	});
-	function loadForm(id, link){
+	function loadForm(id, link, type){
+		var get_type = 3 ; 
+		if(type=="list")
+			get_type = 4 ;	
+
 		if(link.html()=="編輯"){
-			link.html("取消");
-			$('#raider_form').load("/courses/course_raider?ct_id="+id+"&type=3");
-			$('#raider_form').show() ;
-			$('#raider_content').hide() ;
+			link.html("收回");
+			$('#'+type+'_form').load("/courses/course_raider?ct_id="+id+"&type="+get_type);
+			$('#'+type+'_form').show() ;
+			$('#course_content_'+type).hide() ;
 		}else{
 			link.html("編輯");
-			$('#raider_form').hide() ;
-			$('#raider_content').show() ;
+			$('#course_content_'+type).load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type='+(get_type-2)) ;
+			$('#'+type+'_form').html('').hide() ;
+			$('#course_content_'+type).show() ;
 		}	
 	}
-
+	
 	function commentShow(link){
 		if(link.html()=="留言"){
 			$("#commentNew").show();
@@ -266,7 +290,7 @@
 	
 	function addRow(){
 		var f = true ;
-		var cnt = 1 ;
+		var cnt = 0 ;
 		$('#raider_content_table input').each(function(index){
 			if($(this).val()==""){
 				alert("請填完空白部分再新增謝謝");
@@ -274,16 +298,24 @@
 			}	
 			cnt+=1 ;
 		});
-		if(f&&cnt<6)
+		//alert(cnt);
+		if(f)
 			$('#raider_content_table > tbody:last').append(
-			'<tr id="content_list_new_0">'+
-			'<td><select class="form-control" id="content_list_type_'+cnt+'" name="content_list_type_'+cnt+'">'+
+			'<tr id="content_list_new_'+cnt+'">'+
+			'<td style="display: none;"></td>'+
+			'<td style="display: none;"><span class="col-sm-6"></span><span class="col-sm-4"></span>'+
+			'<span class="col-sm-2">'+
+			"<div class=\"btn btn-success btn-circle\" name=\"button\" onclick=\"return EditOld($(this).parent('span').parent('td'));\">E</div>"+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="DelOld();">R</div>'+
+			'</span>'+
+			'</td>'+
+			'<td><select class="form-control" id="content_list_type" name="content_list_type">'+
 			'<option value="1">[考試]</option>'+
 			'<option value="2">[作業]</option>'+
 			'<option value="3">[上課]</option>'+
 			'<option value="4">[其他]</option>'+
 			'</select></td>'+
-			'<td><span class="col-sm-10"><input class="form-control" id="content_list_'+cnt+'" name="content_list_'+cnt+'" type="text" value=""></span>'+
+			'<td><span class="col-sm-10"><input class="form-control" id="content_list" name="content_list" type="text" value=""></span>'+
 			'<span class="col-sm-2">'+
 			'<div class="btn btn-danger btn-circle" name="button" onclick="return Submit($(this));">O</div> '+
 			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow();">X</div>'+
@@ -346,22 +378,26 @@
 	
 	function Submit(tdiv){
 		var tr = tdiv.parent('span').parent('td').parent('tr');
-		var id = tr.attr('id').substring(17) ;
-		alert(id);
-		alert(tr.find('select').val());
-		alert(tr.find('input').val()) ;
+		var id = tr.attr('id');//.substring(17) ;
 		
+	//	alert(id);
+	//	alert(tr.find('select').val());
+	//	alert(tr.find('input').val()) ;
+	//	return false ;
 		$.ajax({
 			type: "POST",
 			dataType: "script",
-  			url: "/courses/course_raider" ,
+  			url: "/courses/course_content_post" ,
   			data:{
+  				post_type: 1,
   				id: id ,
   				content_type: tr.find('select').val(),
   				content: tr.find('input').val(),
   				ct_id : <%=j courseTeacher.id.to_s %>
   			},
-  			success: function(){}
+  			success: function(){
+  				$('#toggle-msg').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
+  			}
 		});
 		
 		return false ;

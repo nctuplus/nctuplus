@@ -1,0 +1,25 @@
+考試週：（該週可能有考試）  		
+		<div class="btn-group" id="test-btn-group">	
+<%for i in 1..18 do%>		
+	<%if 2**(i-1) & @head.exam_record !=0 %>
+		<button type="button" class="btn btn-danger" id="1" onclick="changeColor($(this), 'danger', 'test');" style="border-color: #fff;border-width: 0px;">
+	<% else %>
+		<button type="button" class="btn btn-default" onclick="changeColor($(this), 'danger', 'test');" style="border-color: #fff;border-width: 0px;">
+	<%end%>	
+			<%=i.to_s%>
+		</button>  		 
+<%end%>      	
+		</div>    	
+</br></br>	 	
+作業週：（該週可能有作業）	
+		<div class="btn-group" id="hw-btn-group">	
+<%for i in 1..18 do%>		
+	<%if 2**(i-1) & @head.homework_record !=0 %>	
+		<button type="button" class="btn btn-warning" id="1" onclick="changeColor($(this), 'warning', 'hw');" style="border-color: #fff;border-width: 0px;">
+	<% else %>	
+		<button type="button" class="btn btn-default" onclick="changeColor($(this), 'warning', 'hw');" style="border-color: #fff;border-width: 0px;">
+	<% end %>
+			<%=i.to_s%>
+		</button>	
+<%end%>      	       	
+		</div>    		

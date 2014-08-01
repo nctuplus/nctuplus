@@ -12,7 +12,10 @@
 # It's strongly recommended that you check this file into your version control system.
 
 
-ActiveRecord::Schema.define(version: 20140731124339) do
+ActiveRecord::Schema.define(version: 20140731155315) do
+
+
+#ActiveRecord::Schema.define(version: 20140731124339) do
 
 
   create_table "colleges", force: true do |t|
@@ -35,14 +38,14 @@ ActiveRecord::Schema.define(version: 20140731124339) do
   add_index "comments", ["user_id"], name: "index_comments_on_user_id", using: :btree
 
   create_table "content_list_ranks", force: true do |t|
-    t.integer  "raider_content_list_id"
+    t.integer  "course_content_list_id"
     t.integer  "user_id"
     t.integer  "rank"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "content_list_ranks", ["raider_content_list_id"], name: "index_content_list_ranks_on_raider_content_list_id", using: :btree
+  add_index "content_list_ranks", ["course_content_list_id"], name: "index_content_list_ranks_on_course_content_list_id", using: :btree
   add_index "content_list_ranks", ["user_id"], name: "index_content_list_ranks_on_user_id", using: :btree
 
   create_table "course_content_heads", force: true do |t|

@@ -1,0 +1,31 @@
+<% if @list.presence %>
+<table class="table">
+	<% @list.order('content_type DESC').each do |c|%>
+	<tr>
+		<td><%=content_type_to_html(c.content_type)%></td>
+		<td>
+			<span class="col-sm-6"><%=c.content%></span>
+			<span class="col-sm-4"><%=c.created_at.strftime('%Y/%m/%d %H:%M')%> <%=c.user.name%></span>
+			<span class="col-sm-2" id="rank_span_<%=j c.id.to_s%>">
+			<% if ContentListRank.where(:user_id=>current_user.id, :course_content_list_id=>c.id).first.presence %>
+				<i class="fa fa-thumbs-o-up"></i> 
+				<span style="color: green ;"><%=c.content_list_ranks.where(:rank=>1).count.to_s%></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;  
+				<i class="fa fa-thumbs-o-down"></i> 
+				<span style="color: red ;"><%=c.content_list_ranks.where(:rank=>2).count.to_s%></span>
+			<% else %>
+				<i class="fa fa-thumbs-o-up clickable-hover"  onclick="return preferClick(1,<%=j c.id.to_s%>);"></i> 
+				<span style="color: green ;"><%=c.content_list_ranks.where(:rank=>1).count.to_s%></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;					
+				<i class="fa fa-thumbs-o-down clickable-hover" onclick="return preferClick(2,<%=j c.id.to_s%>);"></i> 
+				<span style="color: red ;"><%=c.content_list_ranks.where(:rank=>2).count.to_s%></span>
+			<% end %>
+				
+			</span>
+		</td>
+	</tr>
+	<% end %>	
+</table>   
+<% else %>
+	<p class="text-center"><strong>尚無資料</strong></p>	
+<% end %>
