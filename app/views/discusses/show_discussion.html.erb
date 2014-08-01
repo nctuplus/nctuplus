@@ -107,8 +107,10 @@
 		<% if params[:target]%>
 			$('body').scrollTo('#discuss_<%=params[:target]%>',1000,{offset:-60});
 		<% end %>
+		<% share_url="#{root_url}courses/#{@ct.course_id}?first_show=discussion&tid=#{@ct.teacher_id}&target=" %>
 		$("[class^=share-button]").each(function(){
-			 
+			var share_url='<%=j share_url.html_safe%>'+$(this).attr('id');
+			var description=$("#content_"+$(this).attr('id')).text();
 			new Share('.'+$(this).attr('class'), {
 			//title : $(this).closest("#title").text(),
 			ui: {
@@ -120,15 +122,16 @@
 				facebook: {
 					app_id: "309270975792981",
 					title : $("#title_"+$(this).attr('id')).text(),
-					description: $("#content_"+$(this).attr('id')).text(),
-					url :'<%=root_url%>courses/<%=@ct.course_id%>?first_show=discussion&tid=<%=@ct.teacher_id%>&target='+$(this).attr('id'),
+					description: description,
+					url : share_url,
 					caption: "NCTU+ 交大智慧選課系統"
 				},
 				google_plus:{
-					enabled:false
+					url :share_url
 				},
 				twitter:{
-					enabled:false
+					url :share_url,
+					description :description.substr(0,50)
 				},
 				pinterest:{
 					enabled:false

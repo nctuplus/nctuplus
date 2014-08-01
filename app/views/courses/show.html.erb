@@ -46,7 +46,9 @@
 <script>
 	$(document).ready(function(){
 		show_item('<%=@first_show%>',true);
-		
+		<% share_url="#{root_url}courses/#{@course.id}?tid=#{@teacher_show.id}" %>
+		var share_url='<%=j share_url.html_safe %>';
+		var course_title="<%= @course.ch_name %> <%=@teacher_show.name%>";
 		new Share(".share-course",{
 			ui: {
 				flyout: "bottom center",
@@ -57,15 +59,17 @@
 			networks: {
 				facebook: {
 					app_id: "309270975792981",
-					title : "NCTU+ 課程資訊",
-					description: "<%= @course.ch_name %> <%=@teacher_show.name%>",
-					url :'<%=root_url%>courses/<%=@course.id%>?tid=<%=@teacher_show.id%>',
+					title : course_title,
+					caption: "NCTU+ 交大智慧選課系統",
+					description: "",
+					url :share_url,
 				},
 				google_plus:{
-					enabled:false
+					url :share_url
 				},
 				twitter:{
-					enabled:false
+					url :share_url,
+					description :course_title
 				},
 				pinterest:{
 					enabled:false
