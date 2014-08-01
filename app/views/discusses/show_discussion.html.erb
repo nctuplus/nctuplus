@@ -15,7 +15,7 @@
 
 
 <% @discusses.each do |discuss| %>
-	<div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
+	<div class="panel panel-default bs-callout-success" id="discuss_<%=discuss.id%>" style="border-left-width:5px;">
 		<div class="panel-heading row no-margin-left" >
 			<div class="col-md-1">
 			<%= image_tag "http://graph.facebook.com/"<<discuss.user.uid<<"/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
@@ -104,6 +104,9 @@
 
 <script>
 	$(document).ready(function(){
+		<% if params[:target]%>
+			$('body').scrollTo('#discuss_<%=params[:target]%>',1000,{offset:-60});
+		<% end %>
 		$("[class^=share-button]").each(function(){
 			 
 			new Share('.'+$(this).attr('class'), {
@@ -118,8 +121,8 @@
 					app_id: "309270975792981",
 					title : $("#title_"+$(this).attr('id')).text(),
 					description: $("#content_"+$(this).attr('id')).text(),
-					url :'<%=root_url%>',
-					//before:
+					url :'<%=root_url%>courses/<%=@ct.course_id%>?first_show=discussion&tid=<%=@ct.teacher_id%>&target='+$(this).attr('id'),
+					caption: "NCTU+ 交大智慧選課系統"
 				},
 				google_plus:{
 					enabled:false

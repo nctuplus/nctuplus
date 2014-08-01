@@ -1,12 +1,33 @@
 <%= javascript_include_tag "courses", "data-turbolinks-track" => true %>
 
-<h1 class="row">
-	<div class="col-md-9"><%= @course.ch_name %>(<%= @course.eng_name %>) <button class="btn btn-primary btn-lg" onclick="add_to_cart(<%=params[:id]%>,'add')">加入觀察名單</button></div>  	
-	<div class="col-md-3" id="teacher-name">
-		<%=@teacher_show.name%> 
-		<small><span class="label label-<%=rankTag(@target_rank)%>" id="rank-icon"><%=@target_rank.to_s%></span></small>
+<div class="row">
+	<div class="col-md-7">
+		<h1>
+		<%= @course.ch_name %>－<%=@teacher_show.name%> 
+		<small>
+			<span class="label label-<%=rankTag(@target_rank)%>" id="rank-icon"><%=@target_rank.to_s%>
+			</span>
+		</small>
+		</h1>
 	</div>
-</h1>
+	<div class="col-md-5" id="teacher-name">
+		
+		<span class="pull-right">
+			<br>
+			<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
+			<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
+			</button>
+			&nbsp;
+			<button class="btn btn-md btn-success masterTooltip" style="height:33px;margin-top:-1px" title="加選!">
+			<%= fa_icon "calendar 1x"%><sup><%= fa_icon "plus 1x"%></sup>
+			</button>
+			&nbsp;
+			<span style="display:inline-block">
+			<div class="share-course"></div>
+			</span>
+		</span>
+	</div>
+</div>
 
 
 
@@ -24,17 +45,52 @@
 
 <script>
 	$(document).ready(function(){
-		show_item('<%=@first_show%>');
-
+		show_item('<%=@first_show%>',true);
+		
+		new Share(".share-course",{
+			ui: {
+				flyout: "bottom center",
+				button_text :"分享",
+				button_font : false,
+				//icon_font : false
+			},
+			networks: {
+				facebook: {
+					app_id: "309270975792981",
+					title : "NCTU+ 課程資訊",
+					description: "<%= @course.ch_name %> <%=@teacher_show.name%>",
+					url :'<%=root_url%>courses/<%=@course.id%>?tid=<%=@teacher_show.id%>',
+				},
+				google_plus:{
+					enabled:false
+				},
+				twitter:{
+					enabled:false
+				},
+				pinterest:{
+					enabled:false
+				},
+				email:{
+					enabled:false
+				}
+			},
+		});
+		
+		
 	});
-	function show_item(item){//change show files or notes
+	function show_item(item,show_first){//change show files or notes
 		list=["files","compare","tc","discussion"]
 		if(item=="tc"){
 			//prepare_raider();
 			$("#result").html('<%=j render :partial=> "show_teacherOnCourse" %>');
 		}
 		else if(item=="discussion"){
-			$("#result").load("/discusses/list_by_course?ct_id=<%=@ct.id%>");
+			if(show_first){
+				$("#result").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>");
+			}
+			else{
+				$("#result").load("/discusses/list_by_course?ct_id=<%=@ct.id%>");
+			}
 		}
 		else if(item=="compare"){
 			$("#result").load("/courses/get_compare?c_id=<%=@course.id%>");
