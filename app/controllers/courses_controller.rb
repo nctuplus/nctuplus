@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
   
 	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_compare]
 
-	before_filter :checkLogin, :only=>[:raider_list_like, :rate_cts, :simulation, :add_simulated_course, :special_list]
+	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course, :special_list]
 
 
 ### for course_teacher_page_content	
@@ -13,21 +13,43 @@ class CoursesController < ApplicationController
 	def course_raider
 		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
-		@ct_id = ct.id		
+		@ct_id = ct.id
+		
+		if request.post?
+			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
+			@page.exam_record = params[:test]		
+			@page.homework_record = params[:hw]
+
+		#	@page.course_note = params[:content].presence || "無內容"
+			
+			if params[:id].to_i != 0 #updated old
+				@list = RaiderContentList.where(:id=>params[:old_id], :user_id=>current_user.id).first
+				if @list.presence
+					@list.content_type = params[:content_type].to_i
+					@list.content = params[:content]
+					if @list.save
+						Rails.logger.debug "[debug] "+"post ????"
+						render "update_content_list" and return
+					end
+				end
+			else # new one
+				#@list = RaiderContentList.new(:user_id=>current_user.id, :course_teacher_page_content_id=>params[:])
+				
+			end	
+
+			@page.course_teachership_id = params[:ct_id].to_i
+			@page.last_user_id = current_user.id
+			if @page.save		
+				render "raider_submit"
+			else
+				render "raider_fail"  #error handler page 
+			end
+				
+		else			
 			if params[:type].to_i==1
 				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
-				render "course_content_head"
+				render "course_raider"
 			elsif params[:type].to_i==2
-				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i)
-				render "course_content_list"
-			elsif params[:type].to_i==3  #3  -> head form
-				@head = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
-						CourseContentHead.new(:exam_record=>0, :homework_record=>0)	
-				render "content_head_form"
-			elsif params[:type].to_i==4	#4 -> list form
-				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
-				render "content_list_form"
-			else # 5 -> chart
 				data_table = GoogleVisualr::DataTable.new
 			# Add Column Headers
 				data_table.new_column('string', '年度' )
@@ -57,37 +79,19 @@ class CoursesController < ApplicationController
 				@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
 				
 				render "course_chart"
-			end		
-	end
-	
-	def course_content_post
-		tr_id = params[:id][17..-1].to_i
-		if params[:post_type]==0 #head
-		
-		else #list
-			if params[:id].include?("new") #new
-				
-				@list = CourseContentList.new(:course_teachership_id=>params[:ct_id],:user_id=>current_user.id)
-				@list.content_type = params[:content_type].to_i
-				@list.content = params[:content]
-				@list.save!
-			else #update old
- 				@list = CourseContentList.find(tr_id)
- 				@list.content_type = params[:content_type].to_i
-				@list.content = params[:content]
-				@list.save!
-				
+			else  #3  -> edit raider content
+				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
+						CourseContentHead.new(:exam_record=>0, :homework_record=>0)
+				render "raider_form"	
 			end
-			@trid = params[:id]
-			render "content_list_update"
 		end
 	end
 	
 	def raider_list_like
-		if ContentListRank.where(:user_id=>current_user.id, :course_content_list_id=>params[:list_id]).first.presence
+		if ContentListRank.where(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id]).first.presence
 			render :nothing => true, :status => 200, :content_type => 'text/html' #已給過評
 		else
-			@like = ContentListRank.new(:user_id=>current_user.id, :course_content_list_id=>params[:list_id],:rank=>params[:like_type])	
+			@like = ContentListRank.new(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id],:rank=>params[:like_type])	
 			if @like.save
 				render "raider_list_like"
 			else
