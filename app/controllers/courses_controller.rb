@@ -42,7 +42,7 @@ class CoursesController < ApplicationController
 						sem_year += "(本學期)"
 					end	
 					row.push(sem_year)
-					if cd.students_limit.to_i == 9999
+					if cd.students_limit.to_i == 9999 # 無上限設為0防scope太大有顯示問題
 						row.push(0)
 					else
 						row.push(cd.students_limit.to_i)
@@ -61,10 +61,19 @@ class CoursesController < ApplicationController
 	end
 	
 	def course_content_post
-		tr_id = params[:id][17..-1].to_i
-		if params[:post_type]==0 #head
 		
+		if params[:post_type].to_i==0 #head
+			@head = CourseContentHead.where(:course_teachership_id=> params[:ct_id]).first.presence ||
+					 CourseContentHead.new(:course_teachership_id=> params[:ct_id])
+			@head.last_user_id = current_user.id
+			@head.exam_record = params[:test].to_i
+			@head.homework_record = params[:hw].to_i
+			@head.course_rollcall = params[:rollcall].to_i
+			@head.save!
+			
+			render "content_head_update"
 		else #list
+			tr_id = params[:id][17..-1].to_i
 			if params[:id].include?("new") #new
 				
 				@list = CourseContentList.new(:course_teachership_id=>params[:ct_id],:user_id=>current_user.id)
@@ -76,6 +85,10 @@ class CoursesController < ApplicationController
  				@list.content_type = params[:content_type].to_i
 				@list.content = params[:content]
 				@list.save!
+				
+				if @list.content_list_ranks.presence
+					@list.content_list_ranks.delete!
+				end
 				
 			end
 			@trid = params[:id]

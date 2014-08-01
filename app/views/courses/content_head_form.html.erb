@@ -22,4 +22,12 @@
 			<%=i.to_s%>
 		</button>	
 <%end%>      	       	
-		</div>    		
+		</div>  
+		</br></br>  	
+<span class="col-sm-9">
+點名頻率：
+<%= select_tag :rollcall, options_for_select([["每堂必點",1],["經常抽點",2],["偶爾抽點",3],["不點名",4]]) %>
+</span>
+<span class="col-sm-3">
+		<div class="btn btn-success btn-circle" name="button" onclick="return headSubmit();">O</div>
+</span>
