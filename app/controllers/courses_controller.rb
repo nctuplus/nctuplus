@@ -10,52 +10,31 @@ class CoursesController < ApplicationController
 
 ### for course_teacher_page_content	
 
+
 	def course_raider
 		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
-		@ct_id = ct.id
-		
-		if request.post?
-			@page = CourseTeacherPageContent.where(:course_teachership_id=>params[:ct_id].to_i).first.presence || CourseTeacherPageContent.new()
-			@page.exam_record = params[:test]		
-			@page.homework_record = params[:hw]
-
-		#	@page.course_note = params[:content].presence || "無內容"
-			
-			if params[:id].to_i != 0 #updated old
-				@list = RaiderContentList.where(:id=>params[:old_id], :user_id=>current_user.id).first
-				if @list.presence
-					@list.content_type = params[:content_type].to_i
-					@list.content = params[:content]
-					if @list.save
-						Rails.logger.debug "[debug] "+"post ????"
-						render "update_content_list" and return
-					end
-				end
-			else # new one
-				#@list = RaiderContentList.new(:user_id=>current_user.id, :course_teacher_page_content_id=>params[:])
-				
-			end	
-
-			@page.course_teachership_id = params[:ct_id].to_i
-			@page.last_user_id = current_user.id
-			if @page.save		
-				render "raider_submit"
-			else
-				render "raider_fail"  #error handler page 
-			end
-				
-		else			
+		@ct_id = ct.id		
 			if params[:type].to_i==1
 				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
-				render "course_raider"
+				render "course_content_head"
 			elsif params[:type].to_i==2
+				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i)
+				render "course_content_list"
+			elsif params[:type].to_i==3  #3  -> head form
+				@head = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
+						CourseContentHead.new(:exam_record=>0, :homework_record=>0)	
+				render "content_head_form"
+			elsif params[:type].to_i==4	#4 -> list form
+				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
+				render "content_list_form"
+			else # 5 -> chart
 				data_table = GoogleVisualr::DataTable.new
 			# Add Column Headers
 				data_table.new_column('string', '年度' )
 				data_table.new_column('number', '開課人數')
 				data_table.new_column('number', '選課人數')
-				
+
 				row_list = Array.new
 				ct.course_details.each do |cd|
 					row = Array.new
@@ -64,12 +43,12 @@ class CoursesController < ApplicationController
 						sem_year += "(本學期)"
 					end	
 					row.push(sem_year)
-					if cd.students_limit.to_i == 9999
+					if cd.students_limit.to_i == 9999 # 無上限設為0防scope太大有顯示問題
 						row.push(0)
 					else
 						row.push(cd.students_limit.to_i)
 					end		
-					
+
 					row.push(cd.reg_num.to_i)
 					row_list.push(row)
 				end
@@ -77,13 +56,44 @@ class CoursesController < ApplicationController
 				data_table.add_rows(row_list.reverse)
 				option = { width: 550, height: 250, title: '選課狀況' }
 				@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
-				
+
 				render "course_chart"
-			else  #3  -> edit raider content
-				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
-						CourseContentHead.new(:exam_record=>0, :homework_record=>0)
-				render "raider_form"	
+			end		
+	end
+
+	def course_content_post
+
+		if params[:post_type].to_i==0 #head
+			@head = CourseContentHead.where(:course_teachership_id=> params[:ct_id]).first.presence ||
+					 CourseContentHead.new(:course_teachership_id=> params[:ct_id])
+			@head.last_user_id = current_user.id
+			@head.exam_record = params[:test].to_i
+			@head.homework_record = params[:hw].to_i
+			@head.course_rollcall = params[:rollcall].to_i
+			@head.save!
+
+			render "content_head_update"
+		else #list
+			tr_id = params[:id][17..-1].to_i
+			if params[:id].include?("new") #new
+
+				@list = CourseContentList.new(:course_teachership_id=>params[:ct_id],:user_id=>current_user.id)
+				@list.content_type = params[:content_type].to_i
+				@list.content = params[:content]
+				@list.save!
+			else #update old
+ 				@list = CourseContentList.find(tr_id)
+ 				@list.content_type = params[:content_type].to_i
+				@list.content = params[:content]
+				@list.save!
+
+				if @list.content_list_ranks.presence
+					@list.content_list_ranks.delete!
+				end
+
 			end
+			@trid = params[:id]
+			render "content_list_update"
 		end
 	end
 	

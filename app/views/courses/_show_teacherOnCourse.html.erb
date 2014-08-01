@@ -254,38 +254,40 @@
 		}
 	}
 	
-	function submit_check(){
+	function headSubmit(){
 		if(!confirm("確定資料無誤嗎？"))
 			return false ;
-		//check list blank?
-		var f = false ;
-		$('#raider_content_table input').each(function(index){
-			if($(this).val()==""){
-				alert("內容不可留白謝謝");	
-				f = true;	
-			}	
-		});
-		if(f)
-			return false ;
-	
-		var res= 0 ;
+
+		var test= 0 ;
+		var hw=0 ;
 		$('#test-btn-group > button').each(function( index ) {			
-  			if($(this).attr('id')=='1'){
-  			//	alert(index);
-  				res = res | Math.pow(2,index) ;
-  			}	
+  			if($(this).attr('id')=='1')
+  				test = test | Math.pow(2,index) ;		
 		});
-		$('#test').attr('value',res);
-		res = 0 ;
 		$('#hw-btn-group > button').each(function( index ) {			
-  			if($(this).attr('id')=='1'){
-  			//	alert(index);
-  				res = res | Math.pow(2,index) ;
-  			}	
+  			if($(this).attr('id')=='1')
+  				hw = hw | Math.pow(2,index) ;	
 		});
-		$('#hw').attr('value',res);
+
+	//alert(test) ; alert(hw);
+		$.ajax({
+			type: "POST",
+			dataType: "script",
+  			url: "/courses/course_content_post" ,
+  			data:{
+  				post_type: 0,
+  				test: test,
+  				hw: hw,
+  				rollcall: $("#rollcall").val(),
+  				ct_id : <%=j courseTeacher.id.to_s %>
+  			},
+  			success: function(){
+  				$('#toggle-msg').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
+  			}
+		});
 		
-		return true ;
+		
+		return false ;
 	}
 	
 	function addRow(){
@@ -377,9 +379,16 @@
 	}
 	
 	function Submit(tdiv){
+		if(!confirm("確定資料無誤嗎？"))
+			return false ;
+
 		var tr = tdiv.parent('span').parent('td').parent('tr');
 		var id = tr.attr('id');//.substring(17) ;
-		
+
+		if(tr.find('input').val()==""){
+			alert("內容不可留白謝謝");
+			return false ;
+		}	
 	//	alert(id);
 	//	alert(tr.find('select').val());
 	//	alert(tr.find('input').val()) ;

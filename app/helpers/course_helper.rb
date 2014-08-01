@@ -8,6 +8,35 @@ module CourseHelper
 		return Semester.last
 	end
 	
+	def rollcall_name(id)
+		str = ""
+		case id
+			when 1 #
+				str = "每堂必點"
+			when 2 #
+				str = "經常抽點"
+			when 3 #
+				str= "偶爾抽點"
+			when 4 #
+				str = "不點名"
+		end	
+		return str.html_safe
+	end	
+	
+	def rollcall_color(id)
+		str = ""
+		case id
+			when 1 #
+				str = "danger"
+			when 2 #
+				str = "warning"
+			when 3 #
+				str= "primary"
+			when 4 #
+				str = "success"
+		end	
+	end
+	
 	def content_type_to_html(id)
 		str = ""
 		case id
@@ -22,7 +51,7 @@ module CourseHelper
 		end	
 		return str.html_safe
 	end
-
+	
 	def rankTag(rank)
 		if rank>=1 and rank<=2
 			return "success"
