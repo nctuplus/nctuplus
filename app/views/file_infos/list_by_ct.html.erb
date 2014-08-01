@@ -160,7 +160,20 @@
 			var inputs = data.context.find(':input');
 			data.formData = inputs.serializeArray();
 	  });
-
+		$('#fileupload').bind('fileuploadadd', function (e, data) {
+				$(".no-files-yet").hide();
+        var allFiles = $('#fileupload').find('.filename');
+        $.each(allFiles, function(index, file) {
+            var filename = file.innerHTML;
+            $.each(data.files, function(index, file) {
+                if(filename === file.name){
+                    file.error = 'Duplicate filename';
+                    return;
+                }
+            });
+        });
+    });
+		
     // Load existing files:
 		$.getJSON("/file_infos/?ct_id=<%=@ct_id %>", function (files) {
 			var fu = $('#fileupload').data('blueimpFileupload'), 
@@ -185,5 +198,20 @@
 			
 		});
   });
+	
+	function add_count(id){
+		//alert("!!!");
+		$.ajax({
+			type :"GET",
+			url : "/file_infos/add_count",
+			data : {
+				file_id : id
+			},
+			success :function(data){
+				var count=$("#download_"+id).find(".download_times");
+				count.text(parseInt(count.text())+1);
+			}
+		});
+	}
 </script>
 

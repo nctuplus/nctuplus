@@ -25,7 +25,7 @@
 
 	</span></td>
 	<td class="col-md-2 description"><input name="file_info[description]" rows="1" style="width:200px;"></td>
-	<td class="name"><span>{%=file.name%}</span></td>
+	<td class="filename">{%=file.name%}</td>
 	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     {% if (file.error) { %}
     <td class="error" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>

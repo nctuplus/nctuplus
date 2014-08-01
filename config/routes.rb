@@ -69,12 +69,13 @@ Nctuplus::Application.routes.draw do
   #----------for files---------------
   #get "file_info/all_users"
 	get "file_infos/list_by_ct"
-  get "file_infos/one_user"
+  #get "file_infos/one_user"
+	get "file_infos/add_count"
   #get "file_info/upload"
   #get "file_info/download"
   #get "file_info/delete_file"
   get "file_infos/edit"
-  get "file_infos/pictures_show"
+  #get "file_infos/pictures_show"
   resources :file_infos
   
  

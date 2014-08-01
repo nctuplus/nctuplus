@@ -9,7 +9,7 @@ class FileInfosController < ApplicationController
 	
 	def index
 		if params[:ct_id]
-				@files = FileInfo.where(:course_teachership_id=>params[:ct_id])
+				@files = FileInfo.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
 		else
 			@files = FileInfo.where(:owner_id=>current_user.id)#.select(:file
 		end
@@ -22,7 +22,7 @@ class FileInfosController < ApplicationController
 	def list_by_ct
 		@ct_id=params[:ct_id]
 		sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>@ct_id).pluck(:semester_id)
-		@sems=Semester.where(:id=>sem_ids)
+		@sems=Semester.where(:id=>sem_ids).order("id DESC")
 		#@course=Course.find(params[:cid])
 		#@teacher=Teacher.find(params[:tid])
 		#@files=@course.file_infos
@@ -59,9 +59,10 @@ class FileInfosController < ApplicationController
   def create
     return if data_params[:course_teachership_id]==""||data_params[:semester_id]==""||data_params[:upload]==""
     
-		#FileInfo.where(:owner_id=>current_user.id, :upload_file_name=>params[:file_info][:upload][:file_name])
-		
+		@file_same=FileInfo.where(:owner_id=>current_user.id, :upload_file_name=>params[:file_info][:upload].original_filename).take
+		@file_same.destroy! if @file_same
 		@file = FileInfo.new(data_params)
+
 		@file.download_times=0
 	#@file.course_id=5
 	@file.owner_id=current_user.id
@@ -128,6 +129,18 @@ class FileInfosController < ApplicationController
     @files=FileInfo.where(:owner_id=>current_user.id)
   end
   
+	def add_count
+		@file=FileInfo.find(params[:file_id])
+		if @file
+			@file.download_times+=1
+			@file.save
+			render :nothing => true, :status => 200, :content_type => 'text/html'
+		else
+			render :nothing => true, :status => 400, :content_type => 'text/html'
+		end
+	end
+	
+	
   private
   def data_params
     #if params[:file_info]

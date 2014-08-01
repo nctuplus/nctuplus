@@ -9,7 +9,9 @@ class FileInfo < ActiveRecord::Base
 	:path => ":ct_id/:userid/:filename"
   do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
- 
+	
+
+	 
   def to_jq_upload(user)
     if user
 	  _uid=user.id
@@ -21,6 +23,7 @@ class FileInfo < ActiveRecord::Base
       "name" => read_attribute(:upload_file_name),
       "size" => read_attribute(:upload_file_size),
       "url" => upload.url(:original),
+			"download_times" => read_attribute(:download_times).to_s,
       #"delete_url" => file_infos_path(self), will occur like /file_infos.5 and will show no route matches
       "delete_type" => "DELETE",
 			"id" => read_attribute(:id),
