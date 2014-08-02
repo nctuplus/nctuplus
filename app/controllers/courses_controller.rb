@@ -83,15 +83,16 @@ class CoursesController < ApplicationController
 				@list.save!
 			else #update old
  				@list = CourseContentList.find(tr_id)
- 				@list.content_type = params[:content_type].to_i
-				@list.content = params[:content]
-				@list.save!
-
-				if @list.content_list_ranks.presence
-				#Rails.logger.debug "[debug] destroy"
-					@list.content_list_ranks.destroy_all
+ 				if params[:del].to_i==1
+ 					@list.destroy
+ 				else	
+ 					@list.content_type = params[:content_type].to_i
+					@list.content = params[:content]
+					@list.save!
+					if @list.content_list_ranks.presence
+						@list.content_list_ranks.destroy_all
+					end	
 				end
-
 			end
 			@trid = params[:id]
 			render "content_list_update"
