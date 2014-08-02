@@ -88,7 +88,8 @@ class CoursesController < ApplicationController
 				@list.save!
 
 				if @list.content_list_ranks.presence
-					@list.content_list_ranks.delete!
+				#Rails.logger.debug "[debug] destroy"
+					@list.content_list_ranks.destroy_all
 				end
 
 			end
@@ -98,10 +99,10 @@ class CoursesController < ApplicationController
 	end
 	
 	def raider_list_like
-		if ContentListRank.where(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id]).first.presence
+		if ContentListRank.where(:user_id=>current_user.id, :course_content_list_id=>params[:list_id]).first.presence
 			render :nothing => true, :status => 200, :content_type => 'text/html' #已給過評
 		else
-			@like = ContentListRank.new(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id],:rank=>params[:like_type])	
+			@like = ContentListRank.new(:user_id=>current_user.id, :course_content_list_id=>params[:list_id],:rank=>params[:like_type])	
 			if @like.save
 				render "raider_list_like"
 			else

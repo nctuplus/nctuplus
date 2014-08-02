@@ -81,7 +81,6 @@
 			<p>
 				<i class="fa fa-gamepad"></i>				
 				課程攻略：
-				<span id="toggle-msg" style="display:none;"></span>
 			</p>
 		</h2>	
 	</div>
@@ -92,6 +91,7 @@
 			<%if current_user%>
 				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'head');", :id=>"link_edit_head"%>	
 			<% end %>
+			<span id="toggle-msg-head" style="display:none;"></span>
 			</br></br>
 				<div id="course_content_head">
 					<%=loading_img%>
@@ -104,6 +104,7 @@
 			<%if current_user%>
 				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>	
 			<% end %>
+			<span id="toggle-msg-list" style="display:none;"></span>
 			</br></br>
 				<div id="course_content_list">
 					<%=loading_img%>
@@ -282,7 +283,7 @@
   				ct_id : <%=j courseTeacher.id.to_s %>
   			},
   			success: function(){
-  				$('#toggle-msg').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
+  				$('#toggle-msg-head').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
   			}
 		});
 		
@@ -307,8 +308,8 @@
 			'<td style="display: none;"></td>'+
 			'<td style="display: none;"><span class="col-sm-6"></span><span class="col-sm-4"></span>'+
 			'<span class="col-sm-2">'+
-			"<div class=\"btn btn-success btn-circle\" name=\"button\" onclick=\"return EditOld($(this).parent('span').parent('td'));\">E</div>"+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="DelOld();">R</div>'+
+			"<div class=\"btn btn-success btn-circle\" name=\"button\" onclick=\"return EditOld($(this).parent('span').parent('td'));\"><i class=\"fa fa-pencil\"></i></div> "+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="DelOld();"><i class="fa fa-trash-o"></i></div>'+
 			'</span>'+
 			'</td>'+
 			'<td><select class="form-control" id="content_list_type" name="content_list_type">'+
@@ -319,8 +320,8 @@
 			'</select></td>'+
 			'<td><span class="col-sm-10"><input class="form-control" id="content_list" name="content_list" type="text" value=""></span>'+
 			'<span class="col-sm-2">'+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return Submit($(this));">O</div> '+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow();">X</div>'+
+			'<div class="btn btn-success btn-circle" name="button" onclick="return Submit($(this));"><i class="fa fa-check"></i></div> '+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow();"><i class="fa fa-times"></i></div>'+
 			'</span></td>'+
 			'</tr>');
 	}
@@ -348,7 +349,7 @@
   			data:{
   				like_type: pre ,
   				list_id : id 
-  			},
+  			},	
   			success: function(){}
   		});			
 			
@@ -369,8 +370,8 @@
 			'</select></td>'+
 			'<td><span class="col-sm-10"><input class="form-control" id="list_old'+id+'" name="list_old'+id+'" type="text" value="'+content+'"></span>'+
 			'<span class="col-sm-2">'+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return Submit($(this));">O</div> '+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return Cancel($(this));">X</div>'+
+			'<div class="btn btn-success btn-circle" name="button" onclick="return Submit($(this));"><i class="fa fa-check"></i></div> '+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return Cancel($(this));"><i class="fa fa-times"></i></div>'+
 			'</span>'+
 			'</td>'
 		);
@@ -405,7 +406,7 @@
   				ct_id : <%=j courseTeacher.id.to_s %>
   			},
   			success: function(){
-  				$('#toggle-msg').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
+  				$('#toggle-msg-list').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
   			}
 		});
 		
