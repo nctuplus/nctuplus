@@ -1,7 +1,7 @@
 //alert("target tr :  "+'<%=j @trid %>');
 
 
-
+<% if params[:del].to_i != 1%>
 $('#<%=j @trid %>').find('td').first().html('<%=j content_type_to_html(@list.content_type) %>');
 $('#<%=j @trid %>').find('td').eq(1).find('span').first().html('<%=j @list.content%>');
 $('#<%=j @trid %>').find('td').eq(1).find('span').eq(1).html("<%=j @list.updated_at.strftime('%Y/%m/%d %H:%M')%> <%=j @list.user.name%>");
@@ -16,3 +16,6 @@ $("#content_list_old_<%=j @list.id.to_s %>").children().each(function(index){
 	else
 		$(this).remove() ;	
 });
+<% else %>
+$('#<%=j params[:id]%>').remove() ;
+<% end %>

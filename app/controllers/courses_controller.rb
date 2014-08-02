@@ -83,14 +83,16 @@ class CoursesController < ApplicationController
 				@list.save!
 			else #update old
  				@list = CourseContentList.find(tr_id)
- 				@list.content_type = params[:content_type].to_i
-				@list.content = params[:content]
-				@list.save!
-
-				if @list.content_list_ranks.presence
-					@list.content_list_ranks.delete!
+ 				if params[:del].to_i==1
+ 					@list.destroy
+ 				else	
+ 					@list.content_type = params[:content_type].to_i
+					@list.content = params[:content]
+					@list.save!
+					if @list.content_list_ranks.presence
+						@list.content_list_ranks.destroy_all
+					end	
 				end
-
 			end
 			@trid = params[:id]
 			render "content_list_update"
@@ -98,10 +100,10 @@ class CoursesController < ApplicationController
 	end
 	
 	def raider_list_like
-		if ContentListRank.where(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id]).first.presence
+		if ContentListRank.where(:user_id=>current_user.id, :course_content_list_id=>params[:list_id]).first.presence
 			render :nothing => true, :status => 200, :content_type => 'text/html' #已給過評
 		else
-			@like = ContentListRank.new(:user_id=>current_user.id, :raider_content_list_id=>params[:list_id],:rank=>params[:like_type])	
+			@like = ContentListRank.new(:user_id=>current_user.id, :course_content_list_id=>params[:list_id],:rank=>params[:like_type])	
 			if @like.save
 				render "raider_list_like"
 			else

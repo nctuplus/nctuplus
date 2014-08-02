@@ -10,8 +10,8 @@
 							<span class="col-sm-4"><%=c.updated_at.strftime('%Y/%m/%d %H:%M')%> <%=c.user.name%></span>
 							<span class="col-sm-2">
 								<% if current_user.id == c.user_id %>
-									<div class="btn btn-success btn-circle" name="button" onclick="return EditOld($(this).parent('span').parent('td'));">E</div>
-									<div class="btn btn-danger btn-circle" name="button" onclick="DelOld();">R</div>
+									<div class="btn btn-success btn-circle" name="button" onclick="return EditOld($(this).parent('span').parent('td'));"><i class="fa fa-pencil"></i></div>
+									<div class="btn btn-danger btn-circle" name="button" onclick="return Del($(this));"><i class="fa fa-trash-o"></i></div>
 								<%end %>
 							</span>
 						</td>
