@@ -13,6 +13,10 @@ body
   //background-color: #eeeeee;
 }	
 
+.fb-bg-color{
+	background-color:#4c66a4;
+}
+
 .no-margin-left{
 	margin-left:0px;
 }

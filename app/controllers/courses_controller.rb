@@ -120,8 +120,16 @@ class CoursesController < ApplicationController
 		@cd_this=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_this_ids).order(:cos_type).references(:course_teachership, :semester)
 		@cd_this_mixed=get_mixed_info(@cd_this)
 		
-		@cd_all_sum=CourseDetail.where(:id=>cd_all_ids).sum(:credit).round
+		
+		@cd_all=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:cos_type).references(:course_teachership, :semester)
+		@cd_all_mixed=get_mixed_info(@cd_all)
+		
+		@cd_all_sum=@cd_all.sum(:credit).round
 		@cd_all_cos_type_credit=CourseDetail.where(:id=>cd_all_ids).group(:cos_type).sum(:credit)
+		
+		@cd_all_sem=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:semester_id).references(:course_teachership, :semester)
+		@cd_all_sem_mixed=get_mixed_info(@cd_all_sem)
+		
 		
 		#Department.where(:dept_type=>"dept", :degree=>"3").each do |d|
 		#	d.update_attributes(:credit=>128)

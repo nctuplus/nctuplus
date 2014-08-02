@@ -1,0 +1,46 @@
+<table class="table table-hover hidden <%=table_class%>" id="by_semester">
+	<% @cd_all_sem_mixed.group_by{|cd,course,teacher| cd.semester}.each do |sem,cd_local| %>
+		<tr class="row fb-bg-color">
+			<td colspan="2">
+				<h4 class="text-center">
+					<%= sem.name %>
+				</h4>
+			</td>
+		</tr>
+		<% credit_sum=0 %>
+		<% cd_local.each do |cd,course,teacher| %>
+			<% credit_sum+=cd.credit.to_i %>
+			<tr class="row">
+				<td class="col-md-6">
+					<h4 class="text-center"><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
+						<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 					
+						<%=teacher.name %> | 
+						<%= fa_icon "user" %> <strong><%=CourseSimulation.where(:course_detail_id=>cd.id).count%></strong> | 
+						<%= fa_icon "graduation-cap" %> <strong><%=cd.credit%></strong>
+					</h4>
+				</td>
+				<td class="col-md-6">
+					<div class="container" style="display:inline-block;">		
+						<%= link_to "考古題", course_path(course, :tid=>teacher.id, :first_show=>"files"), :class=>"btn btn-sm btn-default" %>
+						<div class="number-right-top" ><%=cd.course_teachership.file_infos.count%></div>
+						<%= link_to "討論區", course_path(course, :tid=>teacher.id, :first_show=>"discussion"), :class=>"btn btn-sm btn-default" %>
+						<%ct=CourseTeachership.where(:course_id=>course.id, :teacher_id=>teacher.id).take%>
+						<div class="number-right-top" ><%=ct.discusses.count%></div>
+					</div>
+				</td>
+			</tr>
+		<% end %>
+		
+		<tr class="row success">
+			<td colspan="2" >
+				<h4 class="text-right">
+					<% cd_local.group_by{|cd,course,teacher|cd.cos_type}.each do |type,cd_2| %>
+						<%=type%> : <strong><%=cd_2.map{|cd,course,teacher|cd.credit.to_i}.reduce(:+)%></strong>
+					<% end %>
+					共 <strong><%=cd_local.count%></strong> 門課 <strong><%=credit_sum%></strong> 學分
+				</h4>
+			</td>
+		</tr>
+		
+	<% end %>
+</table>
