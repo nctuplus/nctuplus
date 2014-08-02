@@ -1,4 +1,5 @@
 <% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
+<% cd=courseTeacher.course_details.first %>
 <% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
 
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
@@ -8,8 +9,10 @@
 	<div class="panel-heading">
 		<h2 class="panel-title">
 			<p class="">
-				<i class="fa fa-user fa-6"></i> 			
-				課程教師： <%=@teacher_show.name%> 系別：<%=@teacher_show.department.ch_name%>
+				<!--<i class="fa fa-user fa-6"></i> 			
+				課程教師： <%=@teacher_show.name%>-->
+				<%=fa_icon "bank"%> 系別：<%=@teacher_show.department.ch_name%>
+				&nbsp;<%=fa_icon "book"%> 種類：<%=cd.cos_type%>
 			</p>
 		</h2>	
 	</div>
@@ -21,13 +24,14 @@
       		<p>   			
 				<i class="fa fa-calendar fa-6"></i> 
 				課程時間/地點： 
-				<% first_name = Semester.find(courseTeacher.course_details.first.semester_id).name %>
+				<% first_name = Semester.find(cd.semester_id).name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
-					(<%=first_name%>) <%=courseTeacher.course_details.first.room.presence||"無地點資料"%> / <%=courseTeacher.course_details.first.time.presence||"無時間資料"%>			
+					(<%=first_name%>) <%=cd.room.presence||"無地點資料"%> / <%=cd.time.presence||"無時間資料"%>			
 				<% else %>
 				 本學期無開課
 				<% end %>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<br><br>
+				&nbsp;&nbsp;&nbsp;
 				<small class="">
 					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed" onclick="PMchange($(this).hasClass('collapsed'));">
 						查看歷年 <i class="fa fa-search-plus" id="imagePM"></i>

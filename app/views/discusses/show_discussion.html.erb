@@ -4,7 +4,7 @@
 
 <div class="bs-callout bs-callout-default well">
 	<h3><%=fa_icon "comment-o"%>課程討論</h3>
-	<h4>請在此頁討論與課程內容有關的問題或發表心得，對選課或老師的評論請至課程討論區</h4>
+	<h4>請在此頁討論與課程內容有關的問題或發表心得，對選課或老師的評論請至<%=link_to "課程資訊頁面",course_path(@ct.course)%></h4>
 	<h4 class="text-right"><%=link_to "javascript:void(0);", onclick:"$('#main_title').focus();" do %>
 		<%=fa_icon "pencil-square-o" %>新增主題
 	<% end %>
