@@ -8,6 +8,7 @@
   
   <% javascript_include_tag "#{params[:controller]}" %>
 <!-- <script src='https://www.google.com/jsapi'></script>  -->
+
   <%= csrf_meta_tags %>
 	
 	
@@ -35,10 +36,6 @@
 <% end %>
 <div class="container-fluid" style="margin-top:55px;">
 	<div class="row">
-		
-		
-		
-		
 		<div id="content" class="col-md-9 col-md-offset-2">
 			<% if flash[:notice] %>
 			<div id="notice" class="col-md-9 col-md-offset-2 alert <%= flash[:notice][:style] %>"style="z-index:2000;">
@@ -46,7 +43,7 @@
 				<%= flash[:notice][:message] %>
 			</div>
 			<% end %>
-			<div id="global_bgcolor" class="well global-background-color">
+			<div id="global_bgcolor" class="well global-background-color" >
 			<%= yield %>
 			</div>
 		</div>

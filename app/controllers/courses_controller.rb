@@ -125,8 +125,16 @@ class CoursesController < ApplicationController
 		@cd_this=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_this_ids).order(:cos_type).references(:course_teachership, :semester)
 		@cd_this_mixed=get_mixed_info(@cd_this)
 		
-		@cd_all_sum=CourseDetail.where(:id=>cd_all_ids).sum(:credit).round
+		
+		@cd_all=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:cos_type).references(:course_teachership, :semester)
+		@cd_all_mixed=get_mixed_info(@cd_all)
+		
+		@cd_all_sum=@cd_all.sum(:credit).round
 		@cd_all_cos_type_credit=CourseDetail.where(:id=>cd_all_ids).group(:cos_type).sum(:credit)
+		
+		@cd_all_sem=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:semester_id).references(:course_teachership, :semester)
+		@cd_all_sem_mixed=get_mixed_info(@cd_all_sem)
+		
 		
 		#Department.where(:dept_type=>"dept", :degree=>"3").each do |d|
 		#	d.update_attributes(:credit=>128)
@@ -409,21 +417,11 @@ class CoursesController < ApplicationController
   end
 	
 	def simulation
-    #@semesters=Semester.all	
-		
-		#@departments=Department.where(:dept_type=>'dept')
-		#@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		#@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		#@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		#@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		
-		#@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
-		
-		#@semester_select=Semester.all.select{|s|s.courses.count>0}.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id} 
-		#@user_sem_ids.append(Semester.last.id)
-		
-		
+    
+		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
+		if @user_sem_ids.empty?
+			@user_sem_ids=latest_semester.id
+		end
   end
 	
   def new

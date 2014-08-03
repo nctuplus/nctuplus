@@ -1,0 +1,25 @@
+﻿<div class="panel panel-primary" >
+	<div class="panel-heading" >
+		<h4 class="text-center"><%=latest_semester.name%></h4>
+	</div>
+	<br>
+	<div class="row">	
+		<div  class="col-md-8">
+			<%= render :partial=> "/user/dept_form"%>
+			<h4 id="user_info" class="text-center">
+				<% unless current_user.department.nil? %>
+				<%=current_user.department.ch_name%> <%=current_user.grade.name%> <%=current_user.name %>				
+				<% end %>
+			</h4>
+		</div>
+		<div class="col-md-4"><% unless current_user.department.nil? %>
+			<button class="btn btn-success" onclick="show_form($(this));">修改系級</button>
+			<% end %>
+			<%=link_to "/courses/simulation", class:"btn btn-primary" do %>
+				<%=fa_icon "plus" %>新增課程
+			<% end %>
+		</div>
+	</div>
+	<br>
+	<%= render :partial=>"/user/table_list_by_costype", locals: {cd_mixed: @cd_this_mixed, table_class:"this_sem_table"} %>
+</div>

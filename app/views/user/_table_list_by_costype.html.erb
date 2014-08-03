@@ -1,0 +1,63 @@
+<table class="table table-hover <%=table_class%>" id="by_cos_type">
+		
+		<% cos_types=[] %>
+		<% credits=[] %>
+		<% cd_mixed.each do |cd,course,teacher|%>
+			<% if !cos_types.include?(cd.cos_type) %>
+				<% cos_types.append(cd.cos_type) %>
+				<tr class="row"><th colspan="3" class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
+				<% credits.append(cd.credit.to_i) %>
+			<% else %>
+				<% credits[credits.length-1]+=cd.credit.to_i %>
+			<% end %>
+		<tr class="row">
+		<td class="col-md-6">
+			<h4 class="text-center"><%= link_to course.ch_name, course_path(course, :tid=>teacher.id) %>
+				<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 
+				
+				<%=teacher.name %> | 
+				<%= fa_icon "user" %> <strong><%=CourseSimulation.where(:course_detail_id=>cd.id).count%></strong> | 
+				<%= fa_icon "graduation-cap" %> <strong><%=cd.credit%></strong>
+				</h4>
+			</td>
+			<td class="col-md-6">
+			<div class="container" style="display:inline-block;">
+				
+				<%= link_to "考古題", course_path(course, :tid=>teacher.id, :first_show=>"files"), :class=>"btn btn-sm btn-default" %>
+				<div class="number-right-top" ><%=cd.course_teachership.file_infos.count%></div>
+				<%= link_to "討論區", course_path(course, :tid=>teacher.id, :first_show=>"discussion"), :class=>"btn btn-sm btn-default" %>
+				<%ct=CourseTeachership.where(:course_id=>course.id, :teacher_id=>teacher.id).take%>
+				<div class="number-right-top" ><%=ct.discusses.count%></div>
+			</div>
+
+			</td>
+		</tr>
+		<% end %>
+	<tr class="row success">
+		<td colspan="2">
+			<h4 class="text-right">
+				<%cos_all=cos_types.zip(credits)%>
+				
+				<% cos_all.each do |t,c| %>
+					<%= t %> : <strong><%=c%></strong>		
+				<% end %>
+				共 <strong><%= cd_mixed.count %></strong> 門課 <strong><%=credits.reduce(:+) %></strong> 學分
+			</h4>
+		</td>
+	</tr>
+	
+	<!--<tr class="row success">
+		<td colspan="2" class="info">
+			<h4 class="text-right">
+			
+				目前學分: <strong><%=@cd_all_sum%></strong>
+				<% @cd_all_cos_type_credit.each do |type,credit| %>
+					<%=type%> : <strong><%=credit.round%></strong>
+				<% end %>
+				<% unless current_user.department.nil? %>
+				離畢業還差 <strong><%=current_user.department.credit-@cd_all_sum%></strong> 學分
+				<% end %>
+			</h4>
+		</td>
+	</tr>-->
+</table>
