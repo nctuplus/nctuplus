@@ -1,9 +1,9 @@
 <%if @page%>
 考試週：（該週可能有考試）    		
-		<div class="btn-group">
+		<div class="btn-group">		
 <%for i in 1..18 do%>		
 	<%if 2**(i-1) & @page.exam_record !=0 %>
-        <button type="button" class="btn btn-danger" style="border-color: #fff;border-width: 0px;">
+        <button type="button" id="1" class="btn btn-danger" style="border-color: #fff; border-width: 0px;">
     <% else %>
         <button type="button" class="btn btn-default" style="border-color: #fff;border-width: 0px;">
     <% end %>

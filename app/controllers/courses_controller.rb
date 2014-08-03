@@ -29,6 +29,7 @@ class CoursesController < ApplicationController
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
 			else # 5 -> chart
+=begin			
 				data_table = GoogleVisualr::DataTable.new
 			# Add Column Headers
 				data_table.new_column('string', '年度' )
@@ -54,10 +55,12 @@ class CoursesController < ApplicationController
 				end
 				#Rails.logger.debug "[debug] "+(row_list.to_s)
 				data_table.add_rows(row_list.reverse)
-				option = { width: 550, height: 250, title: '選課狀況' }
-				@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
+			#	option = { width: 550, height: 250, title: '選課狀況' }
+			#	@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
 
-				render "course_chart"
+			#	render "course_chart"
+=end				
+				render :text=> row_list.to_json
 			end		
 	end
 

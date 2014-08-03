@@ -7,7 +7,6 @@ module CourseHelper
 	def latest_semester
 		return Semester.last
 	end
-	
 	def rollcall_name(id)
 		str = ""
 		case id
