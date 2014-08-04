@@ -11,7 +11,7 @@
 		$("#cart_but").click(
 			function(){
 				$("#user_modal").modal('show');
-				$("#user_modal .modal-body").load("/courses/show_cart");
+				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
 			}
 		);
 
@@ -29,7 +29,7 @@
 				$("#content").prepend(data);
 				$("#ajax_notice").fadeOut(10000, function() { $(this).remove(); });
 				$("#user_modal .modal-body").html('<%=loading_img%>');
-				$("#user_modal .modal-body").load("/courses/show_cart");
+				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
 			}
 		
 		});

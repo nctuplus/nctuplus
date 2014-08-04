@@ -8,6 +8,9 @@ class User < ActiveRecord::Base
   has_many :comments
 	has_many :course_simulations#, :foreign_key=>:owner_id
   has_many :courses, :through=> :course_manager
+	
+	validates_uniqueness_of :uid
+	
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
       user.provider = auth.provider

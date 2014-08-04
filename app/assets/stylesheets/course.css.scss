@@ -197,3 +197,24 @@
 	min-width:30px ;
 	display: inline-block;
 }
+//for search
+.cleaninput{
+	position :absolute;
+    float:left;
+    margin-top:-10px;
+    margin-left:-10px;
+    cursor:pointer;
+    color: #fff;
+    //border: 1px solid #AEAEAE;
+    border-radius: 15px;
+    background-color: rgba(91,192,222,0.7);
+    font-size: 15px;
+    font-weight: bold;
+    //display: inline-block;
+		padding-left:4px;
+    height: 20px;
+		width:20px;
+		z-index:1000;
+    //padding: 11px 3px;       
+}
+

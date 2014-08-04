@@ -17,6 +17,7 @@
 		<input type="hidden" id="semester_id" value="<%=@sem_id%>" >
 		<div class="form-group">
 			<div class="input-group">
+				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 				<input type="text" class="form-control" id="degree_select" placeholder="大學部/研究所/通識" ><!--readonly-->
 				<input type="hidden" id="degree_id" value="" >
 	      <div class="input-group-btn">
@@ -34,6 +35,7 @@
 				<!--<span class="input-group-addon">
 					<input type="checkbox" id="department_check">
 				</span>-->
+				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 				<input type="text" class="form-control" id="department_select" placeholder="選擇系所..." >
 				<input type="hidden" id="department_id" value="" >
 	      <div class="input-group-btn">
@@ -47,6 +49,7 @@
 	<div class="row schedule-search-bar">
 		<div class="form-group ">
 			<div class="input-group">
+				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 				<div class="input-group-btn">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="search_action">課名 <span class="caret"></span></button>
 					<ul class="dropdown-menu">

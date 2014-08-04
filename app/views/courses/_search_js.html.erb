@@ -9,6 +9,15 @@ function find_by_label(array,value){
 	return false;
 }
 
+function get_label_by_value(array,value){
+	for(var i = 0 ; i < array.length;i++){
+		if(value==array[i].walue){
+			return array[i].label;
+		}
+	}
+	return "";
+}
+
 function select_thing(type){
 	$( "#"+type+"_select" ).trigger("focus");
 }
@@ -75,14 +84,22 @@ function show_tip(id){
 		$("#"+id).addClass("hidden");
 	
 }
-
-
+function change_dept_select(id){
+	var dept_select=[];
+	dept_select['3']=<%=@departments_under_grad_select.to_s.html_safe%>;
+	dept_select['2']=<%=@departments_grad_select.to_s.html_safe%>;
+	dept_select['0']=<%=@departments_common_select.to_s.html_safe%>;
+	$( "#department_select" ).val("");
+	$( "#department_select" ).autocomplete({
+		source: dept_select[id] 
+	});
+}
+function clean_input(obj){
+	obj.next().next().val("");
+	obj.next().next().next().val("");
+}
 $( document ).ready( function(){
 
-	//$("#semester_select").val("103上");
-	<% if @preload_first_time %>
-		$("#search_result").load("/courses/list_all_courses?page=1");
-	<% end %>
 	var department_select=<%=@departments_all_select.to_s.html_safe%>;
 	$( "#department_select" ).autocomplete({
       source:  department_select,
@@ -129,6 +146,7 @@ $( document ).ready( function(){
   }).on("focus",function(event){$(this).autocomplete("search", "");});
 	<% end %>
 	var degree_select=<%=@degree_select.to_s.html_safe%>;
+	
 	$( "#degree_select" ).autocomplete({
       source:  degree_select,
 			//mustMatch :true,
@@ -144,14 +162,10 @@ $( document ).ready( function(){
 				event.preventDefault();			
 				$(this).val(ui.item.label);
 				$(this).next().val(ui.item.walue);
-				var degree_select=[];
-				degree_select['3']=<%=@departments_under_grad_select.to_s.html_safe%>;
-				degree_select['2']=<%=@departments_grad_select.to_s.html_safe%>;
-				degree_select['0']=<%=@departments_common_select.to_s.html_safe%>;
-				$( "#department_select" ).val("");
-				$( "#department_select" ).autocomplete({
-					source: degree_select[ui.item.walue] 
-				});
+				
+				change_dept_select(ui.item.walue);
+				
+				
 
 				$( "#department_select" ).trigger("focus");//();
 
@@ -180,6 +194,24 @@ $( document ).ready( function(){
 				$("#search_term").trigger("focus");
 			}
 		}
-	});	
+	});
+	<% if params[:action]=="index" %>
+	<% if session[:saved_query].empty? %>
+		$("#search_result").load("/courses/list_all_courses?page=1");
+	<% else %>
+		$( "#semester_select" ).val(get_label_by_value(semester_select,<%=session[:saved_query][:sem_id]%>));
+		$( "#degree_select" ).val(get_label_by_value(degree_select,<%=session[:saved_query][:degree]%>));
+		change_dept_select(<%=session[:saved_query][:degree]%>);
+		$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
+		$("#search_term").val('<%=session[:saved_query][:term]%>');
+		<% if session[:saved_query][:type]=="dept" %>	
+			search_dept(<%=session[:saved_query][:dept_id]%>);
+		<% else %>
+			$("#<%=session[:saved_query][:search_type]%>").click();
+			search_keyword();
+		<% end %>
+		
+	<% end %>
+	<% end %>
 });
 </script>

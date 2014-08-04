@@ -2,7 +2,8 @@ class FileInfo < ActiveRecord::Base
   #attr_accessible :upload
   
   belongs_to :course_teachership
-  
+  #validates_presence_of :semester_id, :course_teachership_id
+	
   has_attached_file :upload,  
     :storage => :dropbox,
     :dropbox_credentials => Rails.root.join("config/dropbox.yml"),

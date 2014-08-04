@@ -16,6 +16,8 @@
 
 //= require jquery-ui
 
+//= require jquery-fileupload
+
 //= require background
 
 
