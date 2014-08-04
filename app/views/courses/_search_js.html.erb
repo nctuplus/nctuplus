@@ -104,6 +104,10 @@ $( document ).ready( function(){
 	$( "#department_select" ).autocomplete({
       source:  department_select,
 			minLength :0,
+			/*focus :function (event,ui){
+				$(this).autocomplete("search","");
+				return false;
+			},*/
 			change: function (event, ui) {
 				if(!find_by_label(department_select,$(this).val())){
 					$(this).val("");
@@ -118,7 +122,10 @@ $( document ).ready( function(){
 				search_dept(ui.item.walue);
 				$(this).blur();
 			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
+  }).focus(function(){
+		$(this).autocomplete("search","");
+		return false;
+	});
 	
 	<% if @semester_select %>
 	var semester_select=<%=@semester_select.to_s.html_safe%>;
@@ -126,9 +133,6 @@ $( document ).ready( function(){
       source: semester_select,
 			mustMatch :true,
 			minLength :0,
-			focus :function(event,ui){
-				return false;
-			},
 			change: function (event, ui) {
 				event.preventDefault();
 				if(!find_by_label(semester_select,$(this).val())){
@@ -143,7 +147,7 @@ $( document ).ready( function(){
 				$(this).next().val(ui.item.walue);
 				$( "#degree_select" ).trigger("focus");//();			
 			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
+  }).focus(function(){$(this).autocomplete("search", "");return false;});
 	<% end %>
 	var degree_select=<%=@degree_select.to_s.html_safe%>;
 	
@@ -159,6 +163,7 @@ $( document ).ready( function(){
 				}
 			},
 			select: function(event, ui){
+				
 				event.preventDefault();			
 				$(this).val(ui.item.label);
 				$(this).next().val(ui.item.walue);
@@ -170,7 +175,7 @@ $( document ).ready( function(){
 				$( "#department_select" ).trigger("focus");//();
 
 			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
+  }).focus(function(){$(this).autocomplete("search", "");return false;});
 	
 	$(document).keypress(function(e) {
 		var $focused = $(':focus');

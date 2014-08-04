@@ -9,9 +9,9 @@
 	
 	<br>
 	<table class="table table-bordered ">
-		<tr class="row">
-			<td colspan="7">
-				<p class="text-center">通識</p>
+		<tr class="row ">
+			<td class="col-md-8 course-general" colspan="7">
+				<p class="text-center no-margin-bottom">通識</p>
 			</td>
 		</tr>
 		<% cs_common=@cd_all.select{|cd|cd.cos_type=="通識"} %>
@@ -21,37 +21,47 @@
 		<% cs_common_world_credit=cs_common_world.map{|cs|cs.credit.to_i}.reduce(:+)||0 %>
 		<% cs_common_dimension=cs_common.map{|cs|cs.brief.partition('/')[0]} %>
 		<tr class="row">
-			<td><p class="text-center">學分</p></td>
+			<td><p class="text-center ">學分</p></td>
 			<td colspan="6">
-				<div class="progress">
+				<div class="progress no-margin-bottom">
 					<div class="progress-bar dimension-world" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 20%;">		
 						<span>當代 <strong><%=cs_common_world_credit%>/2</strong></span>
 					</div>		
 					<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: <%=cs_common_basic_credit*100/22%>%;">		
-						<span >其他 <strong><%=cs_common_basic_credit%>/18</strong></span>
+						<span class="<%=cs_common_basic_credit==0?"sr-only":""%>">其他 <strong><%=cs_common_basic_credit%>/18</strong></span>
 					</div>
 				</div>
 			</td>
 		</tr>
 		<tr class="row">
-		<td rowspan="2"><p class="text-center">向度</p></td>
+		<td class="col-md-2" rowspan="2"><p class="text-center">向度</p></td>
 			<% common_dimension.each do |key,value| %>
-				<td class="dimension-<%=value%>"><%=key%></td>
+				<td class="dimension-<%=value%>">
+				<p class="text-center no-margin-bottom">
+				<% if key=="通識" %>
+					當代
+				<% else %>
+					<%=key%>
+				<% end %>
+				</p>
+				</td>
 			<% end %>
 		</tr>
 		<tr class="row">
 		<% common_dimension.each do |key,value| %>
-			<td class="">
+			<td class="col-md-1" style="min-height:16px;">
+			<p class="text-center no-margin-bottom" >
 			<% if cs_common_dimension.include?(key) %>
 				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
 			<% end %>
+			</p>
 			</td>	
 		<% end %>
 		</tr>
 		
-		<tr class="row">
-			<td colspan="7">
-				<p class="text-center">外文</p>
+		<tr class="row ">
+			<td class="col-md-10 course-foreign" colspan="7">
+				<p class="text-center no-margin-bottom">外文</p>
 			</td>
 		</tr>
 		<% cs_foreign=@cd_all.select{|cs|cs.cos_type=="外語"} %>
@@ -63,7 +73,7 @@
 		<tr class="row">
 			<td><p class="text-center">學分</p></td>
 			<td colspan="6">
-				<div class="progress">
+				<div class="progress no-margin-bottom">
 					<div class="progress-bar progress-bar-success" style="width: <%=(cs_foreign_basic_credit*66.7)/4 %>%">
 						<span>基礎 <strong><%=cs_foreign_basic_credit%>/4</strong></span>
 					</div>
@@ -73,7 +83,26 @@
 				</div>
 			</td>
 		</tr>
+		<tr class="row ">
+			<td class="col-md-10 label-info" colspan="7">
+				<p class="text-center no-margin-bottom">Total</p>
+			</td>
+		</tr>
+		<tr class="row">
+			<td><p class="text-center">學分</p></td>
+			<td colspan="6">
+				<div class="progress no-margin-bottom">
+				<% all_credit=@cd_all.map{|cd|cd.credit.to_i}.reduce(:+) %>
+					<div class="progress-bar progress-bar-info" style="width: <%=(all_credit*100/128) %>%">
+						<span><strong><%=all_credit%>/128</strong></span>
+					</div>
+
+				</div>
+			</td>
+		</tr>
+		
 	</table>
+	<br>
 	<div class="row" style="margin-top:2px;">
 		<div class="col-md-2 col-md-offset-2">
 		<p class="text-right" style="margin-top:3px;">
@@ -84,6 +113,7 @@
 			<%= select_tag "", options_for_select([['課程種類','cos_type'],['學期','semester']]), onchange:"$('.statics_table').toggleClass('hidden');", class:"form-control" %>
 		</div>
 	</div>
+	<br>
 	<%= render :partial=>"/user/table_list_by_costype", locals: {cd_mixed: @cd_all_mixed, table_class:"statics_table"} %>
 	<%= render :partial=>"/user/table_list_by_semester", locals: {table_class:"statics_table"} %>
 </div>

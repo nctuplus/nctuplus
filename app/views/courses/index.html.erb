@@ -57,7 +57,7 @@
 		
 		<div class="form-group col-sm-3 ">
 			<div class="input-group">
-				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+				
 				<div class="input-group-btn">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="search_action">課名 <span class="caret"></span></button>
 					<ul class="dropdown-menu">
@@ -67,6 +67,7 @@
 						<!--<li><a href="#" onclick="change_action($(this))" id="course_teacher">老師</a></li>-->
 					</ul>
 				</div><!-- /btn-group -->
+				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 				<input type="hidden" id="search_type" value="course_name">
 				<input type="text" class="form-control" id="search_term" placeholder="Search..." >
 				
