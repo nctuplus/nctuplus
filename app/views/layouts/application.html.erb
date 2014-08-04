@@ -6,8 +6,9 @@
   
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
   
-  <%= javascript_include_tag "#{params[:controller]}" %>
-  <script src='https://www.google.com/jsapi'></script>
+  <% javascript_include_tag "#{params[:controller]}" %>
+<!-- <script src='https://www.google.com/jsapi'></script>  -->
+
   <%= csrf_meta_tags %>
 	
 	

@@ -1,5 +1,5 @@
 考試週：（該週可能有考試）  		
-		<div class="btn-group" id="test-btn-group">	
+		<div class="btn-group" id="test-btn-group">		
 <%for i in 1..18 do%>		
 	<%if 2**(i-1) & @head.exam_record !=0 %>
 		<button type="button" class="btn btn-danger" id="1" onclick="changeColor($(this), 'danger', 'test');" style="border-color: #fff;border-width: 0px;">

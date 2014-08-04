@@ -36,7 +36,7 @@ gem "jquery-fileupload-rails"
 gem 'curb'
 gem 'jquery-raty-rails', github: 'bmc/jquery-raty-rails'
 gem 'font-awesome-rails'
-gem "google_visualr", ">= 2.1"
+#gem "google_visualr", ">= 2.1"
 #, github: 'bokmann/font-awesome-rails'
 #gem 'rename'
 group :doc do
