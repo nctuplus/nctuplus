@@ -127,6 +127,10 @@ background-color: black  ;
 	color: green;
 }
 
+.crown-color{
+	fill: #94d31b;
+}
+
 #rank-icon{
 //	position: absolution ;	
 }
