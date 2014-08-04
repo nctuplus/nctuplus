@@ -196,22 +196,22 @@ $( document ).ready( function(){
 		}
 	});
 	<% if params[:action]=="index" %>
-	<% if session[:saved_query].empty? %>
-		$("#search_result").load("/courses/list_all_courses?page=1");
-	<% else %>
-		$( "#semester_select" ).val(get_label_by_value(semester_select,<%=session[:saved_query][:sem_id]%>));
-		$( "#degree_select" ).val(get_label_by_value(degree_select,<%=session[:saved_query][:degree]%>));
-		change_dept_select(<%=session[:saved_query][:degree]%>);
-		$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
-		$("#search_term").val('<%=session[:saved_query][:term]%>');
-		<% if session[:saved_query][:type]=="dept" %>	
-			search_dept(<%=session[:saved_query][:dept_id]%>);
+		<% if session[:saved_query].empty? %>
+			$("#search_result").load("/courses/list_all_courses?page=1");
 		<% else %>
-			$("#<%=session[:saved_query][:search_type]%>").click();
-			search_keyword();
+			$( "#semester_select" ).val(get_label_by_value(semester_select,<%=session[:saved_query][:sem_id]%>));
+			$( "#degree_select" ).val(get_label_by_value(degree_select,<%=session[:saved_query][:degree]%>));
+			change_dept_select(<%=session[:saved_query][:degree]%>);
+			$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
+			$("#search_term").val('<%=session[:saved_query][:term]%>');
+			<% if session[:saved_query][:type]=="dept" %>	
+				search_dept(<%=session[:saved_query][:dept_id]%>);
+			<% else %>
+				$("#<%=session[:saved_query][:search_type]%>").click();
+				search_keyword();
+			<% end %>
+			
 		<% end %>
-		
-	<% end %>
 	<% end %>
 });
 </script>
