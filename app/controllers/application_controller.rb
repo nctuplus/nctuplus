@@ -25,7 +25,11 @@ class ApplicationController < ActionController::Base
   def checkLogin
     unless current_user
 	  alertmesg("info",'Sorry',"請先登入,謝謝!")
-	  redirect_to :back
+	  if request.env["HTTP_REFERER"].nil?
+		redirect_to :root
+	  else
+		redirect_to :back
+	  end
 	  return false
 	end
 	return true

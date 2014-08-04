@@ -1,5 +1,11 @@
+<% if !session[:saved_query].empty? %>
+<%= session[:saved_query][:sem_id]%>
+<%= session[:saved_query][:dept_id]%>
+<% end %>
 
-<%= render :partial=>"search_js" %>
+
+
+<% render :partial=>"search_js" %>
 
 
 <div class="form-inline" ><!--role="form"-->
@@ -7,36 +13,22 @@
 
 		<div class="form-group col-sm-2  col-sm-offset-1">
 			
-			<div class="input-group">
-				<!--<span class="input-group-addon">
-					<input type="checkbox" id="semester_check">
-				</span>-->
-				
-				<input type="text" class="form-control" id="semester_select" placeholder="選擇學期..." value="<%=latest_semester.name%>">
-				<input type="hidden" id="semester_id" value="<%= session[:saved_query][:sem_id]||Semester.all.last.id%>" >
-				<div class="input-group-btn">
-					<button type="button" class="btn btn-default " id="semester" onclick="select_thing('semester')">
-						<span class="caret"></span>
-					</button>
-				</div>	<!-- /btn-group -->
+			<div class="row">
+				<div class="col-md-4 no-padding-right"><h4>學期</h4></div>
+				<div class="col-md-8 no-padding-left no-padding-right">
+				<%= select_tag "semester_select", options_from_collection_for_select(Semester.all.reverse,"id","name"), class:"form-control" %>
+				</div>
 			</div>	<!-- /input-group --> 
 		</div>	<!-- /form-group -->
 		
 		<div class="form-group col-sm-2 ">
-			<div class="input-group">
-				<!--<span class="input-group-addon">
-					<input type="checkbox" id="department_check">
-				</span>-->
-				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-				<input type="text" class="form-control" id="degree_select" placeholder="大學部/研究所/通識" ><!--readonly-->
-				<input type="hidden" id="degree_id" value="<%=session[:saved_query][:degree]%>" >
-	      <div class="input-group-btn">
-					<button type="button" class="btn btn-default " id="department" onclick="select_thing('degree')">
-						<span class="caret"></span>
-					</button>
-
-				</div>	<!-- /btn-group -->
+			<div class="row">
+				<div class="col-md-3 no-padding-left no-padding-right"><h4>種類</h4></div>
+				<div class="col-md-9 no-padding-left no-padding-right">
+				<%= select_tag "semester_select", options_for_select([['大學部','3'],['研究所','2'],['大學部共同課程','0']]), class:"form-control" %>
+				</div>
 			</div>	<!-- /input-group --> 
+
 		</div>	<!-- /form-group -->
 		
 	  <div class="form-group col-sm-3 ">
@@ -44,9 +36,8 @@
 				<!--<span class="input-group-addon">
 					<input type="checkbox" id="department_check">
 				</span>-->
-				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 				<input type="text" class="form-control" id="department_select" placeholder="選擇系所..." >
-				<input type="hidden" id="department_id" value="<%=session[:saved_query][:dept_id]%>" >
+				<input type="hidden" id="department_id" value="" >
 	      <div class="input-group-btn">
 					<button type="button" class="btn btn-default" id="department" onclick="select_thing('department')">
 						<span class="caret"></span>
@@ -57,7 +48,6 @@
 		
 		<div class="form-group col-sm-3 ">
 			<div class="input-group">
-				<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 				<div class="input-group-btn">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="search_action">課名 <span class="caret"></span></button>
 					<ul class="dropdown-menu">

@@ -17,8 +17,18 @@ body
 	background-color:#4c66a4;
 }
 
+.no-padding-left{
+	padding-left:0px;
+}
+.no-padding-right{
+	padding-right:0px;
+}
+
 .no-margin-left{
 	margin-left:0px;
+}
+.no-padding-right{
+	padding-right:0px;
 }
 
 textcontent{

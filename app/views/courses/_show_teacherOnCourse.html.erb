@@ -1,5 +1,5 @@
 <% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
-<% cd=courseTeacher.course_details.first %>
+<% cd=courseTeacher.course_details.last %>
 <% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
 <script src="/assets/Chart.min.js"></script>
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
@@ -11,46 +11,47 @@
 			<p class="">
 				<!--<i class="fa fa-user fa-6"></i> 			
 				課程教師： <%=@teacher_show.name%>-->
-				<%=fa_icon "bank"%> 系別：<%=@teacher_show.department.ch_name%>
-				&nbsp;<%=fa_icon "book"%> 種類：<%=cd.cos_type%>
-			</p>
-		</h2>	
-	</div>
-
-<!-- course time and classroom info -->	
-
-	<div class="panel-heading">
-      	<h2 class="panel-title">
-      		<p>   			
-				<i class="fa fa-calendar fa-6"></i> 
-				課程時間/地點： 
-				<% first_name = Semester.find(cd.semester_id).name %>
+				<%=fa_icon "bank"%> 單位：<%=@teacher_show.department.ch_name%>
+				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, target:"_blank"%>
+				&nbsp;<%=fa_icon "book"%> 種類：
+				<span class="<%=cos_type_class(cd.cos_type)%>">
+				<%=cd.cos_type%>
+				</span>
+				&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=cd.credit%>
+			 
+				<% first_name = cd.semester.name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
-					(<%=first_name%>) <%=cd.room.presence||"無地點資料"%> / <%=cd.time.presence||"無時間資料"%>			
+					<%=fa_icon "bell"%> 時間
+					<%=cd.time.presence||"N/A"%>
+								
+					&nbsp;<%=fa_icon "building"%> 地點：<%=cd.room.presence||"N/A"%> 
 				<% else %>
-				 本學期無開課
+				 <strong>本學期無開課</strong>
 				<% end %>
-				<br><br>
 				&nbsp;&nbsp;&nbsp;
 				<small class="">
 					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed" onclick="PMchange($(this).hasClass('collapsed'));">
 						查看歷年 <i class="fa fa-search-plus" id="imagePM"></i>
 					</a>
 				</small>
-			</p>	
-      	</h2>  	
+				
+			</p>
+		</h2>	
 	</div>
-	
+
+<!-- course time and classroom info -->	
+
+
     <div id="collapseOne" class="panel-collapse collapse">
       <div class="panel-body">
       
 		<table class="table">
     		<tr>
-    			<td>學期</td>
-    			<td>地點</td>
-    			<td>學分</td>
-    			<td>時間</td>
-    			<td>註記</td>
+    			<td><%=fa_icon "calendar-o" %></td>
+    			<td><%=fa_icon "building" %></td>
+    			<td><%=fa_icon "graduation-cap" %></td>
+    			<td><%=fa_icon "bell" %></td>
+    			<td><%=fa_icon "bookmark" %></td>
     		</tr>	
 <%courseTeacher.course_details.each do |t|%>  
     		<tr>

@@ -8,6 +8,7 @@ class CoursesController < ApplicationController
 	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course, :special_list]
 
 
+
 ### for course_teacher_page_content	
 
 
@@ -159,19 +160,19 @@ class CoursesController < ApplicationController
 		#reset_session
 		@semesters=Semester.all
 		
+		if !session[:saved_query]
+			session[:saved_query]={}
+		end
+		
 		get_autocomplete_vars
-		#@departments=Department.where("dept_type = 'dept' OR dept_type='common' ")#.merge(Department.where(:dept_type=>'common'))
-		#@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		#@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		#@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		#@departments_common_select=@departments.select{|d|d.degree=='0'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		
-		#@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
-		
+
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
 		
 		@view_type=""
-		@preload_first_time=true;
+
+		
+		#render "index_select_ver"
+		
   end
 	
 	def get_user_statics
@@ -203,6 +204,7 @@ class CoursesController < ApplicationController
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
     #end
 		if params[:type]=="schd"
+			session[:saved_query]={}
 			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
 			render "user_schedule"
 		elsif params[:type]=="list"
@@ -213,22 +215,20 @@ class CoursesController < ApplicationController
 	end
 	
 	def get_user_simulated
-		@sem_id=params[:sem_id]
+		@sem_id=params[:sem_id].to_i
 		get_autocomplete_vars
 		@view_type="_mini"
 		@table_type="simulated"
 		render "srch_and_schd"
 	end
 	
-	def remove_cart
-		cd_id=params[:cd_id].to_i
-		session[:cd].delete(cd_id)
-	end
 	
 	def add_simulated_course
 		cd_id=params[:cd_id].to_i
 		_type=params[:type]
-		
+		if params[:from]=="cart"
+			session[:cd].delete(cd_id)
+		end
 		sem_id=params[:sem_id]
 		if _type=="add"
 			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>sem_id, :course_detail_id=>cd_id)
@@ -256,6 +256,10 @@ class CoursesController < ApplicationController
 		@sem=Semester.find(@sem_id)
 		dept_ids=get_dept_ids(dept_id)
 		
+		if params[:view_type]!="_mini"
+			session[:saved_query]={:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree}
+		end
+		
 		semester=Semester.where(:id=>@sem_id).take
 		if semester
 			@courses=semester.courses.select{|c| join_dept(c,dept_ids)}
@@ -270,7 +274,7 @@ class CoursesController < ApplicationController
 		#@courses=Course.where(:id=>@course_details.map{|cd|cd.course_teachership.course_id})
 		#@teachers=Teacher.where(:id=>@course_details.map{|cd|cd.course_teachership.teacher_id})		
 		#@cd_all=@course_details.zip(@courses,@teachers)
-		@cd_all = get_mixed_info(@course_details)
+		@cd_all = get_mixed_info(@course_details||[])
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		@table_type="search" if params[:view_type]=="_mini"
@@ -282,11 +286,15 @@ class CoursesController < ApplicationController
 		search_type=params[:search_type]
 		semester_id=params[:sem_id].to_i
 		dept_id=params[:dept_id].to_i
-		degree_id=params[:degree_id]
+		degree_id=params[:degree_id].to_i
+		
+		if params[:view_type]!="_mini"
+			session[:saved_query]={:type=>"keyword",:sem_id=>semester_id, :dept_id=>dept_id, :degree=>degree_id, :term=>search_term, :search_type=>search_type}
+		end
 		if dept_id!=0
 			dept_ids= get_dept_ids(dept_id)
 		else
-			dept_ids=Department.where(:degree=>degree_id.to_i).map{|d|d.id} if degree_id!=""
+			dept_ids=Department.where(:degree=>degree_id).map{|d|d.id} if degree_id!=0
 		end
 		case search_type
 			when "course_time"
@@ -325,7 +333,7 @@ class CoursesController < ApplicationController
 				end
 		end
 		
-		@cd_all=get_mixed_info(@course_details)
+		@cd_all=get_mixed_info(@course_details||[])
 		
 		@page_numbers=1#@course_details.count/each_page_show
 		
@@ -381,7 +389,7 @@ class CoursesController < ApplicationController
 		if !session[:cd]
 			session[:cd]=[]
 		end
-    @course = Course.find(params[:id])
+    @course = Course.includes(:semesters).find(params[:id])
 	 
 		@first_show=params[:first_show]||"tc"
 
@@ -405,7 +413,7 @@ class CoursesController < ApplicationController
 			@teacher_show =  @teachers.first
 			@target_rank = 1 
 		end
-		@ct=CourseTeachership.where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
+		@ct=CourseTeachership.includes(:course_details).where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters
 
@@ -491,10 +499,14 @@ class CoursesController < ApplicationController
 		
 	end
 	def show_cart
+		@sem=latest_semester
 		@course_details=CourseDetail.where(:id=>session[:cd])
 		@cd_all=get_mixed_info(@course_details)
-		@table_type="cart"
-		render "course_lists_mini"
+		@table_type=params[:table_type]
+		if params[:sem_id]
+			@sem=Semester.find(params[:sem_id])
+		end
+		render "shopping_cart_list"
 	end
 	
   protected
@@ -538,10 +550,10 @@ class CoursesController < ApplicationController
 	  return nil if dept_id==0
 		
 	  dept_ids=[]
-		dept_main=Department.where(:id=>dept_id).take
-		dept_ids.append(dept_main.id)
-		if dept_main.dept_type=="dept"
-			dept_college=Department.where(:degree => dept_main.degree, :college_id=>dept_main.college_id, :dept_type => 'college').take
+		@dept_main=Department.where(:id=>dept_id).take
+		dept_ids.append(@dept_main.id)
+		if @dept_main.dept_type=="dept"
+			dept_college=Department.where(:degree => @dept_main.degree, :college_id=>@dept_main.college_id, :dept_type => 'college').take
 			dept_ids.append(dept_college.id) if !dept_college.nil?
 		end
 		return dept_ids

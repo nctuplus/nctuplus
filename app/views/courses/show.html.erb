@@ -11,14 +11,18 @@
 		
 		<span class="pull-right">
 			<br>
+			
+			<% if @ct.course_details.last.semester==latest_semester %>
 			<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
 			<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
 			</button>
 			&nbsp;
+			<!--
 			<button class="btn btn-md btn-success masterTooltip" style="height:33px;margin-top:-1px" title="加選!" onclick="alert('Not done yet');">
 			<%= fa_icon "calendar 1x"%><sup><%= fa_icon "plus 1x"%></sup>
 			</button>
-			&nbsp;
+			&nbsp;-->
+			<% end %>
 			<span style="display:inline-block">
 			<div class="share-course"></div>
 			</span>

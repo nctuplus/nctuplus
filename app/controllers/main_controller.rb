@@ -30,7 +30,7 @@ class MainController < ApplicationController
 	
 	
 	def hidden_prepare
-		parse_semester
+		#parse_semester
 	  #prepare_course_db
 		#final_set_dept_type
 		
@@ -153,18 +153,17 @@ class MainController < ApplicationController
   def prepare_course_db
   #year=['103']
 	#sem=['1']
-    year=['103','102','101','100']
-	sem=['2','1']
-	year.each do |y|
-		sem.each do |s|
-			data=parse_course(y,s)
-			if save_courses(data,y,s)
-			change_to_grad_degree("12")
-			change_to_grad_degree("13")
+    #year=['103','102','101','100']
+	#sem=['2','1']
+	
+		Semester.all.each do |sem|
+			data=parse_course(sem.year,sem.half)
+			if save_courses(data,sem.year,sem.half)
+				change_to_grad_degree("12")
+				change_to_grad_degree("13")
 			end
-			#set_department_type
 		end
-	end
+	
   end
   def do_save_courses(sem_id,data)
     data.each do |key1,value1|
@@ -194,7 +193,7 @@ class MainController < ApplicationController
 		return @cts
 	end
   def save_courses(data,year,sem)
-	@sem= Semester.find_by_real_id(year+sem)
+	@sem= Semester.where(:year=>year,:half=>sem).take
 	if @sem
 		sem_id=@sem.id
 	else 
@@ -282,9 +281,9 @@ class MainController < ApplicationController
   
   def parse_course(year,sem)
     @dept_real_id=[]
-	Department.all.each do |dept|
-	@dept_real_id.append(dept.degree+dept.real_id)
-	end
+		Department.where("id <= 144").each do |dept|
+			@dept_real_id.append(dept.degree+dept.real_id)
+		end
 	
 	@slice=21
 	

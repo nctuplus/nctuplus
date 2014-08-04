@@ -59,9 +59,9 @@ class FileInfosController < ApplicationController
   def create
     return if data_params[:course_teachership_id]==""||data_params[:semester_id]==""||data_params[:upload]==""
     
-		@file_same=FileInfo.where(:owner_id=>current_user.id, :upload_file_name=>params[:file_info][:upload].original_filename).take
-		@file_same.destroy! if @file_same
-		@file = FileInfo.new(data_params)
+	@file_same=FileInfo.where(:owner_id=>current_user.id, :upload_file_name=>data_params[:upload].original_filename).take
+	@file_same.destroy! if @file_same
+	@file = FileInfo.new(data_params)
 
 		@file.download_times=0
 	#@file.course_id=5
