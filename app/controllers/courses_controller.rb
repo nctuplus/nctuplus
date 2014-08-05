@@ -47,6 +47,15 @@ class CoursesController < ApplicationController
 					end		
 					@row_pick.push(cd.reg_num.to_i)
 				end
+				if @row_name.size <=3
+					cnt = 4 - @row_name.size
+					for i in 1..cnt
+						@row_name.unshift('')
+						@row_open.unshift(0)
+						@row_pick.unshift(0)
+					end
+				end
+				
 				render "course_chart"
 			end		
 	end
