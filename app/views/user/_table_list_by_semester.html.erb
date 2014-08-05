@@ -43,4 +43,20 @@
 		</tr>
 		
 	<% end %>
+	
+	<tr class="row label-info">
+		<td colspan="2" >
+			<h4 class="text-right">
+				目前學分:
+				<%all_credit_sum=0%>
+				<% @cd_all_sem_mixed.group_by{|cd,course,teacher| cd.cos_type}.each do |type,cd_all| %>
+					<% credit=cd_all.map{|cd,course,teacher|cd.credit.to_i}.reduce(:+)%>
+						<%=type%> : <strong><%=credit%></strong>
+					<%all_credit_sum+=credit%>
+				<% end %>
+					共 <strong><%=@cd_all_sem_mixed.count%></strong> 門課 <strong><%=all_credit_sum%></strong> 學分
+			</h4>
+		</td>
+	</tr>
+	
 </table>
