@@ -1,7 +1,7 @@
 <% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
 <% cd=courseTeacher.course_details.last %>
 <% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
-<script src="/assets/highcharts-custom.js"></script> 
+
 
 <div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
 
@@ -169,12 +169,14 @@
 <script>
 	
 	$(document).ready(function(){	
+	
 		$.ajax({
    		 	type: "GET",
    		 	dataType: "script",
     		url: '/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5',
     		error: function(res){alert("Some error happened :( ");}
   		});		
+
 	    $('#course_content_head').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
 		$('#course_content_list').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2') ;
 		$('#head_form').hide() ;
