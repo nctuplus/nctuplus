@@ -41,8 +41,7 @@ var options = {
     barValueSpacing : 5,
 
     //Number - Spacing between data sets within X values
-    barDatasetSpacing : 1,
-    legendTemplate : "<%=j "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].lineColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>" %>"
+    barDatasetSpacing : 1
 };
 
 var ctx = $("#myChart").get(0).getContext("2d");
