@@ -3,8 +3,16 @@
 <div class="row">
 	<div class="col-md-7">
 		<h1>	
-	<!-- <span class="label label-<%=rankTag(@target_rank)%>" id="rank-icon"><%=@target_rank.to_s%> -->	
-		<%= @course.ch_name %>－<small style="position: absolute;margin-top: -20px;margin-left: -10px;"><%=image_tag "crown.svg", :class=>"crown-color"%></small></span><%=@teacher_show.name%>
+		<%= @course.ch_name %>－
+<% if @target_rank <=3 %>		
+		<small style="position: absolute;margin-top: -11px;margin-left: -8px;">
+			<%=image_tag "crown.svg", :class=>"svg-inject"%>
+		</small>
+		<style>
+			.crown-color{fill: <%=j rankTag(@target_rank)%>;}
+		</style>
+<% end %>		
+		<%=@teacher_show.name%>
 		</h1>
 	</div>
 	<div class="col-md-5" id="teacher-name">
@@ -43,7 +51,7 @@
 <div id="result" class="container">
 	
 </div>
-
+<script src="/assets/jquery.svginject.js"></script>
 <script>
 	$(document).ready(function(){
 		show_item('<%=@first_show%>',true);
@@ -81,7 +89,7 @@
 			},
 		});
 		
-		
+		$('.svg-inject').svgInject();
 	});
 	function show_item(item,show_first){//change show files or notes
 		list=["files","compare","tc","discussion"]

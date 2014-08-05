@@ -29,39 +29,25 @@ class CoursesController < ApplicationController
 			elsif params[:type].to_i==4	#4 -> list form
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
-			else # 5 -> chart
-=begin			
-				data_table = GoogleVisualr::DataTable.new
-			# Add Column Headers
-				data_table.new_column('string', '年度' )
-				data_table.new_column('number', '開課人數')
-				data_table.new_column('number', '選課人數')
-
-				row_list = Array.new
+			else # 5 -> chart		
+				@row_name = Array.new
+				@row_open = Array.new
+				@row_pick = Array.new
 				ct.course_details.each do |cd|
-					row = Array.new
 					sem_year = Semester.find(cd.semester_id).name
 					if latest_semester.name == sem_year 
-						sem_year += "(本學期)"
+						sem_year += " (本學期)"
 					end	
-					row.push(sem_year)
+					@row_name.push(sem_year)
+					
 					if cd.students_limit.to_i == 9999 # 無上限設為0防scope太大有顯示問題
-						row.push(0)
+						@row_open.push(0)
 					else
-						row.push(cd.students_limit.to_i)
+						@row_open.push(cd.students_limit.to_i)
 					end		
-
-					row.push(cd.reg_num.to_i)
-					row_list.push(row)
+					@row_pick.push(cd.reg_num.to_i)
 				end
-				#Rails.logger.debug "[debug] "+(row_list.to_s)
-				data_table.add_rows(row_list.reverse)
-			#	option = { width: 550, height: 250, title: '選課狀況' }
-			#	@chart = GoogleVisualr::Interactive::ColumnChart.new(data_table, option)
-
-			#	render "course_chart"
-=end				
-				render :text=> row_list.to_json
+				render "course_chart"
 			end		
 	end
 

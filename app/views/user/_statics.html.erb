@@ -92,7 +92,7 @@
 			<td><p class="text-center">學分</p></td>
 			<td colspan="6">
 				<div class="progress no-margin-bottom">
-				<% all_credit=@cd_all.map{|cd|cd.credit.to_i}.reduce(:+) %>
+				<% all_credit=@cd_all.map{|cd|cd.credit.to_i}.reduce(:+)||0 %>
 					<div class="progress-bar progress-bar-info" style="width: <%=(all_credit*100/128) %>%">
 						<span><strong><%=all_credit%>/128</strong></span>
 					</div>

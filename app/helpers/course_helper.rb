@@ -52,13 +52,16 @@ module CourseHelper
 	end
 	
 	def rankTag(rank)
-		if rank>=1 and rank<=2
-			return "success"
-		elsif rank>=3 and rank<=4	
-			return "primary"
-		else
-			return "default"
-		end	
+		case rank.to_i 
+			when 1
+				return "#FFDB58"
+			when 2 
+				return "#808080"
+			when 3
+				return "#CD7F32"
+			else
+				return "black"
+		end
 			
 	end
 	
