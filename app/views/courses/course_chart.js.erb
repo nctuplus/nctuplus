@@ -1,18 +1,21 @@
-/*
 $(function () {
     $('#container').highcharts({
     	chart:{defaultSeriesType: "column"},
         title: {
-            text: '歷年選課結果統計'
+            text: '歷年選課統計'
         },      
         xAxis: {
-            categories: <%=raw @row_name.to_json%>//['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            categories: <%=raw @row_name.to_json%>
+        },         
+        yAxis: {
+       			min: 0,
+                title: {
+                    text: '人數'
+                }
         },
-        
         series: [
-        {name: '開課人數', data: <%=raw @row_open.to_json%>},
+        {name: '開課人數(無顯示為無上限)', data: <%=raw @row_open.to_json%>},
         {name: '選課人數', data: <%=raw @row_pick.to_json%>}
         ]
     });
 });
-*/
