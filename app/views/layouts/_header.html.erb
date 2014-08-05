@@ -10,25 +10,11 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-
-
-				<!--<li class="dropdown">
-					<a href="#"  class="dropdown-toggle" data-toggle="dropdown">facebook登入<b class="caret"></b></a>
-					<ul class="dropdown-menu user-reg" id="user_reg" >
-					<% render "/user/registry" %>
-					</ul>
-				</li>-->
 				<% if current_user && TopManager.find_by_user_id(current_user.id) %>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-							
-								<!--<li><a href="/post">筆記<span class="badge pull-right"><%=Post.all.count%></span></a></li>
-								<li><a href="/files/all_users">檔案庫<span class="badge pull-right"><%=FileInfo.all.count%></span></a></li>
-								<li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>-->
-							<!--<li><a href="/courses">課程<span class="badge pull-right"><%=Course.all.count%></span></a></li>-->
-								
-								
+								<li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
 								<li><a href="/departments">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 						</ul>
 					</li>
@@ -39,19 +25,24 @@
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li>
+				<li class="dropdown">
 				<% if current_user %>
-					<%= link_to  "/courses/special_list" do %>
-					<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
-					<%=current_user.name%>
+					<%= link_to  "/courses/special_list", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
+						<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
+						<%=current_user.name%>
 					<% end %>
-					
+					<ul class="dropdown-menu">
+						<li>
+							<%= link_to  "登出", signout_path, id: "sign_out" %>
+						</li>
+					</ul>
+				</li>
 				<% else %>
 					<%= link_to  "/auth/facebook", id: "sign_in" do %>
 					<%=fa_icon "facebook-square " %> 登入
 					<% end %>
 				<% end %>  
-				</li>
+				
 			</ul>
 				
     </div><!-- /.navbar-collapse -->

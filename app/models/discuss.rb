@@ -4,5 +4,9 @@ class Discuss < ActiveRecord::Base
 	has_many :discuss_likes, :dependent => :destroy
 	has_many :sub_discusses, :dependent => :destroy
 	validates_presence_of :title, :content
+	
+	def check_owner()
+	
+	end
 	#validates_presence_of :content
 end
