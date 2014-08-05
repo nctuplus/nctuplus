@@ -18,9 +18,6 @@
 
 //= require jquery-fileupload
 
-//= require background
-
-
 //= require bootstrap.min
 
 

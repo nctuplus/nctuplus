@@ -77,21 +77,34 @@ class ApplicationController < ActionController::Base
   def checkOwner
     case params[:controller] 
       when 'post'
-		if Post.find(params[:id]).owner_id!=current_user.id
-		  alertmesg("danger",'Sorry',"您沒有操作此動作的權限")     
-		  redirect_to root_url
-		#else return true
-		end
-	  when 'files'
-	    @file=FileInfo.find_by_id(params[:id])
-	    if @file && @file.owner_id!=current_user.id
-				alertmesg("danger",'Sorry',"您沒有操作此動作的權限")
-		  redirect_to root_url
-		#else return true
-		end	  
+				if Post.find(params[:id]).owner_id!=current_user.id
+					alertmesg("danger",'Sorry',"您沒有操作此動作的權限")     
+					redirect_to root_url
+				#else return true
+			end
+			when 'files'
+				@file=FileInfo.find_by_id(params[:id])
+				if @file && @file.owner_id!=current_user.id
+					alertmesg("danger",'Sorry',"您沒有操作此動作的權限")
+				redirect_to root_url
+				#else return true
+			end	  
     end
   end
-  
+  def checkDiscussOwner
+		case params[:type]
+			when "main"
+				@discuss=Discuss.find(params[:discuss_id])
+			when "sub"
+				@discuss=SubDiscuss.find(params[:discuss_id])
+			else
+				redirect_to :back
+		end
+		
+		if current_user != @discuss.user
+			redirect_to :back
+		end
+	end
   
   def alertmesg(type,title,msg)
     flash[:notice] = {

@@ -2,7 +2,7 @@ class DiscussesController < ApplicationController
 
 	layout false, :only =>[:list_by_course]
 	before_filter :checkLogin, :only=>[:new_discuss, :new_sub_discuss, :update_discuss, :like]
-	
+	before_filter :checkDiscussOwner, :only=>[:update_discuss]
 	def like
 		@like=DiscussLike.new
 		@like.user_id=current_user.id
@@ -77,14 +77,20 @@ class DiscussesController < ApplicationController
 	
 	def update_discuss
 		
-		@discuss=Discuss.find(params[:discuss_id])
-		if current_user.id!=@discuss.user_id
-			redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
-			return false;
+		if params[:type]=="main"
+			#@discuss=Discuss.find(params[:discuss_id])
+			@discuss.content=params[:content]
+			@discuss.title=params[:title]
+			@discuss.save!
+		elsif params[:type]=="sub"
+			#@discuss=SubDiscuss.find(params[:discuss_id])
+			@discuss.content=params[:content]
+			@discuss.save!
+		#else
+		#	redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
+		#	return false
 		end
-		@discuss.content=params[:content]
-		@discuss.title=params[:title]
-		@discuss.save!
+
 		redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
 	end
 	
