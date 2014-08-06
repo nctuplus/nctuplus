@@ -13,7 +13,7 @@ class CoursesController < ApplicationController
 
 
 	def course_raider
-		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
+#		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
 		@ct_id = ct.id		
 			if params[:type].to_i==1
@@ -29,7 +29,53 @@ class CoursesController < ApplicationController
 			elsif params[:type].to_i==4	#4 -> list form
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
-			else # 5 -> chart		
+			else # 5 -> chart
+				@row_name = []
+				@row_open = []
+				@row_pick = []	
+				@row_teacher = []	
+				@course = Course.includes(:course_teacherships).find(params[:c_id])
+				
+				@course.course_teacherships.each do |ctt|
+					@row_teacher.push(ctt.teacher.name.strip)
+					ctt.course_details.includes(:semester).each do |ctd|
+						sn = ctd.semester.name
+						if not @row_name.include?(sn)
+							@row_name.push(Semester.find(ctd.semester_id).name)
+						end	
+					end
+				end
+			#	Rails.logger.debug "[debug] "+@row_name.to_s
+				if @row_name.size < 4 
+					cnt = 4 - @row_name.size
+					for i in 1..cnt
+						@row_name.unshift('')
+					end
+				elsif @row_name.size > 4
+					cnt = @row_name.size - 4
+					for i in 1..cnt do
+						@row_name.shift
+					end
+				end
+			#	Rails.logger.debug "[debug] "+@row_name.to_s
+			#	Rails.logger.debug "[debug] "+@row_teacher.to_s
+				@course.course_teacherships.each do |ctt| # each teacher
+					tmp = []
+					for i in 1..@row_name.size do
+						tmp.push(0)
+					end
+					ctt.course_details.includes(:semester).each do |ctd| # each semester
+						sn = ctd.semester.name
+						for i in 0..(@row_name.size-1) do
+							if @row_name[i]==sn
+								tmp[i] = ctd.reg_num.to_i
+							end
+						end
+					end			
+					@row_pick.push(tmp)
+				end
+				
+=begin			
 				@row_name = Array.new
 				@row_open = Array.new
 				@row_pick = Array.new
@@ -55,9 +101,10 @@ class CoursesController < ApplicationController
 						@row_pick.unshift(0)
 					end
 				end
-				
+=end
+						
 				render "course_chart"
-			end		
+			end# else		
 	end
 
 	def course_content_post

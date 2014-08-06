@@ -77,7 +77,7 @@
 			</p>	
 		</h2>	
 	</div>
-	<div id="container" style="height: 400px; width: 600px;"></div>
+	<div id="container" style="height: 400px; width: 800px;"></div></br>
 <!-- course's content and tick -->    
     <div class="panel-heading">
 		<h2 class="panel-title">
@@ -173,7 +173,7 @@
 		$.ajax({
    		 	type: "GET",
    		 	dataType: "script",
-    		url: '/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5',
+    		url: '/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5&c_id=<%=j params[:id]%>',//'/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5',
     		error: function(res){alert("Some error happened :( ");}
   		});		
 

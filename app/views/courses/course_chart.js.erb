@@ -1,3 +1,4 @@
+/*
 $(function () {
     $('#container').highcharts({
     	chart:{defaultSeriesType: "column"},
@@ -13,9 +14,79 @@ $(function () {
                     text: '人數'
                 }
         },
+        tooltip: {
+            formatter: function () {
+                return '<b>' + this.x + '</b><br/>' +
+                    this.series.name + ': ' + this.y + '<br/>' +
+                    'Total: ' + this.point.stackTotal;
+            }
+        },
+        plotOptions: {
+        
+            column: {
+            
+                stacking: 'normal',
+                dataLabels: {  //stack上的數字樣式設定
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                }
+                 
+            }
+           
+        },
         series: [
-        {name: '開課人數(無顯示為無上限)', data: <%=raw @row_open.to_json%>},
-        {name: '選課人數', data: <%=raw @row_pick.to_json%>}
+        {name: '開課人數(無顯示為無上限)', data: <%=raw @row_open.to_json%>, color: "#045FB4"},
+        {name: '選課人數', data: <%=raw @row_pick.to_json%>, color: "#00FFFF"}
         ]
     });
 });
+*/
+$(function () {
+    $('#container').highcharts({
+    	chart:{defaultSeriesType: "column"},
+        title: {
+            text: '歷年選課統計'
+        },      
+        xAxis: {
+            categories: <%=raw @row_name.to_json%>
+        },         
+        yAxis: {
+       			min: 0,
+                title: {
+                    text: '人數'
+                }
+        },
+        tooltip: {
+          
+        },
+        plotOptions: {
+        /*
+            column: {
+            
+                stacking: 'normal',
+                dataLabels: {  //stack上的數字樣式設定
+                    enabled: true,
+                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                    style: {
+                        textShadow: '0 0 3px black, 0 0 3px black'
+                    }
+                }
+                 
+            }
+           */
+        },
+        series: [
+        <% @row_teacher.each_with_index do |name, idx|%>
+        	{name: '<%=raw name%>', data: <%=raw @row_pick[idx].to_json%>},  
+        <%end%>
+        ]
+    });
+});
+/*
+alert('<%=raw @row_name.to_s%>');
+alert('<%=raw @row_teacher.to_s%>');
+alert('<%=raw @row_pick.to_s%>');
+*/
