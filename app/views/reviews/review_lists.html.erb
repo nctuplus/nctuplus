@@ -5,11 +5,12 @@
 		<th>時間</th>
 	</tr>
 	<% @reviews.each do |r| %>
-		<tr class="clickable-row" href="<%=review_path(r)%>">
+		<tr class="clickable-row" id="<%=r.id%>" href="<%=review_path(r)%>">
 		<th id="title"><%=r.title%></th>
 		<th id="author"><%=r.author%></th>
-		<th class="hidden" id="content"><textcontent><%=r.content%></textcontent></th>
+		<th class="hidden" id="content"><%=simple_format h r.content%></th>
 		<th id="date"><%=r.date.strftime("%F")%></th>
+		
 		</tr>
 	<% end %>
 
@@ -22,13 +23,15 @@
 	$(document).ready(function() {
 		
 		$(".clickable-row").click(function() {
-					//window.document.location = $(this).attr("href");
+			/*window.document.location = $(this).attr("href");
+			return;*/
 			but='<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>';
 			title="<h4>"+$(this).find("#title").text()+"</h4>"
 			author_time="<p>作者:"+$(this).find("#author").text()+" 時間: "+$(this).find("#date").text()+"</p>";
 			content=$(this).find("#content").html();
 			
 			$("#reviewModal").find(".modal-header").html(but+title+author_time);
+			$("#reviewModal").find(".modal-header").append('<a href="/reviews/'+$(this).attr('id')+'?page=<%=@page%>" data-method="delete" rel="nofollow" class="btn btn-danger btn-lg" data-confirm="Are you sure?">刪除</a>');
 			$("#reviewModal .modal-body").html(content);
 			$("#reviewModal").modal("toggle");
 		});

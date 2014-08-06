@@ -22,33 +22,3 @@
 </tr>
 </table>
 
-<script>
-function find_by_label(array,value){
-	for(var i = 0 ; i < array.length;i++){
-		if(value==array[i].label){
-			return true;
-		}
-	}
-	return false;
-}
-
-$( document ).ready( function(){
-	var course_select= <%= @courses_all_select.to_s.html_safe %> ;
-	$( "#course_select" ).autocomplete({
-      source:  course_select,
-			minLength :0,
-			change: function (event, ui) {
-				if(!find_by_label(course_select,$(this).val())){
-					$(this).val("");
-					$(this).next().val("");
-				}
-					
-			},
-			select: function(event, ui){
-				event.preventDefault();
-				$(this).val(ui.item.label);
-				$(this).next().val(ui.item.walue);
-			}
-  }).on("focus",function(event){$(this).autocomplete("search", "");});
-});
-</script>

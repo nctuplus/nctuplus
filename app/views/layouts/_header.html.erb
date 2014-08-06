@@ -2,9 +2,7 @@
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-
       <a class="navbar-brand" href="<%=root_url%>" style="font-family:arial;">NCTU<sup>+</sup></a>
-			
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -20,7 +18,9 @@
 					</li>
 				<% end %>
 				<li><a href="/courses/">全校課程</a></li>
+				<% if current_user && TopManager.find_by_user_id(current_user.id) %>
 				<li><a href="/reviews">心得列表</a></li>
+				<% end %>
 				<li><a href="/courses/simulation">課程地圖</a></li>
       </ul>
 			

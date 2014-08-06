@@ -72,25 +72,7 @@ class UserController < ApplicationController
     @user=User.new
 	render :layout => false
   end
-	def create
-		if request.post?
-			dept_id=params[:user][:department_id]
-			if dept_id!=""&&Department.find(dept_id.to_i).degree=='2'
-			  session[:grade_id]=params[:user][:grade_id]
-			else
-				session[:grade_id]=Grade.find_by_name('研究所').id
-			end
-			session[:dept_id]=dept_id=="" ? '0' : dept_id
-			
-			# @user=User.new
-			# @user.department_id=dept_id
-			# @user.grade_id=grade_id
-			# @user.activated=0 if dept_id=""
-			# @user.save!
-			redirect_to "/auth/facebook"
-		end
-		
-  end
+
 	
   # def create
 		# if request.post?

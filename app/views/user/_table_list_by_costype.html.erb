@@ -54,7 +54,7 @@
 				<% @cd_all_cos_type_credit.each do |type,credit| %>
 					<%=type%> : <strong><%=credit.round%></strong>
 				<% end %>
-				<!--<% unless current_user.department.nil? %>
+				<!--<% if !current_user.department.nil?&&!current_user.department.credit.nil? %>
 				離畢業還差 <strong><%=current_user.department.credit-@cd_all_sum%></strong> 學分
 				<% end %>-->
 			</h4>

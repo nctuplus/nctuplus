@@ -6,7 +6,7 @@ class ReviewsController < ApplicationController
 	def index
 		@reviews=Review.all
 		@view_type="all"
-		@page=1
+		@page=params[:page] ? params[:page]:1
 	end
 	
 	def show
@@ -53,7 +53,9 @@ class ReviewsController < ApplicationController
     @review = Review.find(params[:id])
     @review.destroy
 		page = params[:page]
-    redirect_to :action => :index#, :page=>page
+    redirect_to :action => :index, :page=>page
+		
+		#render :nothing => true, :status => 200, :content_type => 'text/html'
   end
 	private
 	def each_page_show
