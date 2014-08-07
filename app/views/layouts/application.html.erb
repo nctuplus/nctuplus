@@ -27,10 +27,13 @@
 <%= render 'layouts/header' %>
 <!-- layouts/header end -->
 <% if params[:controller]!="main" %>
-<%= render 'layouts/sidebar' %>
+	<% render 'layouts/sidebar' %>
 <% end %>
-<div class="container-fluid" style="margin-top:55px;">
+
+
+<div id="content-contaier" class="container-fluid" style="margin-top:60px;" >
 	<div class="row">
+
 		<div id="content" class="col-md-9 col-md-offset-2">
 			<% if flash[:notice] %>
 			<div id="notice" class="col-md-9 col-md-offset-2 alert <%= flash[:notice][:style] %>"style="z-index:2000;">

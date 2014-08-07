@@ -1,5 +1,4 @@
-<br>
-
+<h2 style="border-bottom:solid 1px;">教授比一比</h2>
 <% rating_cold_arr =[]%>
 <% rating_sweety_arr =[]%>
 <% rating_hardness_arr =[]%>
@@ -69,7 +68,7 @@
 					</div>
 					<div class="row">
 						<div class="col-sm-3 col-sm-offset-1 row-condensed">
-							<label>硬度</label>
+							<label>深度</label>
 						</div>
 						<div class="col-sm-5 row-condensed">
 							<div id="rating_<%=rating_hardness.id%>"></div>
@@ -93,6 +92,7 @@
 <% if i%3!=0%>
 	</div>
 <% end %>
+
 
 
 <% r_cold_arr=r_cold_arr.sort_by{|k| k[:score]}.reverse%>

@@ -37,23 +37,18 @@ Nctuplus::Application.routes.draw do
 
 	resources :courses
 
+	resources :departments do
+    resources :courses
+	end
+		
 	get "discusses/list_by_course"
 	get "discusses/like"
 	post "discusses/new_discuss"
 	post "discusses/new_sub_discuss"
 	post "discusses/update_discuss"
-	
-		resources :departments do
-       #resources :comments, :sales
-       resources :courses #, :controller => 'department_courses'
-	  #resources :course
-	   
-		end
-  #resources
-	
-  resources :teachers
-  
-	
+	post "discusses/delete_discuss"
+ 
+
 	post "reviews/search_by_keyword"
 	get "reviews/list_all_reviews"
 	
@@ -68,25 +63,18 @@ Nctuplus::Application.routes.draw do
 	
 	
   #----------for files---------------
-  #get "file_info/all_users"
+  
 	get "file_infos/list_by_ct"
-  #get "file_infos/one_user"
 	get "file_infos/add_count"
-  #get "file_info/upload"
-  #get "file_info/download"
-  #get "file_info/delete_file"
   get "file_infos/edit"
-  #get "file_infos/pictures_show"
   resources :file_infos
   
- 
-  #post "files/create"
-  #get "files/show"  
+  
   #----------for user---------------
   #get "user/mail_confirm"
-  get "user/activate"
+  #get "user/activate"
   get "user/manage"
-  get "user/registry"
+
   
   get "user/:id/permission", to: "user#permission"
   

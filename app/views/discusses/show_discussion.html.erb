@@ -1,6 +1,4 @@
-<br>
-
-<div class="col-md-10 col-offset-2" style="">
+<div class="col-md-12 col-offset-" style="">
 
 <div class="bs-callout bs-callout-default well">
 	<h3><%=fa_icon "comment-o"%>課程討論</h3>
@@ -82,14 +80,15 @@
 						<div class="col-md-3">
 							<p class="text-righ">
 							<br>
-							<% can_like=current_user && sub_d.discuss_likes.select{|l|l.user_id==current_user.id}.empty? %>
-							<% if can_like %>
+							
+							<% can_like_sub=current_user && sub_d.discuss_likes.select{|l|l.user_id==current_user.id}.empty? %>
+							<% if can_like_sub %>
 								<%= fa_icon "thumbs-o-up 2x", title:"讚", class:"clickable-hover", onclick:"like(1,'sub',#{sub_d.id},$(this));"%>
 							<% else %>
 								<%= fa_icon "thumbs-o-up 2x", title:"讚" %>
 							<% end %>
 							<span class="like-count like" id="sub_like_<%=sub_d.id%>"><%=sub_d.likes%></span>
-							<% if can_like %>	
+							<% if can_like_sub %>	
 								<%= fa_icon "thumbs-o-down 2x", title:"噓", class:"clickable-hover", onclick:"like(0,'sub',#{sub_d.id},$(this));"%>
 							<% else %>
 								<%= fa_icon "thumbs-o-down 2x", title:"噓" %>
@@ -113,6 +112,7 @@
 
 
 </div>
+
 
 <script>
 	$(document).ready(function(){
@@ -220,14 +220,30 @@
 		content_text=content.find("textcontent");
 		var content_input='<textarea class="form-control" rows="5" id="content_edit_'+type+'_'+id+'" required>'+content_text.text()+'</textarea>';
 		var but_submit='<p class="text-right"><button class="btn btn-primary" onclick="send_edit('+id+",'"+type+'\')">送出</button>  ';
-		var but_cancel='<button class="btn btn-danger" onclick="cancel('+id+",'"+type+'\')">取消</button></p>';
-		content.append(content_input+but_submit+but_cancel);
+		var but_cancel='<button class="btn btn-warning" onclick="cancel('+id+",'"+type+'\')">取消</button></p>';
+		var but_delete='<button class="btn btn-danger" onclick="delete_discuss('+id+",'"+type+'\')">刪除</button>  ';
+		
+		content.append(content_input+but_submit+but_delete+but_cancel);
 		content_text.hide();
 		
 		$("#edit_"+type+"_but_"+id).hide();
 
 	}
-
+	function delete_discuss(id,type){
+		if (confirm('確定刪除此文章?')) {
+				
+				$("#discuss").load(
+					"/discusses/delete_discuss",{
+						ct_id : <%=@ct_id%>,
+						type :type,
+						discuss_id: id,
+						
+				}
+		);
+		} else {
+			
+		}
+	}
 	function cancel(id,type){
 		if (type=="main"){
 			title=$("#main_title_"+id);
@@ -257,7 +273,7 @@
 			return;
 		}
 		
-		$("#result").load(
+		$("#discuss").load(
 			"/discusses/update_discuss",{
 				ct_id : <%=@ct_id%>,
 				type :type,
