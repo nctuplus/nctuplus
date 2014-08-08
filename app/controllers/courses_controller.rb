@@ -509,7 +509,8 @@ class CoursesController < ApplicationController
 			cd_id=CourseDetail.where(:course_teachership_id=>ct_id, :semester_id=>Semester.last.id).take.id
 			
 			if !session[:cd].include?(cd_id)
-				session[:cd].append(cd_id) 
+				session[:cd].append(cd_id)
+				session[:cd]=CourseDetail.select(:id).where(:id=>session[:cd]).order(:time).pluck(:id)
 				alt_class="success"
 				title='Success'
 				mesg="新增成功!"
@@ -584,7 +585,7 @@ class CoursesController < ApplicationController
 		course_ids=courses.map{|c| c.id}
 		ct_ids=CourseTeachership.where(:course_id=>course_ids)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
 		if semester_id!=0
-			course_details=CourseDetail.includes(:course_teachership).where(:course_teachership_id=>ct_ids).references(:course_teachership).order(:cos_type ,:brief).flit_semester(semester_id)
+			course_details=CourseDetail.includes(:course_teachership).where(:course_teachership_id=>ct_ids).references(:course_teachership).order(:time).flit_semester(semester_id)
 		else
 			course_details=CourseDetail.includes(:course_teachership).where(:course_teachership_id=>ct_ids).references(:course_teachership)
 		end

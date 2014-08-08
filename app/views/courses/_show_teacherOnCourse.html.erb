@@ -3,12 +3,15 @@
 <% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
 
 
-<div class="well bs-callout bs-callout-<%=rankTagBar(@target_rank)%>">
+
+<div class="well bs-callout bs-callou-<%=rankTagBar(@target_rank)%>">
 
 <!-- course's teacher and department -->
-
+<h2 style="border-bottom:solid 1px;">課程資訊</h2>
 	<div class="panel-heading">
+	
 		<h2 class="panel-title">
+			
 			<p class="">
 				<!--<i class="fa fa-user fa-6"></i> 			
 				課程教師： <%=@teacher_show.name%>-->
@@ -69,7 +72,7 @@
     </div>
  
 <!-- statistics -->  
-   <div class="panel-heading">
+   <div id="reg_nums" class="panel-heading">
 		<h2 class="panel-title">
 			<p>
 				<i class="fa fa-align-left"></i>				
@@ -79,7 +82,7 @@
 	</div>
 	<div id="container" style="height: 400px; width: 800px;"></div></br>
 <!-- course's content and tick -->    
-    <div class="panel-heading">
+    <div id="course-tips" class="panel-heading">
 		<h2 class="panel-title">
 			<p>
 				<i class="fa fa-gamepad"></i>				
@@ -119,11 +122,11 @@
 	</div>
 
 <!-- comment for the info in this page -->
-	<div class="panel-heading">
+	<div id="messages" class="panel-heading">
 		<h2 class="panel-title">
 			<p>
 				<i class="fa fa-weixin"></i>			
-				討論： 
+				留言板： 
 		<% if current_user %>
 					<%=link_to "留言","javascript:void(0);",:onclick=>"commentShow($(this));",:id=>"comment_post_link"%>
 					

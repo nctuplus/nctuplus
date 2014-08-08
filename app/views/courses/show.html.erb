@@ -1,58 +1,75 @@
 <div class="row">
-	<div class="col-md-7">
-		<h1>	
-		<%= @course.ch_name %>－
-<% if @target_rank <=3 %>		
-		<small style="position: absolute;margin-top: -11px;margin-left: -8px;">
-			<%=image_tag "crown.svg", :class=>"svg-inject"%>
-		</small>
-		<style>
-			.crown-color{fill: <%=j rankTag(@target_rank)%>;}
-		</style>
-<% end %>		
-		<%=@teacher_show.name%>
-		</h1>
+	<div class="col-md-2 col-md-offset-">
+	<%= render "scroll_sidebar"%>
 	</div>
-	<div class="col-md-5" id="teacher-name">
-		
-		<span class="pull-right">
-			<br>
-			
-			<% if @ct.course_details.last.semester==latest_semester %>
-			<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
-			<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
-			</button>
-			&nbsp;
-			<!--
-			<button class="btn btn-md btn-success masterTooltip" style="height:33px;margin-top:-1px" title="加選!" onclick="alert('Not done yet');">
-			<%= fa_icon "calendar 1x"%><sup><%= fa_icon "plus 1x"%></sup>
-			</button>
-			&nbsp;-->
-			<% end %>
-			<span style="display:inline-block">
-			<div class="share-course"></div>
-			</span>
-		</span>
+	<div class="col-md-10 scroll-content">
+		<div class="row">
+			<div class="col-md-7">
+				<h1 class="scroll-title" id="course-name" data-offset="100">	
+					<%= @course.ch_name %>－
+					<% if @target_rank <=3 %>		
+						<small style="position: absolute;margin-top: -11px;margin-left: -8px;">
+							<%=image_tag "crown.svg", :class=>"svg-inject"%>
+						</small>
+						<style>
+							.crown-color{fill: <%=j rankTag(@target_rank)%>;}
+						</style>
+					<% end %>		
+					<%=@teacher_show.name%>
+				</h1>
+			</div>
+			<div class="col-md-5" id="teacher-name">
+				<span class="pull-right">
+					<br>
+					<% if @ct.course_details.last.semester==latest_semester %>
+					<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
+					<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
+					</button>
+					&nbsp;
+					<!--
+					<button class="btn btn-md btn-success masterTooltip" style="height:33px;margin-top:-1px" title="加選!" onclick="alert('Not done yet');">
+					<%= fa_icon "calendar 1x"%><sup><%= fa_icon "plus 1x"%></sup>
+					</button>
+					&nbsp;-->
+					<% end %>
+					<span style="display:inline-block">
+						<div class="share-course"></div>
+					</span>
+				</span>
+			</div>
+		</div>
+
+		<div class="row">
+			<div id="tc" class="container" style="">
+			</div>
+			<div id="compare" class="well bs-callout" style="">
+			</div>
+			<div id="discuss" class="well bs-callout row" style="background-color:white;">
+			</div>
+			<div id="files" class="well bs-callout" style="background-color:white;">
+			</div>
+		</div>
 	</div>
 </div>
 
 
 
-<ul class="nav nav-tabs">
-  <li class="active" id="tc-link"><a href="javascript:void(0);" onclick="show_item('tc');">課程資訊</a></li>
-  <li class="" id="compare-link"><a href="javascript:void(0);" onclick="show_item('compare');">教授比一比</a></li>
-	<li class="" id="discussion-link"><a href="javascript:void(0);" onclick="show_item('discussion');" >討論區</a></li>
-  <li class="" id="files-link"><a href="javascript:void(0);" onclick="show_item('files');" >檔案</a></li>
-</ul>
 
-
-<div id="result" class="container">
-	
-</div>
 
 <script>
 	$(document).ready(function(){
-		show_item('<%=@first_show%>',true);
+		//show_item('<%=@first_show%>',true);
+		$("#tc").html('<%=j render :partial=> "show_teacherOnCourse" %>');
+		$("#compare").load("/courses/get_compare?c_id=<%=@course.id%>", function() {
+			$('body').scrollspy('refresh');
+		});
+		$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
+			$('body').scrollspy('refresh');
+		});
+		$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
+			$('body').scrollspy('refresh');
+		});
+		
 		<% share_url="#{root_url}courses/#{@course.id}?tid=#{@teacher_show.id}" %>
 		var share_url='<%=j share_url.html_safe %>';
 		var course_title="<%= @course.ch_name %> <%=@teacher_show.name%>";
