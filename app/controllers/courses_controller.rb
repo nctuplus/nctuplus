@@ -57,8 +57,7 @@ class CoursesController < ApplicationController
 						@row_name.shift
 					end
 				end
-			#	Rails.logger.debug "[debug] "+@row_name.to_s
-			#	Rails.logger.debug "[debug] "+@row_teacher.to_s
+
 				@course.course_teacherships.each do |ctt| # each teacher
 					tmp = []
 					for i in 1..@row_name.size do
@@ -75,6 +74,10 @@ class CoursesController < ApplicationController
 					@row_pick.push(tmp)
 				end
 				
+				@tmp = @row_teacher.zip(@row_pick).reject{|t1,t2|t2.sum==0}
+				
+		#		Rails.logger.debug "[debug] "+@tmp.to_s
+		#		render :nothing => true, :status => 200, :content_type => 'text/html'			
 =begin			
 				@row_name = Array.new
 				@row_open = Array.new

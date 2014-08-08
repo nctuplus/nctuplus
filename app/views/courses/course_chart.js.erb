@@ -79,8 +79,8 @@ $(function () {
            */
         },
         series: [
-        <% @row_teacher.each_with_index do |name, idx|%>
-        	{name: '<%=raw name%>', data: <%=raw @row_pick[idx].to_json%>},  
+        <% @tmp.each do |t1, t2|%>
+        	{name: '<%=raw t1%>', data: <%=raw t2.to_json%>},  
         <%end%>
         ]
     });
