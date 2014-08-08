@@ -1,7 +1,5 @@
 <div class="row">
-	<div class="col-md-2 col-md-offset-">
-	<%= render "scroll_sidebar"%>
-	</div>
+	
 	<div class="col-md-10 scroll-content">
 		<div class="row">
 			<div class="col-md-7">
@@ -50,6 +48,9 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-md-2 col-md-offset-">
+	<%= render "scroll_sidebar"%>
+	</div>
 </div>
 
 
@@ -68,7 +69,9 @@
 		});
 		$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
 			$('body').scrollspy('refresh');
+			$('body').scrollTo("#course-name",10,{offset:-80});
 		});
+		
 		
 		<% share_url="#{root_url}courses/#{@course.id}?tid=#{@teacher_show.id}" %>
 		var share_url='<%=j share_url.html_safe %>';
@@ -106,34 +109,5 @@
 		
 		$('.svg-inject').svgInject();
 	});
-	function show_item(item,show_first){//change show files or notes
-		list=["files","compare","tc","discussion"]
-		if(item=="tc"){
-			//prepare_raider();
-			$("#result").html('<%=j render :partial=> "show_teacherOnCourse" %>');
-		}
-		else if(item=="discussion"){
-			if(show_first){
-				$("#result").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>");
-			}
-			else{
-				$("#result").load("/discusses/list_by_course?ct_id=<%=@ct.id%>");
-			}
-		}
-		else if(item=="compare"){
-			$("#result").load("/courses/get_compare?c_id=<%=@course.id%>");
-		}
-		else if(item=="files"){
-			$("#result").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>");
-		}
-		for(i=0;i<list.length;i++){
-			if(list[i]!=item){
-				$("#"+list[i]+"_list").hide();
-				$("#"+list[i]+"-link").attr("class","");
-			}
-		}
-		$("#"+item+"_list").show();
-		$("#"+item+"-link").attr("class","active");
 
-	}
 </script>

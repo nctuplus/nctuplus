@@ -1,13 +1,12 @@
 <div id="sidebar-menu" class="hidden-xs hidden-sm" style="font-size:16px;position:fixed;margin-top:100px;">
 	<ul class=" nav nav-stacked affix main-menu">
-	<li class="">
-		<a href="#course-name"><%= @course.ch_name %>－<%=@teacher_show.name%></a></li>
-		<ul class="nav sub-menu">
-			<li><a href="#tc">課程資訊</a></li>
-			<li><a href="#reg_nums">歷年選課狀況</a></li>
-			<li><a href="#course-tips">課程攻略</a></li>
-			<li><a href="#messages">留言板</a></li>
-		</ul>
+	<li><a href="#tc">課程資訊</a></li>
+	<ul class="nav sub-menu">
+		<!--<li><a href="#tc">課程資訊</a></li>-->
+		<li><a href="#reg_nums">歷年選課狀況</a></li>
+		<li><a href="#course-tips">課程攻略</a></li>
+		<li><a href="#messages">留言板</a></li>
+	</ul>
 	
 	<li><a href="#compare">教授比一比</a></li>
 	<li><a href="#discuss">課程(心得)討論區</a></li>
@@ -45,7 +44,7 @@ ul {
 	padding: 0;
 }
 .active{
-	//color: #428bca !important;
+	color: #11427D !important;
 	text-decoration: none;
 	background-color: transparent;
 	border-left: 5px solid #11427D;
