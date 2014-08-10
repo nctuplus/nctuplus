@@ -31,8 +31,9 @@ $(document).ready(function() {
 
 	$('.main-menu li a').click(function(event) {
     event.preventDefault();
-    $($(this).attr('href'))[0].scrollIntoView();
-    scrollBy(0, -55);
+    /*$($(this).attr('href'))[0].scrollIntoView();
+    scrollBy(0, -55);*/
+		$('body').scrollTo($(this).attr('href'),700,{offset:-60});
 	});
 });
 </script>

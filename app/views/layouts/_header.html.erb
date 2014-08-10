@@ -18,36 +18,105 @@
 					</li>
 				<% end %>
 				<li><a href="/courses/">全校課程</a></li>
+
 				<% if current_user && TopManager.find_by_user_id(current_user.id) %>
 				<li><a href="/reviews">心得列表</a></li>
 				<% end %>
 				<li><a href="/courses/simulation">模擬排課</a></li>
+				<li><a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" target="_blank">必修科目表</a></li>
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown">
+				<li>
+					<a class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :class=>"masterTooltip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %></a>
+				</li>
 				<% if current_user %>
-					<%= link_to  "/courses/special_list", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
+				<li>
+					<a class="no-padding-bottom"><%= fa_icon("calendar 2x ", :id=>"schd_but", :class=>"masterTooltip clickable-hover", :title=>"預排課表") %></a>
+					<!--<a href="javascript:void(0);" onclick="show_schd();">
+					課表
+					</a>-->
+				</li>
+				
+				<li class="dropdown">
+				
+					<%= link_to  "/user/special_list", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
 						<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
 						<li>
 							<%= link_to  "登出", signout_path, id: "sign_out" %>
-						</li>
+						</li>					
 					</ul>
-				</li>
+				
 				<% else %>
+				<li>
 					<%= link_to  "/auth/facebook", id: "sign_in" do %>
 					<%=fa_icon "facebook-square " %> 登入
 					<% end %>
 				<% end %>  
-				
+				</li>
 			</ul>
 				
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>
 
+<div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" >
+			<!--<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="purchaseLabel">Purchase</h4>
+			</div>-->
+			<div class="modal-body" ></div>
+			<!--<div class="modal-footer">
+				
+				<button type="button" class="btn btn-primary">Purchase</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>-->
+		</div>
+	</div>
+</div>
 
 
+
+
+<script>
+	$(document).ready(function(){
+		$("#schd_but").click(
+			function(){
+				$("#user_modal").modal('show');
+				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
+			}
+		);		
+		$("#cart_but").click(
+			function(){
+				$("#user_modal").modal('show');
+				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
+			}
+		);
+
+	});
+	function add_to_cart(id,type){
+		$.ajax({
+			type: "GET",
+			url : "/courses/add_to_cart",
+			data : {
+				cd_id:id,
+				tid:<%=params[:tid]||0%>,
+				type:type
+			},
+			success : function(data){
+				$("#content").prepend(data);
+				$("#ajax_notice").fadeOut(10000, function() { $(this).remove(); });
+				$("#user_modal .modal-body").html('<%=loading_img%>');
+				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
+			}
+		
+		});
+	}
+
+
+</script>
