@@ -121,7 +121,7 @@ class ApplicationController < ActionController::Base
 
 	def redirect_to_user_index
 		if current_user
-			redirect_to :action=> "special_list", :controller=> "courses"
+			redirect_to :action=> "special_list", :controller=> "user"
 		end
 	end
 	

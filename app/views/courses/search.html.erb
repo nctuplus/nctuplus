@@ -1,10 +1,5 @@
-<script>
 
-<% if session[:saved_query].empty? %>
-	//$("#search_result").load("/courses/list_all_courses?page=1");
-<% end %>
-</script>		
-<%= render :partial=>"search_js" %>
+<%= render :partial=>"search_js2" %>
 
 <div class="form-inline" ><!--role="form"-->
 	<div class="row">
@@ -124,7 +119,3 @@
 	</div>
 </div>
 
-<br>
-<div id="search_result" class="row bg-white-transparent">
-
-</div>

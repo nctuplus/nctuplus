@@ -27,7 +27,7 @@
 <%= render 'layouts/header' %>
 <!-- layouts/header end -->
 <% if params[:controller]!="main" %>
-	<%= render 'layouts/sidebar' %>
+	<% render 'layouts/sidebar' %>
 <% end %>
 
 
@@ -58,7 +58,7 @@
 						// Hover over code
 						var title = $(this).attr('title');
 						$(this).data('tipText', title).removeAttr('title');
-						$('<p class="toolTipText "></p>')
+						$('<p style="z-index:5000;"class="toolTipText "></p>')
 						.text(title)
 						.appendTo('body')
 						.fadeIn('slow');

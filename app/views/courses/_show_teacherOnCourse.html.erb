@@ -15,6 +15,7 @@
 			<p class="">
 				<!--<i class="fa fa-user fa-6"></i> 			
 				課程教師： <%=@teacher_show.name%>-->
+				永久課號：<%=@course.real_id%>
 				<%=fa_icon "bank"%> 單位：<%=@teacher_show.department.ch_name%>
 				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, target:"_blank"%>
 				&nbsp;<%=fa_icon "book"%> 種類：
@@ -134,21 +135,21 @@
 			<%=form_tag "/courses/comment_submit", :remote=>true, :class=>"form-horizontal",:role=>"form" do%>
 					<%=hidden_field_tag "ctship", courseTeacher.id %>
 					<div class="form-group">
-						<div class="col-sm-1">
+						<div class="col-sm-2 col-md-offset-1">
 							<select id="type" name="type" class="form-control">
 								<option value="1">推</option>
 								<option value="2">-></option>
 								<option value="3">噓</option>
 							</select>
 						</div>				
-						<div class="col-sm-3">
+						<!--<div class="col-sm-3">
 							<label class="control-label" for="comment"><%=current_user.name%>：</label>
-						</div>	
+						</div>-->	
 						<div class="col-sm-7">
 							<div class="input-group">
 								<input class="form-control" id="comment" name="comment" type="text" value="推薦這篇文章">
       							<span class="input-group-btn">
-      								<%=submit_tag "POST", :class=>"btn btn-default", :id=>"submit_but"%> 
+      								<%=submit_tag "POST", :class=>"btn btn-primary", :id=>"submit_but"%> 
       							</span>
    							</div>
 						</div>

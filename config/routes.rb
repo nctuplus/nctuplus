@@ -9,12 +9,14 @@ Nctuplus::Application.routes.draw do
 	#post "courses/new_discuss"
 	#post "courses/new_sub_discuss"
 	post "courses/search_by_dept"
+	get "courses/search_by_dept2"
 	post "courses/search_by_keyword"
 	post "courses/comment_submit"
 	#post "courses/raider_submit"
 	post "courses/course_raider"
 	post "courses/course_content_post"
 	
+	get "courses/search"
 	get "courses/get_compare"
 	#get "courses/get_discuss"
 	
@@ -28,7 +30,7 @@ Nctuplus::Application.routes.draw do
 	get "courses/get_sem_form"
 	get "courses/raider_list_like"
 
-  get "courses/special_list"
+  
 
 	get "courses/get_user_statics"
 	
@@ -73,9 +75,10 @@ Nctuplus::Application.routes.draw do
   #----------for user---------------
   #get "user/mail_confirm"
   #get "user/activate"
+	post "user/add_course"
   get "user/manage"
-
-  
+	get "user/import_course"
+  get "user/special_list"
   get "user/:id/permission", to: "user#permission"
   
   post "user/:id/permission", to: "user#permission"

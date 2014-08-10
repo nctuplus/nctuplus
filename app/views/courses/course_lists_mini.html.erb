@@ -15,15 +15,12 @@
 <table class="table table-hover courselist-hover " id="course_table" >
 	<% credit_sum=0 %>
 	<% cos_types=[] %>
+	
 	<% if @course_details %>
+	<%=@cd_all.count%>
 		<% @cd_all.each do |cd,course,teacher|  %>
 		
-				<% ctrs=cd.course_teachership.course_teacher_ratings %>
-				<% ctr_cold=ctrs.select{|ctr| ctr.rating_type=="cold"}[0] %>
-				<% ctr_sweety=ctrs.select{|ctr| ctr.rating_type=="sweety"}[0] %>
-				<% ctr_hardness=ctrs.select{|ctr| ctr.rating_type=="hardness"}[0] %>
-				<% ctr_all_avg = (ctr_cold.avg_score*ctr_cold.total_rating_counts+ctr_sweety.avg_score*ctr_sweety.total_rating_counts+ctr_hardness.avg_score*ctr_hardness.total_rating_counts)/ctrs.sum(:total_rating_counts) %>
-				
+
 				<% if !cos_types.include?(cd.cos_type) %>
 					<% cos_types.append(cd.cos_type) %>
 					<tr class="row"><th class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
@@ -53,11 +50,6 @@
 							<% end %>
 						</p>
 						<p class="text-right">
-						
-						<%if !ctr_all_avg.nan? %>
-						<span class="glyphicon glyphicon-star"></span> 
-						<%= ctr_all_avg.round(1) %> | 
-						<% end %>
 						<% if cd.cos_type=="通識"||cd.cos_type=="外語"%>
 							<%=cd.brief%> | 
 						<% else %>

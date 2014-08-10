@@ -1,7 +1,8 @@
 class UserController < ApplicationController
- require 'digest/sha1'
+	include CourseHelper
   before_filter :checkTopManager, :only=>[:manage, :permission]
-  
+	before_filter :checkLogin, :only=>[:add_course, :import_course, :special_list]
+  layout false, :only => [:add_course]
   # def mail_confirm
     # @user=User.where(:activate_token=>params[:key]).first
 		# if(@user)
@@ -33,6 +34,82 @@ class UserController < ApplicationController
     # redirect_to "user/manage"
     
   # end
+	
+	def special_list
+		ls=latest_semester
+		cs_all=current_user.course_simulations
+		cs_this=cs_all.select{|cs|cs.semester_id==ls.id}
+		cd_this_ids = cs_this.map{|cs|cs.course_detail_id}
+		cd_all_ids = cs_all.map{|cs|cs.course_detail_id}
+		#cd_ids = CourseSimulation.select(:course_detail_id).where(:user_id=>current_user.id, :semester_id=>latest_semester.id)
+		@cd_this=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_this_ids).order(:cos_type).references(:course_teachership, :semester)
+		@cd_this_mixed=get_mixed_info(@cd_this)
+		
+		
+		@cd_all=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:cos_type).references(:course_teachership, :semester)
+		@cd_all_mixed=get_mixed_info(@cd_all)
+		
+		@cd_all_sum=@cd_all.sum(:credit).round
+		@cd_all_cos_type_credit=CourseDetail.where(:id=>cd_all_ids).group(:cos_type).sum(:credit)
+		
+		@cd_all_sem=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:semester_id).references(:course_teachership, :semester)
+		@cd_all_sem_mixed=get_mixed_info(@cd_all_sem)
+		
+		
+		#Department.where(:dept_type=>"dept", :degree=>"3").each do |d|
+		#	d.update_attributes(:credit=>128)
+		#end
+		
+	end
+	
+	def test
+		
+	end
+	
+	def add_course
+		score=params[:course][:score]
+		@score=score
+		@agree=[]
+		@normal=[]
+		@score.split("\n").each do |s|
+			s2=s.split(" ") 
+			if s2.length>5 &&s2[0].match(/[[:digit:]]/)
+			
+				if s2[1].match(/[A-Z]{3}[[:digit:]]{2}+/)
+					@agree.append(s2[1])
+				else
+				course={'sem'=>s2[1],'cos_id'=>s2[2], 'score'=>s2[7]}
+				@normal.append(course)
+				end	
+			end 
+		end
+		@course=[]
+		pass_score=current_user.department.degree=='2' ? 70 : 60
+		@has_added=0
+		@success_added=0
+		@normal.each do |n|
+			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
+			if n['score']=="通過" || n['score'].to_i>=pass_score
+				sem=n['sem']
+				sem_id=Semester.where(:year=>sem[0..sem.length-2], :half=>sem[sem.length-1]).take.id
+				cds=CourseDetail.where(:semester_id=>sem_id, :temp_cos_id=>n['cos_id']).take
+				#@course.append(cds)
+				if CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id).take
+					@has_added+=1
+				else
+					CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id)
+					@success_added+=1
+				end
+			end
+		end
+		respond_to do |format|
+			format.html { redirect_to "courses/special_list", :notice => "Successfully created place" }
+			format.js
+
+		end
+	end
+	
+	
 	def select_dept
 		degree=params[:degree_select].to_i
 		if degree==2

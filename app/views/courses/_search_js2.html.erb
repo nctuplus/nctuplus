@@ -65,7 +65,7 @@ function search_keyword(){
 }
 
 function search_dept(dept_id){
-	$("#search_result").html('<%=loading_img%>');
+	/*$("#search_result").html('<%=loading_img%>');
 	$("#search_result").load(
 		"/courses/search_by_dept",
 		{	view_type: '<%=@view_type%>',
@@ -73,7 +73,10 @@ function search_dept(dept_id){
 			sem_id : $("#semester_id").val(),
 			page : '<%=@page.nil? ? 1: @page%>'
 		}
-	);
+	);*/
+	
+	window.document.location = "/courses/search_by_dept2?type=dept&view_type=<%=@view_type%>&dept_id="
+										+dept_id+"&sem_id="+$("#semester_id").val()+"&page=<%=@page.nil? ? 1: @page%>";
 
 													
 }
@@ -207,25 +210,20 @@ $( document ).ready( function(){
 			}
 		}
 	});
-	<% if params[:action]=="index" %>
-		<% if session[:saved_query].empty? %>
-			$("#search_result").load("/courses/list_all_courses?page=1");
-		<% else %>
-			
-			$( "#semester_select" ).val(get_label_by_value(semester_select,<%=session[:saved_query][:sem_id]%>));
-			$( "#degree_select" ).val(get_label_by_value(degree_select,<%=session[:saved_query][:degree]%>));
+	<% if params[:action]=="index" %>		
+			$( "#semester_select" ).val(get_label_by_value(semester_select,<%=params[:sem_id]%>));
+			$( "#degree_select" ).val(get_label_by_value(degree_select,<%=params[:degree]%>));
 			change_dept_select(<%=session[:saved_query][:degree]%>);
-			$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
-			$("#search_term").val('<%=session[:saved_query][:term]%>');
-			<% if session[:saved_query][:type]=="dept" %>	
-				search_dept(<%=session[:saved_query][:dept_id]%>);
+			$( "#department_select" ).val(get_label_by_value(department_select,<%=params[:dept_id]%>));	
+			$("#search_term").val('<%=params[:term]%>');
+			<% if params[:type]=="dept" %>	
+				search_dept(<%=params[:dept_id]%>);
 			<% else %>
-				$("#<%=session[:saved_query][:search_type]%>").click();
+				$("#<%=params[:search_type]%>").click();
 				
 				search_keyword();
 			<% end %>
-			
-		<% end %>
+
 	<% end %>
 });
 </script>
