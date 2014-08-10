@@ -87,26 +87,36 @@ class UserController < ApplicationController
 		pass_score=current_user.department.degree=='2' ? 70 : 60
 		@has_added=0
 		@success_added=0
+		@fail_added=0
 		@normal.each do |n|
 			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
 			if n['score']=="通過" || n['score'].to_i>=pass_score
 				sem=n['sem']
-				sem_id=Semester.where(:year=>sem[0..sem.length-2], :half=>sem[sem.length-1]).take.id
-				cds=CourseDetail.where(:semester_id=>sem_id, :temp_cos_id=>n['cos_id']).take
-				#@course.append(cds)
-				if CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id).take
-					@has_added+=1
+				@sem=Semester.where(:year=>sem[0..sem.length-2], :half=>sem[sem.length-1]).take
+				if @sem
+					cds=CourseDetail.where(:semester_id=>@sem.id, :temp_cos_id=>n['cos_id']).take
+					#@course.append(cds)
+					if cds
+						if CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id).take
+							@has_added+=1
+						else
+							CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id)
+							@success_added+=1
+						end
+					else
+						@fail_added+=1
+					end
 				else
-					CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id)
-					@success_added+=1
+					@fail_added+=1
 				end
 			end
 		end
-		respond_to do |format|
-			format.html { redirect_to "courses/special_list", :notice => "Successfully created place" }
-			format.js
+		#respond_to do |format|
+		#	format.html { redirect_to "user/special_list", :notice => "Successfully created place" }
+		#	format.js
 
-		end
+		#end
+		redirect_to :action =>"special_list", :import_course=>true, :success=>@success_added, :same=>@has_added, :failed=>@fail_added
 	end
 	
 	
@@ -120,7 +130,7 @@ class UserController < ApplicationController
 			dept=params[:dept_under_select].to_i
 		end
 		current_user.update_attributes(:grade_id=>grade,:department_id=>dept)
-		redirect_to :controller=> "courses", :action=>"special_list"
+		redirect_to :controller=> "user", :action=>"special_list"
 	end
   def manage
     @users=User.all

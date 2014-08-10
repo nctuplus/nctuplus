@@ -26,10 +26,30 @@
 			$("#user_form").hide();
 			change_degree();
 		<% else %>
+			//$("#user_form").removeClass("hidden");
 			$("#dept_grad_select").hide();
 			$("#grade_grad_select").hide();
 		<% end %>
+		
+		<% if params[:import_course] %>
+			alert("匯入完成! 共新增 <%=params[:success]%> 門課 重複:<%=params[:same]%> 失敗:<%=params[:failed]%>");	
+		<% end %>
+		
 	});
+	
+	function show_form(obj){
+		if ($("#user_form").is(':visible')) {
+			$("#user_form").hide();
+			$("#user_info").show();
+			obj.text("修改系級");
+		}
+		else{
+			$("#user_form").show();
+			$("#user_info").hide();
+			obj.text("隱藏");
+		}
+	}
+	
 	function change_degree(){
 		var sel=$("#degree_select").val();
 		var arr=['grad','under']

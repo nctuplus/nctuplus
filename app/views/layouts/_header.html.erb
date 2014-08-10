@@ -49,13 +49,14 @@
 							<%= link_to  "登出", signout_path, id: "sign_out" %>
 						</li>					
 					</ul>
-				</li>
+				
 				<% else %>
+				<li>
 					<%= link_to  "/auth/facebook", id: "sign_in" do %>
 					<%=fa_icon "facebook-square " %> 登入
 					<% end %>
 				<% end %>  
-				
+				</li>
 			</ul>
 				
     </div><!-- /.navbar-collapse -->
