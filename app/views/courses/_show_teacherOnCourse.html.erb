@@ -4,7 +4,7 @@
 
 
 
-<div class="well bs-callout bs-callou-<%=rankTagBar(@target_rank)%>">
+<!-- <div class="well bs-callout bs-callou-<%=rankTagBar(@target_rank)%>">  -->
 
 <!-- course's teacher and department -->
 <h2 style="border-bottom:solid 1px;">課程資訊</h2>
@@ -17,12 +17,12 @@
 				課程教師： <%=@teacher_show.name%>-->
 				<%=fa_icon "bank"%> 單位：<%=@teacher_show.department.ch_name%>
 				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, target:"_blank"%>
-				&nbsp;<%=fa_icon "book"%> 種類：
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "book"%> 種類：
 				<span class="<%=cos_type_class(cd.cos_type)%>">
 				<%=cd.cos_type%>
 				</span>
-				&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=cd.credit%>
-			 
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=cd.credit%> 
+				</br></br>
 				<% first_name = cd.semester.name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
 					<%=fa_icon "bell"%> 時間
@@ -51,11 +51,11 @@
       
 		<table class="table">
     		<tr>
-    			<td><%=fa_icon "calendar-o" %></td>
-    			<td><%=fa_icon "building" %></td>
-    			<td><%=fa_icon "graduation-cap" %></td>
-    			<td><%=fa_icon "bell" %></td>
-    			<td><%=fa_icon "bookmark" %></td>
+    			<td><%=fa_icon "calendar-o" %> 學期</td>
+    			<td><%=fa_icon "building" %> 教室</td>
+    			<td><%=fa_icon "graduation-cap" %> 學分</td>
+    			<td><%=fa_icon "bell" %> 時間</td>
+    			<td><%=fa_icon "bookmark" %> 備註</td>
     		</tr>	
 <%courseTeacher.course_details.each do |t|%>  
     		<tr>
@@ -167,7 +167,7 @@
 		</div>
 	</div>
 	
-</div>
+<!-- </div> -->
 
 <script>
 	
@@ -298,7 +298,7 @@
   				ct_id : <%=j courseTeacher.id.to_s %>
   			},
   			success: function(){
-  				$('#toggle-msg-head').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
+  				$('#toggle-msg-head').addClass('text-color-green').html('更新成功').show().fadeOut(3000);
   			}
 		});
 		
@@ -365,7 +365,9 @@
   				like_type: pre ,
   				list_id : id 
   			},	
-  			success: function(){}
+  			success: function(){
+  				$('#toggle-msg-list').addClass('text-color-green').html('給評成功').show().fadeOut(3000);
+  			}
   		});			
 			
 	}
@@ -409,7 +411,7 @@
   				ct_id : <%=j courseTeacher.id.to_s %>
   			},
   			success: function(){
-  				$('#toggle-msg-list').addClass('text-color-green').html('刪除成功').show().fadeOut(4000);
+  				$('#toggle-msg-list').addClass('text-color-green').html('刪除成功').show().fadeOut(3000);
   			}
 		});
 		
@@ -417,8 +419,8 @@
 	}
 	
 	function Submit(tdiv){
-		if(!confirm("確定資料無誤嗎？"))
-			return false ;
+	//	if(!confirm("確定資料無誤嗎？"))
+	//		return false ;
 
 		var tr = tdiv.parent('span').parent('td').parent('tr');
 		var id = tr.attr('id');//.substring(17) ;
