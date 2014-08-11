@@ -32,10 +32,16 @@
 				</li>
 				<% if current_user %>
 				<li>
-					<a class="no-padding-bottom"><%= fa_icon("calendar 2x ", :id=>"schd_but", :class=>"masterTooltip clickable-hover", :title=>"預排課表") %></a>
+				<!--	<a class="no-padding-bottom"><%= fa_icon("calendar 2x ", :id=>"schd_but", :class=>"masterTooltip clickable-hover", :title=>"預排課表") %></a> -->
 					<!--<a href="javascript:void(0);" onclick="show_schd();">
 					課表
 					</a>-->
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= fa_icon("calendar 2x", :id=>"schd_but")%></a>
+						<ul class="dropdown-menu">
+								<li id="small_timetable">
+
+								</li>
+						</ul>
 				</li>
 				
 				<li class="dropdown">
@@ -84,13 +90,14 @@
 
 
 <script>
-	$(document).ready(function(){
+	$(document).ready(function(){	
 		$("#schd_but").click(
 			function(){
-				$("#user_modal").modal('show');
+			//	$("#user_modal").modal('show');
 				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
 			}
-		);		
+		);
+
 		$("#cart_but").click(
 			function(){
 				$("#user_modal").modal('show');
