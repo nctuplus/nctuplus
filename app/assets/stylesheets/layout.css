@@ -27,6 +27,10 @@ body
 .no-margin-left{
 	margin-left:0px;
 }
+.no-margin-bottom{
+	margin-bottom:0px ;
+}
+
 .no-padding-right{
 	padding-right:0px;
 }

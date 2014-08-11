@@ -1,0 +1,19 @@
+<% time=['A','B','C','D','X','E','F','G','H'] %>
+<% days=['一','二','三','四','五'] %>
+<table class="table table-bordered no-margin-bottom" > 
+	<tr>
+		<td><%=fa_icon "search-plus",:onclick=>"$('#user_modal').modal('show');", :class=>" clickable-hover"%></td>
+		<%days.each do |th|%>
+			<td><%=th%></td>
+		<% end %>
+	<tr>
+	<% time.each do |t|%>
+	<tr>
+		<td><%=t%></td>
+		
+		<%for i in 1..(days.size-1) do%>
+		<td id="day_<%=i%>_time_<%=t%>_sm"></td>
+		<% end 	%>
+	</tr>
+	<% end %>
+</table>
