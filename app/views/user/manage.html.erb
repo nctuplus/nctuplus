@@ -1,16 +1,21 @@
 ﻿<table class="table">
 <tr>
-<th>Name</th><th>年級</th><th>Email</th><th>狀態</th><th>功能</th>
+<th>Name</th><th>系所</th><th>年級</th><th>狀態</th><th>功能</th>
 </tr>
 <%@users.each do |user| %>
 <tr>
 <td><%= user.name %></td>
+<% if user.department_id %>
+<td><%=user.department.ch_name%></td>
+<% else %>
+<td>尚未填寫</td>
+<% end %>
 <% if user.grade_id %>
 <td><%= Grade.find(user.grade_id).name %></td>
 <% else %>
 <td>尚未填寫</td>
 <% end %>
-<td><%= user.email %></td>
+
 <td>
 <% case user.activated %>
 <% when 0 %>登入fb
@@ -18,8 +23,28 @@
  
 <% end %>
 </td>
-<!--<td><%= link_to "啟用", :controller=>"user" , :action=>"activate", :id=>user %></td>-->
-<td><%=link_to "權限","/user/"+user.id.to_s+"/permission"%></td>
+<td>
+	<% if !TopManager.where(:user_id=>user.id).take %>
+	<%=link_to "管理員","javascript:void(0);", onclick:"addTopManager(#{user.id})"%>
+	<% else %>
+	
+	<% end %>
+</td>
+<!--<td><%=link_to "權限","/user/"+user.id.to_s+"/permission"%></td>-->
 </tr>
 <% end %>
 </table>
+
+
+<script>
+	function addTopManager(id){
+		$.ajax({
+			url: "/user/add_top_manager",
+			type: "GET",
+			data :{uid:id},
+			success :function(data){
+				alert(data);
+			}
+		});
+	}
+</script>

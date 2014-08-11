@@ -18,6 +18,10 @@ class CoursesController < ApplicationController
 			session[:saved_query]={}
 		end
 		
+		#if !cookies[:saved_query]
+		#	cookies[:saved_query]={}
+		#end
+		
 		get_autocomplete_vars
 
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
@@ -193,7 +197,7 @@ class CoursesController < ApplicationController
 		#reset_session
 		@semesters=Semester.all
 		
-		if !session[:saved_query]
+		if session[:saved_query].nil?
 			session[:saved_query]={}
 		end
 		
@@ -203,6 +207,7 @@ class CoursesController < ApplicationController
 		
 		@view_type=""
 
+		@search_type="all"
 		
 		#render "index_select_ver"
 		
@@ -325,9 +330,10 @@ class CoursesController < ApplicationController
 		@sem=Semester.where(:id=>@sem_id).take
 		dept_ids=get_dept_ids(dept_id)
 		id_begin=(params[:page].to_i-1)*each_page_show
-				
+			
 		#if params[:view_type]!="_mini"
-			session[:saved_query]={:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}
+		session[:saved_query]={:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}
+		#cookies[:saved_query]={value:{:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}, :expires => 1.year.from_now}
 		#end
 
 		if @sem
@@ -344,7 +350,7 @@ class CoursesController < ApplicationController
 		end
 		@cd_all = get_mixed_info(@course_details)
 		
-		@table_type="search_by_dept"+params[:view_type]
+		@table_type="search"+params[:view_type]
 		render "course_lists"+params[:view_type]
 	end
 	
@@ -510,9 +516,10 @@ class CoursesController < ApplicationController
 	def simulation
     
 		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
-		if @user_sem_ids.empty?
-			@user_sem_ids=latest_semester.id
-		end
+		@user_sem_ids.append(latest_semester.id)
+		#if @user_sem_ids.empty?
+		#	@user_sem_ids=latest_semester.id
+		#end
   end
 	
   def new

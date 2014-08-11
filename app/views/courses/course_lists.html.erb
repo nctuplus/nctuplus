@@ -1,6 +1,6 @@
 
-<table class="table table-hover table-bordered" id="course_table" >
-
+<table class="table table-hover table-bordered display" id="course_table" >
+<thead>
 
 
 <tr class="row">
@@ -17,9 +17,10 @@
 <th class="col-md-1">學分</th>
 <!--<th class="col-md-1"></th>-->
 </tr>
-
+</thead>
+<tbody>
 	<% if !@cd_all.empty? %>
-		<%=@cd_all.count%>
+
 		<% @cd_all.each do |cd,course,teacher| %>
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(course, :tid=>teacher.id)%>">
 					<td>
@@ -43,6 +44,7 @@
 	<% else %>
 		<tr class="row"><td colspan="7" class="col-md-12"><h4>查無結果!</h4></td></tr>
 	<% end %>
+</tbody>
 </table>
 
 <div id="page-selection" class="text-center"></div>
@@ -55,6 +57,12 @@ $(document).ready(function($) {
 	});
 
 	//alert("<%=j session[:saved_query].to_s.html_safe%>");
+	
+	/*$("#course_table").dataTable({
+		"paging":   false,
+		"searching":false,
+	});*/
+	
 });
 
 function reorder(obj){
@@ -95,7 +103,7 @@ $('#page-selection').bootpag({
 		<% end %>
 		maxVisible: 10
 	}).on("page", function(event, num){
-		<% case @table_type %>
+		<% case @search_type %>
 		<% when "all" %>
 			$("#search_result").load("/courses/list_all_courses?page="+num);
 		<% when "search_by_dept" %>

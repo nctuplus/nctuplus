@@ -75,6 +75,7 @@ Nctuplus::Application.routes.draw do
   #----------for user---------------
   #get "user/mail_confirm"
   #get "user/activate"
+	get "user/add_top_manager"
 	post "user/add_course"
   get "user/manage"
 	get "user/import_course"

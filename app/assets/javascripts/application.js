@@ -22,3 +22,4 @@
 
 
 //= require jquery.bootpag.min.js
+

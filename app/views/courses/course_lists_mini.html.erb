@@ -17,7 +17,7 @@
 	<% cos_types=[] %>
 	
 	<% if @course_details %>
-	<%=@cd_all.count%>
+
 		<% @cd_all.each do |cd,course,teacher|  %>
 		
 
@@ -34,7 +34,7 @@
 							<% course.ch_name %>
 							<%= course.department.ch_name %>
 							<%= teacher.name %>
-							<% if @table_type=="search" %>
+							<% if @table_type=="search_mini" %>
 							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add','search')">
 							<span class="glyphicon glyphicon-plus"></span>
 							</button>

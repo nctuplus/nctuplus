@@ -34,7 +34,21 @@ class UserController < ApplicationController
     # redirect_to "user/manage"
     
   # end
-	
+	def add_top_manager
+		
+		if TopManager.find_or_create_by_user_id(:user_id=>params[:uid].to_i, :all_users=>1, :all_departments=>1)
+			mesg="新增成功!"
+		else
+			mesg="新增失敗"
+		end
+		respond_to do |format|
+			format.html {
+				render :text => mesg,
+							 :content_type => 'text/html',
+							 :layout => false
+			}
+		end
+	end
 	def special_list
 		ls=latest_semester
 		cs_all=current_user.course_simulations

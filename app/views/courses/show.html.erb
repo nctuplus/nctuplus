@@ -59,6 +59,7 @@
 
 <script>
 	$(document).ready(function(){
+		//alert("<%=j session[:saved_query].to_s.html_safe%>");
 		//show_item('<%=@first_show%>',true);
 		$("#tc").html('<%=j render :partial=> "show_teacherOnCourse" %>');
 		$("#compare").load("/courses/get_compare?c_id=<%=@course.id%>", function() {

@@ -219,6 +219,7 @@ $( document ).ready( function(){
 			$("#search_term").val('<%=session[:saved_query][:term]%>');
 			<% if session[:saved_query][:type]=="dept" %>	
 				search_dept(<%=session[:saved_query][:dept_id]%>);
+				//alert("cookie:<%=j cookies[:saved_query].to_s.html_safe%>\n session:<%=j session[:saved_query].to_s.html_safe%>");
 			<% else %>
 				$("#<%=session[:saved_query][:search_type]%>").click();
 				
