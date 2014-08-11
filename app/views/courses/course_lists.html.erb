@@ -106,7 +106,7 @@ $('#page-selection').bootpag({
 		<% case @search_type %>
 		<% when "all" %>
 			$("#search_result").load("/courses/list_all_courses?page="+num);
-		<% when "search_by_dept" %>
+		<% when "by_dept" %>
 			$("#search_result").load(
 				"/courses/search_by_dept",
 				{	view_type: '<%=@view_type%>',
@@ -115,7 +115,7 @@ $('#page-selection').bootpag({
 					page : num
 				}
 			);
-		<% else %>
+		<% when "by_keyword" %>
 			$("#search_result").load(
 			"/courses/search_by_keyword",
 			{ view_type : "<%=@view_type%>",

@@ -34,19 +34,15 @@
 							<% course.ch_name %>
 							<%= course.department.ch_name %>
 							<%= teacher.name %>
-							<% if @table_type=="search_mini" %>
-							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add','search')">
-							<span class="glyphicon glyphicon-plus"></span>
-							</button>
-							<% elsif @table_type=="cart" %>
-							<button class="btn btn-danger btn-circle pull-right" onclick="add_to_cart(<%=cd.id%>,'delete')">
-								<span class="glyphicon glyphicon-minus"></span>
-							</button>
-							
-							<% else %>
+							<% if @table_type=="simulated" %>
 							<button class="btn btn-danger btn-circle pull-right" style="z-index:100" onclick="add_class(<%=cd.id%>,'delete')">
 								<span class="glyphicon glyphicon-minus"></span>
 							</button>
+							<% else %>
+							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add','search')">
+							<span class="glyphicon glyphicon-plus"></span>
+							</button>
+							
 							<% end %>
 						</p>
 						<p class="text-right">

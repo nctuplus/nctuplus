@@ -241,8 +241,9 @@ class CoursesController < ApplicationController
     #  format.html # index.html.erb
     #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
     #end
+		@table_type="simulated"
 		if params[:type]=="schd"
-			session[:saved_query]={}
+			#session[:saved_query]={}
 			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
 			render "user_schedule"
 		elsif params[:type]=="list"
@@ -286,7 +287,7 @@ class CoursesController < ApplicationController
 		@cd_all=get_mixed_info(@course_details)
 		@page_numbers=CourseDetail.all.count/each_page_show
 		
-		@table_type='all'
+		@search_type='all'
 		get_autocomplete_vars
 
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
@@ -350,7 +351,7 @@ class CoursesController < ApplicationController
 		end
 		@cd_all = get_mixed_info(@course_details)
 		
-		@table_type="search"+params[:view_type]
+		@search_type="by_dept"
 		render "course_lists"+params[:view_type]
 	end
 	
@@ -428,7 +429,8 @@ class CoursesController < ApplicationController
 		get_autocomplete_vars
 
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		@table_type="search" if params[:view_type]=="_mini"
+		@table_type="by_keyword" #if params[:view_type]=="_mini"
+		
 		render "course_lists"+params[:view_type]
 		#end
 	end

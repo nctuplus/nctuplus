@@ -217,6 +217,7 @@ $( document ).ready( function(){
 			change_dept_select(<%=session[:saved_query][:degree]%>);
 			$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
 			$("#search_term").val('<%=session[:saved_query][:term]%>');
+			
 			<% if session[:saved_query][:type]=="dept" %>	
 				search_dept(<%=session[:saved_query][:dept_id]%>);
 				//alert("cookie:<%=j cookies[:saved_query].to_s.html_safe%>\n session:<%=j session[:saved_query].to_s.html_safe%>");
