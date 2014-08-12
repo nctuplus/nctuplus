@@ -42,6 +42,7 @@
 
 $(document).ready(function() {
 	$('#small_timetable').html('<%=j render :partial=>'small_timetable'%>') ; // for small timetable
+	
 	add_time_slot(<%=@cd_jsons.to_s.html_safe%>);
 	var rows = $('.schd-slot-empty');//.not(':first');
 	rows.on('click', function(e) {    
@@ -50,7 +51,7 @@ $(document).ready(function() {
 		row.addClass("schd-grid-selected");
 		
 	});
-	
+
 });
 function add_time_slot(courses){
 	for(var i = 0 ; i < courses.length ; i++){
@@ -61,7 +62,7 @@ function add_time_slot(courses){
 			var day=timearr[j][0];
 			for(var k = 1 ; k < timearr[j].length ; k++){
 				var row_id="#day_"+day+"_time_"+timearr[j][k];
-				var small_row_id = row_id+"_sm" ;
+				var small_row_id = row_id+"_hsm" ;
 								
 				$(small_row_id).removeClass("schd-slot-empty");
 				$(small_row_id).addClass(courses[i].class);
