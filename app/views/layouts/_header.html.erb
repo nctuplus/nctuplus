@@ -93,8 +93,8 @@
 	$(document).ready(function(){	
 		$("#schd_but").click(
 			function(){
-			//	$("#user_modal").modal('show');
-				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
+				//$("#user_modal").modal('show');
+				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd&renderType=1");
 			}
 		);
 

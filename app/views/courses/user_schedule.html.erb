@@ -28,7 +28,11 @@
 							<% time_index = time_index+1 %>
 							<% i = 1 %>
 							<%  days.each do |day| %>
+							<%if params[:renderType].to_i==1%>
+								<td id="day_<%=i%>_time_<%=t%>_h" class="schd-slot-empty" ></td>		
+							<%else %>
 								<td id="day_<%=i%>_time_<%=t%>" class="schd-slot-empty" ></td>
+							<%end%>
 								<%i=i+1%>
 							<% end %>
 						</tr>
@@ -41,7 +45,9 @@
 <script>
 
 $(document).ready(function() {
+<%if params[:renderType].to_i==1%>
 	$('#small_timetable').html('<%=j render :partial=>'small_timetable'%>') ; // for small timetable
+<%end%>	
 	add_time_slot(<%=@cd_jsons.to_s.html_safe%>);
 	var rows = $('.schd-slot-empty');//.not(':first');
 	rows.on('click', function(e) {    
@@ -50,7 +56,7 @@ $(document).ready(function() {
 		row.addClass("schd-grid-selected");
 		
 	});
-	
+
 });
 function add_time_slot(courses){
 	for(var i = 0 ; i < courses.length ; i++){
@@ -60,9 +66,10 @@ function add_time_slot(courses){
 		for(var j = 0 ; j < timearr.length ; j++){
 			var day=timearr[j][0];
 			for(var k = 1 ; k < timearr[j].length ; k++){
-				var row_id="#day_"+day+"_time_"+timearr[j][k];
+				var row_id = "#day_"+day+"_time_"+timearr[j][k] ;
+			<%if params[:renderType].to_i==1%>			
 				var small_row_id = row_id+"_sm" ;
-								
+				row_id = row_id+"_h";							
 				$(small_row_id).removeClass("schd-slot-empty");
 				$(small_row_id).addClass(courses[i].class);
 				$(small_row_id).text(courses[i].name[1]);
@@ -71,8 +78,10 @@ function add_time_slot(courses){
 					placement:"auto",
 					trigger : "hover",
 					container :"body"
-				});
+				});			
+			<% end %>
 				
+
 				$(row_id).removeClass("schd-slot-empty"); // remove old color
 				$(row_id).addClass(courses[i].class); //add color
 				$(row_id).text(courses[i].name);//add name
@@ -83,6 +92,7 @@ function add_time_slot(courses){
 					trigger : "hover",
 					container :"body"
 				});
+				
 			}
 		}
 	}
