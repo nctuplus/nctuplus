@@ -1,0 +1,24 @@
+<script>
+	$(document).ready(function(){
+
+		$("#filter").keyup(function(){
+			$("#course_table tr:not(:visible)").show();
+			$("#course_table tr:not(:first, :contains("+$("#filter").val()+"))").hide();
+			
+		});
+	});
+</script>
+
+<div id="components" class="">
+	<%= render 'components' %>
+</div>
+<script>
+$(document).ready(function($) {
+	$(".clickable-row").click(function() {
+		window.document.location = $(this).attr("href");
+
+	});
+
+	
+});
+</script>

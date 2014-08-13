@@ -192,13 +192,16 @@ class CoursesController < ApplicationController
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
   	 	
     end
-###	
+###
 	def index
 		#reset_session
 		@semesters=Semester.all
 		
 		if session[:saved_query].nil?
 			session[:saved_query]={}
+			@page=1
+		else
+			@page=session[:saved_query][:page].to_i
 		end
 		
 		get_autocomplete_vars
@@ -281,6 +284,7 @@ class CoursesController < ApplicationController
 	def list_all_courses
 	  page=params[:page].to_i
 		id_begin=(page-1)*each_page_show
+		session[:saved_query]={:type=>"all", :page=>page}
 		@course_details=CourseDetail.where(:id=>id_begin..id_begin+each_page_show)
 		@course_details=@course_details.sort_by{|cd| cd.course_teachership.course_teacher_ratings.sum(:avg_score)}.reverse
 		#@course_details=@courses
@@ -332,10 +336,10 @@ class CoursesController < ApplicationController
 		dept_ids=get_dept_ids(dept_id)
 		id_begin=(params[:page].to_i-1)*each_page_show
 			
-		#if params[:view_type]!="_mini"
-		session[:saved_query]={:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}
+		if params[:view_type]!="_mini"
+			session[:saved_query]={:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}
 		#cookies[:saved_query]={value:{:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}, :expires => 1.year.from_now}
-		#end
+		end
 
 		if @sem
 			@courses=@sem.courses.select{|c| join_dept(c,dept_ids)}
@@ -366,7 +370,7 @@ class CoursesController < ApplicationController
 		
 		
 		if params[:view_type]!="_mini"
-			session[:saved_query]={:type=>"keyword",:sem_id=>semester_id, :dept_id=>dept_id, :degree=>degree_id, :term=>search_term, :search_type=>search_type, :page=>params[:page].to_i}
+			session[:saved_query]={:page=>params[:page], :type=>"keyword",:sem_id=>semester_id, :dept_id=>dept_id, :degree=>degree_id, :term=>search_term, :search_type=>search_type, :page=>params[:page].to_i}
 		end
 		if dept_id!=0
 			dept_ids= get_dept_ids(dept_id)
@@ -429,7 +433,7 @@ class CoursesController < ApplicationController
 		get_autocomplete_vars
 
 		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		@table_type="by_keyword" #if params[:view_type]=="_mini"
+		@search_type="by_keyword" #if params[:view_type]=="_mini"
 		
 		render "course_lists"+params[:view_type]
 		#end
@@ -592,6 +596,7 @@ class CoursesController < ApplicationController
 		
 	end
 	def show_cart
+		session[:saved_query]={}
 		@sem=latest_semester
 		@course_details=CourseDetail.where(:id=>session[:cd])
 		@cd_all=get_mixed_info(@course_details)

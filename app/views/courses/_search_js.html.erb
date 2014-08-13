@@ -31,7 +31,7 @@ function change_search_type(obj){
 	}
 }
 
-function search_keyword(){
+function search_keyword(page){
 	var search_term=$("#search_term").val();//.html();
 	//search_term=search_term.replace(/\s+/g,"%20");
 	
@@ -56,25 +56,28 @@ function search_keyword(){
 			sem_id :sem_id,
 			dept_id : dept_id,
 			degree_id : degree_id,
-			page : '<%=@page.nil? ? 1: @page%>'			
+			page : page
 		}
 	);
 	$("#search-btn").blur();
+	$("#filter").attr('readonly',false);
+	$("#filter").focus();
 	//$("#search_result").load("/courses/search_by_keyword?view_type=<%=@view_type%>&search_term="+search_term+
 	//				"&search_type="+search_type+"&sem_id="+sem_id+"&dept_id="+dept_id+"&degree_id="+degree_id);
 }
 
-function search_dept(dept_id){
+function search_dept(dept_id,page){
 	$("#search_result").html('<%=loading_img%>');
 	$("#search_result").load(
 		"/courses/search_by_dept",
 		{	view_type: '<%=@view_type%>',
 			dept_id : dept_id,
 			sem_id : $("#semester_id").val(),
-			page : '<%=@page.nil? ? 1: @page%>'
+			page : page
 		}
 	);
-
+	$("#filter").attr('readonly',false);
+	$("#filter").focus();
 													
 }
 
@@ -121,7 +124,7 @@ $( document ).ready( function(){
 				event.preventDefault();
 				$(this).val(ui.item.label);
 				$(this).next().val(ui.item.walue);
-				search_dept(ui.item.walue);
+				search_dept(ui.item.walue,1);
 				$(this).blur();
 			}
   }).focus(function(){
@@ -180,7 +183,7 @@ $( document ).ready( function(){
   }).focus(function(){$(this).autocomplete("search", "");return false;});
 	$("#search_term").keypress(function(e) {
 		if(e.which==13){
-			search_keyword();
+			search_keyword(1);
 			$("#search-btn").blur();
 		}
 	});
@@ -211,23 +214,28 @@ $( document ).ready( function(){
 		<% if session[:saved_query].empty? %>
 			$("#search_result").load("/courses/list_all_courses?page=1");
 		<% else %>
-			
-			$( "#semester_select" ).val(get_label_by_value(semester_select,<%=session[:saved_query][:sem_id]%>));
-			$( "#degree_select" ).val(get_label_by_value(degree_select,<%=session[:saved_query][:degree]%>));
-			change_dept_select(<%=session[:saved_query][:degree]%>);
-			$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
-			$("#search_term").val('<%=session[:saved_query][:term]%>');
-			
-			<% if session[:saved_query][:type]=="dept" %>	
-				search_dept(<%=session[:saved_query][:dept_id]%>);
-				//alert("cookie:<%=j cookies[:saved_query].to_s.html_safe%>\n session:<%=j session[:saved_query].to_s.html_safe%>");
+			<% if session[:saved_query][:type]=="all" %>
+				$("#search_result").load("/courses/list_all_courses?page=<%=session[:saved_query][:page]%>");
 			<% else %>
-				$("#<%=session[:saved_query][:search_type]%>").click();
+				$( "#semester_select" ).val(get_label_by_value(semester_select,<%=session[:saved_query][:sem_id]%>));
+				$( "#degree_select" ).val(get_label_by_value(degree_select,<%=session[:saved_query][:degree]%>));
+				change_dept_select(<%=session[:saved_query][:degree]%>);
+				$( "#department_select" ).val(get_label_by_value(department_select,<%=session[:saved_query][:dept_id]%>));	
+				$("#search_term").val('<%=session[:saved_query][:term]%>');
 				
-				search_keyword();
+				<% if session[:saved_query][:type]=="dept" %>	
+					search_dept(<%=session[:saved_query][:dept_id]%>,'<%=@page.nil? ? 1: @page%>');
+					//alert("cookie:<%=j cookies[:saved_query].to_s.html_safe%>\n session:<%=j session[:saved_query].to_s.html_safe%>");
+				<% else %>
+					$("#<%=session[:saved_query][:search_type]%>").click();
+					
+					search_keyword('<%=@page.nil? ? 1: @page%>');
+				<% end %>
 			<% end %>
-			
 		<% end %>
+			
+			
+
 	<% end %>
 });
 </script>

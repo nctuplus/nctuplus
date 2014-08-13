@@ -24,10 +24,11 @@ class User < ActiveRecord::Base
 	  #end
 			#user.grade_id=session[:grade_id].to_i
 			#if session[:dept_id]
-			#user.department_id=session[:dept_id].to_i
+			
 			
 			#user.activated = user.department_id==0 ? 0 : 1 
 			user.activated=0
+			user.department_id=0
       user.oauth_token = auth.credentials.token
       user.oauth_expires_at = Time.at(auth.credentials.expires_at)
       user.save!

@@ -44,6 +44,11 @@ group :doc do
   gem 'sdoc', require: false
 end
 
+#for search
+gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4'
+gem 'kaminari'
+
+
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
 

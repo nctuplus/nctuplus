@@ -1,6 +1,14 @@
 module CourseHelper
+	def get_mixed_info2(cds)
+		#courses=Course.join(:course_teachership).where(:id=>cds.map{|cd|cd.course_teachership})
+		return [] if cds.empty?
+		depts=Department.where(:id=>cds.map{|cd|cd.course.department_id}.uniq)
+		dept_dulp=cds.map{|cd| depts.select{|d|d.id==cd.course.department_id}.first}
+		return cds.zip(dept_dulp)
+	end
 	def get_mixed_info(cds)
 		#courses=Course.join(:course_teachership).where(:id=>cds.map{|cd|cd.course_teachership})
+		return [] if cds.empty?
 		courses=Course.where(:id=>cds.map{|cd|cd.course_teachership.course_id})
 		courses_dulp=cds.map{|cd| courses.select{|c|c.id==cd.course_teachership.course_id}.first}
 		teachers=Teacher.where(:id=>cds.map{|cd|cd.course_teachership.teacher_id})

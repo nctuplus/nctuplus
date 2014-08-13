@@ -1,12 +1,17 @@
 ﻿<script>
 	
-	
+	<% if params[:show_static] %>
+	$(document).ready(function(){
+		//$("#toggle-b").trigger('click');
+		$("#toggle-b").click();
+	});
+	<% end %>
 </script>
 
 <div class="tabbable tabs-top">
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
-		<li class="active"><a href="#a" data-toggle="tab" >今年</a></li>
-		<li><a href="#b" data-toggle="tab">統計</a></li>
+		<li class="active"><a id='toggle-a' href="#a" data-toggle="tab" >今年</a></li>
+		<li><a id='toggle-b' href="#b" data-toggle="tab">統計</a></li>
 	</ul>
 	<br>
 	<div class="tab-content" style="overflow:hidden;">

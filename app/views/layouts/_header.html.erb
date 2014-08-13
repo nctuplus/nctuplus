@@ -17,8 +17,8 @@
 						</ul>
 					</li>
 				<% end %>
-				<li><a href="/courses/">全校課程</a></li>
-
+				<!--<li><a href="/courses/">全校課程</a></li>-->
+				<li><a href="/course_details/">全校課程</a></li>
 				<% if current_user && TopManager.find_by_user_id(current_user.id) %>
 				<li><a href="/reviews">心得列表</a></li>
 				<% end %>

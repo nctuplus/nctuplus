@@ -86,13 +86,13 @@ class UserController < ApplicationController
 		@agree=[]
 		@normal=[]
 		@score.split("\n").each do |s|
-			s2=s.split(" ") 
+			s2=s.split("\t") 
 			if s2.length>5 &&s2[0].match(/[[:digit:]]/)
 			
 				if s2[1].match(/[A-Z]{3}[[:digit:]]{2}+/)
 					@agree.append(s2[1])
 				else
-				course={'sem'=>s2[1],'cos_id'=>s2[2], 'score'=>s2[7]}
+				course={'sem'=>s2[1],'cos_id'=>s2[2], 'score'=>s2[7], 'name'=>s2[4]}
 				@normal.append(course)
 				end	
 			end 
@@ -102,6 +102,8 @@ class UserController < ApplicationController
 		@has_added=0
 		@success_added=0
 		@fail_added=0
+		@fail_course_name=[]
+		@no_pass=0
 		@normal.each do |n|
 			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
 			if n['score']=="通過" || n['score'].to_i>=pass_score
@@ -118,11 +120,14 @@ class UserController < ApplicationController
 							@success_added+=1
 						end
 					else
+						#@fail_course_name.append()
 						@fail_added+=1
 					end
 				else
 					@fail_added+=1
 				end
+			else
+				@no_pass+=1
 			end
 		end
 		#respond_to do |format|
@@ -130,7 +135,7 @@ class UserController < ApplicationController
 		#	format.js
 
 		#end
-		redirect_to :action =>"special_list", :import_course=>true, :success=>@success_added, :same=>@has_added, :failed=>@fail_added
+		redirect_to :action =>"special_list", :import_course=>true, :success=>@success_added, :same=>@has_added, :failed=>@fail_added, :no_pass=>@no_pass, :show_static=>true
 	end
 	
 	

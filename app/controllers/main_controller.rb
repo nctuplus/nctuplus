@@ -31,7 +31,7 @@ class MainController < ApplicationController
 	
 	def hidden_prepare
 		#parse_semester
-	  #prepare_course_db
+	  prepare_course_db
 		#final_set_dept_type
 		
 		#_type=["cold","sweety","hardness"]
@@ -225,7 +225,7 @@ class MainController < ApplicationController
 		end
   end
   def save_course_detail(cts_id,sem_id,raw_data)
-    @cd=CourseDetail.where(:course_teachership_id=>cts_id, :semester_id=>sem_id).take
+    @cd=CourseDetail.where(:temp_cos_id=>raw_data['cos_id'], :semester_id=>sem_id).take
     if @cd.nil?
 	  #@department
 			@cd=CourseDetail.new
@@ -259,10 +259,10 @@ class MainController < ApplicationController
 	  @course=Course.new(:ch_name=>ch_name,:eng_name=>eng_name,:real_id=>code,:department_id=>dept_id)
 	  @course.save
 	  
-	#else
-	#  return nil
-	end
-	return @course
+		#else
+		#  return nil
+		end
+			return @course
   end
   def save_teacher(name,dept_id)
     @teacher=Teacher.find_by_name(name)

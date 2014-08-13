@@ -8,9 +8,10 @@ class Course < ActiveRecord::Base
 	has_many :semesters, :through => :semester_courseships
 	
 	has_many :course_teacherships, :dependent => :destroy
+	has_many :course_details, :through=> :course_teacherships#, :source=>course_details
 	has_many :teachers, :through => :course_teacherships
 	
-	#has_many :course_details, :through=>course_teacherships#, :dependent => :destroy
+	
 
 	
 	has_many :reviews
@@ -30,4 +31,13 @@ class Course < ActiveRecord::Base
 	 
     }
   end
+	
+	
+	
+	#UNRANSACKABLE_ATTRIBUTES = ["ch_name"]
+
+  #def self.ransackable_attributes auth_object = nil
+  #  (column_names - UNRANSACKABLE_ATTRIBUTES) + _ransackers.keys
+  #end
+	
 end

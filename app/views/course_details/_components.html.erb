@@ -1,0 +1,122 @@
+<script>
+	function clean_input(obj){
+		obj.next().val("");
+		$("#search").click();
+	}
+	$(function(){
+		var dept_sel=[];
+		dept_sel['3']='<%=j options_from_collection_for_select(Department.where(:degree=>'3', :dept_type=>"dept"),'id','ch_name')%>'
+		dept_sel['2']='<%=j options_from_collection_for_select(Department.where(:degree=>'2', :dept_type=>"dept"),'id','ch_name')%>'
+		dept_sel['0']='<%=j options_from_collection_for_select(Department.where(:degree=>['0','5']),'id','ch_name')%>'
+		$("#degree").change(function(){
+			
+			$("#q_course_department_id_eq").html(dept_sel[$(this).val()]);
+			
+		});
+	});
+</script>
+<%= search_form_for @q, class:"form-inline" do |f| %>
+
+<div class="row">
+	
+	<div class="col-sm-1 col-md-offset-1">
+		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+		<%= f.select :semester_id_eq, options_from_collection_for_select(Semester.all, "id", "name", @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
+	</div>
+	<div class="col-sm-1">
+		<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']]), prompt: "分類", class: "form-control" %>
+	</div>	
+	<div class="col-sm-2">
+		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+		<%= f.select :course_department_id_eq, options_from_collection_for_select(Department.where.not(:dept_type=>['no_courses','for_user']), "id", "ch_name", @q.course_department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
+	</div>
+	<div class="col-sm-6 row">
+	<div class="col-sm-2">
+		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+		<%= f.search_field :brief_cont, class: "form-control",placeholder:"摘要(向度)" %>
+	</div>
+	<div class="col-sm-3">
+		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+		<%= f.search_field :course_ch_name_cont, class: "form-control",placeholder:"課名" %>
+	</div>
+	<div class="col-sm-2">
+		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+		<%= f.search_field :time_cont, class: "form-control",placeholder:"時間" %>
+	</div>
+	<div class="col-sm-3">
+		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+		<%= f.search_field :teacher_name_cont, class: "form-control",placeholder:"老師" %>
+	</div>
+	<button class="btn btn-success" id="search" onclick="$('#course_detail_search').submit()">
+	<%= fa_icon "search" %>
+	</button>
+	</div>
+  
+
+<% end %>
+</div>
+<br>
+
+
+<table class="table table-hover table-bordered bg-white-transparent" id="course_table" >
+
+
+<div class="row hidden " id="search_tips">
+	<div id="" class="col-md-10 col-md-offset-1">
+		<div class="bs-callout bs-callout-info ">
+			<!--<h4></h4>-->
+			<p>快速鍵: 選擇類別-[U]ndergraduate:大學部 [G]raduate:研究所 [C]ommon:通識 [D]epartment:系所 [/]:關鍵字</p>
+			<p>搜尋規則: 1CD 5G=>找含有1CD與5G時段的課程(OR) 1CD5G=>找1CD5G的課程(AND) </p>
+		</div>
+	</div>
+</div>
+
+
+
+<tr class="row">
+<th class="col-md-1"><%= sort_link @q,:semester_id, "學期" %></th>
+<th class="col-md-2">
+	<%= sort_link @q,:course_department_id, "系所" %> /
+	<%= sort_link @q,:brief, "摘要" %>
+</th>
+<!--<th>永久課號</th>-->
+
+<th class="col-md-2"><%= sort_link @q,:course_ch_name, "課名" %></th>
+<th class="col-md-1"><%= sort_link @q,:teacher_name, "老師" %></th>
+<th class="col-md-4">備註</th>
+<th class="col-md-1"><%= sort_link @q,:time, "時間" %></th>
+<th class="col-md-1"><%= sort_link @q,:credit, "學分" %></th>
+<!--<th class="col-md-1"></th>-->
+</tr>
+
+<tbody>
+
+	<% if !@cd_all.empty? %>
+
+		<% @cd_all.each do |cd,dept| %>
+				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course, :tid=>cd.teacher.id)%>">
+					<td>
+						<%=cd.semester.name%>
+					</td>
+					<td>
+						<%=dept.ch_name%>
+						<% if cd.brief!=" " %>
+						/<%= cd.brief %>
+						<% end %>
+					</td>
+					<!--<td><%= cd.brief %></td>-->
+
+					<td><%= cd.course.ch_name %></td>
+					<td><%= cd.teacher.name %></td>
+					<td><%= cd.memo %></td>
+					<td><%= cd.time %></td>
+					<td><%= cd.credit %></td>
+				</tr>
+		<% end %>
+	<% else %>
+		<tr class="row"><td colspan="7" class="col-md-12"><h4>查無結果!</h4></td></tr>
+	<% end %>
+</tbody>
+</table>
+
+<%= paginate @cds, :window=>2 %>

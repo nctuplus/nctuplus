@@ -91,7 +91,8 @@ Nctuplus::Application.routes.draw do
  # resources :upload
   #root :to => "courses#show", :id=>5
   root :to => "main#index"
-  
+	
+  resources :course_details
   
   
   # The priority is based upon order of creation: first created -> highest priority.
