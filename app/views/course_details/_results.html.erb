@@ -1,37 +1,21 @@
-<script>
-	function clean_input(obj){
-		obj.next().val("");
-		$("#search").click();
-	}
-	$(function(){
-		var dept_sel=[];
-		dept_sel['3']='<%=j options_from_collection_for_select(Department.where(:degree=>'3', :dept_type=>"dept"),'id','ch_name')%>'
-		dept_sel['2']='<%=j options_from_collection_for_select(Department.where(:degree=>'2', :dept_type=>"dept"),'id','ch_name')%>'
-		dept_sel['0']='<%=j options_from_collection_for_select(Department.where(:degree=>['0','5']),'id','ch_name')%>'
-		$("#degree").change(function(){
-			
-			$("#q_course_department_id_eq").html(dept_sel[$(this).val()]);
-			
-		});
-	});
-</script>
+
 <%= search_form_for @q, class:"form-inline" do |f| %>
 
 <div class="row">
 	
-	<div class="col-sm-1 col-md-offset-1">
+	<div class="col-sm-1 col-md-offset-1 no-padding-left">
 		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 		<%= f.select :semester_id_eq, options_from_collection_for_select(Semester.all, "id", "name", @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
 	</div>
-	<div class="col-sm-1">
+	<div class="col-sm-1 no-padding-left">
 		<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']]), prompt: "分類", class: "form-control" %>
 	</div>	
-	<div class="col-sm-2">
+	<div class="col-sm-2 no-padding-left ">
 		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 		<%= f.select :course_department_id_eq, options_from_collection_for_select(Department.where.not(:dept_type=>['no_courses','for_user']), "id", "ch_name", @q.course_department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
 	</div>
 	<div class="col-sm-6 row">
-	<div class="col-sm-2">
+	<div class="col-sm-2 no-padding-left no-padding-right">
 		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 		<%= f.search_field :brief_cont, class: "form-control",placeholder:"摘要(向度)" %>
 	</div>
@@ -114,7 +98,12 @@
 				</tr>
 		<% end %>
 	<% else %>
-		<tr class="row"><td colspan="7" class="col-md-12"><h4>查無結果!</h4></td></tr>
+		<tr class="row">
+			<td colspan="7" class="col-md-6 col-md-offset-5">
+				<h3>查無結果!</h3>
+				<h4>小提示:可以試著在老師名稱中間加空格</h4>
+			</td>
+		</tr>
 	<% end %>
 </tbody>
 </table>

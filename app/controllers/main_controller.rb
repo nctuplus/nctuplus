@@ -30,84 +30,10 @@ class MainController < ApplicationController
 	
 	
 	def hidden_prepare
-		#parse_semester
-	  prepare_course_db
+	  #prepare_course_db
 		#final_set_dept_type
-		
-		#_type=["cold","sweety","hardness"]
-		#
-		#CourseTeachership.all.each do |ct|
-		#	_type.each do |t|
-		#		CourseTeacherRating.create(:course_teachership_id=>ct.id, :rating_type=>t, :avg_score=>0, :total_rating_counts=>0)
-		#	end
-		#end
 	end
-	
-	
-	
-	
-  
 
-	# def search_by_keyword_ajax
-    # search_term=params[:_search_term]
-		# search_type=params[:_search_type]
-		# semester_id=params[:_semester_id].to_i
-		# dept_id=params[:_dept_id]
-		
-		# dept_ids= get_dept_ids(dept_id)
-				
-		# case search_type
-			# when "course_no"
-				# if !semester_id.nil?
-					# @courses= Course.where(" id IN (:id) AND real_id LIKE :real_id ",
-							# { :id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :real_id => "%#{search_term}%" })	
-				# else
-					# @courses= Course.where("real_id LIKE :real_id ",
-																# {:real_id => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
-				# end
-				# @courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-				
-			# when "course_name"
-				# if !semester_id.nil?
-					# @courses = Course.where("id IN (:id) AND ch_name LIKE :name ",
-						# {:id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :name => "%#{search_term}%" })
-				# else
-					# @courses= Course.where("ch_name LIKE :name ",
-																# {:name => "%#{search_term}%" })#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
-				# end
-				# @courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-		# end
-		# respond_to do |format|
-			# format.html {
-				# render :json => @courses.map{|course|
-														# course.course_details.flit_semester(semester_id).map{|cd|cd.to_result(course) }
-												# },
-					# :content_type => 'text/html',
-					# :layout => false
-			# }
-		# end
-  # end
-	
-  # def search_by_dept_ajax
-		# dept_id=params[:_dept_id]
-		# semester_id=params[:_semester_id].to_i
-		
-		# dept_ids=get_dept_ids(dept_id)
-		
-		# @semester=Semester.find(semester_id)
-		# @courses=@semester.courses.select{|c| join_dept(c,dept_ids)}
-
-		# respond_to do |format|
-			# format.html {
-				# render :json => @courses.map{|course|
-														# course.course_details.flit_semester(semester_id).map{|cd|cd.to_result(course) }
-												# },
-					# :content_type => 'text/html',
-					# :layout => false
-			# }
-		# end
-	# end
-	
   private
 	
 	def final_set_dept_type

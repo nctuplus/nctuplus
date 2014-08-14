@@ -1,4 +1,4 @@
-<%= render :partial=>"search_js" %>
+<% render :partial=>"search_js" %>
 
 <div class="row">
 	
@@ -21,8 +21,7 @@
 							<h4 class="text-center">課程查詢</h4>
 						</div>
 						<div class="panel-body">
-							<div class="row schedule-search-bar">
-								<%= render :partial=> "schd_search_bar" %>
+							<div id="search-form" class="row schedule-search-bar">
 							</div>
 						</div>
 					</div>
@@ -61,6 +60,7 @@
 
 
 $(document).ready(function(){
+	$("#search-form").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	<% if current_user %>
 		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
 		$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");

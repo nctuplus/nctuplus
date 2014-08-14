@@ -41,12 +41,12 @@
 </div>
 
 
-	<div class="col-md-11" style="position:absolute;margin-top:25%;margin-bottom:5%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000; ">
+	<div class="col-md-11" style="position:absolute;margin-top:30%;margin-bottom:5%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000; ">
 		<div class="row">
 		
-			<div class="container icon-container" style="margin-left:25%;" >
+			<div class="container icon-container" style="margin-left:40%;" >
 				<div class="row row-margin" >
-				<div class="circle clickable-hover" href="/courses/">
+				<div class="circle clickable-hover" href="/course_details/">
 					<%=fa_icon "search 5x" %>
 				</div>
 				</div>
@@ -54,6 +54,17 @@
 				<p class="text-center function-desc" style="">找課程</p>
 				
 			</div>
+			<div class="container icon-container" style="margin-left:100px;">
+				<div class="row row-margin">
+				<div class="circle clickable-hover" href="/user/special_list">
+					<%=fa_icon "graduation-cap 5x" %>
+					
+					<!--<span class="glyphicon glyphicon-list-alt"style="font-size:70px;"></span>-->
+				</div>
+					<p class="text-center function-desc" >算學分</p>
+				</div>
+			</div>
+<!--
 			<div class="container icon-container" >
 				<div class="row row-margin">
 				<div class="circle clickable-hover" href="#">	
@@ -64,16 +75,7 @@
 
 				</div>
 			</div>
-			<div class="container icon-container" >
-				<div class="row row-margin">
-				<div class="circle clickable-hover" href="#">
-					<%=fa_icon "graduation-cap 5x" %>
-					
-					<!--<span class="glyphicon glyphicon-list-alt"style="font-size:70px;"></span>-->
-				</div>
-					<p class="text-center function-desc" >算學分</p>
-				</div>
-			</div>
+			
 			
 			<div class="container icon-container">
 				<div class="row row-margin">
@@ -86,29 +88,9 @@
 		</div>
 
 	</div>
-
-	
-<!--
-<div class="container">
-	<div class="row" >
-		<div class="col-md-12"style="height:500px; background-color:white;">
-			6465456
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-md-3 index-grid" >45654</div>
-		<div class="col-md-3 index-grid">
-			<%=number_with_delimiter(@review_count)%>
-		</div>
-		<div class="col-md-3 index-grid">
-			<%=number_with_delimiter(@file_count)%>
-		</div>
-		<div class="col-md-3 index-grid">
-			<%=number_with_delimiter(@user_count)%>
-		</div>
-	</div>
-</div>
 -->
+	
+
 
 <script>
 	$(document).ready(function() {

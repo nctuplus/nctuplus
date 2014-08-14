@@ -1,16 +1,7 @@
-<script>
-	$(document).ready(function(){
+<%=render 'common_js' %>
 
-		$("#filter").keyup(function(){
-			$("#course_table tr:not(:visible)").show();
-			$("#course_table tr:not(:first, :contains("+$("#filter").val()+"))").hide();
-			
-		});
-	});
-</script>
-
-<div id="components" class="">
-	<%= render 'components' %>
+<div id="results" class="">
+	<%= render 'results' %>
 </div>
 <script>
 $(document).ready(function($) {

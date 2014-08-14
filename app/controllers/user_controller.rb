@@ -1,7 +1,7 @@
 class UserController < ApplicationController
 	include CourseHelper
   before_filter :checkTopManager, :only=>[:manage, :permission]
-	before_filter :checkLogin, :only=>[:add_course, :import_course, :special_list]
+	before_filter :checkLogin, :only=>[:add_course, :import_course, :special_list, :select_dept]
   layout false, :only => [:add_course]
   # def mail_confirm
     # @user=User.where(:activate_token=>params[:key]).first
@@ -76,9 +76,6 @@ class UserController < ApplicationController
 		
 	end
 	
-	def test
-		
-	end
 	
 	def add_course
 		score=params[:course][:score]
@@ -91,9 +88,12 @@ class UserController < ApplicationController
 			
 				if s2[1].match(/[A-Z]{3}[[:digit:]]{2}+/)
 					@agree.append(s2[1])
-				else
+				elsif s2[1].include?('.')
+					course=course
+				elsif s2[1].match(/[[:digit:]]{3}+/)&&s2[2].match(/[[:digit:]]{4}/)
 				course={'sem'=>s2[1],'cos_id'=>s2[2], 'score'=>s2[7], 'name'=>s2[4]}
 				@normal.append(course)
+				
 				end	
 			end 
 		end
@@ -104,6 +104,9 @@ class UserController < ApplicationController
 		@fail_added=0
 		@fail_course_name=[]
 		@no_pass=0
+		if @normal.length>0
+			CourseSimulation.where("user_id = ? AND semester_id != ? ",current_user.id,Semester.last.id).destroy_all
+		end
 		@normal.each do |n|
 			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
 			if n['score']=="通過" || n['score'].to_i>=pass_score
@@ -115,7 +118,7 @@ class UserController < ApplicationController
 					if cds
 						if CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id).take
 							@has_added+=1
-						else
+						else	
 							CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id)
 							@success_added+=1
 						end
@@ -159,46 +162,16 @@ class UserController < ApplicationController
     @user=User.find_by(params[:id])
 		@departments=Department.all
     if request.post?
-	  CourseManager.destroy_all(:user_id=>@user.id)
-	  if params[:department]
-	    params[:department][:checked].each do |key,value|
-	      @course_manager=CourseManager.new(:user_id=>@user.id)
-		  @course_manager.department_id=key
-		  @course_manager.save!
-	    end
-	  end
+			CourseManager.destroy_all(:user_id=>@user.id)
+			if params[:department]
+				params[:department][:checked].each do |key,value|
+					@course_manager=CourseManager.new(:user_id=>@user.id)
+					@course_manager.department_id=key
+					@course_manager.save!
+				end
+			end
+		end
 	end
-	
-    
-	
-  end
-  
-  def registry
-    
-    @user=User.new
-	render :layout => false
-  end
-
-	
-  # def create
-		# if request.post?
-			# _email=params[:user][:email]
-			# if User.where(:email=>_email).empty?
-				# @user=current_user
-			# @user.email=_email
-			# @user.activate_token=Digest::SHA1.hexdigest @user.uid
-			# @user.grade_id=5
-			# @user.activated=0
-			# @user.save!
-			# @message="新增成功! 管理員將在之後寄出認證信!"
-			# else
-			# @message="Oops!您的Email已經有人使用囉!"<<current_user.name
-			# end
-			# flash[:notice] = @message	
-		# end
-	# redirect_to root_url
-  # end
-  
   private
   def user_params
     params.require(:user).permit(:email)

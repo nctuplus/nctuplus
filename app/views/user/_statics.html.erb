@@ -112,6 +112,11 @@
 		<div class="col-md-4">
 			<%= select_tag "", options_for_select([['課程種類','cos_type'],['學期','semester']]), onchange:"$('.statics_table').toggleClass('hidden');", class:"form-control" %>
 		</div>
+		<div class="col-md-1">
+			<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
+			<%=fa_icon "bookmark-o"%>必修科目表
+			</a>
+		</div>
 	</div>
 	<br>
 	<%= render :partial=>"/user/table_list_by_costype", locals: {cd_mixed: @cd_all_mixed, table_class:"statics_table"} %>

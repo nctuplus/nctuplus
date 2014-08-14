@@ -20,7 +20,7 @@
 
 //= require bootstrap.min
 
-
+//= require jquery-bootpag.min
 
 //= require jquery.raty.min
 //= require share.min

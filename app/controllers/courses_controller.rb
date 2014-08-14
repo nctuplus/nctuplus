@@ -11,23 +11,7 @@ class CoursesController < ApplicationController
 
 ### for course_teacher_page_content	
 
-	def search
-		@semesters=Semester.all
-		
-		if !session[:saved_query]
-			session[:saved_query]={}
-		end
-		
-		#if !cookies[:saved_query]
-		#	cookies[:saved_query]={}
-		#end
-		
-		get_autocomplete_vars
-
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		
-		@view_type=""
-	end
+	
 
 	def course_raider
 #		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
@@ -193,28 +177,7 @@ class CoursesController < ApplicationController
   	 	
     end
 ###
-	def index
-		#reset_session
-		@semesters=Semester.all
-		
-		if session[:saved_query].nil?
-			session[:saved_query]={}
-			@page=1
-		else
-			@page=session[:saved_query][:page].to_i
-		end
-		
-		get_autocomplete_vars
-
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		
-		@view_type=""
-
-		@search_type="all"
-		
-		#render "index_select_ver"
-		
-  end
+	
 	
 	def get_user_statics
 		@css=current_user.course_simulations
@@ -261,6 +224,7 @@ class CoursesController < ApplicationController
 		get_autocomplete_vars
 		@view_type="_mini"
 		@table_type="simulated"
+		
 		render "srch_and_schd"
 	end
 	
@@ -281,163 +245,6 @@ class CoursesController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 	
-	def list_all_courses
-	  page=params[:page].to_i
-		id_begin=(page-1)*each_page_show
-		session[:saved_query]={:type=>"all", :page=>page}
-		@course_details=CourseDetail.where(:id=>id_begin..id_begin+each_page_show)
-		@course_details=@course_details.sort_by{|cd| cd.course_teachership.course_teacher_ratings.sum(:avg_score)}.reverse
-		#@course_details=@courses
-		@cd_all=get_mixed_info(@course_details)
-		@page_numbers=CourseDetail.all.count/each_page_show
-		
-		@search_type='all'
-		get_autocomplete_vars
-
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		
-	  render "course_lists"
-	end
-	
-	def search_by_dept2
-		dept_id=params[:dept_id]
-		@sem_id=params[:sem_id].to_i
-		@sem=Semester.where(:id=>@sem_id).take
-		dept_ids=get_dept_ids(dept_id)
-		id_begin=(params[:page].to_i-1)*each_page_show
-
-
-		if @sem
-			@courses=@sem.courses.select{|c| join_dept(c,dept_ids)}
-		else
-			@courses=Course.where(:department_id=>dept_ids)
-			#@course_details=@courses.
-		end
-		
-		@course_details=join_course_detail(@courses,@sem_id)
-		@page_numbers=@course_details? (@course_details.count.to_f/each_page_show).ceil : 1
-		@course_details=@course_details? @course_details.limit(each_page_show).offset(id_begin) : []
-		@cd_all = get_mixed_info(@course_details)
-		
-		#
-		get_autocomplete_vars
-
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		
-		@table_type="search_by_dept"+params[:view_type]
-		render "_course_lists"
-	end
-	
-	
-	def search_by_dept
-		dept_id=params[:dept_id]
-		@sem_id=params[:sem_id].to_i
-		@sem=Semester.where(:id=>@sem_id).take
-		dept_ids=get_dept_ids(dept_id)
-		id_begin=(params[:page].to_i-1)*each_page_show
-			
-		if params[:view_type]!="_mini"
-			session[:saved_query]={:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}
-		#cookies[:saved_query]={value:{:type=>"dept",:sem_id=>@sem_id, :dept_id=>dept_id, :degree=>@dept_main.degree, :page=>params[:page].to_i}, :expires => 1.year.from_now}
-		end
-
-		if @sem
-			@courses=@sem.courses.select{|c| join_dept(c,dept_ids)}
-		else
-			@courses=Course.where(:department_id=>dept_ids)
-			#@course_details=@courses.
-		end
-		
-		@course_details=join_course_detail(@courses,@sem_id)
-		@page_numbers=@course_details? (@course_details.count.to_f/each_page_show).ceil : 1
-		if params[:view_type]!="_mini"
-			@course_details=@course_details? @course_details.limit(each_page_show).offset(id_begin) : []
-		end
-		@cd_all = get_mixed_info(@course_details)
-		
-		@search_type="by_dept"
-		render "course_lists"+params[:view_type]
-	end
-	
-	def search_by_keyword
-	  search_term=params[:search_term]
-		search_type=params[:search_type]
-		semester_id=params[:sem_id].to_i
-		dept_id=params[:dept_id].to_i
-		degree_id=params[:degree_id].to_i
-		
-		id_begin=(params[:page].to_i-1)*each_page_show
-		
-		
-		if params[:view_type]!="_mini"
-			session[:saved_query]={:page=>params[:page], :type=>"keyword",:sem_id=>semester_id, :dept_id=>dept_id, :degree=>degree_id, :term=>search_term, :search_type=>search_type, :page=>params[:page].to_i}
-		end
-		if dept_id!=0
-			dept_ids= get_dept_ids(dept_id)
-		else
-			dept_ids=Department.where(:degree=>degree_id).map{|d|d.id} if degree_id!=0
-		end
-		case search_type
-			when "course_time"
-				course_ids=[]
-				cd_ids=[]
-				#@course_details=nil
-				search_term.split(' ').each do |st|
-					st=st.upcase
-					unless semester_id==0
-						@cds=CourseDetail.where("semester_id= ? AND time LIKE ?  ",semester_id,"%#{st}%")
-					else
-						@cds=CourseDetail.where("time LIKE ?  ","%#{st}%")
-					end
-					ids=@cds.map{|cd|cd.id}
-					cd_ids.append(ids) unless ids.empty?
-					#course_ids.append(@cd.map{|cd|cd.course_teachership.course.id})
-				end
-				unless cd_ids.empty?
-					@course_details=CourseDetail.where(:id=>cd_ids)
-					@course_details=@course_details.select{|cd|join_dept(cd.course_teachership.course,dept_ids)} if dept_ids
-				end
-				#@courses=Course.where(:id=>course_ids)
-				#@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-				
-			when "course_name"
-				#unless semester_id==0
-				#	@courses = Course.where("id IN (:id) AND ch_name LIKE :name ",
-				#		{:id=>SemesterCourseship.select("course_id").where(:semester_id=> semester_id), :name => "%#{search_term}%" })
-				#else
-					@courses= Course.where("ch_name LIKE ? ",
-																 "%#{search_term}%" )#, :id=> SemesterCourseship.select("course_id").where(:semester_id=> "8"))		
-				#end
-				if @courses
-					@courses=@courses.select{|c| join_dept(c,dept_ids) } if dept_ids
-					@course_details=join_course_detail(@courses,semester_id) unless @courses.empty? 
-				end
-			when "course_teacher"
-				tids=Teacher.select(:id).where("name LIKE ? ","%#{search_term}%").pluck(:id)
-				if !tids.empty?
-					ct_ids=CourseTeachership.select(:id).where(:teacher_id=>tids).pluck(:id)
-					@course_details=CourseDetail.where(:course_teachership_id=>ct_ids)
-				end
-		end
-		
-		@page_numbers=@course_details ? (@course_details.count.to_f/each_page_show).ceil : 1
-		if params[:view_type]!="_mini"
-			@course_details=@course_details ? @course_details.limit(each_page_show).offset(id_begin) : []
-		end
-		@cd_all=get_mixed_info(@course_details)
-		
-		#@course_details.count/each_page_show
-		
-		#	render
-		#else
-		get_autocomplete_vars
-
-		@semester_select=Semester.all.select{|s|s.courses.count>0}.reverse.map{|s| {"walue"=>s.id, "label"=>s.name}}.to_json
-		@search_type="by_keyword" #if params[:view_type]=="_mini"
-		
-		render "course_lists"+params[:view_type]
-		#end
-	end
 	
 	def rate_cts
     ctr_id=params[:ctr_id].to_i
@@ -615,11 +422,6 @@ class CoursesController < ApplicationController
   
   private
 	
-
-	
-	def each_page_show
-	  30
-	end
 	
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)

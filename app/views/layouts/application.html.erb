@@ -50,7 +50,7 @@
 <script>
 	$(document).ready(function() {
 		<% if flash[:notice] %>
-			alert("<%= flash[:notice][:title] %> <%= flash[:notice][:message] %>");
+			alert("<%= flash[:notice][:message] %>");
 		<% end %>
 		$('.masterTooltip').hover(function(){
 						// Hover over code

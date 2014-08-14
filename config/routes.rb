@@ -9,7 +9,7 @@ Nctuplus::Application.routes.draw do
 	#post "courses/new_discuss"
 	#post "courses/new_sub_discuss"
 	post "courses/search_by_dept"
-	get "courses/search_by_dept2"
+
 	post "courses/search_by_keyword"
 	post "courses/comment_submit"
 	#post "courses/raider_submit"
@@ -92,6 +92,7 @@ Nctuplus::Application.routes.draw do
   #root :to => "courses#show", :id=>5
   root :to => "main#index"
 	
+	get "course_details/mini"
   resources :course_details
   
   
