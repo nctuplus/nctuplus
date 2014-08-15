@@ -1,4 +1,6 @@
-﻿<div class="panel panel-primary" >
+﻿
+
+<div class="panel panel-primary" >
 	<div class="panel-heading" >
 		<h4 class="text-center"><%=latest_semester.name%></h4>
 	</div>
@@ -39,13 +41,8 @@
 		$('#degree_select').focus();
 	}
 <% end %>
-	$(function(){
-		$("#add_course").popover({ 
-			content: "按此手動輸入課程",
-			placement:"auto",
-			trigger : "click",
-			container :"body"
-		}).popover('show');
+	/*$(function(){
+		
 		$("#import_course").popover({ 
 			content: "匯入歷年課程",
 			placement:"auto",
@@ -53,5 +50,5 @@
 			container :"body",
 			placement :"bottom"
 		}).popover('show');
-	});		
+	});		*/
 </script>

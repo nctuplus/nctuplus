@@ -1,13 +1,22 @@
 ﻿<script>
-	
-	<% if params[:show_static] %>
 	$(document).ready(function(){
-		//$("#toggle-b").trigger('click');
-		$("#toggle-b").click();
+		<% if params[:show_static] %>
+			$("#toggle-b").click();
+		<% end %>
+		
+		
 	});
-	<% end %>
 </script>
-
+<% if @cd_all_mixed.empty? %>
+<div class="jumbotron bs-callout bs-callout-info border-info" style="background-color:rgba(0,0,0,0);">
+  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+  <h2>你可以...</h2>
+  <h3>
+		&nbsp;&nbsp;&nbsp;1.<%=link_to'匯入歷年課程',"import_course"%>做學分統計<br>
+		&nbsp;&nbsp;&nbsp;2.<%=link_to'新增本學期課程',"/courses/simulation"%>追蹤最新消息
+	</h3>
+</div>
+<% end %>
 <div class="tabbable tabs-top">
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
 		<li class="active"><a id='toggle-a' href="#a" data-toggle="tab" >今年</a></li>
