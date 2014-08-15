@@ -8,7 +8,7 @@
 		<%= f.select :semester_id_eq, options_from_collection_for_select(Semester.all, "id", "name", @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
 	</div>
 	<div class="col-sm-1 no-padding-left">
-		<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']]), prompt: "分類", class: "form-control" %>
+		<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']]), prompt: "分類", class: "form-control",:onchange=>"" %>
 	</div>	
 	<div class="col-sm-2 no-padding-left ">
 		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
@@ -101,7 +101,6 @@
 		<tr class="row">
 			<td colspan="7" class="col-md-6 col-md-offset-5">
 				<h3>查無結果!</h3>
-				<h4>小提示:可以試著在老師名稱中間加空格</h4>
 			</td>
 		</tr>
 	<% end %>

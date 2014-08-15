@@ -71,6 +71,11 @@
 		$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
 			$('body').scrollspy('refresh');
 			$('body').scrollTo("#course-name",10,{offset:-80});
+			<% if params[:first_show]=="discussion" %>
+				$('body').scrollTo("#discuss",700,{offset:-60});
+			<% elsif params[:first_show]=="files" %>
+				$('body').scrollTo("#files",700,{offset:-60});
+			<% end %>
 		});
 		
 		

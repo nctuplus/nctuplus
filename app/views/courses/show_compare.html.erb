@@ -10,7 +10,7 @@
 <% else %>
 	<% ectr_arr=[]%>
 <% end %>
-<% sem=Semester.all %>
+
 <% i=0 %>
 <% @cts_mix.each do |cts,t| %>
 
@@ -35,13 +35,7 @@
 							<h4></h4>
 							</div>
 						</div>
-					<div class="row col-sm-offset-1">
-						<% sem_ids=cts.course_details.pluck(:semester_id) %>
-						<% sem_ids.each do |sem_id| %>
-							<%= sem.select{|s|s.id==sem_id}.first.name %>
-							<% sem.name %>
-						<% end %>
-					</div>
+
 					
 					<div class="row">
 						<div class="col-sm-3 col-sm-offset-1 row-condensed">

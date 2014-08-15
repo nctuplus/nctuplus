@@ -3,13 +3,12 @@
 <div id="results" class="">
 	<%= render 'results' %>
 </div>
+
 <script>
-$(document).ready(function($) {
+$(function(){
 	$(".clickable-row").click(function() {
-		window.document.location = $(this).attr("href");
+			window.document.location = $(this).attr("href");
 
 	});
-
-	
 });
 </script>
