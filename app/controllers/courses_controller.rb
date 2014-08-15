@@ -302,18 +302,24 @@ class CoursesController < ApplicationController
 		@teachers=@course.teachers.sort_by{
 			|cd| CourseTeachership.where(:course_id=>params[:id],:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
 		}.reverse
+		@target_rank = 999 ;
 		if params[:tid]
 			@teacher_show =  Teacher.find(params[:tid])
-			@target_rank = -1 ;
-			@teachers.each_with_index do | teacher, idx|
-				if teacher.id == @teacher_show.id
-					@target_rank = idx+1
-					break 
-				end
+			score = CourseTeachership.where(:course_id=>params[:id],:teacher_id=>params[:tid]).first.course_teacher_ratings.sum(:avg_score) 
+			if score>0
+				@teachers.each_with_index do | teacher, idx|
+					if teacher.id == @teacher_show.id
+						@target_rank = idx+1
+						break 
+					end
+				end		
 			end
 		else
 			@teacher_show =  @teachers.first
-			@target_rank = 1 
+			score = CourseTeachership.where(:course_id=>params[:id],:teacher_id=>@teacher_show.id).first.course_teacher_ratings.sum(:avg_score) 
+			if score > 0
+				@target_rank = 1 
+			end	
 		end
 		@ct=CourseTeachership.includes(:course_details).where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
