@@ -64,19 +64,21 @@
 		$("#tc").html('<%=j render :partial=> "show_teacherOnCourse" %>');
 		$("#compare").load("/courses/get_compare?c_id=<%=@course.id%>", function() {
 			$('body').scrollspy('refresh');
+			$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
+				$('body').scrollspy('refresh');
+				$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
+					$('body').scrollspy('refresh');
+					$('body').scrollTo("#course-name",10,{offset:-80});
+					<% if params[:first_show]=="discussion" %>
+						$('body').scrollTo("#discuss",700,{offset:-60});
+					<% elsif params[:first_show]=="files" %>
+						$('body').scrollTo("#files",700,{offset:-60});
+					<% end %>
+				});
+			});
 		});
-		$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
-			$('body').scrollspy('refresh');
-		});
-		$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
-			$('body').scrollspy('refresh');
-			$('body').scrollTo("#course-name",10,{offset:-80});
-			<% if params[:first_show]=="discussion" %>
-				$('body').scrollTo("#discuss",700,{offset:-60});
-			<% elsif params[:first_show]=="files" %>
-				$('body').scrollTo("#files",700,{offset:-60});
-			<% end %>
-		});
+		
+		
 		
 		
 		<% share_url="#{root_url}courses/#{@course.id}?tid=#{@teacher_show.id}" %>
