@@ -86,7 +86,15 @@ a:hover{
 	text-decoration:none;
 	
 }
-
+.course-clean{
+//display: none;
+position:absolute;
+top: -7px;
+right: -2px;
+}
+.pos-relative{
+position:relative;
+}
 
 .user-reg {
     width: 280px !important;

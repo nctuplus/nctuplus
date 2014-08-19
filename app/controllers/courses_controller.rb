@@ -5,7 +5,7 @@ class CoursesController < ApplicationController
   
 	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_compare]
 
-	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course]
+	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course, :del_simu_course]
 
 
 
@@ -210,13 +210,29 @@ class CoursesController < ApplicationController
 		@table_type="simulated"
 		if params[:type]=="schd"
 			#session[:saved_query]={}
-			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name}}.to_json
+			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name,"course_id"=>cd.id}}.to_json
 			render "user_schedule"
 		elsif params[:type]=="list"
 			render "course_lists_mini"
 		else 
 			render ""
 		end
+	end
+		
+	def del_simu_course
+		sem_id = params[:sem_id].to_i
+		cid = params[:cid].to_i
+		cd_ids=current_user.course_simulations.filter_semester(sem_id).select{|ps| ps.course_detail.id==cid}
+		if cd_ids.size == 1
+			target = current_user.course_simulations.where(:semester_id=>sem_id, :course_detail_id=>cid).first
+			status = CourseDetail.where(:id=>cid).map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name,"course_id"=>cd.id}}.to_json
+			target.delete	
+		else
+			status = 0
+		end
+		respond_to do |format|
+       		format.html { render :text => status.to_s.html_safe }
+   		end	
 	end
 	
 	def get_user_simulated

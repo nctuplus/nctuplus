@@ -31,7 +31,7 @@
 							<%if params[:renderType].to_i==1%>
 								<td id="day_<%=i%>_time_<%=t%>_h" class="schd-slot-empty" ></td>		
 							<%else %>
-								<td id="day_<%=i%>_time_<%=t%>" class="schd-slot-empty" ></td>
+								<td id="day_<%=i%>_time_<%=t%>" class="schd-slot-empty pos-relative" ></td>
 							<%end%>
 								<%i=i+1%>
 							<% end %>
@@ -66,8 +66,9 @@ function add_time_slot(courses){
 		for(var j = 0 ; j < timearr.length ; j++){
 			var day=timearr[j][0];
 			for(var k = 1 ; k < timearr[j].length ; k++){
-				var row_id = "#day_"+day+"_time_"+timearr[j][k] ;
-			<%if params[:renderType].to_i==1%>			
+				var plan_id = "day_"+day+"_time_"+timearr[j][k] ;
+				var row_id = "#"+plan_id ;
+	<%if params[:renderType].to_i==1%>	 // for small timetable		
 				var small_row_id = row_id+"_sm" ;
 				row_id = row_id+"_h";							
 				$(small_row_id).removeClass("schd-slot-empty");
@@ -78,23 +79,75 @@ function add_time_slot(courses){
 					placement:"auto",
 					trigger : "hover",
 					container :"body"
-				});			
-			<% end %>
-				
-
+				});		
 				$(row_id).removeClass("schd-slot-empty"); // remove old color
 				$(row_id).addClass(courses[i].class); //add color
-				$(row_id).text(courses[i].name);//add name
+				$(row_id).html(courses[i].name);//add name
 				$(row_id).popover({ // hover detail info
 					content:"教室:"+courses[i].room,
-					//delay: { show: 500, hide: 100 },
+					placement:"auto",
+					trigger : "hover",
+					container :"body"
+				});	
+	<% else %> //normal simulation timetable
+				$(row_id).removeClass("schd-slot-empty"); // remove old color
+				$(row_id).addClass(courses[i].class); //add color
+				$(row_id).html(courses[i].name+
+				'<div class="course-clean" id="'+
+				plan_id+'_div'+
+				'" onclick="return del_course('+courses[i].course_id+');"><i class="fa fa-times clickable-hover"></i></div>'); //add name
+				$(row_id).popover({ // hover detail info
+					content:"教室:"+courses[i].room,
 					placement:"auto",
 					trigger : "hover",
 					container :"body"
 				});
-				
-			}
-		}
+				$(row_id).mouseover(function(){
+					$("#"+$(this).attr('id')+"_div").show();
+				});
+				$(row_id).mouseleave(function(){
+					$("#"+$(this).attr('id')+"_div").hide();
+				});
+				$(".course-clean").hide();
+	<% end %>	
+			}//inner for 
+		}//middle for
+	}//outer for
+}//func
+<%if params[:renderType].to_i != 1%>
+	function del_course(course_id){
+	//	if(!confirm("要刪ㄇ ？"))
+	//		return false ;
+		var id  = <%=j @sem_id.to_s%> ;
+		//alert(course_id);
+		$.ajax({
+			type: "GET",
+			dataType: "text",
+  			url: "/courses/del_simu_course" ,
+  			data:{
+  				cid: course_id,
+  				sem_id : id 
+  			},	
+  			success: function(result){
+  				if(result!=0){
+  					var json_str = JSON.parse(result)[0] ;
+					var timearr=json_str.time.match(/[0-9][A-Z]+/g);
+					for(var j = 0 ; j < timearr.length ; j++){
+						var day=timearr[j][0];
+						for(var k = 1 ; k < timearr[j].length ; k++){
+							var row_id = "#day_"+day+"_time_"+timearr[j][k] ;
+							$(row_id).removeClass("schd-slot-empty"); // remove old color
+							$(row_id).removeClass(json_str.class);
+							$(row_id).html('') ;
+							$(row_id).popover('disable');
+						}
+					}	
+  				}else
+  					alert("Delete course failed.");
+  			}
+  		});
+ 		
 	}
-}
+<% end %>
+
 </script>

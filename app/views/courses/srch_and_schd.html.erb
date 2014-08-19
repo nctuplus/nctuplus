@@ -7,7 +7,7 @@
 			
 			<ul class="nav nav-tabs" style="margin-top:50px;">
 				<li class="active"><a href="#a" data-toggle="tab" >查詢</a></li>
-				<li><a href="#b" data-toggle="tab">已選</a></li>
+	<!--			<li><a href="#b" data-toggle="tab">已選</a></li>  -->
 				<% if @sem_id==latest_semester.id %>
 				<li><a href="#c" data-toggle="tab">觀察名單</a></li>
 				<% end %>
@@ -26,6 +26,7 @@
 						</div>
 					</div>
 				</div>
+<!--				
 				<div class="tab-pane" id="b">
 					<div class="panel panel-primary" >
 						<div class="panel-heading" >
@@ -36,7 +37,7 @@
 						</div>
 					</div>
 				</div>
-				
+-->				
 				<div class="tab-pane" id="c">
 					<div class="panel panel-primary" >
 						<div class="panel-heading" >
@@ -62,7 +63,7 @@
 $(document).ready(function(){
 	$("#search-form").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	<% if current_user %>
-		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+//		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
 		$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");
 	<% end %>
 	<% if @sem_id==latest_semester.id %>
