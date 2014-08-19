@@ -7,13 +7,16 @@
 		
 	});
 </script>
-<% if @cd_all_mixed.empty? %>
+<% if @cd_all.empty? %>
 <div class="jumbotron bs-callout bs-callout-info border-info" style="background-color:rgba(0,0,0,0);">
   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-  <h2>你可以...</h2>
+  <h2>開始使用...</h2>
   <h3>
-		&nbsp;&nbsp;&nbsp;1.<%=link_to'匯入歷年課程',"import_course"%>做學分統計<br>
-		&nbsp;&nbsp;&nbsp;2.<%=link_to'新增本學期課程',"/courses/simulation"%>追蹤最新消息
+		
+		&nbsp;&nbsp;&nbsp;1.<%=link_to'輸入系級',"javascript:void(0);",onclick:"$('#degree_select').focus();"%> <br> 
+		&nbsp;&nbsp;&nbsp;2.<%=link_to current_user.department.present? ? "/user/import_course":"javascript:void(0);" , class:"", onclick:"no_dept_alert();" do %>匯入歷年課程
+		<% end %><br>
+		&nbsp;&nbsp;&nbsp;3.<%=link_to'新增本學期課程',"/courses/simulation"%>追蹤最新消息
 	</h3>
 </div>
 <% end %>
