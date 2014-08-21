@@ -18,7 +18,7 @@
 /config/initializers/ominauth.rb
 /config/initializers/smtp.rb
 
-/data_upload/
+/file_upload/
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
