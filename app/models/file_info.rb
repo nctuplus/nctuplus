@@ -4,10 +4,13 @@ class FileInfo < ActiveRecord::Base
   belongs_to :course_teachership
   #validates_presence_of :semester_id, :course_teachership_id
 	
-  has_attached_file :upload,  
-    :storage => :dropbox,
-    :dropbox_credentials => Rails.root.join("config/dropbox.yml"),
-	:path => ":ct_id/:userid/:filename"
+  #has_attached_file :upload,  
+  #  :storage => :dropbox,
+  #  :dropbox_credentials => Rails.root.join("config/dropbox.yml"),
+	#:path => ":ct_id/:userid/:filename"
+	has_attached_file :upload,  
+
+	:path => ":rails_root/file_upload/:ct_id/:userid/:filename"
   do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
 	
