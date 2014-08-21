@@ -122,8 +122,8 @@ function gen_raty(ctr_id,show_score,rated){
 		score:show_score,
 		readOnly :<%=current_user.nil?%>,
 		cancel :rated,
-		cancelOff : '<%=image_url("cancel-custom-off.png")%>',
-		cancelOn  : '<%=image_url("cancel-custom-on.png")%>',
+		cancelOff : 'cancel-custom-off.png',
+		cancelOn  : 'cancel-custom-on.png',
 		noRatedMsg : "請先登入!",
 		cancelHint : '取消評分',
 		click: function(score, evt) {
