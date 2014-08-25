@@ -2,17 +2,19 @@
 
 <div class="row">
 	
-	<!--<div class="col-md-5" style="/*background-color:white;margin-top:50px;*/">-->
-		<div class="tabbable tabs-left col-md-5">
-			
+<!--<div class="col-md-5" style="/*background-color:white;margin-top:50px;*/">-->
+		<div class="tabbable tabs-left col-md-4 col-md-offset-1">
+<!--			
 			<ul class="nav nav-tabs" style="margin-top:50px;">
+			
 				<li class="active"><a href="#a" data-toggle="tab" >查詢</a></li>
-	<!--			<li><a href="#b" data-toggle="tab">已選</a></li>  -->
+				<li><a href="#b" data-toggle="tab">已選</a></li>  
 				<% if @sem_id==latest_semester.id %>
 				<li><a href="#c" data-toggle="tab">觀察名單</a></li>
 				<% end %>
+				
 			</ul>
-			
+-->			
 			<!--<div class="container">-->
 			<div class="tab-content" style="overflow:hidden;">
 			 <div class="tab-pane active" id="a">
@@ -37,7 +39,7 @@
 						</div>
 					</div>
 				</div>
--->				
+			
 				<div class="tab-pane" id="c">
 					<div class="panel panel-primary" >
 						<div class="panel-heading" >
@@ -48,7 +50,7 @@
 						</div>
 					</div>
 				</div>
-				
+-->					
 			</div>
 
 		</div>
@@ -79,8 +81,8 @@ $(document).ready(function(){
 		var time=this_row.find(".course_time").text();
 		if(time==" "){//for 藝文賞析
 			save_course(id,addordel);
-			if(addordel=="add")
-				this_row.remove();
+			/*if(addordel=="add")
+				this_row.remove();*/
 			return;
 		}
 		var timearr=time.match(/[0-9][A-Z]+/g);
@@ -120,8 +122,8 @@ $(document).ready(function(){
 				}
 			}
 			save_course(id,addordel,from);
-			if(addordel=="add")
-				this_row.remove();
+			/*if(addordel=="add")
+				this_row.remove();*/
 		}
 	}
 	

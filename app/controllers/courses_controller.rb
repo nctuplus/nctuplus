@@ -78,34 +78,6 @@ class CoursesController < ApplicationController
 				@tmp = @row_teacher.zip(@row_pick).reject{|t1,t2|t2.sum==0}
 				
 		#		Rails.logger.debug "[debug] "+@tmp.to_s
-		#		render :nothing => true, :status => 200, :content_type => 'text/html'			
-=begin			
-				@row_name = Array.new
-				@row_open = Array.new
-				@row_pick = Array.new
-				ct.course_details.each do |cd|
-					sem_year = Semester.find(cd.semester_id).name
-					if latest_semester.name == sem_year 
-						sem_year += " (本學期)"
-					end	
-					@row_name.push(sem_year)
-					
-					if cd.students_limit.to_i == 9999 # 無上限設為0防scope太大有顯示問題
-						@row_open.push(0)
-					else
-						@row_open.push(cd.students_limit.to_i)
-					end		
-					@row_pick.push(cd.reg_num.to_i)
-				end
-				if @row_name.size <=3
-					cnt = 4 - @row_name.size
-					for i in 1..cnt
-						@row_name.unshift('')
-						@row_open.unshift(0)
-						@row_pick.unshift(0)
-					end
-				end
-=end
 						
 				render "course_chart"
 			end# else		

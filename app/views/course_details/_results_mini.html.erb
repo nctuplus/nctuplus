@@ -55,7 +55,7 @@
 				<tr id="cd_<%=cd.id%>" class="row" >
 					<td class="">
 						<p id="rating_all" class="">
-							<%= link_to cd.course.ch_name, course_path(cd.course, :tid=>cd.teacher.id), :class=>"course_name" %>
+							<%= link_to cd.course.ch_name, course_path(cd.course, :tid=>cd.teacher.id), :class=>"course_name", :target=>"_blank" %>
 							<% cd.course.ch_name %>
 							<%= dept.ch_name %>
 							<%= cd.teacher.name %>
