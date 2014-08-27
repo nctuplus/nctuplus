@@ -1,7 +1,7 @@
 class FileInfosController < ApplicationController
   # GET /files
   # GET /files.json
-  layout false, :only =>[:list_by_ct]
+  layout false, :only =>[:list_by_ct, :index]
   
   before_filter :checkLogin, :only=>[ :new, :edit, :update, :create, :destroy, :one_user]
   #before_filter :checkCourseManager(params[:id]), :only=>[:edit, :update]
@@ -59,7 +59,7 @@ class FileInfosController < ApplicationController
   def create
     return if data_params[:course_teachership_id]==""||data_params[:semester_id]==""||data_params[:upload]==""
     
-	@file_same=FileInfo.where(:owner_id=>current_user.id, :upload_file_name=>data_params[:upload].original_filename).take
+	@file_same=FileInfo.where(:owner_id=>current_user.id,:course_teachership_id=>data_params[:course_teachership_id], :upload_file_name=>data_params[:upload].original_filename).take
 	@file_same.destroy! if @file_same
 	@file = FileInfo.new(data_params)
 

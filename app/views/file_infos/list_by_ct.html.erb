@@ -16,7 +16,7 @@
 				<th class="col-md-1">上傳時間</th>
 				<th class="col-md-1">動作</th>
 			</tr>
-	<tr id="loading"><td colspan="8" ><p class="text-center"><%=image_tag("/assets/loading.gif", size: '42x42')%></p></td></tr>
+	<tr id="loading"><td colspan="8" ><p class="text-center"><%=loading_img%></p></td></tr>
 	</tbody>
     </table>
   
@@ -31,7 +31,7 @@
 	  <div class="panel-body ">
 		<h4>請尊重智慧財產權!</h4>
 		<p>本區只開放上傳考古題，若上傳非相關檔案或未授權檔案後果請自行負責!</p>
-		<p>目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip</p>
+		<p>目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip/rar</p>
 		<p>每個檔案的大小限制為10mb</p>     
 		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 		<% if current_user %>
@@ -157,6 +157,7 @@
 	  });
 	  $('#fileupload').bind('fileuploadsubmit', function (e, data) {
 			var inputs = data.context.find(':input');
+			$('.upload_ct_id').val("<%=params[:ct_id]%>");
 			data.formData = inputs.serializeArray();
 	  });
 		$('#fileupload').bind('fileuploadadd', function (e, data) {
@@ -174,7 +175,7 @@
     });
 		
     // Load existing files:
-		$.getJSON("/file_infos/?ct_id=<%=@ct_id %>", function (files) {
+		$.getJSON("/file_infos/?ct_id=<%=params[:ct_id] %>", function (files) {
 			var fu = $('#fileupload').data('blueimpFileupload'), 
 				template;
 			fu._adjustMaxNumberOfFiles(-files.length);
