@@ -190,13 +190,15 @@ class CoursesController < ApplicationController
 			render ""
 		end
 	end
-=begin
+
 	def get_user_xls
+		
+	
 		respond_to do |format|
 			 format.xls
 		end
 	end	
-=end	
+	
 	def del_simu_course
 		sem_id = params[:sem_id].to_i
 		cid = params[:cid].to_i

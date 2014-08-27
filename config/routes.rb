@@ -30,7 +30,7 @@ Nctuplus::Application.routes.draw do
 	get "courses/get_sem_form"
 	get "courses/raider_list_like"
 	get "courses/del_simu_course"
-#  	get "courses/get_user_xls"
+  	get "courses/get_user_xls"
 
 	get "courses/get_user_statics"
 	

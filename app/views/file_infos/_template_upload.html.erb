@@ -20,7 +20,8 @@
     <!--<td class="preview"><span class="fade"></span></td>-->
     <td>0</td>
 	<td class="semester"><span>
-	<%=select_tag "file_info[semester_id]", options_from_collection_for_select(@sems, "id", "name"), :onchange=>"update_input($(this));" %>
+	
+	<%=select_tag "file_info[semester_id]", options_from_collection_for_select(Semester.all, "id", "name"), :onchange=>"update_input($(this));" %>
 	<input id="new_semester_id" type="hidden" name="file_info[semester_id]" value="<%=@sems.first.id %>">
 
 	</span></td>
