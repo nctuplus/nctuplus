@@ -30,7 +30,7 @@ Nctuplus::Application.routes.draw do
 	get "courses/get_sem_form"
 	get "courses/raider_list_like"
 	get "courses/del_simu_course"
-  	get "courses/get_user_xls"
+  	get "courses/timetable"
 
 	get "courses/get_user_statics"
 	
@@ -64,6 +64,9 @@ Nctuplus::Application.routes.draw do
   get "main/index"
 	
 	
+	#----------for chrome extension---------------
+	post "api/query_from_time_table"
+	post "api/query_from_cos_adm"
   #----------for files---------------
   
 	get "file_infos/list_by_ct"

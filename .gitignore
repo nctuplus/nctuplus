@@ -11,15 +11,15 @@
 
 /db/*.sqlite3
 /db/*.sqlite3-journal
-/config/database.yml
-/config/dropbox.yml
+#/config/database.yml
+#/config/dropbox.yml
 /config/initializers/secret_token.rb
-
+*.yml
 /config/initializers/ominauth.rb
 /config/initializers/smtp.rb
 /public/assets/
 /file_upload/
 
 # Ignore all logfiles and tempfiles.
-/log/*.log
+/log/
 /tmp

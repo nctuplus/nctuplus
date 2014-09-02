@@ -20,7 +20,12 @@
 			 <div class="tab-pane active" id="a">
 					<div class="panel panel-primary ">
 						<div class="panel-heading">
-							<h4 class="text-center">課程查詢</h4>
+							<h4 class="text-center">
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;課程查詢
+								<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="reload_search();" style="margin-top: -5px;">
+									<font color="white"><%=fa_icon "shopping-cart"%></font>
+								</button>	
+							</h4>
 						</div>
 						<div class="panel-body">
 							<div id="search-form" class="row schedule-search-bar">
@@ -63,6 +68,12 @@
 
 
 $(document).ready(function(){
+	$('#cart-btn').popover({
+		content: "顯示觀察名單",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
+	});
 	$("#search-form").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	<% if current_user %>
 //		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
@@ -73,6 +84,10 @@ $(document).ready(function(){
 	<% end %>
 });
 
+
+	function reload_search(){
+		$("#search-form").load("/course_details/mini?sem_id=<%=@sem_id%>");
+	}
 	
 	function add_class(id,addordel,from){
 		//alert("!!!");

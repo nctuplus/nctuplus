@@ -174,20 +174,48 @@ module CourseHelper
 			when "共同選修"
 				type="common-elective"
 			when "通識"
-				type='general'
+				type="general"
 			when "必修"
-				type='required'
+				type="required"
 			when "選修"
-				type='elective'
+				type="elective"
 			when "外語"
-				type='foreign'
+				type="foreign"
 			
 		end
 		#type=""
-		prefix<<type
+		return prefix+type
 	end
 	
+	def cos_type_color(cos_type)
+		case cos_type
+			when "共同必修"
+				type="#AFFFD8"
+			when "共同選修"
+				type="#B0AFFF"
+			when "通識"
+				type="#F0AD4E"
+			when "必修"
+				type="#AFFFB0"
+			when "選修"
+				type="#AFD6FF"
+			when "外語"
+				type="#FEFFCD"		
+		end
+		return type
+	end
 	
-	
+	def check_course(courses, time_i, time_e)
+		
+		courses.each do |c|
+			c.time.scan(/[1-9][A-Z]+/).each do |s|
+				if time_i.to_s == s[0] and s.include?(time_e)					
+					return  ("<td bgcolor=\""+cos_type_color(c.cos_type)+"\" class=\"grid-default\"><p class=\"text-center\">"+c.course_teachership.course.ch_name+"</br>"+c.room+"</p></td>").html_safe
+				end
+			end		
+		end
+		
+		return "<td class=\"grid-default\" > </td>".html_safe
+	end
 	
 end

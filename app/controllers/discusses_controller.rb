@@ -39,13 +39,14 @@ class DiscussesController < ApplicationController
 	
 	def list_by_course
 		@ct_id=params[:ct_id].to_i
-		@ct=CourseTeachership.find(@ct_id)
+		@ct=CourseTeachership.includes(:course, :teacher).find(@ct_id)
 		@discusses=Discuss.includes(:sub_discusses, :user, :discuss_likes).where(:course_teachership_id=>@ct_id).order("updated_at DESC")
 		render "show_discussion"
 	end
 	
 	def new_discuss
-		title=params[:main_title]
+		#@share=params[:share]
+		@title=params[:main_title]
 		content=params[:main_content]
 		@ct_id=params[:ct_id]
 		@discuss=Discuss.new
@@ -53,9 +54,10 @@ class DiscussesController < ApplicationController
 		@discuss.user_id=current_user.id
 		@discuss.likes=0
 		@discuss.dislikes=0
-		@discuss.title=title
+		@discuss.title=@title
 		@discuss.content=content
 		@discuss.save!
+		
 		render "new_discuss_ok"
 	end
 	
@@ -99,5 +101,6 @@ class DiscussesController < ApplicationController
 		@discuss.destroy!
 		redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
 	end
+
 	
 end

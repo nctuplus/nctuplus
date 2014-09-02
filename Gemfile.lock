@@ -114,6 +114,8 @@ GEM
       activerecord (>= 3.0)
     polyglot (0.3.4)
     rack (1.5.2)
+    rack-jsonp-middleware (0.0.10)
+      rack
     rack-test (0.6.2)
       rack (>= 1.0)
     rails (4.0.2)
@@ -179,6 +181,7 @@ DEPENDENCIES
   omniauth
   omniauth-facebook (= 1.4.0)
   paperclip
+  rack-jsonp-middleware
   rails (= 4.0.2)
   ransack!
   sass-rails (~> 4.0.0)

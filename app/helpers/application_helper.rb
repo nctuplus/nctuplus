@@ -1,4 +1,5 @@
 module ApplicationHelper
+	
 	def loading_img
 		html='<br><p class="text-center">'<<image_tag(asset_path("loading.gif"), size: '42x42')<<'</p>'
 		html.html_safe

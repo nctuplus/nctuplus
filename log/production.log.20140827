@@ -1,0 +1,760 @@
+I, [2014-08-27T23:42:39.568944 #31687]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:42:39 +0800
+I, [2014-08-27T23:42:39.572082 #31687]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:42:39.582799 #31687]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (5.4ms)
+I, [2014-08-27T23:42:39.588352 #31687]  INFO -- :   Rendered layouts/_header.html.erb (4.5ms)
+I, [2014-08-27T23:42:39.589508 #31687]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.9ms)
+I, [2014-08-27T23:42:39.590146 #31687]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:42:39.590489 #31687]  INFO -- : Completed 200 OK in 18ms (Views: 11.2ms | ActiveRecord: 3.5ms)
+I, [2014-08-27T23:42:39.806517 #31687]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:42:39 +0800
+I, [2014-08-27T23:42:39.808963 #31687]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:42:39.809073 #31687]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:42:39.908183 #31687]  INFO -- :   Rendered courses/_search_js.html.erb (0.5ms)
+I, [2014-08-27T23:42:39.911559 #31687]  INFO -- :   Rendered courses/srch_and_schd.html.erb (4.2ms)
+I, [2014-08-27T23:42:39.911867 #31687]  INFO -- : Completed 200 OK in 103ms (Views: 3.9ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:42:39.960901 #31687]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:42:39 +0800
+I, [2014-08-27T23:42:39.963622 #31687]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:42:39.963789 #31687]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:42:39.982813 #31687]  INFO -- :   Rendered course_details/_common_js.html.erb (15.0ms)
+I, [2014-08-27T23:42:40.000173 #31687]  INFO -- :   Rendered course_details/_results_mini.html.erb (17.0ms)
+I, [2014-08-27T23:42:40.000429 #31687]  INFO -- :   Rendered course_details/mini.html.erb (32.9ms)
+I, [2014-08-27T23:42:40.000817 #31687]  INFO -- : Completed 200 OK in 37ms (Views: 30.9ms | ActiveRecord: 3.0ms)
+I, [2014-08-27T23:42:40.002750 #31687]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:42:40 +0800
+I, [2014-08-27T23:42:40.005150 #31687]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:42:40.005270 #31687]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:42:40.023327 #31687]  INFO -- :   Rendered courses/user_schedule.html.erb (3.0ms)
+I, [2014-08-27T23:42:40.023689 #31687]  INFO -- : Completed 200 OK in 18ms (Views: 3.8ms | ActiveRecord: 4.5ms)
+I, [2014-08-27T23:42:41.120482 #31687]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.122899 #31687]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:42:41.123754 #31687]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:42:41.123912 #31687]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:42:41.124090 #31687]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:42:41.160675 #31687]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.162941 #31687]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:42:41.168183 #31687]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.9ms)
+I, [2014-08-27T23:42:41.171128 #31687]  INFO -- :   Rendered layouts/_header.html.erb (1.8ms)
+I, [2014-08-27T23:42:41.171728 #31687]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:42:41.172067 #31687]  INFO -- : Completed 200 OK in 9ms (Views: 5.0ms | ActiveRecord: 1.6ms)
+I, [2014-08-27T23:42:41.174289 #31687]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.176246 #31687]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:42:41.177380 #31687]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.0ms)
+I, [2014-08-27T23:42:41.177623 #31687]  INFO -- : Completed 200 OK in 1ms (Views: 0.6ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:42:41.226443 #31687]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.228566 #31687]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:42:41.234613 #31687]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.9ms)
+I, [2014-08-27T23:42:41.237273 #31687]  INFO -- :   Rendered layouts/_header.html.erb (1.7ms)
+I, [2014-08-27T23:42:41.237844 #31687]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:42:41.238158 #31687]  INFO -- : Completed 200 OK in 9ms (Views: 4.4ms | ActiveRecord: 2.2ms)
+I, [2014-08-27T23:42:41.239649 #31687]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.241407 #31687]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:42:41.242441 #31687]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.0ms)
+I, [2014-08-27T23:42:41.242683 #31687]  INFO -- : Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:42:41.281792 #31687]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.284081 #31687]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:42:41.286840 #31687]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:42:41.286997 #31687]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:42:41.287172 #31687]  INFO -- : Completed 302 Found in 3ms (ActiveRecord: 0.5ms)
+I, [2014-08-27T23:42:41.326260 #31687]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:42:41 +0800
+I, [2014-08-27T23:42:41.328443 #31687]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:42:41.353426 #31687]  INFO -- :   Rendered user/_dept_form.html.erb (14.7ms)
+I, [2014-08-27T23:42:41.371420 #31687]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (16.2ms)
+I, [2014-08-27T23:42:41.371653 #31687]  INFO -- :   Rendered user/_this_semester.html.erb (33.5ms)
+I, [2014-08-27T23:42:41.407034 #31687]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (34.7ms)
+I, [2014-08-27T23:42:41.435150 #31687]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (27.7ms)
+I, [2014-08-27T23:42:41.435409 #31687]  INFO -- :   Rendered user/_statics.html.erb (63.5ms)
+I, [2014-08-27T23:42:41.435582 #31687]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (98.5ms)
+I, [2014-08-27T23:42:41.440640 #31687]  INFO -- :   Rendered layouts/_header.html.erb (4.0ms)
+I, [2014-08-27T23:42:41.441724 #31687]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.8ms)
+I, [2014-08-27T23:42:41.442342 #31687]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:42:41.442728 #31687]  INFO -- : Completed 200 OK in 114ms (Views: 92.3ms | ActiveRecord: 15.9ms)
+I, [2014-08-27T23:42:49.737322 #31687]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:42:49 +0800
+I, [2014-08-27T23:42:49.741651 #31687]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:42:49.744171 #31687]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.1ms)
+I, [2014-08-27T23:42:49.744664 #31687]  INFO -- : Completed 200 OK in 3ms (Views: 1.3ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:42:49.793042 #31687]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:42:49 +0800
+I, [2014-08-27T23:42:49.794673 #31687]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:42:49.795660 #31687]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.0ms)
+I, [2014-08-27T23:42:49.795920 #31687]  INFO -- : Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:47:52.219996 #31687]  INFO -- : Started GET "/" for 140.113.251.137 at 2014-08-27 23:47:52 +0800
+I, [2014-08-27T23:47:52.223437 #31687]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:47:52.227616 #31687]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:47:52.227915 #31687]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:47:52.228237 #31687]  INFO -- : Completed 302 Found in 4ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:47:52.256990 #31687]  INFO -- : Started GET "/user/special_list" for 140.113.251.137 at 2014-08-27 23:47:52 +0800
+I, [2014-08-27T23:47:52.259354 #31687]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:47:52.295976 #31687]  INFO -- :   Rendered user/_dept_form.html.erb (17.1ms)
+I, [2014-08-27T23:47:52.335954 #31687]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (37.9ms)
+I, [2014-08-27T23:47:52.336177 #31687]  INFO -- :   Rendered user/_this_semester.html.erb (58.0ms)
+I, [2014-08-27T23:47:52.781770 #31687]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (268.1ms)
+I, [2014-08-27T23:47:53.054786 #31687]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (272.5ms)
+I, [2014-08-27T23:47:53.055179 #31687]  INFO -- :   Rendered user/_statics.html.erb (718.7ms)
+I, [2014-08-27T23:47:53.055516 #31687]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (778.7ms)
+I, [2014-08-27T23:47:53.061311 #31687]  INFO -- :   Rendered layouts/_header.html.erb (4.7ms)
+I, [2014-08-27T23:47:53.062551 #31687]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.0ms)
+I, [2014-08-27T23:47:53.063327 #31687]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:47:53.063763 #31687]  INFO -- : Completed 200 OK in 804ms (Views: 715.9ms | ActiveRecord: 74.2ms)
+I, [2014-08-27T23:47:54.213225 #31687]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd&renderType=1" for 140.113.251.137 at 2014-08-27 23:47:54 +0800
+I, [2014-08-27T23:47:54.217190 #31687]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:47:54.217408 #31687]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd", "renderType"=>"1"}
+I, [2014-08-27T23:47:54.276405 #31687]  INFO -- :   Rendered courses/_small_timetable.html.erb (2.6ms)
+I, [2014-08-27T23:47:54.277099 #31687]  INFO -- :   Rendered courses/user_schedule.html.erb (14.8ms)
+I, [2014-08-27T23:47:54.277512 #31687]  INFO -- : Completed 200 OK in 60ms (Views: 15.8ms | ActiveRecord: 10.1ms)
+I, [2014-08-27T23:48:02.858119 #31687]  INFO -- : Started GET "/courses/simulation" for 140.113.251.137 at 2014-08-27 23:48:02 +0800
+I, [2014-08-27T23:48:02.862717 #31687]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:48:02.883190 #31687]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (9.5ms)
+I, [2014-08-27T23:48:02.891654 #31687]  INFO -- :   Rendered layouts/_header.html.erb (6.6ms)
+I, [2014-08-27T23:48:02.894918 #31687]  INFO -- :   Rendered layouts/_sidebar.html.erb (2.3ms)
+I, [2014-08-27T23:48:02.897212 #31687]  INFO -- :   Rendered layouts/_footer.html.erb (1.3ms)
+I, [2014-08-27T23:48:02.897718 #31687]  INFO -- : Completed 200 OK in 35ms (Views: 23.2ms | ActiveRecord: 3.7ms)
+I, [2014-08-27T23:48:02.935271 #31687]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.251.137 at 2014-08-27 23:48:02 +0800
+I, [2014-08-27T23:48:02.938770 #31687]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:48:02.938915 #31687]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:48:02.964971 #31687]  INFO -- :   Rendered courses/_search_js.html.erb (0.6ms)
+I, [2014-08-27T23:48:02.968636 #31687]  INFO -- :   Rendered courses/srch_and_schd.html.erb (4.6ms)
+I, [2014-08-27T23:48:02.968968 #31687]  INFO -- : Completed 200 OK in 30ms (Views: 4.5ms | ActiveRecord: 2.3ms)
+I, [2014-08-27T23:48:02.987593 #31687]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.251.137 at 2014-08-27 23:48:02 +0800
+I, [2014-08-27T23:48:02.990664 #31687]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:48:02.990889 #31687]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:48:03.012433 #31687]  INFO -- :   Rendered course_details/_common_js.html.erb (16.5ms)
+I, [2014-08-27T23:48:03.030948 #31687]  INFO -- :   Rendered course_details/_results_mini.html.erb (18.2ms)
+I, [2014-08-27T23:48:03.031137 #31687]  INFO -- :   Rendered course_details/mini.html.erb (35.4ms)
+I, [2014-08-27T23:48:03.031419 #31687]  INFO -- : Completed 200 OK in 40ms (Views: 33.2ms | ActiveRecord: 3.2ms)
+I, [2014-08-27T23:48:03.033097 #31687]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.251.137 at 2014-08-27 23:48:03 +0800
+I, [2014-08-27T23:48:03.035153 #31687]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:48:03.035293 #31687]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:48:03.149311 #31687]  INFO -- :   Rendered courses/user_schedule.html.erb (3.2ms)
+I, [2014-08-27T23:48:03.149723 #31687]  INFO -- : Completed 200 OK in 114ms (Views: 4.2ms | ActiveRecord: 10.6ms)
+I, [2014-08-27T23:48:06.377113 #31687]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.251.137 at 2014-08-27 23:48:06 +0800
+I, [2014-08-27T23:48:06.380075 #31687]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:48:06.381794 #31687]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.1ms)
+I, [2014-08-27T23:48:06.382103 #31687]  INFO -- : Completed 200 OK in 2ms (Views: 0.8ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:50:36.949297 #753]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:50:36 +0800
+I, [2014-08-27T23:50:36.986298 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:50:37.069727 #753]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (8.4ms)
+I, [2014-08-27T23:50:37.134761 #753]  INFO -- :   Rendered layouts/_header.html.erb (62.4ms)
+I, [2014-08-27T23:50:37.137635 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (2.0ms)
+I, [2014-08-27T23:50:37.139379 #753]  INFO -- :   Rendered layouts/_footer.html.erb (1.0ms)
+I, [2014-08-27T23:50:37.139912 #753]  INFO -- : Completed 200 OK in 153ms (Views: 75.1ms | ActiveRecord: 14.6ms)
+I, [2014-08-27T23:50:37.464521 #753]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:50:37 +0800
+I, [2014-08-27T23:50:37.469305 #753]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:50:37.469471 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:50:37.507710 #753]  INFO -- :   Rendered courses/_search_js.html.erb (1.9ms)
+I, [2014-08-27T23:50:37.510919 #753]  INFO -- :   Rendered courses/srch_and_schd.html.erb (8.7ms)
+I, [2014-08-27T23:50:37.511277 #753]  INFO -- : Completed 200 OK in 42ms (Views: 11.3ms | ActiveRecord: 1.7ms)
+I, [2014-08-27T23:50:37.559722 #753]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:50:37 +0800
+I, [2014-08-27T23:50:37.565290 #753]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:50:37.565405 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:50:37.595660 #753]  INFO -- :   Rendered course_details/_common_js.html.erb (15.6ms)
+I, [2014-08-27T23:50:37.623995 #762]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:50:37 +0800
+I, [2014-08-27T23:50:37.631219 #753]  INFO -- :   Rendered course_details/_results_mini.html.erb (32.5ms)
+I, [2014-08-27T23:50:37.631469 #753]  INFO -- :   Rendered course_details/mini.html.erb (54.9ms)
+I, [2014-08-27T23:50:37.631835 #753]  INFO -- : Completed 200 OK in 66ms (Views: 52.1ms | ActiveRecord: 8.9ms)
+I, [2014-08-27T23:50:37.661724 #762]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:50:37.661954 #762]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:50:37.853752 #762]  INFO -- :   Rendered courses/user_schedule.html.erb (4.8ms)
+I, [2014-08-27T23:50:37.854300 #762]  INFO -- : Completed 200 OK in 192ms (Views: 9.2ms | ActiveRecord: 18.4ms)
+I, [2014-08-27T23:50:38.695271 #762]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:50:38 +0800
+I, [2014-08-27T23:50:38.699306 #762]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:50:38.700444 #762]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:50:38.700591 #762]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:50:38.700787 #762]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:50:38.738123 #762]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:50:38 +0800
+I, [2014-08-27T23:50:38.740947 #762]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:50:38.755463 #762]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.9ms)
+I, [2014-08-27T23:50:38.761128 #762]  INFO -- :   Rendered layouts/_header.html.erb (3.2ms)
+I, [2014-08-27T23:50:38.762995 #762]  INFO -- :   Rendered layouts/_footer.html.erb (1.1ms)
+I, [2014-08-27T23:50:38.763395 #762]  INFO -- : Completed 200 OK in 22ms (Views: 11.5ms | ActiveRecord: 5.6ms)
+I, [2014-08-27T23:50:38.817781 #762]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:50:38 +0800
+I, [2014-08-27T23:50:38.821264 #762]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:50:38.826279 #762]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.8ms)
+I, [2014-08-27T23:50:38.829026 #762]  INFO -- :   Rendered layouts/_header.html.erb (1.8ms)
+I, [2014-08-27T23:50:38.829580 #762]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:50:38.829855 #762]  INFO -- : Completed 200 OK in 8ms (Views: 4.3ms | ActiveRecord: 1.8ms)
+I, [2014-08-27T23:50:38.882996 #762]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:50:38 +0800
+I, [2014-08-27T23:50:38.884849 #762]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:50:38.888462 #762]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:50:38.888611 #762]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:50:38.888778 #762]  INFO -- : Completed 302 Found in 4ms (ActiveRecord: 0.5ms)
+I, [2014-08-27T23:50:38.929842 #762]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:50:38 +0800
+I, [2014-08-27T23:50:38.933123 #762]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:50:38.988894 #762]  INFO -- :   Rendered user/_dept_form.html.erb (36.5ms)
+I, [2014-08-27T23:50:39.034960 #753]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:50:39 +0800
+I, [2014-08-27T23:50:39.037825 #753]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:50:39.042196 #753]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.5ms)
+I, [2014-08-27T23:50:39.042611 #753]  INFO -- : Completed 200 OK in 5ms (Views: 3.6ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:50:39.076272 #762]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (83.7ms)
+I, [2014-08-27T23:50:39.076517 #762]  INFO -- :   Rendered user/_this_semester.html.erb (126.2ms)
+I, [2014-08-27T23:50:39.092243 #753]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:50:39 +0800
+I, [2014-08-27T23:50:39.094672 #753]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:50:39.096169 #753]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.1ms)
+I, [2014-08-27T23:50:39.096400 #753]  INFO -- : Completed 200 OK in 2ms (Views: 0.7ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:50:39.115343 #762]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (34.3ms)
+I, [2014-08-27T23:50:39.144875 #762]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (28.5ms)
+I, [2014-08-27T23:50:39.145129 #762]  INFO -- :   Rendered user/_statics.html.erb (67.8ms)
+I, [2014-08-27T23:50:39.145286 #762]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (197.2ms)
+I, [2014-08-27T23:50:39.159651 #762]  INFO -- :   Rendered layouts/_header.html.erb (13.4ms)
+I, [2014-08-27T23:50:39.162185 #762]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.8ms)
+I, [2014-08-27T23:50:39.162823 #762]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:50:39.163204 #762]  INFO -- : Completed 200 OK in 230ms (Views: 194.5ms | ActiveRecord: 24.5ms)
+I, [2014-08-27T23:51:25.599354 #762]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:51:25 +0800
+I, [2014-08-27T23:51:25.601976 #762]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:51:25.616071 #762]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (7.6ms)
+I, [2014-08-27T23:51:25.620999 #762]  INFO -- :   Rendered layouts/_header.html.erb (4.0ms)
+I, [2014-08-27T23:51:25.622020 #762]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.8ms)
+I, [2014-08-27T23:51:25.622556 #762]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:51:25.622935 #762]  INFO -- : Completed 200 OK in 21ms (Views: 14.0ms | ActiveRecord: 3.3ms)
+I, [2014-08-27T23:51:25.912514 #762]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:51:25 +0800
+I, [2014-08-27T23:51:25.915309 #762]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:51:25.915411 #762]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:51:25.943410 #762]  INFO -- :   Rendered courses/_search_js.html.erb (2.1ms)
+I, [2014-08-27T23:51:25.946478 #762]  INFO -- :   Rendered courses/srch_and_schd.html.erb (8.8ms)
+I, [2014-08-27T23:51:25.946793 #762]  INFO -- : Completed 200 OK in 31ms (Views: 11.3ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:51:26.005963 #762]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:51:26 +0800
+I, [2014-08-27T23:51:26.009377 #753]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:51:26 +0800
+I, [2014-08-27T23:51:26.010016 #762]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:51:26.010122 #762]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:51:26.013252 #753]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:51:26.013614 #753]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:51:26.035371 #762]  INFO -- :   Rendered course_details/_common_js.html.erb (14.7ms)
+I, [2014-08-27T23:51:26.113887 #762]  INFO -- :   Rendered course_details/_results_mini.html.erb (75.6ms)
+I, [2014-08-27T23:51:26.114142 #762]  INFO -- :   Rendered course_details/mini.html.erb (96.7ms)
+I, [2014-08-27T23:51:26.114902 #762]  INFO -- : Completed 200 OK in 105ms (Views: 97.6ms | ActiveRecord: 3.3ms)
+I, [2014-08-27T23:51:26.149189 #753]  INFO -- :   Rendered courses/user_schedule.html.erb (4.7ms)
+I, [2014-08-27T23:51:26.149644 #753]  INFO -- : Completed 200 OK in 136ms (Views: 8.7ms | ActiveRecord: 9.2ms)
+I, [2014-08-27T23:51:27.083281 #753]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:51:27 +0800
+I, [2014-08-27T23:51:27.086169 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:51:27.087350 #753]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:51:27.087553 #753]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:51:27.087755 #753]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:51:27.122774 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:51:27 +0800
+I, [2014-08-27T23:51:27.126428 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:27.143295 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (2.1ms)
+I, [2014-08-27T23:51:27.146626 #753]  INFO -- :   Rendered layouts/_header.html.erb (2.0ms)
+I, [2014-08-27T23:51:27.147262 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:27.147694 #753]  INFO -- : Completed 200 OK in 21ms (Views: 8.3ms | ActiveRecord: 6.3ms)
+I, [2014-08-27T23:51:27.194741 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:51:27 +0800
+I, [2014-08-27T23:51:27.198635 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:27.205015 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.0ms)
+I, [2014-08-27T23:51:27.207691 #753]  INFO -- :   Rendered layouts/_header.html.erb (1.7ms)
+I, [2014-08-27T23:51:27.208297 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:51:27.208620 #753]  INFO -- : Completed 200 OK in 10ms (Views: 4.7ms | ActiveRecord: 2.1ms)
+I, [2014-08-27T23:51:27.249322 #753]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:51:27 +0800
+I, [2014-08-27T23:51:27.251924 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:27.256634 #753]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:51:27.256809 #753]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:51:27.257002 #753]  INFO -- : Completed 302 Found in 5ms (ActiveRecord: 0.5ms)
+I, [2014-08-27T23:51:27.295880 #753]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:51:27 +0800
+I, [2014-08-27T23:51:27.300589 #753]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:51:27.348389 #753]  INFO -- :   Rendered user/_dept_form.html.erb (26.6ms)
+I, [2014-08-27T23:51:27.389914 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (37.2ms)
+I, [2014-08-27T23:51:27.390228 #753]  INFO -- :   Rendered user/_this_semester.html.erb (70.9ms)
+I, [2014-08-27T23:51:27.437381 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (41.5ms)
+I, [2014-08-27T23:51:27.523531 #753]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (85.2ms)
+I, [2014-08-27T23:51:27.523850 #753]  INFO -- :   Rendered user/_statics.html.erb (132.7ms)
+I, [2014-08-27T23:51:27.524041 #753]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (207.4ms)
+I, [2014-08-27T23:51:27.529884 #753]  INFO -- :   Rendered layouts/_header.html.erb (4.6ms)
+I, [2014-08-27T23:51:27.531067 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.9ms)
+I, [2014-08-27T23:51:27.531790 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:27.532235 #753]  INFO -- : Completed 200 OK in 231ms (Views: 197.3ms | ActiveRecord: 22.6ms)
+I, [2014-08-27T23:51:27.818086 #753]  INFO -- : Started GET "/courses/get_user_xls" for 140.113.46.205 at 2014-08-27 23:51:27 +0800
+I, [2014-08-27T23:51:27.821062 #753]  INFO -- : Processing by CoursesController#get_user_xls as HTML
+I, [2014-08-27T23:51:27.822301 #753]  INFO -- : Completed 406 Not Acceptable in 1ms
+F, [2014-08-27T23:51:27.824023 #753] FATAL -- : 
+ActionController::UnknownFormat (ActionController::UnknownFormat):
+  app/controllers/courses_controller.rb:197:in `get_user_xls'
+
+
+I, [2014-08-27T23:51:28.240668 #753]  INFO -- : Started GET "/courses/get_user_xls" for 140.113.46.205 at 2014-08-27 23:51:28 +0800
+I, [2014-08-27T23:51:28.243882 #753]  INFO -- : Processing by CoursesController#get_user_xls as HTML
+I, [2014-08-27T23:51:28.245159 #753]  INFO -- : Completed 406 Not Acceptable in 1ms
+F, [2014-08-27T23:51:28.246768 #753] FATAL -- : 
+ActionController::UnknownFormat (ActionController::UnknownFormat):
+  app/controllers/courses_controller.rb:197:in `get_user_xls'
+
+
+I, [2014-08-27T23:51:28.985000 #753]  INFO -- : Started HEAD "/courses/get_user_xls" for 140.113.46.205 at 2014-08-27 23:51:28 +0800
+I, [2014-08-27T23:51:28.988151 #753]  INFO -- : Processing by CoursesController#get_user_xls as HTML
+I, [2014-08-27T23:51:28.989304 #753]  INFO -- : Completed 406 Not Acceptable in 1ms
+F, [2014-08-27T23:51:28.991908 #753] FATAL -- : 
+ActionController::UnknownFormat (ActionController::UnknownFormat):
+  app/controllers/courses_controller.rb:197:in `get_user_xls'
+
+
+I, [2014-08-27T23:51:30.381704 #753]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:51:30 +0800
+I, [2014-08-27T23:51:30.384846 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:51:30.386254 #753]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:51:30.386541 #753]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:51:30.386866 #753]  INFO -- : Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:51:30.422532 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:51:30 +0800
+I, [2014-08-27T23:51:30.424696 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:30.430257 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.9ms)
+I, [2014-08-27T23:51:30.433016 #753]  INFO -- :   Rendered layouts/_header.html.erb (1.7ms)
+I, [2014-08-27T23:51:30.433667 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:30.434007 #753]  INFO -- : Completed 200 OK in 9ms (Views: 4.6ms | ActiveRecord: 2.1ms)
+I, [2014-08-27T23:51:30.480767 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:51:30 +0800
+I, [2014-08-27T23:51:30.482638 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:30.488659 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.4ms)
+I, [2014-08-27T23:51:30.492807 #753]  INFO -- :   Rendered layouts/_header.html.erb (2.3ms)
+I, [2014-08-27T23:51:30.493891 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.7ms)
+I, [2014-08-27T23:51:30.494360 #753]  INFO -- : Completed 200 OK in 11ms (Views: 7.1ms | ActiveRecord: 1.8ms)
+I, [2014-08-27T23:51:30.535955 #753]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:51:30 +0800
+I, [2014-08-27T23:51:30.538537 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:30.542187 #753]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:51:30.542480 #753]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:51:30.542798 #753]  INFO -- : Completed 302 Found in 4ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:51:30.581507 #753]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:51:30 +0800
+I, [2014-08-27T23:51:30.585412 #753]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:51:30.612633 #753]  INFO -- :   Rendered user/_dept_form.html.erb (16.8ms)
+I, [2014-08-27T23:51:30.632157 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (17.5ms)
+I, [2014-08-27T23:51:30.632369 #753]  INFO -- :   Rendered user/_this_semester.html.erb (37.2ms)
+I, [2014-08-27T23:51:30.672268 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (39.2ms)
+I, [2014-08-27T23:51:30.703055 #753]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (30.5ms)
+I, [2014-08-27T23:51:30.703228 #753]  INFO -- :   Rendered user/_statics.html.erb (70.6ms)
+I, [2014-08-27T23:51:30.703433 #753]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (109.4ms)
+I, [2014-08-27T23:51:30.708709 #753]  INFO -- :   Rendered layouts/_header.html.erb (4.3ms)
+I, [2014-08-27T23:51:30.709884 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.9ms)
+I, [2014-08-27T23:51:30.710544 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:30.710897 #753]  INFO -- : Completed 200 OK in 125ms (Views: 101.9ms | ActiveRecord: 17.6ms)
+I, [2014-08-27T23:51:32.077843 #753]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:51:32 +0800
+I, [2014-08-27T23:51:32.080361 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:51:32.091590 #753]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (5.7ms)
+I, [2014-08-27T23:51:32.097382 #753]  INFO -- :   Rendered layouts/_header.html.erb (4.8ms)
+I, [2014-08-27T23:51:32.098743 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.1ms)
+I, [2014-08-27T23:51:32.099430 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:32.099807 #753]  INFO -- : Completed 200 OK in 19ms (Views: 11.9ms | ActiveRecord: 3.7ms)
+I, [2014-08-27T23:51:32.285427 #753]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:51:32 +0800
+I, [2014-08-27T23:51:32.288495 #753]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:51:32.288710 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:51:32.317681 #753]  INFO -- :   Rendered courses/_search_js.html.erb (0.5ms)
+I, [2014-08-27T23:51:32.320597 #753]  INFO -- :   Rendered courses/srch_and_schd.html.erb (3.6ms)
+I, [2014-08-27T23:51:32.320853 #753]  INFO -- : Completed 200 OK in 32ms (Views: 3.1ms | ActiveRecord: 2.1ms)
+I, [2014-08-27T23:51:32.370933 #753]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:51:32 +0800
+I, [2014-08-27T23:51:32.374718 #762]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:51:32 +0800
+I, [2014-08-27T23:51:32.374865 #753]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:51:32.374992 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:51:32.377170 #762]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:51:32.377279 #762]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:51:32.394755 #753]  INFO -- :   Rendered course_details/_common_js.html.erb (16.3ms)
+I, [2014-08-27T23:51:32.395787 #762]  INFO -- :   Rendered courses/user_schedule.html.erb (2.8ms)
+I, [2014-08-27T23:51:32.396077 #762]  INFO -- : Completed 200 OK in 19ms (Views: 3.5ms | ActiveRecord: 5.0ms)
+I, [2014-08-27T23:51:32.413123 #753]  INFO -- :   Rendered course_details/_results_mini.html.erb (18.1ms)
+I, [2014-08-27T23:51:32.413319 #753]  INFO -- :   Rendered course_details/mini.html.erb (35.0ms)
+I, [2014-08-27T23:51:32.413592 #753]  INFO -- : Completed 200 OK in 38ms (Views: 32.8ms | ActiveRecord: 3.2ms)
+I, [2014-08-27T23:51:33.426218 #753]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:51:33 +0800
+I, [2014-08-27T23:51:33.429635 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:51:33.430983 #753]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:51:33.431239 #753]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:51:33.431567 #753]  INFO -- : Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:51:33.467210 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:51:33 +0800
+I, [2014-08-27T23:51:33.469126 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:33.474278 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.9ms)
+I, [2014-08-27T23:51:33.477103 #753]  INFO -- :   Rendered layouts/_header.html.erb (1.7ms)
+I, [2014-08-27T23:51:33.477779 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:33.478114 #753]  INFO -- : Completed 200 OK in 9ms (Views: 4.7ms | ActiveRecord: 1.8ms)
+I, [2014-08-27T23:51:33.530125 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:51:33 +0800
+I, [2014-08-27T23:51:33.532320 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:33.537621 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.8ms)
+I, [2014-08-27T23:51:33.597047 #753]  INFO -- :   Rendered layouts/_header.html.erb (2.9ms)
+I, [2014-08-27T23:51:33.597688 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:51:33.598020 #753]  INFO -- : Completed 200 OK in 65ms (Views: 61.1ms | ActiveRecord: 2.0ms)
+I, [2014-08-27T23:51:33.639019 #753]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:51:33 +0800
+I, [2014-08-27T23:51:33.641363 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:51:33.643850 #753]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:51:33.644029 #753]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:51:33.644232 #753]  INFO -- : Completed 302 Found in 3ms (ActiveRecord: 0.5ms)
+I, [2014-08-27T23:51:33.683530 #753]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:51:33 +0800
+I, [2014-08-27T23:51:33.686192 #753]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:51:33.722726 #753]  INFO -- :   Rendered user/_dept_form.html.erb (21.7ms)
+I, [2014-08-27T23:51:33.741955 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (17.4ms)
+I, [2014-08-27T23:51:33.742158 #753]  INFO -- :   Rendered user/_this_semester.html.erb (42.1ms)
+I, [2014-08-27T23:51:33.781304 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (38.5ms)
+I, [2014-08-27T23:51:33.811715 #753]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (30.1ms)
+I, [2014-08-27T23:51:33.811914 #753]  INFO -- :   Rendered user/_statics.html.erb (69.5ms)
+I, [2014-08-27T23:51:33.812114 #753]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (113.7ms)
+I, [2014-08-27T23:51:33.817353 #753]  INFO -- :   Rendered layouts/_header.html.erb (4.2ms)
+I, [2014-08-27T23:51:33.818521 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.9ms)
+I, [2014-08-27T23:51:33.819141 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:51:33.819521 #753]  INFO -- : Completed 200 OK in 133ms (Views: 106.0ms | ActiveRecord: 18.1ms)
+I, [2014-08-27T23:53:17.682522 #753]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:53:17 +0800
+I, [2014-08-27T23:53:17.687381 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:53:17.704338 #753]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (8.7ms)
+I, [2014-08-27T23:53:17.712924 #753]  INFO -- :   Rendered layouts/_header.html.erb (7.0ms)
+I, [2014-08-27T23:53:17.714847 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.5ms)
+I, [2014-08-27T23:53:17.715855 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.6ms)
+I, [2014-08-27T23:53:17.716410 #753]  INFO -- : Completed 200 OK in 29ms (Views: 18.3ms | ActiveRecord: 4.8ms)
+I, [2014-08-27T23:53:18.019425 #753]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:53:18 +0800
+I, [2014-08-27T23:53:18.022709 #753]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:53:18.022920 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:53:18.052912 #753]  INFO -- :   Rendered courses/_search_js.html.erb (0.5ms)
+I, [2014-08-27T23:53:18.055861 #753]  INFO -- :   Rendered courses/srch_and_schd.html.erb (3.7ms)
+I, [2014-08-27T23:53:18.056140 #753]  INFO -- : Completed 200 OK in 33ms (Views: 3.2ms | ActiveRecord: 2.1ms)
+I, [2014-08-27T23:53:18.113335 #753]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:53:18 +0800
+I, [2014-08-27T23:53:18.114950 #762]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:53:18 +0800
+I, [2014-08-27T23:53:18.115616 #753]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:53:18.115840 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:53:18.118202 #762]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:53:18.118425 #762]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:53:18.136931 #753]  INFO -- :   Rendered course_details/_common_js.html.erb (16.3ms)
+I, [2014-08-27T23:53:18.141956 #762]  INFO -- :   Rendered courses/user_schedule.html.erb (3.2ms)
+I, [2014-08-27T23:53:18.142289 #762]  INFO -- : Completed 200 OK in 24ms (Views: 3.9ms | ActiveRecord: 5.9ms)
+I, [2014-08-27T23:53:18.154185 #753]  INFO -- :   Rendered course_details/_results_mini.html.erb (17.0ms)
+I, [2014-08-27T23:53:18.154363 #753]  INFO -- :   Rendered course_details/mini.html.erb (34.0ms)
+I, [2014-08-27T23:53:18.154648 #753]  INFO -- : Completed 200 OK in 39ms (Views: 31.9ms | ActiveRecord: 3.3ms)
+I, [2014-08-27T23:53:19.229436 #753]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.232737 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:53:19.234006 #753]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:53:19.234265 #753]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:53:19.234588 #753]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:53:19.272343 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.273991 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:19.279190 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.8ms)
+I, [2014-08-27T23:53:19.281993 #753]  INFO -- :   Rendered layouts/_header.html.erb (1.8ms)
+I, [2014-08-27T23:53:19.282663 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:53:19.283022 #753]  INFO -- : Completed 200 OK in 9ms (Views: 4.6ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:53:19.333869 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.335518 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:19.340197 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.7ms)
+I, [2014-08-27T23:53:19.342679 #753]  INFO -- :   Rendered layouts/_header.html.erb (1.5ms)
+I, [2014-08-27T23:53:19.343243 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:53:19.343541 #753]  INFO -- : Completed 200 OK in 8ms (Views: 3.9ms | ActiveRecord: 1.8ms)
+I, [2014-08-27T23:53:19.383366 #753]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.385814 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:19.389112 #753]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:53:19.389386 #753]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:53:19.389705 #753]  INFO -- : Completed 302 Found in 4ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:53:19.429715 #753]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.432301 #753]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:53:19.468875 #753]  INFO -- :   Rendered user/_dept_form.html.erb (21.8ms)
+I, [2014-08-27T23:53:19.487869 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (17.2ms)
+I, [2014-08-27T23:53:19.488074 #753]  INFO -- :   Rendered user/_this_semester.html.erb (41.9ms)
+I, [2014-08-27T23:53:19.525016 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (36.3ms)
+I, [2014-08-27T23:53:19.614093 #753]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (31.7ms)
+I, [2014-08-27T23:53:19.614365 #753]  INFO -- :   Rendered user/_statics.html.erb (126.0ms)
+I, [2014-08-27T23:53:19.614571 #753]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (170.0ms)
+I, [2014-08-27T23:53:19.619872 #753]  INFO -- :   Rendered layouts/_header.html.erb (4.3ms)
+I, [2014-08-27T23:53:19.621038 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.9ms)
+I, [2014-08-27T23:53:19.621671 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:53:19.622056 #753]  INFO -- : Completed 200 OK in 189ms (Views: 163.1ms | ActiveRecord: 17.6ms)
+I, [2014-08-27T23:53:19.696045 #753]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.698232 #753]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:53:19.699500 #753]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.1ms)
+I, [2014-08-27T23:53:19.699756 #753]  INFO -- : Completed 200 OK in 1ms (Views: 0.7ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:53:19.752221 #753]  INFO -- : Started GET "/courses/get_user_xls.xls" for 140.113.46.205 at 2014-08-27 23:53:19 +0800
+I, [2014-08-27T23:53:19.753950 #753]  INFO -- : Processing by CoursesController#get_user_xls as XLS
+I, [2014-08-27T23:53:19.754886 #753]  INFO -- :   Rendered courses/get_user_xls.xls.erb (0.0ms)
+I, [2014-08-27T23:53:19.755129 #753]  INFO -- : Completed 200 OK in 1ms (Views: 0.5ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:53:26.666884 #753]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:53:26 +0800
+I, [2014-08-27T23:53:26.670250 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:53:26.687173 #753]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (8.8ms)
+I, [2014-08-27T23:53:26.695819 #753]  INFO -- :   Rendered layouts/_header.html.erb (7.1ms)
+I, [2014-08-27T23:53:26.697739 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.5ms)
+I, [2014-08-27T23:53:26.698745 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.6ms)
+I, [2014-08-27T23:53:26.699283 #753]  INFO -- : Completed 200 OK in 29ms (Views: 18.3ms | ActiveRecord: 4.7ms)
+I, [2014-08-27T23:53:26.895063 #753]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:53:26 +0800
+I, [2014-08-27T23:53:26.897688 #753]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:53:26.897908 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:53:26.926478 #753]  INFO -- :   Rendered courses/_search_js.html.erb (0.4ms)
+I, [2014-08-27T23:53:26.929382 #753]  INFO -- :   Rendered courses/srch_and_schd.html.erb (3.5ms)
+I, [2014-08-27T23:53:26.929666 #753]  INFO -- : Completed 200 OK in 32ms (Views: 3.0ms | ActiveRecord: 2.3ms)
+I, [2014-08-27T23:53:26.980094 #753]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:53:26 +0800
+I, [2014-08-27T23:53:26.981399 #762]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:53:26 +0800
+I, [2014-08-27T23:53:26.983444 #753]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:53:26.983754 #753]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:53:26.984690 #762]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:53:26.984908 #762]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:53:27.009941 #753]  INFO -- :   Rendered course_details/_common_js.html.erb (20.8ms)
+I, [2014-08-27T23:53:27.015004 #762]  INFO -- :   Rendered courses/user_schedule.html.erb (5.2ms)
+I, [2014-08-27T23:53:27.015470 #762]  INFO -- : Completed 200 OK in 30ms (Views: 6.2ms | ActiveRecord: 6.6ms)
+I, [2014-08-27T23:53:27.026927 #753]  INFO -- :   Rendered course_details/_results_mini.html.erb (16.7ms)
+I, [2014-08-27T23:53:27.027109 #753]  INFO -- :   Rendered course_details/mini.html.erb (38.3ms)
+I, [2014-08-27T23:53:27.027389 #753]  INFO -- : Completed 200 OK in 43ms (Views: 36.3ms | ActiveRecord: 3.2ms)
+I, [2014-08-27T23:53:27.999373 #753]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:53:27 +0800
+I, [2014-08-27T23:53:28.001962 #753]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:53:28.002808 #753]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:53:28.002965 #753]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:53:28.003161 #753]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:53:28.038754 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:53:28 +0800
+I, [2014-08-27T23:53:28.040910 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:28.048733 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.3ms)
+I, [2014-08-27T23:53:28.052930 #753]  INFO -- :   Rendered layouts/_header.html.erb (2.6ms)
+I, [2014-08-27T23:53:28.053955 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.6ms)
+I, [2014-08-27T23:53:28.054507 #753]  INFO -- : Completed 200 OK in 13ms (Views: 7.1ms | ActiveRecord: 2.6ms)
+I, [2014-08-27T23:53:28.103557 #753]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:53:28 +0800
+I, [2014-08-27T23:53:28.105320 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:28.110231 #753]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.8ms)
+I, [2014-08-27T23:53:28.112794 #753]  INFO -- :   Rendered layouts/_header.html.erb (1.6ms)
+I, [2014-08-27T23:53:28.113714 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.5ms)
+I, [2014-08-27T23:53:28.114174 #753]  INFO -- : Completed 200 OK in 9ms (Views: 4.5ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:53:28.155835 #753]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:53:28 +0800
+I, [2014-08-27T23:53:28.158520 #753]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:28.162076 #753]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:53:28.162352 #753]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:53:28.162677 #753]  INFO -- : Completed 302 Found in 4ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:53:28.203249 #753]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:53:28 +0800
+I, [2014-08-27T23:53:28.205747 #753]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:53:28.241399 #753]  INFO -- :   Rendered user/_dept_form.html.erb (20.8ms)
+I, [2014-08-27T23:53:28.261130 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (17.8ms)
+I, [2014-08-27T23:53:28.261345 #753]  INFO -- :   Rendered user/_this_semester.html.erb (41.7ms)
+I, [2014-08-27T23:53:28.301641 #753]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (39.6ms)
+I, [2014-08-27T23:53:28.332177 #753]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (30.3ms)
+I, [2014-08-27T23:53:28.332352 #753]  INFO -- :   Rendered user/_statics.html.erb (70.7ms)
+I, [2014-08-27T23:53:28.332550 #753]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (114.5ms)
+I, [2014-08-27T23:53:28.337679 #753]  INFO -- :   Rendered layouts/_header.html.erb (4.2ms)
+I, [2014-08-27T23:53:28.338920 #753]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.0ms)
+I, [2014-08-27T23:53:28.339617 #753]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:53:28.339961 #753]  INFO -- : Completed 200 OK in 134ms (Views: 105.7ms | ActiveRecord: 19.6ms)
+I, [2014-08-27T23:53:52.740811 #1144]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:53:52 +0800
+I, [2014-08-27T23:53:52.782333 #1144]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:53:52.860727 #1144]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (7.9ms)
+I, [2014-08-27T23:53:52.922375 #1144]  INFO -- :   Rendered layouts/_header.html.erb (59.1ms)
+I, [2014-08-27T23:53:52.925173 #1144]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.9ms)
+I, [2014-08-27T23:53:52.926783 #1144]  INFO -- :   Rendered layouts/_footer.html.erb (1.0ms)
+I, [2014-08-27T23:53:52.927245 #1144]  INFO -- : Completed 200 OK in 145ms (Views: 70.6ms | ActiveRecord: 14.7ms)
+I, [2014-08-27T23:53:53.163169 #1144]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:53:53 +0800
+I, [2014-08-27T23:53:53.170244 #1144]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:53:53.170498 #1144]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:53:53.212181 #1144]  INFO -- :   Rendered courses/_search_js.html.erb (1.8ms)
+I, [2014-08-27T23:53:53.215028 #1144]  INFO -- :   Rendered courses/srch_and_schd.html.erb (8.0ms)
+I, [2014-08-27T23:53:53.215321 #1144]  INFO -- : Completed 200 OK in 45ms (Views: 10.4ms | ActiveRecord: 1.8ms)
+I, [2014-08-27T23:53:53.262887 #1144]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:53:53 +0800
+I, [2014-08-27T23:53:53.269155 #1144]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:53:53.269367 #1144]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:53:53.300939 #1144]  INFO -- :   Rendered course_details/_common_js.html.erb (15.6ms)
+I, [2014-08-27T23:53:53.323973 #1153]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:53:53 +0800
+I, [2014-08-27T23:53:53.336050 #1144]  INFO -- :   Rendered course_details/_results_mini.html.erb (31.9ms)
+I, [2014-08-27T23:53:53.336263 #1144]  INFO -- :   Rendered course_details/mini.html.erb (54.3ms)
+I, [2014-08-27T23:53:53.336599 #1144]  INFO -- : Completed 200 OK in 67ms (Views: 51.3ms | ActiveRecord: 9.0ms)
+I, [2014-08-27T23:53:53.368931 #1153]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:53:53.369215 #1153]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:53:53.601819 #1153]  INFO -- :   Rendered courses/user_schedule.html.erb (5.6ms)
+I, [2014-08-27T23:53:53.602438 #1153]  INFO -- : Completed 200 OK in 233ms (Views: 10.7ms | ActiveRecord: 19.6ms)
+I, [2014-08-27T23:53:54.358668 #1153]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:53:54 +0800
+I, [2014-08-27T23:53:54.364934 #1153]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:53:54.366249 #1153]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:53:54.366431 #1153]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:53:54.366672 #1153]  INFO -- : Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:53:54.402953 #1153]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:53:54 +0800
+I, [2014-08-27T23:53:54.407193 #1153]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:54.432367 #1153]  INFO -- :   Rendered main/index.html.erb within layouts/application (3.5ms)
+I, [2014-08-27T23:53:54.439571 #1153]  INFO -- :   Rendered layouts/_header.html.erb (3.7ms)
+I, [2014-08-27T23:53:54.441780 #1153]  INFO -- :   Rendered layouts/_footer.html.erb (1.3ms)
+I, [2014-08-27T23:53:54.442244 #1153]  INFO -- : Completed 200 OK in 35ms (Views: 17.0ms | ActiveRecord: 8.1ms)
+I, [2014-08-27T23:53:54.501461 #1153]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:53:54 +0800
+I, [2014-08-27T23:53:54.505529 #1153]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:54.511417 #1153]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.0ms)
+I, [2014-08-27T23:53:54.514711 #1153]  INFO -- :   Rendered layouts/_header.html.erb (2.1ms)
+I, [2014-08-27T23:53:54.515400 #1153]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:53:54.515733 #1153]  INFO -- : Completed 200 OK in 10ms (Views: 5.4ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:53:54.556651 #1153]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:53:54 +0800
+I, [2014-08-27T23:53:54.559232 #1153]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:53:54.565242 #1153]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:53:54.565529 #1153]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:53:54.565846 #1153]  INFO -- : Completed 302 Found in 6ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:53:54.606883 #1153]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:53:54 +0800
+I, [2014-08-27T23:53:54.611953 #1153]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:53:54.679092 #1153]  INFO -- :   Rendered user/_dept_form.html.erb (44.2ms)
+I, [2014-08-27T23:53:54.780008 #1153]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (96.5ms)
+I, [2014-08-27T23:53:54.780344 #1153]  INFO -- :   Rendered user/_this_semester.html.erb (148.0ms)
+I, [2014-08-27T23:53:54.826220 #1153]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (40.0ms)
+I, [2014-08-27T23:53:54.860423 #1153]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (33.3ms)
+I, [2014-08-27T23:53:54.860629 #1153]  INFO -- :   Rendered user/_statics.html.erb (79.2ms)
+I, [2014-08-27T23:53:54.860817 #1153]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (231.2ms)
+I, [2014-08-27T23:53:54.877126 #1153]  INFO -- :   Rendered layouts/_header.html.erb (15.2ms)
+I, [2014-08-27T23:53:54.880030 #1153]  INFO -- :   Rendered layouts/_sidebar.html.erb (2.1ms)
+I, [2014-08-27T23:53:54.880753 #1153]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:53:54.881208 #1153]  INFO -- : Completed 200 OK in 269ms (Views: 230.8ms | ActiveRecord: 25.1ms)
+I, [2014-08-27T23:53:55.460740 #1153]  INFO -- : Started GET "/courses/timetable.xls" for 140.113.46.205 at 2014-08-27 23:53:55 +0800
+I, [2014-08-27T23:53:55.464287 #1153]  INFO -- : Processing by CoursesController#timetable as XLS
+I, [2014-08-27T23:53:55.469233 #1153]  INFO -- :   Rendered courses/timetable.xls.erb (0.5ms)
+I, [2014-08-27T23:53:55.469651 #1153]  INFO -- : Completed 200 OK in 5ms (Views: 4.0ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:53:55.516858 #1153]  INFO -- : Started GET "/courses/timetable.xls" for 140.113.46.205 at 2014-08-27 23:53:55 +0800
+I, [2014-08-27T23:53:55.520064 #1153]  INFO -- : Processing by CoursesController#timetable as XLS
+I, [2014-08-27T23:53:55.522408 #1153]  INFO -- :   Rendered courses/timetable.xls.erb (0.1ms)
+I, [2014-08-27T23:53:55.522811 #1153]  INFO -- : Completed 200 OK in 2ms (Views: 1.2ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:54:55.861214 #1413]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:54:55 +0800
+I, [2014-08-27T23:54:55.902011 #1413]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:54:55.981345 #1413]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (7.9ms)
+I, [2014-08-27T23:54:56.046676 #1413]  INFO -- :   Rendered layouts/_header.html.erb (62.7ms)
+I, [2014-08-27T23:54:56.050162 #1413]  INFO -- :   Rendered layouts/_sidebar.html.erb (2.3ms)
+I, [2014-08-27T23:54:56.051806 #1413]  INFO -- :   Rendered layouts/_footer.html.erb (1.0ms)
+I, [2014-08-27T23:54:56.052302 #1413]  INFO -- : Completed 200 OK in 150ms (Views: 75.0ms | ActiveRecord: 14.3ms)
+I, [2014-08-27T23:54:56.344045 #1413]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:54:56 +0800
+I, [2014-08-27T23:54:56.348670 #1413]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:54:56.348778 #1413]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:54:56.384494 #1413]  INFO -- :   Rendered courses/_search_js.html.erb (1.8ms)
+I, [2014-08-27T23:54:56.387205 #1413]  INFO -- :   Rendered courses/srch_and_schd.html.erb (7.8ms)
+I, [2014-08-27T23:54:56.387487 #1413]  INFO -- : Completed 200 OK in 39ms (Views: 10.1ms | ActiveRecord: 1.7ms)
+I, [2014-08-27T23:54:56.443409 #1413]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:54:56 +0800
+I, [2014-08-27T23:54:56.449307 #1413]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:54:56.449561 #1413]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:54:56.478983 #1413]  INFO -- :   Rendered course_details/_common_js.html.erb (14.2ms)
+I, [2014-08-27T23:54:56.511164 #1413]  INFO -- :   Rendered course_details/_results_mini.html.erb (29.3ms)
+I, [2014-08-27T23:54:56.511356 #1413]  INFO -- :   Rendered course_details/mini.html.erb (49.7ms)
+I, [2014-08-27T23:54:56.511711 #1413]  INFO -- : Completed 200 OK in 62ms (Views: 46.4ms | ActiveRecord: 9.2ms)
+I, [2014-08-27T23:54:56.513392 #1413]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:54:56 +0800
+I, [2014-08-27T23:54:56.515530 #1413]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:54:56.515637 #1413]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:54:56.627479 #1413]  INFO -- :   Rendered courses/user_schedule.html.erb (3.9ms)
+I, [2014-08-27T23:54:56.627865 #1413]  INFO -- : Completed 200 OK in 112ms (Views: 7.2ms | ActiveRecord: 8.4ms)
+I, [2014-08-27T23:54:57.809258 #1413]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:54:57 +0800
+I, [2014-08-27T23:54:57.812458 #1413]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:54:57.813704 #1413]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:54:57.813921 #1413]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:54:57.814136 #1413]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:54:57.849793 #1413]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:54:57 +0800
+I, [2014-08-27T23:54:57.854895 #1413]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:54:57.877891 #1413]  INFO -- :   Rendered main/index.html.erb within layouts/application (2.8ms)
+I, [2014-08-27T23:54:57.882917 #1413]  INFO -- :   Rendered layouts/_header.html.erb (3.1ms)
+I, [2014-08-27T23:54:57.883866 #1413]  INFO -- :   Rendered layouts/_footer.html.erb (0.5ms)
+I, [2014-08-27T23:54:57.884265 #1413]  INFO -- : Completed 200 OK in 29ms (Views: 11.8ms | ActiveRecord: 7.5ms)
+I, [2014-08-27T23:54:57.939078 #1413]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:54:57 +0800
+I, [2014-08-27T23:54:57.942768 #1413]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:54:57.948120 #1413]  INFO -- :   Rendered main/index.html.erb within layouts/application (0.8ms)
+I, [2014-08-27T23:54:57.950712 #1413]  INFO -- :   Rendered layouts/_header.html.erb (1.6ms)
+I, [2014-08-27T23:54:57.951307 #1413]  INFO -- :   Rendered layouts/_footer.html.erb (0.3ms)
+I, [2014-08-27T23:54:57.951624 #1413]  INFO -- : Completed 200 OK in 9ms (Views: 4.3ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:54:57.992423 #1413]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:54:57 +0800
+I, [2014-08-27T23:54:57.995118 #1413]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:54:58.001239 #1413]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:54:58.001521 #1413]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:54:58.001855 #1413]  INFO -- : Completed 302 Found in 6ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:54:58.040971 #1413]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:54:58 +0800
+I, [2014-08-27T23:54:58.045871 #1413]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:54:58.098063 #1413]  INFO -- :   Rendered user/_dept_form.html.erb (26.3ms)
+I, [2014-08-27T23:54:58.138820 #1413]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (36.2ms)
+I, [2014-08-27T23:54:58.139076 #1413]  INFO -- :   Rendered user/_this_semester.html.erb (69.8ms)
+I, [2014-08-27T23:54:58.187977 #1413]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (43.3ms)
+I, [2014-08-27T23:54:58.277225 #1413]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (88.1ms)
+I, [2014-08-27T23:54:58.277572 #1413]  INFO -- :   Rendered user/_statics.html.erb (137.6ms)
+I, [2014-08-27T23:54:58.277773 #1413]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (211.1ms)
+I, [2014-08-27T23:54:58.283753 #1413]  INFO -- :   Rendered layouts/_header.html.erb (4.8ms)
+I, [2014-08-27T23:54:58.284911 #1413]  INFO -- :   Rendered layouts/_sidebar.html.erb (0.9ms)
+I, [2014-08-27T23:54:58.285589 #1413]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:54:58.286031 #1413]  INFO -- : Completed 200 OK in 240ms (Views: 200.6ms | ActiveRecord: 23.3ms)
+I, [2014-08-27T23:55:51.371699 #1413]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:55:51 +0800
+I, [2014-08-27T23:55:51.374994 #1413]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:55:51.386743 #1413]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (6.0ms)
+I, [2014-08-27T23:55:51.392155 #1413]  INFO -- :   Rendered layouts/_header.html.erb (4.4ms)
+I, [2014-08-27T23:55:51.393404 #1413]  INFO -- :   Rendered layouts/_sidebar.html.erb (1.0ms)
+I, [2014-08-27T23:55:51.394108 #1413]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:55:51.394479 #1413]  INFO -- : Completed 200 OK in 19ms (Views: 12.1ms | ActiveRecord: 3.3ms)
+I, [2014-08-27T23:55:51.673873 #1413]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:55:51 +0800
+I, [2014-08-27T23:55:51.677229 #1413]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:55:51.677441 #1413]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:55:51.706980 #1413]  INFO -- :   Rendered courses/_search_js.html.erb (0.5ms)
+I, [2014-08-27T23:55:51.709947 #1413]  INFO -- :   Rendered courses/srch_and_schd.html.erb (3.7ms)
+I, [2014-08-27T23:55:51.710218 #1413]  INFO -- : Completed 200 OK in 33ms (Views: 3.2ms | ActiveRecord: 2.1ms)
+I, [2014-08-27T23:55:51.773369 #1413]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:55:51 +0800
+I, [2014-08-27T23:55:51.778838 #1413]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:55:51.779133 #1413]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:55:51.780644 #1424]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:55:51 +0800
+I, [2014-08-27T23:55:51.800447 #1413]  INFO -- :   Rendered course_details/_common_js.html.erb (15.8ms)
+I, [2014-08-27T23:55:51.818368 #1413]  INFO -- :   Rendered course_details/_results_mini.html.erb (17.6ms)
+I, [2014-08-27T23:55:51.818569 #1413]  INFO -- :   Rendered course_details/mini.html.erb (34.2ms)
+I, [2014-08-27T23:55:51.818902 #1413]  INFO -- : Completed 200 OK in 40ms (Views: 32.3ms | ActiveRecord: 3.1ms)
+I, [2014-08-27T23:55:51.824157 #1424]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:55:51.824349 #1424]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:55:52.047822 #1424]  INFO -- :   Rendered courses/user_schedule.html.erb (5.5ms)
+I, [2014-08-27T23:55:52.048349 #1424]  INFO -- : Completed 200 OK in 224ms (Views: 10.3ms | ActiveRecord: 22.4ms)
+I, [2014-08-27T23:55:52.918019 #1424]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:55:52 +0800
+I, [2014-08-27T23:55:52.924305 #1424]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:55:52.925496 #1424]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:55:52.925679 #1424]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:55:52.925916 #1424]  INFO -- : Completed 302 Found in 1ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:55:52.961997 #1424]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:55:52 +0800
+I, [2014-08-27T23:55:52.965793 #1424]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:55:52.984245 #1424]  INFO -- :   Rendered main/index.html.erb within layouts/application (2.7ms)
+I, [2014-08-27T23:55:52.992220 #1424]  INFO -- :   Rendered layouts/_header.html.erb (4.5ms)
+I, [2014-08-27T23:55:52.994733 #1424]  INFO -- :   Rendered layouts/_footer.html.erb (1.4ms)
+I, [2014-08-27T23:55:52.995182 #1424]  INFO -- : Completed 200 OK in 29ms (Views: 16.1ms | ActiveRecord: 6.7ms)
+I, [2014-08-27T23:55:53.042441 #1424]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:55:53 +0800
+I, [2014-08-27T23:55:53.047294 #1424]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:55:53.055336 #1424]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.4ms)
+I, [2014-08-27T23:55:53.059940 #1424]  INFO -- :   Rendered layouts/_header.html.erb (2.8ms)
+I, [2014-08-27T23:55:53.060981 #1424]  INFO -- :   Rendered layouts/_footer.html.erb (0.6ms)
+I, [2014-08-27T23:55:53.061453 #1424]  INFO -- : Completed 200 OK in 14ms (Views: 7.5ms | ActiveRecord: 2.6ms)
+I, [2014-08-27T23:55:53.103096 #1424]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:55:53 +0800
+I, [2014-08-27T23:55:53.105478 #1424]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:55:53.111162 #1424]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:55:53.111466 #1424]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:55:53.111787 #1424]  INFO -- : Completed 302 Found in 6ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:55:53.151265 #1424]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:55:53 +0800
+I, [2014-08-27T23:55:53.155163 #1424]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:55:53.220693 #1424]  INFO -- :   Rendered user/_dept_form.html.erb (44.2ms)
+I, [2014-08-27T23:55:53.314389 #1424]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (88.9ms)
+I, [2014-08-27T23:55:53.314730 #1424]  INFO -- :   Rendered user/_this_semester.html.erb (140.7ms)
+I, [2014-08-27T23:55:53.374673 #1424]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (54.5ms)
+I, [2014-08-27T23:55:53.419775 #1424]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (43.5ms)
+I, [2014-08-27T23:55:53.420097 #1424]  INFO -- :   Rendered user/_statics.html.erb (104.4ms)
+I, [2014-08-27T23:55:53.420289 #1424]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (249.0ms)
+I, [2014-08-27T23:55:53.445798 #1424]  INFO -- :   Rendered layouts/_header.html.erb (24.3ms)
+I, [2014-08-27T23:55:53.450707 #1424]  INFO -- :   Rendered layouts/_sidebar.html.erb (3.5ms)
+I, [2014-08-27T23:55:53.451919 #1424]  INFO -- :   Rendered layouts/_footer.html.erb (0.7ms)
+I, [2014-08-27T23:55:53.452588 #1424]  INFO -- : Completed 200 OK in 297ms (Views: 257.5ms | ActiveRecord: 28.0ms)
+I, [2014-08-27T23:56:16.351175 #1697]  INFO -- : Started GET "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:56:16 +0800
+I, [2014-08-27T23:56:16.398300 #1697]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:56:16.496155 #1697]  INFO -- :   Rendered courses/simulation.html.erb within layouts/application (10.4ms)
+I, [2014-08-27T23:56:16.580109 #1697]  INFO -- :   Rendered layouts/_header.html.erb (80.8ms)
+I, [2014-08-27T23:56:16.584300 #1697]  INFO -- :   Rendered layouts/_sidebar.html.erb (2.8ms)
+I, [2014-08-27T23:56:16.586355 #1697]  INFO -- :   Rendered layouts/_footer.html.erb (1.2ms)
+I, [2014-08-27T23:56:16.586981 #1697]  INFO -- : Completed 200 OK in 188ms (Views: 97.8ms | ActiveRecord: 14.7ms)
+I, [2014-08-27T23:56:16.837709 #1697]  INFO -- : Started GET "/courses/get_user_simulated?sem_id=9" for 140.113.46.205 at 2014-08-27 23:56:16 +0800
+I, [2014-08-27T23:56:16.844273 #1697]  INFO -- : Processing by CoursesController#get_user_simulated as HTML
+I, [2014-08-27T23:56:16.844407 #1697]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:56:16.886507 #1697]  INFO -- :   Rendered courses/_search_js.html.erb (2.2ms)
+I, [2014-08-27T23:56:16.889831 #1697]  INFO -- :   Rendered courses/srch_and_schd.html.erb (9.7ms)
+I, [2014-08-27T23:56:16.890195 #1697]  INFO -- : Completed 200 OK in 46ms (Views: 12.7ms | ActiveRecord: 1.9ms)
+I, [2014-08-27T23:56:17.011295 #1697]  INFO -- : Started GET "/course_details/mini?sem_id=9" for 140.113.46.205 at 2014-08-27 23:56:17 +0800
+I, [2014-08-27T23:56:17.017476 #1697]  INFO -- : Processing by CourseDetailsController#mini as HTML
+I, [2014-08-27T23:56:17.017645 #1697]  INFO -- :   Parameters: {"sem_id"=>"9"}
+I, [2014-08-27T23:56:17.052932 #1697]  INFO -- :   Rendered course_details/_common_js.html.erb (17.4ms)
+I, [2014-08-27T23:56:17.083620 #1706]  INFO -- : Started GET "/courses/get_user_courses?sem_id=9&type=schd" for 140.113.46.205 at 2014-08-27 23:56:17 +0800
+I, [2014-08-27T23:56:17.091900 #1697]  INFO -- :   Rendered course_details/_results_mini.html.erb (35.4ms)
+I, [2014-08-27T23:56:17.092170 #1697]  INFO -- :   Rendered course_details/mini.html.erb (60.9ms)
+I, [2014-08-27T23:56:17.092602 #1697]  INFO -- : Completed 200 OK in 75ms (Views: 59.3ms | ActiveRecord: 9.1ms)
+I, [2014-08-27T23:56:17.132892 #1706]  INFO -- : Processing by CoursesController#get_user_courses as HTML
+I, [2014-08-27T23:56:17.133142 #1706]  INFO -- :   Parameters: {"sem_id"=>"9", "type"=>"schd"}
+I, [2014-08-27T23:56:17.347449 #1706]  INFO -- :   Rendered courses/user_schedule.html.erb (5.5ms)
+I, [2014-08-27T23:56:17.347964 #1706]  INFO -- : Completed 200 OK in 215ms (Views: 10.1ms | ActiveRecord: 21.4ms)
+I, [2014-08-27T23:56:18.029666 #1706]  INFO -- : Started HEAD "/courses/simulation" for 140.113.46.205 at 2014-08-27 23:56:18 +0800
+I, [2014-08-27T23:56:18.036086 #1706]  INFO -- : Processing by CoursesController#simulation as HTML
+I, [2014-08-27T23:56:18.037980 #1706]  INFO -- : Redirected to http://140.113.166.130:7717/
+I, [2014-08-27T23:56:18.038270 #1706]  INFO -- : Filter chain halted as :checkLogin rendered or redirected
+I, [2014-08-27T23:56:18.038637 #1706]  INFO -- : Completed 302 Found in 2ms (ActiveRecord: 0.0ms)
+I, [2014-08-27T23:56:18.075044 #1706]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:56:18 +0800
+I, [2014-08-27T23:56:18.079280 #1706]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:56:18.097639 #1706]  INFO -- :   Rendered main/index.html.erb within layouts/application (2.7ms)
+I, [2014-08-27T23:56:18.106343 #1706]  INFO -- :   Rendered layouts/_header.html.erb (4.9ms)
+I, [2014-08-27T23:56:18.109813 #1706]  INFO -- :   Rendered layouts/_footer.html.erb (2.1ms)
+I, [2014-08-27T23:56:18.110466 #1706]  INFO -- : Completed 200 OK in 31ms (Views: 17.5ms | ActiveRecord: 6.0ms)
+I, [2014-08-27T23:56:18.161280 #1706]  INFO -- : Started HEAD "/" for 140.113.46.205 at 2014-08-27 23:56:18 +0800
+I, [2014-08-27T23:56:18.167386 #1706]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:56:18.176762 #1706]  INFO -- :   Rendered main/index.html.erb within layouts/application (1.5ms)
+I, [2014-08-27T23:56:18.181754 #1706]  INFO -- :   Rendered layouts/_header.html.erb (3.0ms)
+I, [2014-08-27T23:56:18.182815 #1706]  INFO -- :   Rendered layouts/_footer.html.erb (0.6ms)
+I, [2014-08-27T23:56:18.183338 #1706]  INFO -- : Completed 200 OK in 16ms (Views: 8.2ms | ActiveRecord: 2.7ms)
+I, [2014-08-27T23:56:18.226849 #1706]  INFO -- : Started GET "/" for 140.113.46.205 at 2014-08-27 23:56:18 +0800
+I, [2014-08-27T23:56:18.229573 #1706]  INFO -- : Processing by MainController#index as HTML
+I, [2014-08-27T23:56:18.235310 #1706]  INFO -- : Redirected to http://140.113.166.130:7717/user/special_list
+I, [2014-08-27T23:56:18.235616 #1706]  INFO -- : Filter chain halted as :redirect_to_user_index rendered or redirected
+I, [2014-08-27T23:56:18.235895 #1706]  INFO -- : Completed 302 Found in 6ms (ActiveRecord: 0.6ms)
+I, [2014-08-27T23:56:18.275655 #1706]  INFO -- : Started GET "/user/special_list" for 140.113.46.205 at 2014-08-27 23:56:18 +0800
+I, [2014-08-27T23:56:18.280601 #1706]  INFO -- : Processing by UserController#special_list as HTML
+I, [2014-08-27T23:56:18.357936 #1706]  INFO -- :   Rendered user/_dept_form.html.erb (44.1ms)
+I, [2014-08-27T23:56:18.444839 #1706]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (82.3ms)
+I, [2014-08-27T23:56:18.445145 #1706]  INFO -- :   Rendered user/_this_semester.html.erb (135.3ms)
+I, [2014-08-27T23:56:18.495178 #1706]  INFO -- :   Rendered user/_table_list_by_costype.html.erb (44.3ms)
+I, [2014-08-27T23:56:18.530464 #1706]  INFO -- :   Rendered user/_table_list_by_semester.html.erb (34.2ms)
+I, [2014-08-27T23:56:18.530749 #1706]  INFO -- :   Rendered user/_statics.html.erb (84.6ms)
+I, [2014-08-27T23:56:18.530938 #1706]  INFO -- :   Rendered user/special_list.html.erb within layouts/application (225.4ms)
+I, [2014-08-27T23:56:18.547683 #1706]  INFO -- :   Rendered layouts/_header.html.erb (15.6ms)
+I, [2014-08-27T23:56:18.550688 #1706]  INFO -- :   Rendered layouts/_sidebar.html.erb (2.1ms)
+I, [2014-08-27T23:56:18.551423 #1706]  INFO -- :   Rendered layouts/_footer.html.erb (0.4ms)
+I, [2014-08-27T23:56:18.551870 #1706]  INFO -- : Completed 200 OK in 271ms (Views: 224.8ms | ActiveRecord: 27.5ms)
+I, [2014-08-27T23:56:20.471511 #1706]  INFO -- : Started GET "/courses/timetable.xls" for 140.113.46.205 at 2014-08-27 23:56:20 +0800
+I, [2014-08-27T23:56:20.475992 #1706]  INFO -- : Processing by CoursesController#timetable as XLS
+I, [2014-08-27T23:56:20.481678 #1706]  INFO -- :   Rendered courses/timetable.xls.erb (0.5ms)
+I, [2014-08-27T23:56:20.482070 #1706]  INFO -- : Completed 200 OK in 6ms (Views: 4.3ms | ActiveRecord: 0.0ms)
+I, [2014-08-27T23:56:20.530313 #1706]  INFO -- : Started GET "/courses/timetable.xls" for 140.113.46.205 at 2014-08-27 23:56:20 +0800
+I, [2014-08-27T23:56:20.533285 #1706]  INFO -- : Processing by CoursesController#timetable as XLS
+I, [2014-08-27T23:56:20.535305 #1706]  INFO -- :   Rendered courses/timetable.xls.erb (0.1ms)
+I, [2014-08-27T23:56:20.535706 #1706]  INFO -- : Completed 200 OK in 2ms (Views: 1.1ms | ActiveRecord: 0.0ms)

@@ -1,3 +1,11 @@
+<script>
+	function change_check(obj){
+		if(obj.val()=="yes")
+			obj.val("no");
+		else
+			obj.val("yes");
+	}
+</script>
 <%= form_tag '/discusses/new_discuss', :role=>"form", :remote=>"true" do %>
 <div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
 
@@ -24,7 +32,12 @@
 	<div class="panel-footer row no-margin-left">
 		<div class="col-md-12">
 		<% if current_user %>
-			<%= submit_tag "送出", :class=>"btn btn-primary pull-right" %>
+			<p class="pull-right">
+			同步分享至FB
+			<input type="checkbox" name="share" id="sync-share" onchange="change_check($(this))" class="" value="no" >
+			&nbsp;&nbsp;
+			<%= submit_tag "送出", :class=>"btn btn-primary " %>
+			</p>
 		<% else %>
 			<%=link_to "/auth/facebook", class:"btn btn-primary pull-right" do %>
 				<%=fa_icon "facebook"%> fb登入

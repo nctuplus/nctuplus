@@ -48,6 +48,9 @@ end
 gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4'
 gem 'kaminari'
 
+#for chrome extension cross domain support
+gem 'rack-jsonp-middleware',
+  :require => 'rack/jsonp'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

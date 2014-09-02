@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
 
 	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course, :del_simu_course]
 
-
+	before_filter :cors_set_access_control_headers, :only=>[:show]
 
 ### for course_teacher_page_content	
 
@@ -191,11 +191,17 @@ class CoursesController < ApplicationController
 		end
 	end
 
-	def get_user_xls
-		
-	
+	def timetable
+		sem_id=params[:sem_id].to_i
+		@sem=Semester.find(sem_id)
+		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
+		@course_details=CourseDetail.where(:id=>cd_ids).order(:time)
+
 		respond_to do |format|
-			 format.xls
+			 format.xlsx{
+			 	response.headers['Content-Type'] = "application/vnd.ms-excel"
+			 	response.headers['Content-Disposition'] = " attachment; filename=\"#{@sem.name}.xls\" "	
+			 }
 		end
 	end	
 	

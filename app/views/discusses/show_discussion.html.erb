@@ -1,3 +1,4 @@
+
 <div class="col-md-12 col-offset-" style="">
 
 <div class="bs-callout bs-callout-default well">
@@ -132,11 +133,11 @@
 			},
 			networks: {
 				facebook: {
-					app_id: "309270975792981",
+					app_id: "<%=Facebook::APP_ID%>",
 					title : $("#title_"+$(this).attr('id')).text(),
 					description: description,
 					url : share_url,
-					caption: "NCTU+ 交大智慧選課系統"
+					caption: "<%=@ct.course.ch_name<<' - '<<@ct.teacher.name%>"
 				},
 				google_plus:{
 					url :share_url

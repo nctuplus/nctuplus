@@ -5,6 +5,8 @@ class MainController < ApplicationController
   require 'json'
 	#layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
 	before_filter :redirect_to_user_index, :only=>[:index]
+	#before_filter :cors_preflight_check, :only=>[:zzz]
+	
   def index
 		
 		@course_detail_count=CourseDetail.all.count

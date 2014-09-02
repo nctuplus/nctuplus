@@ -1,6 +1,14 @@
+
+
 <div class="panel panel-primary ">
 			<div class="panel-heading" style="background-color:#4c66a4;">
-				<h4 class="text-center"><%=@sem.name%></h4>
+				<h4 class="text-center">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=@sem.name%>
+					<%= link_to "/courses/timetable.xlsx?sem_id="+params[:sem_id].to_s ,:id=>"download-link" ,:class=>"btn btn-success btn-circle pull-right ", :style=>"margin-top: -5px;" do%>				
+					<i class="fa fa-download"></i>
+					<% end %>
+				</h4>
+				
 			</div>
 			<!--<div class="panel-body">-->
 				<table class="table table-bordered" id="schedule_table">
@@ -55,6 +63,12 @@ $(document).ready(function() {
 		var row = $(this);//$(this).find('td');
 		row.addClass("schd-grid-selected");
 		
+	});
+	$('#download-link').popover({
+		content: "下載課表",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
 	});
 
 });
