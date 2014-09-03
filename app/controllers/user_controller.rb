@@ -158,7 +158,7 @@ class UserController < ApplicationController
 		redirect_to :controller=> "user", :action=>"special_list"
 	end
   def manage
-    @users=User.all
+    @users=User.includes(:semester).all
   end
   
   def permission
