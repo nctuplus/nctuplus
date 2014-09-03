@@ -8,7 +8,7 @@
 	<%= image_tag "http://graph.facebook.com/"<<user.uid<<"/picture", size: "25x25" %>
 	<%= link_to user.name, "http://www.facebook.com/"<<user.uid, target:"_blank" %>
 </td>
-<% if user.department_id %>
+<% if !user.department.nil? %>
 <td>
 	
 	<%=user.department.ch_name%>
