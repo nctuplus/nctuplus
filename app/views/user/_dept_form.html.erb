@@ -11,9 +11,15 @@
 	<%=select_tag 'dept_under_select', options_for_select(dept_undergrad,current_user.department_id), class:'form-control'%>
 	<%=select_tag 'dept_grad_select', options_for_select(dept_grad,current_user.department_id), class:'form-control'%>
 	</div>
-	<div class="form-group col-md-3">
-	<%=select_tag 'grade_under_select', options_from_collection_for_select(Grade.where(:degree=>3),:id,:name, current_user.grade_id), class:'form-control'%>
-	<%=select_tag 'grade_grad_select', options_from_collection_for_select(Grade.where(:degree=>2),:id,:name, current_user.grade_id), class:'form-control'%>
+	<div class="form-group col-md-3 row no-margin-left no-padding-left">
+	<div class="col-md-2 no-padding-left no-padding-right">
+	<h4 style="margin-top:8px;">
+	系級
+	</h4>
+	</div>
+	<div class="col-md-9">
+	<%=select_tag 'grade_select', options_from_collection_for_select(Semester.all.group(:year).order(:id),:id,:year, current_user.semester_id), class:'form-control'%>
+	</div>
 	</div>
 	<%=submit_tag "送出", class: "btn btn-success"%>
 	
@@ -57,11 +63,9 @@
 		for(i=0;i<arr.length;i++){
 			if(i==sel){
 				$("#dept_"+arr[i]+"_select").show();
-				$("#grade_"+arr[i]+"_select").show();
 			}
 			else{
 				$("#dept_"+arr[i]+"_select").hide();
-				$("#grade_"+arr[i]+"_select").hide();
 			}
 		}
 	}

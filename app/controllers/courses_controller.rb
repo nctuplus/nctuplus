@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
 
 	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course, :del_simu_course]
 
-	before_filter :cors_set_access_control_headers, :only=>[:show]
+	
 
 ### for course_teacher_page_content	
 

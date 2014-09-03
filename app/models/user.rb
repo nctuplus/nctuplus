@@ -1,6 +1,6 @@
 class User < ActiveRecord::Base
 	belongs_to :department
-	belongs_to :grade
+	belongs_to :semester
   has_many :file_infos
   has_many :posts
   has_many :course_content_lists

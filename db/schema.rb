@@ -11,12 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20140731155315) do
-
-
-#ActiveRecord::Schema.define(version: 20140731124339) do
-
+ActiveRecord::Schema.define(version: 20140903070216) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -220,11 +215,6 @@ ActiveRecord::Schema.define(version: 20140731155315) do
     t.datetime "updated_at"
   end
 
-  create_table "grades", force: true do |t|
-    t.string  "name"
-    t.integer "degree"
-  end
-
   create_table "posts", force: true do |t|
     t.string   "title"
     t.text     "content"
@@ -292,7 +282,7 @@ ActiveRecord::Schema.define(version: 20140731155315) do
   create_table "users", force: true do |t|
     t.string   "name"
     t.string   "email"
-    t.integer  "grade_id"
+    t.integer  "semester_id"
     t.integer  "activated"
     t.string   "activate_token"
     t.string   "provider"

@@ -21,8 +21,11 @@
 					<div class="panel panel-primary ">
 						<div class="panel-heading">
 							<h4 class="text-center">
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;課程查詢
-								<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="reload_search();" style="margin-top: -5px;">
+								<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="show_has_select()" style="margin-top: -5px;">
+									<font color="white"><%=fa_icon "check"%></font>
+								</button>	
+								課程查詢
+								<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="show_cart();" style="margin-top: -5px;">
 									<font color="white"><%=fa_icon "shopping-cart"%></font>
 								</button>	
 							</h4>
@@ -74,6 +77,13 @@ $(document).ready(function(){
 		trigger : "hover",
 		container :"body"
 	});
+	$('#has-select-btn').popover({
+		content: "已選課程",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
+	});
+	
 	$("#search-form").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	<% if current_user %>
 //		$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
@@ -84,8 +94,10 @@ $(document).ready(function(){
 	<% end %>
 });
 
-
-	function reload_search(){
+	function show_has_select(){
+		$(".scrollable").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+	}
+	function show_cart(){
 		$("#search-form").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	}
 	
@@ -154,8 +166,8 @@ $(document).ready(function(){
 			},
 			success: function(data) {
 				//if(type=="add")
-				$("#has_seleted_courses").html('<%=loading_img%>');
-				$("#has_seleted_courses").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+				$(".scrollable").html('<%=loading_img%>');
+				$(".scrollable").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
 				$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");

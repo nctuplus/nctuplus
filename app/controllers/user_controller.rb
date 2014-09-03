@@ -148,14 +148,13 @@ class UserController < ApplicationController
 	
 	def select_dept
 		degree=params[:degree_select].to_i
+		grade=params[:grade_select].to_i
 		if degree==2
-			grade=params[:grade_grad_select].to_i
 			dept=params[:dept_grad_select].to_i
 		else
-			grade=params[:grade_under_select].to_i
 			dept=params[:dept_under_select].to_i
 		end
-		current_user.update_attributes(:grade_id=>grade,:department_id=>dept)
+		current_user.update_attributes(:semester_id=>grade,:department_id=>dept)
 		redirect_to :controller=> "user", :action=>"special_list"
 	end
   def manage

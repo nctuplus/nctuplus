@@ -1,10 +1,17 @@
+<script>
+$(document).ready(function(){
+	change_degree($("#degree"));
+	$("#q_course_department_id_eq").val('<%=@q.course_department_id_eq%>');
+});
+</script>
+
 <%= search_form_for @q, url:"/course_details/mini",id:"search", class:"form-horizontal", remote:true do |f| %>
 
 	<div class="row schedule-search-bar" >
-		<%=f.search_field :semester_id_eq,class:"hidden", value:params[:sem_id]%>
+		<%=f.search_field :semester_id_eq,class:"hidden", value:params[:sem_id]||params[:q][:semester_id_eq]%>
 
 		<div class="col-sm-5 no-padding-left">
-			<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']]), prompt: "分類", class: "form-control" %>
+			<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']],params[:degree]), prompt: "分類", class: "form-control", onchange: "change_degree($(this))" %>
 		</div>
 		<div class="col-sm-7">
 			<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
