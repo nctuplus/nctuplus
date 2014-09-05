@@ -11,7 +11,9 @@ class CoursesController < ApplicationController
 
 ### for course_teacher_page_content	
 
+	#def get_list_opt
 	
+	#end
 
 	def course_raider
 #		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")

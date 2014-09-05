@@ -11,7 +11,7 @@
 			<h4 id="user_info" class="text-center">
 				<% if !current_user.department.nil? && !current_user.semester.nil? %>
 				<%=current_user.department.ch_name%> <%sem=current_user.semester.name%>
-				<%=sem[0..sem.length-2]%>級 
+				<%=sem[0..sem.length-2].to_i+4%>級 
 					<% unless current_user.department.credit.nil? %>
 					畢業學分:<strong><%=current_user.department.credit %></strong>	
 					<% end %>

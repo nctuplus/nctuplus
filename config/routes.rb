@@ -31,6 +31,7 @@ Nctuplus::Application.routes.draw do
 	get "courses/raider_list_like"
 	get "courses/del_simu_course"
   	get "courses/timetable"
+  	#get "courses/get_list_opt"
 
 	get "courses/get_user_statics"
 	

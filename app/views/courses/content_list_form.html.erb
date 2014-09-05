@@ -2,7 +2,7 @@
 			<tbody>		
 <% if @list.presence %>			
 				<% @list.order('updated_at DESC').each do |c|%>
-				<% if c.user_id == current_user.id%>
+				
 					<tr id="content_list_old_<%=j c.id.to_s%>">
 						<td><%=content_type_to_html(c.content_type)%></td>
 						<td>
@@ -16,7 +16,7 @@
 							</span>
 						</td>
 					</tr>
-				<% end %>	
+					
 				<% end %>
 <% end %>				
 			</tbody>

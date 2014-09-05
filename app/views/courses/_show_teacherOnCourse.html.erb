@@ -378,7 +378,24 @@
 	function EditOld(thistd){
 		var id = thistd.parent('tr').attr('id').substring(17) ;
 		var content = "" ;
-		content = thistd.parent('tr').find('span').first().html();
+		var list_type = thistd.parent('tr').find('td').first().html(); 
+		var type_id = 1 ;
+		switch(list_type) {
+    		case "[考試]":
+    			type_id=1;
+    			break ;
+    		case "[作業]":
+    			type_id=2;
+    			break ;
+    		case "[上課]":
+    			type_id=3;
+    			break ;
+    		case "[其他]":
+    			type_id=4;
+    			break ;
+		}
+		//alert(type_id);
+		content = thistd.parent('tr').find('span').first().html();	
 		thistd.parent('tr').children().hide() ;
 		thistd.parent('tr').append(
 			'<td>'+
@@ -395,7 +412,7 @@
 			'</span>'+
 			'</td>'
 		);
-		
+		$("#type_old"+id+" option[value='"+type_id+"']").attr('selected', 'selected');
 		return false ;
 	}
 	
