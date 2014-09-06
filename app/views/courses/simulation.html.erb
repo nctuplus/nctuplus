@@ -38,15 +38,6 @@
 
 <script>
 
-function show_statics(){
-	$("#sem_selector .active").removeClass("active");
-	$("#show_statics").addClass("active");
-	$("#add_sem_form").hide();
-	
-	$("#srch_and_schd").show();
-	$("#srch_and_schd").load("/courses/get_user_statics");
-	
-}
 function add_semester(){
 	$("#sem_selector .active").removeClass("active");
 	var select =$("#sem_id");

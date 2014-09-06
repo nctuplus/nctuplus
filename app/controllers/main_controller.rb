@@ -32,8 +32,17 @@ class MainController < ApplicationController
 	
 	
 	def hidden_prepare
-	  #prepare_course_db
-		#final_set_dept_type
+		
+		# @cd=CourseDetail.all
+	  # CourseDetailorg.all.each do |cd2|
+			# temp=@cd.select{|cd| cd.temp_cos_id==cd2.temp_cos_id && cd.semester_id==cd2.semester_id }.first
+			# if temp
+				# cd2.time=temp.time
+				# cd2.room=temp.room
+				# cd2.save!
+			# end
+		# end
+		
 	end
 
   private
@@ -160,8 +169,15 @@ class MainController < ApplicationController
 			@cd.course_teachership_id=cts_id
 			@cd.semester_id=sem_id
 			@cd.credit=raw_data['cos_credit']
-			@cd.time=raw_data['cos_time'].partition('-')[0]
-			@cd.room=raw_data['cos_time'].partition('-')[2]
+			costime=raw_data['cos_time'].split(',')
+			@cd.time=""
+			@cd.room=""
+			costime.each do |t|
+				@cd.time<<t.partition('-')[0]
+				@cd.room<<t.partition('-')[2]
+			end
+			#@cd.time=raw_data['cos_time'].partition('-')[0]
+			#@cd.room=raw_data['cos_time'].partition('-')[2]
 			@cd.memo=raw_data['memo']
 			@cd.students_limit=raw_data['num_limit']
 			@cd.reg_num=raw_data['reg_num']

@@ -16,8 +16,8 @@
 			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">一</p></td>
 			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">二</p></td>
 		</tr>
-		<% cs_service_1 = @cd_all_sem.select{|cd|cd.course.ch_name.include?('服務學習')&&cd.course.ch_name.include?('一')} %>
-		<% cs_service_2 = @cd_all_sem.select{|cd|cd.course.ch_name.include?('服務學習')&&cd.course.ch_name.include?('二')} %>
+		<% cs_service_1 = @cs_all_passed.select{|cs|cs.course.ch_name.include?('服務學習')&&cs.course.ch_name.include?('一')} %>
+		<% cs_service_2 = @cs_all_passed.select{|cs|cs.course.ch_name.include?('服務學習')&&cs.course.ch_name.include?('二')} %>
 		<tr class="row">
 			
 			<td class="col-md-3" colspan="3">
@@ -42,8 +42,8 @@
 			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">上</p></td>
 			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">下</p></td>
 		</tr>
-		<% cs_art_1 = @cd_all_sem.select{|cd|cd.brief=="藝文賞析"&&cd.course.ch_name.include?('一')} %>
-		<% cs_art_2 = @cd_all_sem.select{|cd|cd.brief=="藝文賞析"&&cd.course.ch_name.include?('二')} %>
+		<% cs_art_1 = @cs_all_passed.select{|cs|cs.course_detail.brief=="藝文賞析"&&cs.course.ch_name.include?('一')} %>
+		<% cs_art_2 = @cs_all_passed.select{|cs|cs.course_detail.brief=="藝文賞析"&&cs.course.ch_name.include?('二')} %>
 		<tr class="row">
 			
 			<td class="col-md-3" colspan="3">
@@ -61,7 +61,7 @@
 					<% end %>
 			</td>
 		</tr>
-		<% cs_phe=@cd_all_sem.select{|cs|cs.brief[0..1]=="體育"} %>
+		<% cs_phe=@cs_all_passed.select{|cs|cs.course_detail.brief[0..1]=="體育"} %>
 		<% cs_phe_1=cs_phe.select{|cs|cs.course.ch_name=="大一體育"} %>
 		<% cs_phe_needed=cs_phe.select{|cs|cs.course.ch_name[0..1]=="體育"} %>
 		<tr class="row">
@@ -100,12 +100,12 @@
 		<%=output.html_safe%>
 
 		</tr>
-		<% cs_foreign=@cd_all_sem.select{|cs|cs.cos_type=="外語"} %>
-		<% cs_foreign_basic=cs_foreign.select{|cs|cs.brief=="基礎"} %>
-		<% cs_foreign_basic_credit=cs_foreign_basic.map{|cs|cs.credit.to_i}.reduce(:+)||0 %>
-		<% cs_foreign_advanced=cs_foreign.select{|cs|cs.brief=="進階"||cs.brief=="其它"} %>
-		<% cs_foreign_advanced_credit=cs_foreign_advanced.map{|cs|cs.credit.to_i}.reduce(:+)||0 %>
-		<% cs_foreign_dimension=cs_foreign.map{|cs|cs.brief} %>
+		<% cs_foreign=@cs_all_passed.select{|cs|cs.course_detail.cos_type=="外語"} %>
+		<% cs_foreign_basic=cs_foreign.select{|cs|cs.course_detail.brief=="基礎"} %>
+		<% cs_foreign_basic_credit=cs_foreign_basic.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_foreign_advanced=cs_foreign.select{|cs|cs.course_detail.brief=="進階"||cs.course_detail.brief=="其它"} %>
+		<% cs_foreign_advanced_credit=cs_foreign_advanced.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_foreign_dimension=cs_foreign.map{|cs|cs.course_detail.brief} %>
 		<tr class="row">
 			<td class="col-md-2" >
 				<h4 class="text-center ">外文</h4>
@@ -123,12 +123,12 @@
 			</td>
 		</tr>
 		
-		<% cs_common=@cd_all_sem.select{|cd|cd.cos_type=="通識"} %>
-		<% cs_common_basic=cs_common.select{|cs|cs.brief.partition('/')[0]!="通識"} %>
-		<% cs_common_world=cs_common.select{|cs|cs.brief.partition('/')[0]=="通識"} %>
-		<% cs_common_basic_credit=cs_common_basic.map{|cd|cd.credit.to_i}.reduce(:+)||0 %>
-		<% cs_common_world_credit=cs_common_world.map{|cs|cs.credit.to_i}.reduce(:+)||0 %>
-		<% cs_common_dimension=cs_common.map{|cs|cs.brief.partition('/')[0]} %>
+		<% cs_common=@cs_all_passed.select{|cs|cs.course_detail.cos_type=="通識"} %>
+		<% cs_common_basic=cs_common.select{|cs|cs.course_detail.brief.partition('/')[0]!="通識"} %>
+		<% cs_common_world=cs_common.select{|cs|cs.course_detail.brief.partition('/')[0]=="通識"} %>
+		<% cs_common_basic_credit=cs_common_basic.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_common_world_credit=cs_common_world.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_common_dimension=cs_common.map{|cs|cs.course_detail.brief.partition('/')[0]} %>
 		
 		<tr class="row">
 			<td rowspan="3" style="vertical-align:middle">
@@ -192,7 +192,7 @@
 			<td><p class="text-center">學分</p></td>
 			<td colspan="6">
 				<div class="progress no-margin-bottom">
-				<% all_credit=@cd_all.map{|cd|cd.credit.to_i}.reduce(:+)||0 %>
+				<% all_credit=@cs_all_passed.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
 					<div class="progress-bar progress-bar-info" style="width: <%=(all_credit*100/128)>10?(all_credit*100/128):10 %>%">
 						<span><strong><%=all_credit%>/<%=current_user.department.credit%></strong></span>
 					</div>
@@ -221,6 +221,6 @@
 		</div>
 	</div>
 	<br>
-	<%= render :partial=>"/user/table_list_by_costype", locals: {cd_mixed: @cd_all, table_class:"statics_table"} %>
+	<%= render :partial=>"/user/table_list_by_costype", locals: {cs_mixed: @cs_all_cos_type, table_class:"statics_table"} %>
 	<%= render :partial=>"/user/table_list_by_semester", locals: {table_class:"statics_table"} %>
 </div>

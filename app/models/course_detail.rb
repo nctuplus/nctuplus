@@ -2,6 +2,7 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :course_teachership
 	belongs_to :semester
 	#belongs_to :course
+	
 	has_one :course, :through=>:course_teachership
 	has_one :teacher, :through=>:course_teachership
 	#has_one :course_teachership

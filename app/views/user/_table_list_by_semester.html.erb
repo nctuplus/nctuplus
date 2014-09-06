@@ -1,5 +1,7 @@
 <table class="table table-hover hidden <%=table_class%>" id="by_semester">
-	<% @cd_all_sem.group_by{|cd| cd.semester}.each do |sem,cd_local| %>
+	<% pass_score=current_user.department.degree=='2' ? 70 : 60 %>
+
+	<% @cs_all_sem.group_by{|cs| cs.course_detail.semester}.each do |sem,cs_local| %>
 		<tr class="row fb-bg-color">
 			<td colspan="2">
 				<h4 class="text-center">
@@ -8,23 +10,34 @@
 			</td>
 		</tr>
 		<% credit_sum=0 %>
-		<% cd_local.each do |cd| %>
-			<% credit_sum+=cd.credit.to_i %>
-			<tr class="row">
+		<% pass_count=0 %>
+		<% cs_local.each do |cs| %>
+			
+			
+			<% if cs.score=="通過" || cs.score.to_i>=pass_score %>
+			<% credit_sum+=cs.course_detail.credit.to_i %>
+			<% pass_count+=1 %>
+			<%pass_class=""%>
+			<% else %>
+				
+				<%pass_class="danger"%>
+			<% end %>
+			
+			<tr class="row <%=pass_class%>">
 				<td class="col-md-6">
-					<h4 class="text-center"><%= link_to cd.course.ch_name, course_path(cd.course, :tid=>cd.teacher.id) %>
-						<%= link_to cd.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, :target=>"_blank" %> | 					
-						<%=cd.teacher.name %> | 
-						<%= fa_icon "user" %> <strong><%=CourseSimulation.where(:course_detail_id=>cd.id).count%></strong> | 
-						<%= fa_icon "graduation-cap" %> <strong><%=cd.credit%></strong>
+					<h4 class="text-center"><%= link_to cs.course_detail.course.ch_name, course_path(cs.course_detail.course, :tid=>cs.course_detail.teacher.id) %>
+						<%= link_to cs.course_detail.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cs.course_detail.semester.year<<"&Sem="<<cs.course_detail.semester.half<<"&CrsNo="<<cs.course_detail.temp_cos_id, :target=>"_blank" %> | 					
+						<%=cs.course_detail.teacher.name %> | 
+						<%= fa_icon "user" %> <strong><%=CourseSimulation.where(:course_detail_id=>cs.course_detail.id).count%></strong> | 
+						<%= fa_icon "graduation-cap" %> <strong><%=cs.course_detail.credit%></strong>
 					</h4>
 				</td>
 				<td class="col-md-6">
-					<%ct=cd.course_teachership%>
+					<%ct=cs.course_teachership%>
 					<div class="container" style="display:inline-block;">		
-						<%= link_to "考古題", course_path(cd.course, :tid=>cd.teacher.id, :first_show=>"files"), :class=>"btn btn-sm btn-default" %>
+						<%= link_to "考古題", course_path(cs.course_detail.course, :tid=>cs.course_detail.teacher.id, :first_show=>"files"), :class=>"btn btn-sm btn-default" %>
 						<div class="number-right-top" ><%=ct.file_infos.count%></div>
-						<%= link_to "討論區", course_path(cd.course, :tid=>cd.teacher.id, :first_show=>"discussion"), :class=>"btn btn-sm btn-default" %>
+						<%= link_to "討論區", course_path(cs.course_detail.course, :tid=>cs.course_detail.teacher.id, :first_show=>"discussion"), :class=>"btn btn-sm btn-default" %>
 						<div class="number-right-top" ><%=ct.discusses.count%></div>
 					</div>
 				</td>
@@ -34,14 +47,14 @@
 		<tr class="row success">
 			<td colspan="2" >
 				<h4 class="text-right">
-					<% cd_local.group_by{|cd|cd.cos_type}.each do |type,cd_2| %>
-						<%=type%> : <strong><%=cd_2.map{|cd|cd.credit.to_i}.reduce(:+)%></strong>
+					<% cs_local.group_by{|cs|cs.course_detail.cos_type}.each do |type,cs_2| %>
+						<%=type%> : <strong><%=cs_2.map{|cs_2_local|cs_2_local.course_detail.credit.to_i}.reduce(:+)%></strong>
 					<% end %>
-					共 <strong><%=cd_local.count%></strong> 門課 <strong><%=credit_sum%></strong> 學分
+					共 Pass: <strong><%=pass_count%></strong> 門課 Fail: <strong><%=cs_local.count-pass_count%></strong> 門課<strong> <%=credit_sum%></strong> 學分
 				</h4>
 			</td>
 		</tr>
-		
+
 	<% end %>
 	
 	<tr class="row label-info">
@@ -49,12 +62,12 @@
 			<h4 class="text-right">
 				目前學分:
 				<%all_credit_sum=0%>
-				<% @cd_all_sem.group_by{|cd| cd.cos_type}.each do |type,cd_all| %>
-					<% credit=cd_all.map{|cd|cd.credit.to_i}.reduce(:+)%>
+				<% @cs_all_passed.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_all| %>
+					<% credit=cs_all.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)%>
 						<%=type%> : <strong><%=credit%></strong>
 					<%all_credit_sum+=credit%>
 				<% end %>
-					共 <strong><%=@cd_all_sem.count%></strong> 門課 <strong><%=all_credit_sum%></strong> 學分
+					共 <strong><%=@cs_all_passed.count%></strong> 門課 <strong><%=all_credit_sum%></strong> 學分
 			</h4>
 		</td>
 	</tr>

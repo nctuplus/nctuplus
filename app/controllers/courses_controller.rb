@@ -241,7 +241,7 @@ class CoursesController < ApplicationController
 		end
 		sem_id=params[:sem_id]
 		if _type=="add"
-			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>sem_id, :course_detail_id=>cd_id)
+			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>sem_id, :course_detail_id=>cd_id, :score=>'通過')
 		else
 			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd_id).destroy_all
 				

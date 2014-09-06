@@ -51,32 +51,17 @@ class UserController < ApplicationController
 	end
 	def special_list
 		ls=latest_semester
-		cs_all=current_user.course_simulations
-		cs_this=cs_all.select{|cs|cs.semester_id==ls.id}
-		cd_this_ids = cs_this.map{|cs|cs.course_detail_id}
-		cd_all_ids = cs_all.map{|cs|cs.course_detail_id}
-		#cd_ids = CourseSimulation.select(:course_detail_id).where(:user_id=>current_user.id, :semester_id=>latest_semester.id)
-		#@cd_this=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_this_ids).order(:cos_type).references(:course_teachership, :semester)
-		#@cd_this_mixed=get_mixed_info(@cd_this)
+
+
+		@cs_all=current_user.course_simulations.includes(:course_detail,:course,:teacher)#, :course, :teacher)
 		
-		@cd_this=CourseDetail.includes(:course_teachership, :course, :teacher, :semester).where(:id=>cd_this_ids).order(:cos_type)
-		
-		@cd_all=CourseDetail.includes(:course_teachership, :course, :teacher, :semester).where(:id=>cd_all_ids).order(:cos_type)
-		#@cd_all=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:cos_type).references(:course_teachership, :semester)
-		#@cd_all_mixed=get_mixed_info(@cd_all)
-		
-		@cd_all_sum=@cd_all.sum(:credit).round
-		@cd_all_cos_type_credit=CourseDetail.where(:id=>cd_all_ids).group(:cos_type).sum(:credit)
-		
-		#@cd_all_sem=CourseDetail.includes(:course_teachership, :semester).where(:id=>cd_all_ids).order(:semester_id).references(:course_teachership, :semester)
-		#@cd_all_sem_mixed=get_mixed_info(@cd_all_sem)
+		@cs_all_cos_type=@cs_all.sort_by{|cs|cs.course_detail.cos_type}
+		@cs_all_sem=@cs_all.sort_by{|cs|cs.course_detail.semester_id}
+		@cs_this=@cs_all.select{|cs|cs.semester_id==ls.id}
+		pass_score=current_user.department.degree=='2' ? 70 : 60
+		@cs_all_passed=@cs_all.select{|cs|cs.score=="通過"||cs.score.to_i>=pass_score}
 		
 		
-		@cd_all_sem=CourseDetail.includes(:course_teachership, :course, :teacher, :semester).where(:id=>cd_all_ids).order(:cos_type)
-		#@cd_all_sem_2=get_mixed_info(@cd_all_sem_2)
-		#Department.where(:dept_type=>"dept", :degree=>"3").each do |d|
-		#	d.update_attributes(:credit=>128)
-		#end
 		
 	end
 	
@@ -108,33 +93,30 @@ class UserController < ApplicationController
 		@fail_added=0
 		@fail_course_name=[]
 		@no_pass=0
+		@pass=0
 		if @normal.length>0
 			CourseSimulation.where("user_id = ? AND semester_id != ? ",current_user.id,Semester.last.id).destroy_all
 		end
 		@normal.each do |n|
 			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
 			if n['score']=="通過" || n['score'].to_i>=pass_score
-				sem=n['sem']
-				@sem=Semester.where(:year=>sem[0..sem.length-2], :half=>sem[sem.length-1]).take
-				if @sem
-					cds=CourseDetail.where(:semester_id=>@sem.id, :temp_cos_id=>n['cos_id']).take
-					#@course.append(cds)
-					if cds
-						if CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id).take
-							@has_added+=1
-						else	
-							CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id)
-							@success_added+=1
-						end
-					else
-						#@fail_course_name.append()
-						@fail_added+=1
-					end
+				@pass+=1
+			else
+				@no_pass+=1
+			end
+			sem=n['sem']
+			@sem=Semester.where(:year=>sem[0..sem.length-2], :half=>sem[sem.length-1]).take
+			if @sem
+				cds=CourseDetail.where(:semester_id=>@sem.id, :temp_cos_id=>n['cos_id']).take
+				if cds	
+					CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'])
+					@success_added+=1
 				else
+					#@fail_course_name.append()
 					@fail_added+=1
 				end
 			else
-				@no_pass+=1
+				@fail_added+=1
 			end
 		end
 		#respond_to do |format|
@@ -142,7 +124,7 @@ class UserController < ApplicationController
 		#	format.js
 
 		#end
-		redirect_to :action =>"special_list", :import_course=>true, :success=>@success_added, :same=>@has_added, :failed=>@fail_added, :no_pass=>@no_pass, :show_static=>true
+		redirect_to :action =>"special_list", :import_course=>true, :success=>@success_added, :pass=>@pass, :failed=>@fail_added, :no_pass=>@no_pass, :show_static=>true
 	end
 	
 	

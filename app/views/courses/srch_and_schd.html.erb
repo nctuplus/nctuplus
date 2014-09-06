@@ -166,8 +166,8 @@ $(document).ready(function(){
 			},
 			success: function(data) {
 				//if(type=="add")
-				$(".scrollable").html('<%=loading_img%>');
-				$(".scrollable").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
+				//$(".scrollable").html('<%=loading_img%>');
+				//$(".scrollable").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=list");
 				$("#user_schedule").load("/courses/get_user_courses?sem_id=<%=@sem_id%>&type=schd");
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");

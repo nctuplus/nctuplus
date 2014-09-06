@@ -38,7 +38,7 @@
 		<% end %>
 		
 		<% if params[:import_course] %>
-			alert("匯入完成! 共新增 <%=params[:success]%> 門課 重複:<%=params[:same]%> 失敗:<%=params[:failed]%> 被當:<%=params[:no_pass]%>");	
+			alert("匯入完成! 共新增 <%=params[:success]%> 門課 失敗:<%=params[:failed]%> Pass:<%=params[:pass]%>  Fail:<%=params[:no_pass]%>");	
 		<% end %>
 		
 	});

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140903070216) do
+ActiveRecord::Schema.define(version: 20140906165222) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -67,6 +67,25 @@ ActiveRecord::Schema.define(version: 20140903070216) do
   add_index "course_content_lists", ["course_teachership_id"], name: "index_course_content_lists_on_course_teachership_id", using: :btree
   add_index "course_content_lists", ["user_id"], name: "index_course_content_lists_on_user_id", using: :btree
 
+  create_table "course_detailorgs", force: true do |t|
+    t.integer  "course_teachership_id"
+    t.integer  "semester_id"
+    t.string   "time"
+    t.string   "room"
+    t.string   "temp_cos_id"
+    t.string   "brief"
+    t.text     "memo"
+    t.string   "reg_num"
+    t.string   "students_limit"
+    t.string   "cos_type"
+    t.string   "credit"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_detailorgs", ["course_teachership_id"], name: "index_course_details_on_course_teachership_id", using: :btree
+  add_index "course_detailorgs", ["semester_id"], name: "index_course_details_on_semester_id", using: :btree
+
   create_table "course_details", force: true do |t|
     t.integer  "course_teachership_id"
     t.integer  "semester_id"
@@ -107,6 +126,7 @@ ActiveRecord::Schema.define(version: 20140903070216) do
     t.integer  "user_id"
     t.integer  "semester_id"
     t.integer  "course_detail_id"
+    t.string   "score"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
