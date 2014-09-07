@@ -1,5 +1,5 @@
 <table class="table table-hover hidden <%=table_class%>" id="by_semester">
-	<% pass_score=current_user.department.degree=='2' ? 70 : 60 %>
+	
 
 	<% @cs_all_sem.group_by{|cs| cs.course_detail.semester}.each do |sem,cs_local| %>
 		<tr class="row fb-bg-color">
@@ -14,7 +14,7 @@
 		<% cs_local.each do |cs| %>
 			
 			
-			<% if cs.score=="通過" || cs.score.to_i>=pass_score %>
+			<% if cs.score=="通過" || cs.score.to_i>=@pass_score %>
 			<% credit_sum+=cs.course_detail.credit.to_i %>
 			<% pass_count+=1 %>
 			<%pass_class=""%>

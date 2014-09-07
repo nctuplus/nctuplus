@@ -1,5 +1,6 @@
 <table class="table table-hover <%=table_class%>" id="by_semester">
-	<% pass_score=current_user.department.degree=='2' ? 70 : 60 %>
+
+	
 
 	<% cs_mixed.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_local| %>
 		<tr class="row"><th colspan="3" class="<%=cos_type_class(type)%>"><%=type%></th></tr>
@@ -7,7 +8,7 @@
 		<% cs_local.each do |cs| %>
 			
 			
-			<% if cs.score=="通過" || cs.score.to_i>=pass_score %>
+			<% if cs.score=="通過" || cs.score.to_i>=@pass_score %>
 			<% credit_sum+=cs.course_detail.credit.to_i %>
 			
 			<%pass_class=""%>

@@ -58,7 +58,7 @@ class UserController < ApplicationController
 		@cs_all_cos_type=@cs_all.sort_by{|cs|cs.course_detail.cos_type}
 		@cs_all_sem=@cs_all.sort_by{|cs|cs.course_detail.semester_id}
 		@cs_this=@cs_all.select{|cs|cs.semester_id==ls.id}
-		pass_score=current_user.department.degree=='2' ? 70 : 60
+		@pass_score=current_user.department&&current_user.department.degree=='2' ? 70 : 60
 		@cs_all_passed=@cs_all.select{|cs|cs.score=="通過"||cs.score.to_i>=pass_score}
 		
 		
