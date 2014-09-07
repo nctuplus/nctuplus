@@ -10,7 +10,7 @@ $(document).ready(function(){
 	
 	<div class="col-sm-1 col-md-offset-1 no-padding-left">
 		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.select :semester_id_eq, options_from_collection_for_select(Semester.all, "id", "name", @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
+		<%= f.select :semester_id_eq, options_from_collection_for_select(Semester.all.reverse, "id", "name", @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"$('#search').click();"} %>
 	</div>
 	<div class="col-sm-1 no-padding-left">
 		<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']],params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>

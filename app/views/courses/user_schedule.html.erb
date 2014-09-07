@@ -76,7 +76,10 @@ function add_time_slot(courses){
 	for(var i = 0 ; i < courses.length ; i++){
 		if(courses[i].time==" ")//for 藝文賞析
 			continue;
-		var timearr=courses[i].time.match(/[0-9][A-Z]+/g);
+		var timearr = courses[i].time.match(/[0-9][A-Z]+/g);
+		var rooms = courses[i].room.match(/[A-Z]+[0-9]+/g);
+		var rooms_len = rooms.length ;
+	//	alert(rooms[0]);
 		for(var j = 0 ; j < timearr.length ; j++){
 			var day=timearr[j][0];
 			for(var k = 1 ; k < timearr[j].length ; k++){
@@ -89,7 +92,7 @@ function add_time_slot(courses){
 				$(small_row_id).addClass(courses[i].class);
 				$(small_row_id).text(courses[i].name[1]);
 				$(small_row_id).popover({ 
-					content: "課程: "+courses[i].name+" 教室: "+courses[i].room,
+					content: "課程: "+courses[i].name+" 教室: "+((rooms[j])?rooms[j]:rooms[rooms_len-1]),//+courses[i].room,
 					placement:"auto",
 					trigger : "hover",
 					container :"body"
@@ -98,7 +101,7 @@ function add_time_slot(courses){
 				$(row_id).addClass(courses[i].class); //add color
 				$(row_id).html(courses[i].name);//add name
 				$(row_id).popover({ // hover detail info
-					content:"教室:"+courses[i].room,
+					content:"教室:"+((rooms[j])?rooms[j]:rooms[rooms_len-1]),//courses[i].room,
 					placement:"auto",
 					trigger : "hover",
 					container :"body"
@@ -111,7 +114,7 @@ function add_time_slot(courses){
 				plan_id+'_div'+
 				'" onclick="return del_course('+courses[i].course_id+');"><i class="fa fa-times clickable-hover"></i></div>'); //add name
 				$(row_id).popover({ // hover detail info
-					content:"教室:"+courses[i].room,
+					content:"教室:"+((rooms[j])?rooms[j]:rooms[rooms_len-1]),//courses[i].room,
 					placement:"auto",
 					trigger : "hover",
 					container :"body"
@@ -130,10 +133,7 @@ function add_time_slot(courses){
 }//func
 <%if params[:renderType].to_i != 1%>
 	function del_course(course_id){
-	//	if(!confirm("要刪ㄇ ？"))
-	//		return false ;
 		var id  = <%=j @sem_id.to_s%> ;
-		//alert(course_id);
 		$.ajax({
 			type: "GET",
 			dataType: "text",

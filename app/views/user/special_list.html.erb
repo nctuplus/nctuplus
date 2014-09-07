@@ -36,3 +36,20 @@
 		</div>
 	</div>
 </div>
+
+<script>
+$(document).ready(function() {
+	$('.user-count').popover({
+		content: "排課人數",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
+	});
+	$('.credit-count').popover({
+		content: "學分",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
+	});
+});
+</script>

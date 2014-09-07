@@ -21,31 +21,32 @@
 				<h4 class="modal-title" >聯絡我們</h4>
 				<p>歡迎提出任何建議或是回報Bug，我們會盡快與您聯絡!</p>
 			</div>
-			<div class="modal-body">
-				<%= form_tag '/main/send_report', :class=>"form-horizotal", :role=>"form", :remote=>"true" do %>
-						<div class="form-group ">
-							<% if current_user %>
-								<input type="text" class="form-control" name="report[name]" id="report_name" value="<%=current_user.name%>" readonly>
-							<% else %>
-								<input type="text" class="form-control" name="report[name]" id="report_name" placeholder="姓名..." required>
-							<% end %>	
-						</div>
-						<div class="form-group ">
-							<% if !current_user %>
-								<input type="text" class="form-control" name="report[email]" id="report_email" placeholder="Email..." required>
-							<% end %>
-						</div>
-						<div class="form-group ">
-								<textarea class="form-control" name="report[content]" id="report_content" rows="10" placeholder="內容..." required></textarea>
-						</div>
-				
+			
+			<%= form_tag '/main/send_report', :class=>"form-horizotal", :role=>"form", :remote=>"true" do %>
+				<div class="modal-body">
+				<div class="form-group ">
+					<% if current_user %>
+						<input type="text" class="form-control" name="report[name]" id="report_name" value="<%=current_user.name%>" readonly>
+					<% else %>
+						<input type="text" class="form-control" name="report[name]" id="report_name" placeholder="姓名..." required>
+					<% end %>	
+				</div>
+				<div class="form-group ">
+					<% if !current_user %>
+						<input type="text" class="form-control" name="report[email]" id="report_email" placeholder="Email..." required>
+					<% end %>
+				</div>
+				<div class="form-group ">
+						<textarea class="form-control" name="report[content]" id="report_content" rows="10" placeholder="內容..." required></textarea>
+				</div>
 			</div>
-			<div class="modal-footer">
-				<%= submit_tag "送出", :class=>"btn btn-primary" %>
-				<button type="button" class="btn btn-default" onclick="$('#report_content').val('')">重填</button>
-			</div>
+				<div class="modal-footer">
+					<%= submit_tag "送出", :class=>"btn btn-primary" %>
+					<button type="button" class="btn btn-default" onclick="$('#report_content').val('')">重填</button>
+				</div>
+				</div>
 			<% end %>
-		</div>
+		
 	</div>
 </div>
 

@@ -150,10 +150,10 @@
 							<label class="control-label" for="comment"><%=current_user.name%>：</label>
 						</div>-->	
 						<div class="col-sm-7">
-							<div class="input-group">
-								<input class="form-control" id="comment" name="comment" type="text" value="推薦這篇文章">
+							<div class="input-group" id="comment-group">
+								<input class="form-control" id="comment" name="comment" type="text" value="推薦這門課程">
       							<span class="input-group-btn">
-      								<%=submit_tag "POST", :class=>"btn btn-primary", :id=>"submit_but"%> 
+      								<%=submit_tag "POST", :class=>"btn btn-primary", :id=>"submit_but", :onclick=>"return checkComment();"%> 
       							</span>
    							</div>
 						</div>
@@ -193,6 +193,14 @@
 	
 	});
 	
+	function checkComment(){
+		var isEmpty = ($('#comment').val().length==0)?true:false ;
+		if(isEmpty){
+			$('#comment-group').addClass('has-error');
+		}
+		return !isEmpty ;
+	}
+	
 	function loadForm(id, link, type){
 		var get_type = 3 ; 
 		if(type=="list")
@@ -213,6 +221,7 @@
 	
 	function commentShow(link){
 		if(link.html()=="留言"){
+			$('#comment-group').removeClass('has-error');
 			$("#commentNew").show();
 			link.html("收回");
 		}else{

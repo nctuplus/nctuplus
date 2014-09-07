@@ -204,13 +204,18 @@ module CourseHelper
 		end
 		return type
 	end
-	
-	def check_course(courses, time_i, time_e)
+
+	def check_course(courses, time_i, time_e) # EX.  time_i+time_e = '1'+ 'C' = '1C'
 		
 		courses.each do |c|
-			c.time.scan(/[1-9][A-Z]+/).each do |s|
-				if time_i.to_s == s[0] and s.include?(time_e)					
-					return  ("<td bgcolor=\""+cos_type_color(c.cos_type)+"\" class=\"grid-default\"><p class=\"text-center\">"+c.course_teachership.course.ch_name+"</br>"+c.room+"</p></td>").html_safe
+			time = c.time.scan(/[1-9][A-Z]+/)
+			room = c.room.scan(/[A-Z]+[0-9]+/)
+			time.zip(room).each do |s|
+				if time_i.to_s == s[0][0] and s[0].include?(time_e)	#  1. match day 2. match time slot
+					str = "<td bgcolor=\""+cos_type_color(c.cos_type)+"\" class=\"grid-default\"><p class=\"text-center\">"+c.course_teachership.course.ch_name+"</br>"
+					str += s[1].presence || room[room.length-1]
+					str += "</p></td>"				
+					return str.html_safe# ().html_safe
 				end
 			end		
 		end

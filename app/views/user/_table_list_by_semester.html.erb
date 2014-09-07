@@ -28,8 +28,8 @@
 					<h4 class="text-center"><%= link_to cs.course_detail.course.ch_name, course_path(cs.course_detail.course, :tid=>cs.course_detail.teacher.id) %>
 						<%= link_to cs.course_detail.temp_cos_id, "https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cs.course_detail.semester.year<<"&Sem="<<cs.course_detail.semester.half<<"&CrsNo="<<cs.course_detail.temp_cos_id, :target=>"_blank" %> | 					
 						<%=cs.course_detail.teacher.name %> | 
-						<%= fa_icon "user" %> <strong><%=CourseSimulation.where(:course_detail_id=>cs.course_detail.id).count%></strong> | 
-						<%= fa_icon "graduation-cap" %> <strong><%=cs.course_detail.credit%></strong>
+						<%= fa_icon "user", class:"user-count" %> <strong><%=CourseSimulation.where(:course_detail_id=>cs.course_detail.id).count%></strong> | 
+						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong><%=cs.course_detail.credit%></strong>
 					</h4>
 				</td>
 				<td class="col-md-6">
