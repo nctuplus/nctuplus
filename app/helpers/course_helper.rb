@@ -210,6 +210,7 @@ module CourseHelper
 		courses.each do |c|
 			time = c.time.scan(/[1-9][A-Z]+/)
 			room = c.room.scan(/[A-Z]+[0-9]+/)
+			room = [""] if room.empty?
 			time.zip(room).each do |s|
 				if time_i.to_s == s[0][0] and s[0].include?(time_e)	#  1. match day 2. match time slot
 					str = "<td bgcolor=\""+cos_type_color(c.cos_type)+"\" class=\"grid-default\"><p class=\"text-center\">"+c.course_teachership.course.ch_name+"</br>"

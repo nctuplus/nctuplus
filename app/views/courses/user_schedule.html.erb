@@ -78,6 +78,8 @@ function add_time_slot(courses){
 			continue;
 		var timearr = courses[i].time.match(/[0-9][A-Z]+/g);
 		var rooms = courses[i].room.match(/[A-Z]+[0-9]+/g);
+		if(rooms==null)
+			rooms=[""];
 		var rooms_len = rooms.length ;
 	//	alert(rooms[0]);
 		for(var j = 0 ; j < timearr.length ; j++){
