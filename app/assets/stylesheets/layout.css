@@ -248,6 +248,7 @@ img.header{
   //top: 0;
   //left: 0;
 	//z-index : 10;
+	transform: translate3d(0,0,0);
 }
 img.bg {
   /* Set rules to fill background */
