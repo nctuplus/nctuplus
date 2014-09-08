@@ -12,17 +12,15 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-								<li><a href="/user/manage">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
-								<li><a href="/departments">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+								<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+								<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 						</ul>
 					</li>
 				<% end %>
-				<!--<li><a href="/courses/">全校課程</a></li>-->
-				<li><a href="/course_details/">全校課程</a></li>
-				<% if current_user && TopManager.find_by_user_id(current_user.id) %>
-				<li><a href="/reviews">心得列表</a></li>
-				<% end %>
-				<li><a href="/courses/simulation">模擬排課</a></li>
+
+				<li><a href="/course_details/" rel="nofollow">全校課程</a></li>
+
+				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
 				
       </ul>
 			
@@ -32,14 +30,10 @@
 				</li>
 				<% if current_user %>
 				<li>
-				<!--	<a class="no-padding-bottom"><%= fa_icon("calendar 2x ", :id=>"schd_but", :class=>"masterTooltip clickable-hover", :title=>"預排課表") %></a> -->
-					<!--<a href="javascript:void(0);" onclick="show_schd();">
-					課表
-					</a>-->
+
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= fa_icon("calendar 2x", :id=>"schd_but")%></a>
 						<ul class="dropdown-menu">
 								<li id="small_timetable">
-
 								</li>
 						</ul>
 				</li>

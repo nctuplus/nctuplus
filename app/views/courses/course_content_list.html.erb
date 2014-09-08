@@ -1,6 +1,6 @@
 <% if @list.presence %>
 <table class="table">
-	<% @list.order('content_type DESC').each do |c|%>
+	<% @list.order('updated_at DESC').each do |c|%>
 	<tr>
 		<td><%=content_type_to_html(c.content_type)%></td>
 		<td>

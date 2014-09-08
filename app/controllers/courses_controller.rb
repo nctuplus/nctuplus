@@ -38,8 +38,8 @@ class CoursesController < ApplicationController
 				@row_pick = []	
 				@row_teacher = []	
 				@course = Course.includes(:course_teacherships).find(params[:c_id])
-				
-				@course.course_teacherships.each do |ctt|
+				@cts=@course.course_teacherships.includes(:teacher, :course_details)
+				@cts.each do |ctt|
 					@row_teacher.push(ctt.teacher.name.strip)
 					ctt.course_details.includes(:semester).each do |ctd|
 						sn = ctd.semester.name
@@ -48,7 +48,8 @@ class CoursesController < ApplicationController
 						end	
 					end
 				end
-			#	Rails.logger.debug "[debug] "+@row_name.to_s
+				@row_name.sort!{|x,y| x.scan(/[0-9]+/)[0]<=>y.scan(/[0-9]+/)[0]}
+				Rails.logger.debug "[debug] "+@row_name.reverse.to_s
 				if @row_name.size < 4 
 					cnt = 4 - @row_name.size
 					for i in 1..cnt
@@ -61,7 +62,7 @@ class CoursesController < ApplicationController
 					end
 				end
 
-				@course.course_teacherships.each do |ctt| # each teacher
+				@cts.each do |ctt| # each teacher
 					tmp = []
 					for i in 1..@row_name.size do
 						tmp.push(0)

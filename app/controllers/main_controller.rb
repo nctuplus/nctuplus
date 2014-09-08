@@ -10,9 +10,9 @@ class MainController < ApplicationController
   def index
 		
 		@course_detail_count=CourseDetail.all.count
-		@file_count=FileInfo.count
-		@review_count=Review.count
-		@user_count=User.count
+		#@file_count=FileInfo.count
+		
+		#@user_count=User.count
 		
   end
 	
@@ -33,22 +33,14 @@ class MainController < ApplicationController
 	
 	def hidden_prepare
 		
-		# @cd=CourseDetail.all
-	  # CourseDetailorg.all.each do |cd2|
-			# temp=@cd.select{|cd| cd.temp_cos_id==cd2.temp_cos_id && cd.semester_id==cd2.semester_id }.first
-			# if temp
-				# cd2.time=temp.time
-				# cd2.room=temp.room
-				# cd2.save!
-			# end
-		# end
-		
+		#prepare_course_db
+		#final_set_dept_type
 	end
 
   private
 	
 	def final_set_dept_type
-		Department.all.each do |d|
+		Department.where("dept_type!='for_user'").each do |d|
 			if d.courses.count == 0
 				d.update_attributes(:dept_type=>"no_courses")
 			else
@@ -224,12 +216,10 @@ class MainController < ApplicationController
   end
   
   def parse_course(year,sem)
-    @dept_real_id=[]
-		Department.where("id <= 144").each do |dept|
-			@dept_real_id.append(dept.degree+dept.real_id)
-		end
 	
-	@slice=21
+	#total length is 248 so take 31 for each thread
+  @dept_real_id=Department.where("dept_type!='for_user'").map{|d|d.degree+d.real_id}
+	@slice=31
 	
 	threads=[]
 	(0..7).each do |i| 
@@ -261,8 +251,29 @@ class MainController < ApplicationController
 	end
 	return data
   end
-  def parse_dep
-    @type=[3,2,0]#,7,72,8] 
+	def parse_dep_next3
+		ftype=['7','72','8']
+		fcategory='0C'
+		ftype.each do |_type|
+			@payload={"acysem"=>'1031', "ftype"=>_type,"fcategory"=>fcategory,
+						 "fcollege"=>'*', "flang" =>'zh-tw'}
+			http=Curl.post("http://timetable.nctu.edu.tw/?r=main/get_dep",@payload)
+			@result=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		  @result.each do |result1|
+		    next if result1["unit_id"].nil?
+		    next if Department.where(:degree=>result1['unit_id'][0], :real_id=>result1['unit_id'][1..2]).take
+				department=Department.new
+				department.degree=result1['unit_id'][0]
+				department.real_id=result1['unit_id'][1..2]
+				department.ch_name=result1['unit_name']
+				department.dept_type="temp"
+				department.college_id=1
+				department.save!
+		  end
+		end
+	end
+  def parse_dep_prev3
+    @type=[3,2,0]#7,72,8] 
 	
     data=Array.new
     @type.each do |_type|

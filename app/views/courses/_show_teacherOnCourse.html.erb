@@ -112,6 +112,7 @@
 			<i class="fa fa-cube"></i> 其他內容：
 			<%if current_user%>
 				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>
+			
 			<% else %>
 				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"link_edit_head"%>
 			<% end %>
@@ -133,22 +134,18 @@
 				<i class="fa fa-weixin"></i>			
 				留言板： 
 		<% if current_user %>
-					<%=link_to "留言","javascript:void(0);",:onclick=>"commentShow($(this));",:id=>"comment_post_link"%>
-					
-				<div id="commentNew" style="display:none;">	
+						
+				<div id="commentNew">	
 			<%=form_tag "/courses/comment_submit", :remote=>true, :class=>"form-horizontal",:role=>"form" do%>
 					<%=hidden_field_tag "ctship", courseTeacher.id %>
 					<div class="form-group">
-						<div class="col-sm-2 col-md-offset-1">
+						<div class="col-sm-1 col-md-offset-1">
 							<select id="type" name="type" class="form-control">
 								<option value="1">推</option>
 								<option value="2">-></option>
 								<option value="3">噓</option>
 							</select>
 						</div>				
-						<!--<div class="col-sm-3">
-							<label class="control-label" for="comment"><%=current_user.name%>：</label>
-						</div>-->	
 						<div class="col-sm-7">
 							<div class="input-group" id="comment-group">
 								<input class="form-control" id="comment" name="comment" type="text" value="推薦這門課程">
@@ -194,6 +191,8 @@
 	});
 	
 	function checkComment(){
+		if(!confirm("確定資料無誤嗎？"))
+			return false ;
 		var isEmpty = ($('#comment').val().length==0)?true:false ;
 		if(isEmpty){
 			$('#comment-group').addClass('has-error');
@@ -220,6 +219,7 @@
 	}
 	
 	function commentShow(link){
+		
 		if(link.html()=="留言"){
 			$('#comment-group').removeClass('has-error');
 			$("#commentNew").show();
@@ -317,7 +317,7 @@
 		
 		return false ;
 	}
-	
+/*	
 	function addRow(){
 		var f = true ;
 		var cnt = 0 ;
@@ -330,7 +330,7 @@
 		});
 		//alert(cnt);
 		if(f)
-			$('#raider_content_table > tbody:last').append(
+			$('#raider_content_table > tbody:first').append(
 			'<tr id="content_list_new_'+cnt+'">'+
 			'<td style="display: none;"></td>'+
 			'<td style="display: none;"><span class="col-sm-6"></span><span class="col-sm-4"></span>'+
@@ -348,17 +348,19 @@
 			'<td><span class="col-sm-10"><input class="form-control" id="content_list" name="content_list" type="text" value=""></span>'+
 			'<span class="col-sm-2">'+
 			'<div class="btn btn-success btn-circle" name="button" onclick="return Submit($(this));"><i class="fa fa-check"></i></div> '+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow();"><i class="fa fa-times"></i></div>'+
+			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow('+cnt+');"><i class="fa fa-times"></i></div>'+
 			'</span></td>'+
 			'</tr>');
 	}
 	
-	function RemoveRow(){
-		var target = $('#raider_content_table tr:last') ;
-		if(target.attr('id')=="content_list_new_0")
-			target.remove() ;	
+	function RemoveRow(cnt){
+		//var target = $('#raider_content_table tr:last') ;
+		//if(target.attr('id')=="content_list_new_0")
+		//	target.remove() ;	
+		$('#content_list_new_'+cnt).remove() ;
 			
 	}
+*/	
 	function preferClick(pre, id){
 		var str ="" ;
 		if(pre==1)
@@ -429,6 +431,7 @@
 		if(!confirm("確定要刪除嗎？"))
 			return false ;
 		var tr = thisdiv.parent('span').parent('td').parent('tr') ;
+		var ctid = <%=j courseTeacher.id.to_s %> ;
 		$.ajax({
 			type: "POST",
 			dataType: "script",
@@ -437,23 +440,24 @@
   				post_type: 1,
   				id: tr.attr('id') ,
   				del: 1,
-  				ct_id : <%=j courseTeacher.id.to_s %>
+  				ct_id : ctid
   			},
   			success: function(){
   				$('#toggle-msg-list').addClass('text-color-green').html('刪除成功').show().fadeOut(3000);
+  				$('#list_form').load("/courses/course_raider?ct_id="+ctid+"&type=4");
   			}
 		});
 		
 		return false ;
 	}
-	
+
 	function Submit(tdiv){
-	//	if(!confirm("確定資料無誤嗎？"))
-	//		return false ;
+		if(!confirm("確定資料無誤嗎？"))
+			return false ;
 
 		var tr = tdiv.parent('span').parent('td').parent('tr');
 		var id = tr.attr('id');//.substring(17) ;
-
+		var ctid = <%=j courseTeacher.id.to_s %> ;
 		if(tr.find('input').val()==""){
 			alert("內容不可留白謝謝");
 			return false ;
@@ -471,10 +475,11 @@
   				id: id ,
   				content_type: tr.find('select').val(),
   				content: tr.find('input').val(),
-  				ct_id : <%=j courseTeacher.id.to_s %>
+  				ct_id : ctid
   			},
   			success: function(){
   				$('#toggle-msg-list').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
+  				$('#list_form').load("/courses/course_raider?ct_id="+ctid+"&type=4");
   			}
 		});
 		

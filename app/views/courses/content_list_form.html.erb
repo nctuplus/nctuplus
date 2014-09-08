@@ -1,8 +1,7 @@
 		<table class="table" id="raider_content_table">
 			<tbody>		
 <% if @list.presence %>			
-				<% @list.order('updated_at DESC').each do |c|%>
-				
+				<% @list.order('updated_at ASC').each do |c|%>				
 					<tr id="content_list_old_<%=j c.id.to_s%>">
 						<td><%=content_type_to_html(c.content_type)%></td>
 						<td>
@@ -20,13 +19,26 @@
 				<% end %>
 <% end %>				
 			</tbody>
+			<tr id="content_list_new">
+				<td>
+					<%= select_tag :content_list_type, options_for_select([["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]],"[考試]"), :class=>"form-control" %>
+				</td>
+				<td>
+					<span class="col-sm-10">
+						<input class="form-control" id="content_list" name="content_list" type="text" value="">
+					</span>
+					<span class="col-sm-2">
+						<div class="btn btn-success btn-circle" name="button" onclick="return Submit($(this));"><i class="fa fa-check"></i></div>
+					</span>
+				</td>			
+			</tr>
 		</table>
 		
 		<hr>
 
 	</div>
 	<%=hidden_field_tag "ct_id",params[:ct_id] %> 
-	<input id="test" name="test" type="hidden" value="0">
-	<input id="hw" name="hw" type="hidden" value="0">
-	<div class="btn btn-success btn-circle" name="button" onclick="addRow();">＋</div>
-	<div class="btn btn-danger btn-circle" name="button" onclick="RemoveRow();">－</div>
+<!--	<input id="test" name="test" type="hidden" value="0">
+	<input id="hw" name="hw" type="hidden" value="0"> -->
+<!--	<div class="btn btn-success btn-circle" name="button" onclick="addRow();">＋</div>
+	<div class="btn btn-danger btn-circle" name="button" onclick="RemoveRow();">－</div>  -->
