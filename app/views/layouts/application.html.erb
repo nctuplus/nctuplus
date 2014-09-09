@@ -12,7 +12,7 @@
 	
 	<%= analytics_init if Rails.env.production? %>
 	<% if params[:controller]!="main"%>
-	<meat name="robots" content="noindex">
+	<meta name="robots" content="noindex">
 	<% end %>
 	<meta name="description" content="NCTU+ 交大智慧選課系統">
 </head>
