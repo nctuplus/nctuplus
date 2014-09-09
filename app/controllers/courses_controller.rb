@@ -32,62 +32,24 @@ class CoursesController < ApplicationController
 			elsif params[:type].to_i==4	#4 -> list form
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
-			else # 5 -> chart
-				@row_name = []
-				@row_open = []
-				@row_pick = []	
-				@row_teacher = []	
-				@course = Course.includes(:course_teacherships).find(params[:c_id])
-				@cts=@course.course_teacherships.includes(:teacher, :course_details)
-				@cts.each do |ctt|
-					@row_teacher.push(ctt.teacher.name.strip)
-					ctt.course_details.includes(:semester).each do |ctd|
-						sn = ctd.semester.name
-						if not @row_name.include?(sn)
-							@row_name.push(Semester.find(ctd.semester_id).name)
-						end	
+			else # 5 -> chart			
+				sems=Semester.last(5).reject{|s|s==latest_semester}
+				@row_name = sems.map{|s|s.name}
+				@row_id = sems.map{|s| s.id}
+				@tmp = Course.find(params[:c_id]).course_details.where(:semester_id=>sems.map{|s| s.id})
+					   .map{|ctd| {:teacher=>ctd.teacher.name.strip, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
+				@res = []
+				@tmp.group_by{|t| t[:teacher]}.each do |k1, k2|
+					@tmp_num = [0,0,0,0]
+					k2.each do |hash|
+						@tmp_num[@row_id.index(hash[:sem])] = hash[:num].to_i
 					end
+					@res.push({:name=>k1, :data=>@tmp_num})
 				end
-				@ttmp = @row_name
-				@row_name.sort!{|x,y| x.scan(/[0-9]+/)[0]<=>y.scan(/[0-9]+/)[0]}
-				Rails.logger.debug "[debug] "+@row_name.reverse.to_s
-				@row_name = @row_name.reverse
-				if @row_name.size < 4 
-					cnt = 4 - @row_name.size
-					for i in 1..cnt
-						@row_name.unshift('')
-					end
-				elsif @row_name.size > 4
-					cnt = @row_name.size - 4
-					for i in 1..cnt do
-						@row_name.shift
-					end
-				end
+#				Rails.logger.debug "[debug] "+@res.to_s
 				
-				@row_name = @row_name.reverse
-				@ttmp = @row_name
-				@cts.each do |ctt| # each teacher
-					tmp = []
-					for i in 1..@row_name.size do
-						tmp.push(0)
-					end
-					ctt.course_details.includes(:semester).each do |ctd| # each semester
-						sn = ctd.semester.name
-						for i in 0..(@row_name.size-1) do
-							if @row_name[i]==sn
-								tmp[i] = ctd.reg_num.to_i
-							end
-						end
-					end			
-					@row_pick.push(tmp)
-				end
-				
-				@tmp = @row_teacher.zip(@row_pick).reject{|t1,t2|t2.sum==0}
-				
-		#		Rails.logger.debug "[debug] "+@tmp.to_s
-						
 				render "course_chart"
-			end# else		
+			end
 	end
 
 	def course_content_post
@@ -332,7 +294,7 @@ class CoursesController < ApplicationController
 		end
 		@ct=CourseTeachership.includes(:course_details).where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
-		@sems=@course.semesters
+		@sems=@course.semesters.uniq
 
 	#@teachers=Teacher.where(:course_id=>@course.id)
 	

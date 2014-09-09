@@ -1,52 +1,13 @@
-/*
 $(function () {
     $('#container').highcharts({
     	chart:{defaultSeriesType: "column"},
-        title: {
-            text: '歷年選課統計'
-        },      
-        xAxis: {
-            categories: <%=raw @row_name.to_json%>
-        },         
-        yAxis: {
-       			min: 0,
-                title: {
-                    text: '人數'
-                }
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' + this.x + '</b><br/>' +
-                    this.series.name + ': ' + this.y + '<br/>' +
-                    'Total: ' + this.point.stackTotal;
-            }
-        },
-        plotOptions: {
-        
-            column: {
-            
-                stacking: 'normal',
-                dataLabels: {  //stack上的數字樣式設定
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style: {
-                        textShadow: '0 0 3px black, 0 0 3px black'
-                    }
-                }
-                 
-            }
-           
-        },
-        series: [
-        {name: '開課人數(無顯示為無上限)', data: <%=raw @row_open.to_json%>, color: "#045FB4"},
-        {name: '選課人數', data: <%=raw @row_pick.to_json%>, color: "#00FFFF"}
-        ]
-    });
-});
-*/
-$(function () {
-    $('#container').highcharts({
-    	chart:{defaultSeriesType: "column"},
+		colors: [
+					'#50B432', '#AA4643', '#FF3EFF', '#80699B', '#3D96AE', 
+  				'darkslategray', '#92A8CD', '#ED561B', 'orchid', '#24CBE5',
+					'#64E572', '#FF9655','#FFF263','#6AF9C4', '#0d233a',
+					'#8bbc21', '#910000', '#1aadce', '#492970','#f28f43',
+					'#77a1e5', '#c42525', '#a6c96a','#4572A7'
+					],
         title: {
             text: '歷年選課統計'
         },      
@@ -78,15 +39,11 @@ $(function () {
             }
            */
         },
-        series: [
-        <% @tmp.each do |t1, t2|%>
-        	{name: '<%=raw t1%>', data: <%=raw t2.to_json%>},  
-        <%end%>
-        ]
+        series: 
+        <%=@res.to_json.to_s.html_safe%>
+        	
+        
     });
 });
 
-alert('<%=raw @ttmp.to_s%>');
-
-alert('<%=raw @row_teacher.to_s%>');
-alert('<%=raw @row_pick.to_s%>');
+//alert('<%=raw @ttmp.to_s%>');

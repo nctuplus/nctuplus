@@ -105,7 +105,7 @@ class MainController < ApplicationController
 			@cts=save_course_teacher(teacher.id,course.id)
 			save_course_teacher_rating(@cts.id)
 			save_course_detail(@cts.id,sem_id,value1)
-			save_sem_courseship(sem_id,course.id)
+			#save_sem_courseship(sem_id,course.id)
 		end
   end
 	def save_course_teacher_rating(cts_id)
