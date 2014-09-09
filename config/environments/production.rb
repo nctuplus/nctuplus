@@ -80,5 +80,4 @@ Nctuplus::Application.configure do
 	
 	config.logger = Logger.new(config.paths["log"].first, 'daily') 
 
-	GA.tracker = "UA-54567036-1"
 	end
