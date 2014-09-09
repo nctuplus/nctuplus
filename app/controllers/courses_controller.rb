@@ -48,8 +48,10 @@ class CoursesController < ApplicationController
 						end	
 					end
 				end
+				@ttmp = @row_name
 				@row_name.sort!{|x,y| x.scan(/[0-9]+/)[0]<=>y.scan(/[0-9]+/)[0]}
 				Rails.logger.debug "[debug] "+@row_name.reverse.to_s
+				@row_name = @row_name.reverse
 				if @row_name.size < 4 
 					cnt = 4 - @row_name.size
 					for i in 1..cnt
@@ -61,7 +63,9 @@ class CoursesController < ApplicationController
 						@row_name.shift
 					end
 				end
-
+				
+				@row_name = @row_name.reverse
+				@ttmp = @row_name
 				@cts.each do |ctt| # each teacher
 					tmp = []
 					for i in 1..@row_name.size do
@@ -270,7 +274,7 @@ class CoursesController < ApplicationController
 		avg=avg.nan? ? 0 :avg
 		@ctr.update_attributes(:total_rating_counts=>total_rating_counts, :avg_score=>avg)
 		
-		result={:new_score=>@ctr.avg_score, :new_counts=>@ctr.total_rating_counts, :score=>score}
+		result={:new_score=>@ctr.avg_score.round(1), :new_counts=>@ctr.total_rating_counts, :score=>score}
 		respond_to do |format|
 			format.html {
 				render :json => result.to_json,

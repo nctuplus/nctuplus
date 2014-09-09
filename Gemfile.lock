@@ -64,6 +64,7 @@ GEM
       multipart-post (>= 1.2, < 3)
     font-awesome-rails (4.1.0.0)
       railties (>= 3.2, < 5.0)
+    google-analytics-rails (0.0.6)
     hashie (2.1.1)
     hike (1.2.3)
     httpauth (0.2.1)
@@ -172,6 +173,7 @@ DEPENDENCIES
   coffee-rails (~> 4.0.0)
   curb
   font-awesome-rails
+  google-analytics-rails
   jbuilder (~> 1.2)
   jquery-fileupload-rails
   jquery-rails
