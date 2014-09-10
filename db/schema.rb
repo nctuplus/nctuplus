@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140906165222) do
+ActiveRecord::Schema.define(version: 20140910084301) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -104,6 +104,20 @@ ActiveRecord::Schema.define(version: 20140906165222) do
 
   add_index "course_details", ["course_teachership_id"], name: "index_course_details_on_course_teachership_id", using: :btree
   add_index "course_details", ["semester_id"], name: "index_course_details_on_semester_id", using: :btree
+
+  create_table "course_groups", force: true do |t|
+    t.string   "title"
+    t.string   "description"
+    t.integer  "department_id"
+    t.integer  "user_id"
+    t.integer  "credit_needed"
+    t.integer  "adopt_times"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_groups", ["department_id"], name: "index_course_groups_on_department_id", using: :btree
+  add_index "course_groups", ["user_id"], name: "index_course_groups_on_user_id", using: :btree
 
   create_table "course_managers", force: true do |t|
     t.integer  "department_id"
@@ -242,27 +256,6 @@ ActiveRecord::Schema.define(version: 20140906165222) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  create_table "reviews", force: true do |t|
-    t.integer  "bbs_id"
-    t.string   "author"
-    t.string   "title"
-    t.text     "content",   limit: 2147483647
-    t.datetime "date"
-    t.integer  "course_id"
-  end
-
-  add_index "reviews", ["course_id"], name: "index_reviews_on_course_id", using: :btree
-
-  create_table "semester_courseships", force: true do |t|
-    t.integer  "semester_id"
-    t.integer  "course_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "semester_courseships", ["course_id"], name: "index_semester_courseships_on_course_id", using: :btree
-  add_index "semester_courseships", ["semester_id"], name: "index_semester_courseships_on_semester_id", using: :btree
 
   create_table "semesters", force: true do |t|
     t.string   "name"

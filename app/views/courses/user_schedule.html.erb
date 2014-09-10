@@ -154,6 +154,7 @@ function add_time_slot(courses){
 							var row_id = "#day_"+day+"_time_"+timearr[j][k] ;
 							$(row_id).removeClass("schd-slot-empty"); // remove old color
 							$(row_id).removeClass(json_str.class);
+							$(row_id).css("background-color","#FFFFFF");
 							$(row_id).html('') ;
 							$(row_id).popover('disable');
 						}

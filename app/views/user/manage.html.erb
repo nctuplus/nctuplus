@@ -1,7 +1,12 @@
-﻿<table class="table">
-<tr>
-<th>Name</th><th>系所</th><th>年級</th><th>身份</th><th>功能</th>
-</tr>
+﻿<div class="table-responsive">
+<table class="table" id="dataTables-paginate">
+<thead>
+	<tr>
+		<th>Name</th><th>系所</th><th>年級</th><th>身份</th><th>功能</th>
+	</tr>
+</thead>
+
+<tbody>
 <%@users.each do |user| %>
 <tr>
 <td>
@@ -38,9 +43,15 @@
 <!--<td><%=link_to "權限","/user/"+user.id.to_s+"/permission"%></td>-->
 </tr>
 <% end %>
+</tbody>
+
 </table>
-
-
+</div>
+<!--
+<script src="/assets/jquery-1.10.2.js"></script> 
+<script src="/assets/jquery.dataTables.js"></script>
+<script src="/assets/dataTables.bootstrap.js"></script>
+-->
 <script>
 	function addTopManager(id){
 		$.ajax({
