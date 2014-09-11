@@ -224,4 +224,7 @@ module CourseHelper
 		return "<td class=\"grid-default\" > </td>".html_safe
 	end
 	
+	def numeric?(lookAhead)
+  		lookAhead =~ /[[:digit:]]/
+	end
 end

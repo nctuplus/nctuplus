@@ -82,6 +82,7 @@
 		</h2>	
 	</div>
 	<div id="container" style="height: 400px; width: 800px;"></div></br>
+	<div id="container-score" style="height: 400px; width: 800px;"></div></br>
 <!-- course's content and tick -->    
     <div id="course-tips" class="panel-heading">
 		<h2 class="panel-title">
@@ -180,7 +181,7 @@
    		 	type: "GET",
    		 	dataType: "script",
     		url: '/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5&c_id=<%=j params[:id]%>',//'/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5',
-    		error: function(res){alert("Some error happened :( ");}
+    		error: function(res){alert("Some error happened in chart :( ");}
   		});		
 
 	    $('#course_content_head').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;

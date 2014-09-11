@@ -12,6 +12,7 @@ $(function () {
             text: '歷年選課統計'
         },      
         xAxis: {
+					
             categories: <%=raw @row_name.to_json%>
         },         
         yAxis: {
@@ -20,8 +21,11 @@ $(function () {
                     text: '人數'
                 }
         },
+
         tooltip: {
-          
+          formatter: function() {
+        		return '<b>' + this.series.name + '</b>老師<br>修課人數: <b>' + this.y + '</b>';
+    		}
         },
         plotOptions: {
         /*
@@ -44,6 +48,49 @@ $(function () {
         	
         
     });
+<% if @show_flag==1%>
+		
+    $('#container-score').highcharts({
+    	chart:{type: 'column'/*defaultSeriesType: "column"*/},
+		colors: [
+					'#50B432', '#AA4643', '#FF3EFF', '#80699B', '#3D96AE', 
+  				'darkslategray', '#92A8CD', '#ED561B', 'orchid', '#24CBE5',
+					'#64E572', '#FF9655','#FFF263','#6AF9C4', '#0d233a',
+					'#8bbc21', '#910000', '#1aadce', '#492970','#f28f43',
+					'#77a1e5', '#c42525', '#a6c96a','#4572A7'
+					],
+        title: {
+            text: '歷年修課平均分數'
+        },      
+        xAxis: {
+          categories: <%=raw @row_name.to_json%>
+        },         
+        yAxis: {
+       			min: 0,
+                title: {
+                    text: '分'
+                }
+        },
+        tooltip: {
+          formatter: function() {
+        		return '<b>' + this.series.name + '</b>老師<br>平均: <b>' + this.y + '</b>分/共<b>'+this.point.nums+"</b>人";
+					}
+        },
+
+        plotOptions: {
+
+        },
+
+        series: <%=@res_score.to_json.to_s.html_safe%>
+				
+        
+				
+        
+    });
+<%else%>
+$('#container-score').remove() ;
+//alert("no data");
+<% end %>    
 });
 
-//alert('<%=raw @ttmp.to_s%>');
+//alert('<%=raw @res_score.to_s%>');

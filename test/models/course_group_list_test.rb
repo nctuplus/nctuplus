@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ApiControllerTest < ActionController::TestCase
+class CourseGroupListTest < ActiveSupport::TestCase
   # test "the truth" do
   #   assert true
   # end

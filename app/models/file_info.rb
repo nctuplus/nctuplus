@@ -10,11 +10,16 @@ class FileInfo < ActiveRecord::Base
 	#:path => ":ct_id/:userid/:filename"
 	has_attached_file :upload,  
 
-	:path => ":rails_root/file_upload/:ct_id/:userid/:filename"
-  do_not_validate_attachment_file_type :upload
+	:path => ":rails_root/file_upload/:ct_id/:userid/:filename",
+  :url => "/file_infos/:id"
+	#:url => ":rails_root/file_upload/:ct_id/:userid/:filename"
+	do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
 	
 
+	def download_url
+		upload.path(:original)
+	end
 	 
   def to_jq_upload(user)
     if user
