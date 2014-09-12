@@ -17,7 +17,7 @@
 *.yml
 /config/initializers/ominauth.rb
 /config/initializers/smtp.rb
-/public/assets/
+/public/
 /file_upload/
 
 # Ignore all logfiles and tempfiles.

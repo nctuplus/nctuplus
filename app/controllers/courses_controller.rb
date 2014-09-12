@@ -33,25 +33,51 @@ class CoursesController < ApplicationController
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
 			else # 5 -> chart			
-				sems=Semester.last(5).reject{|s|s==latest_semester}
+
+				
+				sems=Course.includes(:semesters).find(params[:c_id]).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}
 				@row_name = sems.map{|s|s.name}
 				@row_id = sems.map{|s| s.id}
-				@tmp = Course.find(params[:c_id]).course_details.where(:semester_id=>sems.map{|s| s.id})
-					   .map{|ctd| {:teacher=>ctd.teacher.name.strip, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
+				
+				@tmp = Course.find(params[:c_id]).course_details.includes(:teacher).where(:semester_id=>@row_id).order(:semester_id)					
+				@simu = CourseSimulation.where(:semester_id=>@row_id, :course_detail_id=>@tmp.map{|ctd| ctd.id})  
+					   
 				@res = []
-				@tmp.group_by{|t| t[:teacher]}.each do |k1, k2|
+				@res_score = []
+				@res_score_drill=[]
+				@show_flag = 0
+				@tmp.map{|ctd| {:teacher=>ctd.teacher.name.strip, :cdid=>ctd.id, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
+				.group_by{|t| t[:teacher]}.each do |k1, k2|
 					@tmp_num = [0,0,0,0]
+					@tmp_score = [{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1}]
+					#@tmp_score2 = [1,2,3,4]
+					zz=0
 					k2.each do |hash|
 						@tmp_num[@row_id.index(hash[:sem])] = hash[:num].to_i
+						
+						score_sum = 0 
+						score_count = 0
+						@simu.select{|sim| sim.semester_id==hash[:sem]&&sim.course_detail_id==hash[:cdid]}.each do |s|
+							if s.score.presence and numeric?(s.score) #and s.score.to_i >=60
+								score_sum+= s.score.to_i
+								score_count+=1
+								@show_flag = 1
+							end
+						end
+		
+						@tmp_score[@row_id.index(hash[:sem])][:y] = (score_count==0)?0 : score_sum/score_count*1.0
+						@tmp_score[@row_id.index(hash[:sem])][:nums] = score_count
 					end
 					@res.push({:name=>k1, :data=>@tmp_num})
+					@res_score.push({:name=>k1, :data=>@tmp_score})
+
 				end
 #				Rails.logger.debug "[debug] "+@res.to_s
 				
 				render "course_chart"
 			end
 	end
-
+	
 	def course_content_post
 
 		if params[:post_type].to_i==0 #head

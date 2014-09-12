@@ -3,7 +3,7 @@ class FileInfosController < ApplicationController
   # GET /files.json
   layout false, :only =>[:list_by_ct, :index]
   
-  before_filter :checkLogin, :only=>[ :new, :edit, :update, :create, :destroy, :one_user]
+  before_filter :checkLogin, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
   #before_filter :checkCourseManager(params[:id]), :only=>[:edit, :update]
   
 	
@@ -34,11 +34,11 @@ class FileInfosController < ApplicationController
   # GET /files/1.json
   def show
     @file = FileInfo.find(params[:id])
-
-    respond_to do |format|
-      format.html # show.html.erb
-      format.json { render json: @file }
-    end
+		send_file @file.download_url#, :type => @file.document_content_type, :disposition => 'inline'
+		#respond_to do |format|
+		#	format.html # show.html.erb
+    #  format.json { render json: @file }
+    #end
   end
 
   # GET /files/new

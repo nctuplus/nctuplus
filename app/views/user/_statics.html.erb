@@ -8,26 +8,29 @@
 	</div>
 	
 	<br>
+	<div class="container">
 	<% if current_user.department.present? && current_user.department.degree=='3' %>
-	<table class="table table-bordered ">
+	<table class="table table-bordered "style="border:0px">
 		
 		<tr class="row">
 			<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">服務學習</h4></td>
-			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">一</p></td>
-			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">二</p></td>
+			
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">一</p></td>
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">二</p></td>
+
 		</tr>
 		<% cs_service_1 = @cs_all_passed.select{|cs|cs.course.ch_name.include?('服務學習')&&cs.course.ch_name.include?('一')} %>
 		<% cs_service_2 = @cs_all_passed.select{|cs|cs.course.ch_name.include?('服務學習')&&cs.course.ch_name.include?('二')} %>
 		<tr class="row">
 			
-			<td class="col-md-3" colspan="3">
+			<td class="col-md-" colspan="3">
 				<% if cs_service_1.length>0 %>
 				<p class="text-center no-margin-bottom">
 				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
 				</p>
 				<% end %>
 			</td>
-			<td class="col-md-3" colspan="3">
+			<td class="col-md-" colspan="3">
 				<% if cs_service_2.length>0 %>
 				<p class="text-center no-margin-bottom">
 				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
@@ -39,8 +42,8 @@
 		
 		<tr class="row">
 			<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">藝文賞析</h4></td>
-			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">上</p></td>
-			<td class="col-md-3" colspan="3"><p class="text-center no-margin-bottom">下</p></td>
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">上</p></td>
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">下</p></td>
 		</tr>
 		<% cs_art_1 = @cs_all_passed.select{|cs|cs.course_detail.brief=="藝文賞析"&&cs.course.ch_name.include?('一')} %>
 		<% cs_art_2 = @cs_all_passed.select{|cs|cs.course_detail.brief=="藝文賞析"&&cs.course.ch_name.include?('二')} %>
@@ -48,14 +51,14 @@
 		<tr class="row">
 		
 			
-			<td class="col-md-3" colspan="3">
+			<td class="col-md-" colspan="3">
 				<% if cs_art_1.length>0||cs_art_after102.length>=1 %>
 				<p class="text-center no-margin-bottom">
 					<%= fa_icon "check 2x", style:"color:#5cb85c" %>
 				</p>
 				<% end %>
 			</td>
-			<td class="col-md-3" colspan="3">
+			<td class="col-md-" colspan="3">
 					<% if cs_art_2.length>0||cs_art_after102.length>=2 %>
 					<p class="text-center no-margin-bottom">
 						<%= fa_icon "check 2x", style:"color:#5cb85c" %>
@@ -68,18 +71,18 @@
 		<% cs_phe_needed=cs_phe.select{|cs|cs.course.ch_name[0..1]=="體育"} %>
 		<tr class="row">
 			<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">體育</h4></td>
-			<td class="col-md-1"><p class="text-center no-margin-bottom">大一</p></td>
-			<td class="col-md-1"><p class="text-center no-margin-bottom">大一</p></td>
-			<td class="col-md-1"><p class="text-center no-margin-bottom">選修</p></td>
-			<td class="col-md-1"><p class="text-center no-margin-bottom">選修</p></td>
-			<td class="col-md-1"><p class="text-center no-margin-bottom">選修</p></td>
-			<td class="col-md-1"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
 		</tr>
 		<tr class="row">
 		
 		<% output="" %>
 		<% (0..1).each do |i| %>
-			<% output<<'<td class="col-md-1">' %>
+			<% output<<'<td class="col-md-">' %>
 			<% if cs_phe_1[i].present? %>
 				<% output<<'<p class="text-center no-margin-bottom">'%>
 				<% output<<fa_icon("check 2x", style:"color:#5cb85c") %>
@@ -91,7 +94,7 @@
 		
 		<% output="" %>
 		<% (0..3).each do |i| %>
-			<% output<<'<td class="col-md-1">' %>
+			<% output<<'<td class="col-md-">' %>
 			<% if cs_phe_needed[i].present? %>
 				<% output<<'<p class="text-center no-margin-bottom">'%>
 				<% output<<fa_icon("check 2x", style:"color:#5cb85c") %>
@@ -150,7 +153,7 @@
 		</tr>
 		<tr class="row">
 		<% common_dimension.each do |key,value| %>
-			<td class="col-md-1" style="min-height:16px;">
+			<td class="col-md-" style="min-height:16px;">
 			<p class="text-center no-margin-bottom" >
 			<% if cs_common_dimension.include?(key) %>
 				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
@@ -204,8 +207,48 @@
 		</tr>
 		-->
 		<% end %>
+		
 	</table>
 	<% end %>
+	
+	<% unless @cs_agree.empty? %>
+	
+		<table class="table table-bordered"style="border:0px">
+			<tr class="row">
+				<th class="col-md-"><h4 class="text-center">抵免科目<h4></th>
+			</tr>
+			<% @cs_agree.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_local| %>
+			<tr class="row"><th class="col-md- <%=cos_type_class(type)%>"><%=type%></th></tr>
+			<% credit_sum=0 %>
+			<% cs_local.each do |cs_agree| %>
+			
+				<tr class="row">
+					<td class="col-md-">
+						<h4 class="text-center">
+						<%=cs_agree.course.ch_name%> | 
+						<%=cs_agree.course_detail.cos_type%> | 
+						<%= fa_icon "graduation-cap", class:"credit-count" %><strong><%=cs_agree.course_detail.credit%></strong>
+						</h4>
+					</td>
+				</tr>
+			<% end %>
+			<% end %>
+			<tr class="row ">
+				<td class="col-md- label-info">
+					<h4 class="text-right">
+						<%all_credit_sum=0%>
+						<% @cs_agree.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_all| %>
+							<% credit=cs_all.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)%>
+								<%=type%> : <strong><%=credit%></strong>
+							<%all_credit_sum+=credit%>
+						<% end %>
+							共 <strong><%=@cs_agree.count%></strong> 門課 <strong><%=all_credit_sum%></strong> 學分
+					</h4>
+				</td>
+			</tr>
+		</table>
+	<% end %>
+	</div>	
 	<br>
 	<div class="row" style="margin-top:2px;">
 		<div class="col-md-2 col-md-offset-2">

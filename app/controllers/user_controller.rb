@@ -52,15 +52,15 @@ class UserController < ApplicationController
 	def special_list
 		ls=latest_semester
 
-
-		@cs_all=current_user.course_simulations.includes(:course_detail,:course,:teacher)#, :course, :teacher)
+		@cs_agree=current_user.course_simulations.includes(:course_detail,:course,:teacher).where(:semester_id=> 0)#, :course, :teacher)
+		@cs_all=current_user.course_simulations.includes(:course_detail,:course,:teacher).where("semester_id != 0")#, :course, :teacher)
 		
 		@cs_all_cos_type=@cs_all.sort_by{|cs|cs.course_detail.cos_type}
 		@cs_all_sem=@cs_all.sort_by{|cs|cs.course_detail.semester_id}
 		@cs_this=@cs_all.select{|cs|cs.semester_id==ls.id}
 		@pass_score=current_user.department&&current_user.department.degree=='2' ? 70 : 60
-		@cs_all_passed=@cs_all.select{|cs|cs.score=="通過"||cs.score.to_i>=@pass_score}
-		
+		@cs_all_passed=@cs_all.select{|cs|cs.score=="通過"||cs.score.to_i>=@pass_score}+ @cs_agree
+		#@cs_all_passed=@cs_all_passed.append()
 		
 		
 	end
@@ -74,9 +74,10 @@ class UserController < ApplicationController
 		@score.split("\n").each do |s|
 			s2=s.split("\t") 
 			if s2.length>5 &&s2[0].match(/[[:digit:]]/)
-			
-				if s2[1].match(/[A-Z]{3}[[:digit:]]{2}+/)
-					@agree.append(s2[1])
+				#Rails.logger.debug "[debug] "+s2[1]
+				if s2[1].match(/[A-Z]{3}[[:digit:]]{4}/)
+					#Rails.logger.debug "[debug] "+s2[1]
+					@agree.append({:real_id=>s2[1], :credit=>s2[3].to_i})
 				elsif s2[1].include?('.')
 					course=course
 				elsif s2[1].match(/[[:digit:]]{3}+/)&&s2[2].match(/[[:digit:]]{4}/)
@@ -97,6 +98,17 @@ class UserController < ApplicationController
 		if @normal.length>0
 			CourseSimulation.where("user_id = ? AND semester_id != ? ",current_user.id,Semester.last.id).destroy_all
 		end
+
+		@agree.each do |a|
+			#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name
+			
+			course=Course.includes(:course_details).where(:real_id=>a[:real_id]).take
+			unless course.nil?
+			cd_temp=course.course_details.where(:credit=>a[:credit]).first
+			CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過")
+			end
+		end
+
 		@normal.each do |n|
 			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
 			if n['score']=="通過" || n['score'].to_i>=pass_score

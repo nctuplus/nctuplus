@@ -1,4 +1,4 @@
-<table class="table table-hover <%=table_class%>" id="by_semester">
+<table class="table table-hover <%=table_class%>" id="by_cos_type">
 
 	
 
@@ -41,7 +41,7 @@
 	<tr class="row success">
 		<td colspan="2" >
 			<h4 class="text-left">
-				目前學分:
+				
 				<%this_credit_sum=0%>
 				<% @cs_this.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_all| %>
 					<% credit=cs_all.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)%>
@@ -53,10 +53,11 @@
 		</td>
 	</tr>
 	<% end %>
+	
 	<tr class="row label-info">
 		<td colspan="2" >
 			<h4 class="text-right">
-				目前學分:
+				歷年總和:
 				<%all_credit_sum=0%>
 				<% @cs_all_passed.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_all| %>
 					<% credit=cs_all.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)%>
@@ -67,7 +68,7 @@
 			</h4>
 		</td>
 	</tr>
-	
+
 </table>
 
 
