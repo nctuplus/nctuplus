@@ -33,10 +33,13 @@ class CoursesController < ApplicationController
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
 			else # 5 -> chart			
-				sems=Semester.last(5).reject{|s|s==latest_semester}
+
+				
+				sems=Course.includes(:semesters).find(params[:c_id]).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}
 				@row_name = sems.map{|s|s.name}
 				@row_id = sems.map{|s| s.id}
-				@tmp = Course.find(params[:c_id]).course_details.includes(:teacher).where(:semester_id=>@row_id)					
+				
+				@tmp = Course.find(params[:c_id]).course_details.includes(:teacher).where(:semester_id=>@row_id).order(:semester_id)					
 				@simu = CourseSimulation.where(:semester_id=>@row_id, :course_detail_id=>@tmp.map{|ctd| ctd.id})  
 					   
 				@res = []
