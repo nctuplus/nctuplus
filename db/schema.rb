@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140910084301) do
+ActiveRecord::Schema.define(version: 20140910092844) do
 
   create_table "colleges", force: true do |t|
     t.string   "name"
@@ -104,6 +104,22 @@ ActiveRecord::Schema.define(version: 20140910084301) do
 
   add_index "course_details", ["course_teachership_id"], name: "index_course_details_on_course_teachership_id", using: :btree
   add_index "course_details", ["semester_id"], name: "index_course_details_on_semester_id", using: :btree
+
+  create_table "course_group_lists", force: true do |t|
+    t.integer  "course_group_id"
+    t.integer  "course_id"
+    t.integer  "semester_id"
+    t.integer  "course_type"
+    t.integer  "user_id"
+    t.boolean  "hidden"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "course_group_lists", ["course_group_id"], name: "index_course_group_lists_on_course_group_id", using: :btree
+  add_index "course_group_lists", ["course_id"], name: "index_course_group_lists_on_course_id", using: :btree
+  add_index "course_group_lists", ["semester_id"], name: "index_course_group_lists_on_semester_id", using: :btree
+  add_index "course_group_lists", ["user_id"], name: "index_course_group_lists_on_user_id", using: :btree
 
   create_table "course_groups", force: true do |t|
     t.string   "title"

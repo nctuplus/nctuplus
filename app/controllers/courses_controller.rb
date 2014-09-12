@@ -391,6 +391,11 @@ class CoursesController < ApplicationController
 		render "shopping_cart_list"
 	end
 	
+	def groups
+	
+	end
+	
+	
   protected
   def find_department
     @department=Department.find(params[:department_id])

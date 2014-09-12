@@ -16,7 +16,9 @@ Nctuplus::Application.routes.draw do
 	post "courses/course_raider"
 	post "courses/course_content_post"
 	
-	get "courses/search"
+	
+	get "courses/groups"
+
 	get "courses/get_compare"
 	#get "courses/get_discuss"
 	
