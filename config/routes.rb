@@ -41,7 +41,10 @@ Nctuplus::Application.routes.draw do
 	get "courses/show_cart"
 
 	resources :courses
-
+	
+	get "course_groups/add_list"
+	resources :course_groups
+	
 	resources :departments do
     resources :courses
 	end
@@ -99,6 +102,7 @@ Nctuplus::Application.routes.draw do
   root :to => "main#index"
 	
 	get "course_details/mini"
+	get "course_details/course_group"
   resources :course_details
   
   

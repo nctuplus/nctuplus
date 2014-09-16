@@ -1,0 +1,2 @@
+module CourseGroupsHelper
+end
