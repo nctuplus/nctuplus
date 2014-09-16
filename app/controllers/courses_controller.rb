@@ -35,10 +35,13 @@ class CoursesController < ApplicationController
 			else # 5 -> chart			
 
 				
-				sems=Course.includes(:semesters).find(params[:c_id]).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}
-				@row_name = sems.map{|s|s.name}
+				sems=Course.includes(:semesters).find(params[:c_id]).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}				
+				@row_name = sems.map{|s|s.name}				
 				@row_id = sems.map{|s| s.id}
-				
+				if @row_id.length ==5
+					@row_id.shift
+					@row_name.shift
+				end
 				@tmp = Course.find(params[:c_id]).course_details.includes(:teacher).where(:semester_id=>@row_id).order(:semester_id)					
 				@simu = CourseSimulation.where(:semester_id=>@row_id, :course_detail_id=>@tmp.map{|ctd| ctd.id})  
 					   
@@ -64,7 +67,7 @@ class CoursesController < ApplicationController
 								@show_flag = 1
 							end
 						end
-		
+						Rails.logger.debug "[debug] "+@row_name.to_s
 						@tmp_score[@row_id.index(hash[:sem])][:y] = (score_count==0)?0 : score_sum/score_count*1.0
 						@tmp_score[@row_id.index(hash[:sem])][:nums] = score_count
 					end
