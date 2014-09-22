@@ -51,7 +51,7 @@ gem 'kaminari'
 #for chrome extension cross domain support
 gem 'rack-jsonp-middleware',
   :require => 'rack/jsonp'
-
+gem "koala", "~> 1.10.0rc"
 #gem 'google-analytics-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

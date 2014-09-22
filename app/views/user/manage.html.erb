@@ -1,4 +1,5 @@
 ﻿<div class="table-responsive">
+<div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
 <table class="table" id="dataTables-paginate">
 <thead>
 	<tr>
@@ -63,4 +64,47 @@
 			}
 		});
 	}
+<% data = User.all.joins(:department).group(:ch_name).count %>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: '使用者系所統計'
+        },
+        subtitle: {
+            text: ''
+        },
+        xAxis: {
+            categories: <%=raw data.keys.to_json%>
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '人數'
+            }
+        },
+        tooltip: {
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y} 人</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
+        },
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
+        },
+        series: [{
+            name: '人數',
+            data: <%=raw data.values.to_json%>
+
+        }]
+    });
+});
+
 </script>

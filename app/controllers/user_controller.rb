@@ -1,5 +1,8 @@
 class UserController < ApplicationController
+	require 'net/http'
+  require "net/https"
 	include CourseHelper
+	
   before_filter :checkTopManager, :only=>[:manage, :permission]
 	before_filter :checkLogin, :only=>[:add_course, :import_course, :special_list, :select_dept]
   layout false, :only => [:add_course]
@@ -60,8 +63,27 @@ class UserController < ApplicationController
 		@cs_this=@cs_all.select{|cs|cs.semester_id==ls.id}
 		@pass_score=current_user.department&&current_user.department.degree=='2' ? 70 : 60
 		@cs_all_passed=@cs_all.select{|cs|cs.score=="通過"||cs.score.to_i>=@pass_score}+ @cs_agree
-		#@cs_all_passed=@cs_all_passed.append()
-		
+	
+		cs_all_scored=@cs_all.reject{|cs|cs.score=="通過"||cs.score=="不通過"||cs.semester_id==latest_semester.id}
+		gpa_all = 0.0
+		all_credit = 0.0
+		cs_all_scored.each do |cs|
+			point=calc_gpa_point(cs.score.to_i)
+			credit=cs.course_detail.credit.to_i
+			gpa_all+=credit * point
+			all_credit+=credit
+	  end
+		@gpa_all= gpa_all #/ all_credit
+
+		#fb_url = "#{current_user.uid}/notifications?access_token=272520269546220|9dd6af5c70d6eac3d26e656e4b638fa3&href=/user/special_list&template=213123123"
+  #uri = URI.encode("https://graph.facebook.com/#{fb_url}")
+  #uri = URI.parse(uri)
+  #http = Net::HTTP.new(uri.host, uri.port)
+  #http.use_ssl = true
+  #http.verify_mode = OpenSSL::SSL::VERIFY_NONE
+
+  #fb_req = Net::HTTP::Post.new(uri.request_uri)
+  #fb_response = http.request(fb_req)
 		
 	end
 	
@@ -170,6 +192,33 @@ class UserController < ApplicationController
 		end
 	end
   private
+  def calc_gpa_point(score)
+	case score
+		when 90..100
+			point=4.3
+		when 85..89
+			point=4.0
+		when 80..84
+			point=3.7
+		when 77..79
+			point=3.3
+		when 73..76
+			point=3.0
+		when 70..72
+			point=2.7
+		when 67..69
+			point=2.3
+		when 63..66
+			point=2.0
+		when 60..62
+			point=1.7
+		when 50..59
+			point=1
+		else
+			point = 0
+	end
+	return point
+  end
   def user_params
     params.require(:user).permit(:email)
   end
