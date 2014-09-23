@@ -18,10 +18,24 @@
 				永久課號：<%=@course.real_id%>
 				<%=fa_icon "bank"%> 單位：<%=@course.department.ch_name%>
 				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, target:"_blank"%>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "book"%> 種類：
-				<span class="<%=cos_type_class(cd.cos_type)%>">
-				<%=cd.cos_type%>
-				</span>
+				&nbsp;
+				<%=fa_icon "book"%> 
+				<% if cd.cos_type=="通識" %>
+					<% dimension=cd.brief[0..1]%>
+					向度：
+					<span class="<%=dimension_class(dimension)%>">
+						<% if dimension=="通識" %>
+							當代
+						<% else %>
+							<%= dimension %>
+						<% end %>
+					</span>
+				<% else %>
+					種類：
+					<span class="<%=cos_type_class(cd.cos_type)%>">
+						<%=cd.cos_type%>
+					</span>
+				<% end %>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=cd.credit%> 
 				</br></br>
 				<% first_name = cd.semester.name %>
