@@ -1,7 +1,10 @@
 jQuery ->
   $('body').prepend('<div id="fb-root"></div>')
 
-
+  $.ajax
+    url: "#{window.location.protocol}//connect.facebook.net/en_US/sdk.js"
+    dataType: 'script'
+    cache: true
 
 
 window.fbAsyncInit = ->
@@ -16,13 +19,3 @@ window.fbAsyncInit = ->
     FB.getLoginStatus (response) ->
       FB.logout() if response.authResponse
     true
-
-((d, s, id) ->
-  fjs = d.getElementsByTagName(s)[0]
-  return  if d.getElementById(id)
-  js = d.createElement(s)
-  js.id = id
-  js.src = "//connect.facebook.net/en_US/sdk.js"
-  fjs.parentNode.insertBefore js, fjs
-  return
-) document, "script", "facebook-jssdk"
