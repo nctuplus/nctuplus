@@ -28,7 +28,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
 gem 'omniauth'
-gem 'omniauth-facebook', '1.4.0'
+gem 'omniauth-facebook' #, '1.4.0'
 gem "paperclip"
 #gem "paperclip-dropbox", ">= 1.1.7"
 #gem 'ckeditor'
