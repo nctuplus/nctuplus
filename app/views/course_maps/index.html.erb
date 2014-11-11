@@ -1,0 +1,32 @@
+<h3>課程地圖 <%= link_to '新增', new_course_map_path, :class=>"btn btn-warning" %></h3>
+<table class="table">
+	<tr>
+		<th>標題</th>
+		<th>適用系所</th>
+		<th>說明</th>
+		<th>建立者</th>
+		<th>功能</th>
+	</tr>
+<% @course_maps.each do |cm| %>
+  <tr> 
+  	<td><%= link_to cm.name, course_map_path(cm) %></td>
+  	<td>
+  		<% if cm.department_id != 0%>
+  		<%=cm.department.ch_name%>	
+  		<% end %>
+  	</td>
+  	<td><%= cm.desc %></td>
+  	<td><%= cm.user.name%></td>
+  	<td>
+  	<%=link_to "加入我的統計", "javascript:void(0);", :onclick=>"add_to_user_statics(#{cm.id})"%>
+	<!-- if current_user.id==cm.user_id -->  
+    	<%= link_to '刪除', course_map_path(cm),
+              method: :delete,
+              data: { confirm: 'Are you sure?' } %>
+	<!-- end -->              
+  	</td>
+  <tr>
+<% end %>
+</table>
+
+

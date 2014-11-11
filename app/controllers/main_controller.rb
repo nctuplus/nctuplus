@@ -9,12 +9,74 @@ class MainController < ApplicationController
 	
   def index
 		
-		@course_detail_count=CourseDetail.all.count
+		#@course_detail_count=CourseDetail.all.count
 		#@file_count=FileInfo.count
 		
 		#@user_count=User.count
 		
   end
+	def testttt
+		@all=CourseGroup.find(7).lead_course
+		#@sendE3={:key=>Nctuplus::Application.config.secret_key_base,:id=>"0256061",:pwd=>"zmdzjbep"}
+		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/Authentication",@sendE3)
+		
+		#@sendE3={:acy=>"102", :sem=>"3"}
+		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/CourseList",@sendE3)
+		#@mesg=http.body_str.force_encoding("UTF-8")
+		
+
+	end
+	def updateTeacherList
+		http=Curl.get("http://dcpc.nctu.edu.tw/plug/n/nctup/TeacherList",{})
+		teachers=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		
+		tids=teachers.map{|t|t["TeacherId"]}
+		@deleted=NewTeacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
+		all_now=NewTeacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
+		@new=teachers - all_now
+		@new.each do |t|
+			@teacher=NewTeacher.new
+			@teacher.real_id=t["TeacherId"]
+			@teacher.name=t["Name"]
+			@teacher.save!
+		end
+	end
+	def test
+		if request.xhr? # if ajax
+			list = []
+			data = CourseMap.includes(:course_field_groups).find(params[:map_id])
+			data.course_field_groups.includes(:course_fields).order('group_type ASC').each do |cfg|
+				sub = {}
+				if cfg.group_type != 3				
+					target = cfg.course_fields.last  # .includes(:course_field_lists)
+					sub[:text] = ( (cfg.group_type==1) ? "[必修] " : "[多選多] " ) + target.name	
+					sub[:type], sub[:cf_id] = 0	, target.id	
+					sub[:backColor] = (cfg.group_type==1) ? "#f0ad4e" : "#5bc0de" 					
+				else		
+					sub[:text] = "[領域] " + cfg.name
+					sub[:type] = 1
+					sub[:icon] = 'fa fa-share-alt-square'
+					sub[:tags] = [ cfg.course_fields.count.to_s ]
+					nodes = []
+					cfg.course_fields.each_with_index do |sub_field, idx|
+						inner_sub = {:text=>("[子領域] " + sub_field.name), :type=>0}
+						inner_sub[:cf_id] = sub_field.id
+						nodes.push(inner_sub)
+					end
+					nodes.push({:text=>'新增子領域', :type=>-1, :parent_id=>cfg.id, :icon=>'fa fa-plus-square-o'})
+					sub[:nodes] = nodes			
+				end	
+				list.push(sub)	
+			end
+			list.push({:text=>'新增類別', :type=>-1, :icon=>'fa fa-plus-square-o', :parent_id=>0})
+		Rails.logger.debug "[debug] " + list.to_s
+		end# if
+	
+		respond_to do |format|
+   	 		format.html {}
+   	 		format.json {render :layout => false, :text=>list.to_json}
+    	end
+	end
 	
 	def send_report
 		@name=params[:report][:name]
@@ -37,6 +99,14 @@ class MainController < ApplicationController
 		#final_set_dept_type
 	end
 
+	def get_specified_classroom_schedule
+  	if params[:token_id]=="ems5566"
+  		@data = CourseDetail.where(:semester_id=>Semester.last.id, :room=>params[:room]).includes(:course)	
+  		respond_to do |format|
+   	 		format.json { render :layout => false, :text => @data.map{|d| [d.course.ch_name, d.time, d.reg_num] }.to_json }
+    	end
+    end
+  	end	
   private
 	
 	def final_set_dept_type
@@ -277,6 +347,7 @@ class MainController < ApplicationController
 	
     data=Array.new
     @type.each do |_type|
+	#@sendE3={:key=>Nctuplus::Application.config.secret_key_base,:id=>"0011566",:pwd=>"ffffff"}
 	  @send={"ftype"=>_type,"flang" =>'zh-tw'}
 	  http=Curl.post("http://timetable.nctu.edu.tw/?r=main/get_category",@send)
 	  @category=JSON.parse(http.body_str.force_encoding("UTF-8"))
@@ -329,5 +400,6 @@ class MainController < ApplicationController
 	return data
   end
 	
+  
   
 end

@@ -12,25 +12,31 @@ class CourseDetailsController < ApplicationController
 			@q.sorts = 'cos_type asc' if @q.sorts.empty?
 		else
 			@q = CourseDetail.search({:id_in=>session[:cd].presence||0})
-			
 		end
 		#@q = CourseDetail.search(params[:q])
 		@cds=@q.result(distinct: true).includes(:course, :teacher, :semester)
 		
 		@cd_all=get_mixed_info2(@cds)
 	end
+	
 	def course_group
 		if !params[:q].blank?
 			@q = Course.search(params[:q])
-			@q.sorts = 'cos_type asc' if @q.sorts.empty?
 		else
-			@q = Course.search({:department_id_eq=>params[:dept_id]})	
+			@q = Course.search({:id_eq=>0})	
 		end
-		#@q = CourseDetail.search(params[:q])
-		@courses=@q.result(distinct: true).includes(:course_details)
-		@cds=@courses.map{|c|c.course_details.first}
 		
-		@cd_all=get_mixed_info2(@cds)
+		@courses=@q.result(distinct: true).includes(:course_details).reject{|c|c.course_details.empty?}.sort_by{|c|c.course_details.first.cos_type}
+		
+		if params[:map_id].presence
+			course_group = CourseGroup.where("gtype=0 AND course_map_id=? ",params[:map_id]).map{|cg| cg.id}
+			course_group_courses = CourseGroupList.where(:course_group_id=>course_group, :lead=>0).includes(:course).map{|c| c.course}
+			@courses = @courses.reject{|course| course_group_courses.include? course }
+		end
+		
+	end
+	def users
+		
 	end
 
 end

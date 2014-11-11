@@ -27,3 +27,5 @@
 //= require jquery.scrollTo.min
 //= require jquery.svginject
 //= require highcharts-custom
+//= require custom-array-handler
+//= require custom-helper

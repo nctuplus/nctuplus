@@ -61,7 +61,7 @@ function change_sem(id){
 	$("#add_sem_form").hide();
 	$("#srch_and_schd").show();
 	$("#srch_and_schd").html('<%=loading_img%>');
-	$("#srch_and_schd").load("/courses/get_user_simulated?sem_id="+id);
+	$("#srch_and_schd").load("/courses/get_user_simulated?sem_id="+id); //load sidebar
 	$("#sem_selector .active").removeClass("active");
 	$("#sem_"+id).addClass("active");
 	

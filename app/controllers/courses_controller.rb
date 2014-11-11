@@ -315,7 +315,7 @@ class CoursesController < ApplicationController
 				end		
 			end
 		else
-			@teacher_show =  @teachers.first
+			@teacher_show =  @course.teachers.first
 			score = CourseTeachership.where(:course_id=>params[:id],:teacher_id=>@teacher_show.id).first.course_teacher_ratings.sum(:avg_score) 
 			if score > 0
 				@target_rank = 1 
@@ -325,11 +325,6 @@ class CoursesController < ApplicationController
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters.uniq
 
-	#@teachers=Teacher.where(:course_id=>@course.id)
-	
-
-
-	#@teachers=Teacher.where(:course_id=>@course.id)
   end
 	
 	def simulation

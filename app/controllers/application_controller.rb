@@ -19,7 +19,9 @@ class ApplicationController < ActionController::Base
 		html<<mesg
 		html<<'<div>'
 	end
-	
+	def getUserByIdForManager(uid)
+		return checkTopManagerNoReDirect &&uid.presence&& uid!="" ? User.find(uid) : current_user
+	end
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
@@ -28,14 +30,20 @@ class ApplicationController < ActionController::Base
     unless current_user
 	  alertmesg("info",'Sorry',"請先登入,謝謝!")
 	  if request.env["HTTP_REFERER"].nil?
-		redirect_to :root
+			redirect_to :root
 	  else
-		redirect_to :back
+			redirect_to :back
 	  end
 	  return false
 	end
 	return true
   end
+	def checkTopManagerNoReDirect
+		#if checkLogin
+	  TopManager.find_by_user_id(current_user.id).presence
+		#end
+		#return @topmanager
+	end
   def checkTopManager
     
     if checkLogin

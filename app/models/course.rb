@@ -2,7 +2,7 @@ class Course < ActiveRecord::Base
 	belongs_to :grade
 	belongs_to :department
 	belongs_to :user
-	
+	#belongs_to :course_field_list
 #	has_many :teachers, :through => :course_details
 	#has_many :semester_courseships, :dependent => :destroy
 	

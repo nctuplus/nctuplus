@@ -1,15 +1,43 @@
 class User < ActiveRecord::Base
+	#default_scope :join => :course_simulations
 	belongs_to :department
 	belongs_to :semester
-  has_many :file_infos
-  has_many :posts
-  has_many :course_content_lists
-  has_many :content_list_ranks
-  has_many :comments
+	has_many :file_infos
+	has_many :posts
+	has_many :course_content_lists
+	has_many :content_list_ranks
+	has_many :comments
 	has_many :course_simulations#, :foreign_key=>:owner_id
-  has_many :courses, :through=> :course_manager
-	
+	#has_many :courses, :through=> :course_manager
+	has_many :user_coursemapships
+	has_many :course_maps, :through=> :user_coursemapships
 	validates_uniqueness_of :uid
+	
+	def all_courses
+		self.course_simulations.includes(:course_detail, :course, :teacher, :course_field)
+	end
+	def courses_agreed
+		self.all_courses.where(:semester_id=>0)
+	end
+	def pass_courses
+		self.course_simulations.includes(:course, :course_detail).where("(semester_id !=0) AND (score = '通過' OR score>= ?)",self.pass_score)
+	end
+	
+	
+	def pass_score
+		return 0 if self.department.nil?
+		case department.degree
+			when '3'
+				return 60
+			when '2'
+				return 70
+			else 
+				return 0
+		end
+	end
+	def total_credit
+		return self.pass_courses.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0
+	end
 	
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|

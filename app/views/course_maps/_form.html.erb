@@ -1,0 +1,72 @@
+<div class="panel-group" id="accordion">
+  <div class="panel panel-primary" id="start1_div">
+    <div class="panel-heading">
+      <h4 class="panel-title">
+        <a data-toggle="collapse" data-parent="#accordion" id="start1_title">
+        建立一個學程地圖
+        </a>
+      </h4>
+    </div>
+    <div id="start1" class="panel-collapse collapse in">
+      <div class="panel-body">
+      	<div class="col-md-offset-2">
+      		<h2>新增學程地圖</h2>
+			<% test=Department.new%>
+			<% test.id=0%>
+			<% test.ch_name="其他"%>
+			<%= form_for :course_map, url: course_maps_path, html:{:class=>"form-horizontal new-form"} do |f|%>
+				<div class="row">
+					<div class="col-md-2">
+						<h4 class="text-right">標題</h4>
+					</div>
+					<div class="col-md-5">
+						<%= text_field_tag :name ,'', :class=>"form-control" %>
+					</div>
+				</div>			
+				<div class="row">
+					<div class="col-md-2">
+						<h4 class="text-right">適用系所</h4>
+					</div>
+					<div class="col-md-5">
+						<% depts=["for_user",'dept']%>
+						<%= f.select :department_id, options_from_collection_for_select(Department.where(:dept_type=>depts).order("degree DESC").prepend(test),"id","ch_name"),{} ,{:class=>"form-control"}  %>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<h4 class="text-right">適用年度</h4>
+					</div>
+					<div class="col-md-5">
+					<%=select_tag :semester_id, options_for_select(Semester.where('half=1').map{ |u| [u.year, u.id] }), :class=>'form-control', :prompt=>'不指定' %>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						<h4 class="text-right">簡介</h4>
+					</div>
+					<div class="col-md-5">
+						<%= text_area_tag :desc,'', :class=>"form-control", :style=>"height: 100px;"%>
+					</div>
+				</div>		
+				<div class="row">
+					<div class="col-md-7">
+						</br>
+						<%= f.submit "下一步", :class=>"btn btn-primary pull-right" %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+	$('.new-form').submit(function(){
+		if(!confirm('確定資料無誤嗎？'))
+			return false ;
+		// TO-DO : check data
+
+		return true;
+	});
+</script>

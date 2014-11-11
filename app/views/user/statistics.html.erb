@@ -1,0 +1,353 @@
+<% common_dimension={'公民'=>'civil','群已'=>'youandme','自然'=>'nature','歷史'=>'history','文化'=>'culture','通識'=>'world'} %>
+
+<% foreign_dimension=['基礎','進階'] %>
+
+<div class="panel panel-primary" >
+	<div class="panel-heading" >
+		<h4 class="text-center">統計</h4>
+	</div>
+	
+	<br>
+	<div class="container">
+	<% @course_maps.each_with_index do |course_map , i| %>
+	
+		<% credit_taked=0 %>
+		<% credit_need=0 %>
+		<table class="table table-bordered "style="border:0px">
+			<tr class="row" >
+				<td class="col-md-12" colspan="<%=@max_colspan[i]+1 %>">
+					<h4 class="text-center">
+						<%=course_map.name %>
+						<%=link_to "產生報表", "/course_maps/statistic_table?map_id=#{course_map.id}&user_id=#{@user.id}", :class=>"btn btn-info pull-right", target:"blank"%>
+					</h4>
+					
+				</td>
+			</tr>
+		<% course_map.course_field_groups.includes(:course_fields).sort_by{|cfg|cfg.group_type}.each do |cfg| %>
+			<% cf=cfg.course_fields %>
+			
+			<% if cfg.group_type<3 %>
+			<%_cf=cf.first %>
+			<% credit_need+=_cf.credit_need %>
+			<% cfl=_cf.course_field_lists %>
+			<% res=statistic_level2(course_map.id,courses_join_cf(@user.pass_courses,_cf),cfg,_cf) %>
+			<% credit_taked += res[:credit] %>
+			<tr class="row">
+				<td class="col-md-2" style="vertical-align:middle"><h4 class="text-center"><%=_cf.name%></h4></td>
+				<td class="col-md-10" colspan="<%=@max_colspan[i] %>" style="vertical-align:middle">
+
+					<p class="text-center no-margin-bottom">
+					<a data-toggle="modal" href="/course_maps/show_list?cf_id=<%=_cf.id%>&uid=<%=@user.id%>"  data-target="#courselist_modal">
+					<%= res[:match] ? green_check : red_x+" (#{res[:credit]}/#{_cf.credit_need})" %>
+					</a>
+					</p>
+				</td>
+			</tr>
+			<% else %>
+			<% credit_need+=cfg.credit_need %>
+			<tr class="row" >
+				<td class="col-md-2" rowspan="2" style="vertical-align:middle"><h4 class="text-center"><%=cfg.name%></h4></td>
+					<% cf.each do |_cf| %>
+						<td style="vertical-align:middle"><p class="text-center"><%=_cf.name%></p></td>
+					<% end %>
+				</tr>
+			<tr class="row">
+				<% cf.each do |_cf| %>
+					<% res=statistic_level2(course_map.id,courses_join_cf(@user.pass_courses,_cf),cfg,_cf) %>
+
+					<% credit_taked += res[:credit] %>
+					<td>
+						
+						<p class="text-center no-margin-bottom">
+							<a data-toggle="modal" href="/course_maps/show_list?cf_id=<%=_cf.id%>&uid=<%=@user.id%>"  data-target="#courselist_modal">
+								<%= res[:match] ? green_check : red_x+" (#{res[:credit]}/#{_cf.credit_need})" %>
+							</a>
+						</p>
+						
+					</td>
+				<% end %>
+			</tr>
+			<% end %>
+		
+		<% end %>
+		<tr class="row">
+			<td colspan="<%=@max_colspan[i]+1 %>">
+				<%= progress_bar(credit_taked,credit_need) %>
+			</td>
+		</tr>
+		</table>	
+	<% end %>
+	
+	<% if @user.department.present? && @user.department.degree=='3' %>
+	<table class="table table-bordered "style="border:0px">
+		
+		<tr class="row">
+			<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">服務學習</h4></td>
+			
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">一</p></td>
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">二</p></td>
+
+		</tr>
+		<% cs_service_1 = @cs_all_passed.select{|cs|cs.course.ch_name.include?('服務學習')&&cs.course.ch_name.include?('一')} %>
+		<% cs_service_2 = @cs_all_passed.select{|cs|cs.course.ch_name.include?('服務學習')&&cs.course.ch_name.include?('二')} %>
+		<tr class="row">
+			
+			<td class="col-md-" colspan="3">
+				<% if cs_service_1.length>0 %>
+				<p class="text-center no-margin-bottom">
+				<%=green_check%>
+				</p>
+				<% end %>
+			</td>
+			<td class="col-md-" colspan="3">
+				<% if cs_service_2.length>0 %>
+				<p class="text-center no-margin-bottom">
+				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
+				</p>
+				<% end %>
+			</td>
+			
+		</tr>
+		
+		<tr class="row">
+			<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">藝文賞析</h4></td>
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">上</p></td>
+			<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">下</p></td>
+		</tr>
+		<% cs_art_1 = @cs_all_passed.select{|cs|cs.course_detail.brief=="藝文賞析"&&cs.course.ch_name.include?('一')} %>
+		<% cs_art_2 = @cs_all_passed.select{|cs|cs.course_detail.brief=="藝文賞析"&&cs.course.ch_name.include?('二')} %>
+		<% cs_art_after102 = @cs_all_passed.select{|cs|cs.course_detail.semester_id>=7&&cs.course_detail.brief=="藝文賞析"} %>
+		<tr class="row">
+		
+			
+			<td class="col-md-" colspan="3">
+				<% if cs_art_1.length>0||cs_art_after102.length>=1 %>
+				<p class="text-center no-margin-bottom">
+					<%= fa_icon "check 2x", style:"color:#5cb85c" %>
+				</p>
+				<% end %>
+			</td>
+			<td class="col-md-" colspan="3">
+					<% if cs_art_2.length>0||cs_art_after102.length>=2 %>
+					<p class="text-center no-margin-bottom">
+						<%= fa_icon "check 2x", style:"color:#5cb85c" %>
+					</p>
+					<% end %>
+			</td>
+		</tr>
+		<% cs_phe=@cs_all_passed.select{|cs|cs.course_detail.brief[0..1]=="體育"} %>
+		<% cs_phe_1=cs_phe.select{|cs|cs.course.ch_name=="大一體育"} %>
+		<% cs_phe_needed=cs_phe.select{|cs|cs.course.ch_name[0..1]=="體育"} %>
+		<tr class="row">
+			<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">體育</h4></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+			<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+		</tr>
+		<tr class="row">
+		
+		<% output="" %>
+		<% (0..1).each do |i| %>
+			<% output<<'<td class="col-md-">' %>
+			<% if cs_phe_1[i].present? %>
+				<% output<<'<p class="text-center no-margin-bottom">'%>
+				<% output<<fa_icon("check 2x", style:"color:#5cb85c") %>
+				<% output<<'</p>'%>
+			<% end %>
+			<% output<<'</td>' %>	
+		<% end %>
+		<%=output.html_safe%>
+		
+		<% output="" %>
+		<% (0..3).each do |i| %>
+			<% output<<'<td class="col-md-">' %>
+			<% if cs_phe_needed[i].present? %>
+				<% output<<'<p class="text-center no-margin-bottom">'%>
+				<% output<<fa_icon("check 2x", style:"color:#5cb85c") %>
+				<% output<<'</p>'%>
+			<% end %>
+			<% output<<'</td>' %>	
+		<% end %>
+		<%=output.html_safe%>
+
+		</tr>
+		<% cs_foreign=@cs_all_passed.select{|cs|cs.course_detail.cos_type=="外語"} %>
+		<% cs_foreign_basic=cs_foreign.select{|cs|cs.course_detail.brief=="基礎"} %>
+		<% cs_foreign_basic_credit=cs_foreign_basic.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_foreign_advanced=cs_foreign.select{|cs|cs.course_detail.brief=="進階"||cs.course_detail.brief=="其它"} %>
+		<% cs_foreign_advanced_credit=cs_foreign_advanced.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_foreign_dimension=cs_foreign.map{|cs|cs.course_detail.brief} %>
+		<tr class="row">
+			<td class="col-md-2" >
+				<h4 class="text-center ">外文</h4>
+			</td>
+
+			<td colspan="6">
+				<div class="progress no-margin-bottom">
+					<div class="progress-bar progress-bar-success" style="width: <%=(cs_foreign_basic_credit*66.7)/4 %>%">
+						<span>基礎 <strong><%=cs_foreign_basic_credit%>/4</strong></span>
+					</div>
+					<div class="progress-bar" role="progressbar" style="width: 33.3%;">
+						<span >進階(其他) <strong><%=cs_foreign_advanced_credit%>/2</strong></span>
+					</div>
+				</div>
+			</td>
+		</tr>
+		
+		<% cs_common=@cs_all_passed.select{|cs|cs.course_detail.cos_type=="通識"} %>
+		<% cs_common_basic=cs_common.select{|cs|cs.course_detail.brief.partition('/')[0]!="通識"} %>
+		<% cs_common_world=cs_common.select{|cs|cs.course_detail.brief.partition('/')[0]=="通識"} %>
+		<% cs_common_basic_credit=cs_common_basic.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_common_world_credit=cs_common_world.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+		<% cs_common_dimension=cs_common.map{|cs|cs.course_detail.brief.partition('/')[0]} %>
+		
+		<tr class="row">
+			<td rowspan="3" style="vertical-align:middle">
+				<h4 class="text-center no-margin-bottom" style="line-">通識</h4>
+			</td>
+			<% common_dimension.each do |key,value| %>
+				<td class="dimension-<%=value%>">
+				<p class="text-center no-margin-bottom">
+				<% if key=="通識" %>
+					當代
+				<% else %>
+					<%=key%>
+				<% end %>
+				</p>
+				</td>
+			<% end %>
+		</tr>
+		<tr class="row">
+		<% common_dimension.each do |key,value| %>
+			<td class="col-md-" style="min-height:16px;">
+			<p class="text-center no-margin-bottom" >
+			<% if cs_common_dimension.include?(key) %>
+				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
+			<% end %>
+			</p>
+			</td>	
+		<% end %>
+		</tr>
+		
+		<tr class="row">
+			
+			<td colspan="6">
+				<div class="progress no-margin-bottom">
+					<div class="progress-bar dimension-world" style="width: 20%;">		
+						<span>當代 <strong><%=cs_common_world_credit%>/2</strong></span>
+					</div>		
+					<div class="progress-bar" role="progressbar" style="width: <%=cs_common_basic_credit*100/18 - 20 > 80 ? 80 : cs_common_basic_credit*100/18 - 20 %>%;">		
+						<span class="<%=cs_common_basic_credit==0?"sr-only":""%>">其他 <strong><%=cs_common_basic_credit%>/18</strong></span>
+					</div>
+				</div>
+			</td>
+		</tr>
+		
+		
+
+		
+
+		
+		
+		
+		
+		
+		<!--
+		<tr class="row">
+			<td class="col-md-10 label-info" colspan="7">
+				<p class="text-center no-margin-bottom">Total</p>
+			</td>
+		</tr>
+		<% if @user.department.credit.present? %>
+		<tr class="row">
+			<td><p class="text-center">學分</p></td>
+			<td colspan="6">
+				<div class="progress no-margin-bottom">
+				<% all_credit=@cs_all_passed.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
+					<div class="progress-bar progress-bar-info" style="width: <%=(all_credit*100/128)>10?(all_credit*100/128):10 %>%">
+						<span><strong><%=all_credit%>/<%=@user.department.credit%></strong></span>
+					</div>
+
+				</div>
+			</td>
+		</tr>
+		-->
+		<% end %>
+		
+	</table>
+	<% end %>
+	
+	<% unless @cs_agree.empty? %>
+	
+		<table class="table table-bordered"style="border:0px">
+			<tr class="row">
+				<th class="col-md-"><h4 class="text-center">抵免科目<h4></th>
+			</tr>
+			<% @cs_agree.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_local| %>
+			<tr class="row"><th class="col-md- <%=cos_type_class(type)%>"><%=type%></th></tr>
+			<% credit_sum=0 %>
+			<% cs_local.each do |cs_agree| %>
+			
+				<tr class="row">
+					<td class="col-md-">
+						<h4 class="text-center">
+						<%=cs_agree.course.ch_name%> | 
+						<%=cs_agree.course_detail.cos_type%> | 
+						<%= fa_icon "graduation-cap", class:"credit-count" %><strong><%=cs_agree.course_detail.credit%></strong>
+						</h4>
+					</td>
+				</tr>
+			<% end %>
+			<% end %>
+			<tr class="row ">
+				<td class="col-md- label-info">
+					<h4 class="text-right">
+						<%all_credit_sum=0%>
+						<% @cs_agree.group_by{|cs| cs.course_detail.cos_type}.each do |type,cs_all| %>
+							<% credit=cs_all.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)%>
+								<%=type%> : <strong><%=credit%></strong>
+							<%all_credit_sum+=credit%>
+						<% end %>
+							共 <strong><%=@cs_agree.count%></strong> 門課 <strong><%=all_credit_sum%></strong> 學分
+					</h4>
+				</td>
+			</tr>
+		</table>
+	<% end %>
+	</div>	
+	<br>
+	<div class="row" style="margin-top:2px;">
+		<div class="col-md-2 col-md-offset-2">
+		<p class="text-right" style="margin-top:3px;">
+			<label class="">List by : </label>
+		</p>
+		</div>
+		<div class="col-md-1">
+			<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
+			<%=fa_icon "bookmark-o"%>必修科目表
+			</a>
+		</div>
+	</div>
+	<br>
+	<%= render :partial=>"/user/table_list_by_cosmap", locals: {cs_mixed: @cs_all_cos_type, table_class:"statics_table"} %>
+</div>
+
+<div class="modal fade" id="courselist_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" >
+			<!--<div class="modal-footer">
+				<button type="button" class="btn btn-primary">Purchase</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>-->
+		</div>
+	</div>
+</div>
+<script>
+
+$('body').on('hidden.bs.modal', '.modal', function () {
+    $(this).removeData('bs.modal');
+});
+</script>

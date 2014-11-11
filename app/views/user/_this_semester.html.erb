@@ -9,26 +9,26 @@
 		<div  class="col-md-8">
 			<%= render :partial=> "/user/dept_form"%>
 			<h4 id="user_info" class="text-center">
-				<% if !current_user.department.nil? && !current_user.semester.nil? %>
-				<%=current_user.department.ch_name%> <%sem=current_user.semester.name%>
-				<% if current_user.department.degree=="3" %>
+				<% if !@user.department.nil? && !@user.semester.nil? %>
+				<%=@user.department.ch_name%> <%sem=@user.semester.name%>
+				<% if @user.department.degree=="3" %>
 					<%=sem[0..sem.length-2].to_i+4%>級 
 				<% end %>
 				<!--
-					<% unless current_user.department.credit.nil? %>
-					畢業學分:<strong><%=current_user.department.credit %></strong>	
+					<% unless @user.department.credit.nil? %>
+					畢業學分:<strong><%=@user.department.credit %></strong>	
 					<% end %>
 				-->
 				<% end %>
 			</h4>
 		</div>
-		<div class="col-md-4"><% unless current_user.department.nil? %>
+		<div class="col-md-4"><% unless @user.department.nil? %>
 			<button class="btn btn-success" onclick="show_form($(this));">修改系級</button>
 		<% end %>
 		<%=link_to "/courses/simulation", class:"btn btn-primary" ,id: "add_course" do %>
 			<%=fa_icon "plus" %>新增課程
 		<% end %>
-		<%=link_to current_user.department.present? ? "/user/import_course":"javascript:void(0);" , class:"btn btn-primary",id:"import_course", onclick:"no_dept_alert();" do %>
+		<%=link_to @user.department.present? ? "/user/import_course":"javascript:void(0);" , class:"btn btn-primary",id:"import_course", onclick:"no_dept_alert();" do %>
 			<%=fa_icon "upload" %>匯入課程
 		<% end %>
 			
@@ -40,7 +40,7 @@
 
 
 <script>
-<% if current_user.department.nil? %>
+<% if @user.department.nil? %>
 	function no_dept_alert(){	
 		alert('請先輸入系級,謝謝!');
 		$('#degree_select').focus();

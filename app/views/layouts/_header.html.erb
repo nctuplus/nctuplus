@@ -15,6 +15,7 @@
 						<ul class="dropdown-menu">
 								<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
 								<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+								<li><a href="/course_maps/course_group_handle" rel="nofollow">共用課程群組<span class="badge pull-right"><%=CourseGroup.where(:course_map_id=>0).count%></span></a></li>
 						</ul>
 					</li>
 				<% end %>
@@ -22,7 +23,7 @@
 				<li><a href="/course_details/" rel="nofollow">全校課程</a></li>
 
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
-				<li><a href="/course_groups/" rel="nofollow">課程地圖</a></li>
+				<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">

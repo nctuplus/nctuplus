@@ -19,7 +19,7 @@
 			<div class="col-md-5" id="teacher-name">
 				<span class="pull-right">
 					<br>
-					<% if @ct.course_details.last.semester==latest_semester %>
+					<% if @ct.course_details.last.semester_id==latest_semester.id %>
 					<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
 					<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
 					</button>

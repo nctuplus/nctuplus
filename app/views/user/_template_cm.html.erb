@@ -1,0 +1,27 @@
+<script type="text/x-tmpl" id="template-cm">
+<table class="table table-bordered "style="border:0px">
+	<tr class="row" >
+		<td class="col-md-12" colspan="1">
+			<h4 class="text-center">
+				{%=o.name %}
+				<a href="/course_maps/statistic_table?map_id={%=o.id%}&user_id=<%=@user.id%>" class="btn btn-info pull-right" target="blank">產生報表</a>
+			</h4>
+		</td>
+	</tr>
+	{% for(var i=0,cfg; cfg=o.cfg[i];i++){ %}
+		<tr>
+		<td class="col-md-2" style="vertical-align:middle"><h4 class="text-center">{%=cfg.name%}</h4></td>
+		</tr>
+		{% for(var j=0,cf; cf=cfg.cf[j];j++){ %}
+			<tr>
+				<td>{%=cf.name%}</td>
+			</tr>
+			{% for(var k=0,course; course=cf.courses[k];k++){ %}
+				<tr>
+					<td>{%=course.name%}</td>
+				</tr>
+			{% } %}
+		{% } %}
+	{% } %}
+</table>
+</script>

@@ -5,6 +5,7 @@ Nctuplus::Application.routes.draw do
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 	
+	
   #post "courses/update_discuss"
 	#post "courses/new_discuss"
 	#post "courses/new_sub_discuss"
@@ -24,7 +25,7 @@ Nctuplus::Application.routes.draw do
 	
 	get "courses/course_raider"
 	get "courses/list_all_courses"
-  get "courses/rate_cts"
+    get "courses/rate_cts"
 	get "courses/simulation"
 	get "courses/add_simulated_course"
 	get "courses/get_user_simulated"
@@ -42,8 +43,24 @@ Nctuplus::Application.routes.draw do
 
 	resources :courses
 	
-	get "course_groups/add_list"
-	resources :course_groups
+
+	
+	get "course_maps/add_usercoursemapship"		
+	get "course_maps/statistic_table"
+####### 	11/8 treeview reverse
+	get "course_maps/get_course_tree"
+	get "course_maps/get_group_tree"
+	post "course_maps/action_new"
+	post "course_maps/action_update"
+	post "course_maps/action_delete"	
+	get "course_maps/show_course_list" # course list show (必修 多選多)
+	get "course_maps/show_course_group_list"
+	
+	post "course_maps/course_group_action"
+	post "course_maps/course_action"
+#######	
+	get "course_maps/start2"
+	resources :course_maps
 	
 	resources :departments do
     resources :courses
@@ -64,11 +81,15 @@ Nctuplus::Application.routes.draw do
   
   #get "post/getcode"
   #resources :post
-	
+  	get "main/test"
+	get "main/testttt"
+	get "main/testtt11t"
 	post "main/send_report"
 	get "main/hidden_prepare"
   get "main/index"
 	
+	# for ems curl
+	post "/main/get_specified_classroom_schedule"
 	
 	#----------for chrome extension---------------
 	post "api/query_from_time_table"
@@ -84,11 +105,19 @@ Nctuplus::Application.routes.draw do
   #----------for user---------------
   #get "user/mail_confirm"
   #get "user/activate"
+  
+	#get "user/:id", to: "user#show"
+	get "user/statistics2"
+	get "user/all_courses2"
+	post "user/select_cm_in_manage"
+	get "user/select_cf"
 	get "user/add_top_manager"
 	post "user/add_course"
   get "user/manage"
 	get "user/import_course"
   get "user/special_list"
+	get "user/all_courses"
+	get "user/statistics"
   get "user/:id/permission", to: "user#permission"
   
   post "user/:id/permission", to: "user#permission"

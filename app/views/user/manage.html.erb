@@ -1,26 +1,43 @@
-﻿<div class="table-responsive">
-<table class="table" id="dataTables-paginate">
+﻿	
+<table class="table table-bordered table-hover bg-white-transparent" id="">
 <thead>
-	<tr>
-		<th>Name</th><th>系所</th><th>年級</th><th>身份</th><th>功能</th>
+	<tr class="row">
+		<th class="col-md-2">Name</th>
+		<th class="col-md-3">系所</th>
+		<th class="col-md-1">學分數</th>
+		<th class="col-md-2">課程地圖</th>
+		<th>年級</th>
+		<th>身份</th>
 	</tr>
 </thead>
 
 <tbody>
+<% has_imported=0%>
+
+
 <%@users.each do |user| %>
-<tr>
-<td>
-	<%= image_tag "http://graph.facebook.com/"<<user.uid<<"/picture", size: "25x25" %>
-	<%= link_to user.name, "http://www.facebook.com/"<<user.uid, target:"_blank" %>
-</td>
-<% if !user.department.nil? %>
-<td>
-	
-	<%=user.department.ch_name%>
-</td>
-<% else %>
-<td>尚未填寫</td>
-<% end %>
+	<% if user.course_simulations.count!=0%>
+		<%has_imported+=1%>
+	<% end %>
+	<tr class="row">
+	<td>
+		<%= image_tag "http://graph.facebook.com/"<<user.uid<<"/picture", size: "25x25" %>
+		<%= link_to user.name, "http://www.facebook.com/"<<user.uid, target:"_blank" %>
+	</td>
+	<% if !user.department.nil? %>
+	<td>
+		<%=user.department.ch_name%>
+	</td>
+	<% else %>
+		<td>尚未填寫</td>
+	<% end %>
+	<td>
+		<%=link_to user.total_credit,"/user/special_list?uid="<<user.id.to_s %>
+	</td>
+	<td>
+	<% cm_id=user.course_maps.first.nil? ? 0 :user.course_maps.first.id %>  
+		<%=select_tag "course_map", options_from_collection_for_select(CourseMap.all, :id, :name, cm_id), prompt:"none", class:"course_map form-control", id:user.id%>
+	</td>
 <% unless user.semester.nil? %>
 <% sem=user.semester.name%>
 <td><%= sem[0..sem.length-2] %></td>
@@ -29,16 +46,12 @@
 <% end %>
 
 <td>
-<% if TopManager.where(:user_id=>user.id).take %>
+<% if @top_managers.include?(user.id) %>
 	管理員
-<% end %>
-</td>
-<td>
-	<% if !TopManager.where(:user_id=>user.id).take %>
+<% else %>
 	<%=link_to "新增管理員","javascript:void(0);", onclick:"addTopManager(#{user.id})"%>
-	<% else %>
-	
-	<% end %>
+
+<% end %>
 </td>
 <!--<td><%=link_to "權限","/user/"+user.id.to_s+"/permission"%></td>-->
 </tr>
@@ -46,12 +59,9 @@
 </tbody>
 
 </table>
-</div>
-<!--
-<script src="/assets/jquery-1.10.2.js"></script> 
-<script src="/assets/jquery.dataTables.js"></script>
-<script src="/assets/dataTables.bootstrap.js"></script>
--->
+<h4>匯入人數<%=has_imported%></h4>
+
+
 <script>
 	function addTopManager(id){
 		$.ajax({
@@ -63,4 +73,16 @@
 			}
 		});
 	}
+	$(document).ready(function(){
+		$(".course_map").change(function(){
+			var cm_id=$(this).val();
+			$.ajax({
+				type : "POST",
+				data : {cm_id:cm_id,uid:$(this).attr("id")},
+				url : "/user/select_cm_in_manage"
+			});
+			/*if(cm_id)
+				alert(cm_id);*/
+		});
+	});
 </script>

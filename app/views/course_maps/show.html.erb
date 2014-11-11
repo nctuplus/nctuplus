@@ -1,0 +1,61 @@
+<h3>課程地圖 - <%=@course_map.name%></h3>  
+
+<div class="well">
+<h3>課程介紹</h3>
+<table class="table table-bordered">
+	<tr>
+		<td>適用系所：</td>
+		<td><%=(@course_map.department_id==0)? "不指定" : @course_map.department.ch_name%></td>
+		<td>適用學期：</td>
+		<td><%=(@course_map.semester_id==0)? "不指定" : @course_map.semester.year%></td>
+	<tr>
+	<tr>
+		<td colspan="4">說明：
+			testaa
+		</td>
+	</tr>	
+</table>
+
+<hr>
+<h3>課程內容</h3>
+<div id="start2_content"></div>
+</div>
+
+<script>
+var map_id = <%=j @course_map.id.to_s %> ;
+$(document).ready(function(){
+	$('#start2_content').load('/course_maps/start2?map_id='+map_id);
+});
+function add_to_user_statics(map_id){
+	$.ajax({
+			type: "GET",
+  			url: "/course_maps/add_usercoursemapship" ,
+  			data:{
+  				map_id : map_id,
+  			},	
+  			success: function(data){
+					alert(data);
+  			},	
+  			error: function(){
+  				alert("add_to_user_statics failed..");
+  			}
+  	});	
+	return false ;
+	
+}
+function statistic_table(map_id, user_id){
+	$.ajax({
+			type: "GET",
+  			url: "/course_maps/statistic_table" ,
+  			data:{
+  				map_id : map_id,
+  				user_id : user_id,
+  			},	
+  			success: function(data){
+  			},	
+  			error: function(){
+  				alert("table generating failed..");
+  			}
+  	});	
+}
+</script>

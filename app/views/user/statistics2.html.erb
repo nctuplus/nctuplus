@@ -1,0 +1,26 @@
+<div class="panel panel-primary" >
+	<div class="panel-heading" >
+		<h4 class="text-center">歷年課程</h4>
+	</div>
+	
+	<br>
+	<div id="common_check" class="container">
+	</div>
+	<div id="course_map_check" class="container">
+	</div>
+</div>
+<script>
+$(document).ready(function(){
+	$.getJSON("/user/statistics2?uid=<%=params[:uid] %>", function (data) {
+		$("#common_check").html(tmpl("template-common", data["course"]));
+		$("#course_map_check").html(tmpl("template-cm",data["course_map"]));
+		console.log(data);
+	});
+	
+});
+
+</script>
+
+
+<%=render :partial=>"/user/template_common"%>
+<%=render :partial=>"/user/template_cm"%>

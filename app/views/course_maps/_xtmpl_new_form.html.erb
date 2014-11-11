@@ -1,0 +1,32 @@
+<script type="text/x-tmpl" id="new-form-format">
+
+<%= form_for :data, url: "action_new", html:{:class=>"form-horizontal new-form"}, :remote=>true do |f|%>
+	<input id="action_type" name="action_type" type="hidden" value="{%= o.action_type %}">
+	<input id="map_id" name="map_id" type="hidden" value="{%= map_id %}">
+	<input id="target_id" name="target_id" type="hidden" value="{%= o.target_id %}">
+	
+	<h4 class="form-header-name">
+		{%= o.header_name %}
+	</h4>
+	<div class="row">
+		<div class="col-md-2">
+			<h4 class="text-right">名稱</h4>
+		</div>
+
+	{% if(o.action_type!="course_field_head"){ %}
+		<div class="col-md-2" >
+		<%= select_tag "group_type" ,options_for_select([['必修','1'],['X選Y','2'],['領域/類別','3']]), class: "form-control" %>		
+		</div>
+	{% } %}
+		<div class="col-md-5">
+			<%= text_field_tag :name , '', class:"form-control"%>
+		</div>					
+		<div class="col-md-2">
+			<%=submit_tag "送出", :class=>"form-control btn-info" %>
+		</div>
+	</div>		
+	<hr>
+<% end %>
+
+
+</script>

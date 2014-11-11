@@ -14,7 +14,7 @@
 		<% cs_local.each do |cs| %>
 			
 			
-			<% if cs.score=="通過" || cs.score.to_i>=@pass_score %>
+			<% if cs.semester_id==@ls.id || cs.score=="通過" || cs.score.to_i>=@pass_score %>
 			<% credit_sum+=cs.course_detail.credit.to_i %>
 			<% pass_count+=1 %>
 			<%pass_class=""%>
