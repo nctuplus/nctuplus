@@ -3,9 +3,29 @@
 		<% if params[:show_static] %>
 			$("#toggle-c").click();
 		<% end %>
-		
-		
+		$('.user-count').popover({
+			content: "排課人數",
+			placement:"auto",
+			trigger : "hover",
+			container :"body"
+		});
+		$('.credit-count').popover({
+			content: "學分",
+			placement:"auto",
+			trigger : "hover",
+			container :"body"
+		});
+		$(".others-link").click(function(e){
+			$("#others").load($(this).attr("url"));
+		});
+		<% if params[:msg] %>
+			alert("<%=params[:msg]%>");
+		<% end %>
 	});
+	function no_dept_alert(){	
+		alert('請先輸入系級,謝謝!');
+		$('#degree_select').focus();
+	}
 </script>
 <% if @cs_this.empty? %>
 <div class="jumbotron bs-callout bs-callout-info border-info" style="background-color:rgba(0,0,0,0);">
@@ -24,9 +44,7 @@
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
 		<li class="active"><a id='toggle-a' href="#this_semester" data-toggle="tab" >本學期</a></li>
 		<li><a class="others-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
-		<li><a class="others-link" id='toggle-b2' href="#others" data-toggle="tab" url="/user/all_courses2?uid=<%=params[:uid]%>">歷年課程2</a></li>
-		<li><a class="others-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics?uid=<%=params[:uid]%>">統計</a></li>
-		<li><a class="others-link" id='toggle-c2' href="#others" data-toggle="tab" url="/user/statistics2?uid=<%=params[:uid]%>">統計2</a></li>
+		<li><a class="others-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics2?uid=<%=params[:uid]%>">統計</a></li>
 	</ul>
 	<br>
 	<div class="tab-content" style="overflow:hidden;" id="gg">
@@ -39,23 +57,3 @@
 
 	</div>
 </div>
-
-<script>
-$(document).ready(function() {
-	$('.user-count').popover({
-		content: "排課人數",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});
-	$('.credit-count').popover({
-		content: "學分",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});
-	$(".others-link").click(function(e){
-		$("#others").load($(this).attr("url"));
-	});
-});
-</script>

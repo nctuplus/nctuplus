@@ -1,0 +1,40 @@
+<script type="text/x-tmpl" id="cosmap_check">
+{% var cm=o.course_map,user_courses=o.user_courses; %}
+<table class="table table-bordered "style="border:0px">
+	<tr class="row" >
+		<td class="col-md-12" colspan="{%=cm.max_colspan+1%}">
+			<h4 class="text-center">
+				{%=cm.name %}
+				<a href="/course_maps/statistic_table?map_id={%=cm.id%}&user_id={%=o.user_id%}" class="btn btn-info pull-right" target="blank">產生報表</a>
+			</h4>
+		</td>
+	</tr>
+	{% var pass_courses=get_pass_courses(o.pass_score,o.last_sem_id,o.user_courses); %}
+	{% print(parse_cf_tree(cm.cfs,pass_courses,cm.max_colspan),true); %}
+	
+</table>
+</script>
+
+<script>
+	
+	function select_cf(user_id,obj){
+		$.ajax({
+			type:"GET",
+			url:"/user/select_cs_cf",
+			data:{cs_id:obj.attr('id'),cf_id:obj.val()},
+			success:function(){
+				$.getJSON("/user/statistics2?uid="+user_id, function (data) {
+					$("#cosmap_check_div").html(tmpl("cosmap_check",data));
+					
+				});
+				obj.parent().parent().append("<span id='' class='fader text-success'>選擇成功!</span>");
+				$(".fader").fadeOut(3000,function(){
+					$(this).remove();
+				});
+			},
+			error:function(){
+				alert("Error!");
+			}
+		});
+	}
+</script>

@@ -1,5 +1,18 @@
 module CourseMapsHelper
 
+	def cf_trace(cf, funcA, funcB=nil)
+  	    if cf.field_type < 3
+			data = send(funcA, cf)	
+		else 
+			nodes = []
+			cf.child_cfs.order('field_type ASC').each do |sub|
+				nodes.push(cf_trace(sub, funcA, funcB))
+			end
+			data= send(funcB, cf, nodes) if funcB
+		end
+		return data
+    end
+	
 	def statistic_map(map) # course_map header 
 		group_list = map.course_field_groups
 		msg = ""
@@ -49,7 +62,7 @@ module CourseMapsHelper
 #			Rails.logger.debug "[debug] " + must_credit.to_s
 		else
 			if group_type==3#領域 需多檢查子群組
-				sub_fields = course_field.course_fields
+				sub_fields = course_field.child_cfs
 				unless sub_fields.empty?
 					must_credit += sub_fields.sum(:credit_need).to_i	
 				end	
@@ -67,32 +80,12 @@ module CourseMapsHelper
 	end
 	
 	def course_field_group_must_credit_check(cfg)
-		credit_need = count_field_credit(cfg.course_fields)
+		credit_need = count_field_credit(cfg.child_cfs)
 		cfg.credit_need = (cfg.credit_need < credit_need) ? credit_need : cfg.credit_need
-		cfg.field_need = (cfg.course_fields.count < cfg.field_need) ? cfg.course_fields.count : cfg.field_need
+		cfg.field_need = (cfg.child_cfs.count < cfg.field_need) ? cfg.child_cfs.count : cfg.field_need
 		cfg.save!
 	end
-=begin	
-  def statistic_level1(map_id, cfg)
-  	match = false
-  	#course_field_group = CourseFieldGroup.find(fg_id)
-  	result=[]
-  	total_credit = 0
-		user_courses=current_user.pass_courses.map{|c| c.course}
-  	cfg.course_fields.each do |cf|
-  		res = statistic_level2(map_id, user_courses,cfg, cf)
-  		total_credit += res[:credit]
-  		result.append({:cf_name=>cf.name, :match=>res[:match]}) 		
-  	end
-  	
-  	if result.select{|s| s[:match]}.length >= cfg.field_need.to_i and total_credit >= cfg.credit_need.to_i  		
-  		match = true 
-  	end
 
-		return match
-	
-  end	
-=end
   def statistic_level2(map_id, user_courses, cf)
   	match = false
 
@@ -143,352 +136,109 @@ module CourseMapsHelper
   	return {:match=>match, :result2=>result,:rest=>miss, :result=>result.map{|c| c.id}, :credit=>user_credit, :org_result=>org_result}
   end
 	
+  # input : courses, course_field	
+  def validate_pass(user_courses, cf)
+  		res = {}
+  		case cf.field_type
+  			when 1
+  				remains = cf.courses - user_courses
+  				res[:pass] = (remains.empty?) ? true : false
+  			when 2
+  				match = cf.courses - (cf.courses - user_courses)
+  				if match.map{|m| m.credit.to_i}.reduce(:+) >= cf.credit_need
+  					res[:pass] = true 
+  				else
+  					res[:pass] = false
+  				end 
+  			when 3
+  				field_pass = 0
+  				cf.child_cfs.each do |sub|
+  					tmp = validate_pass(user_courses, sub)
+  					if tmp[:pass]
+  						field_pass +=1
+  					end
+  				end
+  				res[:pass] = (field_pass >= cf.field_need) ? true : false
+  			when 4
+  				res[:pass] = true
+  				cf.child_cfs.each do |sub|
+  					tmp = validate_pass(user_courses, sub)
+  					unless tmp[:pass]
+  						res[:pass] = false
+  						return res
+  					end
+  				end		
+  		end		
+  		return res
+  end	
+	
+	# update cs cf_id, deep to level 2
 	def update_cs_cfids(course_map,user)
-		course_fields = course_map.course_field_groups.includes(:course_fields)
-						.map{|cfg|cfg.course_fields.includes(:course_field_lists)}.flatten
-		
-		user.all_courses.each do |cs|
-			course_fields.each do |cf|
-				if cf_search(cs, cf)
-					cs.course_field_id = cf.id
-					cs.save!
-					next
+		course_fields = course_map.course_fields.includes(:child_cfs)
+#Rails.logger.debug "[all_courses] "+user.all_courses.map{|cs| [cs.id, cs.course.ch_name]}.to_s
+		all_courses=user.all_courses
+		all_courses.each do |cs|
+			
+			cf_id=0
+			course_fields.each do |cf| # level 1
+				cf_id=_cf_search(cs,cf)
+				if cf_id!=0
+					break
+				end
+			end		
+			cs.course_field_id = cf_id
+			cs.save!
+
+		end
+		agreed=all_courses.select{|cs|cs.semester_id==0&&cs.memo.include?("同意免修")}
+		taked=all_courses.select{|cs|cs.semester_id!=0}
+		course_map.course_groups.where(:gtype=>1).each do |cg|
+			agreed.each do |agree|
+				next if !cg.courses.include?(agree.course)
+				taked.each do |take|
+					if cg.courses.include?(take.course)
+						agree.memo="("+take.course.ch_name+")"+agree.memo
+						agree.score=take.score
+						agree.save!
+						take.destroy!
+						break
+					end
 				end
 			end
+			
 		end
 	end
 	
-	def cf_search(cs, cf)		
-		if cf.field_type == 0	
-			cf.course_fields.each do |sub_cf|
-				if cf_search(cs, sub_cf)
-					return true
+	# return cf_id if match ,else nil
+	def _cf_search(cs, cf)
+		if cf.field_type >= 3 #領域群組
+			cf.child_cfs.each do |sub_cf|
+				#return _cf_search(cs,sub_cf)
+				cf_id=_cf_search(cs, sub_cf)
+				if cf_id!=0
+					return cf_id
 				end
 			end
-			return false
+			return 0
 		else
-			courses = cf.courses#.select{|c|c==cs.course}#cf.course_field_lists.select{|l| l.course == cs.course}	
+			courses = cf.courses
 			if courses.include?(cs.course)
-				return true
+				return cf.id
 			else
 				group_courses=cf.course_groups.includes(:courses).map{|g|g.courses}.flatten#.map{|g|g.id}
-				#group_ids = cf.course_field_lists.select(:course_group_id).where("course_group_id IS NOT NULL").pluck(:course_group_id)#.map{|cfl| cfl.course_group_id}#.flatten#
-				#courses=CourseGroup.includes(:courses).where(:id=>group_ids).map{|cg|cg.courses}.flatten
 				if group_courses.include?(cs.course)
-					return true
+					return cf.id
 				end
 			end
-			return false
+			return 0
 		end
+		#return 0
 	end
   
 	def courses_join_cf(user_courses,cf)
 		return user_courses.select{|pc|pc.course_field==cf}.map{|cs|cs.course}
 	end
 	
-  
-  def check_sub_field(cf)
-  	sub_fields = cf.course_fields
-  	if sub_fields.empty?
-  		return
-  	else
-  		sub_fields.each do |sf|
-  			# TO-DO 
-  		end	
-  	end
-  end
-  
-  def statistic_table_cal77(cfg, user_simulation, user)
-  	res = {}
-  	user_courses = user_simulation.map{|s| s.course_detail.course}
-  	course_group_heads = CourseGroup.all.includes(:course)
 
-  		course_fields = []
-  		cfg.course_fields.includes(:course_field_lists).each do |cf|
-  		
-  			course_field = {}
-  			course_field[:cf_name] = cf.name
-  			course_units = []
-			show_all = (cfg.group_type==1 or cf.course_field_lists.count<=6)? true : true # 
-			#Rails.logger.debug "[debug] " + user_simulation.map{|s| s.course_detail.course.ch_name}.to_s			
-  			cf.course_field_lists.includes(:course).each do |list|
-  				tmp = {}
-  				tmp[:note] = ""	
-  				match = true
-  				user_courses = user_simulation.map{|s| s.course_detail.course}
-  				if user_courses.include? list.course
-  					target = user_simulation.select{|s| s.course_detail.course==list.course}.first	
-  					Rails.logger.debug "[debug] " + user_simulation.select{|s| s.course_detail.course==list.course}.map{|s| s.score.to_s}.to_s
-  					tmp[:course] = list.course	
-  					tmp[:grade] = count_grade(user.semester, target.semester)
-  					tmp[:score] = target.score
-  					tmp[:note] += (cfg.group_type==3 and list.c_type==1)?"必選修 ":""
-  					if tmp[:grade] ==0 and tmp[:score]=="通過"
-  						tmp[:note] += "大學攜帶課程抵免 "
-  					end
-  					if tmp[:grade]==-1
-  						tmp[:note] += "本學期修習中"
-  					end
-  					
-  					user_simulation = user_simulation.reject{|s| s == target}
-  				else
-  					isHead = course_group_heads.select{|h| h.course==list.course}
-  					if isHead.presence 
-  						headContent = isHead.first.course_group_lists.map{|l| l.course}
-  						match2 = headContent - (headContent - user_courses)
-  						#Rails.logger.debug "[debug match] "+ match.to_s 						
-  						if not match2.empty? #presence
-  							target = user_simulation.select{|s| s.course_detail.course.id==match2[0].id}.first
-  							#c+ user_simulation.map{|s| s.course_detail.course.id}.to_s
-  							grade = count_grade(user.semester, target.semester)
-  							if grade != 0
-  								tmp[:course] = list.course
-  								tmp[:grade] = grade
-  								tmp[:score] = target.score
-  								tmp[:note] += (cfg.group_type==3 and list.c_type==1)?"必選修 ":""
-  								if tmp[:grade] ==0 and tmp[:score]=="通過"
-  									tmp[:note] += "已抵免"
-  								end								
-  								tmp[:note] += target.course_detail.course.ch_name
-  								if tmp[:grade]==-1
-  									tmp[:note] += "本學期修習中"
-  								end
-								user_simulation = user_simulation.reject{|s| s == target}
-  							else
-  								match = false										
-  							end
-  						else
-  							match = false							
-  						end
-  					else
-  						match = false						
-  					end
-  				end
-  			
-  				if match
-  					course_units.push(tmp)
-  				else
-  		#			check_sub_field(cf)    For inner layer
-  					if show_all 
-  						tmp[:course] = list.course
-  						tmp[:grade] = 0
-  						tmp[:score] = 0
-  						tmp[:note] += (cfg.group_type==3 and list.c_type==1)?"必選修 ":""
-  						course_units.push(tmp)
-  					end
-  					break
-  				end	
 
-  			end # each list
-  			
-  			
-  			course_field[:course_units] = course_units
-  			# course_field end
-  			course_fields.push(course_field)
-  		end
-  			
-
-  	res[:cfg_name] = cfg.name
-  	res[:cfg_type] = cfg.group_type
-  	res[:cf_info] = course_fields
-  	res[:course_remaining] = user_simulation
-    #Rails.logger.debug "[debug] " + user_simulation.map{|s| s.course_detail.course.ch_name}.to_s
-  	return res
-  end
-  
-  def statistic_table_cal(map_id, cfg, user_simulation, user)
-  	res = {}
-  	user_courses = user_simulation.map{|s| s.course_detail.course}
-  	course_group_heads = CourseGroup.where("course_map_id=0 or course_map_id=?",map_id).includes(:course)
-
-  		course_fields = []
-  		cfg.course_fields.includes(:course_field_lists).each do |cf|	
-  			course_field = {}
-  			course_field[:cf_name] = cf.name
-  			course_units = []
-			show_all = (cfg.group_type==1 or cf.course_field_lists.count<=6)? true : false # 
-			#Rails.logger.debug "[debug] " + user_simulation.map{|s| s.course_detail.course.ch_name}.to_s			
-  			main = cf.course_field_lists.includes(:course) 
-
-# handle sub field, only handle one layer and one child now
-  			if not cf.course_fields.empty?
-  				subs = cf.course_fields.last.course_field_lists.includes(:course)
-  				main += subs
-  			end
-  			
-  			main.each do |list|
-  				user_courses = user_simulation.map{|s| s.course_detail.course}
-  		#		Rails.logger.debug "[debug all] " + user_simulation.map{|s| s.course_detail.course.ch_name}.to_s
-  				tmp = {}
-  				tmp[:note] = ""	
-  				tmp[:grade] = []
-  				tmp[:score] = []
-  				match = false
-  				pass = true		
-  				target1 = nil						
-  				if user_simulation.map{|s| s.course_detail.course}.include? list.course
-  		#		Rails.logger.debug "[debug] first match " + list.course.ch_name 
-  		#       Rails.logger.debug "[debug] 11 " + user_simulation.map{|s| s.course_detail.course.ch_name}.to_s 			
-  					target1 = user_simulation.select{|s| s.course_detail.course==list.course}.first	
-  					tmp[:course] = list.course	
-  					grade = count_grade(user.semester, target1.semester)
-  					score = target1.score
-  					tmp[:grade].push(grade)
-  					tmp[:score].push(score)
-  					tmp[:note] += ((cfg.group_type==3 and list.c_type==1)?"必選修 ":"")
-  					if grade==0 and score=="通過"
-  						tmp[:note] += "大學攜帶課程抵免"
-  					elsif grade==-1
-  						tmp[:note] += "本學期修習中"
-  					end
-  					check_res = check_pass(user, score)
-  					tmp[:credit] = target1.course_detail.credit
-  					tmp[:credit_get] = (check_res  and grade!=-1)?(target1.course_detail.credit):0
-  					pass = (check_res)? true : false	
-  					match = true	
-  			#		Rails.logger.debug "[debug] res pass1 " + pass.to_s
-  				end
-  			#if not match or not pass	
-  					isHead = course_group_heads.select{|h| h.course==list.course}
-  					if not isHead.empty?
-  		#				Rails.logger.debug "[debug In 2] " + isHead.first.course.ch_name+ " "+ isHead.first.course.id.to_s
-  						headContent = isHead.first.course_group_lists.map{|l| l.course}
-  						match2 = headContent - (headContent - user_courses)
-  		#				Rails.logger.debug "[debug 2 match] "+headContent.to_s 						
-  						if (not match2.empty?) #presence
-  				#			Rails.logger.debug "[debug] 2 " + match2.to_s
-  							match2.each do |m|
-  								tmp[:course] = list.course
-  								target = user_simulation.select{|s| s.course_detail.course==m}.first
-  								grade = count_grade(user.semester, target.semester)
-  								if grade >= 0												
-  									check_res = check_pass(user, target.score)
-  									if match and pass 
-  										if not check_res # add all fail course
-  											tmp[:grade].push(grade)
-  											tmp[:score].push(target.score)
-  											tmp[:note] += (cfg.group_type==3 and list.c_type==1)?"必選修 ":""
-  											if grade==0 and target.score=="通過"
-  												tmp[:note] += "已抵免"
-  											end								
-  											tmp[:note] += target.course_detail.course.ch_name+" "
-  											if grade==-1
-  												tmp[:note] += "本學期修習中"
-  											end
-											user_simulation = user_simulation.reject{|s| s == target}																	
-  										else	
-  											user_simulation = user_simulation.reject{|s| s == target1}								
-  										end
-  									else									
-  										tmp[:grade].push(grade)
-  										tmp[:score].push(target.score)
-  										tmp[:note] += (cfg.group_type==3 and list.c_type==1)?"必選修 ":""
-  										if grade==0 and target.score=="通過"
-  											tmp[:note] += "已抵免"
-  										end								
-  										tmp[:note] += target.course_detail.course.ch_name+" "
-  										if grade==-1
-  											tmp[:note] += "本學期修習中"
-  										end
-										user_simulation = user_simulation.reject{|s| s == target}																			
-										tmp[:credit] = target.course_detail.credit
-  										tmp[:credit_get] = ((check_res and grade!=-1)?tmp[:credit]:0)								
-  										match = true
-  										if match and check_res
-  											break
-  										end
-  									end							
-  								end
-  							end # match2 for each
-  						else
-  							if match
-  								user_simulation = user_simulation.reject{|s| s == target1}
-  							else
-  								match = false
-  							end							
-  						end
-  					else
-  						if match
-  							user_simulation = user_simulation.reject{|s| s == target1}
-  						else
-  							match = false	
-  						end						
-  					end
-			#end# if match and pass
-  	#			Rails.logger.debug "[debug] out 2 " + match.to_s
-  				if match 
-  					course_units.push(tmp)
-  				else
-  					if show_all 
-  			#			Rails.logger.debug "[debug] res " + list.course.ch_name
-  						tmp[:course] = list.course
-  						tmp[:grade].push(0)
-  						tmp[:score].push(0)
-  						tmp[:credit] = list.course.course_details.first.credit
-  						tmp[:credit_get] = 0
-  						tmp[:note] += ((cfg.group_type==3 and list.c_type==1)?"必選修 ":"")
-  						course_units.push(tmp)
-  					end
-  					#break
-  				end	
-
-  			end # each list
-  			
-  			course_field[:course_units] = course_units
-  			# course_field end
-  			course_fields.push(course_field)
-  		end
-  			
-
-  	res[:cfg_name] = cfg.name
-  	res[:cfg_type] = cfg.group_type
-  	res[:cf_info] = course_fields
-  	res[:course_remaining] = user_simulation
-#    Rails.logger.debug "[debug] " + res.to_s
-  	return res
-  end
-  
-  def count_grade(me, target) # semester
-	unless target # semester_id ==0 抵免
-		return 0
-	end
-	if latest_semester == target
-		return -1 # 本學期正在修
-	end
-	
-	diff = target.name.to_i - me.name.to_i
-	#Rails.logger.debug "[debug target] "+ target.name.to_s 	
-	part = (target.name.include?"上")?0:1
-	re = (diff>=0)?(diff*2+1+part):-2 # return -2 if 入學期修？
-	#Rails.logger.debug "[debug count_grade] "+ re.to_s 
-	return re
-  end  
-  
-  def count_all_row(res)
-  	count = 0
-  	res[:cf_info].each do |cf|
-  		count += cf[:course_units].count
-  	end
-  	return count.to_s
-  end
-  
-  def check_pass(user, score)
-  	if score=="通過"
-  		return true	
-  	elsif score=="W"
-  		return false	
-  	else
-  #	Rails.logger.debug "[debug pass] deg=" + user.department.degree.to_s + " score="+score.to_s
-  		if user.department.degree.to_i==3 and score.to_i>=60
-  			return true	
-  		elsif user.department.degree.to_i==2 and score.to_i>=70
-  			return true	
-  		end
-  	end	
-  	return false
-  end	
-  
-  #def count_cfg_credit()	
-  #	
-  #end	
 end

@@ -96,10 +96,12 @@
 		<div class="well">
 			<div class="row" >
 			<i class="fa fa-cube"></i> 作業/考試：
-			<%if current_user%>
-				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'head');", :id=>"link_edit_head"%>	
+			<%if not current_user%>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"link_edit_head"%>	
+			<% elsif not current_user.uid.presence %>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('須綁定FB才可編輯');", :id=>"link_edit_head"%>	
 			<% else %>
-				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"link_edit_head"%>			
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'head');", :id=>"link_edit_head"%>	
 			<% end %>
 			<span id="toggle-msg-head" style="display:none;"></span>
 			</br></br>
@@ -111,12 +113,14 @@
 			<hr>
 			<div class="row">
 			<i class="fa fa-cube"></i> 其他內容：
-			<%if current_user%>
-				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>
-			
+			<%if not current_user%>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"link_edit_head"%>	
+			<% elsif not current_user.uid.presence %>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('須綁定FB才可編輯');", :id=>"link_edit_head"%>	
 			<% else %>
-				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"link_edit_head"%>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>
 			<% end %>
+			
 			<span id="toggle-msg-list" style="display:none;"></span>
 			</br></br>
 				<div id="course_content_list">
@@ -134,8 +138,9 @@
 			<p>
 				<i class="fa fa-weixin"></i>			
 				留言板： 
-		<% if current_user %>
-						
+		<% if not current_user %>
+			<%=link_to "留言", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"comment_post_link"%>		
+		<% elsif current_user.uid %>
 				<div id="commentNew">	
 			<%=form_tag "/courses/comment_submit", :remote=>true, :class=>"form-horizontal",:role=>"form" do%>
 					<%=hidden_field_tag "ctship", courseTeacher.id %>
@@ -159,7 +164,7 @@
 			<%end%>
 				</div>	
 		<% else %>
-				<%=link_to "留言", "javascript:void(0);", :onclick=>"alert('請先登入謝謝');", :id=>"comment_post_link"%>		
+				<%=link_to "留言", "javascript:void(0);", :onclick=>"alert('須綁定FB才可編輯');", :id=>"comment_post_link"%>		
 		<% end %> <!-- current_user -->
 			</p>	
 		</h2>	

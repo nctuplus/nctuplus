@@ -5,8 +5,8 @@ class CoursesController < ApplicationController
   
 	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_compare]
 
-	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts, :simulation, :add_simulated_course, :del_simu_course]
-
+	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts]
+	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
 
 ### for course_teacher_page_content	

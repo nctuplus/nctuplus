@@ -12,10 +12,12 @@ th, td {
 			<div class="row" id="course_content"></div>
 		</div>
 		<div class="col-md-3 col-sm-5 well">
+			
 			<ul id="myTab" class="nav nav-tabs" role="tablist">
 		      <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">課程總覽</a></li>
 		      <li role="presentation" class=""><a href="#group" role="tab" id="group-tab" data-toggle="tab" aria-controls="group" aria-expanded="false">課程群組</a></li>
 		      <small id="alert-msg"></small>
+		     
 		    </ul>
 		    <div id="myTabContent" class="tab-content">
 		      <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
@@ -24,6 +26,7 @@ th, td {
 		      <div role="tabpanel" class="tab-pane fade" id="group" aria-labelledby="group-tab">
 		        <div id="group_tree">0.0</div>
 		      </div>
+		      
 		    </div>		
 		
 			
@@ -41,18 +44,14 @@ th, td {
 <script>
 var cf_show_id = null ;
 var cg_show_id = null ;
+var map_id = <%=j @course_map.id.to_s%> ;
 
-var header_node = null ;
-var header_type = 0 ;
-var header_update = 0 ;
-
-function load_treeview(level, target_id){
+function load_treeview(target_id){
 	$.getJSON( "get_course_tree.json?map_id="+map_id, function(res){
 		console.log('load course tree success');
-		$('#course_tree').treeview({data: res, map_id: map_id,});
+		$('#course_tree').treeview({data: res, map_id: map_id});
 		if (target_id!=0){
-			var label_name = (level==1) ? "cfg_id" : "cf_id" ;
-			$('#course_tree').treeview('activateNode', [label_name, target_id]);
+			$('#course_tree').treeview('activateNode', ['cf_id', target_id]);
 		}
 	});
 	return ;
@@ -60,7 +59,7 @@ function load_treeview(level, target_id){
 function load_group_treeview(target_id){
 	$.getJSON( "get_group_tree.json?map_id="+map_id, function(res){
 		console.log('load group tree success');
-		$('#group_tree').treeview({data: res, map_id: map_id,});
+		$('#group_tree').treeview({data: res, map_id: map_id});
 		if (target_id!=0)
 			$('#group_tree').treeview('activateNode', ['cg_id', target_id]);
 	});
@@ -71,7 +70,7 @@ function reset_data(){
 	// reset new form;
 	$('#new_form_div').empty();
 	// reset header content
-	header_update = null; header_node = null ; cg_show_id = null ;
+	cg_show_id = null ;cf_show_id = null ;
 	$('#header_content_div').empty();
 	// reset course list content
 	$('#course_content').empty();
@@ -85,23 +84,19 @@ function load_new_form(data){
 			alert('data not complete');
 			return false ;
 		}
-		var level = (data.action_type=='course_field_group') ? 1 : 0 ;
-		if(level==1)
-			level = ($('.new-form #group_type').val()==3) ? 1 : 0 ;
-		console.log(level);
 		$.ajax({
 			type: "POST",
   			url: "action_new" ,
   			data: $(this).serialize(),
   			success: function(data){
-				load_treeview(level, data);
+				load_treeview(data);
   			}
 		});
 		return false;
 	});
 }
 
-function bind_header_button(){
+function bind_header_button(header_node){
 	// header action : delete
 	$('#header_content_div .delete').click(function(){
 		if(!confirm('確定要刪除嗎？'))
@@ -110,13 +105,12 @@ function bind_header_button(){
 			type: "POST",
   			url: "action_delete" ,
   			data:{
-  				target_id : ((header_type=='cfg') ? header_node.cfg_id : header_node.cf_id),
-  				level : ( (header_type=='cfg') ? 1 : 0 )
+  				target_id : header_node.cf_id,
   			},	
   			success: function(data){
   				reset_data();
   				$('#alert-msg').removeClass().addClass('text-color-green').html('更新成功').show().fadeOut(2200);
-  				load_treeview(0, 0);
+  				load_treeview(0);
   				$('#course_content').empty() ;
   			},	
   			error: function(){
@@ -127,31 +121,19 @@ function bind_header_button(){
 
 	// header action : update
 	$('#header_content_div .update').click(function(){
-		if(header_update!=1){
-			var header_tag = $('#header_content_div .header-type') ;
-			var name_tag = $('#header_content_div .field-header-name') ;
-			var credit_tag = $('#header_content_div .credit-need') ;
-			var field_tag = $('#header_content_div .field-need') ;
-			header_tag.html(header_node.label).show();
-			name_tag.html('<input type="text" value="'+header_node.name+'" class="form-control">');
-			if(header_node.credit_need!='N/A')
-				credit_tag.html('<input type="text" value="'+header_node.credit_need+'" class="form-control">');
-			field_tag.html('<input type="text" value="'+header_node.field_need+'" class="form-control">');			
-			$(this).html('<%=fa_icon "check"%>').switchClass('btn-warning','btn-success');
-			header_update = 1 ;
-		}else{
+		if($(this).hasClass('edit')){
 			if(!confirm('要送出嗎？'))
 				return false ;
 			var name = $('.field-header-name :input').val() ;
 			var credit_need = $('.credit-need :input').val() ;
 			var field_need = $('.field-need :input').val() ;
+			var target_id = header_node.cf_id ;	
+						
 			if(!(name.length > 0) ){
 				alert('data not complete');
 				return false;
 			}
-				
-			var target_id = ((header_type=='cfg') ? header_node.cfg_id : header_node.cf_id) ;
-			var level = (header_type=='cfg') ? 1 : 0  ;		
+
 			credit_need = (!credit_need) ? -1 : credit_need; //必修
 
 			$.ajax({
@@ -162,19 +144,30 @@ function bind_header_button(){
 	  				credit_need : credit_need,
 	  				field_need : field_need,
 	  				target_id : target_id,
-	  				level : level,
 	  			},	
 	  			success: function(data){
 	  				reset_data();		
 	  				$('#alert-msg').removeClass().addClass('text-color-green').html('更新成功').show().fadeOut(2200);
-	  				load_treeview(level, target_id);
+	  				load_treeview(target_id);
 	  			},	
 	  			error: function(){
 	  				reset_data();	
 	  				$('#alert-msg').removeClass().addClass('text-color-red').html('更新失敗').show().fadeOut(2200);
-	  			}
-				
-	  		});
+	  			}		
+	  		});			
+		}else{		
+			var header_tag = $('#header_content_div .header-type') ;
+			var name_tag = $('#header_content_div .field-header-name') ;
+			var credit_tag = $('#header_content_div .credit-need') ;
+			var field_tag = $('#header_content_div .field-need') ;
+			header_tag.html(header_node.label).show();
+			name_tag.html('<input type="text" value="'+header_node.name+'" class="form-control">');
+			if(header_node.credit_need!='N/A')
+				credit_tag.html('<input type="text" value="'+header_node.credit_need+'" class="form-control">');
+			if(field_tag)
+				field_tag.html('<input type="text" value="'+header_node.field_need+'" class="form-control">');			
+			$(this).html('<%=fa_icon "check"%>').switchClass('btn-warning','btn-success');
+			$(this).addClass('edit') ;			
 		}
 		
 	});
@@ -194,14 +187,14 @@ function bind_course_group_but(){  // for course group
   				type: 'update',
 				target: 'gtype',
 				gtype: gtype ,
-  				cg_id : $('.list-header').attr('cg_id'),
+  				cg_id : $('.list-header').attr('cg_id')
   			},
 			success: function(){
 				$('.update-gtype').attr('gtype', gtype).html(but_text);
 				$('.update-gtype').switchClass(but_color[org_gtype], but_color[gtype]);
 			},error: function(){
 				alert('update course group failed..');
-			},
+			}
 		});	
 	});
 	$('.update-leader').click(function(){
@@ -214,13 +207,13 @@ function bind_course_group_but(){  // for course group
   				type: 'update',
 				target: 'leader',
   				cg_id : cg_id,
-				list_id: list_id ,
+				list_id: list_id 
   			},
 			success: function(){
 				load_group_treeview(cg_id);
 			},error: function(){
 				alert('update course leader failed..');
-			},
+			}
 		});	
 	});
 	
@@ -233,14 +226,14 @@ function bind_course_group_but(){  // for course group
   			data:{
   				type: 'delete',
 				target: 'cg',
-  				cg_id : $('.list-header').attr('cg_id'),
+  				cg_id : $('.list-header').attr('cg_id')
   			},
 			success: function(){
 				load_group_treeview(0);
 				$('#course_content').empty();
 			},error: function(){
 				alert('delete course group failed..');
-			},
+			}
 		});	
 	});
 	
@@ -257,14 +250,14 @@ function bind_course_group_but(){  // for course group
   				type: 'delete',
 				target: 'cgl',
   				list_id : list_id,
-				cg_id: cg_id,
+				cg_id: cg_id
   			},
 			success: function(){
 				//list_tr.remove();
 				load_group_treeview(cg_id);
 			},error: function(){
 				alert('delete course group list failed..');
-			},
+			}
 		});	
 	});
 }
@@ -279,8 +272,9 @@ function bind_course_list_button(){
 			type: "POST",
   			url: "course_action" ,
   			data:{
+  				cf_id: cf_show_id,
   				target_id : list_id,
-  				type : 'delete',
+  				type : 'delete'
   			},	
   			success: function(data){
   				//target_tr.remove();
@@ -306,7 +300,7 @@ function bind_course_list_button(){
   			data:{
   				target_id : target_tr.attr('list_id'),
   				rtype : rtype,
-  				type : 'update',
+  				type : 'update'
   			},	
   			success: function(data){
   				console.log('course update success');
@@ -323,13 +317,13 @@ function bind_course_list_button(){
 
 function load_header_content(data){
 	$("#header_content_div").html(tmpl("header-content-format", data));	
-	bind_header_button();
+	bind_header_button(data.head_node);
 }
 
 function load_course_list(target_id){
 	if(!target_id)
 		return false;
-	$.getJSON("show_course_list.json?target_id="+target_id+"&map_id="+map_id, function (data) {
+	$.getJSON("show_course_list.json?target_id="+target_id, function (data) {
 		$("#course_content").html(tmpl("table-format", data));	
 		bind_course_list_button();
 	});
@@ -341,7 +335,7 @@ $(document).ready(function(){
 
 	// init in home-tab
 	$('#search_div').load("/course_details/course_group?hide_group=true&map_id="+map_id) ;		
-	load_treeview(0, 0);
+	load_treeview(0);
 	load_group_treeview(0);
 	
 	// change tab, change search cond
@@ -359,38 +353,20 @@ $(document).ready(function(){
 		reset_data(); // reset new-form & header-content
 		cf_show_id = null ; // reset course table target id
 	//	console.log(node.cf_id) ;
-		switch(node.type) {
-    		case 0: //  course_field content
-    			header_node = node ;
-    			cf_show_id = node.cf_id ;  
-				load_header_content({}) ;
-      			load_course_list(cf_show_id);
-      			break ;
-      		case 1: //  course_field header
-      			header_type = 'cf';
-      			header_node = node ;
-      			load_header_content({}) ;
-      			break ;
-      		case 2: //  course_field_group
-      			header_type = 'cfg';
-      			header_node = node ;
-				load_header_content({}) ;
-      			break ;
-      		case -1: // new course_field_group
-				load_new_form({action_type : 'course_field_group',header_name: '新增類別',
-         				    target_id: 0});
-      			break ;
-      		case -2: // new course_field header
-				load_new_form({action_type : 'course_field_head',header_name: '新增子領域',
-         				    target_id: node.parent_id});
-      			break ;
-      		case -3: // new course_field content
-				load_new_form({action_type : 'course_field_content',header_name: '新增子類別',
-         				    target_id: node.parent_id});
-      			break ;
-    		default:
-        		console.log("undefined state..");
+		if(node.type > 0){
+			load_header_content({head_node: node}) ;
+			if(node.type < 3){ // 1: 必修, 2: x選y
+    			cf_show_id = node.cf_id ;  			
+      			load_course_list(cf_show_id);  			
+      		}			   		
+		}else{ // new form 
+			console.log("[course_tree select] " + node.type);
+			load_new_form({
+						level : node.type, 
+						header_name: '新增類別',
+         			    parent_id: node.parent_id}); 
 		}
+		
 		if(node.type<0){ // new something
 			$('#header_content').hide() ;
 			$('#course_content').empty();	
@@ -409,7 +385,7 @@ $(document).ready(function(){
 				url: "course_group_action" ,
 				data:{
 					type: "new",
-					map_id : map_id,
+					map_id : map_id
 				},	
 				success: function(data){
 					load_group_treeview(data);

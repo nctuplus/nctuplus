@@ -5,6 +5,12 @@ Nctuplus::Application.routes.draw do
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 	
+	get "api/testttt"
+	get "user/test_get_cs_cm"
+	post "user/import_course"
+	get "user/import_course"
+	get "user/import_course_2"
+	get "user/select_cs_cf"
 	
   #post "courses/update_discuss"
 	#post "courses/new_discuss"
@@ -44,23 +50,23 @@ Nctuplus::Application.routes.draw do
 	resources :courses
 	
 
-	
-	get "course_maps/add_usercoursemapship"		
-	get "course_maps/statistic_table"
-####### 	11/8 treeview reverse
+#### course map block 	
+	#get "course_maps/add_usercoursemapship"		
+	get "course_maps/statistics_table"
+
 	get "course_maps/get_course_tree"
 	get "course_maps/get_group_tree"
+	post "course_maps/course_action"
 	post "course_maps/action_new"
 	post "course_maps/action_update"
 	post "course_maps/action_delete"	
-	get "course_maps/show_course_list" # course list show (必修 多選多)
+	get "course_maps/show_course_list" 
 	get "course_maps/show_course_group_list"
-	
 	post "course_maps/course_group_action"
-	post "course_maps/course_action"
-#######	
+
 	get "course_maps/start2"
 	resources :course_maps
+####
 	
 	resources :departments do
     resources :courses
@@ -81,6 +87,10 @@ Nctuplus::Application.routes.draw do
   
   #get "post/getcode"
   #resources :post
+	get "main/E3Login"
+	post "main/E3Login_Check"
+	get "main/student_import"
+	post "main/student_import"
   	get "main/test"
 	get "main/testttt"
 	get "main/testtt11t"
@@ -108,11 +118,12 @@ Nctuplus::Application.routes.draw do
   
 	#get "user/:id", to: "user#show"
 	get "user/statistics2"
-	get "user/all_courses2"
-	post "user/select_cm_in_manage"
+
+	get "user/select_cm"
+	post "user/select_cm"
 	get "user/select_cf"
 	get "user/add_top_manager"
-	post "user/add_course"
+	
   get "user/manage"
 	get "user/import_course"
   get "user/special_list"

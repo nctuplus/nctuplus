@@ -11,29 +11,33 @@ class User < ActiveRecord::Base
 	#has_many :courses, :through=> :course_manager
 	has_many :user_coursemapships
 	has_many :course_maps, :through=> :user_coursemapships
-	validates_uniqueness_of :uid
-	
+	#validates_uniqueness_of [:uid, :student_id]
+	validates :uid, :uniqueness => {:scope => [ :student_id]}
+	def is_undergrad
+		self.department && self.department.degree=="3"
+	end
 	def all_courses
 		self.course_simulations.includes(:course_detail, :course, :teacher, :course_field)
 	end
-	def courses_agreed
-		self.all_courses.where(:semester_id=>0)
+	
+	def courses_this_sem
+		self.all_courses.where("semester_id=?",latest_semester.id)
 	end
+	
+	def courses_taked
+		self.all_courses.where("semester_id!=0")
+	end
+	def courses_agreed
+		self.course_simulations.includes(:course_detail, :course, :course_field).where(:semester_id=>0)
+	end
+	
 	def pass_courses
 		self.course_simulations.includes(:course, :course_detail).where("(semester_id !=0) AND (score = '通過' OR score>= ?)",self.pass_score)
 	end
 	
 	
 	def pass_score
-		return 0 if self.department.nil?
-		case department.degree
-			when '3'
-				return 60
-			when '2'
-				return 70
-			else 
-				return 0
-		end
+		return self.is_undergrad ? 60 : 70
 	end
 	def total_credit
 		return self.pass_courses.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0

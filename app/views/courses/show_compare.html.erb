@@ -120,7 +120,7 @@ $(document).ready(function(){
 function gen_raty(ctr_id,show_score,rated){
 	$("#rating_"+ctr_id).raty({
 		score:show_score,
-		readOnly :<%=current_user.nil?%>,
+		readOnly :<%=current_user.nil? ||!current_user.uid %>,
 		cancel :rated,
 		cancelOff : 'cancel-custom-off.png',
 		cancelOn  : 'cancel-custom-on.png',
@@ -133,7 +133,7 @@ function gen_raty(ctr_id,show_score,rated){
 		}
 	});
 }
-<% if current_user %>
+<% if current_user &&current_user.uid %>
 	function rate_course(ctr_id,score){
 
 		$.ajax({

@@ -1,50 +1,9 @@
-<div class="panel panel-primary" >
-	<div class="panel-heading" >
-		<h4 class="text-center">歷年課程</h4>
-	</div>
-	
-	<br>
-	<div id="ggaa" class="container">
-	</div>
-</div>
-<script>
-$(document).ready(function(){
-	$.getJSON("/user/all_courses2?uid=<%=params[:uid] %>", function (data) {
-		$("#ggaa").html(tmpl("gg8", data));
-		
-		console.log(data);
-	});
-	
-});
+<script type="text/x-tmpl" id="cos_type_list">
+{% var credits={}; %}
 
-</script>
-
-
-<script type="text/x-tmpl" id="gg8">
-{%= o.length %}
-{% if (o.agreed.length > 0){ %}
-	<table class="table table-bordered"style="border:0px">
-		<tr class="row">
-			<th class="col-md-"><h4 class="text-center">抵免科目<h4></th>
-		</tr>
-	{% for (var i=0, course; course=o.agreed[i]; i++) { %}
-		<tr class="row">
-			<td class="col-md-">
-				<h4 class="text-center">
-				{%=course.cf_name%} | 
-				{%=course.name%} | 
-				{%=course.cos_type%} | 
-				<%= fa_icon "graduation-cap", class:"credit-count" %><strong>{%=course.credit%}</strong>
-				</h4>
-			</td>
-		</tr>
-	{% } %}
-	</table>
-{% } %}
-
-<table class="table table-hover " id="by_cos_type">
+<table class="table" id="by_cos_type">
 	{% var grouped=groupBy(o.taked,function(item){return item.cos_type;}); %}
-	{% var credits={}; %}
+	
 	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
 		
 		{% var local_credit=0;%}
@@ -56,7 +15,7 @@ $(document).ready(function(){
 
 		{% for (var j=0, course; course=courses[j]; j++) { %}
 			{% var pass_class=""; %}
-			{% if(course.pass) { %}
+			{% if(course.sem_id==o.last_sem_id||check_pass(o.pass_score,course.score)) { %}
 			{% local_credit+=parseInt(course.credit); %}
 			{% } else{ %}
 			{% pass_class="danger"; %}
@@ -66,6 +25,7 @@ $(document).ready(function(){
 					<h4 class="text-center">
 						<a href="/courses/{%=course.cos_id%}?tid={%=course.t_id%}">{%=course.name%}</a> | 
 						{%=course.t_name%} | 
+						{%=course.cf_name%} | 
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong>
 					</h4>
 				</td>
@@ -79,16 +39,23 @@ $(document).ready(function(){
 					</td>
 			</tr>
 		{% } %}
-		{% credits[courses[0].cos_type]=local_credit; %}
+		{% if(credits[courses[0].cos_type]){ %}
+			{% credits[courses[0].cos_type]+=local_credit; %}
+		{% }else{ %}
+			{% credits[courses[0].cos_type]=local_credit; %}
+		{% } %}
 	{% } %}
 	<tr class="row label-info">
 		<td colspan="2" >
 			<h4 class="text-right">
 				歷年總和:
+				{% total=0; %}
 				{% for (var value in credits){ %}
+					{% total+=credits[value]; %}
 					{%=value%} : <strong>{%=credits[value]%}</strong>
 				{% } %}
-				
+				共 <strong>{%=o.agreed.length+o.taked.length%}</strong> 門課
+					<strong>{%=total%}</strong> 學分
 			</h4>
 		</td>
 	</tr>

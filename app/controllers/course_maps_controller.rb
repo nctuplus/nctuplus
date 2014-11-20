@@ -25,11 +25,6 @@ class CourseMapsController < ApplicationController
 		@course_map.user_id, @course_map.like = current_user.id, 0
 		@course_map.save!
 	
-		# cfg pass=2 => course_group
-	#	course_group_cfg = CourseFieldGroup.new
-	#	course_group_cfg.course_map_id, course_group_cfg.pass, course_group_cfg.user_id = @course_map.id, 2, current_user.id
-	#	course_group_cfg.save!
-		
 		redirect_to @course_map
 	end
 	
@@ -55,30 +50,15 @@ class CourseMapsController < ApplicationController
 		render "start2", :layout=>false		
 	end
 	
-	# type=0 course_field(content), type=1 course_field(header), type=2 course_field_group 
-	# type=-1 new course_field_group, type=-2 new course_field (header), type=-3 new course_field (content)
 	def get_course_tree
 		if request.xhr? # if ajax
 			list = []
-			data = CourseMap.includes(:course_field_groups).find(params[:map_id])
-			data.course_field_groups.where('pass != 2').includes(:course_fields).order('pass ASC').each do |cfg|
-				sub = {}
-				if cfg.pass == 1				
-					if cfg.course_fields.empty? #刪 必,多 時，因為只傳cf id 沒法刪到cfg，在這刪掉留下的
-						cfg.destroy
-						next
-					else
-						content = cfg.course_fields.last  # .includes(:course_field_lists)
-						sub = cf_parse(content, 0)	
-										
-					end 					
-				else		
-					sub = cfg_parse(cfg, 0)						
-				end	
+			data = CourseMap.find(params[:map_id])
+			data.course_fields.order('field_type ASC').each do |cf|	
+				sub = cf_trace(cf, :_get_field_content_data, :_get_add_field_node)											
 				list.push(sub)	
-			end
+			end		
 			list.push({:text=>'新增類別', :type=>-1, :icon=>'fa fa-plus text-success', :parent_id=>params[:map_id]})
-	#	Rails.logger.debug "[debug] " + list.to_s
 		end# if
 	
 		respond_to do |format|
@@ -86,15 +66,17 @@ class CourseMapsController < ApplicationController
     	end
 	end
 	
-	# type = 0 course_group list, type = -1 new course group
-	# field_type=4 代表, field_type=5 抵免
 	def get_group_tree
 		if request.xhr? # if ajax
 			list = []
-			cg = CourseMap.find(params[:map_id]).course_groups
+			cg = CourseMap.find(params[:map_id]).course_groups.order('gtype ASC')
 			unless cg.empty?
 				cg.each do |group|
-					tmp = {:text=>group.lead_course ? group.lead_course.ch_name : "未選代表課", :cg_id=>group.id, :type=>0, :gtype=>group.gtype}
+					tmp = {:text=>group.lead_course ? group.lead_course.ch_name : "未選代表課", 
+							:cg_id=>group.id, 
+							:type=>0, 
+							:gtype=>group.gtype,
+							:icon=>(group.gtype==1) ? 'fa fa-bookmark-o' : 'fa fa-sitemap'}
 					list.push(tmp)
 				end
 			end
@@ -107,99 +89,92 @@ class CourseMapsController < ApplicationController
 	end
 	
 	def action_new
-		@target_id = nil
-		
-		map_id = params[:map_id]
-		target_id = params[:target_id]
+		level = params[:level].to_i
+		parent_id = params[:parent_id]
 		name = params[:name]
-		@course_map = CourseMap.find(map_id)
-		case params[:action_type]		
-			when 'course_field_group'			
-				case params[:group_type].to_i
-					when 1..2 #必, 多
-						cfg = CourseFieldGroup.new
-						cfg.course_map_id, cfg.user_id, cfg.pass = @course_map.id, current_user.id, 1
-						cfg.save!
-						cf = CourseField.new
-						cf.course_field_group_id = cfg.id
-						cf.name, cf.user_id, cf.field_type  = name, current_user.id, params[:group_type].to_i
-						cf.save!
-						@target_id = cf.id
-					when 3 #領
-						cfg = CourseFieldGroup.new
-						cfg.name = name
-						cfg.course_map_id, cfg.user_id, cfg.pass = @course_map.id, current_user.id, 0
-						cfg.save!
-						@target_id = cfg.id
-				end
-			when 'course_field_head'
-				
-				cfg = CourseFieldGroup.find(target_id)
-				cfh = CourseField.new
-				cfh.course_field_group_id, cfh.name, cfh.user_id, cfh.field_type = target_id, name, current_user.id, 0
-				cfh.save!
-				@target_id = cfh.id
-			when 'course_field_content'
-			
-				cfh = CourseField.find(target_id)
-				cfc = CourseField.new
-				cfc.user_id, cfc.name, cfc.field_type = current_user.id, name, ((params[:group_type].to_i==3) ? 0 : params[:group_type].to_i)	
-				cfc.save!
-				cfs = CourseFieldSelfship.new
-				cfs.parent_id, cfs.child_id = cfh.id, cfc.id
-				cfs.save!
-				@target_id = cfc.id
+		field_type = params[:field_type].to_i
+	# new cf
+		cf = CourseField.new
+		cf.name, cf.field_type, cf.user_id = name, field_type, current_user.id
+		cf.save!
+	# if 領域, add field_need table row
+		if field_type==3
+			fd = CfFieldNeed.new
+			fd.course_field_id, fd.field_need = cf.id, 0
+			fd.save!
+		end 
+	# create relation to it's parent
+		if level==-1
+			cmcf = CmCfship.new
+			cmcf.course_map_id, cmcf.course_field_id = parent_id, cf.id
+			cmcf.save!
+		else
+			cfship = CourseFieldSelfship.new
+			cfship.parent_id, cfship.child_id = parent_id, cf.id
+			cfship.save!
 		end
-
-		render :text=> @target_id.to_s
+		
+		render :text=> cf.id.to_s
 	end
 
 	def action_update
-		if params[:level].to_i == 1 # cfg
-			cfg = CourseFieldGroup.find(params[:target_id])
-			cfg.name = params[:name]
-			cfg.credit_need = params[:credit_need].to_i
-			cfg.field_need = params[:field_need].to_i
-			cfg.save!
-		else # cf
-			cf = CourseField.find(params[:target_id])
-			cf.name = params[:name]
-			cf.credit_need = (params[:credit_need].to_i==-1) ? 0 : params[:credit_need].to_i
-			cf.save!
-		end	
+		cf = CourseField.find(params[:target_id])
+		cf.name = params[:name]
+		cf.credit_need = (params[:credit_need].to_i==-1) ? 0 : params[:credit_need].to_i
+		if cf.field_need
+			cf_fd = cf.cf_field_need
+			cf_fd.field_need = params[:field_need].to_i
+			cf_fd.save!
+		end
+		cf.save!
+	
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 
-	def action_delete # ajax POST
-		case params[:level].to_i
-			when 0 # 
-				cg = CourseField.find(params[:target_id])
-				cg.destroy
-			when 1 # cf
-				cfg = CourseFieldGroup.find(params[:target_id])
-				cfg.destroy
-		end
+	def action_delete # ajax POST 
+		cf = CourseField.find(params[:target_id])
+		cmcf = CmCfship.where(:course_field_id=>cf.id)
+		cmcf.last.destroy unless cmcf.empty?
+		cfship = CourseFieldSelfship.where(:child_id=>cf.id)
+		cfship.last.destroy unless cfship.empty?
+		cf.destroy
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 	
 	def show_course_list	
 		
-		cg = CourseField.find(params[:target_id])
+		cf = CourseField.find(params[:target_id])
 		data = []
-		cg.course_field_lists.includes(:course).each do |list|
-			course = list.course
-			tmp = {:id=>list.id, :course_id=>list.course_id ,:course_name=>course.ch_name,
-			:dep=>course.department.ch_name,:credit=>course.course_details.first.credit,
-			:record_type=>list.record_type }
+		cf.course_field_lists.includes(:course).each do |list|
+			course = nil
 			if list.course_group_id  # it is a group header
-				cg = CourseGroup.find(list.course_group_id)
+				cg = list.course_group
+			#	leader = cg.lead_group_list
 				groups = []
-				cg.course_group_lists.includes(:course).reject{|l| l.course==course}.each do |l|
-					tmp2 = {:course_name=>l.course.ch_name, :dep=> l.course.department.ch_name, :credit=> l.course.course_details.last.credit}
-					groups.push(tmp2)
+				cg.course_group_lists.includes(:course).each do |cgl|				
+					if cgl.lead == 1
+						course = cgl.course
+					else
+						c = cgl.course
+						tmp2 = {:course_name=>c.ch_name, :dep=> c.department.ch_name, :credit=> c.course_details.last.credit}
+						groups.push(tmp2)
+					end
 				end
-				tmp[:groups] = groups
-			end			
+				
+			else
+				groups = nil
+				course = list.course	
+			end		
+			
+			tmp = {
+			:id=>list.id, 
+			:course_id=>course.id ,
+			:course_name=>course.ch_name,
+			:dep=>course.department.ch_name,
+			:credit=>course.course_details.first.credit,
+			:record_type=>list.record_type,
+			:groups=> groups
+			 }
 			
 			data.push(tmp)	
 		end
@@ -232,14 +207,16 @@ class CourseMapsController < ApplicationController
 			when 'add_course'
 				cf = CourseField.find(params[:cf_id])
 				c_ids = params[:c_ids]
-				all_courses = cf.course_field_lists.map{|li| li.course_id.to_s}
+				all_courses = cf.course_field_lists.map{|li| li.course_id}
 				fail_cnt = 0
 				success_cnt = 0
 			##  check if is course group header
-				course_groups = CourseMap.find(params[:map_id]).course_groups.includes(:course_group_lists)
-			#	Rails.logger.debug "[debug hit] " + course_groups.map{|m| m.course_id}.to_s
+				course_group_leads = CourseMap.find(params[:map_id]).course_groups.includes(:course_group_lists)
+									 .reject{|cg| cg.course_group_lists.count==0 or cg.gtype==1}
+									 .map{|cg| [cg.id, cg.lead_group_list.course_id]}
+				#Rails.logger.debug "[debug hit] " + course_group_leads.to_s	
 				c_ids.each do |c_id|
-					if all_courses.include? c_id
+					if all_courses.include? c_id.to_i
 						fail_cnt +=1
 						next
 					end
@@ -249,34 +226,56 @@ class CourseMapsController < ApplicationController
 					cfl.user_id = current_user.id
 					
 					# check course group
-					hit = course_groups.select{|g| g.lead_course.id==c_id.to_i}	
-			#		Rails.logger.debug "[debug c_id] " + c_id.to_s
-					unless hit.empty?
-						cfl.course_group_id = hit.last.id
+					hit = course_group_leads.select{|d1, d2| d2==c_id.to_i}
+					if not hit.empty?					
+						cfl.course_group_id = hit.last[0]
+					else	
+						cfl.course_id = c_id
 					end
-					
-					cfl.course_id = c_id
+					cf.credit_need += Course.find(c_id).credit
 					cfl.save!
 					success_cnt += 1
 				end
+				cf.save!
+=begin				
+				cf = CourseField.find(params[:cf_id]) # reload
+				if cf.field_type.to_i==1
+					all_credit = 0
+					cf.course_field_lists.each do |d|
+						if d.course_group_id.presence
+							lead = d.course_group.lead_group_list.course
+							Rails.logger.debug "[debug] lead_course "+lead.ch_name+" "+lead.credit.to_s
+							all_credit += lead.credit
+						else
+							Rails.logger.debug "[debug] course"+d.course.ch_name+" "+d.course.credit.to_s
+							all_credit += d.course.credit
+						end
+					end	
+					cf.credit_need = all_credit
+					cf.save!
+				end		
+=end					
 				data[:success], data[:fail] = success_cnt, fail_cnt
 			when 'add_group'
 				cg = CourseGroup.find(params[:cg_id])
 				c_ids = params[:c_ids]
-				all_courses = cg.course_group_lists.map{|li| li.course_id.to_s}
+				all_courses = cg.course_group_lists.map{|li| li.course_id}
 				fail_cnt = 0
 				success_cnt = 0
+				has_lead = (cg.lead_group_list.presence) ? true : false
 				c_ids.each do |c_id|
-					if all_courses.include? c_id
+					if all_courses.include? c_id.to_i
 						fail_cnt +=1
 						next
 					end
 					cgl = CourseGroupList.new
 					cgl.course_group_id, cgl.course_id = cg.id, c_id
-					cgl.user_id, cgl.lead = current_user.id, 0
+					cgl.user_id= current_user.id
+					cgl.lead = (has_lead) ? 0 : 1
 					cgl.save!
 					success_cnt += 1
 				end
+				
 				data[:success], data[:fail] = success_cnt, fail_cnt	
 			when 'update'
 				cfl = CourseFieldList.find(params[:target_id])
@@ -284,8 +283,21 @@ class CourseMapsController < ApplicationController
 				cfl.save!
 				data[:success] = 1	
 			when 'delete'
+				cf = CourseField.find(params[:cf_id])
 				cfl = CourseFieldList.find(params[:target_id])
+				if cf.field_type.to_i==1
+					credit = 0
+					if cfl.course_group_id
+						credit = cfl.course_group.lead_group_list.course.credit
+					else
+						credit = cfl.course.credit
+					end
+					cf.credit_need -= credit
+					cf.save!
+				end
 				cfl.destroy
+				
+				
 				data[:success] = 1	
 			else
 				data[:fail] = 1	
@@ -322,15 +334,14 @@ class CourseMapsController < ApplicationController
 				cg.save!
 				data = {:success=>1}.to_json
 			when 'delete' # delete course
-				if params[:target] == 'cg'
+				if params[:target] == 'cg'		
 					cg = CourseGroup.find(params[:cg_id])
+					CourseFieldList.where(:course_group_id=>cg.id).destroy_all
 					cg.destroy
 				else #cgl
 					cgl = CourseGroupList.find(params[:list_id])	
 					if cgl.lead==1		
 						cg = CourseField.find(params[:cg_id])
-						#cg.name = '未選代表課'
-						#cg.course_id = nil
 						cg.save!
 					end
 					cgl.destroy
@@ -340,71 +351,47 @@ class CourseMapsController < ApplicationController
 		render :text=> data
 	end
 	
-	
+	def statistics_table
+		
+		render :layout=> false
+	end
 
 private
   
-  def cf_parse(cf, level)
-  	if cf.field_type != 0
-  		chead = (cf.field_type==1) ? "[必修] " : "[X選Y] "
-  		data = {:text=>(chead+cf.name), :type=>0, :cf_id=>cf.id}  
-  		data[:label], data[:name] = chead, cf.name
-			data[:icon] = (cf.field_type==1) ? "fa fa-star" : "fa fa-check-square-o"
-  		data[:credit_need] = (cf.field_type==1) ? "N/A" : cf.credit_need.to_s
-  		#data[:backColor] = color_level(level)		
-		#data[:color] = (level==0) ? '#FFFFFF' : '#000000'
-		if cf.field_type==2
-			data[:tag] = [ cf.credit_need.to_s ]
-		end
-	else	
-		chead = (level==1) ? "[領域] " : "[群組] "
-		data = {:text=>(chead + cf.name), :type=>1, :cf_id=>cf.id}
-		data[:label], data[:name], data[:icon] = chead, cf.name, 'fa fa-share-alt-square'
-		data[:credit_need] = cf.credit_need
-		#data[:tags] = [ "C(#{cf.credit_need})" ]
+  def _get_field_content_data(cf)		
+		chead = (cf.field_type==1) ? "[必修] " : "[X選Y] "
+		data = {
+			:text=>(chead+cf.name),
+			:type=>cf.field_type,
+			:cf_id=>cf.id,
+			:label=>chead, 
+			:name=>cf.name,
+			:icon => (cf.field_type==3) ? "fa fa-star" : "fa fa-check-square-o",
+			:credit_need => (cf.field_type==3) ? "N/A" : cf.credit_need.to_s,
+			:tag=>cf.field_type==2 ? [cf.credit_need.to_s] : ""
+		}  
 
-		#data[:backColor] = color_level(level)
-		#data[:color] = (level==0) ? '#FFFFFF' : '#000000'
-		nodes = []
-		cf.course_fields.order('field_type ASC').each do |sub|
-			nodes.push(cf_parse(sub, level+1))
-		end
-		nodes.push({:text=>'新增群組', :type=>-3, :parent_id=>cf.id, :icon=>'fa fa-plus text-success'})	
-		data[:nodes] = nodes
-	end
-	return data
+		return data
   end
   
-  def cfg_parse(cfg, level) # for each cfg
-  	data = {}
-  	data[:text] = "[領域群組] " + cfg.name
-  	data[:label], data[:name] = "[領域群組]", cfg.name
-	data[:type], data[:icon], data[:tags] = 2, 'fa fa-share-alt-square', [ "F(#{cfg.field_need})","C(#{cfg.credit_need})"]
-	data[:cfg_id], data[:credit_need], data[:field_need] = cfg.id, cfg.credit_need, cfg.field_need
-	#data[:backColor] = color_level(level)
-	#data[:color] = (level==0) ? '#FFFFFF' : '#000000'
-	nodes = []
-	cfg.course_fields.order('field_type ASC').each do |cf|
-		nodes.push(cf_parse(cf, level+1))
-	end
-	nodes.push({:text=>'新增領域', :type=>-2, :parent_id=>cfg.id, :icon=>'fa fa-plus text-success'})	
-	data[:nodes] = nodes
-	
-	return data
+  
+  def _get_add_field_node(cf,nodes)
+		chead = (cf.field_type==3) ? "[領域群組] " : "[領域] "
+		nodes.push({:text=>'新增類別', :type=>(cf.field_type==3) ? -2 : -3, :parent_id=>cf.id, :icon=>'fa fa-plus text-success'})	
+		data = {
+			:text=>(chead + cf.name),
+			:type=>cf.field_type,
+			:cf_id=>cf.id,
+			:label=>chead,
+			:name=>cf.name,
+			:icon=>'fa fa-share-alt-square',
+			:credit_need=>cf.credit_need,
+			:field_need=>cf.field_type==3 ? cf.field_need : nil,
+			:nodes=>nodes
+		}
+		return data
   end
 
-  def color_level(l)
-  	case l
-  		when 0 
-  			return '#088A08'
-  		when 1 
-  			return '#58FA58'
-  		when 2 
-  			return '#A9F5A9'
-  		else
-  			return '#E0F8E0'
-	
-  	end
-  end
+  
 	
 end

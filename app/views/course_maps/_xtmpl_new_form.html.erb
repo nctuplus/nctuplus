@@ -1,9 +1,8 @@
 <script type="text/x-tmpl" id="new-form-format">
 
 <%= form_for :data, url: "action_new", html:{:class=>"form-horizontal new-form"}, :remote=>true do |f|%>
-	<input id="action_type" name="action_type" type="hidden" value="{%= o.action_type %}">
-	<input id="map_id" name="map_id" type="hidden" value="{%= map_id %}">
-	<input id="target_id" name="target_id" type="hidden" value="{%= o.target_id %}">
+	<input id="level" name="level" type="hidden" value="{%= o.level %}">
+	<input id="parent_id" name="parent_id" type="hidden" value="{%= o.parent_id %}">
 	
 	<h4 class="form-header-name">
 		{%= o.header_name %}
@@ -13,11 +12,19 @@
 			<h4 class="text-right">名稱</h4>
 		</div>
 
-	{% if(o.action_type!="course_field_head"){ %}
 		<div class="col-md-2" >
-		<%= select_tag "group_type" ,options_for_select([['必修','1'],['X選Y','2'],['領域/類別','3']]), class: "form-control" %>		
+		<select class="form-control" id="field_type" name="field_type">
+		{% if (o.level==-3 || o.level==-1){ %}
+			<option value="1">必修</option>
+			<option value="2">X選Y</option>
+		{% } %}	
+		{% if(o.level==-1){ %}	
+			<option value="3">領域群組</option>
+		{% } %}	
+			<option value="4">領域</option>
+		</select>
+		
 		</div>
-	{% } %}
 		<div class="col-md-5">
 			<%= text_field_tag :name , '', class:"form-control"%>
 		</div>					

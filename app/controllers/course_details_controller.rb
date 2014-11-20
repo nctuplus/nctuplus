@@ -3,8 +3,9 @@ class CourseDetailsController < ApplicationController
 	layout false, :only=>[:mini, :course_group]
 	def index
 		@q = CourseDetail.search(params[:q])
-		@cds=@q.result(distinct: true).includes(:course, :teacher, :semester).page(params[:page])
-		@cd_all=get_mixed_info2(@cds)
+		@cds=@q.result(distinct: true).includes(:course, :teacher, :semester, :department).page(params[:page])
+		#@cd_all=get_mixed_info2(@cds)
+		@cd_all=@cds
   	end
 	def mini
 		if !params[:q].blank?

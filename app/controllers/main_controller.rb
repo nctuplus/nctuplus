@@ -6,6 +6,10 @@ class MainController < ApplicationController
 	#layout false, :only => [:test_p, :search_by_keyword, :search_by_dept]
 	before_filter :redirect_to_user_index, :only=>[:index]
 	#before_filter :cors_preflight_check, :only=>[:zzz]
+	before_filter :checkTopManager, :only=>[:student_import]
+	#test
+	include CourseMapsHelper	
+	
 	
   def index
 		
@@ -15,17 +19,62 @@ class MainController < ApplicationController
 		#@user_count=User.count
 		
   end
-	def testttt
-		@all=CourseGroup.find(7).lead_course
-		#@sendE3={:key=>Nctuplus::Application.config.secret_key_base,:id=>"0256061",:pwd=>"zmdzjbep"}
-		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/Authentication",@sendE3)
+	def E3Login_Check
 		
+		std_id = params[:id]
+		
+		@sendE3={:key=>Nctuplus::Application.config.secret_key_base ,:id=>std_id, :pwd=>params[:pwd]}		
+		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/Authentication",@sendE3)
+		@res=http.body_str
+		Rails.logger.debug "[debug] res="+@res.to_s
+		data = 'fail'
+		
+		if @res.to_s=='"OK"'
+			find_user = User.where(:student_id=>std_id).take
+			
+			if current_user and find_user #有兩個獨立的帳號(fb, e3), merge	
+				if find_user.uid.nil?
+					if not find_user.course_simulations.empty? 
+						current_user.course_simulations.destroy_all # fb cs delete
+						find_user.course_simulations.each do |cs| #有save ? # move e3 cs
+							cs.user_id = current_user.id
+							cs.save!
+						end
+					end
+					current_user.student_id = find_user.student_id
+					find_user.destroy
+					current_user.save!
+				else
+					alertmesg("info",'Sorry','綁定失敗')  		
+				end
+			elsif current_user and not find_user #只有fb
+				current_user.student_id = std_id
+				current_user.save!
+			elsif not current_user and find_user #僅知有e3
+				session[:user_id] = find_user.id
+			else  # 僅知沒e3
+				new_user = User.new	
+				new_user.student_id, new_user.name = std_id, std_id
+				new_user.save!
+				session[:user_id] = new_user.id
+			end			
+			data = 'success'		
+		end
+		
+		render :text=> data
+	end
+	
+	def testttt
+		#@all=CourseGroup.find(7).lead_course
+		#@sendE3={:key=>Nctuplus::Application.config.secret_key_base,:id=>"0256061",:pwd=>"zmdzjbep"}
+		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/Authentication",@sendE3)		
 		#@sendE3={:acy=>"102", :sem=>"3"}
 		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/CourseList",@sendE3)
-		#@mesg=http.body_str.force_encoding("UTF-8")
 		
-
+		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/DepartmentList",{})
+		@all=JSON.parse(http.body_str.force_encoding("UTF-8"))		
 	end
+	
 	def updateTeacherList
 		http=Curl.get("http://dcpc.nctu.edu.tw/plug/n/nctup/TeacherList",{})
 		teachers=JSON.parse(http.body_str.force_encoding("UTF-8"))
@@ -42,40 +91,10 @@ class MainController < ApplicationController
 		end
 	end
 	def test
-		if request.xhr? # if ajax
-			list = []
-			data = CourseMap.includes(:course_field_groups).find(params[:map_id])
-			data.course_field_groups.includes(:course_fields).order('group_type ASC').each do |cfg|
-				sub = {}
-				if cfg.group_type != 3				
-					target = cfg.course_fields.last  # .includes(:course_field_lists)
-					sub[:text] = ( (cfg.group_type==1) ? "[必修] " : "[多選多] " ) + target.name	
-					sub[:type], sub[:cf_id] = 0	, target.id	
-					sub[:backColor] = (cfg.group_type==1) ? "#f0ad4e" : "#5bc0de" 					
-				else		
-					sub[:text] = "[領域] " + cfg.name
-					sub[:type] = 1
-					sub[:icon] = 'fa fa-share-alt-square'
-					sub[:tags] = [ cfg.course_fields.count.to_s ]
-					nodes = []
-					cfg.course_fields.each_with_index do |sub_field, idx|
-						inner_sub = {:text=>("[子領域] " + sub_field.name), :type=>0}
-						inner_sub[:cf_id] = sub_field.id
-						nodes.push(inner_sub)
-					end
-					nodes.push({:text=>'新增子領域', :type=>-1, :parent_id=>cfg.id, :icon=>'fa fa-plus-square-o'})
-					sub[:nodes] = nodes			
-				end	
-				list.push(sub)	
-			end
-			list.push({:text=>'新增類別', :type=>-1, :icon=>'fa fa-plus-square-o', :parent_id=>0})
-		Rails.logger.debug "[debug] " + list.to_s
-		end# if
-	
-		respond_to do |format|
-   	 		format.html {}
-   	 		format.json {render :layout => false, :text=>list.to_json}
-    	end
+		data =  {'OrgId' => '46804706', 'VirtualAccount' => '95306617687250'}
+		http = Curl.post("https://easyfee.esunbank.com.tw/payciweb/vacntQuery.action", data)
+		@response = http.body_str.force_encoding("UTF-8")#JSON.parse(http.body_str.force_encoding("UTF-8"))
+				
 	end
 	
 	def send_report
@@ -107,6 +126,97 @@ class MainController < ApplicationController
     	end
     end
   	end	
+  	
+  	def student_import
+  	
+  	if request.post?
+		score=params[:course][:score]
+
+		agree=[]
+		normal=[]
+		student_id=0
+		student_name=""
+		dept=""
+		score.split("\r\n").each do |s|
+			s2=s.split("\t")
+			if s2.length>3&&s2[2].match(/[[:digit:]]{5}+/)
+				student_id=s2[2]
+				dept=s2[0]
+				student_name=s2[4]
+			elsif s2.length>5 &&s2[0].match(/[[:digit:]]/)
+				#Rails.logger.debug "[debug] "+s2[1]
+				if s2[1].match(/[A-Z]{3}[[:digit:]]{4}/)
+					#Rails.logger.debug "[debug] "+s2[1]
+					agree.append({:real_id=>s2[1], :credit=>s2[3].to_i, :memo=>s2[5]})
+				elsif s2[1].include?('.')
+					course=course
+				elsif s2[1].match(/[[:digit:]]{3}+/)&&s2[2].match(/[[:digit:]]{4}/)
+				course={'sem'=>s2[1],'cos_id'=>s2[2], 'score'=>s2[7], 'name'=>s2[4]}
+				normal.append(course)
+				
+				end	
+			end 
+		end
+
+		course=[]
+		@pass_score=60
+		has_added=0
+		@success_added=0
+		@fail_added=0
+		fail_course_name=[]
+		@no_pass=0
+		@pass=0
+
+
+		agree.each do |a|
+			#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name
+			
+			course=Course.includes(:course_details).where(:real_id=>a[:real_id]).take
+			unless course.nil?
+			cd_temp=course.course_details.where(:credit=>a[:credit]).first
+			TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過", :memo=>a[:memo])
+			end
+		end
+
+		normal.each do |n|
+			#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
+			if n['score']=="通過" || n['score'].to_i>=@pass_score
+				@pass+=1
+			else
+				@no_pass+=1
+			end
+			sem=n['sem']
+			sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
+			if sem
+				cds=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
+				if cds	
+					TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'])
+					@success_added+=1
+				else
+					#fail_course_name.append()
+					@fail_added+=1
+				end
+			else
+				@fail_added+=1
+			end
+		end
+		
+		data = TempCourseSimulation.uniq.pluck(:student_id, :name, :dept)
+		render :text=>{:data=>data, :fail=>@fail_added.to_s}.to_json
+  	end# request.post
+  	
+  	if params[:type]=='delete'
+  		stdid = params[:student_id]
+  		TempCourseSimulation.where(:student_id=>stdid).destroy_all
+  		
+  	end
+  	
+  		respond_to do |format|
+  			format.html {}
+   	 		format.json {render :layout => false, :text=>{:data=>TempCourseSimulation.uniq.pluck(:student_id, :name, :dept)}.to_json }
+    	end
+  	end# def student_import
+  	
   private
 	
 	def final_set_dept_type

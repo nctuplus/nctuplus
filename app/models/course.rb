@@ -1,12 +1,12 @@
 class Course < ActiveRecord::Base
 	belongs_to :grade
-	belongs_to :department
+	belongs_to :department#, :class_name=>"NewDepartment"
 	belongs_to :user
 	#belongs_to :course_field_list
 #	has_many :teachers, :through => :course_details
 	#has_many :semester_courseships, :dependent => :destroy
-	
-	
+	has_many :course_field_lists
+	has_many :course_fields, :through=>:course_field_lists
 	has_many :course_teacherships, :dependent => :destroy
 	has_many :course_details, :through=> :course_teacherships#, :source=>course_details
 	has_many :teachers, :through => :course_teacherships
@@ -15,6 +15,10 @@ class Course < ActiveRecord::Base
 
 	
 	has_many :reviews
+	
+	def _credit
+		self.course_details.take.credit.to_i
+	end
 	
 	def to_result(semester_name)
 	

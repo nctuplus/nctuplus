@@ -11,14 +11,10 @@
 			<h4 id="user_info" class="text-center">
 				<% if !@user.department.nil? && !@user.semester.nil? %>
 				<%=@user.department.ch_name%> <%sem=@user.semester.name%>
-				<% if @user.department.degree=="3" %>
+				<% if @user.department.degree==3 %>
 					<%=sem[0..sem.length-2].to_i+4%>級 
 				<% end %>
-				<!--
-					<% unless @user.department.credit.nil? %>
-					畢業學分:<strong><%=@user.department.credit %></strong>	
-					<% end %>
-				-->
+				
 				<% end %>
 			</h4>
 		</div>
@@ -28,9 +24,18 @@
 		<%=link_to "/courses/simulation", class:"btn btn-primary" ,id: "add_course" do %>
 			<%=fa_icon "plus" %>新增課程
 		<% end %>
-		<%=link_to @user.department.present? ? "/user/import_course":"javascript:void(0);" , class:"btn btn-primary",id:"import_course", onclick:"no_dept_alert();" do %>
-			<%=fa_icon "upload" %>匯入課程
-		<% end %>
+		<% if @user.department.nil? %>
+			<%=link_to "javascript:void(0);" , class:"btn btn-primary",id:"import_course", onclick:"no_dept_alert();" do %>
+				<%=fa_icon "upload" %>匯入課程
+			<% end %>
+		<% else %>	
+			<%=link_to "/user/import_course", class:"btn btn-primary",id:"import_course" do %>
+				<%=fa_icon "upload" %>匯入課程
+			<% end %>
+		<% end %>		
+				
+		
+		
 			
 		</div>
 	</div>
@@ -40,12 +45,9 @@
 
 
 <script>
-<% if @user.department.nil? %>
-	function no_dept_alert(){	
-		alert('請先輸入系級,謝謝!');
-		$('#degree_select').focus();
-	}
-<% end %>
+
+	
+
 	/*$(function(){
 		
 		$("#import_course").popover({ 

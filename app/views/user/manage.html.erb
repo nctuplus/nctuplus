@@ -21,8 +21,12 @@
 	<% end %>
 	<tr class="row">
 	<td>
-		<%= image_tag "http://graph.facebook.com/"<<user.uid<<"/picture", size: "25x25" %>
-		<%= link_to user.name, "http://www.facebook.com/"<<user.uid, target:"_blank" %>
+		<% if user.uid%>
+			<%= image_tag "http://graph.facebook.com/"<<user.uid<<"/picture", size: "25x25" %>
+			<%= link_to user.name, "http://www.facebook.com/"<<user.uid, target:"_blank" %>
+		<% else %>
+			<%=user.student_id	%>
+		<% end%>	
 	</td>
 	<% if !user.department.nil? %>
 	<td>
@@ -79,7 +83,7 @@
 			$.ajax({
 				type : "POST",
 				data : {cm_id:cm_id,uid:$(this).attr("id")},
-				url : "/user/select_cm_in_manage"
+				url : "/user/select_cm"
 			});
 			/*if(cm_id)
 				alert(cm_id);*/

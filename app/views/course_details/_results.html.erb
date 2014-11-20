@@ -82,21 +82,21 @@ $(document).ready(function(){
 
 	<% if !@cd_all.empty? %>
 
-		<% @cd_all.each do |cd,dept| %>
-				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course, :tid=>cd.teacher.id)%>">
+		<% @cd_all.each do |cd| %>
+				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course, :tid=>cd.teacher ? cd.teacher.id : 0 )%>">
 					<td>
 						<%=cd.semester.name%>
 					</td>
 					<td>
-						<%=dept.ch_name%>
-						<% if cd.brief!=" " %>
+						<%=cd.department ? cd.department.ch_name : "N/A"%>
+						<% if cd.brief&&cd.brief!=" " %>
 						/<%= cd.brief %>
 						<% end %>
 					</td>
 					<!--<td><%= cd.brief %></td>-->
 
 					<td><%= cd.course.ch_name %></td>
-					<td><%= cd.teacher.name %></td>
+					<td><%= cd.teacher ? cd.teacher.name : "N/A" %></td>
 					<td><%= cd.memo %></td>
 					<td><%= cd.time %></td>
 					<td><%= cd.credit %></td>

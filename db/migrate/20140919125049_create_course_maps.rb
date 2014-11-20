@@ -8,15 +8,6 @@ class CreateCourseMaps < ActiveRecord::Migration
     	t.integer :like
     	t.timestamps
     end
-    
-    create_table :course_field_groups do |t|
-    	t.integer :course_map_id
-    	t.string :name
-    	t.text :credit_need
-    	t.integer :field_need
-    	t.timestamps
-    end
-    
     create_table :course_fields do |t|
     	t.integer :course_map_id
     	t.string :name

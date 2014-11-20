@@ -1,15 +1,17 @@
 <script type="text/x-tmpl" id="header-content-format">
 <div class="row">
 	<h4 class="col-md-2 header-type" style="display: none;"></h4> 
-	<h4 class="col-md-6 field-header-name">{%= header_node.text %}</h4> 
+	<h4 class="col-md-6 field-header-name">{%= o.head_node.text %}</h4> 
 </div>
 <div class="row">
 	<div class="col-md-1"></div>
+{% if(o.head_node.type > 1 ){ %}		
 	<div class="col-md-2">至少學分數</div>
-	<div class="col-md-2 credit-need">{%=header_node.credit_need %}</div>
-{% if(header_type=='cfg'){ %}	
+	<div class="col-md-2 credit-need">{%=o.head_node.credit_need %}</div>
+{% } %}	
+{% if(o.head_node.type == 3 ){ %}	
 	<div class="col-md-3 cfg">至少子領域數</div>
-	<div class="col-md-2 cfg field-need">{%=header_node.field_need %}</div>
+	<div class="col-md-2 cfg field-need">{%=o.head_node.field_need %}</div>	
 {% } %}	
 	<div class="col-md-2">
 		<button type="button" class="btn btn-circle btn-warning update">

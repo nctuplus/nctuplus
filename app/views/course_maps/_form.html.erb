@@ -28,8 +28,8 @@
 						<h4 class="text-right">適用系所</h4>
 					</div>
 					<div class="col-md-5">
-						<% depts=["for_user",'dept']%>
-						<%= f.select :department_id, options_from_collection_for_select(Department.where(:dept_type=>depts).order("degree DESC").prepend(test),"id","ch_name"),{} ,{:class=>"form-control"}  %>
+
+						<%= f.select :department_id, options_from_collection_for_select(Department.where(:degree=>[2,3]).order("degree DESC").prepend(test),"id","ch_name"),{} ,{:class=>"form-control"}  %>
 					</div>
 				</div>
 				<div class="row">

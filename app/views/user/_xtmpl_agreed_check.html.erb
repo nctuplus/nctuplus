@@ -1,0 +1,44 @@
+<script type="text/x-tmpl" id="agreed">
+{%= o.length %}
+{% var credits={}; %}
+{% if (o.agreed.length > 0){ %}
+	<table class="table table-bordered"style="border:0px">
+		<tr class="row">
+			<th class="col-md-"><h4 class="text-center">抵免科目<h4></th>
+		</tr>
+	{% var grouped=groupBy(o.agreed,function(item){return item.cos_type;}); %}
+	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
+		{% var local_credit=0;%}
+		{% for (var j=0, course; course=courses[j]; j++) { %}
+			{% local_credit+=parseInt(course.credit); %}
+			<tr class="row ">
+				<td class="col-md-">
+					<h4 class="text-center">
+					{%=course.name%} | 
+					{%=course.cf_name=="" ? course.cos_type : course.cf_name %} | 
+
+					<%= fa_icon "graduation-cap", class:"credit-count" %><strong>{%=course.credit%}</strong>
+					</h4>
+				</td>
+			</tr>
+		{% } %}
+		{% credits[courses[0].cos_type]=local_credit; %}
+	{% } %}
+
+		<tr class="row label-info">
+			<td class="col-md-12">
+				<h4 class="text-right">
+					{% total=0; %}
+					{% for (var value in credits){ %}
+						{% total+=credits[value]; %}
+						{%=value%} : <strong>{%=credits[value]%}</strong>
+					{% } %}
+					共 <strong>{%=o.agreed.length%}</strong> 門課
+					<strong>{%=total%}</strong> 學分
+				</h4>
+			</td>
+		</tr>
+	</table>
+{% } %}
+
+</script>
