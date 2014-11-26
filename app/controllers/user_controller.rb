@@ -269,6 +269,7 @@ class UserController < ApplicationController
 		cm=CourseMap.where(:department_id=>current_user.department_id, :semester_id=>current_user.semester_id).take
 		if cm
 			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
+			update_cs_cfids(cm,current_user)
 		end
 		redirect_to :controller=> "user", :action=>"special_list"
 	end
