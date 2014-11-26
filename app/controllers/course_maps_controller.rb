@@ -25,14 +25,17 @@ class CourseMapsController < ApplicationController
 		@course_map.desc = params[:course_map][:desc]
 		@course_map.user_id, @course_map.like = current_user.id, 0
 		@course_map.save!
-		if params[:copy].to_i == 0
-			copy_from = CourseMap.find(params[:copy])
-			copy_from.course_fields do |cf|
+		if params[:copy].to_i != 0
+			@copy_from = CourseMap.find(params[:copy])
+			Rails.logger.debug "[debug] in1 "+@copy_from.course_fields.count.to_s
+			@copy_from.course_fields.each do |cf|
+				Rails.logger.debug "[debug] cfcfcf"
 				new_cf = CourseField.new(:user_id=>current_user.id)
-				new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = 
-				cf.name, cf.credit_need, cf.color, cf.field_type
+				new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = cf.name, cf.credit_need, cf.color, cf.field_type
 				new_cf.save!
-				trace_cm(new_cf, cf, _copy_cfl, nil)
+				cmcfship = CmCfship.new(:course_map_id=>@course_map.id, :course_field_id=>new_cf.id)
+				cmcfship.save!
+				trace_cm(new_cf, cf, :_copy_cfl)
 			end
 		end
 		redirect_to @course_map
@@ -351,22 +354,23 @@ private
 
   def trace_cm(target, cf, funcA)
 	if cf.field_type < 3
-			send(funcA, target, cf)	
+			send(funcA, target.id, cf)	
 	else 
 		new_cf = CourseField.new(:user_id=>current_user.id)
-		new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = 
-		cf.name, cf.credit_need, cf.color, cf.field_type
+		new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = cf.name, cf.credit_need, cf.color, cf.field_type
 		new_cf.save!
 		cf.child_cfs.each do |sub|
+			cfship = CourseFieldSelfship.new(:parent_id=>target.id, :child_id=>new_cf.id)
+			cfship.save!
 			trace_cm(new_cf, sub, funcA)
 		end
 	end
 	return
   end
 
-  def _copy_cfl(target, cf)
+  def _copy_cfl(target_id, cf)
 	cf.course_field_lists.each do |cfl|
-		new_cfl = CourseFieldList.new(:user_id=>current_user.id, :course_field_id=>target.id )
+		new_cfl = CourseFieldList.new(:user_id=>current_user.id, :course_field_id=>target_id )
 		new_cfl.course_id, new_cfl.record_type, new_cfl.course_group_id = cfl.course_id, cfl.record_type, cfl.course_group_id
 		new_cfl.save!
 	end

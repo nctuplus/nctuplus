@@ -1,4 +1,3 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 <style>
 .grid-default { width: 104px ; height: 50px ;}
 .text-family{ font-family: Geneva, Arial, Helvetica, san-serif,微軟正黑體; font-size: 14px;}
@@ -9,6 +8,9 @@
 <html>
 <head>
 	<title class='title'>NCTU+</title>
+	<%=javascript_include_tag asset_path("jquery.js")%>
+	<%=javascript_include_tag asset_path("tmpl.min.js")%>
+	<%= stylesheet_link_tag asset_path("bootstrap.css") %>
 </head>
 <div id="table">Loading...</div>
 <hr>
@@ -173,8 +175,6 @@
 
 </script>
 
-<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<%=javascript_include_tag "/assets/tmpl.min"%>
 <script>
 
 function get_remains(user_courses, matchs){
