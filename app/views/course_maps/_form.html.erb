@@ -42,12 +42,21 @@
 				</div>
 				<div class="row">
 					<div class="col-md-2">
+						<h4 class="text-right">複製現有的</h4>
+					</div> 
+					<div class="col-md-5">
+						<%=select_tag :copy, options_for_select(CourseMap.all.map{ |cm| [cm.name, cm.id] }), :class=>'form-control', :prompt=>'不複製' %>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
 						<h4 class="text-right">簡介</h4>
 					</div>
 					<div class="col-md-5">
 						<%= text_area_tag :desc,'', :class=>"form-control", :style=>"height: 100px;"%>
 					</div>
-				</div>		
+				</div>	
+				
 				<div class="row">
 					<div class="col-md-7">
 						</br>

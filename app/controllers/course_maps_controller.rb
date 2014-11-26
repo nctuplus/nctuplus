@@ -18,13 +18,23 @@ class CourseMapsController < ApplicationController
 	end
 
 	def create
+		
 		@course_map = CourseMap.new
 		@course_map.semester_id = (params[:semester_id].presence) ? params[:semester_id] : 0	
 		@course_map.name, @course_map.department_id = params[:name], params[:course_map][:department_id]
 		@course_map.desc = params[:course_map][:desc]
 		@course_map.user_id, @course_map.like = current_user.id, 0
 		@course_map.save!
-	
+		if params[:copy].to_i == 0
+			copy_from = CourseMap.find(params[:copy])
+			copy_from.course_fields do |cf|
+				new_cf = CourseField.new(:user_id=>current_user.id)
+				new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = 
+				cf.name, cf.credit_need, cf.color, cf.field_type
+				new_cf.save!
+				trace_cm(new_cf, cf, _copy_cfl, nil)
+			end
+		end
 		redirect_to @course_map
 	end
 	
@@ -338,6 +348,30 @@ class CourseMapsController < ApplicationController
 	end
 
 private
+
+  def trace_cm(target, cf, funcA)
+	if cf.field_type < 3
+			send(funcA, target, cf)	
+	else 
+		new_cf = CourseField.new(:user_id=>current_user.id)
+		new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = 
+		cf.name, cf.credit_need, cf.color, cf.field_type
+		new_cf.save!
+		cf.child_cfs.each do |sub|
+			trace_cm(new_cf, sub, funcA)
+		end
+	end
+	return
+  end
+
+  def _copy_cfl(target, cf)
+	cf.course_field_lists.each do |cfl|
+		new_cfl = CourseFieldList.new(:user_id=>current_user.id, :course_field_id=>target.id )
+		new_cfl.course_id, new_cfl.record_type, new_cfl.course_group_id = cfl.course_id, cfl.record_type, cfl.course_group_id
+		new_cfl.save!
+	end
+  end
+
   
   def _get_field_content_data(cf)		
 		chead = (cf.field_type==1) ? "[必修] " : "[X選Y] "

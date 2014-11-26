@@ -28,12 +28,12 @@ $(document).ready(function(){
 		<% if @user.is_undergrad %>
 		$("#common_check_div").html(tmpl("common_check",data));
 		<% end %>
-		console.log(data);
+
 		if(data["course_map"]){
 			$("#cosmap_check_div").html(tmpl("cosmap_check",data));
 		}
 		$("#course_list").html(tmpl("list_by_cosmap",data));
-		console.log(data);
+
 	});
 	
 });
