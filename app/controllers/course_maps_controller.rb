@@ -355,11 +355,11 @@ private
   def trace_cm(target, cf, funcA)
 	if cf.field_type < 3
 			send(funcA, target.id, cf)	
-	else 
-		new_cf = CourseField.new(:user_id=>current_user.id)
-		new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = cf.name, cf.credit_need, cf.color, cf.field_type
-		new_cf.save!
+	else 	
 		cf.child_cfs.each do |sub|
+			new_cf = CourseField.new(:user_id=>current_user.id)
+			new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = sub.name, sub.credit_need, sub.color, sub.field_type
+			new_cf.save!
 			cfship = CourseFieldSelfship.new(:parent_id=>target.id, :child_id=>new_cf.id)
 			cfship.save!
 			trace_cm(new_cf, sub, funcA)
