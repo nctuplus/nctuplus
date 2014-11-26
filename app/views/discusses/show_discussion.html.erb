@@ -3,7 +3,7 @@
 
 <div class="bs-callout bs-callout-default well">
 	<h3><%=fa_icon "comment-o"%>課程討論</h3>
-	<h4>請在此頁討論與課程內容有關的問題或發表心得，對選課或老師的評論請至<%=link_to "課程資訊頁面",course_path(@ct.course, :tid=>@ct.teacher.id)%></h4>
+	<h4>請在此頁討論與課程內容有關的問題或發表心得，對選課或老師的評論請至<%=link_to "課程資訊頁面",course_path(@ct)%></h4>
 	<h4 class="text-right"><%=link_to "javascript:void(0);", onclick:"$('#main_title').focus();" do %>
 		<%=fa_icon "pencil-square-o" %>新增主題
 	<% end %>
@@ -137,7 +137,7 @@
 					title : $("#title_"+$(this).attr('id')).text(),
 					description: description,
 					url : share_url,
-					caption: "<%=@ct.course.ch_name<<' - '<<@ct.teacher.name%>"
+					caption: "<%=@ct.course.ch_name<<' - '<<@ct.teacher_name%>"
 				},
 				google_plus:{
 					url :share_url
@@ -235,7 +235,7 @@
 				
 				$("#discuss").load(
 					"/discusses/delete_discuss",{
-						ct_id : <%=@ct_id%>,
+						ct_id : <%=@ct.id%>,
 						type :type,
 						discuss_id: id,
 						
@@ -276,7 +276,7 @@
 		
 		$("#discuss").load(
 			"/discusses/update_discuss",{
-				ct_id : <%=@ct_id%>,
+				ct_id : <%=@ct.id%>,
 				type :type,
 				discuss_id: id,
 				title : title.val(),

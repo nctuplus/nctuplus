@@ -4,9 +4,11 @@ Nctuplus::Application.routes.draw do
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
-	
+	get "admin/ee104"
+	get "user/get_user_courses"
+	get "user/this_sem"
+	get "user/update_all_sem_and_dept"
 	get "api/testttt"
-	get "user/test_get_cs_cm"
 	post "user/import_course"
 	get "user/import_course"
 	get "user/import_course_2"
@@ -52,7 +54,7 @@ Nctuplus::Application.routes.draw do
 
 #### course map block 	
 	#get "course_maps/add_usercoursemapship"		
-	get "course_maps/statistics_table"
+	
 
 	get "course_maps/get_course_tree"
 	get "course_maps/get_group_tree"
@@ -87,6 +89,7 @@ Nctuplus::Application.routes.draw do
   
   #get "post/getcode"
   #resources :post
+  	post "main/temp_student_action"
 	get "main/E3Login"
 	post "main/E3Login_Check"
 	get "main/student_import"
@@ -123,7 +126,7 @@ Nctuplus::Application.routes.draw do
 	post "user/select_cm"
 	get "user/select_cf"
 	get "user/add_top_manager"
-	
+	get "user/statistics_table"
   get "user/manage"
 	get "user/import_course"
   get "user/special_list"

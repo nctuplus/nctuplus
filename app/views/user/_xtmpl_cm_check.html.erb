@@ -5,7 +5,9 @@
 		<td class="col-md-12" colspan="{%=cm.max_colspan+1%}">
 			<h4 class="text-center">
 				{%=cm.name %}
-				<a href="/course_maps/statistic_table?map_id={%=cm.id%}&user_id={%=o.user_id%}" class="btn btn-info pull-right" target="blank">產生報表</a>
+				<% if @show_report %>
+				<a href="/user/statistics_table" class="btn btn-info pull-right" target="blank">產生報表</a>
+				<% end %>
 			</h4>
 		</td>
 	</tr>
@@ -13,10 +15,16 @@
 	{% print(parse_cf_tree(cm.cfs,pass_courses,cm.max_colspan),true); %}
 	
 </table>
+※計算錯誤的原因可能為<br>
+1.系統缺少部分抵免/免修課程<br>
+2.使用者未選擇該課所屬學程/領域
 </script>
 
 <script>
-	
+	function show_list(cf){
+		$("#courselist_modal").find(".modal-dialog").html(tmpl("cosmap_showlist",cf));
+		$("#courselist_modal").modal("show");
+	}
 	function select_cf(user_id,obj){
 		$.ajax({
 			type:"GET",

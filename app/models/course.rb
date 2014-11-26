@@ -9,16 +9,14 @@ class Course < ActiveRecord::Base
 	has_many :course_fields, :through=>:course_field_lists
 	has_many :course_teacherships, :dependent => :destroy
 	has_many :course_details, :through=> :course_teacherships#, :source=>course_details
-	has_many :teachers, :through => :course_teacherships
+	
+	#has_many :teachers, :through => :course_teacherships
 	
 	has_many :semesters, :through => :course_details
 
 	
 	has_many :reviews
 	
-	def _credit
-		self.course_details.take.credit.to_i
-	end
 	
 	def to_result(semester_name)
 	

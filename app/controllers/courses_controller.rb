@@ -33,23 +33,25 @@ class CoursesController < ApplicationController
 				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
 				render "content_list_form"
 			else # 5 -> chart			
-
+				c_id = ct.course_id
 				
-				sems=Course.includes(:semesters).find(params[:c_id]).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}				
+				sems=Course.includes(:semesters).find(c_id).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}	
+			
 				@row_name = sems.map{|s|s.name}				
 				@row_id = sems.map{|s| s.id}
 				if @row_id.length ==5
 					@row_id.shift
 					@row_name.shift
 				end
-				@tmp = Course.find(params[:c_id]).course_details.includes(:teacher).where(:semester_id=>@row_id).order(:semester_id)					
+				@tmp = Course.find(c_id).course_details.where(:semester_id=>@row_id).order(:semester_id)
+				
 				@simu = CourseSimulation.where(:semester_id=>@row_id, :course_detail_id=>@tmp.map{|ctd| ctd.id})  
-					   
+		
 				@res = []
 				@res_score = []
 				@res_score_drill=[]
 				@show_flag = 0
-				@tmp.map{|ctd| {:teacher=>ctd.teacher.name.strip, :cdid=>ctd.id, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
+				@tmp.map{|ctd| {:teacher=>ctd.teacher_name, :cdid=>ctd.id, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
 				.group_by{|t| t[:teacher]}.each do |k1, k2|
 					@tmp_num = [0,0,0,0]
 					@tmp_score = [{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1}]
@@ -67,8 +69,8 @@ class CoursesController < ApplicationController
 								@show_flag = 1
 							end
 						end
-						Rails.logger.debug "[debug] "+@row_name.to_s
-						@tmp_score[@row_id.index(hash[:sem])][:y] = (score_count==0)?0 : score_sum/score_count*1.0
+					#	Rails.logger.debug "[debug] "+@row_name.to_s
+						@tmp_score[@row_id.index(hash[:sem])][:y] = (score_count==0) ? 0 : score_sum/score_count*1.0
 						@tmp_score[@row_id.index(hash[:sem])][:nums] = score_count
 					end
 					@res.push({:name=>k1, :data=>@tmp_num})
@@ -288,17 +290,11 @@ class CoursesController < ApplicationController
 	
 	
   def show
-		if !session[:cd]
-			session[:cd]=[]
-		end
-    @course = Course.includes(:semesters).find(params[:id])
+		@ct=CourseTeachership.find(params[:id])
+    @course = @ct.course#Course.includes(:semesters).find(params[:id])
 	 
 		@first_show=params[:first_show]||"tc"
-
-		
-		#course_details_tids=CourseDetail.where(:course_id=>@course.id).uniq.pluck(:teacher_id)
-		
-		# for _teacher_info.html.erb
+=begin
 		@teachers=@course.teachers.sort_by{
 			|cd| CourseTeachership.where(:course_id=>params[:id],:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
 		}.reverse
@@ -321,7 +317,9 @@ class CoursesController < ApplicationController
 				@target_rank = 1 
 			end	
 		end
-		@ct=CourseTeachership.includes(:course_details).where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
+=end
+		@target_rank=999
+		#@ct=CourseTeachership.includes(:course_details).where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
 		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
 		@sems=@course.semesters.uniq
 

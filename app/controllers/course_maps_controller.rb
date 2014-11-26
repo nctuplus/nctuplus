@@ -1,7 +1,7 @@
 class CourseMapsController < ApplicationController
 	include CourseMapsHelper
 
-	before_filter :checkLogin
+	before_filter :checkTopManager
 
 ##### resource controller
 	def index
@@ -43,8 +43,7 @@ class CourseMapsController < ApplicationController
 
     redirect_to :action => :index
 	end
-########## 11/08 new
-	
+
 	def start2
 		@course_map = CourseMap.find(params[:map_id])
 		render "start2", :layout=>false		
@@ -156,7 +155,7 @@ class CourseMapsController < ApplicationController
 						course = cgl.course
 					else
 						c = cgl.course
-						tmp2 = {:course_name=>c.ch_name, :dep=> c.department.ch_name, :credit=> c.course_details.last.credit}
+						tmp2 = {:course_name=>c.ch_name, :dep=> c.department.ch_name, :credit=> c.credit}
 						groups.push(tmp2)
 					end
 				end
@@ -171,7 +170,7 @@ class CourseMapsController < ApplicationController
 			:course_id=>course.id ,
 			:course_name=>course.ch_name,
 			:dep=>course.department.ch_name,
-			:credit=>course.course_details.first.credit,
+			:credit=>course.credit,
 			:record_type=>list.record_type,
 			:groups=> groups
 			 }
@@ -190,7 +189,7 @@ class CourseMapsController < ApplicationController
 		cg.course_group_lists.each do |l|
 			course = l.course
 			tmp = {:id=>l.id, :course_id=>l.course_id ,:course_name=>course.ch_name,
-				   :dep=>course.department.ch_name,:credit=>course.course_details.first.credit,
+				   :dep=>course.department.ch_name,:credit=>course.credit,
 				   :leader=>(l.lead==0) ? false : true }
 			
 			data.push(tmp)
@@ -236,25 +235,7 @@ class CourseMapsController < ApplicationController
 					cfl.save!
 					success_cnt += 1
 				end
-				cf.save!
-=begin				
-				cf = CourseField.find(params[:cf_id]) # reload
-				if cf.field_type.to_i==1
-					all_credit = 0
-					cf.course_field_lists.each do |d|
-						if d.course_group_id.presence
-							lead = d.course_group.lead_group_list.course
-							Rails.logger.debug "[debug] lead_course "+lead.ch_name+" "+lead.credit.to_s
-							all_credit += lead.credit
-						else
-							Rails.logger.debug "[debug] course"+d.course.ch_name+" "+d.course.credit.to_s
-							all_credit += d.course.credit
-						end
-					end	
-					cf.credit_need = all_credit
-					cf.save!
-				end		
-=end					
+				cf.save!					
 				data[:success], data[:fail] = success_cnt, fail_cnt
 			when 'add_group'
 				cg = CourseGroup.find(params[:cg_id])
@@ -352,7 +333,7 @@ class CourseMapsController < ApplicationController
 	end
 	
 	def statistics_table
-		
+		# only send html file
 		render :layout=> false
 	end
 

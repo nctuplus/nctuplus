@@ -13,18 +13,18 @@
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu">
-								<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
-								<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
-								<li><a href="/course_maps/course_group_handle" rel="nofollow">共用課程群組<span class="badge pull-right"><%=CourseGroup.where(:course_map_id=>0).count%></span></a></li>
-								<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
+							<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+							<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+							<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>
+							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
+							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>								
 						</ul>	
 					</li>
 				<% end %>
 
 				<li><a href="/course_details/" rel="nofollow">全校課程</a></li>
-
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
-				<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>
+				
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">			
@@ -58,7 +58,7 @@
 						</li>
 					<% elsif not current_user.uid and current_user.student_id %>
 						<li>
-							<%= link_to  "綁定FaceBook帳號", '/auth/facebook'%>
+							<%= link_to  "綁定FaceBook帳號", '/auth/facebook', :confirm=>'注意! 綁定後無法反悔'%>
 						</li>
 					<% end %>	
 						<li>
@@ -159,7 +159,7 @@
   					</div>
 					<div class="form-group">
    						<div class="col-sm-offset-4 col-sm-8">
-      						</br><button type="submit" class="btn btn-info submit-but">送出</button>
+      						</br><button type="submit" class="btn btn-info submit-but" confirm="注意! 綁定後無法反悔">送出</button>
     					</div>
  					</div>
 					<% end %>

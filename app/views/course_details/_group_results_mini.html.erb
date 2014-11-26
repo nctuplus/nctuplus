@@ -64,10 +64,10 @@ function add_all_class(){
 			<% end %>
 			<tr id="<%=course.id%>" class="row course">
 				<td class="">
-				<p id="" class="">
-					<%= link_to course.ch_name, course_path(course), :class=>"course_name", :target=>"_blank" %> | 
+				<p id="" class="text-left">
+					<%= link_to course.ch_name, course_path(course.course_teacherships.last), :class=>"course_name", :target=>"_blank" %> | 
 			<!--		<%= cd.cos_type %> | -->
-					<%=fa_icon "graduation-cap" %> <strong><%=cd.credit%></strong>｜
+					<%=fa_icon "graduation-cap" %> <strong><%=course.credit%></strong>｜
 					<%=course.department.ch_name%>
 					<button class="btn btn-success btn-circle pull-right" onclick="add_class([<%=course.id%>])">
 						<span class="glyphicon glyphicon-plus"></span>

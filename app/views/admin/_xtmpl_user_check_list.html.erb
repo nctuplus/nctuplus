@@ -1,0 +1,27 @@
+<script type="text/x-tmpl" id="user_check_list">
+<table class="table" >
+<tr class="row">
+	<td>學號</td>
+	<td>已修幾門課</td>
+	<td>服務學習</td>
+	<td>藝文賞析</td>
+	<td>體育</td>
+	<td>外文</td>
+	<td>通識</td>
+</tr>
+{% for(var i = 0,user ;user=o.users[i];i++) { %}
+
+<tr class="row">
+	<td>{%=user.student_id%}</td>
+	<td>{%=user.courses.length%}</td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+	<td></td>
+</tr>
+
+{% } %}
+</table>
+
+</script>

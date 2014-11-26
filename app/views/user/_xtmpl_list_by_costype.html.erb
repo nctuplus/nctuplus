@@ -23,17 +23,19 @@
 			<tr class="row {%=pass_class%}">
 				<td class="col-md-6">
 					<h4 class="text-center">
-						<a href="/courses/{%=course.cos_id%}?tid={%=course.t_id%}">{%=course.name%}</a> | 
+						<a href="/courses/{%=course.ct_id%}" target="blank">{%=course.name%}</a> | 
 						{%=course.t_name%} | 
+						{% if(course.cf_name!=""){ %}
 						{%=course.cf_name%} | 
+						{% } %}
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong>
 					</h4>
 				</td>
 				<td class="col-md-6">
 						<div class="container" style="display:inline-block;">		
-							<a href="/courses/{%=course.cos_id%}?tid={%=course.t_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
+							<a href="/courses/{%=course.ct_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
 							<div class="number-right-top" >{%=course.file_count%}</div>
-							<a href="/courses/{%=course.cos_id%}?tid={%=course.t_id%}&first_show=discussion" class="btn btn-sm btn-default">討論區</a>
+							<a href="/courses/{%=course.ct_id%}&first_show=discussion" class="btn btn-sm btn-default">討論區</a>
 							<div class="number-right-top" >{%=course.discuss_count%}</div>
 						</div>
 					</td>

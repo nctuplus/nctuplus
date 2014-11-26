@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-	#default_scope :join => :course_simulations
+	
 	belongs_to :department
 	belongs_to :semester
 	has_many :file_infos
@@ -14,10 +14,10 @@ class User < ActiveRecord::Base
 	#validates_uniqueness_of [:uid, :student_id]
 	validates :uid, :uniqueness => {:scope => [ :student_id]}
 	def is_undergrad
-		self.department && self.department.degree=="3"
+		self.department && self.department.degree==3
 	end
 	def all_courses
-		self.course_simulations.includes(:course_detail, :course, :teacher, :course_field)
+		self.course_simulations.includes(:course_detail, :course_teachership, :course, :course_field).where("course_detail_id != 0")
 	end
 	
 	def courses_this_sem
@@ -25,10 +25,10 @@ class User < ActiveRecord::Base
 	end
 	
 	def courses_taked
-		self.all_courses.where("semester_id!=0")
+		self.all_courses.where("semester_id != 0")
 	end
 	def courses_agreed
-		self.course_simulations.includes(:course_detail, :course, :course_field).where(:semester_id=>0)
+		self.course_simulations.includes(:course_detail, :course, :course_field).where("course_detail_id != 0 AND semester_id = 0")
 	end
 	
 	def pass_courses
@@ -42,6 +42,22 @@ class User < ActiveRecord::Base
 	def total_credit
 		return self.pass_courses.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0
 	end
+	
+	def courses_json
+		return self.all_courses.order("course_field_id DESC").map{|cs|{
+			:name=>cs.course.ch_name,
+			:cs_id=>cs.id,
+			:course_id=>cs.course.id,
+			:ct_id=>cs.course_teachership.id,
+			:cos_type=>cs.course_detail.cos_type,
+			:sem_id=>cs.semester_id,
+			:brief=>cs.course_detail.brief,
+			:credit=>cs.course.credit,
+			:cf_id=>cs.course_field_id ? cs.course_field_id : 0,
+			:score=>cs.semester_id==0 ? cs.memo : cs.semester_id==Semester.last.id ? "修習中" : cs.score
+		}}
+	end
+	
 	
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|

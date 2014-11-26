@@ -2,8 +2,9 @@ class CourseDetailsController < ApplicationController
 	include CourseHelper
 	layout false, :only=>[:mini, :course_group]
 	def index
+		
 		@q = CourseDetail.search(params[:q])
-		@cds=@q.result(distinct: true).includes(:course, :teacher, :semester, :department).page(params[:page])
+		@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
 		#@cd_all=get_mixed_info2(@cds)
 		@cd_all=@cds
   	end
@@ -15,9 +16,9 @@ class CourseDetailsController < ApplicationController
 			@q = CourseDetail.search({:id_in=>session[:cd].presence||0})
 		end
 		#@q = CourseDetail.search(params[:q])
-		@cds=@q.result(distinct: true).includes(:course, :teacher, :semester)
-		
-		@cd_all=get_mixed_info2(@cds)
+		@cds=@q.result(distinct: true).includes(:course, :course_teachership, :department, :semester)
+		@cd_all=@cds
+		#@cd_all=get_mixed_info2(@cds)
 	end
 	
 	def course_group

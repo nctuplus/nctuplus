@@ -12,7 +12,7 @@
 		</p>
 		</div>
 		<div class="col-md-4">
-			<%= select_tag "list_type", options_for_select([['課程種類','cos_type'],['學期','semester']]), class:"form-control" %>
+			<%= select_tag "list_type", options_for_select([['課程種類','cos_type_list'],['學期','sem_list']]), class:"form-control" %>
 		</div>
 		<div class="col-md-1">
 			<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
@@ -24,12 +24,12 @@
 </div>
 <script>
 $(document).ready(function(){
-	$.getJSON("/user/all_courses?uid=<%=params[:uid] %>", function (data) {
+	$.getJSON("/user/get_user_courses?uid=<%=params[:uid]%>&type=all", function (data) {
 		
 		$("#agree-container").html(tmpl("agreed", data));
 		$("#course-container").html(tmpl("cos_type_list", data));
 		$("#list_type").change(function(){
-			$("#course-container").html(tmpl("sem_list", data));
+			$("#course-container").html(tmpl($(this).val(), data));
 		});
 		console.log(data);
 	});

@@ -3,14 +3,29 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :semester
 	#belongs_to :course
 	
-	#has_one :course, :through=>:course_teachership
+	has_one :course, :through=>:course_teachership
 	#has_one :teacher, :through=>:course_teachership
-	belongs_to :course
-	belongs_to :teacher
+	#belongs_to :course
+	#belongs_to :teacher
 	has_one :department, :through=>:course
 	#has_one :course_teachership
   #belongs_to :course
   #belongs_to :teacher
+	
+	def teacher_name
+		
+		res=""
+		teachers=self.course_teachership._teachers
+		if teachers.length==1
+			res=teachers[0].name
+		else
+			self.course_teachership._teachers.each do |t|
+				res<<t.name<<'/'
+			end
+		end
+		return res
+	end
+	
 	def self.flit_semester(sem_id)
 		self.select{|cd| cd.semester_id==sem_id}
 	end

@@ -1,10 +1,70 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm]
 	def testttt
-		@all=[]
-		Semester.where("id NOT IN (?)",[1,3]).each do |sem|
-		
-			@all.push(save_course(sem))
+
+=begin
+	OldCourseDetail.all.group(:course_teachership_id).each do |oldcd|
+		newcd=CourseDetail.where(:semester_id=>oldcd.semester_id, :temp_cos_id=>oldcd.temp_cos_id).take
+		if newcd
+			NewOldCt.create(:old_ct_id=>oldcd.course_teachership_id, :new_ct_id=>newcd.course_teachership_id)
+		end
+	end
+=end
+
+	#NewOldCt.create
+=begin		
+		CourseFieldList.where("course_group_id IS NULL").each do |cfl|
+			old_id=OldCourse.find(cfl.course_id).real_id
+			new_id=Course.where(:real_id=>old_id).take.id
+			cfl.course_id=new_id
+			cfl.save!
+		end
+=end
+
+=begin
+		CourseGroupList.all.each do |cfl|
+			old_id=OldCourse.find(cfl.course_id).real_id
+			new_id=Course.where(:real_id=>old_id).take
+			if new_id
+			cfl.course_id=new_id.id
+			cfl.save!
+			else 
+				cfl.destroy
+			end
+		end
+=end
+
+=begin
+
+		@new_sem_ids=[0,1,2,4,5,7,8,10,11,13]
+		TempCourseSimulation.includes(:old_course_detail).where("semester_id != 0").each do |cs|
+			new_cd=CourseDetail.where(:temp_cos_id=>cs.old_course_detail.temp_cos_id, :semester_id=>cs.old_course_detail.semester_id).take
+			if new_cd.nil?
+				Rails.logger.debug "NOT FOUND cd_id:"+cs.old_course_detail.id.to_s
+				cs.destroy
+			else
+				cs.course_detail_id=new_cd.id
+				#cs.semester_id=@new_sem_ids[cs.semester_id]
+				cs.save!
+			end
+			
+		end
+
+
+		TempCourseSimulation.includes(:old_course_detail).where("semester_id = 0 AND course_detail_id != 0").each do |cs|
+			course=Course.where(:real_id=>cs.old_course.real_id).take
+			new_cd_id=course.course_details.take.id
+			#NewCourseDetail.where(:temp_cos_id=>cs.course_detail.temp_cos_id).take.id
+			cs.course_detail_id=new_cd_id
+			cs.save!
+		end
+=end
+
+	end
+	def tempcs_change_to_new_sem_id
+		TempCourseSimulation.includes(:course_detail).where("semester_id != 0").all.each do |tempcs|
+			tempcs.semester_id=tempcs.course_detail.semester_id
+			tempcs.save
 		end
 	end
 	def change_to_newdept_id
@@ -40,6 +100,7 @@ class ApiController < ApplicationController
 	def get_depts
 		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/DepartmentList",{})
 		@all=JSON.parse(http.body_str.force_encoding("UTF-8"))
+
 		@all.each do |dept|
 			@dept=NewDepartment.new
 			@dept.dep_id=dept["dep_id"]
@@ -49,6 +110,7 @@ class ApiController < ApplicationController
 			@dept.eng_name=dept["dep_ename"]
 			@dept.save!
 		end
+
 	end
 	def query_from_time_table
 		#@user = Cour.take
@@ -94,26 +156,34 @@ class ApiController < ApplicationController
 	def save_course(sem)
 		
 		sendE3={:acy=>sem.year, :sem=>sem.half}
-		#@sendE3={:acy=>"99", :sem=>"3"}
+		#sendE3={:acy=>"99", :sem=>"3"}
 		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/CourseList",sendE3)
 		ret=JSON.parse(http.body_str.force_encoding("UTF-8"))
 		res=[]
+
 		ret.each do |data|
-			next if CourseDetail.where(:unique_id=>data['unique_id']).take
-			res.push(data)
+			#next if CourseDetail.where(:unique_id=>data['unique_id']).take
+			#res.push(data)
+			
 			course_id=get_cid_by_real_id(data)
-			teacher_id=get_tid_by_id(data["teacher"])
-			#ct_id=get_ctid(course_id,teacher_id)
-			save_cd(data,course_id,teacher_id,sem.id)
+			#if data['teacher']!=""
+			tids=[]
+			NewTeacher.where(:real_id=>data['teacher'].split(',')).each do |t|
+				
+				tids.push(t.id)
+			end
+			nct=NewCourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
+			#end
+			save_cd(data,nct.id,sem.id)
+
 		end
-		return res
+
+		return ret
 	end
-	def save_cd(data,course_id,teacher_id,sem_id)
-		@cd=CourseDetail.new(:unique_id=>data["unique_id"])
-		#@cd=get_cd_by_id()
-		#@cd.course_teachership_id=ct_id
-		@cd.course_id=course_id
-		@cd.teacher_id=teacher_id
+	def save_cd(data,ct_id,sem_id)
+		return if NewCourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
+		@cd=NewCourseDetail.new
+		@cd.course_teachership_id=ct_id
 		@cd.semester_id=sem_id
 		@cd.grade=data["grade"]
 		costime=data['cos_time'].split(',')
@@ -124,7 +194,7 @@ class ApiController < ApplicationController
 			@cd.room<<t.partition('-')[2]
 		end
 		
-		@cd.credit=data['cos_credit'].to_i
+		#@cd.credit=data['cos_credit'].to_i
 
 		@cd.cos_type=data["cos_type"]
 		@cd.temp_cos_id=data["cos_id"]
@@ -134,6 +204,7 @@ class ApiController < ApplicationController
 		
 		@cd.brief=data["brief"]
 		@cd.save!
+		#return @cd
 	end
 	def get_cd_by_id(unique_id)
 		#return NewCourseDetail.find_or_create_by(:unique_id=>unique_id)
@@ -156,9 +227,9 @@ class ApiController < ApplicationController
 		return tid
 	end
 	def get_cid_by_real_id(data)
-		course=Course.where(:real_id=>data["cos_code"]).take
+		course=NewCourse.where(:real_id=>data["cos_code"]).take
 		if course.nil?
-			course=Course.new
+			course=NewCourse.new
 			course.real_id=data["cos_code"]
 			course.ch_name=data["cos_cname"]
 			course.eng_name=data["cos_ename"]

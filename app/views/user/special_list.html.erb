@@ -1,5 +1,6 @@
 ﻿<script>
 	$(document).ready(function(){
+		
 		<% if params[:show_static] %>
 			$("#toggle-c").click();
 		<% end %>
@@ -15,9 +16,10 @@
 			trigger : "hover",
 			container :"body"
 		});
-		$(".others-link").click(function(e){
+		$(".tab-link").click(function(e){
 			$("#others").load($(this).attr("url"));
 		});
+		$("#toggle-a").click();
 		<% if params[:msg] %>
 			alert("<%=params[:msg]%>");
 		<% end %>
@@ -42,18 +44,17 @@
 <% end %>
 <div class="tabbable tabs-top">
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
-		<li class="active"><a id='toggle-a' href="#this_semester" data-toggle="tab" >本學期</a></li>
-		<li><a class="others-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
-		<li><a class="others-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics2?uid=<%=params[:uid]%>">統計</a></li>
+		<li><a class="tab-link" id='toggle-a' href="#others" data-toggle="tab" url="/user/this_sem?uid=<%=params[:uid]%>" >本學期</a></li>
+		<li><a class="tab-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
+		<li><a class="tab-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics2?uid=<%=params[:uid]%>">畢業學分計算</a></li>
 	</ul>
 	<br>
 	<div class="tab-content" style="overflow:hidden;" id="gg">
 		
-		<div class="tab-pane active" id="this_semester">
-			<%= render :partial =>"/user/this_semester" %>
+		<div class="tab-pane active" id="others">
+			
 		</div>
-		<div class="tab-pane" id="others">
-		</div>
+
 
 	</div>
 </div>

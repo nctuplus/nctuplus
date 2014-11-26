@@ -9,7 +9,7 @@ class MainController < ApplicationController
 	before_filter :checkTopManager, :only=>[:student_import]
 	#test
 	include CourseMapsHelper	
-	
+	include ApiHelper
 	
   def index
 		
@@ -65,11 +65,6 @@ class MainController < ApplicationController
 	end
 	
 	def testttt
-		#@all=CourseGroup.find(7).lead_course
-		#@sendE3={:key=>Nctuplus::Application.config.secret_key_base,:id=>"0256061",:pwd=>"zmdzjbep"}
-		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/Authentication",@sendE3)		
-		#@sendE3={:acy=>"102", :sem=>"3"}
-		#http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/CourseList",@sendE3)
 		
 		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/DepartmentList",{})
 		@all=JSON.parse(http.body_str.force_encoding("UTF-8"))		
@@ -131,34 +126,14 @@ class MainController < ApplicationController
   	
   	if request.post?
 		score=params[:course][:score]
+		res=parse_scores(score)
+		
+		agree=res[:agreed]
+		normal=res[:taked]
+		student_id=res[:student_id]
+		student_name=res[:student_name]
+		dept=res[:dept]
 
-		agree=[]
-		normal=[]
-		student_id=0
-		student_name=""
-		dept=""
-		score.split("\r\n").each do |s|
-			s2=s.split("\t")
-			if s2.length>3&&s2[2].match(/[[:digit:]]{5}+/)
-				student_id=s2[2]
-				dept=s2[0]
-				student_name=s2[4]
-			elsif s2.length>5 &&s2[0].match(/[[:digit:]]/)
-				#Rails.logger.debug "[debug] "+s2[1]
-				if s2[1].match(/[A-Z]{3}[[:digit:]]{4}/)
-					#Rails.logger.debug "[debug] "+s2[1]
-					agree.append({:real_id=>s2[1], :credit=>s2[3].to_i, :memo=>s2[5]})
-				elsif s2[1].include?('.')
-					course=course
-				elsif s2[1].match(/[[:digit:]]{3}+/)&&s2[2].match(/[[:digit:]]{4}/)
-				course={'sem'=>s2[1],'cos_id'=>s2[2], 'score'=>s2[7], 'name'=>s2[4]}
-				normal.append(course)
-				
-				end	
-			end 
-		end
-
-		course=[]
 		@pass_score=60
 		has_added=0
 		@success_added=0
@@ -166,16 +141,23 @@ class MainController < ApplicationController
 		fail_course_name=[]
 		@no_pass=0
 		@pass=0
-
-
+		if normal.length>0
+			TempCourseSimulation.where(:student_id=>student_id).destroy_all
+		end
 		agree.each do |a|
 			#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name
 			
 			course=Course.includes(:course_details).where(:real_id=>a[:real_id]).take
 			unless course.nil?
-			cd_temp=course.course_details.where(:credit=>a[:credit]).first
-			TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過", :memo=>a[:memo])
+				cd_temp=course.course_details.first
+				@success_added+=1
+				TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過", :memo=>a[:memo], :has_added=>0)
+			else
+				#if failed,set course_detail_id to 0
+				TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>0, :semester_id=>0, :score=>"通過", :memo=>a[:memo], :has_added=>0, :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name])
+				@fail_added+=1
 			end
+			
 		end
 
 		normal.each do |n|
@@ -190,7 +172,7 @@ class MainController < ApplicationController
 			if sem
 				cds=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
 				if cds	
-					TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'])
+					TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'], :has_added=>0)
 					@success_added+=1
 				else
 					#fail_course_name.append()
@@ -201,7 +183,7 @@ class MainController < ApplicationController
 			end
 		end
 		
-		data = TempCourseSimulation.uniq.pluck(:student_id, :name, :dept)
+		data = TempCourseSimulation.uniq.pluck(:student_id, :name, :dept, :has_added)
 		render :text=>{:data=>data, :fail=>@fail_added.to_s}.to_json
   	end# request.post
   	
@@ -213,10 +195,35 @@ class MainController < ApplicationController
   	
   		respond_to do |format|
   			format.html {}
-   	 		format.json {render :layout => false, :text=>{:data=>TempCourseSimulation.uniq.pluck(:student_id, :name, :dept)}.to_json }
+   	 		format.json {render :layout => false, :text=>{
+					:data=>TempCourseSimulation.uniq.order("student_id").pluck(:student_id, :name, :dept, :has_added)}.to_json 
+				}
     	end
   	end# def student_import
   	
+  	def temp_student_action
+  		stdid = params[:student_id]
+    	if params[:type]=='delete'
+  			TempCourseSimulation.where(:student_id=>stdid).destroy_all
+  			render :text=>"ok"
+ 		else
+ 		 	tcs = TempCourseSimulation.where(:student_id=>stdid)
+ 		 	data = {:fails=>tcs.select{|cs| cs.course_detail_id==0}.count}
+ 		 	tmp1 = []
+ 		 	tcs.each do |cs|
+ 		 		if cs.course_detail_id==0
+ 		 			name = "No match"
+ 		 		else
+ 		 			name = CourseDetail.find(cs.course_detail_id).course.ch_name
+ 		 		end
+ 		 	
+ 		 		tmp2 = {:name=>name}
+ 		 		tmp1.push(tmp2)
+ 		 	end
+ 		 	data[:nodes] = tmp1
+ 		 	render :layout=>false, :text=>data.to_json
+  		end
+  	end
   private
 	
 	def final_set_dept_type

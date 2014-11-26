@@ -1,6 +1,6 @@
-<% courseTeacher = CourseTeachership.where(:course_id=>params[:id], :teacher_id=>@teacher_show.id).first %>
-<% cd=courseTeacher.course_details.last %>
-<% page = CourseContentHead.where(:course_teachership_id => courseTeacher.id).first.presence || nil%>
+
+<% cd=@ct.course_details.last %>
+<% page = CourseContentHead.where(:course_teachership_id => @ct.id).first.presence || nil%>
 
 
 
@@ -14,7 +14,7 @@
 			
 			<p class="">
 				<!--<i class="fa fa-user fa-6"></i> 			
-				課程教師： <%=@teacher_show.name%>-->
+				課程教師： <%=@ct.teacher_name%>-->
 				永久課號：<%=@course.real_id%>
 				<%=fa_icon "bank"%> 單位：<%=@course.department.ch_name%>
 				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy="<<cd.semester.year<<"&Sem="<<cd.semester.half<<"&CrsNo="<<cd.temp_cos_id, target:"_blank"%>
@@ -22,7 +22,7 @@
 				<span class="<%=cos_type_class(cd.cos_type)%>">
 				<%=cd.cos_type%>
 				</span>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=cd.credit%> 
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=@course.credit%> 
 				</br></br>
 				<% first_name = cd.semester.name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
@@ -54,17 +54,17 @@
     		<tr>
     			<td><%=fa_icon "calendar-o" %> 學期</td>
     			<td><%=fa_icon "building" %> 教室</td>
-    			<td><%=fa_icon "graduation-cap" %> 學分</td>
+
     			<td><%=fa_icon "bell" %> 時間</td>
     			<td><%=fa_icon "bookmark" %> 備註</td>
     		</tr>	
-<%courseTeacher.course_details.each do |t|%>  
+<%@ct.course_details.each do |t|%>  
     		<tr>
     			<td><%=t.semester.name%></td>
     			<td><%=t.room%></td>
-    			<td><%=t.credit%></td>
+    			
     			<td><%=t.time%></td>
-    		    <td><%=t.memo%></td>
+    		  <td><%=t.memo%></td>
     		</tr>    
 <%end%>
 		</table>
@@ -101,7 +101,7 @@
 			<% elsif not current_user.uid.presence %>
 				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('須綁定FB才可編輯');", :id=>"link_edit_head"%>	
 			<% else %>
-				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'head');", :id=>"link_edit_head"%>	
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+@ct.id.to_s+",$(this),'head');", :id=>"link_edit_head"%>	
 			<% end %>
 			<span id="toggle-msg-head" style="display:none;"></span>
 			</br></br>
@@ -118,7 +118,7 @@
 			<% elsif not current_user.uid.presence %>
 				<%=link_to "編輯", "javascript:void(0);", :onclick=>"alert('須綁定FB才可編輯');", :id=>"link_edit_head"%>	
 			<% else %>
-				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+courseTeacher.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>
+				<%=link_to "編輯", "javascript:void(0);", :onclick=>"loadForm("+@ct.id.to_s+",$(this),'list');", :id=>"link_edit_head"%>
 			<% end %>
 			
 			<span id="toggle-msg-list" style="display:none;"></span>
@@ -143,7 +143,7 @@
 		<% elsif current_user.uid %>
 				<div id="commentNew">	
 			<%=form_tag "/courses/comment_submit", :remote=>true, :class=>"form-horizontal",:role=>"form" do%>
-					<%=hidden_field_tag "ctship", courseTeacher.id %>
+					<%=hidden_field_tag "ctship", @ct.id %>
 					<div class="form-group">
 						<div class="col-sm-1 col-md-offset-1">
 							<select id="type" name="type" class="form-control">
@@ -172,7 +172,7 @@
 	
 	<div class="panel-body">				
 		<div class="well backgorund-color-grey " id="commentList">
-				<%=render :partial=>"comment_list", :locals => {:ct_id=>courseTeacher.id} %>
+				<%=render :partial=>"comment_list", :locals => {:ct_id=>@ct.id} %>
 		</div>
 	</div>
 	
@@ -185,12 +185,12 @@
 		$.ajax({
    		 	type: "GET",
    		 	dataType: "script",
-    		url: '/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5&c_id=<%=j params[:id]%>',//'/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=5',
+    		url: '/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=5',//'/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=5',
     		error: function(res){alert("Some error happened in chart :( ");}
   		});		
 
-	    $('#course_content_head').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=1') ;
-		$('#course_content_list').load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type=2') ;
+	    $('#course_content_head').load('/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=1') ;
+		$('#course_content_list').load('/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=2') ;
 		$('#head_form').hide() ;
 		$('#head_list').hide() ;
 	
@@ -218,7 +218,7 @@
 			$('#course_content_'+type).hide() ;
 		}else{
 			link.html("編輯");
-			$('#course_content_'+type).load('/courses/course_raider?ct_id=<%=j courseTeacher.id.to_s %>&type='+(get_type-2)) ;
+			$('#course_content_'+type).load('/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type='+(get_type-2)) ;
 			$('#'+type+'_form').html('').hide() ;
 			$('#course_content_'+type).show() ;
 		}	
@@ -313,7 +313,7 @@
   				test: test,
   				hw: hw,
   				rollcall: $("#rollcall").val(),
-  				ct_id : <%=j courseTeacher.id.to_s %>
+  				ct_id : <%=j @ct.id.to_s %>
   			},
   			success: function(){
   				$('#toggle-msg-head').addClass('text-color-green').html('更新成功').show().fadeOut(3000);
@@ -437,7 +437,7 @@
 		if(!confirm("確定要刪除嗎？"))
 			return false ;
 		var tr = thisdiv.parent('span').parent('td').parent('tr') ;
-		var ctid = <%=j courseTeacher.id.to_s %> ;
+		var ctid = <%=j @ct.id.to_s %> ;
 		$.ajax({
 			type: "POST",
 			dataType: "script",
@@ -463,7 +463,7 @@
 
 		var tr = tdiv.parent('span').parent('td').parent('tr');
 		var id = tr.attr('id');//.substring(17) ;
-		var ctid = <%=j courseTeacher.id.to_s %> ;
+		var ctid = <%=j @ct.id.to_s %> ;
 		if(tr.find('input').val()==""){
 			alert("內容不可留白謝謝");
 			return false ;

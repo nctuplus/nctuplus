@@ -1,3 +1,16 @@
+function get_cf_type(cf_type){
+	switch (cf_type){
+		case 1:
+			return "必修";
+		case 2:
+			return "修選";
+		case 3:
+			return "領域群組";
+		case 4:
+			return "領域";
+	}
+}
+
 function green_check(){
 	return '<i class="fa fa-check fa-2x" style="color:#5cb85c"></i>'
 }

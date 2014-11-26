@@ -4,7 +4,6 @@ function get_pass_courses(pass_score,last_sem_id,courses){
 		if(course.sem_id==0||(course.sem_id!=last_sem_id&&check_pass(pass_score,course.score)))
 			res.push(course);
 	}
-	//console.log(res);
 	return res;
 }
 function check_pass(pass_score,score){
@@ -32,9 +31,7 @@ function get_cf_list(cfs,course){
 	for(var i = 0,cf;cf=cfs[i];i++){
 		_get_course_cf(res,null,cf,course);
 	}
-	/*res=res.reduce(function(a,b){
-		if(a!=0) return a.concat(b);
-	});*///(res);//(merged, arrays);
+
 	var selected=0;
 	for(var i = 0,cf;cf=res[i];i++){
 		if(cf["id"]==course.cf_id){
@@ -104,12 +101,12 @@ function _cf_course_match(user_courses, cf){
 		//console.log(cf_course.name);
 		if(_check_user_course(joined_courses, cf_course)){
 			match_credit += cf_course.credit ;
-			console.log(cf_course.name);
+			//console.log(cf_course.name);
 		}else{
 			c_match = false ;
 		}
 	}
-	console.log('all_match1 '+c_match);
+	//console.log('all_match1 '+c_match);
 	var cg_match = true ;
 	if(cf.course_groups){
 		for(var i = 0,course_group;course_group=cf.course_groups[i];i++){ // for each cg
@@ -118,7 +115,7 @@ function _cf_course_match(user_courses, cf){
 				if(_check_user_course(joined_courses, cg_course)){
 					match_credit += cg_course.credit ;
 					local_match = true ;
-					console.log(cg_course.name);
+					//console.log(cg_course.name);
 					break ;
 				}	
 			}
@@ -126,7 +123,7 @@ function _cf_course_match(user_courses, cf){
 				cg_match = false ;
 		}
 	}	
-	console.log('all_match2 '+cg_match);
+	//console.log('all_match2 '+cg_match);
 	return {match_credit: match_credit, all_match: (c_match && cg_match)} ;
 }
 
@@ -134,7 +131,7 @@ function check_cf(user_courses,cf){
 	//console.log(user_courses);
 	switch(cf.cf_type){
 		case 1:
-			console.log('[必修] cf_name : '+cf.cf_name) ;
+			//console.log('[必修] cf_name : '+cf.cf_name) ;
 			var res=_cf_course_match(user_courses, cf) ;
 			return {match_credit: res.match_credit, result: res.all_match};
 			
@@ -214,7 +211,7 @@ function get_node_data(cf,user_courses,maxColSpan){
 		}
 	}
 	else{
-		res+="<tr class='row'><td class='col-md-2'>"+cf.cf_name+"</td>";
+		res+="<tr class='row'><td class='col-md-2'><a href='javascript:void(0);' onclick='show_list("+JSON.stringify(cf,null,4)+")'>"+cf.cf_name+"</a></td>";
 		res+="<td class='col-md-10 text-center' colspan='"+maxColSpan+"'>";
 		
 		var check=check_cf(user_courses,cf);

@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" media="all"  />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
 <style>
 .grid-default { width: 104px ; height: 50px ;}
 .text-family{ font-family: Geneva, Arial, Helvetica, san-serif,微軟正黑體; font-size: 14px;}
@@ -12,7 +12,6 @@
 </head>
 <div id="table">Loading...</div>
 <hr>
-<!--<%=button_tag "print it", :id=>'hrefPrint', :class=>'btn btn-info'%>-->
 </html>
 <script type="text/x-tmpl" id="table-content">
 {% var result = parse_course(o.course_map, o.user_courses, o.user_info);%}
@@ -90,15 +89,29 @@
 {% o.user_courses = get_remains(o.user_courses, result.match); %}
 {% var remains = o.user_courses.filter(function(e){ return e.degree!=0 ;}); %}
 {% console.log('remains(expect for degree==0) :') ;console.log(remains); %}
-{% remains = remains.sort(function(a, b){ return ((a.degree < b.degree) ? -1 : ((a.degree > b.degree) ? 1 : 0));});%}
 
 {% if(remains.length > 0 ){ %}
+{% remains = remains.sort(function(a, b){ return ((a.degree < b.degree) ? -1 : ((a.degree > b.degree) ? 1 : 0));});%}
 	<tr>
 		<td colspan="14" bgcolor="#FAAC58"><p class="text-center">二. 其他選修科目(外系所選修)</p></td>
 	</tr>
-	
+	<tr>
+		<td colspan="2"></td>
+		<td><p class="text-center">科目名稱</p></td>
+		<td>1上</td>
+		<td>1下</td>
+		<td>2上</td>
+		<td>2下</td>
+		<td>3上</td>
+		<td>3下</td>
+		<td>4上</td>
+		<td>4下</td>
+		<td>應修</td>
+		<td>實得</td>
+		<td><p class="text-center">備註</p></td>
+	</tr>
 	{% for(var i=0, r; r=remains[i]; ++i){ %}
-		{% var course_info = check_course(1, r, o.user_info) ; %}
+		{% var course_info = check_course( r, o.user_info) ; %}
 		<tr>
 			<td colspan='2'></td>
 			<td>{%=r.name%}</td>
@@ -117,12 +130,27 @@
 {% } %}	
 
 {% var others = o.user_courses.filter(function(e){ return e.degree==0 ;}); %}
+{% others = others.sort(function(a, b){ return ((a.cos_type < b.cos_type) ? -1 : ((a.cos_type > b.cos_type) ? 1 : 0));});%}
 {% console.log('remain others:'); console.log(others); %}
 {% if(others.length > 0 ){ %}
 	<tr>
 		<td colspan="14" bgcolor="#F4FA58"><p class="text-center">三. 校訂共同科目</p></td>
 	</tr>
-	
+	<tr>
+		<td colspan="2"></td>
+		<td><p class="text-center">科目名稱</p></td>
+		<td>1上</td>
+		<td>1下</td>
+		<td>2上</td>
+		<td>2下</td>
+		<td>3上</td>
+		<td>3下</td>
+		<td>4上</td>
+		<td>4下</td>
+		<td>應修</td>
+		<td>實得</td>
+		<td><p class="text-center">備註</p></td>
+	</tr>
 	{% for(var i=0, r; r=others[i]; ++i){ %}
 		{% var course_info = check_course(r, o.user_info) ; %}
 		<tr>
@@ -147,7 +175,7 @@
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 <%=javascript_include_tag "tmpl.min"%>
-<%=javascript_include_tag "jQuery.print"%>
+<!-- <%=javascript_include_tag "jQuery.print"%>   -->
 <script>
 
 function get_remains(user_courses, matchs){
@@ -225,8 +253,8 @@ function check_pass_and_group(cf, courses, data, user_info){
 		if (course_info.cs.length>0)
 			data.cf_courses.push(course_info) ;	
 	}
-	
-	return {rowspan: data.cf_courses.length, match:match} ; 
+				
+	return {rowspan: data.cf_courses.length, match: match} ; 
 	//return true ;//data ;
 }
 
@@ -239,6 +267,7 @@ function parse_course(course_map, user_courses, user_info){
 		if(cf.cf_type < 3){// bottom level
 			var filter = user_courses.filter(function(x) { return (x.cf_id==cf.id); });
 			var res = check_pass_and_group(cf, filter, cf_data, user_info);
+
 			match = match.concat(res.match);
 			cf_data['rowspan'] = res.rowspan;
 		}else if(cf.cf_type==3){ //領域群組
@@ -270,28 +299,28 @@ function parse_course(course_map, user_courses, user_info){
 		//console.log(cf_data);
 		data.push(cf_data);
 	}
+	
 	return {data: data, match: match} ;
 }	
 
 $(document).ready(function(){
-
-	$.getJSON( "/user/test_get_cs_cm.json?map_id=<%=j params[:map_id]%>&user_id=<%=j params[:user_id]%>", function(res){
+<% if params[:map_id].presence and params[:user_id].presence %>
+	$.getJSON( "/user/statistics_table.json?map_id=<%=j params[:map_id]%>&user_id=<%=j params[:user_id]%>",
+<% else %>
+	$.getJSON( "/user/statistics_table.json",
+<% end %>
+	function(res){
 		console.log('course_map:');
 		console.log(res.course_map);
 		console.log('user_courses:');
 		console.log(res.user_courses);
-		//if(res.user_info.student_id){
-		//	$('.title').html(res.user_info.student_id);
+		if(res.user_info.student_id){
+			$('.title').html(res.user_info.student_id);
 			$("#table").html(tmpl("table-content", res));	
-		//}else
-	//		alert('沒有學號資料');
+		}else
+			alert('沒有學號資料');
 	});
-	/*
-	$("#hrefPrint").click(function() {
-		$("#table").print();
-		return (false);
-	});
-	*/
+
 });
 
 

@@ -194,6 +194,7 @@ module CourseMapsHelper
 		taked=all_courses.select{|cs|cs.semester_id!=0}
 		course_map.course_groups.where(:gtype=>1).each do |cg|
 			agreed.each do |agree|
+				match_fail = true
 				next if !cg.courses.include?(agree.course)
 				taked.each do |take|
 					if cg.courses.include?(take.course)
@@ -201,8 +202,13 @@ module CourseMapsHelper
 						agree.score=take.score
 						agree.save!
 						take.destroy!
+						match_fail = false
 						break
 					end
+				end
+				if match_fail
+					agreed.import_fail = 1 
+					agreed.save!
 				end
 			end
 			

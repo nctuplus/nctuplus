@@ -34,7 +34,7 @@ $(document).ready(function(){
 	</div>
 	<div class="col-sm-3">
 		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.search_field :teacher_name_cont, class: "form-control",placeholder:"老師" %>
+		
 	</div>
 	<button class="btn btn-success" id="search" onclick="$('#course_detail_search').submit()">
 	<%= fa_icon "search" %>
@@ -83,7 +83,8 @@ $(document).ready(function(){
 	<% if !@cd_all.empty? %>
 
 		<% @cd_all.each do |cd| %>
-				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course, :tid=>cd.teacher ? cd.teacher.id : 0 )%>">
+			
+				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course_teachership_id)%>">
 					<td>
 						<%=cd.semester.name%>
 					</td>
@@ -96,10 +97,10 @@ $(document).ready(function(){
 					<!--<td><%= cd.brief %></td>-->
 
 					<td><%= cd.course.ch_name %></td>
-					<td><%= cd.teacher ? cd.teacher.name : "N/A" %></td>
+					<td><%= cd.teacher_name %></td>
 					<td><%= cd.memo %></td>
 					<td><%= cd.time %></td>
-					<td><%= cd.credit %></td>
+					<td><%= cd.course.credit %></td>
 				</tr>
 		<% end %>
 	<% else %>

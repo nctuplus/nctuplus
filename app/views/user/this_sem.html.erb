@@ -33,29 +33,21 @@
 				<%=fa_icon "upload" %>匯入課程
 			<% end %>
 		<% end %>		
-				
-		
-		
-			
 		</div>
 	</div>
 	<br>
-	<%= render :partial=>"/user/table_list_by_costype", locals: {cs_mixed: @cs_this, table_class:"this_sem_table"} %>
+	
+	<div id="course-container"></div>
 </div>
 
 
 <script>
-
-	
-
-	/*$(function(){
-		
-		$("#import_course").popover({ 
-			content: "匯入歷年課程",
-			placement:"auto",
-			trigger : "click",
-			container :"body",
-			placement :"bottom"
-		}).popover('show');
-	});		*/
+	$(document).ready(function(){
+		$.getJSON("/user/get_user_courses?uid=<%=@user.id%>&type=this_sem", function (data) {
+			$("#course-container").html(tmpl("cos_type_list", data));
+			console.log(data);
+		});
+	});
 </script>
+
+<%=render :partial=>"xtmpl_list_by_costype"%>

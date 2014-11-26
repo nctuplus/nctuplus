@@ -22,12 +22,31 @@
 <div class='well col-md-4 sidebar'>Loading...</div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="student_info" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modal-title">Modal title</h4>
+      </div>
+      <div class="modal-body" id="modal-content">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script type="text/x-tmpl" id="side-table">
 	<table class='table table-bordered'>
 		<tr>
 			<td>學號</td>
 			<td>姓名</td>
 			<td>系級(看系就好)</td>
+			<td>已加入</td>
 			<td>動作</td>
 		</tr>
 		{% for(var i=0, data; data=o.data[i]; ++i){ %}
@@ -35,7 +54,21 @@
 			<td>{%=data[0] %}</td>
 			<td>{%=data[1] %}</td>
 			<td>{%=data[2] %}</td>
-			<td><a href="javascript:void(0);" class="delete_data">delete</a></td>
+			<td>{%=((data[3]==0) ? "x" : "o") %}</td>
+			<td>
+				<a href="javascript:void(0);" class="delete_data">delete</a>
+				<a href="javascript:void(0);" class="show_info">info</a>
+			</td>
+		</tr>
+		{% } %}
+	</table>
+</script>
+<script type="text/x-tmpl" id="modal-data">
+	<table class="table">
+
+		{% for(var i=0, cs; cs=o.nodes[i]; ++i){ %}
+		<tr>
+			<td>{%=cs.name %}</td>
 		</tr>
 		{% } %}
 	</table>
@@ -47,9 +80,10 @@ function bind_del(){
 	$('.delete_data').click(function(){
 		var thistr = $(this).parent('td').parent('tr');
 		var std_id = thistr.children('td').first().html() ;
+	
 		$.ajax({
-				type: "get",
-				url: "student_import" ,
+				type: "post",
+				url: "temp_student_action" ,
 				data: {student_id:std_id, type:'delete'},	
 				success: function(data){
 					thistr.remove();
@@ -61,6 +95,28 @@ function bind_del(){
 		});
 		return false;
 	});
+	$('.show_info').click(function(){
+		var thistr = $(this).parent('td').parent('tr');
+		var std_id = thistr.children('td').first().html() ;
+		$.ajax({
+				type: "post",
+				url: "temp_student_action" ,
+				data: {student_id:std_id, type:'info'},	
+				success: function(data){
+					//console.log(data);
+					$('#student_info').modal('show');
+					var res = $.parseJSON( data ) ;
+					$('#modal-title').html(std_id+" fails: "+res.fails);
+					$("#modal-content").html(tmpl("modal-data",res));
+					
+				},	
+				error: function(){
+					alert('something error happened..');
+				}
+		});
+		return false ;
+	});
+	
 }
 
 $(document).ready(function(){

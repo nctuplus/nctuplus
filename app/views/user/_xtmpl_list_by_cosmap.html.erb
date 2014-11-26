@@ -1,62 +1,74 @@
 <script type="text/x-tmpl" id="list_by_cosmap">
 {% var cm=o.course_map,user_courses=o.user_courses; %}
+{% var user_fails=o.user_fails; %}
 {% var cfname=[]; %}
 <table class="table "style="border:0px">
-	{% var first_time=true; %}
-	{% for(var i = 0,course ;course=user_courses[i];i++){ %}
-	{% if(course.cf_id==0){ %}
-		{% if(first_time){ %}
-			{% first_time=false; %}
-			<tr class="row success" >
+	{% if(user_fails.length > 0){ %}
+		<tr class="row warning" >
+			<td class="col-md-12">匯入失敗的(系辦會自行檢查)</td>
+		</tr>
+		{% for(var i=0, f; f=user_fails[i]; ++i){ %}
+			<tr class="row" >
 				<td class="col-md-12">
-					其他
+					<h4 class="text-left">{%=f %}</h4>
 				</td>
 			</tr>
 		{% } %}
-		<tr class="row" >
+	{% } %}
+	{% var first_time=true; %} 
+	{% for(var i = 0,course ;course=user_courses[i];i++){ %}
+		{% if(course.cf_id==0){ %}
+			{% if(first_time){ %}
+				{% first_time=false; %}
+				<tr class="row success" >
+					<td class="col-md-12">
+						其他
+					</td>
+				</tr>
+			{% } %}
+			<tr class="row" >
+					<td class="col-md-12">
+						<h4 class="text-left">
+						{%=course.sem_id==0 ? "抵免" :get_sem_name(course.sem_id) %} | 
+						{%=course.name%} | 
+						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong> | 
+						{%=course.score %}
+						</h4>
+					</td>
+			</tr>
+		{% }else{ %}
+		{% var cfs=get_cf_list(cm.cfs,course); %}
+		{% var tmp=cfs[0].name; %}
+		{% if(cfname.indexOf(tmp)==-1) { %}
+			{% cfname.push(cfs[0].name); %}
+			<tr class="row success" >
 				<td class="col-md-12">
-					<h4 class="text-left">
-					{%=course.sem_id==0 ? "抵免" :get_sem_name(course.sem_id) %} | 
-					{%=course.name%} | 
-					<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong> | 
-					{%=course.score %}
-					</h4>
+					{%=tmp%}
 				</td>
 			</tr>
-	{% }else{ %}
-	{% var cfs=get_cf_list(cm.cfs,course); %}
-	{% var tmp=cfs[0].name; %}
-	{% if(cfname.indexOf(tmp)==-1) { %}
-		{% cfname.push(cfs[0].name); %}
-		<tr class="row success" >
-			<td class="col-md-12">
-				{%=tmp%}
-			</td>
-		</tr>
-	{% } %}
-	<tr class="row" >
-		
-		<td class="col-md-12">
-			<h4 class="text-left">
-				{%=course.sem_id==0 ? "抵免" : get_sem_name(course.sem_id) %} | 
-				{%=course.name%} | 
-				<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong> | 
-				{%=course.score %}
-				{% if(cfs.length>1){ %} 
-				<button class="btn btn-sm btn-default" onclick="$(this).next().toggleClass('hidden');">選擇學程</button>
-				<div class="hidden" style="width:250px;display:inline-block;">
-					<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=o.user_id%},$(this));">
-					{% for(var j = 0,cf ;cf=cfs[j];j++){ %}
-						<option value="{%=cf.id%}" {%= cf.id==course.cf_id ? "selected":""%}>{%=cf.name%}</option>
+		{% } %}
+			<tr class="row" >		
+				<td class="col-md-12">
+					<h4 class="text-left">
+						{%=course.sem_id==0 ? "抵免" : get_sem_name(course.sem_id) %} | 
+						{%=course.name%} | 
+						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong> | 
+						{%=course.score %}
+						{% if(cfs.length>1){ %} 
+						<button class="btn btn-sm btn-default" onclick="$(this).next().toggleClass('hidden');">選擇學程</button>
+						<div class="hidden" style="width:250px;display:inline-block;">
+							<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=o.user_id%},$(this));">
+							{% for(var j = 0,cf ;cf=cfs[j];j++){ %}
+								<option value="{%=cf.id%}" {%= cf.id==course.cf_id ? "selected":""%}>{%=cf.name%}</option>
+							{% } %}
+							</select>
+						</div>
 					{% } %}
-					</select>
-				</div>
-			{% } %}
-			</h4>
-		</td>
+					</h4>
+				</td>
 
-	</tr>
-	{% } %}
+			</tr>
+		{% } %}
 	{% } %}
 	
 </table>
