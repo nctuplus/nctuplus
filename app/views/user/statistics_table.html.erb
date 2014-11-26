@@ -88,7 +88,7 @@
 
 {% o.user_courses = get_remains(o.user_courses, result.match); %}
 {% var remains = o.user_courses.filter(function(e){ return e.degree!=0 ;}); %}
-{% console.log('remains(expect for degree==0) :') ;console.log(remains); %}
+
 
 {% if(remains.length > 0 ){ %}
 {% remains = remains.sort(function(a, b){ return ((a.degree < b.degree) ? -1 : ((a.degree > b.degree) ? 1 : 0));});%}
@@ -131,7 +131,7 @@
 
 {% var others = o.user_courses.filter(function(e){ return e.degree==0 ;}); %}
 {% others = others.sort(function(a, b){ return ((a.cos_type < b.cos_type) ? -1 : ((a.cos_type > b.cos_type) ? 1 : 0));});%}
-{% console.log('remain others:'); console.log(others); %}
+
 {% if(others.length > 0 ){ %}
 	<tr>
 		<td colspan="14" bgcolor="#F4FA58"><p class="text-center">三. 校訂共同科目</p></td>
@@ -174,8 +174,7 @@
 </script>
 
 <script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
-<%=javascript_include_tag "tmpl.min"%>
-<!-- <%=javascript_include_tag "jQuery.print"%>   -->
+<%=javascript_include_tag "/assets/tmpl.min"%>
 <script>
 
 function get_remains(user_courses, matchs){
@@ -301,7 +300,7 @@ function parse_course(course_map, user_courses, user_info){
 	}
 	
 	return {data: data, match: match} ;
-}	
+}	  
 
 $(document).ready(function(){
 <% if params[:map_id].presence and params[:user_id].presence %>
