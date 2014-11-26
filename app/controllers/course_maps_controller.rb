@@ -26,9 +26,9 @@ class CourseMapsController < ApplicationController
 		@course_map.user_id, @course_map.like = current_user.id, 0
 		@course_map.save!
 		if params[:copy].to_i != 0
-			@copy_from = CourseMap.find(params[:copy])
-			Rails.logger.debug "[debug] in1 "+@copy_from.course_fields.count.to_s
-			@copy_from.course_fields.each do |cf|
+			copy_from = CourseMap.find(params[:copy])
+			#Rails.logger.debug "[debug] in1 "+copy_from.course_fields.count.to_s
+			copy_from.course_fields.each do |cf|
 				Rails.logger.debug "[debug] cfcfcf"
 				new_cf = CourseField.new(:user_id=>current_user.id)
 				new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = cf.name, cf.credit_need, cf.color, cf.field_type
@@ -37,6 +37,18 @@ class CourseMapsController < ApplicationController
 				cmcfship.save!
 				trace_cm(new_cf, cf, :_copy_cfl)
 			end
+			
+			copy_from.course_groups.each do |cg|
+				new_cg = CourseGroup.new(:user_id=>current_user.id, :course_map_id=>@course_map.id)
+				new_cg.gtype = cg.gtype 
+				new_cg.save!
+				cg.course_group_lists.each do |cgl|
+					new_cgl = CourseGroupList.new(:user_id=>current_user.id, :course_group_id=>new_cg.id)
+					new_cgl.course_id, new_cgl.lead = cgl.course_id, cgl.lead
+					new_cgl.save!
+				end
+			end
+			
 		end
 		redirect_to @course_map
 	end
