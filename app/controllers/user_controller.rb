@@ -116,9 +116,9 @@ class UserController < ApplicationController
 			ls=latest_semester
 			
 			course_map=@user.course_maps.first
-			if course_map
-				update_cs_cfids(course_map,@user)
-			end
+
+			update_cs_cfids(course_map,@user)
+
 			if course_map
 				course_map_res={
 					:name=>course_map.name,
