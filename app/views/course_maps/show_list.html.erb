@@ -1,0 +1,50 @@
+<div class="modal-header">
+	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	<h4 class="modal-title">
+		名稱：<strong><%=@course_field.name%></strong>
+		學分數(至少)：<strong><%="#{@credit}/#{@course_field.credit_need}"%></strong>
+	</h4>
+</div>
+<div class="modal_body">
+
+<table id="datatable" class="table">
+<thead>
+	<tr>
+		<th class="text-center">符合</th>
+		<th class="text-center">課名</th>
+		<th class="text-center">開課系所</th>
+		<th class="text-center">學分</th>
+		<th class="text-center">類型</th>
+		
+	</tr>
+</thead>
+<tbody>
+
+		<% @taked.each do |c|%>
+			<tr id="course-<%=j c.id.to_s %>">
+				<td class="text-center"><%=green_check%></td>
+				<td class="text-center"><%=c.ch_name%></td>
+				<td class="text-center"><%=c.department.ch_name%></td>
+				<td class="text-center" onclick=""><%=c.course_details.first.credit.to_s%></td>
+				<td class="text-center">
+					N/A
+				</td>
+			</tr>
+		<% end %>
+		<% @rest.each do |c|%>
+			<tr id="course-<%=j c.id.to_s %>">
+				<td></td>
+				<td class="text-center"><%=c.ch_name%></td>
+				<td class="text-center"><%=c.department.ch_name%></td>
+				<td class="text-center" onclick=""><%=c.course_details.first.credit.to_s%></td>
+				<td class="text-center">
+					N/A
+				</td>
+			</tr>
+		<% end %>
+
+<tbody>	
+
+</table>
+
+</div>

@@ -5,6 +5,7 @@ class CourseSimulation < ActiveRecord::Base
 	has_one :teacher, :through=>:course_detail
 	has_one :course_teachership, :through=>:course_detail
 	belongs_to :semester
+	belongs_to :course_field
 	def self.filter_semester(sem_id)
 		self.select{|cs| cs.semester_id==sem_id}
 	end

@@ -9,7 +9,76 @@
 	
 	<br>
 	<div class="container">
-	<% if current_user.department.present? && current_user.department.degree=='3' %>
+	<% @course_maps.each_with_index do |course_map , i| %>
+	
+		<% credit_taked=0 %>
+		<% credit_need=0 %>
+		<table class="table table-bordered "style="border:0px">
+			<tr class="row" >
+				<td class="col-md-12" colspan="<%=@max_colspan[i]+1 %>">
+					<h4 class="text-center">
+						<%=course_map.name %>
+						<%=link_to "產生報表", "/course_maps/statistic_table?map_id=#{course_map.id}&user_id=#{@user.id}", :class=>"btn btn-info pull-right", target:"blank"%>
+					</h4>
+					
+				</td>
+			</tr>
+		<% course_map.course_field_groups.includes(:course_fields).sort_by{|cfg|cfg.group_type}.each do |cfg| %>
+			<% cf=cfg.course_fields %>
+			
+			<% if cfg.group_type<3 %>
+			<%_cf=cf.first %>
+			<% credit_need+=_cf.credit_need %>
+			<% cfl=_cf.course_field_lists %>
+			<% res=statistic_level2(course_map.id,courses_join_cf(@user.pass_courses,_cf),cfg,_cf) %>
+			<% credit_taked += res[:credit] %>
+			<tr class="row">
+				<td class="col-md-2" style="vertical-align:middle"><h4 class="text-center"><%=_cf.name%></h4></td>
+				<td class="col-md-10" colspan="<%=@max_colspan[i] %>" style="vertical-align:middle">
+
+					<p class="text-center no-margin-bottom">
+					<a data-toggle="modal" href="/course_maps/show_list?cf_id=<%=_cf.id%>&uid=<%=@user.id%>"  data-target="#courselist_modal">
+					<%= res[:match] ? green_check : red_x+" (#{res[:credit]}/#{_cf.credit_need})" %>
+					</a>
+					</p>
+				</td>
+			</tr>
+			<% else %>
+			<% credit_need+=cfg.credit_need %>
+			<tr class="row" >
+				<td class="col-md-2" rowspan="2" style="vertical-align:middle"><h4 class="text-center"><%=cfg.name%></h4></td>
+					<% cf.each do |_cf| %>
+						<td style="vertical-align:middle"><p class="text-center"><%=_cf.name%></p></td>
+					<% end %>
+				</tr>
+			<tr class="row">
+				<% cf.each do |_cf| %>
+					<% res=statistic_level2(course_map.id,courses_join_cf(@user.pass_courses,_cf),cfg,_cf) %>
+
+					<% credit_taked += res[:credit] %>
+					<td>
+						
+						<p class="text-center no-margin-bottom">
+							<a data-toggle="modal" href="/course_maps/show_list?cf_id=<%=_cf.id%>&uid=<%=@user.id%>"  data-target="#courselist_modal">
+								<%= res[:match] ? green_check : red_x+" (#{res[:credit]}/#{_cf.credit_need})" %>
+							</a>
+						</p>
+						
+					</td>
+				<% end %>
+			</tr>
+			<% end %>
+		
+		<% end %>
+		<tr class="row">
+			<td colspan="<%=@max_colspan[i]+1 %>">
+				<%= progress_bar(credit_taked,credit_need) %>
+			</td>
+		</tr>
+		</table>	
+	<% end %>
+	
+	<% if @user.department.present? && @user.department.degree=='3' %>
 	<table class="table table-bordered "style="border:0px">
 		
 		<tr class="row">
@@ -26,7 +95,7 @@
 			<td class="col-md-" colspan="3">
 				<% if cs_service_1.length>0 %>
 				<p class="text-center no-margin-bottom">
-				<%= fa_icon "check 2x", style:"color:#5cb85c" %>
+				<%=green_check%>
 				</p>
 				<% end %>
 			</td>
@@ -192,14 +261,14 @@
 				<p class="text-center no-margin-bottom">Total</p>
 			</td>
 		</tr>
-		<% if current_user.department.credit.present? %>
+		<% if @user.department.credit.present? %>
 		<tr class="row">
 			<td><p class="text-center">學分</p></td>
 			<td colspan="6">
 				<div class="progress no-margin-bottom">
 				<% all_credit=@cs_all_passed.map{|cs|cs.course_detail.credit.to_i}.reduce(:+)||0 %>
 					<div class="progress-bar progress-bar-info" style="width: <%=(all_credit*100/128)>10?(all_credit*100/128):10 %>%">
-						<span><strong><%=all_credit%>/<%=current_user.department.credit%></strong></span>
+						<span><strong><%=all_credit%>/<%=@user.department.credit%></strong></span>
 					</div>
 
 				</div>
@@ -256,9 +325,6 @@
 			<label class="">List by : </label>
 		</p>
 		</div>
-		<div class="col-md-4">
-			<%= select_tag "", options_for_select([['課程種類','cos_type'],['學期','semester']]), onchange:"$('.statics_table').toggleClass('hidden');", class:"form-control" %>
-		</div>
 		<div class="col-md-1">
 			<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
 			<%=fa_icon "bookmark-o"%>必修科目表
@@ -266,6 +332,22 @@
 		</div>
 	</div>
 	<br>
-	<%= render :partial=>"/user/table_list_by_costype", locals: {cs_mixed: @cs_all_cos_type, table_class:"statics_table"} %>
-	<%= render :partial=>"/user/table_list_by_semester", locals: {table_class:"statics_table"} %>
+	<%= render :partial=>"/user/table_list_by_cosmap", locals: {cs_mixed: @cs_all_cos_type, table_class:"statics_table"} %>
 </div>
+
+<div class="modal fade" id="courselist_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" >
+			<!--<div class="modal-footer">
+				<button type="button" class="btn btn-primary">Purchase</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+			</div>-->
+		</div>
+	</div>
+</div>
+<script>
+
+$('body').on('hidden.bs.modal', '.modal', function () {
+    $(this).removeData('bs.modal');
+});
+</script>

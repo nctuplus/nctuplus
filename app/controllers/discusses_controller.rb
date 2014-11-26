@@ -38,9 +38,9 @@ class DiscussesController < ApplicationController
 	end
 	
 	def list_by_course
-		@ct_id=params[:ct_id].to_i
-		@ct=CourseTeachership.includes(:course, :teacher).find(@ct_id)
-		@discusses=Discuss.includes(:sub_discusses, :user, :discuss_likes).where(:course_teachership_id=>@ct_id).order("updated_at DESC")
+		#@ct_id=
+		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
+		@discusses=@ct.discusses.includes(:sub_discusses, :user, :discuss_likes).order("updated_at DESC")
 		render "show_discussion"
 	end
 	

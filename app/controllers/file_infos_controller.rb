@@ -9,7 +9,7 @@ class FileInfosController < ApplicationController
 	
 	def index
 		if params[:ct_id]
-				@files = FileInfo.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
+			@files = FileInfo.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
 		else
 			@files = FileInfo.where(:owner_id=>current_user.id)#.select(:file
 		end

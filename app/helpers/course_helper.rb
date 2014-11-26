@@ -116,7 +116,7 @@ module CourseHelper
 			when 3
 				return "#CD7F32"
 			else
-				return "black"
+				return "#000000"
 		end
 			
 	end
@@ -181,7 +181,8 @@ module CourseHelper
 				type="elective"
 			when "外語"
 				type="foreign"
-			
+			else
+				type="zz"
 		end
 		#type=""
 		return prefix+type

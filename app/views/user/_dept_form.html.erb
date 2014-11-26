@@ -1,15 +1,15 @@
-<% dept_all=Department.where("(dept_type = 'dept' AND real_id != '17')  OR dept_type = 'for_user' ")%>
-<% dept_undergrad=dept_all.select{|d|d.degree=='3'}.map{|d| [d.ch_name,d.id]}%>
-<% dept_grad=dept_all.select{|d|d.degree=='2'}.map{|d| [d.ch_name,d.id]}%>
-<%dept=current_user.department%>
+<% dept_all=Department.where("(use_type = 'dept' AND dep_id != '17')  OR use_type = 'for_user' ")%>
+<% dept_undergrad=dept_all.select{|d|d.degree==3}.map{|d| [d.ch_name,d.id]}%>
+<% dept_grad=dept_all.select{|d|d.degree==2}.map{|d| [d.ch_name,d.id]}%>
+<%dept=@user.department%>
 <%= form_tag "/user/select_dept", class:"form-inline", id:"user_form" do %>
 	<div class="form-group col-md-3">
 	
 	<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],dept.nil? ? 3 :dept.degree), class:'form-control', onChange:"change_degree();"%>
 	</div>
 	<div class="form-group col-md-4">
-	<%=select_tag 'dept_under_select', options_for_select(dept_undergrad,current_user.department_id), class:'form-control'%>
-	<%=select_tag 'dept_grad_select', options_for_select(dept_grad,current_user.department_id), class:'form-control'%>
+	<%=select_tag 'dept_under_select', options_for_select(dept_undergrad,@user.department_id), class:'form-control'%>
+	<%=select_tag 'dept_grad_select', options_for_select(dept_grad,@user.department_id), class:'form-control'%>
 	</div>
 	<div class="form-group col-md-4 row no-margin-left no-padding-left">
 	<div class="col-md-4 no-padding-left no-padding-right">
@@ -18,7 +18,7 @@
 	</h4>
 	</div>
 	<div class="col-md-8">
-	<%=select_tag 'grade_select', options_from_collection_for_select(Semester.all.group(:year).order(:id),:id,:year, current_user.semester_id), class:'form-control'%>
+	<%=select_tag 'grade_select', options_from_collection_for_select(Semester.all.group(:year).order(:id),:id,:year, @user.semester_id), class:'form-control'%>
 	</div>
 	</div>
 	<%=submit_tag "送出", class: "btn btn-success"%>
@@ -37,9 +37,7 @@
 			$("#grade_grad_select").hide();
 		<% end %>
 		
-		<% if params[:import_course] %>
-			alert("匯入完成! 共新增 <%=params[:success]%> 門課 失敗:<%=params[:failed]%> Pass:<%=params[:pass]%>  Fail:<%=params[:no_pass]%>");	
-		<% end %>
+		
 		
 	});
 	

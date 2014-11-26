@@ -28,5 +28,7 @@
 //= require jquery.svginject
 //= require highcharts-custom
 
+//= require custom-array-handler
+//= require custom-helper
+//= require cm-stat-helper
 
-//= require facebook

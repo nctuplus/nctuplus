@@ -19,7 +19,9 @@ class ApplicationController < ActionController::Base
 		html<<mesg
 		html<<'<div>'
 	end
-	
+	def getUserByIdForManager(uid)
+		return checkTopManagerNoReDirect &&uid.presence&& uid!="" ? User.find(uid) : current_user
+	end
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
@@ -28,14 +30,63 @@ class ApplicationController < ActionController::Base
     unless current_user
 	  alertmesg("info",'Sorry',"請先登入,謝謝!")
 	  if request.env["HTTP_REFERER"].nil?
-		redirect_to :root
+			redirect_to :root
 	  else
-		redirect_to :back
+			redirect_to :back
 	  end
 	  return false
 	end
 	return true
   end
+  
+  def checkE3Login
+  	msg = ''
+  	flag = true
+    if current_user.nil?
+	  msg, flag = '請先登入,謝謝' , false
+	elsif current_user.student_id.nil?
+	  msg, flag = '請綁定e3,謝謝' , false
+	end
+	
+	if not flag	
+	  alertmesg("info",'Sorry',msg)
+	  if request.env["HTTP_REFERER"].nil?
+			redirect_to :root
+	  else
+			redirect_to :back
+	  end
+	 end 
+	 
+	 return flag
+  end
+  
+  def checkFBLogin
+    msg = ''
+  	flag = true
+    if current_user.nil?
+	  msg, flag = '請先登入,謝謝' , false
+	elsif current_user.uid.nil?
+	  msg, flag = '請綁定FB,謝謝' , false
+	end
+	
+	if not flag	
+	  alertmesg("info",'Sorry',msg)
+	  if request.env["HTTP_REFERER"].nil?
+			redirect_to :root
+	  else
+			redirect_to :back
+	  end
+	 end 
+	 
+	 return flag
+  end
+  
+	def checkTopManagerNoReDirect
+		#if checkLogin
+	  TopManager.find_by_user_id(current_user.id).presence
+		#end
+		#return @topmanager
+	end
   def checkTopManager
     
     if checkLogin
@@ -52,7 +103,8 @@ class ApplicationController < ActionController::Base
 		  redirect_to root_url
 		  end
 	  end
-      
+    else
+		redirect_to root_url
     end    
   end
   

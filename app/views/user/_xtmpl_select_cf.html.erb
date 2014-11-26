@@ -1,0 +1,37 @@
+<script type="text/x-tmpl" id="select_cf">
+{% var cm=o.course_map,user_courses=o.user_courses; %}
+{% var cfname=[]; %}
+<table class="table "style="border:0px">
+	{% var any_need_to_sel=false; %}
+	{% for(var i = 0,course ;course=user_courses[i];i++){ %}
+		{% var cfs=get_cf_list(cm.cfs,course); %}
+		{% if(course.cf_id==0||cfs.length<2)continue; %}
+		{% any_need_to_sel=true; %}
+		<tr class="row" >
+			<td class="col-md-12">
+				<h4 class="text-left">
+					{%=course.sem_id==0 ? "抵免" : get_sem_name(course.sem_id) %} | 
+					{%=course.name%} | 
+					<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong> | 
+					{%=course.score %}				
+					<div class="" style="width:250px;display:inline-block;">
+						<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=o.user_id%},$(this));">
+						{% for(var j = 0,cf ;cf=cfs[j];j++){ %}
+							<option value="{%=cf.id%}" {%= cf.id==course.cf_id ? "selected":""%}>{%=cf.name%}</option>
+						{% } %}
+						</select>
+					</div>
+				</h4>
+			</td>
+		</tr>
+
+	{% } %}
+	
+	<tr class="row">
+		<td class="col-md-12 text-right">
+				<a href="/user/special_list" class="btn btn-primary">確認</a>
+		</td>
+	</tr>
+</table>
+
+</script>

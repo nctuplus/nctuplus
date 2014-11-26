@@ -1,0 +1,66 @@
+<script type="text/x-tmpl" id="cos_type_list">
+{% var credits={}; %}
+
+<table class="table" id="by_cos_type">
+	{% var grouped=groupBy(o.taked,function(item){return item.cos_type;}); %}
+	
+	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
+		
+		{% var local_credit=0;%}
+		<tr class="row">
+			<th colspan="3" class="{%=cos_type_class(courses[0].cos_type)%}">
+				{%=courses[0].cos_type%}
+			</th>
+		</tr>
+
+		{% for (var j=0, course; course=courses[j]; j++) { %}
+			{% var pass_class=""; %}
+			{% if(course.sem_id==o.last_sem_id||check_pass(o.pass_score,course.score)) { %}
+			{% local_credit+=parseInt(course.credit); %}
+			{% } else{ %}
+			{% pass_class="danger"; %}
+			{% } %}
+			<tr class="row {%=pass_class%}">
+				<td class="col-md-6">
+					<h4 class="text-center">
+						<a href="/courses/{%=course.ct_id%}" target="blank">{%=course.name%}</a> | 
+						{%=course.t_name%} | 
+						{% if(course.cf_name!=""){ %}
+						{%=course.cf_name%} | 
+						{% } %}
+						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong>
+					</h4>
+				</td>
+				<td class="col-md-6">
+						<div class="container" style="display:inline-block;">		
+							<a href="/courses/{%=course.ct_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
+							<div class="number-right-top" >{%=course.file_count%}</div>
+							<a href="/courses/{%=course.ct_id%}&first_show=discussion" class="btn btn-sm btn-default">討論區</a>
+							<div class="number-right-top" >{%=course.discuss_count%}</div>
+						</div>
+					</td>
+			</tr>
+		{% } %}
+		{% if(credits[courses[0].cos_type]){ %}
+			{% credits[courses[0].cos_type]+=local_credit; %}
+		{% }else{ %}
+			{% credits[courses[0].cos_type]=local_credit; %}
+		{% } %}
+	{% } %}
+	<tr class="row label-info">
+		<td colspan="2" >
+			<h4 class="text-right">
+				歷年總和:
+				{% total=0; %}
+				{% for (var value in credits){ %}
+					{% total+=credits[value]; %}
+					{%=value%} : <strong>{%=credits[value]%}</strong>
+				{% } %}
+				共 <strong>{%=o.agreed.length+o.taked.length%}</strong> 門課
+					<strong>{%=total%}</strong> 學分
+			</h4>
+		</td>
+	</tr>
+
+</table>
+</script>

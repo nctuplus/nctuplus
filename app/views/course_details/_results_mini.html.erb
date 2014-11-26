@@ -35,10 +35,13 @@ $(document).ready(function(){
 			<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 			<%= f.search_field :course_ch_name_cont, class: "form-control",placeholder:"課名" %>
 		</div>
+		
 		<div class="col-sm-5 no-padding-left">
+		<!--
 			<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-			<%=f.search_field :teacher_name_cont, class: "form-control",placeholder:"老師" %>
+		-->
 		</div>
+		
 		<div class="col-sm-2 no-padding-left" style="margin-top:-20px;">
 			<button class="btn btn-primary" onclick="$('#search').submit();"><%=fa_icon "search"%></button>
 		</div>
@@ -54,7 +57,8 @@ $(document).ready(function(){
 	
 	<% if !@cd_all.empty? %>
 
-		<% @cd_all.each do |cd,dept|  %>
+		<% @cd_all.each do |cd|  %>
+			<% next if cd.time[0].to_i==0 %>
 				<% if !cos_types.include?(cd.cos_type) %>
 					<% cos_types.append(cd.cos_type) %>
 					<tr class="row"><th class="<%=cos_type_class(cd.cos_type)%>"><%=cd.cos_type%></th></tr>
@@ -62,10 +66,9 @@ $(document).ready(function(){
 				<tr id="cd_<%=cd.id%>" class="row" >
 					<td class="">
 						<p id="rating_all" class="">
-							<%= link_to cd.course.ch_name, course_path(cd.course, :tid=>cd.teacher.id), :class=>"course_name", :target=>"_blank" %>
-							<% cd.course.ch_name %>
-							<%= dept.ch_name %>
-							<%= cd.teacher.name %>
+							<%= link_to cd.course.ch_name, course_path(cd.course_teachership), :class=>"course_name", :target=>"_blank" %>
+							<%=cd.department ? cd.department.ch_name.strip : "N/A"%>
+							<%= cd.teacher_name %>
 							<button class="btn btn-success btn-circle pull-right" onclick="add_class(<%=cd.id%>,'add','search')">
 							<span class="glyphicon glyphicon-plus"></span>
 							</button>
@@ -78,7 +81,7 @@ $(document).ready(function(){
 							<%=cd.cos_type%> | 
 						<% end %>
 						<strong class="course_time"><%= cd.time %></strong>
-						| <%=fa_icon "graduation-cap" %> <strong><%= cd.credit %></strong>
+						| <%=fa_icon "graduation-cap" %> <strong><%= cd.course.credit %></strong>
 						
 						</p>
 					</td>

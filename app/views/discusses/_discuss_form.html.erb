@@ -10,7 +10,7 @@
 <div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
 
 	<div class="panel-heading row no-margin-left">
-		<% if current_user %>
+		<% if current_user and current_user.uid %>
 			<div class="col-md-1">
 			<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "50x50", style:"display:inline-block" %>
 			</div>
@@ -31,7 +31,7 @@
 	</div>
 	<div class="panel-footer row no-margin-left">
 		<div class="col-md-12">
-		<% if current_user %>
+		<% if current_user &&current_user.uid %>
 			<p class="pull-right">
 			同步分享至FB
 			<input type="checkbox" name="share" id="sync-share" onchange="change_check($(this))" class="" value="no" >

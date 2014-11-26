@@ -10,8 +10,19 @@ class CourseTeachership < ActiveRecord::Base
 	has_many :file_infos
   #has_one :course_teacher_page_content
 
+	def _teachers
+		return Teacher.where(:id=>JSON.parse(self.teacher_id))
+	end
 	
+	def teacher_name
+		res=self._teachers.first.name+","
+		self._teachers.each_with_index do |t,index|
+			next if index==0
+			res<<t.name<<','
+		end
+		return res[0..-2]
+	end
   
-  belongs_to :teacher
+  #belongs_to :teacher
 	
 end

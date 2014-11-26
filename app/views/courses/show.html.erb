@@ -13,13 +13,13 @@
 							.crown-color{fill: <%=j rankTag(@target_rank)%>;}
 						</style>
 					<% end %>		
-					<%=@teacher_show.name%>
+					<%=@ct.teacher_name%>
 				</h1>
 			</div>
 			<div class="col-md-5" id="teacher-name">
 				<span class="pull-right">
 					<br>
-					<% if @ct.course_details.last.semester==latest_semester %>
+					<% if @ct.course_details.last.semester_id==latest_semester.id %>
 					<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
 					<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
 					</button>
@@ -39,6 +39,7 @@
 
 		<div class="row">
 			<div id="tc" class="well" style="">
+				<%= render :partial=> "show_teacherOnCourse" %>
 			</div>
 			<div id="compare" class="well bs-callout" style="">
 			</div>
@@ -59,9 +60,20 @@
 
 <script>
 	$(document).ready(function(){
-		//alert("<%=j session[:saved_query].to_s.html_safe%>");
-		//show_item('<%=@first_show%>',true);
-		$("#tc").html('<%=j render :partial=> "show_teacherOnCourse" %>');
+		$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
+			$('body').scrollspy('refresh');
+			$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
+				$('body').scrollspy('refresh');
+				$('body').scrollTo("#course-name",10,{offset:-80});
+				<% if params[:first_show]=="discussion" %>
+					$('body').scrollTo("#discuss",700,{offset:-60});
+				<% elsif params[:first_show]=="files" %>
+					$('body').scrollTo("#files",700,{offset:-60});
+				<% end %>
+			});
+		});
+			
+	/* compare temp broken		
 		$("#compare").load("/courses/get_compare?c_id=<%=@course.id%>", function() {
 			$('body').scrollspy('refresh');
 			$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
@@ -77,13 +89,11 @@
 				});
 			});
 		});
-		
-		
-		
-		
-		<% share_url="#{root_url}courses/#{@course.id}?tid=#{@teacher_show.id}" %>
+	*/		
+			
+		<% share_url="#{root_url}courses/#{@ct.id}" %>
 		var share_url='<%=j share_url.html_safe %>';
-		var course_title="<%= @course.ch_name %> <%=@teacher_show.name%>";
+		var course_title="<%= @course.ch_name %> <%=@ct.teacher_name%>";
 		new Share(".share-course",{
 			ui: {
 				flyout: "bottom center",

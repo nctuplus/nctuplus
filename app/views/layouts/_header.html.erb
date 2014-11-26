@@ -18,24 +18,26 @@
 				<% if current_user && TopManager.find_by_user_id(current_user.id) %>
 					<li class="dropdown">
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
-						<ul class="dropdown-menu" role="menu">
-								<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
-								<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
-						</ul>
+						<ul class="dropdown-menu">
+							<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+							<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+							<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>
+							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
+							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>								
+						</ul>	
 					</li>
 				<% end %>
 
 				<li><a href="/course_details/" rel="nofollow">全校課程</a></li>
-
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
 				
       </ul>
 			
-			<ul class="nav navbar-nav navbar-right">
+			<ul class="nav navbar-nav navbar-right">			
+				<% if current_user %>
 				<li>
 					<a class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :class=>"masterTooltip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %></a>
 				</li>
-				<% if current_user %>
 				<li>
 
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= fa_icon("calendar 2x", :id=>"schd_but")%></a>
@@ -48,10 +50,23 @@
 				<li class="dropdown">
 				
 					<%= link_to  "/user/special_list", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
+						<% if current_user.uid.presence%>
+							<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
+						<% else %>
+							學號 
+						<% end %>
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
+					<% if current_user.uid and not current_user.student_id%>
+						<li>
+							<%= link_to  "綁定e3帳號", 'javascript:void(0);', :class=>'fb-bind-e3'%>
+						</li>
+					<% elsif not current_user.uid and current_user.student_id %>
+						<li>
+							<%= link_to  "綁定FaceBook帳號", '/auth/facebook', :confirm=>'注意! 綁定後無法反悔'%>
+						</li>
+					<% end %>	
 						<li>
 							<%= link_to  "登出", signout_path, id: "sign_out" %>
 						</li>					
@@ -59,9 +74,7 @@
 				
 				<% else %>
 				<li>
-					<%= link_to  "/auth/facebook", id: "sign_in" do %>
-					<%=fa_icon "facebook-square " %> 登入
-					<% end %>
+					<%=link_to "登入","javascript:void(0);",:class=>"sign_in" %>
 				<% end %>  
 				</li>
 			</ul>
@@ -87,7 +100,81 @@
 	</div>
 </div>
 
+<% if not current_user %>
 
+<div class="modal fade btn-lg" id="login_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" >	
+			<div class="modal-header text-center">Login</div>	
+			<div class="modal-body row" >
+					<%=form_tag "/main/E3Login_Check", :class=>'col-md-8 e3-login', :remote=>true do%>
+					<div class="form-group">
+						<label class="control-label">e3帳號登入<span class='text-color-red login-alert'></span></label>
+					</div>
+					<div class="form-group">
+    					<label for="id" class="col-md-3 control-label">學號</label>
+   						 <div class="col-md-9">
+      						<%=text_field_tag :id, '', :class=>"form-control"%>
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label for="pwd" class="col-md-3 control-label">密碼</label>
+   						 <div class="col-md-9">
+      						<%=password_field_tag :pwd, '', :class=>"form-control"%>
+    					</div>
+  					</div>
+					<div class="form-group">
+   						<div class="col-sm-offset-4 col-sm-8">
+      						</br><button type="submit" class="btn btn-info submit-but">送出</button>
+    					</div>
+ 					</div>
+					<% end %>
+					<div class="col-md-1"></div>
+					<div class="col-md-4" class='modal-fb-link'>
+						<label>FB登入</label></br></br>
+						<%= link_to  "/auth/facebook", id: "sign_in" do %>
+							<%=fa_icon "facebook-square 3x" %>
+						<% end %>
+					</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<% elsif not current_user.student_id%>
+<div class="modal fade btn-lg" id="login_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" >	
+			<div class="modal-header text-center">綁定e3帳號</div>	
+			<div class="modal-body row" >
+					<%=form_tag "/main/E3Login_Check", :class=>'col-md-8 e3-login', :remote=>true do%>
+					<div class="form-group">
+						<label class="control-label">e3帳號登入<span class='text-color-red login-alert'></span></label>
+					</div>
+					<div class="form-group">
+    					<label for="id" class="col-md-3 control-label">學號</label>
+   						 <div class="col-md-9">
+      						<%=text_field_tag :id, '', :class=>"form-control"%>
+    					</div>
+  					</div>
+  					<div class="form-group">
+    					<label for="pwd" class="col-md-3 control-label">密碼</label>
+   						 <div class="col-md-9">
+      						<%=password_field_tag :pwd, '', :class=>"form-control"%>
+    					</div>
+  					</div>
+					<div class="form-group">
+   						<div class="col-sm-offset-4 col-sm-8">
+      						</br><button type="submit" class="btn btn-info submit-but" confirm="注意! 綁定後無法反悔">送出</button>
+    					</div>
+ 					</div>
+					<% end %>
+			</div>
+		</div>
+	</div>
+</div>
+
+<% end %>
 
 
 <script>
@@ -105,6 +192,11 @@
 				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
 			}
 		);
+		
+		$('.sign_in').click(function(){
+			$("#login_modal").modal('show');	
+			$('.modal-fb-link').show();
+		});
 
 	});
 	function add_to_cart(id,type){
@@ -125,6 +217,32 @@
 		
 		});
 	}
-
+	$('.e3-login').submit(function(){		
+		$('.submit-but').html('<%=j fa_icon "spinner spin"%>');
+		$('.submit-but').attr("disabled", true);
+		$.ajax({
+			type: "POST",
+  			url: "/main/E3Login_Check" ,
+  			data: $(this).serialize(),
+  			success: function(data){
+  				console.log('login result : '+data);
+				if(data=='success'){
+					location.reload();
+				}else{
+					$('.login-alert').html('帳號或密碼錯誤').show().fadeOut(3500);
+				}
+  			},error: function(){
+  				$('.submit-but').html('送出');
+  				$('.submit-but').attr("disabled", false);
+  				alert('Cannot connect to E3 login service..');
+  			}
+		});
+		return false ;
+	});
+	
+	$('.fb-bind-e3').click(function(){
+		$("#login_modal").modal('show');			
+		return false;
+	});
 
 </script>

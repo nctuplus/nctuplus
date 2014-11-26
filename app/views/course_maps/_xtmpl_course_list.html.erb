@@ -1,0 +1,57 @@
+<script type="text/x-tmpl" id="table-format">
+
+<table class="table course-table">
+	<thead>
+		<tr class="row">
+			<th class="col-md-1"></th>
+			<th class="col-md-3">課名</th>
+			<th class="col-md-2">開課系所</th>
+			<th class="col-md-1">學分</th>
+			<th class="col-md-2">採計學分</th>
+			<th class="col-md-1">動作</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% if (o.length > 0){ %}
+			{% for(var i=0 ; i<o.length ; i++){ %}
+				{% var list = o[i] ;%}
+				<tr class="row" list_id="{%= list.id%}">
+					<td class="col-md-1"></td>
+					<td class="col-md-3">{%=list.course_name %}</td>
+					<td class="col-md-2">{%=list.dep %}</td>
+					<td class="col-md-1">{%=list.credit %}</td>
+					<td class="col-md-2">
+						{% if(list.record_type==1){ %}
+							<%=fa_icon 'check', :class=>'text-color-green course-update clickable-hover', :rtype=>1%>
+						{% }else{ %}
+							<%=fa_icon 'times', :class=>'text-color-red course-update  clickable-hover', :rtype=>0%>
+						{% } %}
+					</td>
+					<td class="col-md-2">
+						<%=link_to "刪除", "javascript:void(0);", :class=>"course-delete"%>
+					</td>
+				</tr>
+				{% if(list.groups){ %}
+					{% for(var j=0 ; j<list.groups.length ; j++){ %}
+						{% var group = list.groups[j] ; %}
+						<tr class="row" list_id="{%= list.id%}" bgcolor="#81F781">
+							<td class="col-md-1"><%=fa_icon 'angle-right'%></td>
+							<td class="col-md-3">{%=group.course_name %}</td>	
+							<td class="col-md-2">{%=group.dep %}</td>
+							<td class="col-md-1">{%=group.credit %}</td>
+							<td class="col-md-2"></td>
+							<td class="col-md-2"></td>
+						</tr>
+					{% } %}
+				{% } %}
+			{% } %}	
+		{% }else{ %}
+	</tbody>	
+		<tr class="row">
+			<td colspan="3"><p class="text-right">嘗試從左側搜尋加入課程</p></td>
+		</tr>
+		{% } %}
+
+</table>
+
+</script>

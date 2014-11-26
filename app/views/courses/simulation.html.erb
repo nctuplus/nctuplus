@@ -1,10 +1,5 @@
 <ul class="nav nav-tabs " id="sem_selector">
 	<li class="sem_tab active" id="sem_<%=latest_semester.id%>"><a href="javascript:void(0);" onclick="change_sem(<%=latest_semester.id%>);"><%=latest_semester.name%></a></li>
-	
-	<% Semester.where(:id=>@user_sem_ids).reverse.each do |s| %>
-		<% next if s==latest_semester %>
-		<li id="sem_<%=s.id%>"  class="sem_tab"><a href="javascript:void(0);" onclick="change_sem(<%=s.id%>);"><%=s.name%></a></li>
-	<% end %>
 	<!--<li class="" id="add_sem"><a href="javascript:void(0);" onclick="show_add_form()">新增學期</a></li>-->
 	<!--<li class="" id="show_statics"><a href="javascript:void(0);" onclick="show_statics()">統計</a></li>-->
 	<!--<span class="glyphicon glyphicon-question-sign clickable-hover pull-right" style="color:green !important; "onclick="show_tip('simulation_tips')"></span>-->
@@ -13,65 +8,10 @@
 <br>
 <div id="srch_and_schd" class="" style="background-color:rgba(221,221,221,0.8)">
 </div>
-<br>
-<!--
-<div class="row well" id="add_sem_form">
-	<div class="form-inline col-md-offset-5">
-		<div class="form-group">
-			<% sems=Semester.where("id not in (?)",@user_sem_ids).reverse %>
-			<% if !sems.empty? %>
-			<%= select_tag(:sem_id, options_from_collection_for_select(sems,:id,:name), :class=>"form-control") %>		
-			<% end %>
-		</div>
-		<% if !sems.empty? %>
-		<button class="btn btn-primary" onclick="add_semester()">新增</button>
-		<% end %>
-	</div>
-</div>
--->
 <script>
-
-function add_semester(){
-	$("#sem_selector .active").removeClass("active");
-	var select =$("#sem_id");
-	
-	$("#add_sem_form").hide(); 
-	$("#sem_selector .sem_tab:last").after('<li class="sem_tab" id="sem_'+select.val()+'"><a href="javascript:void(0);" onclick="change_sem('+select.val()+')">'+select.find('option:selected').text()+'</a></li>');
-	
-	change_sem(select.val());
-	select.find('option:selected').remove();
-
-}
-
 $(document).ready(function(){
 	$("#add_sem_form").hide();
 	$("#srch_and_schd").load("/courses/get_user_simulated?sem_id=<%=latest_semester.id%>");
 	
 });
-
-function change_sem(id){
-	//alert("!!!");
-	$("#add_sem_form").hide();
-	$("#srch_and_schd").show();
-	$("#srch_and_schd").html('<%=loading_img%>');
-	$("#srch_and_schd").load("/courses/get_user_simulated?sem_id="+id);
-	$("#sem_selector .active").removeClass("active");
-	$("#sem_"+id).addClass("active");
-	
-}
-function show_add_form(){
-	//$("#add_sem_form").removeClass("hidden");
-	$("#add_sem_form").show();
-	
-	$("#sem_selector .active").removeClass("active");
-	$("#add_sem").addClass("active");
-	
-	//$("#srch_and_schd").load("/courses/get_sem_form");
-	$("#srch_and_schd").hide();
-}
-
-
-
-
-
 </script>

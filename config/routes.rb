@@ -4,6 +4,15 @@ Nctuplus::Application.routes.draw do
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
+	get "admin/ee104"
+	get "user/get_user_courses"
+	get "user/this_sem"
+	get "user/update_all_sem_and_dept"
+	get "api/testttt"
+	post "user/import_course"
+	get "user/import_course"
+	get "user/import_course_2"
+	get "user/select_cs_cf"
 	
   #post "courses/update_discuss"
 	#post "courses/new_discuss"
@@ -16,13 +25,15 @@ Nctuplus::Application.routes.draw do
 	post "courses/course_raider"
 	post "courses/course_content_post"
 	
-	get "courses/search"
+	
+	get "courses/groups"
+
 	get "courses/get_compare"
 	#get "courses/get_discuss"
 	
 	get "courses/course_raider"
 	get "courses/list_all_courses"
-  get "courses/rate_cts"
+    get "courses/rate_cts"
 	get "courses/simulation"
 	get "courses/add_simulated_course"
 	get "courses/get_user_simulated"
@@ -39,7 +50,26 @@ Nctuplus::Application.routes.draw do
 	get "courses/show_cart"
 
 	resources :courses
+	
 
+#### course map block 	
+	#get "course_maps/add_usercoursemapship"		
+	
+
+	get "course_maps/get_course_tree"
+	get "course_maps/get_group_tree"
+	post "course_maps/course_action"
+	post "course_maps/action_new"
+	post "course_maps/action_update"
+	post "course_maps/action_delete"	
+	get "course_maps/show_course_list" 
+	get "course_maps/show_course_group_list"
+	post "course_maps/course_group_action"
+
+	get "course_maps/start2"
+	resources :course_maps
+####
+	
 	resources :departments do
     resources :courses
 	end
@@ -59,11 +89,20 @@ Nctuplus::Application.routes.draw do
   
   #get "post/getcode"
   #resources :post
-	
+  	post "main/temp_student_action"
+	get "main/E3Login"
+	post "main/E3Login_Check"
+	get "main/student_import"
+	post "main/student_import"
+  	get "main/test"
+	get "main/testttt"
+	get "main/testtt11t"
 	post "main/send_report"
 	get "main/hidden_prepare"
   get "main/index"
 	
+	# for ems curl
+	post "/main/get_specified_classroom_schedule"
 	
 	#----------for chrome extension---------------
 	post "api/query_from_time_table"
@@ -79,11 +118,20 @@ Nctuplus::Application.routes.draw do
   #----------for user---------------
   #get "user/mail_confirm"
   #get "user/activate"
+  
+	#get "user/:id", to: "user#show"
+	get "user/statistics2"
+
+	get "user/select_cm"
+	post "user/select_cm"
+	get "user/select_cf"
 	get "user/add_top_manager"
-	post "user/add_course"
+	get "user/statistics_table"
   get "user/manage"
 	get "user/import_course"
   get "user/special_list"
+	get "user/all_courses"
+	get "user/statistics"
   get "user/:id/permission", to: "user#permission"
   
   post "user/:id/permission", to: "user#permission"
@@ -97,6 +145,7 @@ Nctuplus::Application.routes.draw do
   root :to => "main#index"
 	
 	get "course_details/mini"
+	get "course_details/course_group"
   resources :course_details
   
   

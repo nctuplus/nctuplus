@@ -1,0 +1,53 @@
+﻿
+
+<div class="panel panel-primary" >
+	<div class="panel-heading" >
+		<h4 class="text-center"><%=latest_semester.name%></h4>
+	</div>
+	<br>
+	<div class="row">	
+		<div  class="col-md-8">
+			<%= render :partial=> "/user/dept_form"%>
+			<h4 id="user_info" class="text-center">
+				<% if !@user.department.nil? && !@user.semester.nil? %>
+				<%=@user.department.ch_name%> <%sem=@user.semester.name%>
+				<% if @user.department.degree==3 %>
+					<%=sem[0..sem.length-2].to_i+4%>級 
+				<% end %>
+				
+				<% end %>
+			</h4>
+		</div>
+		<div class="col-md-4"><% unless @user.department.nil? %>
+			<button class="btn btn-success" onclick="show_form($(this));">修改系級</button>
+		<% end %>
+		<%=link_to "/courses/simulation", class:"btn btn-primary" ,id: "add_course" do %>
+			<%=fa_icon "plus" %>新增課程
+		<% end %>
+		<% if @user.department.nil? %>
+			<%=link_to "javascript:void(0);" , class:"btn btn-primary",id:"import_course", onclick:"no_dept_alert();" do %>
+				<%=fa_icon "upload" %>匯入課程
+			<% end %>
+		<% else %>	
+			<%=link_to "/user/import_course", class:"btn btn-primary",id:"import_course" do %>
+				<%=fa_icon "upload" %>匯入課程
+			<% end %>
+		<% end %>		
+		</div>
+	</div>
+	<br>
+	
+	<div id="course-container"></div>
+</div>
+
+
+<script>
+	$(document).ready(function(){
+		$.getJSON("/user/get_user_courses?uid=<%=@user.id%>&type=this_sem", function (data) {
+			$("#course-container").html(tmpl("cos_type_list", data));
+			console.log(data);
+		});
+	});
+</script>
+
+<%=render :partial=>"xtmpl_list_by_costype"%>

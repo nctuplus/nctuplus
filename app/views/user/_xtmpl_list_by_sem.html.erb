@@ -1,0 +1,86 @@
+<script type="text/x-tmpl" id="sem_list">
+
+{% var credits={}; %}
+<table class="table" id="by_cos_type">
+	{% var grouped=groupBy(o.taked,function(item){return item.sem_id;}); %}
+	
+	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
+		
+		{% var local_credits={};%}
+		<tr class="row fb-bg-color">
+			<th colspan="2" class="col-md-12">
+				{%=get_sem_name(courses[0].sem_id)%}
+			</th>
+		</tr>
+		
+		{% for (var j=0, course; course=courses[j]; j++) { %}
+			{% var pass_class=""; %}
+			{% if(course.sem_id==o.last_sem_id||check_pass(o.pass_score,course.score)) { %}
+				{% if(local_credits[course.cos_type]){ %}
+					{% local_credits[course.cos_type]+=parseInt(course.credit); %}
+				{% }else{ %}
+					{% local_credits[course.cos_type]=parseInt(course.credit); %}
+				{% } %}
+			{% } else{ %}
+			{% pass_class="danger"; %}
+			{% } %}
+			<tr class="row {%=pass_class%}">
+				<td class="col-md-6">
+					<h4 class="text-center">
+						<a href="/courses/{%=course.ct_id%}">{%=course.name%}</a> | 
+						{%=course.t_name%} | 
+						{% if(course.cf_name!=""){ %}
+						{%=course.cf_name%} | 
+						{% } %}
+						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong>
+					</h4>
+				</td>
+				<td class="col-md-6">
+						<div class="container" style="display:inline-block;">		
+							<a href="/courses/{%=course.ct_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
+							<div class="number-right-top" >{%=course.file_count%}</div>
+							<a href="/courses/{%=course.ct_id%}&first_show=discussion" class="btn btn-sm btn-default">討論區</a>
+							<div class="number-right-top" >{%=course.discuss_count%}</div>
+						</div>
+					</td>
+			</tr>
+			
+		{% } %}
+		<tr class="row success">
+			<td colspan="2" >
+				<h4 class="text-right">
+					{% total=0; %}
+					{% for (var value in local_credits){ %}
+						{% total+=local_credits[value]; %}
+						{%=value%} : <strong>{%=local_credits[value]%}</strong>
+						{% if(credits[value]){ %}
+							{% credits[value]+=local_credits[value]; %}
+						{% } else{ %}
+							{% credits[value]=local_credits[value]; %}
+						{% } %}
+					{% } %}
+					共 <strong>{%=courses.length%}</strong> 門課
+						<strong>{%=total%}</strong> 學分
+				</h4>
+			</td>
+		</tr>
+		
+	{% } %}
+	
+	<tr class="row label-info">
+		<td colspan="2" >
+			<h4 class="text-right">
+				歷年總和:
+				{% total=0; %}
+				{% for (var value in credits){ %}
+					{% total+=credits[value]; %}
+					{%=value%} : <strong>{%=credits[value]%}</strong>
+				{% } %}
+				共 <strong>{%=o.agreed.length+o.taked.length%}</strong> 門課
+					<strong>{%=total%}</strong> 學分
+			</h4>
+		</td>
+	</tr>
+
+</table>
+</script>

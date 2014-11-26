@@ -1,0 +1,200 @@
+<script>
+function get_check_res(data){
+	var result={}; 
+	result['art_after102']=0; 
+	result['phe_1']=0; 
+	result['phe_optional']=0; 
+	result['foreign_basic']=0; 
+	result['foreign_advance']=0; 
+	result['common']={}; 
+	result['common']['通識']=0; 
+	result['common']['公民']=0; 
+	result['common']['群已']=0; 
+	result['common']['歷史']=0; 
+	result['common']['文化']=0; 
+	result['common']['自然']=0; 
+
+	var pass_courses=get_pass_courses(data.pass_score,data.last_sem_id,data.user_courses); 
+	for(var i = 0,course;course=pass_courses[i];i++){ 
+
+		if(course.name.search("服務學習")!=-1){ 
+			if(course.name.search("一")!=-1){ 
+				result['service_1']=true; 
+			}
+			else if(course.name.search("二")!=-1){ 
+				result['service_2']=true; 
+			} 
+		} 
+		else if(course.brief.search("藝文賞析")!=-1){ 
+			if(course.sem_id>=7){ 
+				++result['art_after102']; 
+			} 
+			if(course.name.search("一")!=-1){ 
+				result['art_1']=true; 
+			}
+			else if(course.name.search("二")!=-1){ 
+				result['art_2']=true; 
+			} 
+		} 
+		else if(course.brief.search("體育")!=-1){ 
+			if(course.name=="大一體育"){ 
+				++result['phe_1']; 
+			}
+			else if(course.name.substr(0,2)=="體育"){ 
+				++result['phe_optional']; 
+			} 
+		} 
+		else if(course.cos_type=="外語"){ 
+			if(course.brief=="基礎"){ 
+				result['foreign_basic']+=parseInt(course.credit); 
+			}
+			else if(course.brief=="進階"||course.brief=="其它"){ 
+				result['foreign_advance']+=parseInt(course.credit); 
+			} 
+		} 
+		else if(course.cos_type=="通識"){ 
+			result['common'][course.brief.substr(0,2)]+=parseInt(course.credit); 
+		} 
+	}
+	return result;
+}
+</script>
+
+<script type="text/x-tmpl" id="common_check">
+{% var result=get_check_res(o); %}
+
+	
+<table class="table table-bordered "style="border:0px">
+	<tr class="row">
+		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">服務學習</h4></td>
+		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">一</p></td>
+		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">二</p></td>
+	</tr>
+	<tr class="row">
+		<td class="col-md-" colspan="3">
+			{% if(result['service_1']){ %}
+			<p class="text-center no-margin-bottom">
+			{% print(green_check(),true); %}
+			</p>
+			{% } %}
+		</td>
+		<td class="col-md-" colspan="3">
+			{% if(result['service_2']){ %}
+				<p class="text-center no-margin-bottom">
+				{% print(green_check(),true); %}
+				</p>
+			{% } %}
+		</td>
+	</tr>
+	<tr class="row">
+		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">藝文賞析</h4></td>
+		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">上</p></td>
+		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">下</p></td>
+	</tr>
+	<tr class="row">
+		<td class="col-md-" colspan="3">
+			{% if(result['art_1']||result['art_after102']>=1){ %}
+				<p class="text-center no-margin-bottom">
+					{% print(green_check(),true); %}
+				</p>
+			{% } %}
+		</td>
+		<td class="col-md-" colspan="3">
+			{% if(result['art_2']||result['art_after102']>=2){ %}
+				<p class="text-center no-margin-bottom">
+					{% print(green_check(),true); %}
+				</p>
+			{% } %}
+		</td>
+	</tr>
+	<tr class="row">
+		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">體育</h4></td>
+		<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
+		<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
+		<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+		<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+		<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+		<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
+	</tr>
+	<tr class="row">
+	{% for (var i = 1 ; i <= 2 ; i++){ %}
+		<td class="col-md-">
+			{% if(i<=result['phe_1']){ %}
+				<p class="text-center no-margin-bottom">
+					{% print(green_check(),true); %}
+				</p>
+			{% } %}
+			
+		</td>
+	{% } %}
+	{% for (var i = 1 ; i <= 4 ; i++){ %}
+		<td class="col-md-">
+			{% if(i<=result['phe_optional']){ %}
+				<p class="text-center no-margin-bottom">
+					{% print(green_check(),true); %}
+				</p>
+			{% } %}
+			
+		</td>
+	{% } %}
+	</tr>
+	<tr class="row">
+		<td class="col-md-2" >
+			<h4 class="text-center ">外文</h4>
+		</td>
+		<td colspan="6">
+			<div class="progress no-margin-bottom">
+				<div class="progress-bar progress-bar-success" style="width: {% print((result['foreign_basic']*66.7)/4); %}%">
+					<span>基礎 <strong>{%=result['foreign_basic']%}/4</strong></span>
+				</div>
+				<div class="progress-bar" role="progressbar" style="width: 33.3%;">
+					<span >進階(其他) <strong>{%=result['foreign_advance']%}/2</strong></span>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr class="row">
+		<td rowspan="3" style="vertical-align:middle">
+			<h4 class="text-center no-margin-bottom" style="line-">通識</h4>
+		</td>
+		{% var common_basic_credit=0; %}
+		{% for(var dimension in result['common']){ %}
+			<td class="{%=dimension_class(dimension)%}">
+				<p class="text-center no-margin-bottom">
+					{% if(dimension=="通識"){ %}
+						當代
+					{% } else{ %}
+						{% common_basic_credit+=result['common'][dimension]; %}
+						{%=dimension %}
+					{% } %}
+				</p>
+		{% } %}
+	</tr>
+	<tr class="row">
+		{% for(var dimension in result['common']){ %}
+			<td class="col-md-" style="min-height:16px;">
+				<p class="text-center no-margin-bottom" >
+					{% if (result['common'][dimension]>0){ %}
+						{% print(green_check(),true); %}
+					{% } %}
+				</p>
+			</td>	
+		{% } %}
+	</tr>
+	{% console.log(common_basic_credit); %}
+	<tr class="row">
+		<td colspan="6">
+			<div class="progress no-margin-bottom">
+				<div class="progress-bar dimension-world" style="width: 20%;">		
+					<span>當代 <strong>{%=result['common']['通識']%}/2</strong></span>
+				</div>
+				{% var progresswidth=common_basic_credit*100/18 - 20 > 80 ? 80 : common_basic_credit*100/18 - 20; %}
+				<div class="progress-bar" role="progressbar" style="width: {%= progresswidth %}%;">		
+					{% var spanclass=common_basic_credit==0?"sr-only":""; %}
+					<span class="{%=spanclass%}">其他 <strong>{%= common_basic_credit %}/18</strong></span>
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>
+</script>

@@ -1,7 +1,7 @@
 class FileInfo < ActiveRecord::Base
   #attr_accessible :upload
   
-  belongs_to :course_teachership
+  belongs_to :course_teachership, counter_cache: true
   #validates_presence_of :semester_id, :course_teachership_id
 	
   #has_attached_file :upload,  

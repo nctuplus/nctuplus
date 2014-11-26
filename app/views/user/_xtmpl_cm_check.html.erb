@@ -1,0 +1,48 @@
+<script type="text/x-tmpl" id="cosmap_check">
+{% var cm=o.course_map,user_courses=o.user_courses; %}
+<table class="table table-bordered "style="border:0px">
+	<tr class="row" >
+		<td class="col-md-12" colspan="{%=cm.max_colspan+1%}">
+			<h4 class="text-center">
+				{%=cm.name %}
+				<% if @show_report %>
+				<a href="/user/statistics_table" class="btn btn-info pull-right" target="blank">產生報表</a>
+				<% end %>
+			</h4>
+		</td>
+	</tr>
+	{% var pass_courses=get_pass_courses(o.pass_score,o.last_sem_id,o.user_courses); %}
+	{% print(parse_cf_tree(cm.cfs,pass_courses,cm.max_colspan),true); %}
+	
+</table>
+※計算錯誤的原因可能為<br>
+1.系統缺少部分抵免/免修課程<br>
+2.使用者未選擇該課所屬學程/領域
+</script>
+
+<script>
+	function show_list(cf){
+		$("#courselist_modal").find(".modal-dialog").html(tmpl("cosmap_showlist",cf));
+		$("#courselist_modal").modal("show");
+	}
+	function select_cf(user_id,obj){
+		$.ajax({
+			type:"GET",
+			url:"/user/select_cs_cf",
+			data:{cs_id:obj.attr('id'),cf_id:obj.val()},
+			success:function(){
+				$.getJSON("/user/statistics2?uid="+user_id, function (data) {
+					$("#cosmap_check_div").html(tmpl("cosmap_check",data));
+					
+				});
+				obj.parent().parent().append("<span id='' class='fader text-success'>選擇成功!</span>");
+				$(".fader").fadeOut(3000,function(){
+					$(this).remove();
+				});
+			},
+			error:function(){
+				alert("Error!");
+			}
+		});
+	}
+</script>

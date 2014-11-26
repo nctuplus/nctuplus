@@ -1,0 +1,44 @@
+<div class="panel panel-primary" >
+	<div class="panel-heading" >
+		<h4 class="text-center">歷年課程</h4>
+	</div>
+	
+	<br>
+	<div id="agree-container" class="container"></div>
+	<div class="row" style="margin-top:2px;">
+		<div class="col-md-2 col-md-offset-2">
+		<p class="text-right" style="margin-top:3px;">
+			<label class="">List by : </label>
+		</p>
+		</div>
+		<div class="col-md-4">
+			<%= select_tag "list_type", options_for_select([['課程種類','cos_type_list'],['學期','sem_list']]), class:"form-control" %>
+		</div>
+		<div class="col-md-1">
+			<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
+			<%=fa_icon "bookmark-o"%>必修科目表
+			</a>
+		</div>
+	</div>
+	<div id="course-container" class=""></div>
+</div>
+<script>
+$(document).ready(function(){
+	$.getJSON("/user/get_user_courses?uid=<%=params[:uid]%>&type=all", function (data) {
+		
+		$("#agree-container").html(tmpl("agreed", data));
+		$("#course-container").html(tmpl("cos_type_list", data));
+		$("#list_type").change(function(){
+			$("#course-container").html(tmpl($(this).val(), data));
+		});
+		console.log(data);
+	});
+	
+});
+
+</script>
+
+<%=render :partial=>"xtmpl_agreed_check"%>
+<%=render :partial=>"xtmpl_list_by_costype"%>
+<%=render :partial=>"xtmpl_list_by_sem"%>
+
