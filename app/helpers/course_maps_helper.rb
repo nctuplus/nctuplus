@@ -207,8 +207,8 @@ module CourseMapsHelper
 					end
 				end
 				if match_fail
-					agreed.import_fail = 1 
-					agreed.save!
+					agree.import_fail = 1 
+					agree.save!
 				end
 			end
 			

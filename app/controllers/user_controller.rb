@@ -110,10 +110,10 @@ class UserController < ApplicationController
 	end
 	def statistics2
 		@user=getUserByIdForManager(params[:uid])
-		#cm=@user.course_maps.take
-		#if cm
-		#	update_cs_cfids(cm,@user)
-		#end
+		cm=@user.course_maps.take
+		if cm
+			update_cs_cfids(cm,@user)
+		end
 		if request.format=="json"
 			ls=latest_semester
 			course_map=@user.course_maps.first
