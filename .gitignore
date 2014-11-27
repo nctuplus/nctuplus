@@ -15,7 +15,6 @@
 #/config/dropbox.yml
 /config/initializers/secret_token.rb
 *.yml
-/config/initializers/ominauth.rb
 /config/initializers/smtp.rb
 /public/
 /file_upload/

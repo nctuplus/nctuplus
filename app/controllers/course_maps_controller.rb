@@ -13,6 +13,12 @@ class CourseMapsController < ApplicationController
 	end
 
 	def new
+		@res={}
+		@cm = CourseMap.all
+		@cm.each do |c|
+			@res[c.id]={:sem_id=>c.semester_id, :dept_id=>c.department_id}
+		end
+		
 		@course_map=CourseMap.new
 		render "_form"
 	end
@@ -35,6 +41,10 @@ class CourseMapsController < ApplicationController
 				new_cf.save!
 				cmcfship = CmCfship.new(:course_map_id=>@course_map.id, :course_field_id=>new_cf.id)
 				cmcfship.save!
+				if new_cf.field_type==3
+					cffneed = CfFieldNeed.new(:course_field_id=>new_cf.id, :field_need=>0)
+					cffneed.save!
+				end
 				trace_cm(new_cf, cf, :_copy_cfl)
 			end
 			
@@ -68,7 +78,7 @@ class CourseMapsController < ApplicationController
 
     redirect_to :action => :index
 	end
-
+	
 	def start2
 		@course_map = CourseMap.find(params[:map_id])
 		render "start2", :layout=>false		
@@ -374,6 +384,10 @@ private
 			new_cf.save!
 			cfship = CourseFieldSelfship.new(:parent_id=>target.id, :child_id=>new_cf.id)
 			cfship.save!
+			if new_cf.field_type==3
+				cffneed = CfFieldNeed.new(:course_field_id=>new_cf.id, :field_need=>0)
+				cffneed.save!
+			end
 			trace_cm(new_cf, sub, funcA)
 		end
 	end

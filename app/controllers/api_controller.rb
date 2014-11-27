@@ -1,6 +1,24 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm]
 	def testttt
+	
+=begin
+		EachCourseTeacherRating.includes(:course_teacher_rating).all.each do |ectr|
+			nctr=NewCourseTeacherRating.new
+			nctr.course_teachership_id=ectr.course_teacher_rating.course_teachership_id
+			nctr.score=ectr.score
+			nctr.user_id=ectr.user_id
+			case ectr.course_teacher_rating.rating_type
+				when "cold"
+					nctr.rating_type=1
+				when "sweety"
+					nctr.rating_type=2
+				when "hardness"
+					nctr.rating_type=3
+			end
+			nctr.save
+		end
+=end
 
 =begin
 	OldCourseDetail.all.group(:course_teachership_id).each do |oldcd|
@@ -11,15 +29,14 @@ class ApiController < ApplicationController
 	end
 =end
 
-	#NewOldCt.create
 =begin		
-		CourseFieldList.where("course_group_id IS NULL").each do |cfl|
-			old_id=OldCourse.find(cfl.course_id).real_id
-			new_id=Course.where(:real_id=>old_id).take.id
-			cfl.course_id=new_id
-			cfl.save!
-		end
-=end
+		@all=NewOldCt.where(:old_ct_id=>CourseTeacherRating.all.group(:course_teachership_id).pluck(:course_teachership_id)).pluck(:new_ct_id)
+	CourseTeacherRating.all.each do |ctr|
+		ctr.course_teachership_id=@all[ctr.course_teachership_id]
+		ctr.save!
+	end
+=end		
+
 
 =begin
 		CourseGroupList.all.each do |cfl|

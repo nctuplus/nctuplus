@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126061811) do
+ActiveRecord::Schema.define(version: 20141126181305) do
 
   create_table "cf_field_need", force: true do |t|
     t.integer  "course_field_id"
@@ -265,6 +265,18 @@ ActiveRecord::Schema.define(version: 20141126061811) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "new_course_teacher_ratings", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "course_teachership_id"
+    t.integer  "score"
+    t.integer  "rating_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "new_course_teacher_ratings", ["course_teachership_id"], name: "index_new_course_teacher_ratings_on_course_teachership_id", using: :btree
+  add_index "new_course_teacher_ratings", ["user_id"], name: "index_new_course_teacher_ratings_on_user_id", using: :btree
 
   create_table "new_old_cts", force: true do |t|
     t.integer  "old_ct_id"

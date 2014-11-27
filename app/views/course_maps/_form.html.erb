@@ -1,3 +1,4 @@
+
 <div class="panel-group" id="accordion">
   <div class="panel panel-primary" id="start1_div">
     <div class="panel-heading">
@@ -20,7 +21,7 @@
 						<h4 class="text-right">標題</h4>
 					</div>
 					<div class="col-md-5">
-						<%= text_field_tag :name ,'', :class=>"form-control" %>
+						<%= text_field_tag :name , '', :class=>"form-control" %>
 					</div>
 				</div>			
 				<div class="row">
@@ -45,7 +46,7 @@
 						<h4 class="text-right">複製現有的</h4>
 					</div> 
 					<div class="col-md-5">
-						<%=select_tag :copy, options_for_select(CourseMap.all.map{ |cm| [cm.name, cm.id] }), :class=>'form-control', :prompt=>'不複製' %>
+						<%=select_tag :copy, options_for_select(@cm.map{ |cm| [cm.name, cm.id] }), :class=>'form-control', :prompt=>'不複製' %>
 					</div>
 				</div>
 				<div class="row">
@@ -71,11 +72,28 @@
 </div>
 
 <script>
+$(document).ready(function(){
+	
+	var all_cm = <%= @res.to_json.html_safe%> ;
 	$('.new-form').submit(function(){
-		if(!confirm('確定資料無誤嗎？'))
+		if($('#name').val().length==0){			
 			return false ;
-		// TO-DO : check data
-
+		}
+		if(!confirm('確定資料無誤嗎?'))
+			return false ;
+			
 		return true;
 	});
+	$('#copy').change(function(){
+		var cm_id = $(this).val();
+		var name = $(this).find('option:selected').text();
+		if(!cm_id)
+			return false ;
+	
+		$('#semester_id').find('option[value="'+all_cm[cm_id].sem_id+'"]').attr("selected",true);
+		$('#course_map_department_id').find('option[value="'+all_cm[cm_id].dept_id+'"]').attr("selected",true);
+		$('#name').val(name);
+		
+	});
+});	
 </script>

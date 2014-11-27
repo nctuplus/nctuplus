@@ -2,7 +2,7 @@ class UserController < ApplicationController
 
 	include ApiHelper
 	include CourseHelper
-	include CourseMapsHelper
+	include CourseMapsHelper 
 
 	
     before_filter :checkTopManager, :only=>[:manage, :permission]
@@ -117,7 +117,7 @@ class UserController < ApplicationController
 			
 			course_map=@user.course_maps.first
 
-			update_cs_cfids(course_map,@user)
+			#update_cs_cfids(course_map,@user)
 
 			if course_map
 				course_map_res={
