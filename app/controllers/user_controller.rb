@@ -92,7 +92,16 @@ class UserController < ApplicationController
 	def special_list
 		@ls=latest_semester
 		@user=getUserByIdForManager(params[:uid])
-
+		
+		if @user.course_maps.empty?  
+			cm=CourseMap.where(:department_id=>@user.department_id, :semester_id=>@user.semester_id).take
+			if cm
+				UserCoursemapship.create(:user_id=>@user.id, :course_map_id=>cm.id)
+				if !@user.course_simulations.empty?
+					update_cs_cfids(cm,@user)
+				end
+			end
+		end
 		@cs_this=@user.course_simulations.includes(:course_detail,:course,:teacher).where("semester_id = ?",@ls.id)#, :course, :teacher)
 
 
@@ -244,9 +253,9 @@ class UserController < ApplicationController
 			end
 			
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
-			if cm
-				update_cs_cfids(cm,current_user)
-			end
+			#if cm
+			update_cs_cfids(cm,current_user)
+			#end
 			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 未通過:#{@no_pass}"
 			redirect_to :action=>"import_course_2", :msg=>msg
 		end
@@ -271,8 +280,8 @@ class UserController < ApplicationController
 		cm=CourseMap.where(:department_id=>current_user.department_id, :semester_id=>current_user.semester_id).take
 		if cm
 			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
-			update_cs_cfids(cm,current_user)
 		end
+		update_cs_cfids(cm,current_user)
 		redirect_to :controller=> "user", :action=>"special_list"
 	end
   def manage

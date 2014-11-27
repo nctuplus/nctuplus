@@ -4,8 +4,9 @@
 <table class="table "style="border:0px">
 	{% var any_need_to_sel=false; %}
 	{% for(var i = 0,course ;course=user_courses[i];i++){ %}
+		{% if(course.cf_id==0)continue; %}
 		{% var cfs=get_cf_list(cm.cfs,course); %}
-		{% if(course.cf_id==0||cfs.length<2)continue; %}
+		{% if(cfs.length<2)continue; %}
 		{% any_need_to_sel=true; %}
 		<tr class="row" >
 			<td class="col-md-12">
@@ -26,7 +27,15 @@
 		</tr>
 
 	{% } %}
-	
+	{% if(!any_need_to_sel){ %}
+	<tr class="row">
+		<td class="col-md-12 text-left">
+			<h4>
+				無需要選擇的課程！
+			</h4>
+		</td>
+	</tr>
+	{% } %}
 	<tr class="row">
 		<td class="col-md-12 text-right">
 				<a href="/user/special_list" class="btn btn-primary">確認</a>
