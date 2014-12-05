@@ -76,30 +76,38 @@
 </script>
 
 <script type="text/x-tmpl" id="compare_tmpl">
-	
-	{% for(var i=0,ct;ct=o[i];i++){ %}
+	{% var i=0,ct; %}
+	{% for(;ct=o[i];){ %}
+		{% if(i%3==0){ %}
 		<div class="row">
+		{% } %}
 			<div class="col-sm-4 ">
 				<div class="panel">
 					<div class="panel-body">
 						<div class="row">
 							<div class="col-sm-6 col-md-5 col-sm-offset-1">
 								<h4><a href="/courses/{%=ct.id%}">{%=ct.name%}</a></h4>
-							
 							</div>
 							<div class="text-right" id="best_{%=ct.id%}">
-							<h4></h4>
+								<h4></h4>
 							</div>
 						</div>
 						{% print(printScore("涼度",ct.id,"cold",ct.cold),true); %}
 						{% print(printScore("甜度",ct.id,"sweety",ct.sweety),true); %}
 						{% print(printScore("深度",ct.id,"hardness",ct.hardness),true); %}
-						
+					</div>
 				</div>
 			</div>
-		</div>
-		
+			{% i+=1; %}
+		{% if(i%3==0){ %}
+			</div>
+		{% } %}
 	{% } %}
+	
+{% if(i%3!=0){ %}
+	</div>
+{% } %}
+
 
 </script>
 
