@@ -249,25 +249,48 @@ class CoursesController < ApplicationController
 	
 	
 	def rate_cts
-    ctr_id=params[:ctr_id].to_i
+    ct=CourseTeachership.find(params[:ct_id])
 		score=params[:score].to_i
-
-		@ctr=CourseTeacherRating.find(ctr_id)#:course_teachership_id =>ctr_id, :rating_type=>type).take
-		etr=EachCourseTeacherRating.where(:user_id=>current_user.id, :course_teacher_rating_id=>@ctr.id).take
-		if score!=0 && !etr
-			EachCourseTeacherRating.create(:score=>score, :user_id=>current_user.id, :course_teacher_rating_id=>@ctr.id)
-		elsif score==0
-			if etr
-				etr.destroy!
-			end
-		end
-		total_rating_counts=EachCourseTeacherRating.where(:course_teacher_rating_id=>@ctr.id).count
-		total_rating_sum=EachCourseTeacherRating.where(:course_teacher_rating_id=>@ctr.id).sum(:score)
-		avg=total_rating_sum.to_f/total_rating_counts
-		avg=avg.nan? ? 0 :avg
-		@ctr.update_attributes(:total_rating_counts=>total_rating_counts, :avg_score=>avg)
 		
-		result={:new_score=>@ctr.avg_score.round(1), :new_counts=>@ctr.total_rating_counts, :score=>score}
+		case params[:r_type]
+			when "cold"
+				r_type=1
+				
+			when "sweety"
+				r_type=2
+				
+			when "hardness"
+				r_type=3
+			else 
+				return
+			
+		end
+		@ntr=NewCourseTeacherRating.find_or_create_by(:user_id=>current_user.id, :course_teachership_id=>params[:ct_id],:rating_type=>r_type)
+		if score==0
+			@ntr.destroy
+		else
+			@ntr.score=score
+			@ntr.save!
+		end
+		case params[:r_type]
+			when "cold"
+				target=ct.cold_ratings
+			when "sweety"
+				target=ct.sweety_ratings
+			when "hardness"
+				target=ct.hardness_ratings
+			else 
+				return
+		end
+		
+		#render :nothing => true, :status => 200, :content_type => 'text/html'
+
+		result={:avg_score=>target.avg_score, :rate_count=>target.rate_count, :score=>score}
+		respond_to do |format|
+			format.html{render :layout=>false,:nothing =>true }
+			format.json{render json:result}
+		end
+=begin
 		respond_to do |format|
 			format.html {
 				render :json => result.to_json,
@@ -275,16 +298,38 @@ class CoursesController < ApplicationController
 							 :layout => false
 			}
 		end
+=end
 	end
 	def get_compare
 		@course = Course.includes(:course_teacherships).find(params[:c_id])
-		@teachers=@course.teachers
-		@cts=@course.course_teacherships.includes(:course_teacher_ratings, :course_details)
-		#@zz=@cts
-		@cts_mix=@cts.zip(@teachers)
-		#.sort_by{
-		#	|cd| CourseTeachership.where(:course_id=>@course,:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
-		#}.reverse
+
+		@cts=@course.course_teacherships.includes(:new_course_teacher_ratings, :course_details)
+		@ct_compare_json=[]
+		@user_rated_json=[]
+		t_name=[]
+		@cts.includes(:new_course_teacher_ratings).each do |ct|
+			next if t_name.include?(ct.teacher_name)
+			t_name.push(ct.teacher_name)
+			
+			cold_ratings=ct.cold_ratings
+			sweety_ratings=ct.sweety_ratings
+			hardness_ratings=ct.hardness_ratings
+			
+			res={
+				:id=>ct.id,
+				:name=>ct.teacher_name,
+				:cold=>cold_ratings,
+				:sweety=>sweety_ratings,
+				:hardness=>hardness_ratings,
+			}
+			user_ratings={
+				:cold=>!cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
+				:sweety=>!sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
+				:hardness=>!hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty?
+			}
+			@ct_compare_json.push(res)
+			@user_rated_json.push(user_ratings)
+		end
 		render "show_compare"
 	end
 	
@@ -293,6 +338,7 @@ class CoursesController < ApplicationController
 		@ct=CourseTeachership.find(params[:id])
     @course = @ct.course#Course.includes(:semesters).find(params[:id])
 	 
+	  zz=@ct.cold_ratings.avg_score
 		@first_show=params[:first_show]||"tc"
 =begin
 		@teachers=@course.teachers.sort_by{

@@ -1,165 +1,109 @@
 <h2 style="border-bottom:solid 1px;">教授比一比</h2>
-<% rating_cold_arr =[]%>
-<% rating_sweety_arr =[]%>
-<% rating_hardness_arr =[]%>
-<% r_cold_arr=[] %>
-<% r_sweety_arr=[] %>
-<% r_hardness_arr=[] %>
-<% if current_user %>
-	<% ectr_arr=EachCourseTeacherRating.select(:course_teacher_rating_id).where(:user_id=>current_user.id).pluck(:course_teacher_rating_id) %>
-<% else %>
-	<% ectr_arr=[]%>
-<% end %>
-
-<% i=0 %>
-<% @cts_mix.each do |cts,t| %>
-
-	<% rating_cold = cts.course_teacher_ratings.select{|ctr| ctr.rating_type=="cold"}.first %>
-	<% rating_sweety = cts.course_teacher_ratings.select{|ctr| ctr.rating_type=="sweety"}.first %>
-	<% rating_hardness = cts.course_teacher_ratings.select{|ctr| ctr.rating_type=="hardness"}.first %>
-	
-	<% r_cold_arr.append({:cts_id=>cts.id,:id=>rating_cold.id, :score=>rating_cold.avg_score, :has_rated=>has_rated(rating_cold.id,ectr_arr)})%>
-	<% r_sweety_arr.append({:cts_id=>cts.id,:id=>rating_sweety.id, :score=>rating_sweety.avg_score, :has_rated=>has_rated(rating_sweety.id,ectr_arr)})%>
-	<% r_hardness_arr.append({:cts_id=>cts.id,:id=>rating_hardness.id, :score=>rating_hardness.avg_score, :has_rated=>has_rated(rating_hardness.id,ectr_arr)})%>
-	<% if i%3==0 %>
-		<div class="row">
-	<% end %>
-		<div class="col-sm-4 ">
-			<div class="panel">
-				<div class="panel-body">
-						<div class="row">
-							<div class="col-sm-6 col-md-5 col-sm-offset-1">
-							<h4><%=link_to t.name.to_s, course_path(@course, :tid=>t.id)%></h4>
-							</div>
-							<div class="text-right" id="best_<%=cts.id%>">
-							<h4></h4>
-							</div>
-						</div>
-
-					
-					<div class="row">
-						<div class="col-sm-3 col-sm-offset-1 row-condensed">
-							<label>涼度</label>
-						</div>
-						<div class="col-sm-5 row-condensed">
-							<div id="rating_<%=rating_cold.id%>"></div>
-						</div>	
-						<div class="col-sm-1" id="rating_<%=rating_cold.id%>_counts">
-							<label><%=rating_cold.avg_score.round(1)%>(<%=rating_cold.total_rating_counts%>)</label>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-3 col-sm-offset-1 row-condensed">
-							<label>甜度</label>
-						</div>
-						<div class="col-sm-5 row-condensed">
-							<div id="rating_<%=rating_sweety.id%>"></div>
-							
-						</div>
-						<div class="col-sm-1" id="rating_<%=rating_sweety.id%>_counts">
-						<label><%=rating_sweety.avg_score.round(1)%>(<%=rating_sweety.total_rating_counts%>)</label>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-sm-3 col-sm-offset-1 row-condensed">
-							<label>深度</label>
-						</div>
-						<div class="col-sm-5 row-condensed">
-							<div id="rating_<%=rating_hardness.id%>"></div>
-							
-
-						</div>
-						<div class="col-sm-1" id="rating_<%=rating_hardness.id%>_counts">
-						<label><%=rating_hardness.avg_score.round(1)%>(<%=rating_hardness.total_rating_counts%>)</label>
-						</div>
-					</div>
-				</div>
-			</div>		
-		</div>
-	<%i+=1%>	
-	<% if i%3==0%>	
-		</div>
-	<% end %>
-	
-<% end %>
-
-<% if i%3!=0%>
-	</div>
-<% end %>
-
-
-
-<% r_cold_arr=r_cold_arr.sort_by{|k| k[:score]}.reverse%>
-<% r_sweety_arr=r_sweety_arr.sort_by{|k| k[:score]}.reverse%>
-<% r_hardness_arr=r_hardness_arr.sort_by{|k| k[:score]}.reverse%>
-
+<div id="copare_container"></div>
 <script>
+	$(document).ready(function(){
+		var ctCopare=<%=@ct_compare_json.to_json.html_safe%>;
+		var userCtRated=<%=@user_rated_json.to_json.html_safe%>;
+		$("#copare_container").html(tmpl("compare_tmpl",ctCopare));
 
-$(document).ready(function(){
-	var cold_arr=<%=r_cold_arr.to_json.to_s.html_safe%>;
-	var sweety_arr=<%=r_sweety_arr.to_json.to_s.html_safe%>;
-	var hardness_arr=<%=r_hardness_arr.to_json.to_s.html_safe%>;
-	for(i=0;i<cold_arr.length;i++){
-		gen_raty(cold_arr[i]['id'],cold_arr[i]['score'],cold_arr[i]['has_rated']);
-		gen_raty(sweety_arr[i]['id'],sweety_arr[i]['score'],sweety_arr[i]['has_rated']);
-		gen_raty(hardness_arr[i]['id'],hardness_arr[i]['score'],hardness_arr[i]['has_rated']);
-	}
-	<% if r_cold_arr[0][:score]!=0 %>
-		$("#best_<%=r_cold_arr[0][:cts_id]%> h4").append('<span class="label label-primary">涼</span>');
-	<% end %>
-	<% if r_sweety_arr[0][:score]!=0 %>
-		$("#best_<%=r_sweety_arr[0][:cts_id]%> h4").append('<span class="label label-info">甜</span>');
-	<% end %>
-	<% if r_hardness_arr[0][:score]!=0 %>
-		$("#best_<%=r_hardness_arr[0][:cts_id]%> h4").append('<span class="label label-success">硬</span>');
-	<% end %>
-
-});
-
-
-function gen_raty(ctr_id,show_score,rated){
-	$("#rating_"+ctr_id).raty({
-		score:show_score,
-		readOnly :<%=current_user.nil? ||!current_user.uid %>,
-		cancel :rated,
-		cancelOff : 'cancel-custom-off.png',
-		cancelOn  : 'cancel-custom-on.png',
-		noRatedMsg : "請先登入!",
-		cancelHint : '取消評分',
-		click: function(score, evt) {
-			//alert($(this).raty('cancel'));
-			if((rated&&score==null)||!rated)
-				rate_course(ctr_id,score);
+		for(var i=0,ct,userRated;ct=ctCopare[i],userRated=userCtRated[i];i++){
+			console.log("!!!");
+			gen_raty(ct.id,"cold",ct.cold.avg_score,userRated.cold); 
+			gen_raty(ct.id,"sweety",ct.sweety.avg_score,userRated.sweety); 
+			gen_raty(ct.id,"hardness",ct.hardness.avg_score,userRated.hardness); 
 		}
 	});
-}
-<% if current_user &&current_user.uid %>
-	function rate_course(ctr_id,score){
+	function gen_raty(ct_id,r_type,show_score,rated){
+		console.log("!!!!!!!"+ct_id);
+		$("#rating_"+r_type+'_'+ct_id).raty({
+			score:show_score,
+			readOnly :<%=current_user.nil? ||!current_user.uid %>,
+			cancel :rated,
+			cancelOff : 'cancel-custom-off.png',
+			cancelOn  : 'cancel-custom-on.png',
+			noRatedMsg : "請先登入!",
+			cancelHint : '取消評分',
+			click: function(score, evt) {
+				//alert($(this).raty('cancel'));
+				if((rated&&score==null)||!rated)
+					rate_course(ct_id,r_type,score);
+			}
+		});
+	}
 
+	function printScore(text,id,r_type,obj){
+		var res='<div class="row"><div class="col-sm-3 col-sm-offset-1 row-condensed">';
+			res+='<label>'+text+'</label>';
+			res+='</div><div class="col-sm-5 row-condensed">';
+			res+='<div id="rating_'+r_type+'_'+id+'"></div>';
+			res+='</div>';
+			res+='<div class="col-sm-1" id="rating_'+r_type+'_'+id+'_counts">';
+			res+='<label>'+obj.avg_score+'('+obj.rate_count+')<label>';
+			res+="</div></div>";
+		return res;
+	}
+	<% if current_user &&current_user.uid %>
+	function rate_course(ct_id,r_type,score){
+		
 		$.ajax({
 			type: "GET",
 			url: "/courses/rate_cts",
+			dataType :"json",
 			data: {
-				ctr_id: ctr_id,
+				ct_id: ct_id,
+				r_type: r_type,
 				score: score,   
 			},
 			success: function(data){
-				var d=JSON.parse(data);
-				var new_count="<label>"+d.new_score+"("+d.new_counts+")</label>";
-				$("#rating_"+ctr_id).raty('set',{
-					cancel: d.score!=0,
-					score:d.new_score,
+				var d=data;//JSON.parse(data);
+				console.log(d);
+				var new_count="<label>"+d.avg_score+"("+d.rate_count+")</label>";
+				$("#rating_"+r_type+'_'+ct_id+"_counts").html(new_count);
+				$("#rating_"+r_type+'_'+ct_id).raty('set',{
+					cancel: d.avg_score!=0,
+					score:d.avg_score,
 					click: function(score, evt) {
 						//alert($(this).raty('cancel'));
-						if((d.score!=0&&score==null)||(d.score==0&&score))
-							rate_course(ctr_id,score);
+						if((d.avg_score!=0&&score==null)||(d.avg_score==0&&score))
+							rate_course(ct_id,r_type,score);
 					}
 				});
-
-				$("#rating_"+ctr_id+"_counts").html(new_count);
+				
 			},
 		});
 	}
-<% end %>
+	<% end %>
 </script>
+
+<script type="text/x-tmpl" id="compare_tmpl">
+	
+	{% for(var i=0,ct;ct=o[i];i++){ %}
+		<div class="row">
+			<div class="col-sm-4 ">
+				<div class="panel">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-sm-6 col-md-5 col-sm-offset-1">
+								<h4><a href="/courses/{%=ct.id%}">{%=ct.name%}</a></h4>
+							
+							</div>
+							<div class="text-right" id="best_{%=ct.id%}">
+							<h4></h4>
+							</div>
+						</div>
+						{% print(printScore("涼度",ct.id,"cold",ct.cold),true); %}
+						{% print(printScore("甜度",ct.id,"sweety",ct.sweety),true); %}
+						{% print(printScore("深度",ct.id,"hardness",ct.hardness),true); %}
+						
+				</div>
+			</div>
+		</div>
+		
+	{% } %}
+
+</script>
+
+
+
+
 

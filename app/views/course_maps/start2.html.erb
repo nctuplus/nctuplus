@@ -171,6 +171,27 @@ function bind_header_button(header_node){
 		
 	});
 	
+	//header action : change field_type
+	$('#header_content_div .change-type').click(function(){
+		var ftype = $(this).attr('ftype');
+		var target_id = header_node.cf_id ;
+		if(!confirm( ((ftype==2) ? "要修改 x選y --\> 必修 嗎? " : "要修改 必修 --\> x選y 嗎?")))
+			return false ;
+		$.ajax({
+			type: "POST",
+  			url: "action_fchange" ,
+  			data:{
+  				target_id : target_id,
+  			},	
+  			success: function(data){
+				load_treeview(target_id);
+  			},	
+  			error: function(){
+  				$('#alert-msg').removeClass().addClass('text-color-red').html('更新失敗').show().fadeOut(2200);
+  			}
+  		});	
+	});
+	
 }
 
 function bind_course_group_but(){  // for course group

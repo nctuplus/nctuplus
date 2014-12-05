@@ -303,21 +303,25 @@ function parse_course(course_map, user_courses, user_info){
 }	  
 
 $(document).ready(function(){
-<% if params[:map_id].presence and params[:user_id].presence %>
-	$.getJSON( "/user/statistics_table.json?map_id=<%=j params[:map_id]%>&user_id=<%=j params[:user_id]%>",
+<% if params[:user_id].presence %>
+	$.getJSON( "/user/statistics_table.json?user_id=<%=j params[:user_id]%>",
 <% else %>
 	$.getJSON( "/user/statistics_table.json",
 <% end %>
 	function(res){
-		console.log('course_map:');
-		console.log(res.course_map);
-		console.log('user_courses:');
-		console.log(res.user_courses);
+		if(!res.course_map){
+			alert("沒有對應的學程");
+			$('#table').html('請確認你的系別系級，或通知管理員建立一個新的學程地圖');
+			return false ;
+		}	
 		if(res.user_info.student_id){
-			$('.title').html(res.user_info.student_id);
+			$('.title').html(res.user_info.student_id+" "+res.user_info.map_name);
 			$("#table").html(tmpl("table-content", res));	
-		}else
+		}else{
 			alert('沒有學號資料');
+			$('#table').html('請綁定e3帳號 謝謝');
+			return false ;
+		}
 	});
 
 });

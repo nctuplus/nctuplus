@@ -62,6 +62,7 @@ Nctuplus::Application.routes.draw do
 	post "course_maps/action_new"
 	post "course_maps/action_update"
 	post "course_maps/action_delete"	
+	post "course_maps/action_fchange"
 	get "course_maps/show_course_list" 
 	get "course_maps/show_course_group_list"
 	post "course_maps/course_group_action"

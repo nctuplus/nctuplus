@@ -52,6 +52,11 @@ gem 'kaminari'
 gem 'rack-jsonp-middleware',
   :require => 'rack/jsonp'
 gem "koala", "~> 1.10.0rc"
+
+gem "eventmachine"
+gem 'em-resolv-replace', :require => false
+
+
 #gem 'google-analytics-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

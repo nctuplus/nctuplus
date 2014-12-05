@@ -60,7 +60,7 @@
 
 <script>
 	$(document).ready(function(){
-		$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
+		/*$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
 			$('body').scrollspy('refresh');
 			$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
 				$('body').scrollspy('refresh');
@@ -71,9 +71,9 @@
 					$('body').scrollTo("#files",700,{offset:-60});
 				<% end %>
 			});
-		});
+		});*/
 			
-	/* compare temp broken		
+		
 		$("#compare").load("/courses/get_compare?c_id=<%=@course.id%>", function() {
 			$('body').scrollspy('refresh');
 			$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
@@ -89,7 +89,7 @@
 				});
 			});
 		});
-	*/		
+
 			
 		<% share_url="#{root_url}courses/#{@ct.id}" %>
 		var share_url='<%=j share_url.html_safe %>';

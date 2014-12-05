@@ -151,6 +151,7 @@ class CourseMapsController < ApplicationController
 		render :text=> cf.id.to_s
 	end
 
+	# update course_field column
 	def action_update
 		cf = CourseField.find(params[:target_id])
 		cf.name = params[:name]
@@ -165,6 +166,7 @@ class CourseMapsController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 
+	# delete course_field
 	def action_delete # ajax POST 
 		cf = CourseField.find(params[:target_id])
 		cmcf = CmCfship.where(:course_field_id=>cf.id)
@@ -175,6 +177,24 @@ class CourseMapsController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 	
+	# change field_type 1<-->2 
+	def action_fchange # ajax POST
+		cf = CourseField.find(params[:target_id])
+		cf.field_type = (cf.field_type==1) ? 2 : 1
+		if cf.field_type==1
+			if cf.courses.presence
+				cf.credit_need = cf.courses.map{|c| c.credit}.reduce(:+)
+			end
+			if cf.course_groups.presence
+				cf.credit_need += cf.course_groups.map{|cg| cg.lead_course.credit}.reduce(:+)
+			end
+		else
+			cf.credit_need = 0
+		end
+		cf.save!
+		
+		render :nothing => true, :status => 200, :content_type => 'text/html'
+	end
 	def show_course_list	
 		
 		cf = CourseField.find(params[:target_id])

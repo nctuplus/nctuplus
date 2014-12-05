@@ -6,8 +6,8 @@ class UserController < ApplicationController
 
 	
     before_filter :checkTopManager, :only=>[:manage, :permission]
-	before_filter :checkLogin, :only=>[:add_course,  :special_list, :select_dept]
-    before_filter :checkE3Login, :only=>[:import_course, :statistics_table]
+	before_filter :checkLogin, :only=>[:add_course,  :special_list, :select_dept, :statistics_table]
+    before_filter :checkE3Login, :only=>[:import_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 	def update_all_cs_sem_id
 		@new_sem_ids=[0,1,2,4,5,7,8,10,11,13]
@@ -319,30 +319,44 @@ class UserController < ApplicationController
 	end
   
   def statistics_table
-		if request.xhr? 
-			user = getUserByIdForManager(params[:user_id])
-			course_map = (checkTopManagerNoReDirect and params[:map_id].presence) ? CourseMap.find(params[:map_id]) : current_user.course_maps.last 
-				
-			data1 = get_cm_tree(course_map)
-			data2 = user.all_courses.map{
-  			|cs| 
-  			{
-  			 :id=> cs.course.id,
-  			 :uni_id=> cs.id,
-  			 :name=>cs.course.ch_name, 
-  			 :credit=>cs.course.credit,
-  			 :score=>cs.score,
-  			 :cos_type=>cs.course_detail.cos_type,
-  			 :sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
-  			 :cf_id=>cs.course_field_id,
-  			 :memo=>cs.memo,
-  			 :degree=>cs.course.department.degree,
-  			}}
+		user = nil
+		course_map = nil
+		if request.xhr? 				
+			user = (params[:user_id].presence and checkTopManagerNoReDirect) ? getUserByIdForManager(params[:user_id]) : current_user
+			course_map = user.course_maps.last 
+			data1 = (course_map.presence) ? get_cm_tree(course_map) : nil
+			if data1.presence
+				data2 = user.all_courses.map{
+				|cs| 
+				{
+				 :id=> cs.course.id,
+				 :uni_id=> cs.id,
+				 :name=>cs.course.ch_name, 
+				 :credit=>cs.course.credit,
+				 :score=>cs.score,
+				 :cos_type=>cs.course_detail.cos_type,
+				 :sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
+				 :cf_id=>cs.course_field_id,
+				 :memo=>cs.memo,
+				 :degree=>cs.course.department.degree,
+				}}
+				# if has course_map, user must have semester, dept
+				user_info = {
+							:sem=>{:year=>user.semester.year, :half=>user.semester.half}, 
+							:degree=>user.department.degree, 
+							:sem_now=>{:year=>103, :half=>1}, 
+							:map_name=>course_map.name,
+							:student_id=>user.student_id 
+							}
+			else
+				data2 = nil
+				user_info = nil
+			end
 		end
 		
 		respond_to do |format|
 			format.html {  }
-			format.json { render :text => {:user_info=>{:sem=>{:year=>user.semester.year, :half=>user.semester.half}, :degree=>user.department.degree, :sem_now=>{:year=>103, :half=>1}, :student_id=>user.student_id }, :course_map=>data1, :user_courses=>data2 }.to_json}
+			format.json { render :text => {:user_info=>user_info, :course_map=>data1, :user_courses=>data2 }.to_json}
 		end
 	end
   

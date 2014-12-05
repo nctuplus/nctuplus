@@ -17,9 +17,15 @@
 		<button type="button" class="btn btn-circle btn-warning update">
 			<%=fa_icon "pencil"%>
 		</button>
-		<button type="button" class="btn btn-circle btn-danger delete">
+		{% if(o.head_node.type < 3){ %}
+		<button type="button" class="btn btn-circle btn-sucess change-type" ftype="{%=o.head_node.type%}">
+			<%=fa_icon "arrows-h"%>
+		</button>
+		{% } %}
+		<button type="button" class="btn btn-circle btn-danger delete" >
 			<%=fa_icon "trash-o"%>
 		</button>
+		
 	</div>
 </div>		
 <hr>
