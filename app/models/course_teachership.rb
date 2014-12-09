@@ -1,5 +1,9 @@
 class CourseTeachership < ActiveRecord::Base
+	#alias_method_chain :belongs_to, :polymorphism
   belongs_to :course
+	belongs_to :teachers#, polymorphic: true
+
+	#has_many :teachers
   has_many :course_details, :dependent=> :destroy
 	#has_many :course_teacher_ratings, :dependent=> :destroy
 	has_many :new_course_teacher_ratings, :dependent=> :destroy
@@ -34,6 +38,10 @@ class CourseTeachership < ActiveRecord::Base
 		return Teacher.where(:id=>JSON.parse(self.teacher_id))
 	end
 	
+	#def teachers
+	#	Teacher.where(:id=>JSON.parse(self.teacher_id))
+	#end
+	
 	def teacher_name
 		res=self._teachers.first.name+","
 		self._teachers.each_with_index do |t,index|
@@ -43,6 +51,9 @@ class CourseTeachership < ActiveRecord::Base
 		return res[0..-2]
 	end
   
+	
+	
+	
   #belongs_to :teacher
 	
 end

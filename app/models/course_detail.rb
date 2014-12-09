@@ -4,7 +4,7 @@ class CourseDetail < ActiveRecord::Base
 	#belongs_to :course
 	
 	has_one :course, :through=>:course_teachership
-	#has_one :teacher, :through=>:course_teachership
+	has_many :teachers, :through=>:course_teachership
 	#belongs_to :course
 	#belongs_to :teacher
 	has_one :department, :through=>:course
@@ -12,18 +12,12 @@ class CourseDetail < ActiveRecord::Base
   #belongs_to :course
   #belongs_to :teacher
 	
+	#def teachers
+	#	self.course_teachership._teachers
+	#end
+	
 	def teacher_name
-		
-		res=""
-		teachers=self.course_teachership._teachers
-		if teachers.length==1
-			res=teachers[0].name
-		else
-			self.course_teachership._teachers.each do |t|
-				res<<t.name<<'/'
-			end
-		end
-		return res
+		self.course_teachership.teacher_name
 	end
 	
 	def self.flit_semester(sem_id)
@@ -52,13 +46,14 @@ class CourseDetail < ActiveRecord::Base
 	#	parent.table[:semester_id]
 	#end
 	
-	# ransacker :by_course_name, :formatter => proc {|v| 
-		# CourseTeachership.select(:id).where(
-			# :course_id=>Course.select(:id).where("ch_name like ?","%#{v}%")
-		# ).pluck(:id)||['0']
-	# }, :splat_param => true do |parent|
-    # parent.table[:course_teachership_id]
-  # end
+	ransacker :by_teacher_name, :formatter => proc {|v| 
+		#CourseTeachership.select(:id).where(
+		#	:course_id=>Teacher.select(:id).where("name like ?","%#{v}%")
+		#)
+		Teacher.where("name like ?","%#{v}%").map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten||['0']},
+		:splat_param => true do |parent|
+			parent.table[:course_teachership_id]
+  end
 	
 	# ransacker :by_dept_id, :formatter => proc {|v| 
 		# CourseTeachership.select(:id).where(

@@ -11,16 +11,12 @@ class CourseField < ActiveRecord::Base
 	has_one :cm_cfship
 	has_one :cf_field_need
 	
-	#has_many :course_fields, :through=> :course_field_selfships
-	#has_many :courses, :through=> :course_field_lists
 	has_many :child_course_fieldships, :dependent => :destroy, foreign_key: "parent_id", :class_name=>"CourseFieldSelfship"
 	has_many :child_cfs, :through=> :child_course_fieldships
 	
-	#has_many :parent_course_fieldships, :dependent => :destroy, foreign_key: "child_id", :class_name=>"CourseFieldSelfship"
-	#has_many :parent_cfs, :through =>:parent_course_fieldships
 	has_one :parent_course_fieldship, :dependent => :destroy, foreign_key: "child_id", :class_name=>"CourseFieldSelfship"
 	has_one :parent_cf, :through =>:parent_course_fieldship
-	#belongs_to :course_simulation
+
 	
 	def field_need
 		if self.cf_field_need

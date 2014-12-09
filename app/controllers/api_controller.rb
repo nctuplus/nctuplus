@@ -1,7 +1,13 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm]
 	def testttt
-	
+		@all=[]
+		Department.where("id < 494").each do |dept|
+			if dept.courses.count==0
+				dept.use_type="no_courses"
+				dept.save!
+			end
+		end
 =begin
 		EachCourseTeacherRating.includes(:course_teacher_rating).all.each do |ectr|
 			nctr=NewCourseTeacherRating.new

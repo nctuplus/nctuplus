@@ -2,10 +2,20 @@ class CourseDetailsController < ApplicationController
 	include CourseHelper
 	layout false, :only=>[:mini, :course_group]
 	def index
+		if params[:custom_search]!=""
+			@q = CourseDetail.search({:course_ch_name_cont=>params[:custom_search]})
+			@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+			if @cds.empty?
+				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search]})
+				@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+			end
+		else
+			@q = CourseDetail.search(params[:q])
+			@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+		end
 		
-		@q = CourseDetail.search(params[:q])
-		@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
-		#@cd_all=get_mixed_info2(@cds)
+		#@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+
 		@cd_all=@cds
   	end
 	def mini
