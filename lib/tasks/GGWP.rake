@@ -4,8 +4,15 @@ require "#{Rails.root}/app/helpers/course_maps_helper"
 include CourseMapsHelper
 
 namespace :GGWP do
-	desc "testaa"
+	desc "top manager migrate to user role"
 	task :test => :environment do 
+		tops = TopManager.all
+		tops.each do |t|
+			u = User.find(t.user_id)
+			u.role = 0
+			u.save! 
+		
+		end
 		
 	end
 	

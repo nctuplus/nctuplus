@@ -1,0 +1,2 @@
+$('#body').html('<%= escape_javascript render "manage_user_lists" %>');
+$('#paginator').html('<%= escape_javascript(paginate(@users, :window=>2, :remote => true).to_s) %>');

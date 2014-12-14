@@ -64,7 +64,8 @@ class UserController < ApplicationController
 				:pass_score=>@user.pass_score,
 				:last_sem_id=>latest_semester.id,
 				:agreed=>cs_agree,
-				:taked=>cs_taked
+				:taked=>cs_taked,
+				:list_type=>params[:type]
 			}
 		end
 		respond_to do |format|
@@ -73,22 +74,14 @@ class UserController < ApplicationController
 		
 	end
 
-
-	def add_top_manager
+	def change_role
+		user = User.find(params[:uid])
+		user.role = params[:role].to_i
+		user.save!
 		
-		if TopManager.find_or_create_by_user_id(:user_id=>params[:uid].to_i, :all_users=>1, :all_departments=>1)
-			mesg="新增成功!"
-		else
-			mesg="新增失敗"
-		end
-		respond_to do |format|
-			format.html {
-				render :text => mesg,
-							 :content_type => 'text/html',
-							 :layout => false
-			}
-		end
+		render :layout=>false, :nothing=> true, :status=>200, :content_type => 'text/html'
 	end
+	
 	def special_list
 		@ls=latest_semester
 		@user=getUserByIdForManager(params[:uid])
@@ -129,20 +122,18 @@ class UserController < ApplicationController
 			#update_cs_cfids(course_map,@user)
 
 			if course_map
-				course_map_res={
-					:name=>course_map.name,
-					:id=>course_map.id,
-					:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
-					:cfs=>get_cm_tree(course_map)
-				}
+				course_map_res=get_cm_res(course_map)
 			end
 			res={
 				:user_id=>@user.id,
 				:pass_score=>@user.pass_score,
 				:last_sem_id=>latest_semester.id,
-				:user_courses=>@user.courses_json,
+				:user_courses=>{
+					:success=>@user.courses_json,
+					:fail=>@user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2}
+				},
 				:course_map=>course_map_res||nil,
-				:user_fails=> @user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2} ,
+				#:user_fails=> @user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2} ,
 			}
 		end
 		
@@ -285,8 +276,8 @@ class UserController < ApplicationController
 		redirect_to :controller=> "user", :action=>"special_list"
 	end
   def manage
-    @users=User.includes(:semester, :department, :course_simulations, :course_maps).all#limit(50)
-	@top_managers=TopManager.all.pluck(:user_id)
+    @users=User.includes(:semester, :department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
+	#@top_managers=TopManager.all.pluck(:user_id)
   end
   def select_cm
 		
@@ -379,54 +370,12 @@ class UserController < ApplicationController
 			:score=>cs.score
 		}}
 	end
-	def _get_course_struct(c)
-		return {
-			:ct_id=>c.course_teacherships.take.id,
-			:name=>c.ch_name,
-			:id=>c.id,
-			:credit=>c.credit,
-			:dept=>c.department ? c.department.ch_name : ""
-		}
-	end	
-	def _get_courses_struct(courses)
-		courses.map{|c|
-			_get_course_struct(c)
-		}
-	end
-	def _get_bottom_node(cf)		
-  	data={
-  		:id=>cf.id,
-			:cf_name=>cf.name,
-			:credit_need=>cf.credit_need,
-			:cf_type=>cf.field_type,
-			:courses=>_get_courses_struct(cf.courses),#.map{|c|{:name=>c.ch_name, :id=>c.id, :credit=>c.credit}},
-			:course_groups=>cf.course_groups.where(:gtype=>0).includes(:courses).map{|cg|{
-				:credit=> cg.lead_course.credit,
-				:lead_course_name=>cg.lead_course.ch_name,
-				:lead_course_id=>cg.lead_course.id,
-				:lead_course=>_get_course_struct(cg.lead_course),
-				:courses=>_get_courses_struct(cg.courses)#.map{
-			}}
-		}
-		return data
-  end
 	
-	def _get_middle_node(cf,nodes)		
-  	data={
-  				:id=>cf.id,
-				:cf_name=>cf.name,
-				:cf_type=>cf.field_type,
-				:field_need=>cf.field_type==3 ? cf.field_need : cf.child_cfs.count,
-				:credit_need=>cf.credit_need,
-				:child_cf=>nodes
-		}
-		return data
-  end
+
 	
-	def get_cf_tree(cf)
-		return cf_trace(cf,:_get_bottom_node,:_get_middle_node)
-		
-	end
+	
+	
+	
 	def get_cm_cfs(course_map)
 		return course_map.course_fields.includes(:courses, :child_cfs).map{|cf|
 			cf.field_type < 3 ? 
@@ -434,14 +383,7 @@ class UserController < ApplicationController
 				_get_middle_node(cf,cf.child_cfs.includes(:courses).map{|child_cf|get_cf_tree(child_cf)})
 		}
 	end
-	def get_cm_tree(course_map)
-		return course_map.course_fields.includes(:courses, :child_cfs).map{|cf|
-			cf.field_type < 3 ? 
-				_get_bottom_node(cf) : 
-				_get_middle_node(cf,cf.child_cfs.includes(:courses).map{|child_cf|get_cf_tree(child_cf)})
-		}
-
-	end
+	
 	def check_passed(cs,user)
 		return cs.semester_id!=latest_semester.id&&(cs.score=="通過"||cs.score.to_i > user.pass_score)
 	end

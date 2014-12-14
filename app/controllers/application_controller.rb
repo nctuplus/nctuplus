@@ -3,13 +3,9 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   protect_from_forgery
-	rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
+  rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  
-
-
-	
-	def record_not_found
+  def record_not_found
     redirect_to action: :index
   end
 	
@@ -81,31 +77,27 @@ class ApplicationController < ActionController::Base
 	 return flag
   end
   
-	def checkTopManagerNoReDirect
-		#if checkLogin
-	  TopManager.find_by_user_id(current_user.id).presence
-		#end
-		#return @topmanager
+  def checkCourseMapPermission
+  	if current_user and (current_user.role==0 or current_user.role == 2)
+  		return true
 	end
+	alertmesg("danger",'Sorry',"您沒有操作此動作的權限")  
+  	redirect_to root_url
+  end
+  
+  def checkTopManagerNoReDirect
+		return current_user.role==0
+  end
+  
   def checkTopManager
-    
     if checkLogin
-	  @topmanager=TopManager.find_by_user_id(current_user.id)
-	  case params[:controller]
-		when 'user'
-		  unless @topmanager && @topmanager.all_users==1
-		  alertmesg("danger",'Sorry',"您沒有操作此動作的權限")     
-		  redirect_to root_url
-		  end
-		when 'departments'
-		  unless @topmanager && @topmanager.all_departments==1
-		  alertmesg("danger",'Sorry',"您沒有操作此動作的權限")     
-		  redirect_to root_url
-		  end
-	  end
-    else
-		redirect_to root_url
-    end    
+		if current_user.role==0
+			return true
+		else
+			alertmesg("danger",'Sorry',"您沒有操作此動作的權限")    
+		end	  	
+    end   
+	redirect_to root_url
   end
   
   def checkCourseManager #(course_id)
@@ -119,8 +111,6 @@ class ApplicationController < ActionController::Base
 		    return true if course.id==params[:id]#course_id
 		  end
 		end
-	  #else
-		
 	  end
 	  alertmesg("danger",'Sorry',"您沒有操作此動作的權限") 
 		  redirect_to root_url

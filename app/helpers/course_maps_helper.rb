@@ -250,7 +250,58 @@ module CourseMapsHelper
 	def courses_join_cf(user_courses,cf)
 		return user_courses.select{|pc|pc.course_field==cf}.map{|cs|cs.course}
 	end
-	
+	def get_cm_res(course_map)
+		{
+			:name=>course_map.name,
+			:id=>course_map.id,
+			:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
+			:cfs=>get_cm_tree(course_map)
+		}
+	end
+	def _get_bottom_node(cf)		
+  	data={
+  		:id=>cf.id,
+			:cf_name=>cf.name,
+			:credit_need=>cf.credit_need,
+			:cf_type=>cf.field_type,
+			:courses=>_get_courses_struct(cf.courses),#.map{|c|{:name=>c.ch_name, :id=>c.id, :credit=>c.credit}},
+			:course_groups=>cf.course_groups.where(:gtype=>0).includes(:courses).map{|cg|{
+				:credit=> cg.lead_course.credit,
+				:lead_course_name=>cg.lead_course.ch_name,
+				:lead_course_id=>cg.lead_course.id,
+				:lead_course=>cg.lead_course.to_json_for_stat,#_get_course_struct(cg.lead_course),
+				:courses=>_get_courses_struct(cg.courses)#.map{
+			}}
+		}
+		return data
+  end
+	def _get_middle_node(cf,nodes)		
+		{
+  		:id=>cf.id,
+			:cf_name=>cf.name,
+			:cf_type=>cf.field_type,
+			:field_need=>cf.field_type==3 ? cf.field_need : cf.child_cfs.count,
+			:credit_need=>cf.credit_need,
+			:child_cf=>nodes
+		}
+  end
 
+	def _get_courses_struct(courses)
+		courses.map{|c|
+			#_get_course_struct(c)
+			c.to_json_for_stat
+		}
+	end
+	def get_cm_tree(course_map)
+		return course_map.course_fields.includes(:courses, :child_cfs).map{|cf|
+			cf.field_type < 3 ? 
+				_get_bottom_node(cf) : 
+				_get_middle_node(cf,cf.child_cfs.includes(:courses).map{|child_cf|get_cf_tree(child_cf)})
+		}
 
+	end
+	def get_cf_tree(cf)
+		return cf_trace(cf,:_get_bottom_node,:_get_middle_node)
+		
+	end
 end

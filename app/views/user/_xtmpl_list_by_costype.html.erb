@@ -16,13 +16,14 @@
 		{% for (var j=0, course; course=courses[j]; j++) { %}
 			{% var pass_class=""; %}
 			{% if(course.sem_id==o.last_sem_id||check_pass(o.pass_score,course.score)) { %}
-			{% local_credit+=parseInt(course.credit); %}
-			{% } else{ %}
-			{% pass_class="danger"; %}
+				{% local_credit+=parseInt(course.credit); %}
 			{% } %}
 			<tr class="row {%=pass_class%}">
 				<td class="col-md-6">
 					<h4 class="text-center">
+						{% if(course.sem_id!=o.last_sem_id&&!check_pass(o.pass_score,course.score)) { %}
+								<%=image_tag asset_path("failed.png"),size:"70x30"%>
+						{% } %}
 						<a href="/courses/{%=course.ct_id%}" target="blank">{%=course.name%}</a> | 
 						{%=course.t_name%} | 
 						{% if(course.cf_name!=""){ %}
@@ -37,6 +38,7 @@
 							<div class="number-right-top" >{%=course.file_count%}</div>
 							<a href="/courses/{%=course.ct_id%}&first_show=discussion" class="btn btn-sm btn-default">討論區</a>
 							<div class="number-right-top" >{%=course.discuss_count%}</div>
+							
 						</div>
 					</td>
 			</tr>
@@ -50,7 +52,11 @@
 	<tr class="row label-info">
 		<td colspan="2" >
 			<h4 class="text-right">
-				歷年總和:
+				{% if(o.list_type=="all"){ %}
+					歷年總和:
+				{% }else if(o.list_type=="this_sem"){ %}
+					本學期:
+				{% } %}
 				{% total=0; %}
 				{% for (var value in credits){ %}
 					{% total+=credits[value]; %}

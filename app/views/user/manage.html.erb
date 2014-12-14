@@ -1,6 +1,5 @@
-
-﻿<div class="table-responsive">
 <div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+<hr>
 <table class="table" id="dataTables-paginate">
 
 <thead>
@@ -14,72 +13,33 @@
 	</tr>
 </thead>
 
-<tbody>
-<% has_imported=0%>
-
-
-<%@users.each do |user| %>
-	<% if user.course_simulations.count!=0%>
-		<%has_imported+=1%>
-	<% end %>
-	<tr class="row">
-	<td>
-		<% if user.uid%>
-			<%= image_tag "http://graph.facebook.com/"<<user.uid<<"/picture", size: "25x25" %>
-			<%= link_to user.name, "http://www.facebook.com/"<<user.uid, target:"_blank" %>
-		<% else %>
-			<%=user.student_id	%>
-		<% end%>	
-	</td>
-	<% if !user.department.nil? %>
-	<td>
-		<%=user.department.ch_name%>
-	</td>
-	<% else %>
-		<td>尚未填寫</td>
-	<% end %>
-	<td>
-		<%=link_to user.total_credit,"/user/special_list?uid="<<user.id.to_s %>
-	</td>
-	<td>
-	<% cm_id=user.course_maps.first.nil? ? 0 :user.course_maps.first.id %>  
-		<%=select_tag "course_map", options_from_collection_for_select(CourseMap.all, :id, :name, cm_id), prompt:"none", class:"course_map form-control", id:user.id%>
-	</td>
-<% unless user.semester.nil? %>
-<% sem=user.semester.name%>
-<td><%= sem[0..sem.length-2] %></td>
-<% else %>
-<td>尚未填寫</td>
-<% end %>
-
-<td>
-<% if @top_managers.include?(user.id) %>
-	管理員
-<% else %>
-	<%=link_to "新增管理員","javascript:void(0);", onclick:"addTopManager(#{user.id})"%>
-
-<% end %>
-</td>
-<!--<td><%=link_to "權限","/user/"+user.id.to_s+"/permission"%></td>-->
-</tr>
-<% end %>
+<tbody id="body">
+<%= render "manage_user_lists"%>
 </tbody>
 
 </table>
-<h4>匯入人數<%=has_imported%></h4>
-
+<div id="paginator">
+	<%= paginate @users, :window=>2, :remote => true %>
+</div>
 
 <script>
-	function addTopManager(id){
+
+	$('.role').change(function(){
+		var uid = $(this).attr('user_id');
+		var role = $(this).val();
 		$.ajax({
-			url: "/user/add_top_manager",
+			url: "/user/change_role",
 			type: "GET",
-			data :{uid:id},
-			success :function(data){
-				alert(data);
+			data :{uid: uid, role: role},
+			success: function(){
+				alert('update success.');
+			},
+			error: function(){
+				alert('Internal server error.');
 			}
 		});
-	}
+		return false ;
+	});
 
 <% data = User.all.joins(:department).group(:ch_name).count %>
 $(function () {

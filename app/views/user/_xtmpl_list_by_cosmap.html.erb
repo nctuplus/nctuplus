@@ -1,6 +1,6 @@
 <script type="text/x-tmpl" id="list_by_cosmap">
 {% var cm=o.course_map,user_courses=o.user_courses; %}
-{% var user_fails=o.user_fails; %}
+{% var user_fails=user_courses.fail; %}
 {% var cfname=[]; %}
 <table class="table "style="border:0px">
 	{% if(user_fails.length > 0){ %}
@@ -16,7 +16,7 @@
 		{% } %}
 	{% } %}
 	{% var first_time=true; %} 
-	{% for(var i = 0,course ;course=user_courses[i];i++){ %}
+	{% for(var i = 0,course ;course=user_courses.success[i];i++){ %}
 		{% if(course.cf_id==0){ %}
 			{% if(first_time){ %}
 				{% first_time=false; %}

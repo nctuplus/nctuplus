@@ -1,6 +1,6 @@
 <div class="panel panel-primary" >
 	<div class="panel-heading" >
-		<h4 class="text-center">統計</h4>
+		<h4 class="text-center">畢業學分計算</h4>
 	</div>
 	
 	<br>
@@ -26,7 +26,7 @@
 $(document).ready(function(){
 	$.getJSON("/user/statistics2?uid=<%=params[:uid] %>", function (data) {
 		<% if @user.is_undergrad %>
-		$("#common_check_div").html(tmpl("common_check",data));
+			$("#common_check_div").html(tmpl("common_check",data));
 		<% end %>
 
 		if(data["course_map"]){

@@ -45,7 +45,7 @@
 	$(document).ready(function(){
 		$.getJSON("/user/get_user_courses?uid=<%=@user.id%>&type=this_sem", function (data) {
 			$("#course-container").html(tmpl("cos_type_list", data));
-			console.log(data);
+			//console.log(data);
 		});
 	});
 </script>

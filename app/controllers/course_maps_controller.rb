@@ -1,11 +1,11 @@
 class CourseMapsController < ApplicationController
 	include CourseMapsHelper
 
-	before_filter :checkTopManager
+	before_filter :checkCourseMapPermission #:checkTopManager
 
 ##### resource controller
 	def index
-		@course_maps=CourseMap.all
+		@course_maps=CourseMap.all.order('name  asc')
 	end
 
 	def show
@@ -35,7 +35,7 @@ class CourseMapsController < ApplicationController
 			copy_from = CourseMap.find(params[:copy])
 			#Rails.logger.debug "[debug] in1 "+copy_from.course_fields.count.to_s
 			copy_from.course_fields.each do |cf|
-				Rails.logger.debug "[debug] cfcfcf"
+				#Rails.logger.debug "[debug] cfcfcf"
 				new_cf = CourseField.new(:user_id=>current_user.id)
 				new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = cf.name, cf.credit_need, cf.color, cf.field_type
 				new_cf.save!
@@ -183,10 +183,10 @@ class CourseMapsController < ApplicationController
 		cf.field_type = (cf.field_type==1) ? 2 : 1
 		if cf.field_type==1
 			if cf.courses.presence
-				cf.credit_need = cf.courses.map{|c| c.credit}.reduce(:+)
+				cf.credit_need = cf.courses.map{|c| c.credit.to_i}.reduce(:+)
 			end
 			if cf.course_groups.presence
-				cf.credit_need += cf.course_groups.map{|cg| cg.lead_course.credit}.reduce(:+)
+				cf.credit_need += cf.course_groups.map{|cg| cg.lead_course.credit.to_i}.reduce(:+)
 			end
 		else
 			cf.credit_need = 0
@@ -268,7 +268,7 @@ class CourseMapsController < ApplicationController
 				course_group_leads = CourseMap.find(params[:map_id]).course_groups.includes(:course_group_lists)
 									 .reject{|cg| cg.course_group_lists.count==0 or cg.gtype==1}
 									 .map{|cg| [cg.id, cg.lead_group_list.course_id]}
-				#Rails.logger.debug "[debug hit] " + course_group_leads.to_s	
+#Rails.logger.debug "[debug hit] " + course_group_leads.to_s	
 				c_ids.each do |c_id|
 					if all_courses.include? c_id.to_i
 						fail_cnt +=1

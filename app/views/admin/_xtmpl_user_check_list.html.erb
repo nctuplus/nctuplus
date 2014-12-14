@@ -1,27 +1,150 @@
+<script>
+	function calCreditSum(courses){
+		var sum=0;
+		for(var i = 0,course;course=courses[i];i++){
+			sum+=course.credit;
+		}
+		return sum;
+	}
+	function get_row_res(user,pass_score,last_sem_id,course_map){
+		var user_courses=user.courses.success;
+		var result=get_check_res(pass_score,last_sem_id,user_courses);
+		var pass_courses=get_pass_courses(pass_score,last_sem_id,user_courses);
+		var res='<tr class="row">';
+		res+='<td class="text-center">'+user.student_id+'</td>';
+		res+='<td class="text-center">'+calCreditSum(pass_courses)+' ';
+		
+		res+='<a href="javascript:void(0);" class="check_modal_but">進度表</a>';
+		res+='<a href="javascript:void(0);" class="coslist_modal_but">歷年修課</a>'+'</td>';
+		res+='<td class="text-center">'+user.courses.fail.length+'</td>';
+		res+='<td class="text-center">';
+		if(!result['service_1']){ 
+			res+='一';
+		} if (!result['service_2']){ 
+			res+='二';
+		} 
+		if(result['service_1']&&result['service_2']){ 
+			res+=green_check();
+		} 
+		res+='</td><td class="text-center">';
+		var flag=0; 
+		if(result['art_1']||result['art_after102']>=1){ 
+			++flag; 
+		}else{ 
+			res+='一';
+		} 
+		if(result['art_2']||result['art_after102']>=2){ 
+			++flag; 
+		}else{ 
+			res+='二';
+		} 
+		if(flag==2){ 
+			res+=green_check();
+		} 
+		res+='</td><td class="text-center">';
+		flag=0;
+		if(result['phe_1']<2){ 
+			res+='大一缺'+(2-result['phe_1'])
+		}else{ 
+			++flag;
+		} 
+		if(result['phe_optional']<4){ 
+			if(flag==0){ 
+				res+='<br>';
+			} 
+			res+='選修缺'+(4-result['phe_optional']);
+		} else{ 
+			++flag;
+		} 
+		if(flag==2){ 
+			res+=green_check();
+		} 
+		res+='</td><td class="text-center">';
+		flag=0;
+		if(result['foreign_basic']<4){ 
+			res+='基礎缺'+(4-result['foreign_basic'])/2;
+		}else{ 
+			++flag;
+		} 
+		if(result['foreign_basic']<2){ 
+			res+='進階缺1';
+		}else{ 
+			++flag;
+		} 
+		if(flag==2){ 
+			res+=green_check();
+		} 
+		res+='</td><td class="text-center">';
+		flag=0;
+		for(var dimension in result['common']){ 
+			if (result['common'][dimension]==0){ 
+				if(dimension=="通識"){ 
+					res+='當代';
+				}else{ 
+					res+=dimension; 
+				} 
+			}
+			else{
+				++flag;
+			}
+		}
+		if(flag==6)
+			res+=green_check();
+		flag=0;
+		res+='</td>';
+		
+		for(var i = 0,cf;cf=course_map.cfs[i];i++){
+			res+='<td class="text-center">';
+			if(cf.cf_type<=2){
+				var check=check_cf(pass_courses,cf);
+				if(check["result"])
+					res+=green_check();
+				else 
+					res+=check["match_credit"]+"/"+cf.credit_need;
+			}
+			else if(cf.cf_type==3){
+				for(var j = 0, sub_cf;sub_cf=cf.child_cf[j];j++){
+					var check = check_cf(pass_courses, sub_cf) ;
+					if(check.match_credit!=0){
+						res+=sub_cf.cf_name+':';
+						res+=check["match_credit"]+"/"+sub_cf.credit_need;
+						res+='<br>';
+					}	
+				}
+			}
+			res+='</td>';
+		} 
+		
+		
+		return res;
+	}
+</script>
+
+
 <script type="text/x-tmpl" id="user_check_list">
-<table class="table" >
-<tr class="row">
-	<td>學號</td>
-	<td>已修幾門課</td>
-	<td>服務學習</td>
-	<td>藝文賞析</td>
-	<td>體育</td>
-	<td>外文</td>
-	<td>通識</td>
-</tr>
-{% for(var i = 0,user ;user=o.users[i];i++) { %}
-
-<tr class="row">
-	<td>{%=user.student_id%}</td>
-	<td>{%=user.courses.length%}</td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-	<td></td>
-</tr>
-
-{% } %}
+{% var course_map=o.course_map,users=o.users; %}
+<table class="table table-bordered" >
+	<tr class="row">
+		<td class="text-center">學號</td>
+		<td class="text-center">已修學分(全採計請注意)</td>
+		<td class="text-center">匯入失敗數</td>
+		<td class="text-center">服務學習</td>
+		<td class="text-center">藝文賞析</td>
+		<td class="text-center">體育</td>
+		<td class="text-center">外文</td>
+		<td class="text-center">通識</td>
+		{% for(var i = 0,cf;cf=course_map.cfs[i];i++){ %}
+			<td class="text-center">
+				{%=cf.cf_name%}
+			</td>
+		{% } %}
+	</tr>
+	{% for(var i = 0,user ;user=users[i];i++) { %}
+		{% if(user.courses.success.length==0)continue; %}
+		<tr class="row">
+			{% print(get_row_res(user,o.pass_score,o.last_sem_id,course_map),true); %}
+		</tr>
+	{% } %}
 </table>
 
 </script>

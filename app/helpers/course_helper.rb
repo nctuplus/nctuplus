@@ -61,7 +61,7 @@ module CourseHelper
 	end
 	
 	def latest_semester
-		return Semester.last
+		Semester.last
 	end
 	def rollcall_name(id)
 		str = ""

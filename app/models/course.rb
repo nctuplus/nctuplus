@@ -19,21 +19,25 @@ class Course < ActiveRecord::Base
 	
 	
 	def to_result(semester_name)
-	
     {
 			"id" => read_attribute(:id),
 			"semester_name" => semester_name,
       "ch_name" => read_attribute(:ch_name),
       "eng_name" => read_attribute(:eng_name),
       "real_id" => read_attribute(:real_id),
-			"department_name" => Department.find(read_attribute(:department_id)).ch_name#,
-	  #"teacher_name" => read_attribute(:teacher_id)==0 ? "All": Teacher.find(read_attribute(:teacher_id)).name,
-	  #"teacher_id" => read_attribute(:teacher_id),
-
-	 
+			"department_name" => Department.find(read_attribute(:department_id)).ch_name#,	 
     }
   end
 	
+	def to_json_for_stat
+		{
+			:ct_id=>self.course_teacherships.take.id,
+			:name=>self.ch_name,
+			:id=>self.id,
+			:credit=>self.credit,
+			:dept=>self.department ? self.department.ch_name : ""
+		}
+	end	
 	
 	
 	#UNRANSACKABLE_ATTRIBUTES = ["ch_name"]

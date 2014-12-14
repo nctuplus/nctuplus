@@ -6,4 +6,5 @@ class CourseMap < ActiveRecord::Base
 	belongs_to :semester
 	belongs_to :department
 	belongs_to :user
+	
 end

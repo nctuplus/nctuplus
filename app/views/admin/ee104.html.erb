@@ -1,12 +1,48 @@
-<div id="list"></div>
-
+<div id="list" class="panel"></div>
+<div class="modal fade" id="courselist_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog panel"></div>
+</div>
 <script>
 	$(document).ready(function(){
 		$.getJSON("/admin/ee104", function (data) {
 			$("#list").html(tmpl("user_check_list",data));
 			console.log(data);
+			$(".check_modal_but").each(function(index,value){
+				//console.log(index);
+				$(this).click(function(){
+					var _data={
+						user_courses:data.users[index].courses,
+						course_map:data.course_map,
+						last_sem_id:data.last_sem_id,
+						pass_score:data.pass_score
+					};
+					show_check_modal(_data);
+				});
+			});
+			$(".coslist_modal_but").each(function(index,value){
+				$(this).click(function(){
+					var _data={
+						user_courses:data.users[index].courses,
+						course_map:data.course_map,
+						last_sem_id:data.last_sem_id,
+						pass_score:data.pass_score
+					};
+					$("#courselist_modal").find(".modal-dialog").html(tmpl("list_by_cosmap",_data));
+					$("#courselist_modal").modal("show");
+				});
+			});
+			
 		});
 	});
+	function show_check_modal(data){
+		$("#courselist_modal").find(".modal-dialog").html(tmpl("common_check",data));
+		$("#courselist_modal").find(".modal-dialog").append(tmpl("cosmap_check",data));
+		$("#courselist_modal").modal("show");
+	}
 </script>
 
 <%=render :partial=>"xtmpl_user_check_list" %>
+
+<%=render :partial=>"/user/xtmpl_common_check"%>
+<%=render :partial=>"/user/xtmpl_cm_check"%>
+<%=render :partial=>"/user/xtmpl_list_by_cosmap"%>

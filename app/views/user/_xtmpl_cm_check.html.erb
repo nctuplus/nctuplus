@@ -1,5 +1,5 @@
 <script type="text/x-tmpl" id="cosmap_check">
-{% var cm=o.course_map,user_courses=o.user_courses; %}
+{% var cm=o.course_map,user_courses=o.user_courses.success; %}
 <table class="table table-bordered "style="border:0px">
 	<tr class="row" >
 		<td class="col-md-12" colspan="{%=cm.max_colspan+1%}">
@@ -16,7 +16,7 @@
 			</h4>
 		</td>
 	</tr>
-	{% var pass_courses=get_pass_courses(o.pass_score,o.last_sem_id,o.user_courses); %}
+	{% var pass_courses=get_pass_courses(o.pass_score,o.last_sem_id,user_courses); %}
 	{% print(parse_cf_tree(cm.cfs,pass_courses,cm.max_colspan),true); %}
 	
 </table>

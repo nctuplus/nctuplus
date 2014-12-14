@@ -32,7 +32,8 @@ function add_class(c_ids){ //action="add"
   				}else if(res.success > 1)
   					alert("共加入了 "+res.success+" 門課程");		
   				load_course_list(cf_show_id) ;
-  				$('#alert-msg').html('新增成功').removeClass().addClass('text-color-green').show().fadeOut(3000);
+  				if(res.success>0)
+  					$('#alert-msg').html('新增成功').removeClass().addClass('text-color-green').show().fadeOut(3000);
   			},
   			error: function(){
   				$('#alert-msg').html('新增失敗').removeClass().addClass('text-color-red').show().fadeOut(3000);	

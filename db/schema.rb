@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141126181305) do
+ActiveRecord::Schema.define(version: 20141212170640) do
 
   create_table "cf_field_need", force: true do |t|
     t.integer  "course_field_id"
@@ -85,8 +85,8 @@ ActiveRecord::Schema.define(version: 20141126181305) do
   add_index "course_content_lists", ["user_id"], name: "index_course_content_lists_on_user_id", using: :btree
 
   create_table "course_details", force: true do |t|
-    t.string  "unique_id"
     t.integer "course_teachership_id"
+    t.integer "department_id"
     t.integer "semester_id"
     t.string  "grade"
     t.string  "time"
@@ -100,6 +100,7 @@ ActiveRecord::Schema.define(version: 20141126181305) do
   end
 
   add_index "course_details", ["course_teachership_id"], name: "index_new_course_details_on_course_teachership_id", using: :btree
+  add_index "course_details", ["department_id"], name: "index_course_details_on_department_id", using: :btree
   add_index "course_details", ["semester_id"], name: "index_new_course_details_on_semester_id", using: :btree
 
   create_table "course_field_lists", force: true do |t|

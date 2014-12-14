@@ -27,6 +27,9 @@
 			<tr class="row {%=pass_class%}">
 				<td class="col-md-6">
 					<h4 class="text-center">
+						{% if(course.sem_id!=o.last_sem_id&&!check_pass(o.pass_score,course.score)) { %}
+								<%=image_tag asset_path("failed.png"),size:"70x30"%>
+						{% } %}
 						<a href="/courses/{%=course.ct_id%}">{%=course.name%}</a> | 
 						{%=course.t_name%} | 
 						{% if(course.cf_name!=""){ %}
