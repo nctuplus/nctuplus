@@ -75,7 +75,7 @@ class User < ActiveRecord::Base
 			
 			
 			#user.activated = user.department_id==0 ? 0 : 1 
-			user.activated=0
+			#user.activated=0
 			#user.department_id=0
       user.oauth_token = auth.credentials.token
       user.oauth_expires_at = Time.at(auth.credentials.expires_at)
