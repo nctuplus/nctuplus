@@ -1,5 +1,5 @@
 <script type="text/x-tmpl" id="select_cf">
-{% var cm=o.course_map,user_courses=o.user_courses; %}
+{% var cm=o.course_map,user_courses=o.user_courses.success; %}
 {% var cfname=[]; %}
 <table class="table "style="border:0px">
 	{% var any_need_to_sel=false; %}
