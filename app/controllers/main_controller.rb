@@ -50,6 +50,8 @@ class MainController < ApplicationController
 			elsif current_user and not find_user #只有fb
 				current_user.student_id = std_id
 				current_user.save!
+				current_user.course_simulations.destroy_all 
+				alertmesg("info",'success',"綁定成功！ 成績資訊須重新匯入請注意！！") 
 			elsif not current_user and find_user #僅知有e3
 				session[:user_id] = find_user.id
 			else  # 僅知沒e3
