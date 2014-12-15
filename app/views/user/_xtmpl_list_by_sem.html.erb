@@ -35,7 +35,7 @@
 						{% if(course.cf_name!=""){ %}
 						{%=course.cf_name%} | 
 						{% } %}
-						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong>
+						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit%}</strong>
 					</h4>
 				</td>
 				<td class="col-md-6">

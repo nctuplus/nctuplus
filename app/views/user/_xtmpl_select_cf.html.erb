@@ -13,7 +13,7 @@
 				<h4 class="text-left">
 					{%=course.sem_id==0 ? "抵免" : get_sem_name(course.sem_id) %} | 
 					{%=course.name%} | 
-					<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit%}</strong> | 
+					<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit%}</strong> | 
 					{%=course.score %}				
 					<div class="" style="width:250px;display:inline-block;">
 						<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=o.user_id%},$(this));">
