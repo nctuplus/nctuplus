@@ -193,7 +193,7 @@ function check_course(user_course, user_info){ // course passORfail , check sem
 	if((user_course.sem.year-user_info.sem_now.year)==0 && 
 	   (user_course.sem.half-user_info.sem_now.half)==0) user_course.score = '修習中';
 	
-	if(user_course.sem.year==0 && user_course.memo.length>0){// 大學部或轉學帶課
+	if(user_course.sem.year==0 /* && user_course.memo.length>0*/){// 大學部或轉學帶課
 		//console.log('[take] '+user_course.memo);
 		note += user_course.memo ;
 		sem = -1  ;

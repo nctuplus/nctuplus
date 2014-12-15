@@ -328,7 +328,7 @@ class UserController < ApplicationController
 				 :cos_type=>cs.course_detail.cos_type,
 				 :sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
 				 :cf_id=>cs.course_field_id,
-				 :memo=>cs.memo,
+				 :memo=>cs.memo||"",
 				 :degree=>cs.course.department.degree,
 				}}
 				# if has course_map, user must have semester, dept
