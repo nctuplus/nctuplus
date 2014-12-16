@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141212170640) do
+ActiveRecord::Schema.define(version: 20141216053939) do
 
   create_table "cf_field_need", force: true do |t|
     t.integer  "course_field_id"
@@ -171,6 +171,7 @@ ActiveRecord::Schema.define(version: 20141212170640) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "import_fail",      default: 0
+    t.string   "cos_type",         default: ""
   end
 
   add_index "course_simulations", ["course_detail_id"], name: "index_course_simulations_on_course_detail_id", using: :btree
@@ -402,6 +403,7 @@ ActiveRecord::Schema.define(version: 20141212170640) do
     t.boolean  "has_added"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "cos_type",         default: ""
   end
 
   create_table "top_managers", force: true do |t|
@@ -424,9 +426,7 @@ ActiveRecord::Schema.define(version: 20141212170640) do
 
   create_table "users", force: true do |t|
     t.string   "name"
-    t.string   "email"
     t.integer  "semester_id"
-    t.integer  "activated"
     t.string   "activate_token"
     t.string   "provider"
     t.string   "uid"
@@ -437,6 +437,7 @@ ActiveRecord::Schema.define(version: 20141212170640) do
     t.integer  "department_id"
     t.string   "student_id"
     t.boolean  "agree",            default: false
+    t.integer  "role",             default: 1,     null: false
   end
 
   add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree

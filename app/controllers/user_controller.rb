@@ -119,7 +119,7 @@ class UserController < ApplicationController
 			
 			course_map=@user.course_maps.first
 
-			#update_cs_cfids(course_map,@user)
+			update_cs_cfids(course_map,@user)
 
 			if course_map
 				course_map_res=get_cm_res(course_map)
@@ -164,7 +164,7 @@ class UserController < ApplicationController
 			student_id=res[:student_id]
 			student_name=res[:student_name]
 			dept=res[:dept]
-
+			
 			if student_id!=current_user.student_id
 				msg="成績驗證錯誤，請匯入自己的成績，謝謝!"
 				redirect_to :action =>"special_list", :msg=>msg
@@ -188,11 +188,13 @@ class UserController < ApplicationController
 				return
 			end
 			tcss=TempCourseSimulation.where(:student_id=>current_user.student_id)
-			if !tcss.empty?
+			
+			if !tcss.empty? # from temp
 				tcss.each do |tcs|
 					tcs.has_added=1
 					tcs.save!
-					CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>tcs.course_detail_id, :semester_id=>tcs.semester_id, :course_field_id=>0, :score=>tcs.score, :memo=>tcs.memo, :memo2=>tcs.memo2)
+					CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>tcs.course_detail_id, :semester_id=>tcs.semester_id, 
+											:course_field_id=>0, :score=>tcs.score, :memo=>tcs.memo, :memo2=>tcs.memo2, :cos_type=>tcs.cos_type)
 					if tcs.score=="通過" || tcs.score.to_i>=@pass_score
 						@pass+=1
 					else
@@ -201,20 +203,22 @@ class UserController < ApplicationController
 				end
 				@success_added=tcss.select{|tcs|tcs.course_detail_id!=0}.length
 				@fail_added=tcss.select{|tcs|tcs.course_detail_id==0}.length
-			else
+			
+			else # from user import	
 			
 				agree.each do |a|
-					#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name
-					
+					#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
 					course=Course.where(:real_id=>a[:real_id]).take
 					if !course.nil?
 						Rails.logger.debug "[debug] "+course.ch_name
 						cd_temp=course.course_details.take#.where(:credit=>a[:credit]).first
-						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過", :memo=>a[:memo], :import_fail=>0)
+						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過",
+												:memo=>a[:memo], :import_fail=>0, :cos_type=>a[:cos_type])
 						@success_added+=1
 					else
 					
-						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>0, :semester_id=>0, :score=>"通過", :memo=>a[:memo], :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name], :import_fail=>1)
+						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>0, :semester_id=>0, :score=>"通過",
+												:memo=>a[:memo], :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name], :import_fail=>1, :cos_type=>a[:cos_type])
 						@fail_added+=1
 					end
 				end
@@ -231,7 +235,8 @@ class UserController < ApplicationController
 					if sem
 						cds=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
 						if cds	
-							CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'], :course_field_id=>0)
+							CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id,
+													:score=>n['score'], :course_field_id=>0, :cos_type=>n['cos_type'])
 							@success_added+=1
 						else
 							#fail_course_name.append()

@@ -153,10 +153,12 @@ class MainController < ApplicationController
 			unless course.nil?
 				cd_temp=course.course_details.first
 				@success_added+=1
-				TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過", :memo=>a[:memo], :has_added=>0)
+				TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過",
+											:memo=>a[:memo], :has_added=>0, :cos_type=>a[:cos_type])
 			else
 				#if failed,set course_detail_id to 0
-				TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>0, :semester_id=>0, :score=>"通過", :memo=>a[:memo], :has_added=>0, :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name])
+				TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>0, :semester_id=>0, :score=>"通過",
+											:memo=>a[:memo], :has_added=>0, :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name], :cos_type=>a[:cos_type])
 				@fail_added+=1
 			end
 			
@@ -174,7 +176,8 @@ class MainController < ApplicationController
 			if sem
 				cds=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
 				if cds	
-					TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'], :has_added=>0)
+					TempCourseSimulation.create(:name=>student_name, :student_id=>student_id,:dept=>dept, :course_detail_id=>cds.id, :semester_id=>cds.semester_id, :score=>n['score'],
+												:has_added=>0, :cos_type=>n['cos_type'])
 					@success_added+=1
 				else
 					#fail_course_name.append()
