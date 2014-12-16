@@ -52,7 +52,7 @@ class UserController < ApplicationController
 			cs_agree=@user.courses_agreed.map{|cs|{
 				:name=>cs.course.ch_name,
 				:credit=>cs.course.credit,
-				:cos_type=>cs.course_detail.cos_type,
+				:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
 				:cf_name=>cs.course_field ? cs.course_field.name : ""
 			}}
 			cs_taked=convert_to_json(@user.courses_taked)
@@ -361,7 +361,7 @@ class UserController < ApplicationController
 	def convert_to_json(courses)
 		return courses.map{|cs|{
 			:name=>cs.course.ch_name,
-			:cos_type=>cs.course_detail.cos_type,
+			:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
 			:cos_id=>cs.course.id,
 			:ct_id=>cs.course_teachership.id,
 			:sem_id=>cs.semester_id,

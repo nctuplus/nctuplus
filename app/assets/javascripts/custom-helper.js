@@ -60,6 +60,9 @@ function cos_type_class(cos_type){
 		case "外語":
 			prefix+="foreign";
 			break;
+		default:
+			prefix="success"
+			break;
 	}	
 	return prefix;
 }

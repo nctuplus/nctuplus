@@ -12,6 +12,8 @@ class CourseDetail < ActiveRecord::Base
   #belongs_to :course
   #belongs_to :teacher
 	
+	has_many :user_scores,->{where is_agreed:false}, foreign_key: "parent_id"
+	
 	#def teachers
 	#	self.course_teachership._teachers
 	#end

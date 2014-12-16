@@ -174,15 +174,15 @@ module CourseMapsHelper
 	
 	# update cs cf_id, deep to level 2
 	def update_cs_cfids(course_map,user)
-		user.all_courses.each do |cs|
-				cs.course_field_id=0
-				cs.save
-		end
+		#user.all_courses.each do |cs|
+		#		cs.course_field_id=0
+		#		cs.save
+		#end
 		return if course_map.nil?
 		return if user.all_courses.empty?
 		course_fields = course_map.course_fields.includes(:child_cfs)
 #Rails.logger.debug "[all_courses] "+user.all_courses.map{|cs| [cs.id, cs.course.ch_name]}.to_s
-		all_courses=user.all_courses
+		all_courses=user.all_courses.select{|cs|cs.course_field_id==0}
 		all_courses.each do |cs|
 			
 			cf_id=0

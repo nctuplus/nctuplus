@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141216053939) do
+ActiveRecord::Schema.define(version: 20141216164208) do
 
   create_table "cf_field_need", force: true do |t|
     t.integer  "course_field_id"
@@ -423,6 +423,22 @@ ActiveRecord::Schema.define(version: 20141216053939) do
 
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
+
+  create_table "user_scores", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "target_id"
+    t.integer  "course_field_id",             default: 0
+    t.boolean  "is_agreed"
+    t.text     "cos_type",        limit: 255
+    t.text     "score",           limit: 255
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_scores", ["course_field_id"], name: "index_user_scores_on_course_field_id", using: :btree
+  add_index "user_scores", ["target_id"], name: "index_user_scores_on_target_id", using: :btree
+  add_index "user_scores", ["user_id"], name: "index_user_scores_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"

@@ -147,8 +147,6 @@ class MainController < ApplicationController
 			TempCourseSimulation.where(:student_id=>student_id).destroy_all
 		end
 		agree.each do |a|
-			#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name
-			
 			course=Course.includes(:course_details).where(:real_id=>a[:real_id]).take
 			unless course.nil?
 				cd_temp=course.course_details.first

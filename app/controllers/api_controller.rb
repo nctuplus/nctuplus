@@ -1,88 +1,10 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm]
 	def testttt
-		@all=[]
-		Department.where("id < 494").each do |dept|
-			if dept.courses.count==0
-				dept.use_type="no_courses"
-				dept.save!
-			end
-		end
-=begin
-		EachCourseTeacherRating.includes(:course_teacher_rating).all.each do |ectr|
-			nctr=NewCourseTeacherRating.new
-			nctr.course_teachership_id=ectr.course_teacher_rating.course_teachership_id
-			nctr.score=ectr.score
-			nctr.user_id=ectr.user_id
-			case ectr.course_teacher_rating.rating_type
-				when "cold"
-					nctr.rating_type=1
-				when "sweety"
-					nctr.rating_type=2
-				when "hardness"
-					nctr.rating_type=3
-			end
-			nctr.save
-		end
-=end
-
-=begin
-	OldCourseDetail.all.group(:course_teachership_id).each do |oldcd|
-		newcd=CourseDetail.where(:semester_id=>oldcd.semester_id, :temp_cos_id=>oldcd.temp_cos_id).take
-		if newcd
-			NewOldCt.create(:old_ct_id=>oldcd.course_teachership_id, :new_ct_id=>newcd.course_teachership_id)
-		end
-	end
-=end
-
-=begin		
-		@all=NewOldCt.where(:old_ct_id=>CourseTeacherRating.all.group(:course_teachership_id).pluck(:course_teachership_id)).pluck(:new_ct_id)
-	CourseTeacherRating.all.each do |ctr|
-		ctr.course_teachership_id=@all[ctr.course_teachership_id]
-		ctr.save!
-	end
-=end		
-
-
-=begin
-		CourseGroupList.all.each do |cfl|
-			old_id=OldCourse.find(cfl.course_id).real_id
-			new_id=Course.where(:real_id=>old_id).take
-			if new_id
-			cfl.course_id=new_id.id
-			cfl.save!
-			else 
-				cfl.destroy
-			end
-		end
-=end
-
-=begin
-
-		@new_sem_ids=[0,1,2,4,5,7,8,10,11,13]
-		TempCourseSimulation.includes(:old_course_detail).where("semester_id != 0").each do |cs|
-			new_cd=CourseDetail.where(:temp_cos_id=>cs.old_course_detail.temp_cos_id, :semester_id=>cs.old_course_detail.semester_id).take
-			if new_cd.nil?
-				Rails.logger.debug "NOT FOUND cd_id:"+cs.old_course_detail.id.to_s
-				cs.destroy
-			else
-				cs.course_detail_id=new_cd.id
-				#cs.semester_id=@new_sem_ids[cs.semester_id]
-				cs.save!
-			end
-			
-		end
-
-
-		TempCourseSimulation.includes(:old_course_detail).where("semester_id = 0 AND course_detail_id != 0").each do |cs|
-			course=Course.where(:real_id=>cs.old_course.real_id).take
-			new_cd_id=course.course_details.take.id
-			#NewCourseDetail.where(:temp_cos_id=>cs.course_detail.temp_cos_id).take.id
-			cs.course_detail_id=new_cd_id
-			cs.save!
-		end
-=end
-
+		#UserScore.create(:user_id=>3, :target_id=>2, :is_agreed=>0)
+		uc=UserScore.find(1)
+		#@x=uc.course_detail.id
+		@x=uc.course_detail.id#.id
 	end
 	def tempcs_change_to_new_sem_id
 		TempCourseSimulation.includes(:course_detail).where("semester_id != 0").all.each do |tempcs|

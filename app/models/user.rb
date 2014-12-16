@@ -49,7 +49,7 @@ class User < ActiveRecord::Base
 			:cs_id=>cs.id,
 			:course_id=>cs.course.id,
 			:ct_id=>cs.course_teachership.id,
-			:cos_type=>cs.course_detail.cos_type,
+			:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
 			:sem_id=>cs.semester_id,
 			:brief=>cs.course_detail.brief,
 			:credit=>cs.course.credit,

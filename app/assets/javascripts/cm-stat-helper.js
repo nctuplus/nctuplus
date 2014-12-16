@@ -82,7 +82,7 @@ function get_sem_name(sem_id){
 		case 1:
 			half="下";
 			break;
-		case 3:
+		case 2:
 			half="暑";
 	}
 	return begin_year.toString()+half;
