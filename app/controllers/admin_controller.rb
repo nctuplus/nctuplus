@@ -2,9 +2,30 @@ class AdminController < ApplicationController
 	include CourseMapsHelper
 	
 	def ee104
-		if request.format=="json"
+		#if request.format=="json"
 			all_id=TempCourseSimulation.uniq.order("student_id").pluck(:student_id)
 			@users=User.includes(:course_simulations, :course_maps).where(:student_id=>all_id)
+			@users.each do |user|
+				tcss=TempCourseSimulation.where(:student_id=>user.student_id)
+				failed=tcss.select{|tcs|tcs.course_detail_id==0}
+				success=tcss.select{|tcs|tcs.course_detail_id!=0}
+				user.course_simulations.each do |cs|
+					if cs.course_detail_id!=0
+						tcs=success.select{|tcs|tcs.course_detail_id==cs.course_detail_id}.first
+						if tcs
+							cs.cos_type=tcs.cos_type
+							cs.save!
+						end
+					else
+						tcs=failed.select{|tcs|tcs.memo2==cs.memo2}.first
+						if tcs
+							cs.cos_type=tcs.cos_type
+							cs.save!
+						end
+					end		
+				end
+			end
+=begin
 			user_res=@users.map{|user|{
 				:student_id=>user.student_id,
 				:courses=>{
@@ -24,6 +45,7 @@ class AdminController < ApplicationController
 			format.html{}
 			format.json{render json:res}
 		end
+=end
 	end
 	
 end
