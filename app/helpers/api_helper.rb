@@ -1,4 +1,37 @@
 module ApiHelper
+	def get_course_from_e3(sem)
+		sendE3={:acy=>sem.year, :sem=>sem.half}
+		#sendE3={:acy=>"99", :sem=>"3"}
+		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/CourseList",sendE3)
+		ret=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		return ret
+	end
+	
+	def update_cd(data,cds,sem_id)
+		#@cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
+		@cd=cds.select{|cd|cd.temp_cos_id==data["cos_id"]}.first
+		if @cd.nil?
+			puts "CourseDetail not found,sem_id=#{sem_id}&cos_id=#{data["cos_id"]}\n"
+		else
+			costime=data['cos_time'].split(',')
+			@cd.time=""
+			@cd.room=""
+			costime.each do |t|
+				@cd.time<<t.partition('-')[0]
+				@cd.room<<t.partition('-')[2]
+			end
+			@cd.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
+			@cd.save!
+			#puts "Update success,id=#{@cd.id}\n"
+		end	
+	end
+	
+	def get_deptid(degree,dep_id)
+		return 0 if dep_id==""
+		dept=Department.where(:degree=>degree, :dep_id=>dep_id).take
+		return dept ? dept.id : 0
+	end
+	
 	def parse_scores(score)
 		agree=[]
 		normal=[]

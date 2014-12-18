@@ -113,21 +113,20 @@ class ApiController < ApplicationController
 			course_id=get_cid_by_real_id(data)
 			#if data['teacher']!=""
 			tids=[]
-			NewTeacher.where(:real_id=>data['teacher'].split(',')).each do |t|
-				
+			Teacher.where(:real_id=>data['teacher'].split(',')).each do |t|
 				tids.push(t.id)
 			end
-			nct=NewCourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
+			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
 			#end
 			save_cd(data,nct.id,sem.id)
-
 		end
 
 		return ret
 	end
+	
 	def save_cd(data,ct_id,sem_id)
-		return if NewCourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
-		@cd=NewCourseDetail.new
+		return if CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
+		@cd=CourseDetail.new
 		@cd.course_teachership_id=ct_id
 		@cd.semester_id=sem_id
 		@cd.grade=data["grade"]
