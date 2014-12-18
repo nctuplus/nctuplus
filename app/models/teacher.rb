@@ -9,5 +9,5 @@ class Teacher < ActiveRecord::Base
     CourseTeachership.where("teacher_id LIKE ?","%#{self.id}%").select{|ct|JSON.parse(ct.teacher_id).include?(self.id)}
 		#CourseTeachership.where("teacher_id REGEXP ?","[[.comma.]]#{self.id}[[.comma.]]%")
   end
-	
+
 end

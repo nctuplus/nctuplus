@@ -124,65 +124,8 @@ class ApiController < ApplicationController
 		return ret
 	end
 	
-	def save_cd(data,ct_id,sem_id)
-		return if CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
-		@cd=CourseDetail.new
-		@cd.course_teachership_id=ct_id
-		@cd.semester_id=sem_id
-		@cd.grade=data["grade"]
-		costime=data['cos_time'].split(',')
-		@cd.time=""
-		@cd.room=""
-		costime.each do |t|
-			@cd.time<<t.partition('-')[0]
-			@cd.room<<t.partition('-')[2]
-		end
-		
-		#@cd.credit=data['cos_credit'].to_i
 
-		@cd.cos_type=data["cos_type"]
-		@cd.temp_cos_id=data["cos_id"]
-		@cd.memo=data["memo"]
-		@cd.students_limit=data["num_limit"]
-		@cd.reg_num=data["reg_num"]
-		
-		@cd.brief=data["brief"]
-		@cd.save!
-		#return @cd
-	end
-	def get_cd_by_id(unique_id)
-		#return NewCourseDetail.find_or_create_by(:unique_id=>unique_id)
-		return 
-	end
-	def get_deptid(degree,dep_id)
-		return 0 if dep_id==""
-		dept=Department.where(:degree=>degree, :dep_id=>dep_id).take
-		return dept ? dept.id : 0
-	end
-	def get_ctid(cid,tid)
-		return 0 if cid==0 || tid==0
-		ct=NewCourseTeachership.find_or_create_by(:course_id=>cid, :teacher_id=>tid)
-		return ct.id
-	end
-	def get_tid_by_id(teacher_id)
-		return 0 if teacher_id==""
-		teacher=Teacher.where(:real_id=>teacher_id).take
-		tid=teacher.nil? ? 0 :teacher.id 
-		return tid
-	end
-	def get_cid_by_real_id(data)
-		course=NewCourse.where(:real_id=>data["cos_code"]).take
-		if course.nil?
-			course=NewCourse.new
-			course.real_id=data["cos_code"]
-			course.ch_name=data["cos_cname"]
-			course.eng_name=data["cos_ename"]
-			course.credit=data["cos_credit"].to_i
-			course.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
-			course.save!
-		end
-		return course.id
-	end
+
 	def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST'

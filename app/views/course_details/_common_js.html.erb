@@ -11,29 +11,5 @@
 		$("#q_course_department_id_eq").html(dept_sel[obj.val()]);
 		$("#q_department_id_eq").html(dept_sel[obj.val()]);
 	}
-	$(function(){
-		//alert("!!!");
-		
-		/*$("#degree").change(function(){
-			
-			$("#q_course_department_id_eq").html(dept_sel[$(this).val()]);
 
-		});*/
-		
-		<% if params[:q]&&@cd_all.empty? %>
-			<% if params[:q].fetch(:teacher_name_cont,"").length==2 %>
-				$("#q_teacher_name_cont").popover({ 
-					content: "試著在名字間加入空白",
-					placement:"bottom",
-					trigger : "click",
-					container :"body",
-					
-				}).popover('show');
-			<% end %>
-		<% end %>
-
-
-		
-
-	});
 </script>

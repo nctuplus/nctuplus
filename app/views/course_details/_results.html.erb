@@ -88,7 +88,7 @@ function search_by_select(){
 </tr>
 
 <tbody>
-
+	
 	<% if !@cd_all.empty? %>
 
 		<% @cd_all.each do |cd| %>
@@ -111,15 +111,18 @@ function search_by_select(){
 					<td><%= cd.time %></td>
 					<td><%= cd.course.credit %></td>
 				</tr>
+				
 		<% end %>
-	<% else %>
-		<tr class="row">
-			<td colspan="7" class="col-md-6 col-md-offset-5">
-				<h3>查無結果!</h3>
-			</td>
-		</tr>
-	<% end %>
-</tbody>
-</table>
-
-<%= paginate @cds, :window=>2 %>
+		
+			
+		<% else %>
+				<tr class="row">
+					<td colspan="7" class="col-md-6 col-md-offset-5">
+						<h3>查無結果!</h3>
+					</td>
+				</tr>
+			
+		<% end %>
+	</tbody>
+		</table>	
+		<%= paginate @cds, :window=>2 %>

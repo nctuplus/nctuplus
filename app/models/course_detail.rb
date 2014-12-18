@@ -49,14 +49,22 @@ class CourseDetail < ActiveRecord::Base
 	#end
 	
 	ransacker :by_teacher_name, :formatter => proc {|v| 
-		#CourseTeachership.select(:id).where(
-		#	:course_id=>Teacher.select(:id).where("name like ?","%#{v}%")
-		#)
-		Teacher.where("name like ?","%#{v}%").map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten||['0']},
-		:splat_param => true do |parent|
+		zz=Teacher.where("name like ?","%#{v}%")
+		if zz.empty?
+			[0]
+		else
+			zz.map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten
+		end
+	},:splat_param => true do |parent|
 			parent.table[:course_teachership_id]
   end
-	
+	def testGG(arr)
+		if arr.nil?
+			return [0]
+		else
+			return arr.map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten
+		end
+	end
 	# ransacker :by_dept_id, :formatter => proc {|v| 
 		# CourseTeachership.select(:id).where(
 			# :course_id=>Course.select(:id).where(:department_id => v)
