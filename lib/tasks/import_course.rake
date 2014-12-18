@@ -12,6 +12,7 @@ namespace :import_course do
 			datas.each do |data|
 				update_cd(data,cds,sem)
 			end
+			puts "Update #{sem.name} success!"
 		end
 	end
 	
