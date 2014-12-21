@@ -1,20 +1,7 @@
-<script>
-$(document).ready(function(){
-	change_degree($("#degree"));
-	$("#q_course_department_id_eq").val('<%=@q.course_department_id_eq%>');
-});
-function search_by_text(){
-	clean_input($("#dept_div"));
-	clean_input($("#sem_div"));
-	$('#course_detail_search').submit();
-}
-function search_by_select(){
-	clean_input($("#text_div"));
-	$('#course_detail_search').submit();
-}
-</script>
+<%=render 'courses/search/search_js' %>
 
-<%= search_form_for @q, class:"form-inline" do |f| %>
+<div id="results">
+<%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
 
 <div class="row">
 	
@@ -27,40 +14,19 @@ function search_by_select(){
 	</div>	
 	<div class="col-sm-2 no-padding-left ">
 		<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.select :course_department_id_eq, options_from_collection_for_select(Department.where(:use_type=>['dept','common']), "id", "ch_name", @q.course_department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select();"} %>
+		<%= f.select :department_id_eq, options_from_collection_for_select(Department.searchable, "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select();"} %>
 	</div>
 	
 	<div class="col-sm-2">
 		<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師" %>
-		<!--<%= f.search_field :course_ch_name_cont, class: "form-control",placeholder:"課名" %>-->
-		
+
 	</div>
 	<button class="btn btn-success" id="search" onclick="search_by_text();">
 		<%= fa_icon "search" %>
 	</button>
 	
-	<!--<div class="col-sm-6 row">
 	
-	<div class="col-sm-2 no-padding-left no-padding-right">
-		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.search_field :brief_cont, class: "form-control",placeholder:"摘要(向度)" %>
-	</div>
-	-->
-	
-	
-	<!--
-	<div class="col-sm-2">
-		<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.search_field :time_cont, class: "form-control",placeholder:"時間" %>
-	</div>
-	
-	
-	
-	
-	</div>
-  -->
-
 <% end %>
 </div>
 <br>
@@ -86,9 +52,9 @@ function search_by_select(){
 
 <tbody>
 	
-	<% if !@cd_all.empty? %>
+	<% if !@cds.empty? %>
 
-		<% @cd_all.each do |cd| %>
+		<% @cds.each do |cd| %>
 			
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course_teachership_id)%>">
 					<td>
@@ -124,3 +90,13 @@ function search_by_select(){
 	</tbody>
 		</table>	
 		<%= paginate @cds, :window=>2 %>
+</div>
+
+<script>
+$(function(){
+	$(".clickable-row").click(function() {
+			window.document.location = $(this).attr("href");
+
+	});
+});
+</script>

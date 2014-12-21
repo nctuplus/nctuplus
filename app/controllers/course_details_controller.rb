@@ -2,12 +2,12 @@ class CourseDetailsController < ApplicationController
 	include CourseHelper
 	layout false, :only=>[:mini, :course_group]
 	def index
-		if params[:custom_search]!=""
+		if params[:custom_search]&&params[:custom_search]!=""
 			@q = CourseDetail.search({:course_ch_name_cont=>params[:custom_search]})
-			@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+			@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
 			if @cds.empty?
 				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search]})
-				@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+				@cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
 			end
 		else
 			@q = CourseDetail.search(params[:q])

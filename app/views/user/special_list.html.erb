@@ -29,7 +29,7 @@
 		$('#degree_select').focus();
 	}
 </script>
-<% if @cs_this.empty? %>
+<% if @user.course_simulations.count==0 %>
 <div class="jumbotron bs-callout bs-callout-info border-info" style="background-color:rgba(0,0,0,0);">
   <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
   <h2>開始使用...</h2>

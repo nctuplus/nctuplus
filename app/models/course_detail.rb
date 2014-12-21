@@ -1,29 +1,42 @@
 class CourseDetail < ActiveRecord::Base
 	belongs_to :course_teachership
+	delegate :teacher_name, :to=>:course_teachership
 	belongs_to :semester
-	#belongs_to :course
+	delegate :name, :to=>:semester, :prefix=>true
+	belongs_to :department
+	delegate :ch_name, :to=>:department, :prefix=>true
 	
 	has_one :course, :through=>:course_teachership
-	has_many :teachers, :through=>:course_teachership
-	#belongs_to :course
-	#belongs_to :teacher
-	has_one :department, :through=>:course
-	#has_one :course_teachership
-  #belongs_to :course
-  #belongs_to :teacher
+	delegate :ch_name,:credit, :to=>:course, :prefix=>true
+	has_many :teachers, :through=>:course_teachership	
 	
-	has_many :user_scores,->{where is_agreed:false}, foreign_key: "parent_id"
-	
-	#def teachers
-	#	self.course_teachership._teachers
-	#end
-	
-	def teacher_name
-		self.course_teachership.teacher_name
-	end
+
 	
 	def self.flit_semester(sem_id)
 		self.select{|cd| cd.semester_id==sem_id}
+	end
+	
+	def to_search_result
+		{
+			:id=>self.id,
+			:grade=>self.grade=="*" ? "all" : self.grade ,
+			:cos_type=>self.cos_type,
+			:time=>self.time,
+			:course_name=>self.course_ch_name,
+			:credit=>self.course_credit,
+			:dept_name=>self.department_ch_name,
+			:ct_id=>self.course_teachership_id
+		}
+	end
+	
+	def to_course_table_result
+		{
+			:course_id=>self.id,
+			:time=>self.time,
+			:class=>cos_type_class(self.cos_type),
+			:room=>self.room,
+			:name=>self.course_ch_name		
+		}
 	end
 	
 	def to_result(course)
@@ -42,13 +55,8 @@ class CourseDetail < ActiveRecord::Base
     }
   end
 	
-	#private
-	
-	#ransacker :semester_id, formatter: proc { |v| v.reverse } do |parent|
-	#	parent.table[:semester_id]
-	#end
-	
-	ransacker :by_teacher_name, :formatter => proc {|v| 
+private
+  ransacker :by_teacher_name, :formatter => proc {|v| 
 		zz=Teacher.where("name like ?","%#{v}%")
 		if zz.empty?
 			[0]
@@ -58,19 +66,26 @@ class CourseDetail < ActiveRecord::Base
 	},:splat_param => true do |parent|
 			parent.table[:course_teachership_id]
   end
-	def testGG(arr)
-		if arr.nil?
-			return [0]
-		else
-			return arr.map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten
+
+  def cos_type_class(cos_type)
+		prefix="course-"
+		case cos_type
+			when "共同必修"
+				type="common-required"
+			when "共同選修"
+				type="common-elective"
+			when "通識"
+				type="general"
+			when "必修"
+				type="required"
+			when "選修"
+				type="elective"
+			when "外語"
+				type="foreign"
+			else
+				type="error"
 		end
-	end
-	# ransacker :by_dept_id, :formatter => proc {|v| 
-		# CourseTeachership.select(:id).where(
-			# :course_id=>Course.select(:id).where(:department_id => v)
-		# ).pluck(:id)
-	# }, :splat_param => true do |parent|
-    # parent.table[:course_teachership_id]
-  # end
+		return prefix+type
+  end
 	
 end

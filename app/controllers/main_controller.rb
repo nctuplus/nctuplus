@@ -72,21 +72,7 @@ class MainController < ApplicationController
 		@all=JSON.parse(http.body_str.force_encoding("UTF-8"))		
 	end
 	
-	def updateTeacherList
-		http=Curl.get("http://dcpc.nctu.edu.tw/plug/n/nctup/TeacherList",{})
-		teachers=JSON.parse(http.body_str.force_encoding("UTF-8"))
-		
-		tids=teachers.map{|t|t["TeacherId"]}
-		@deleted=NewTeacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
-		all_now=NewTeacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
-		@new=teachers - all_now
-		@new.each do |t|
-			@teacher=NewTeacher.new
-			@teacher.real_id=t["TeacherId"]
-			@teacher.name=t["Name"]
-			@teacher.save!
-		end
-	end
+
 	def test
 		data =  {'OrgId' => '46804706', 'VirtualAccount' => '95306617687250'}
 		http = Curl.post("https://easyfee.esunbank.com.tw/payciweb/vacntQuery.action", data)

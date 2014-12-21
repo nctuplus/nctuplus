@@ -43,6 +43,8 @@ class CourseTeachership < ActiveRecord::Base
 	#end
 	
 	def teacher_name
+		return "N/A" if self._teachers.empty?
+		
 		res=self._teachers.first.name+","
 		self._teachers.each_with_index do |t,index|
 			next if index==0

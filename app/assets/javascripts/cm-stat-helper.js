@@ -51,8 +51,10 @@ function get_check_res(pass_score,last_sem_id,user_courses){
 				result['foreign_advance']+=parseInt(course.credit); 
 			} 
 		} 
-		else if(course.cos_type=="通識"){ 
-			result['common'][course.brief.substr(0,2)]+=parseInt(course.credit); 
+		else if(course.cos_type=="通識"){
+			var dimension=course.brief.substr(0,2);
+			if(dimension.length==2)
+			result['common'][dimension]+=parseInt(course.credit); 
 		} 
 	}
 	return result;

@@ -1,6 +1,9 @@
 class Department < ActiveRecord::Base
-  #belongs_to :college
   has_many :courses
-  #has_many :teachers
 	has_many :users
+	scope :searchable,->{where use_type:['dept','common']}
+	scope :can_majored,->{where "(use_type = 'dept' AND dep_id != '17')  OR use_type = 'for_user' "}
+	scope :undergraduate,->{where degree:3}
+	scope :graduate,->{where degree:2}
+
 end

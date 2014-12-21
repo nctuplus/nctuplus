@@ -2,7 +2,7 @@
 
 <div class="panel panel-primary" >
 	<div class="panel-heading" >
-		<h4 class="text-center"><%=latest_semester.name%></h4>
+		<h4 class="text-center"><%=Semester.current.name%></h4>
 	</div>
 	<br>
 	<div class="row">	
@@ -43,7 +43,7 @@
 
 <script>
 	$(document).ready(function(){
-		$.getJSON("/user/get_user_courses?uid=<%=@user.id%>&type=this_sem", function (data) {
+		$.getJSON("/user/get_courses?uid=<%=@user.id%>&type=stat&sem_id=<%=Semester.current.id%>", function (data) {
 			$("#course-container").html(tmpl("cos_type_list", data));
 			//console.log(data);
 		});

@@ -24,7 +24,7 @@
 </div>
 <script>
 $(document).ready(function(){
-	$.getJSON("/user/get_user_courses?uid=<%=params[:uid]%>&type=all", function (data) {
+	$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
 		
 		$("#agree-container").html(tmpl("agreed", data));
 		$("#course-container").html(tmpl("cos_type_list", data));

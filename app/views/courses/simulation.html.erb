@@ -1,12 +1,77 @@
-
-
-<br>
-<div id="srch_and_schd" class="" style="background-color:rgba(221,221,221,0.8)">
+<div class="row" style="background-color:rgba(221,221,221,0.8)">
+	<div class="tabbable tabs-left col-md-4 col-md-offset-1">
+		<div class="tab-content" style="overflow:hidden;">
+		 <div class="tab-pane active" id="a">
+				<div class="panel panel-primary ">
+					<div class="panel-heading">
+						<h4 class="text-center">
+							<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="show_has_select()" style="margin-top: -5px;">
+								<font color="white"><%=fa_icon "check"%></font>
+							</button>	
+							課程查詢
+							<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="show_cart();" style="margin-top: -5px;">
+								<font color="white"><%=fa_icon "shopping-cart"%></font>
+							</button>	
+						</h4>
+					</div>
+					<div class="panel-body">
+						<div id="search_div" class="row schedule-search-bar"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-md-6 " id="schedule_div"></div>
 </div>
+
+
 <script>
 $(document).ready(function(){
-	$("#add_sem_form").hide();
-	$("#srch_and_schd").load("/courses/get_user_simulated?sem_id=<%=latest_semester.id%>");
+	$('#cart-btn').popover({
+		content: "顯示觀察名單",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
+	});
+	$('#has-select-btn').popover({
+		content: "已選課程",
+		placement:"auto",
+		trigger : "hover",
+		container :"body"
+	});
 	
+	//sidebar search
+	$("#search_div").load("/courses/search_mini?sem_id=<%=latest_semester.id%>",function(){
+		show_has_select();
+	});	
+	//course table
+	$("#schedule_div").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
+	/*
+	$.getJSON("/user/get_courses?type=course_table",function(data){
+			$("#schedule_div").html(tmpl("course_table", data));
+			table_popover();
+			if(data.courses.length>0) add_time_slot() ;		
+	});
+	*/	
 });
+	function show_has_select(){
+		$.getJSON("/user/get_courses?type=simulation",function(data){
+			$(".scrollable").html(tmpl("search_result", data));
+		});
+	}
+	function show_cart(){
+		$("#search_div").load("/course_details/mini?sem_id=<%=@sem_id%>");
+	}
+/*	
+	function table_popover(){
+		var time = ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'];
+		var real_time = ['6:00 ~ 6:50','7:00 ~ 7:50','8:00 ~ 8:50','9:00 ~ 9:50','10:10 ~ 11:00','11:10 ~ 12:00','12:20 ~ 13:10','13:20 ~ 14:10','14:20 ~ 15:10','15:30 ~ 16:20','16:30 ~ 17:20','17:30 ~ 18:20','18:30 ~ 19:20','19:30 ~ 20:20','20:30 ~ 21:20','21:30 ~ 22:20'];
+		for(var i=0,t; t=time[i]; ++i)
+			$('#time_'+t).popover({content: real_time[i] ,placement: "auto", trigger : "hover", container: "body"});
+	}
+*/
+	
 </script>
+
+<%=render "courses/search/xtmpl_results_mini"%>
+<%=render "courses/course_table/xtmpl_course_table"%>

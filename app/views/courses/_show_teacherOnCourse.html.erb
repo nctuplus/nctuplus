@@ -16,7 +16,7 @@
 				<!--<i class="fa fa-user fa-6"></i> 			
 				課程教師： <%=@ct.teacher_name%>-->
 				永久課號：<%=@course.real_id%>
-				<%=fa_icon "bank"%> 單位：<%=@course.department.ch_name%>
+				<%=fa_icon "bank"%> 單位：<%=cd.department_ch_name%>
 				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%>
 
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "book"%> 種類：
@@ -24,7 +24,7 @@
 				<%=cd.cos_type%>
 				</span>
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=@course.credit%> 
-
+				&nbsp;&nbsp;&nbsp;<%=fa_icon "bookmark"%> 適用年級：<%=cd.grade%> 
 				</br></br>
 				<% first_name = cd.semester.name %>
 				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>

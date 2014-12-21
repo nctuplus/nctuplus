@@ -7,6 +7,52 @@ module ApiHelper
 		return ret
 	end
 	
+	def updateTeacherList
+		http=Curl.get("http://dcpc.nctu.edu.tw/plug/n/nctup/TeacherList",{})
+		teachers=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		
+		tids=teachers.map{|t|t["TeacherId"]}
+		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
+		puts "#{@deleted} Teacher deleted"
+		all_now=Teacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
+		@new=teachers - all_now
+		@new.each do |t|
+			@teacher=Teacher.new
+			@teacher.real_id=t["TeacherId"]
+			@teacher.name=t["Name"]
+			@teacher.is_deleted=false
+			puts "Teacher #{@teacher.name} created"
+			@teacher.save!
+		end
+		puts "#{@new.length} teachers created"
+	end
+	
+	def updateDepartmentList
+		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/DepartmentList",{})
+		new_depts=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		
+		#new_dept_ids=new_depts.map{|dept|dept["degree"]+dept["dep_id"]}
+		#zzz=new_depts
+		Department.all.each do |dept|
+			new_depts=new_depts.reject{|new_dept|new_dept["degree"].to_i==dept.degree&&new_dept["dep_id"]==dept.dep_id}
+		end
+		#puts new_depts	
+		new_depts.each do |dept|
+			@dept=Department.new
+			@dept.dep_id=dept["dep_id"]
+			@dept.degree=dept["degree"].to_i
+			@dept.dept_type=dept["depType"]
+			@dept.ch_name=dept["dep_cname"]
+			@dept.eng_name=dept["dep_ename"]
+			@dept.use_type="dept"
+			@dept.save!
+			puts "Department #{@dept.ch_name} created"
+		end
+		puts "#{new_depts.length} departments created"
+	end
+	
+	
+	
 	def update_cd(data,cds,sem)
 		#@cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
 		@cd=cds.select{|cd|cd.temp_cos_id==data["cos_id"]}.first
@@ -42,6 +88,7 @@ module ApiHelper
 		return if CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
 		@cd=CourseDetail.new
 		@cd.course_teachership_id=ct_id
+		@cd.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
 		@cd.semester_id=sem_id
 		@cd.grade=data["grade"]
 		costime=data['cos_time'].split(',')
@@ -60,6 +107,7 @@ module ApiHelper
 		@cd.students_limit=data["num_limit"]
 		@cd.reg_num=data["reg_num"]
 		
+
 		@cd.brief=data["brief"]
 		@cd.save!
 		#return @cd
@@ -68,14 +116,14 @@ module ApiHelper
 
 	
 	def get_cid_by_real_id(data)
-		course=NewCourse.where(:real_id=>data["cos_code"]).take
+		course=Course.where(:real_id=>data["cos_code"]).take
 		if course.nil?
-			course=NewCourse.new
+			course=Course.new
 			course.real_id=data["cos_code"]
 			course.ch_name=data["cos_cname"]
 			course.eng_name=data["cos_ename"]
 			course.credit=data["cos_credit"].to_i
-			course.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
+			#course.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
 			course.save!
 		end
 		return course.id
@@ -85,7 +133,7 @@ module ApiHelper
 	def get_deptid(degree,dep_id)
 		return 0 if dep_id==""
 		dept=Department.where(:degree=>degree, :dep_id=>dep_id).take
-		return dept ? dept.id : 0
+		return dept.nil? ? 0 : dept.id 
 	end
 	
 	def parse_scores(score)

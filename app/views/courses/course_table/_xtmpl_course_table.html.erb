@@ -1,0 +1,29 @@
+<script type="text/x-tmpl" id="course_table">
+{% var days = ['Mon','Tue','Wed','Thu','Fri','Sat']; %}
+{% var time = ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L']; %}
+<div class="panel panel-primary ">
+	<div class="panel-heading" style="background-color:#4c66a4;">
+		<h4 class="text-center">
+			{%=o.semester%}
+		</h4>		
+	</div>
+	<table class="table table-bordered" id="schedule_table">
+		<tr>
+			<th class="col" ></th>		
+			{% for(var i=0, d; d=days[i]; ++i){ %}
+				<th class="col-md-2"><p class="text-center">{%=d%}</p></th>
+			{% } %}
+		</tr>	
+		{% for(var i=0,t; t=time[i]; ++i){ %}
+			<tr>
+				<th id="time_{%=t %}" class="schedule-grid"><p class="text-center">{%=t %}</p></th>
+				{% for(var j=1; j<=days.length; ++j){ %}
+					<td id="day_{%=j %}_time_{%=t %}" class="schd-slot-empty pos-relative" ></td>
+				{% } %}
+			</tr>
+
+		{% } %}	
+	</table>
+</div>
+</script>
+

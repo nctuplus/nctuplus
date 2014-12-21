@@ -3,18 +3,24 @@ class CoursesController < ApplicationController
   
 	include CourseHelper
   
-	layout false, :only => [:course_raider, :list_all_courses, :search_by_keyword, :search_by_dept, :get_user_simulated, :get_user_courses, :get_sem_form, :get_user_statics, :show_cart, :get_compare]
+	layout false, :only => [:course_raider, :get_user_courses, :get_user_statics, :show_cart, :get_compare]
 
 	before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts]
 	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
-
-### for course_teacher_page_content	
-
-	#def get_list_opt
+	def index
+		@cds=custom_search
+	end
+	def search_mini
+		@result={
+			:type=>"search",
+			:courses=>custom_search.map{|cd|
+				cd.to_search_result
+			}
+		}
+		render "courses/search/mini", :layout=>false
+	end
 	
-	#end
-
 	def course_raider
 #		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")
 		ct = CourseTeachership.find(params[:ct_id])
@@ -151,20 +157,6 @@ class CoursesController < ApplicationController
 ###
 	
 	
-	def get_user_statics
-		@css=current_user.course_simulations
-		sem_ids=@css.map{|s|s.semester_id}
-		@sems=Semester.where(:id=>sem_ids)
-		#@cds=CourseDetail.where(:id=>cd_ids).order(:semester_id)
-		@common_courses=@css.select{|cs|cs.course_detail.cos_type=="通識"}.map{|cs|cs.course_detail}
-		#@common_courses=CourseDetail.where(:id=>cd_ids)
-		render "statics"
-	end
-	
-	def get_sem_form
-		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id} 
-		render "sem_form"
-	end
 	def get_user_courses 
 		sem_id=params[:sem_id].to_i
 		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
@@ -175,13 +167,8 @@ class CoursesController < ApplicationController
 		@cd_all=get_mixed_info(@course_details)
 		@sem=Semester.find(sem_id)
 
-		#respond_to do |format|
-    #  format.html # index.html.erb
-    #  format.json { render json: @preschedules.map{|preschedule| preschedule.to_simulated } }
-    #end
 		@table_type="simulated"
 		if params[:type]=="schd"
-			#session[:saved_query]={}
 			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name,"course_id"=>cd.id}}.to_json
 			render "user_schedule"
 		elsif params[:type]=="list"
@@ -204,48 +191,6 @@ class CoursesController < ApplicationController
 			 }
 		end
 	end	
-	
-	def del_simu_course
-		sem_id = params[:sem_id].to_i
-		cid = params[:cid].to_i
-		cd_ids=current_user.course_simulations.filter_semester(sem_id).select{|ps| ps.course_detail.id==cid}
-		if cd_ids.size == 1
-			target = current_user.course_simulations.where(:semester_id=>sem_id, :course_detail_id=>cid).first
-			status = CourseDetail.where(:id=>cid).map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name,"course_id"=>cd.id}}.to_json
-			target.delete	
-		else
-			status = 0
-		end
-		respond_to do |format|
-       		format.html { render :text => status.to_s.html_safe }
-   		end	
-	end
-	
-	def get_user_simulated
-		@sem_id=params[:sem_id].to_i
-		get_autocomplete_vars
-		@view_type="_mini"
-		@table_type="simulated"
-		
-		render "srch_and_schd"
-	end
-	
-	
-	def add_simulated_course
-		cd_id=params[:cd_id].to_i
-		_type=params[:type]
-		if params[:from]=="cart"
-			session[:cd].delete(cd_id)
-		end
-		sem_id=params[:sem_id]
-		if _type=="add"
-			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>sem_id, :course_detail_id=>cd_id, :score=>'通過')
-		else
-			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd_id).destroy_all
-				
-		end
-		render :nothing => true, :status => 200, :content_type => 'text/html'
-	end
 	
 	
 	def rate_cts
@@ -290,15 +235,7 @@ class CoursesController < ApplicationController
 			format.html{render :layout=>false,:nothing =>true }
 			format.json{render json:result}
 		end
-=begin
-		respond_to do |format|
-			format.html {
-				render :json => result.to_json,
-							 :content_type => 'text/html',
-							 :layout => false
-			}
-		end
-=end
+
 	end
 	def get_compare
 		@course = Course.includes(:course_teacherships).find(params[:c_id])
@@ -335,76 +272,21 @@ class CoursesController < ApplicationController
 	
 	
   def show
-		@ct=CourseTeachership.find(params[:id])
+	@ct=CourseTeachership.find(params[:id]) 
     @course = @ct.course#Course.includes(:semesters).find(params[:id])
 	 
-	  zz=@ct.cold_ratings.avg_score
-		@first_show=params[:first_show]||"tc"
-=begin
-		@teachers=@course.teachers.sort_by{
-			|cd| CourseTeachership.where(:course_id=>params[:id],:teacher_id=>cd.id).first.course_teacher_ratings.sum(:avg_score) 
-		}.reverse
-		@target_rank = 999 ;
-		if params[:tid]
-			@teacher_show =  Teacher.find(params[:tid])
-			score = CourseTeachership.where(:course_id=>params[:id],:teacher_id=>params[:tid]).first.course_teacher_ratings.sum(:avg_score) 
-			if score>0
-				@teachers.each_with_index do | teacher, idx|
-					if teacher.id == @teacher_show.id
-						@target_rank = idx+1
-						break 
-					end
-				end		
-			end
-		else
-			@teacher_show =  @course.teachers.first
-			score = CourseTeachership.where(:course_id=>params[:id],:teacher_id=>@teacher_show.id).first.course_teacher_ratings.sum(:avg_score) 
-			if score > 0
-				@target_rank = 1 
-			end	
-		end
-=end
-		@target_rank=999
-		#@ct=CourseTeachership.includes(:course_details).where(:course_id=>@course.id,:teacher_id=>@teacher_show.id).take
-		# course_teacherships.where(:course_id=>params[:id]).course_teacher_ratings
-		@sems=@course.semesters.uniq
+	zz=@ct.cold_ratings.avg_score
+	@first_show=params[:first_show]||"tc"
+	@target_rank=999
+	@sems=@course.semesters.uniq
 
   end
 	
-	def simulation
-    
+  def simulation  
 		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
-		@user_sem_ids.append(latest_semester.id)
-		#if @user_sem_ids.empty?
-		#	@user_sem_ids=latest_semester.id
-		#end
+		@user_sem_ids.append(latest_semester.id)	
   end
 	
-  def new
-    @course=@department.courses.build
-  end
-	
-  def edit
-    @course = Course.find(params[:id])
-  end
-	
-  def update
-    @course = Course.find(params[:id])
-	
-    @course.ch_name=params[:course][:ch_name]
-		@course.eng_name=params[:course][:eng_name]
-    @course.save!
-    redirect_to :action => :show, :id => @course
-  end
-	
-  def destroy
-    @course = Course.find(params[:id])
-    @course.destroy
-
-    redirect_to :action => :index
-  end
-  
-
 	def add_to_cart
 		
 		if params[:type]=="add"
@@ -447,6 +329,9 @@ class CoursesController < ApplicationController
 
 		
 	end
+	
+
+	
 	def show_cart
 		session[:saved_query]={}
 		@sem=latest_semester
@@ -458,21 +343,23 @@ class CoursesController < ApplicationController
 		end
 		render "shopping_cart_list"
 	end
-	
-	def groups
-	
-	end
-	
-	
-  protected
-  def find_department
-    @department=Department.find(params[:department_id])
-  end
-  
+		
   
   private
-	
-	
+	def custom_search
+		if params[:custom_search]&&params[:custom_search]!=""
+			@q = CourseDetail.search({:course_ch_name_cont=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
+			if cds.empty?
+				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})		
+				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
+			end
+		else
+			@q = CourseDetail.search(params[:q])
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+		end
+		return cds
+	end
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)
   end

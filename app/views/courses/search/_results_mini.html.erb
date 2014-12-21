@@ -1,0 +1,35 @@
+<script>
+	$(document).ready(function(){
+		$(".scrollable").html(tmpl("search_result",<%=@result.to_json.html_safe%>));
+	});
+</script>
+
+<%= search_form_for @q, url:"/courses/search_mini", class:"form-horizontal", remote:true do |f| %>
+
+	<div class="row schedule-search-bar" >
+		<%=f.search_field :semester_id_eq,class:"hidden", value:params[:sem_id]||params[:q][:semester_id_eq]%>
+
+		<div class="col-sm-5 no-padding-left">
+			<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']],params[:degree]), prompt: "分類", class: "form-control", onchange: "change_degree($(this))" %>
+		</div>
+		<div class="col-sm-7">
+			<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+			<%= f.select :department_id_eq, options_from_collection_for_select(Department.searchable, "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select();"} %>
+		</div>
+	</div>
+
+	<div class="row schedule-search-bar"style="margin-top:5px;">
+		<div class="col-sm-5 no-padding-left ">
+			<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師" %>
+		</div>		
+		<div class="col-sm-2 no-padding-left" style="//margin-top:-20px;">
+			<button class="btn btn-primary" onclick="search_by_text();"><%=fa_icon "search"%></button>
+		</div>
+	</div>
+<% end %>
+
+<div class="scrollable"></div>
+
+
+

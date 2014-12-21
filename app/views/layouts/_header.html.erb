@@ -30,16 +30,18 @@
 					</li>
 				<% end %>
 
-				<li><a href="/course_details/" rel="nofollow">全校課程</a></li>
+				<li><a href="/courses/" rel="nofollow">全校課程</a></li>
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
 				
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">			
 				<% if current_user %>
+				<!--
 				<li>
 					<a class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :class=>"masterTooltip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %></a>
 				</li>
+				-->
 				<li>
 
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= fa_icon("calendar 2x", :id=>"schd_but")%></a>

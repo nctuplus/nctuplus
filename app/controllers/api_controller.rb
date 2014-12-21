@@ -30,33 +30,8 @@ class ApiController < ApplicationController
 			end
 		end
 	end
-	def clone_new_teacher_to_teacher
-		NewTeacher.all.each do |nt|
-			@teacher=Teacher.where(:name=>nt.name, :real_id=>nil).take
-			if @teacher
-				@teacher.real_id=nt.real_id
-				@teacher.is_deleted=false
-				@teacher.save!
-			else
-				Teacher.create(:real_id=>nt.real_id, :name=>nt.name, :is_deleted=>false)
-			end
-		end
-	end
-	def get_depts
-		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/DepartmentList",{})
-		@all=JSON.parse(http.body_str.force_encoding("UTF-8"))
 
-		@all.each do |dept|
-			@dept=NewDepartment.new
-			@dept.dep_id=dept["dep_id"]
-			@dept.degree=dept["degree"].to_i
-			@dept.dept_type=dept["depType"]
-			@dept.ch_name=dept["dep_cname"]
-			@dept.eng_name=dept["dep_ename"]
-			@dept.save!
-		end
 
-	end
 	def query_from_time_table
 		#@user = Cour.take
 		@cts=CourseTeachership.search({:course_real_id_in=>params[:cos_id], :teacher_name_in=>params[:teacher_name]})
@@ -87,45 +62,6 @@ class ApiController < ApplicationController
 	
 	private
 	
-	def create_sems
-		h_name=["上","下","暑"]
-		h_id=[1,2,3]
-		(99..103).each do |year|
-			(0..2).each do |index|
-				NewSemester.create(:name=>year.to_s+h_name[index], :year=>year, :half=>h_id[index])
-			end
-		end
-		
-	end
-	
-	def save_course(sem)
-		
-		sendE3={:acy=>sem.year, :sem=>sem.half}
-		#sendE3={:acy=>"99", :sem=>"3"}
-		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/CourseList",sendE3)
-		ret=JSON.parse(http.body_str.force_encoding("UTF-8"))
-		res=[]
-
-		ret.each do |data|
-			#next if CourseDetail.where(:unique_id=>data['unique_id']).take
-			#res.push(data)
-			
-			course_id=get_cid_by_real_id(data)
-			#if data['teacher']!=""
-			tids=[]
-			Teacher.where(:real_id=>data['teacher'].split(',')).each do |t|
-				tids.push(t.id)
-			end
-			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
-			#end
-			save_cd(data,nct.id,sem.id)
-		end
-
-		return ret
-	end
-	
-
-
 	def cors_set_access_control_headers
     headers['Access-Control-Allow-Origin'] = '*'
     headers['Access-Control-Allow-Methods'] = 'POST'
