@@ -1,0 +1,5 @@
+<div id="cart_result"></div>
+<%=render "/courses/search/xtmpl_results_mini" %>
+<script>
+	$("#cart_result").html(tmpl("search_result",<%=@result.to_json.html_safe%>));
+</script>

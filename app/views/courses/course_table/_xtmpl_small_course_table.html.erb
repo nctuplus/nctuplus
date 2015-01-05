@@ -1,0 +1,24 @@
+<script type="text/x-tmpl" id="small_course_table">
+{% var times=['A','B','C','D','X','E','F','G','H']; %}
+{% var days=['一','二','三','四','五']; %}
+<table class="table table-bordered no-margin-bottom" > 
+	<tr>
+		<td>
+			<%=fa_icon "search-plus",:onclick=>"$('#global_modal').modal('show');", :class=>" clickable-hover"%>
+		</td>
+		{% for(var i=0,day; day=days[i]; ++i){ %}
+			<td>{%=day%}</td>
+		{% } %}
+
+	<tr>
+	{% for(var i=0,time; time=times[i]; ++i){ %}
+	<tr>
+		<td>{%=time%}</td>
+		{% for(var j=1; j<=days.length; ++j){ %}
+			<td id="day_{%=j%}_time_{%=time%}_sm"></td>
+		{% } %}
+	</tr>
+	{% } %}
+	
+</table>
+</script>

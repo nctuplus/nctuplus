@@ -1,0 +1,77 @@
+<script type="text/x-tmpl" id="login">
+<div class="modal-header text-center">
+	{%=(o.ltype=='login') ? "Login" : "綁定e3帳號" %}
+</div>	
+<div class="modal-body row" >
+		<%=form_tag "/main/E3Login_Check", :class=>'col-md-8 e3-login', :remote=>true do%>
+		<div class="form-group">
+			<label class="control-label">e3帳號登入<span class='text-color-red login-alert'></span></label>
+		</div>
+		<div class="form-group">
+				<label for="id" class="col-md-3 control-label">學號</label>
+				 <div class="col-md-9">
+						<%=text_field_tag :id, '', :class=>"form-control", :required=>"true"%>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="pwd" class="col-md-3 control-label">密碼</label>
+				 <div class="col-md-9">
+						<%=password_field_tag :pwd, '', :class=>"form-control", :required=>"true"%>
+				</div>
+			</div>
+		<div class="form-group">
+				<div class="col-sm-offset-4 col-sm-8">
+						</br><button type="submit" class="btn btn-info submit-but">送出</button>
+				</div>
+		</div>
+		<% end %>
+	{% if(o.ltype=='login'){ %}	
+		<div class="col-md-1"></div>
+		<div class="col-md-4" class='modal-fb-link'>
+			<label>FB登入</label></br></br>
+			<%= link_to  "/auth/facebook", id: "sign_in", onclick:"disale_submit();" do %>
+				<%=fa_icon "facebook-square 3x" %>
+			<% end %>
+		</div>
+	{% } %}	
+</div>
+</script>
+
+<script>
+	
+	function bind_func(){
+		$('.sign_in').click(function(){
+				$("#global_modal").modal('show');	
+				$('.modal-fb-link').show();
+			});
+			$('.e3-login').submit(function(){		
+			disale_submit();
+			$.ajax({
+				type: "POST",
+					url: "/main/E3Login_Check" ,
+					data: $(this).serialize(),
+					success: function(data){
+						console.log('login result : '+data);
+					if(data=='success'){
+						location.reload();
+					}else{  
+						$('.login-alert').html('帳號或密碼錯誤').show().fadeOut(3500);
+						$('.submit-but').html('送出');
+						$('.submit-but').attr("disabled", false);
+					}
+					},error: function(){
+						$('.submit-but').html('送出');
+						$('.submit-but').attr("disabled", false);
+						alert('Cannot connect to E3 login service..');
+					}
+			});
+			return false ;
+		});	
+	}
+
+	function disale_submit(){
+		$('.submit-but').html('<%=j fa_icon "spinner spin"%>');
+		$('.submit-but').attr("disabled", true);
+		return true ;
+	}
+</script>	

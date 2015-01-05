@@ -36,23 +36,19 @@
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">			
-				<% if current_user %>
-				<!--
+		<% if current_user %>
 				<li>
 					<a class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :class=>"masterTooltip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %></a>
 				</li>
-				-->
 				<li>
 
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= fa_icon("calendar 2x", :id=>"schd_but")%></a>
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
 						<ul class="dropdown-menu">
-								<li id="small_timetable">
-								</li>
+							<li id="small_timetable"></li>
 						</ul>
 				</li>
-				
-				<li class="dropdown">
-				
+			
+				<li class="dropdown">		
 					<%= link_to  "/user/special_list", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
 						<% if current_user.uid.presence%>
 							<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
@@ -75,63 +71,64 @@
 							<%= link_to  "登出", signout_path, id: "sign_out" %>
 						</li>					
 					</ul>
-				
-				<% else %>
+				</li>
+		<% else %>
 				<li>
 					<%=link_to "登入","javascript:void(0);",:class=>"sign_in" %>
-				<% end %>  
-				</li>
+				</li>	
+		<% end %>  			
 			</ul>
 				
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </ul>
 
-<div class="modal fade" id="user_modal" tabindex="-1" role="dialog" aria-hidden="true" >
-	<div class="modal-dialog" >
-		<div class="modal-content" >
-			<!--<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-				<h4 class="modal-title" id="purchaseLabel">Purchase</h4>
-			</div>-->
-			<div class="modal-body" ></div>
-			<!--<div class="modal-footer">
-				
-				<button type="button" class="btn btn-primary">Purchase</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-			</div>-->
-		</div>
-	</div>
-</div>
-
-<% if not current_user %>
-	<%=render '/layouts/login', :ltype=>"login"%>
-<% elsif not current_user.student_id%>
-	<%=render '/layouts/login', :ltype=>"bind"%>
-<% end %>
-
-
 <script>
 	$(document).ready(function(){	
-		$("#schd_but").click(
-			function(){
-				//$("#user_modal").modal('show');
-				$("#user_modal .modal-body").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd&renderType=1");
+	
+	  // login modal 
+		<% if not current_user %>
+			$("#global_modal .modal-content").html(tmpl("login", {ltype:"login"})) ;
+		<% elsif not current_user.student_id%>
+			$("#global_modal .modal-content").html(tmpl("login", {ltype:"bind"})) ;
+		<% end %>
+		bind_func();
+		
+		<% if current_user and current_user.uid and not current_user.student_id%>	
+			$('.fb-bind-e3').click(function(){
+				$("#global_modal .modal-content").html(tmpl("login", {ltype:"bind"})) ;
+				bind_func();
+				$("#global_modal").modal('show');			
+				return false;
+			});
+		<% end %>
+		// small timetable
+		$("#sm_schd_button").click(
+			function(){				
+				$.getJSON("/user/get_courses?type=course_table&sem_id=<%=latest_semester.id%>",function(data){
+					$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>');
+					$("#global_modal .modal-body").html(tmpl("course_table", data.semester_info));
+					table_popover(); 
+					
+					$("#small_timetable").html(tmpl("small_course_table"));
+					if(data.courses.length>0){
+						add_time_slot(data.courses, false, true);			//for small_timetable		
+						add_time_slot(data.courses, false, false);		//for timetable in modal
+					}	
+				});			
 			}
 		);
 
+		// shopping cart
 		$("#cart_but").click(
-			function(){
-				$("#user_modal").modal('show');
-				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
+			function(){		
+		  	$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
+				$("#global_modal .modal-body").load("/courses/show_cart");
+				$("#global_modal").modal('show');
 			}
 		);
-	<% if current_user and current_user.uid and not current_user.student_id%>	
-		$('.fb-bind-e3').click(function(){
-			$("#login_modal").modal('show');			
-			return false;
-		});
-	<% end %>
+
+	
 	});
 	function add_to_cart(id,type){
 		$.ajax({
@@ -139,17 +136,24 @@
 			url : "/courses/add_to_cart",
 			data : {
 				cd_id:id,
-				tid:<%=params[:tid]||0%>,
 				type:type
 			},
+			dataType : "json",
 			success : function(data){
-				$("#content").prepend(data);
-				$("#ajax_notice").fadeOut(10000, function() { $(this).remove(); });
-				$("#user_modal .modal-body").html('<%=loading_img%>');
-				$("#user_modal .modal-body").load("/courses/show_cart?table_type=sidebar");
+				toastr[data["class"]](data["text"]);
+				if(type=="delete"){
+					$("#global_modal .modal-body").load("/courses/show_cart");
+				}
+				//$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
+				//$("#global_modal .modal-body").html('').html('<%=loading_img%>');
+				
 			}
 		
 		});
 	}
 
 </script>
+
+<%=render "/courses/course_table/xtmpl_course_table" if current_user%>
+<%=render "/courses/course_table/xtmpl_small_course_table" if current_user%>
+<%=render "/layouts/modal_content/xtmpl_header_login"%>

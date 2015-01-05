@@ -18,6 +18,11 @@
 
 <%= image_tag(asset_path("head_1.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
 
+<div class="modal fade" id="global_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" ></div>
+	</div>
+</div>
 
 
 <!-- layouts/header start -->
@@ -26,7 +31,8 @@
 
 <% if params[:controller]!="main" %>
 	<% render 'layouts/sidebar' %>
-<% end %>
+<% end %> 
+
 
 
 <div id="content-contaier" class="container-fluid" style="margin-top:60px;" >
@@ -47,7 +53,7 @@
 <script>
 	$(document).ready(function() {
 		<% if flash[:notice] %>
-			alert("<%= flash[:notice][:message] %>");
+			toastr.warning("<%= flash[:notice][:message] %>");
 		<% end %>
 		$('.masterTooltip').hover(function(){
 						// Hover over code

@@ -21,12 +21,10 @@
 					<br>
 					<% if @ct.course_details.last.semester_id==latest_semester.id %>
 					
-					<!--
 					<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=params[:id]%>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
 					<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
 					</button>
 					&nbsp;
-					-->
 					
 					<!--
 					<button class="btn btn-md btn-success masterTooltip" style="height:33px;margin-top:-1px" title="加選!" onclick="alert('Not done yet');">
@@ -64,19 +62,6 @@
 
 <script>
 	$(document).ready(function(){
-		/*$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct.id%>&target=<%=params[:target]%>", function() {
-			$('body').scrollspy('refresh');
-			$("#files").load("/file_infos/list_by_ct?ct_id=<%=@ct.id%>", function() {
-				$('body').scrollspy('refresh');
-				$('body').scrollTo("#course-name",10,{offset:-80});
-				<% if params[:first_show]=="discussion" %>
-					$('body').scrollTo("#discuss",700,{offset:-60});
-				<% elsif params[:first_show]=="files" %>
-					$('body').scrollTo("#files",700,{offset:-60});
-				<% end %>
-			});
-		});*/
-			
 		
 		$("#compare").load("/courses/get_compare?c_id=<%=@course.id%>", function() {
 			$('body').scrollspy('refresh');

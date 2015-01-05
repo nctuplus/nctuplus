@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141216164208) do
+ActiveRecord::Schema.define(version: 20141230191423) do
 
   create_table "cf_field_need", force: true do |t|
     t.integer  "course_field_id"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20141216164208) do
     t.text    "memo"
     t.string  "reg_num"
     t.string  "students_limit"
+    t.integer "view_times",            default: 0
   end
 
   add_index "course_details", ["course_teachership_id"], name: "index_new_course_details_on_course_teachership_id", using: :btree

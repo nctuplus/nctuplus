@@ -4,7 +4,10 @@
 <div class="panel panel-primary ">
 	<div class="panel-heading" style="background-color:#4c66a4;">
 		<h4 class="text-center">
-			{%=o.semester%}
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{%=o.semester_name%}
+			<a href="/courses/timetable.xlsx?sem_id={%=o.semester_id%}" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
+				<i class="fa fa-download"></i>
+			</a>
 		</h4>		
 	</div>
 	<table class="table table-bordered" id="schedule_table">
@@ -27,3 +30,95 @@
 </div>
 </script>
 
+<script>
+function table_popover(){
+		var time = ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'];
+		var real_time = ['6:00 ~ 6:50','7:00 ~ 7:50','8:00 ~ 8:50','9:00 ~ 9:50','10:10 ~ 11:00','11:10 ~ 12:00','12:20 ~ 13:10','13:20 ~ 14:10','14:20 ~ 15:10','15:30 ~ 16:20','16:30 ~ 17:20','17:30 ~ 18:20','18:30 ~ 19:20','19:30 ~ 20:20','20:30 ~ 21:20','21:30 ~ 22:20'];
+		for(var i=0,t; t=time[i]; ++i)
+			$('#time_'+t).popover({content: real_time[i] ,placement: "auto", trigger : "hover", container: "body"});
+	}
+function add_time_slot(courses, isLastest, isSmallTable){
+	for(var i = 0 ; i < courses.length ; i++){
+		if(courses[i].time==""){//for 藝文賞析
+			console.log("藝文賞析");
+			continue;
+		}	
+		var timearr = courses[i].time.match(/[0-9][A-Z]+/g);
+		var rooms = courses[i].room.match(/[A-Z]+[0-9]+/g);
+		if(rooms==null)
+			rooms=[""];
+		var rooms_len = rooms.length ;
+		for(var j = 0 ; j < timearr.length ; j++){
+			var day=timearr[j][0];
+			for(var k = 1 ; k < timearr[j].length ; k++){
+				var plan_id = "day_"+day+"_time_"+timearr[j][k] ;
+				var row_id = "#"+plan_id ;
+				if(isSmallTable) row_id += "_sm" ;
+				$(row_id).removeClass("schd-slot-empty"); // remove old color
+				$(row_id).addClass(courses[i].class); //add color
+				var html_content = courses[i].name ;
+				if(isLastest){ //add delete button if in lastest semester 
+					html_content+='<div class="course-clean" id="'+plan_id+'_div'+
+				'" onclick="return del_course('+courses[i].course_id+');"><i class="fa fa-times clickable-hover"></i></div>' ;
+				}
+				//add course name
+				if(isSmallTable){ 
+					for(var g=0,word ; word=courses[i].name[g]; ++g){
+						if(word=="大"||word=="一"||word=="二"||word=="三"||word=="四") continue ;
+						html_content = courses[i].name[g] ;
+						break; 
+					}
+				}
+				$(row_id).html(html_content); 
+				// hover detail info
+				$(row_id).popover({ 
+					content:"教室:"+((rooms[j])?rooms[j]:rooms[rooms_len-1]),//courses[i].room,
+					placement:"auto",
+					trigger : "hover",
+					container :"body"
+				});
+				// hover delete button
+				$(row_id).mouseover(function(){
+					$("#"+$(this).attr('id')+"_div").show();
+				}).mouseleave(function(){
+					$("#"+$(this).attr('id')+"_div").hide();
+				});
+				$(".course-clean").hide();
+			}//inner for 
+		}//middle for
+	}//outer for
+}//func
+function del_course(cd_id){
+		
+	$.ajax({
+		type: "GET",
+		dataType: "text",
+		url: "/user/add_course" ,
+		data:{
+			cd_id: cd_id,
+			type : "delete" 
+		},	
+		success: function(result){
+			if(result!=0){
+				var json_str = JSON.parse(result)[0] ;
+				var timearr=json_str.time.match(/[0-9][A-Z]+/g);
+				for(var j = 0 ; j < timearr.length ; j++){
+					var day=timearr[j][0];
+					for(var k = 1 ; k < timearr[j].length ; k++){
+						var row_id = "#day_"+day+"_time_"+timearr[j][k] ;
+						$(row_id).removeClass("schd-slot-empty"); // remove old color
+						$(row_id).removeClass(json_str.class);
+						$(row_id).css("background-color","#FFFFFF");
+						$(row_id).html('') ;
+						$(row_id).popover('disable');
+					}
+				}	
+				//$("#has-select-btn").click();
+			}
+			else
+				alert("Internal server error");
+		}
+	});
+	
+}
+</script>

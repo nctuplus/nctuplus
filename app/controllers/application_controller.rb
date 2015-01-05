@@ -5,15 +5,21 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
+	helper_method :latest_semester, :now_semester
+  def latest_semester
+		Semester.last
+  end
+	
+	def now_semester
+		Semester.find(13)
+	end
+  
   def record_not_found
     redirect_to action: :index
   end
 	
 	def ajax_flash(_class,title,mesg)
-		html='<div id="ajax_notice" class="alert alert-'<<_class<<'" style="width:500px;position:fixed;left:300;top:100;z-index:2000;">'
-		html<<'<h4>'<<title<<'</h4>'
-		html<<mesg
-		html<<'<div>'
+
 	end
 	def getUserByIdForManager(uid)
 		return checkTopManagerNoReDirect &&uid.presence&& uid!="" ? User.find(uid) : current_user

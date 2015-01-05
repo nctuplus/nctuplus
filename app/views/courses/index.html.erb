@@ -19,7 +19,7 @@
 	
 	<div class="col-sm-2">
 		<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師" %>
+		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間" %>
 
 	</div>
 	<button class="btn btn-success" id="search" onclick="search_by_text();">
@@ -35,18 +35,20 @@
 <table class="table table-hover table-bordered bg-white-transparent" id="course_table" >
 
 <tr class="row">
-<th class="col-md-1"><%= sort_link @q,:semester_id, "學期" %></th>
-<th class="col-md-2">
+<th class="col-md-"><%= sort_link @q,:semester_id, "學期" %></th>
+<th class="col-md-">
 	<%= sort_link @q,:department_id, "系所" %> /
 	<%= sort_link @q,:brief, "摘要" %>
 </th>
 <!--<th>永久課號</th>-->
 
-<th class="col-md-2"><%= sort_link @q,:course_ch_name, "課名" %></th>
-<th class="col-md-1"><%= sort_link @q,:teacher_name, "老師" %></th>
-<th class="col-md-4">備註</th>
-<th class="col-md-1"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
-<th class="col-md-1"><%= sort_link @q,:credit, "學分" %></th>
+<th class="col-md-"><%= sort_link @q,:course_ch_name, "課名" %></th>
+<th class="col-md-"><%= sort_link @q,:teacher_name, "老師" %></th>
+<th class="col-md-">備註</th>
+<th class="col-md-"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
+<th class="col-md-"><%= sort_link @q,:credit, "學分" %></th>
+<th class="col-md-">文章/檔案數</th>
+<th class="col-md-">點擊數</th>
 <!--<th class="col-md-1"></th>-->
 </tr>
 
@@ -56,7 +58,7 @@
 
 		<% @cds.each do |cd| %>
 			
-				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.course_teachership_id)%>">
+				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
 					<td>
 						<%=cd.semester_name%>
 					</td>
@@ -74,6 +76,8 @@
 					<td><%= cd.memo %></td>
 					<td><%= cd.grade %>/<%= cd.time %></td>
 					<td><%= cd.course_credit %></td>
+					<td><%= "#{cd.discusses.count}/#{cd.file_infos.count}" %></td>
+					<td><%= cd.view_times %></td>
 				</tr>
 				
 		<% end %>

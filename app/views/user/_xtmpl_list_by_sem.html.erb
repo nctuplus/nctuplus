@@ -30,7 +30,7 @@
 						{% if(course.sem_id!=o.last_sem_id&&!check_pass(o.pass_score,course.score)) { %}
 								<%=image_tag asset_path("failed.png"),size:"70x30"%>
 						{% } %}
-						<a href="/courses/{%=course.ct_id%}">{%=course.name%}</a> | 
+						<a href="/courses/{%=course.cd_id%}" target="blank">{%=course.name%}</a> | 
 						{%=course.t_name%} | 
 						{% if(course.cf_name!=""){ %}
 						{%=course.cf_name%} | 
@@ -40,9 +40,9 @@
 				</td>
 				<td class="col-md-6">
 						<div class="container" style="display:inline-block;">		
-							<a href="/courses/{%=course.ct_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
+							<a target="blank" href="/courses/{%=course.cd_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
 							<div class="number-right-top" >{%=course.file_count%}</div>
-							<a href="/courses/{%=course.ct_id%}&first_show=discussion" class="btn btn-sm btn-default">討論區</a>
+							<a target="blank" href="/courses/{%=course.cd_id%}&first_show=discuss" class="btn btn-sm btn-default">討論區</a>
 							<div class="number-right-top" >{%=course.discuss_count%}</div>
 						</div>
 					</td>

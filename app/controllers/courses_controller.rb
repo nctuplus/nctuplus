@@ -13,7 +13,8 @@ class CoursesController < ApplicationController
 	end
 	def search_mini
 		@result={
-			:type=>"search",
+			:view_type=>"schedule",
+			:use_type=>"add",
 			:courses=>custom_search.map{|cd|
 				cd.to_search_result
 			}
@@ -153,30 +154,7 @@ class CoursesController < ApplicationController
 		end
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
   	 	
-    end
-###
-	
-	
-	def get_user_courses 
-		sem_id=params[:sem_id].to_i
-		cd_ids=current_user.course_simulations.filter_semester(sem_id).map{|ps| ps.course_detail.id}
-		@course_details=CourseDetail.where(:id=>cd_ids).order(:cos_type ,:brief)
-
-		@sem_id=sem_id
-
-		@cd_all=get_mixed_info(@course_details)
-		@sem=Semester.find(sem_id)
-
-		@table_type="simulated"
-		if params[:type]=="schd"
-			@cd_jsons=@course_details.map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name,"course_id"=>cd.id}}.to_json
-			render "user_schedule"
-		elsif params[:type]=="list"
-			render "course_lists_mini"
-		else 
-			render ""
-		end
-	end
+  end
 
 	def timetable
 		sem_id=params[:sem_id].to_i
@@ -272,13 +250,16 @@ class CoursesController < ApplicationController
 	
 	
   def show
-	@ct=CourseTeachership.find(params[:id]) 
-    @course = @ct.course#Course.includes(:semesters).find(params[:id])
-	 
-	zz=@ct.cold_ratings.avg_score
-	@first_show=params[:first_show]||"tc"
-	@target_rank=999
-	@sems=@course.semesters.uniq
+		cd=CourseDetail.find(params[:id])
+		cd.incViewTimes!
+
+		@ct=cd.course_teachership
+		@course = @ct.course#Course.includes(:semesters).find(params[:id])
+		 
+		zz=@ct.cold_ratings.avg_score
+		@first_show=params[:first_show]||"tc"
+		@target_rank=999
+		@sems=@course.semesters.uniq
 
   end
 	
@@ -290,30 +271,30 @@ class CoursesController < ApplicationController
 	def add_to_cart
 		
 		if params[:type]=="add"
-			ct_id=CourseTeachership.where(:course_id=>params[:cd_id], :teacher_id=>params[:tid]).take.id
-			cd_id=CourseDetail.where(:course_teachership_id=>ct_id, :semester_id=>Semester.last.id).take.id
-			
-			if !session[:cd].include?(cd_id)
-				session[:cd].append(cd_id)
-				session[:cd]=CourseDetail.select(:id).where(:id=>session[:cd]).order(:time).pluck(:id)
-				alt_class="success"
-				title='Success'
-				mesg="新增成功!"
+			cd_id=params[:cd_id].to_i
+			session[:cd]=[] if !session[:cd]
+			if CourseDetail.where(:id=>cd_id).empty?
+				alt_class="warning"
+				mesg="查無此門課!"
 			else
-				alt_class="success"
-				title='Oops'
-				mesg="您已加入此課程!"		
+				if !session[:cd].include?(cd_id)
+					session[:cd].append(cd_id)
+					session[:cd]=CourseDetail.select(:id).where(:id=>session[:cd]).order(:time).pluck(:id)
+					alt_class="success"
+					mesg="新增成功!"
+				else
+					alt_class="info"
+					mesg="您已加入此課程!"		
+				end
 			end
 		else
 			cd_id=params[:cd_id].to_i
 			if session[:cd].include?(cd_id)
 				session[:cd].delete(cd_id) 
 				alt_class="success"
-				title='Success'
 				mesg="刪除成功!"
 			else
-				alt_class="success"
-				title='Oops'
+				alt_class="warning"
 				mesg="你未加入此課程!"
 			end
 		end
@@ -324,6 +305,9 @@ class CoursesController < ApplicationController
 							 :content_type => 'text/html',
 							 :layout => false
 			}
+			format.json {
+				render :json => {:class=>alt_class, :text=>mesg}
+			}
 		end
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
 
@@ -333,15 +317,13 @@ class CoursesController < ApplicationController
 
 	
 	def show_cart
-		session[:saved_query]={}
-		@sem=latest_semester
-		@course_details=CourseDetail.where(:id=>session[:cd])
-		@cd_all=get_mixed_info(@course_details)
-		@table_type=params[:table_type]
-		if params[:sem_id]
-			@sem=Semester.find(params[:sem_id])
-		end
-		render "shopping_cart_list"
+		@result={
+			:view_type=>"session",
+			:use_type=>"delete",
+			:courses=>CourseDetail.where(:id=>session[:cd]).map{|cd|
+				cd.to_search_result
+			}
+		}
 	end
 		
   
@@ -349,15 +331,20 @@ class CoursesController < ApplicationController
 	def custom_search
 		if params[:custom_search]&&params[:custom_search]!=""
 			@q = CourseDetail.search({:course_ch_name_cont=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
-			if cds.empty?
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).page(params[:page])
+			if cds.empty? #search teacher
 				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})		
-				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).page(params[:page])
+				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).page(params[:page])
+				if cds.empty? #search time
+					@q = CourseDetail.search({:time_cont=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})		
+					cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).page(params[:page])
+				end
 			end
 		else
 			@q = CourseDetail.search(params[:q])
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department).order("semester_id DESC").page(params[:page])
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).order("semester_id DESC").page(params[:page])
 		end
+		cds=cds.order("view_times DESC")#sort_by{|cd|cd.view_times}
 		return cds
 	end
   def course_param

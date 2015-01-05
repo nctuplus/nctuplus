@@ -19,9 +19,9 @@
 	</div>
 
 	<div class="row schedule-search-bar"style="margin-top:5px;">
-		<div class="col-sm-5 no-padding-left ">
+		<div class="col-sm-offset-1 col-sm-7 no-padding-left ">
 			<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師" %>
+			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間" %>
 		</div>		
 		<div class="col-sm-2 no-padding-left" style="//margin-top:-20px;">
 			<button class="btn btn-primary" onclick="search_by_text();"><%=fa_icon "search"%></button>

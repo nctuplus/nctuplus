@@ -60,9 +60,7 @@ module CourseHelper
 		return current_user && ectr_arr.include?(ctr_id)
 	end
 	
-	def latest_semester
-		Semester.last
-	end
+	
 	def rollcall_name(id)
 		str = ""
 		case id
@@ -179,7 +177,7 @@ module CourseHelper
 				type="required"
 			when "選修"
 				type="elective"
-			when "外語"
+			when "外語" 
 				type="foreign"
 			else
 				type="zz"

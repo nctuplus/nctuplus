@@ -32,3 +32,4 @@
 //= require custom-helper
 //= require cm-stat-helper
 //= require bootstrap-treeview
+//= require toastr.min

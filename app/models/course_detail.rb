@@ -1,16 +1,21 @@
 class CourseDetail < ActiveRecord::Base
 	belongs_to :course_teachership
 	delegate :teacher_name, :to=>:course_teachership
-	belongs_to :semester
-	delegate :name, :to=>:semester, :prefix=>true
-	belongs_to :department
-	delegate :ch_name, :to=>:department, :prefix=>true
-	
+	has_many :file_infos, :through=>:course_teachership
+	has_many :discusses, :through=>:course_teachership
 	has_one :course, :through=>:course_teachership
 	delegate :ch_name,:credit, :to=>:course, :prefix=>true
 	has_many :teachers, :through=>:course_teachership	
 	
+	belongs_to :semester
+	delegate :name, :to=>:semester, :prefix=>true
+	belongs_to :department
+	delegate :ch_name, :to=>:department, :prefix=>true
 
+	
+	def incViewTimes!
+		update_attributes(:view_times=>self.view_times+1)
+	end
 	
 	def self.flit_semester(sem_id)
 		self.select{|cd| cd.semester_id==sem_id}

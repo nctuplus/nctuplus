@@ -13,6 +13,7 @@ class UserController < ApplicationController
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
 	end
+	
 	def get_courses
 		@user=getUserByIdForManager(params[:uid])
 		#if request.format=="json"
@@ -39,11 +40,22 @@ class UserController < ApplicationController
 					}
 				when "simulation"
 					result={
-						:type=>"selected",
+						:use_type=>"delete",
+						:view_type=>"schedule",
 						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>latest_semester.id).map{|cs|
 							cs.course_detail.to_search_result
 						}
 					}
+				when "course_table"
+					semester = Semester.find(params[:sem_id])
+					result={
+						:semester_info=>{	:isNow=> (semester.id == latest_semester.id),
+											:semester_id=> semester.id,
+								 			:semester_name=> semester.name },
+						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>semester.id).map{|cs|
+							cs.course_detail.to_course_table_result
+						}
+					}	
 				else
 					result={}
 			end
@@ -85,7 +97,7 @@ class UserController < ApplicationController
 		cs.save!
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
-	def statistics2
+	def statistics
 		@user=getUserByIdForManager(params[:uid])
 
 		
@@ -337,14 +349,13 @@ class UserController < ApplicationController
 		end
 		if _type=="add"
 			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>cd.semester_id, :course_detail_id=>cd.id, :score=>'修習中')
-			#render :nothing => true, :status => 200, :content_type => 'text/html'
-			redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"#, :uid=> current_user.id, :type=> "simulation"
-		else
+			redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
+		else # delete
 			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
 			status=CourseDetail.where(:id=>cd_id).map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_ch_name,"course_id"=>cd.id}}.to_json
 			respond_to do |format|
-       	format.html { render :text => status.to_s.html_safe }
-   		end	
+				format.html { render :text => status.to_s.html_safe }
+			end	
 		end
 		
 	end
@@ -373,7 +384,7 @@ class UserController < ApplicationController
 			:name=>cs.course.ch_name,
 			:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
 			:cos_id=>cs.course.id,
-			:ct_id=>cs.course_teachership.id,
+			:cd_id=>cs.course_detail_id,
 			:sem_id=>cs.semester_id,
 			:t_id=>0,
 			:t_name=>cs.course_detail.teacher_name,

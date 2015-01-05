@@ -24,6 +24,22 @@ class SessionsController < ApplicationController
     redirect_to root_url
   end
 
+	def get_courses
+		result={
+			:view_type=>"schedule",
+			:use_type=>"add",
+			:courses=>CourseDetail.where(:id=>session[:cd]).map{|cd|
+				cd.to_search_result
+			}
+		}
+		respond_to do |format|
+			format.json {
+				render json:result
+			}
+		end
+	end
+	
+	
   def destroy
     session[:user_id] = nil
     redirect_to root_url
