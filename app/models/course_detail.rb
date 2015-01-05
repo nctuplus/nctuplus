@@ -12,6 +12,7 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :department
 	delegate :ch_name, :to=>:department, :prefix=>true
 
+	has_many :course_simulations, :dependent=> :destroy
 	
 	def incViewTimes!
 		update_attributes(:view_times=>self.view_times+1)

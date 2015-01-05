@@ -85,8 +85,13 @@ module ApiHelper
 	end
 	
 	def save_cd(data,ct_id,sem_id)
-		return if CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
-		@cd=CourseDetail.new
+		@cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
+		if @cd.nil?
+			@cd=CourseDetail.new 
+			ret="Create"
+		else
+			ret="Update"
+		end
 		@cd.course_teachership_id=ct_id
 		@cd.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
 		@cd.semester_id=sem_id
@@ -98,9 +103,6 @@ module ApiHelper
 			@cd.time<<t.partition('-')[0]
 			@cd.room<<t.partition('-')[2]
 		end
-		
-		#@cd.credit=data['cos_credit'].to_i
-
 		@cd.cos_type=data["cos_type"]
 		@cd.temp_cos_id=data["cos_id"]
 		@cd.memo=data["memo"]
@@ -110,7 +112,7 @@ module ApiHelper
 
 		@cd.brief=data["brief"]
 		@cd.save!
-		#return @cd
+		return ret
 	end
 	
 
