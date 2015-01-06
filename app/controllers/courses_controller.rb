@@ -9,13 +9,13 @@ class CoursesController < ApplicationController
 	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
 	def index
-		@cds=custom_search
+		@cds=custom_search(true,true)
 	end
 	def search_mini
 		@result={
 			:view_type=>"schedule",
 			:use_type=>"add",
-			:courses=>custom_search.map{|cd|
+			:courses=>custom_search(!params[:q].blank?,false).map{|cd|
 				cd.to_search_result
 			}
 		}
@@ -328,24 +328,30 @@ class CoursesController < ApplicationController
 		
   
   private
-	def custom_search
+	def custom_search(showDefault,pageble)
 		if params[:custom_search]&&params[:custom_search]!=""
 			@q = CourseDetail.search({:course_ch_name_cont=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).page(params[:page])
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 			if cds.empty? #search teacher
 				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})		
-				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).page(params[:page])
+				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 				if cds.empty? #search time
 					@q = CourseDetail.search({:time_cont=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})		
-					cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).page(params[:page])
+					cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 				end
 			end
 		else
-			@q = CourseDetail.search(params[:q])
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).order("semester_id DESC").page(params[:page])
+			if showDefault
+				@q = CourseDetail.search(params[:q])
+			else
+				@q=CourseDetail.search({:id_in=>[0]})
+			end
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).order("semester_id DESC")
 		end
-		cds=cds.order("view_times DESC")#sort_by{|cd|cd.view_times}
-		return cds
+		
+		cds=cds.order("view_times DESC")
+
+		return pageble ? cds.page(params[:page]) : cds
 	end
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)
