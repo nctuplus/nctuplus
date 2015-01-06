@@ -31,38 +31,30 @@
 </div>
 <br>
 
-
 <table class="table table-hover table-bordered bg-white-transparent" id="course_table" >
-
-<tr class="row">
-<th class="col-md-"><%= sort_link @q,:semester_id, "學期" %></th>
-<th class="col-md-">
-	<%= sort_link @q,:department_id, "系所" %> /
-	<%= sort_link @q,:brief, "摘要" %>
-</th>
-<!--<th>永久課號</th>-->
-
-<th class="col-md-"><%= sort_link @q,:course_ch_name, "課名" %></th>
-<th class="col-md-"><%= sort_link @q,:teacher_name, "老師" %></th>
-<th class="col-md-">備註</th>
-<th class="col-md-"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
-<th class="col-md-"><%= sort_link @q,:credit, "學分" %></th>
-<th class="col-md-">文章/檔案數</th>
-<th class="col-md-">人氣</th>
-<!--<th class="col-md-1"></th>-->
-</tr>
-
-<tbody>
-	
+	<tr class="row">
+		<th class="col-md text-center" style="width:70px;"><%= sort_link @q,:semester_id, "學期" %></th>
+		<th class="col-md-2 text-center">
+			<%= sort_link @q,:department_id, "系所" %> /
+			<%= sort_link @q,:brief, "摘要" %>
+		</th>
+		<th class="col-md-2 text-center"><%= sort_link @q,:course_ch_name, "課名" %></th>
+		<th class="col-md-2 text-center"><%= sort_link @q,:teacher_name, "老師" %></th>
+		<!--<th class="col-md-4">備註</th>-->
+		<th class="col-md- text-center"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
+		<th class="col-md- text-center"><%= sort_link @q,:credit, "學分" %></th>
+		<th class="col-md- text-center">文章/檔案數</th>
+		<th class="col-md- text-center">人氣</th>
+		<!--<th class="col-md-1"></th>-->
+	</tr>
+	<tbody>
 	<% if !@cds.empty? %>
-
 		<% @cds.each do |cd| %>
-			
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
-					<td>
+					<td class="text-center">
 						<%=cd.semester_name%>
 					</td>
-					<td>
+					<td class="text-center">
 						<%=cd.department_ch_name%>
 						<% if cd.brief&&cd.brief!="" %>
 						/<%= cd.brief %>
@@ -70,30 +62,27 @@
 					</td>
 					<!--<td><%= cd.brief %></td>-->
 
-					<td><%= cd.course_ch_name %></td>
-					<td><%= cd.teacher_name %></td>
-					
-					<td><%= cd.memo %></td>
-					<td><%= cd.grade %>/<%= cd.time %></td>
-					<td><%= cd.course_credit %></td>
-					<td><%= "#{cd.discusses.count}/#{cd.file_infos.count}" %></td>
-					<td><%= cd.view_times %></td>
+					<td class="text-center"><%= cd.course_ch_name %></td>
+					<td class="text-center"><%= cd.teacher_name %></td>
+					<!--<td><%= cd.memo %></td>-->
+					<td class="text-center"><%= cd.grade %>/<%= cd.time %></td>
+					<td class="text-center"><%= cd.course_credit %></td>
+					<td class="text-center"><%= "#{cd.discusses.count}/#{cd.file_infos.count}" %></td>
+					<td class="text-center"><%= cd.view_times %></td>
 				</tr>
-				
 		<% end %>
-		
-			
-		<% else %>
-				<tr class="row">
-					<td colspan="7" class="col-md-6 col-md-offset-5">
-						<h3>查無結果!</h3>
-					</td>
-				</tr>
-			
-		<% end %>
+	<% else %>
+		<tr class="row">
+			<td colspan="7" class="col-md-6 col-md-offset-5">
+				<h3>查無結果!</h3>
+			</td>
+		</tr>		
+	<% end %>
 	</tbody>
-		</table>	
-		<%= paginate @cds, :window=>2 %>
+</table>	
+
+<%= paginate @cds, :window=>2 %>
+
 </div>
 
 <script>

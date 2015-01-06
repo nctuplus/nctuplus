@@ -255,7 +255,7 @@ class CoursesController < ApplicationController
 
 		@ct=cd.course_teachership
 		@course = @ct.course#Course.includes(:semesters).find(params[:id])
-		 
+		@cds=@ct.course_details.includes(:semester,:department)
 		zz=@ct.cold_ratings.avg_score
 		@first_show=params[:first_show]||"tc"
 		@target_rank=999

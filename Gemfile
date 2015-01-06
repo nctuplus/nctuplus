@@ -47,7 +47,7 @@ end
 #for search
 gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4'
 gem 'kaminari'
-
+gem 'whenever' , :require => false
 #for chrome extension cross domain support
 gem 'rack-jsonp-middleware',
   :require => 'rack/jsonp'

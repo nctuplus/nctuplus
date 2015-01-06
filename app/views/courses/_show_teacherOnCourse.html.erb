@@ -1,78 +1,43 @@
 
-<% cd=@ct.course_details.last %>
 <% page = CourseContentHead.where(:course_teachership_id => @ct.id).first.presence || nil%>
-
-
-
-<!-- <div class="well bs-callout bs-callou-<%=rankTagBar(@target_rank)%>">  -->
 
 <!-- course's teacher and department -->
 <h2 style="border-bottom:solid 1px;">課程資訊</h2>
 	<div class="panel-heading">
-	
 		<h2 class="panel-title">
-			
-			<p class="">
-				<!--<i class="fa fa-user fa-6"></i> 			
-				課程教師： <%=@ct.teacher_name%>-->
-				永久課號：<%=@course.real_id%>
-				<%=fa_icon "bank"%> 單位：<%=cd.department_ch_name%>
-				&nbsp;<%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%>
-
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "book"%> 種類：
-				<span class="<%=cos_type_class(cd.cos_type)%>">
-				<%=cd.cos_type%>
-				</span>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=fa_icon "graduation-cap"%> 學分：<%=@course.credit%> 
-				&nbsp;&nbsp;&nbsp;<%=fa_icon "bookmark"%> 適用年級：<%=cd.grade%> 
-				</br></br>
-				<% first_name = cd.semester.name %>
-				<% if first_name.include?((Time.now.year.to_i-1911).to_s)%>
-					<%=fa_icon "bell"%> 時間
-					<%=cd.time.presence||"N/A"%>
-								
-					&nbsp;<%=fa_icon "building"%> 地點：<%=cd.room.presence||"N/A"%> 
-				<% else %>
-				 <strong>本學期無開課</strong>
+			<h4>
+				永久課號: <%=@course.real_id%>
+				學分: <%=@course.credit%>
+				<% if @cds.last.semester_id!=latest_semester.id%>
+					(本學期無開課)
 				<% end %>
-				&nbsp;&nbsp;&nbsp;
-				<small class="">
-					<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" class="collapsed" onclick="PMchange($(this).hasClass('collapsed'));">
-						查看歷年 <i class="fa fa-search-plus" id="imagePM"></i>
-					</a>
-				</small>
-				
-			</p>
+			</h4>
+			<table class="table">
+				<tr>
+    			<td><%=fa_icon "calendar-o" %> 學期</td>
+					<td><%=fa_icon "bank" %> 單位</td>
+					<td><%=fa_icon "pencil" %> 課號</td>
+					<td><%=fa_icon "book" %> 選別</td>
+					<td><%=fa_icon "bell" %> 時間</td>
+    			<td><%=fa_icon "building" %> 教室</td>
+    			<td><%=fa_icon "tag" %> 年級</td>					
+    			<td><%=fa_icon "bookmark" %> 備註</td>
+    		</tr>
+				<% @cds.order("semester_id DESC").each do |cd| %>  
+					<tr>
+						<td><%=cd.semester.name%></td>
+						<td><%=cd.department.ch_name%></td>
+						<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
+						<td><%=cd.cos_type%></td>
+						<td><%=cd.time%></td>
+						<td><%=cd.room%></td>
+						<td><%= cd.grade=='*' ? 'all' : cd.grade %></td>						
+						<td><%=cd.memo%></td>
+					</tr>    
+				<%end%>
+			</table>
 		</h2>	
 	</div>
-
-<!-- course time and classroom info -->	
-
-
-    <div id="collapseOne" class="panel-collapse collapse">
-      <div class="panel-body">
-      
-		<table class="table">
-    		<tr>
-    			<td><%=fa_icon "calendar-o" %> 學期</td>
-    			<td><%=fa_icon "building" %> 教室</td>
-
-    			<td><%=fa_icon "bell" %> 時間</td>
-    			<td><%=fa_icon "bookmark" %> 備註</td>
-    		</tr>	
-<%@ct.course_details.each do |t|%>  
-    		<tr>
-    			<td><%=t.semester.name%></td>
-    			<td><%=t.room%></td>
-    			
-    			<td><%=t.time%></td>
-    		  <td><%=t.memo%></td>
-    		</tr>    
-<%end%>
-		</table>
-		
-      </div> 
-    </div>
  
 <!-- statistics -->  
    <div id="reg_nums" class="panel-heading">
