@@ -4,9 +4,6 @@
 	<br>
 	<%= f.label :dept_type, "Type" %>
 	<%= f.select :dept_type, options_for_select(Department.all.group(:dept_type).pluck(:dept_type),@department.dept_type) %>
-
-		<%= f.label :credit, "學分" %>
-		<%= f.text_field :credit %>
 		
 	<br>
     <%= f.submit %>
