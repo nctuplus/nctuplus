@@ -260,6 +260,7 @@ function bind_course_group_but(){  // for course group
 	
 	
 	$('.course-delete').click(function(){
+		//console.log("delete");
 		var list_tr = $(this).parent('td').parent('tr') ;
 		var cg_id = $('.list-header').attr('cg_id') ;
 		var list_id = list_tr.attr('list_id');
@@ -285,25 +286,28 @@ function bind_course_group_but(){  // for course group
 function bind_course_list_button(){
 	//course delete
 	$('.course-table .course-delete').click(function(){
+
 		var target_tr = $(this).parent('td').parent('tr') ;
 		var list_id = target_tr.attr('list_id') ;
-
+		//console.log(list_id);
 		$.ajax({
 			type: "POST",
-  			url: "course_action" ,
-  			data:{
-  				cf_id: cf_show_id,
-  				target_id : list_id,
-  				type : 'delete'
-  			},	
-  			success: function(data){
-  				//target_tr.remove();
-  				$('.course-table [list_id='+list_id+']').remove();
-  			},	
-  			error: function(){
-  				alert('delete course failed.');
-  			}
-  		});
+			url: "course_action" ,
+			data:{
+				cf_id: cf_show_id,
+				target_id : list_id,
+				type : 'delete'
+			},	
+			success: function(data){
+				//console.log(data);
+				//target_tr.remove();
+				$('.course-table [list_id='+list_id+']').remove();
+			},	
+			error: function(){
+				alert('delete course failed.');
+			}
+		});
+			
 	});
 
 	//course update
@@ -354,17 +358,17 @@ function load_course_list(target_id){
 $(document).ready(function(){
 
 	// init in home-tab
-	$('#search_div').load("/course_details/course_group?hide_group=true&map_id="+map_id) ;		
+	$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;		
 	load_treeview(0);
 	load_group_treeview(0);
 	
 	// change tab, change search cond
 	$('#group-tab').click(function(){
-		$('#search_div').load("/course_details/course_group?hide_group=false") ;
+		$('#search_div').load("/courses/search_mini_cm?hide_group=false") ;
 		reset_data();
 	});
 	$('#home-tab').click(function(){
-		$('#search_div').load("/course_details/course_group?hide_group=true&map_id="+map_id) ;
+		$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;
 		reset_data();
 	});
 	
@@ -380,7 +384,7 @@ $(document).ready(function(){
       			load_course_list(cf_show_id);  			
       		}			   		
 		}else{ // new form 
-			console.log("[course_tree select] " + node.type);
+	//		console.log("[course_tree select] " + node.type);
 			load_new_form({
 						level : node.type, 
 						header_name: '新增類別',

@@ -23,12 +23,34 @@
     			<td><%=fa_icon "tag" %> 年級</td>					
     			<td class="col-md-4"><%=fa_icon "bookmark" %> 備註</td>
     		</tr>
-				<% @cds.order("semester_id DESC").each do |cd| %>  
+				<% @cds.order("semester_id DESC").select{|cd| cd.semester==latest_semester}.each do |cd| %>  
 					<tr>
 						<td><%=cd.semester.name%></td>
 						<td><%=cd.department.ch_name%></td>
 						<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
-						<td><%=cd.cos_type%></td>
+						<td>
+							<%=cd.cos_type%>
+							<% if cd.cos_type=="通識"%>
+								(<%=cd.brief%>)
+							<% end %>
+						</td>
+						<td><%=cd.time%></td>
+						<td><%=cd.room%></td>
+						<td><%= cd.grade=='*' ? 'all' : cd.grade %></td>						
+						<td><%=cd.memo%></td>
+					</tr>    
+				<%end%>
+				<% @cds.order("semester_id DESC").reject{|cd| cd.semester==latest_semester}.each do |cd| %>  
+					<tr class="old-course">
+						<td><%=cd.semester.name%></td>
+						<td><%=cd.department.ch_name%></td>
+						<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
+						<td>
+							<%=cd.cos_type%>
+							<% if cd.cos_type=="通識"%>
+								(<%=cd.brief%>)
+							<% end %>
+						</td>
 						<td><%=cd.time%></td>
 						<td><%=cd.room%></td>
 						<td><%= cd.grade=='*' ? 'all' : cd.grade %></td>						
@@ -36,6 +58,9 @@
 					</tr>    
 				<%end%>
 			</table>
+			<%=link_to("javascript:void(0);", :class=>"see-more-course pull-right") do%>
+				<i class="fa fa-search-plus"></i>查看更多
+			<% end %>
 		</h2>	
 	</div>
  
@@ -161,7 +186,14 @@
 		$('#head_form').hide() ;
 		$('#head_list').hide() ;
 	
+		$('.old-course').hide();
+		$('.see-more-course').click(function(){
+			$('.old-course').show();
+			$('.see-more-course').hide();
+		});
 	});
+	
+	
 	
 	function checkComment(){
 		if(!confirm("確定資料無誤嗎？"))
@@ -202,41 +234,7 @@
 			link.html("留言");
 		}				
 	}
-/*
-	function colorGradient(but,startColor){
-		graDay = 1 ;
-		var tmp = but;
-		while(1){
-			tmp = tmp.prev() ;
-			if(!tmp){
-				break ;
-			}else if(but.attr("id")){
-				break ;
-			}else if(graDay>=4){
-				break ;	
-			}	
-			graDay++ ;
-		}
-		alert(graDay);
-		startColor = 16711680 ;
-		var gap = ((16777215 - startColor)/graDay).toFixed(0);
-		alert(gap) ;
-		var butGra = but ;
-		var tmpColor = startColor + gap ;
-		alert(tmpColor.toString(16));
-		alert('linear-gradient(to right, #'+tmpColor.toString(16)+', #'+startColor.toString(16)+')');
-		but.css('background','linear-gradient(to right, #'+tmpColor.toString(16)+', #'+startColor.toString(16)+')');
-		for(var i=1;i<=graDay-1;i++){
-			butGra = butGra.prev() ;
-			if(butGra){
-				var change = (startColor+(gap*i)) ;
-				alert(change.toString(16));
- 				butGra.css('background','linear-gradient(to right, #'+change.toString(16)+', #'+tmpColor.toString(16)+')' ) ;
-				tmpColor = change ;
-			}
-		}
-	}
-*/		
+		
 	function PMchange(myclass){
 		if(myclass)
 			$('#imagePM').switchClass('fa-search-plus','fa-search-minus');				

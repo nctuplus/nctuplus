@@ -4,7 +4,10 @@
 		var name=this_row.find(".course_name").text();
 		var time=this_row.find(".course_time").text();
 		if(time==""){//for 藝文賞析
+			console.log(1);
 			save_course(id,addordel);
+			if(addordel=="delete")
+				this_row.remove();
 			return;
 		}
 		var timearr=time.match(/[0-9][A-Z]+/g);

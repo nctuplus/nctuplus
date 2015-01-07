@@ -2,16 +2,28 @@ class SessionsController < ApplicationController
   def create
     user = User.from_omniauth(env["omniauth.auth"])
     
-    if current_user and not current_user.uid and current_user.student_id and user.student_id.nil? # 原本有登入(e3)，要綁fb
+    if current_user and not current_user.uid and current_user.student_id and user.student_id.blank? # 原本有登入(e3)，要綁fb
     
-    	if not current_user.course_simulations.empty?
+    	if !current_user.course_simulations.empty?
     		user.course_simulations.destroy_all
     		current_user.course_simulations.each do |cs|
     			cs.user_id = user.id
     			cs.save! 
     		end
     	end
+		if !current_user.user_coursemapships.empty?
+    		user.user_coursemapships.destroy_all
+    		current_user.user_coursemapships.each do |cm|
+    			cm.user_id = user.id
+    			cm.save! 
+    		end
+    	end
     	user.student_id = current_user.student_id
+		user.semester_id = current_user.semester_id if user.semester_id.nil?||user.semester_id==0
+		user.department_id = current_user.department_id if user.department_id.nil?||user.department_id==0
+		user.role = current_user.role
+		user.agree = current_user.agree
+		
     	user.save!
     	current_user.destroy
     	session[:user_id] = user.id	

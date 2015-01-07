@@ -56,6 +56,7 @@ Nctuplus::Application.routes.draw do
 	get "courses/groups"
 	get "courses/get_compare"	
 	get "courses/search_mini"
+	get "courses/search_mini_cm"
 	get "courses/course_raider"
 	get "courses/list_all_courses"
   get "courses/rate_cts"

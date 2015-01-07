@@ -21,6 +21,22 @@ class CoursesController < ApplicationController
 		}
 		render "courses/search/mini", :layout=>false
 	end
+	def search_mini_cm
+		if !params[:q].blank?
+			@q = Course.search(params[:q])
+		else
+			@q = Course.search({:id_eq=>0})	
+		end
+		
+		@courses=@q.result(distinct: true).includes(:course_details).reject{|c|c.course_details.empty?}.sort_by{|c|c.course_details.first.cos_type}
+		
+		if params[:map_id].presence
+			course_group = CourseGroup.where("gtype=0 AND course_map_id=? ",params[:map_id]).map{|cg| cg.id}
+			course_group_courses = CourseGroupList.where(:course_group_id=>course_group, :lead=>0).includes(:course).map{|c| c.course}
+			@courses = @courses.reject{|course| course_group_courses.include? course }
+		end
+		render "courses/search/course_map", :layout=>false
+	end
 	
 	def course_raider
 #		Rails.logger.debug "[debug] "+(params[:ct_id].presence|| "nil")

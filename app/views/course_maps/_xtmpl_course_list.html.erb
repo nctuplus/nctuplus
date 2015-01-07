@@ -1,3 +1,15 @@
+<script>
+
+	function toggleGroup(id){
+		$(".group-"+id).toggle(600);
+		$("#course-list-"+id).find(".fa-plus").toggleClass("fa-minus");
+	}
+</script>
+<style>
+.zopl{
+	background-color:#BBFFEE;
+}
+</style>
 <script type="text/x-tmpl" id="table-format">
 
 <table class="table course-table">
@@ -8,15 +20,25 @@
 			<th class="col-md-2">開課系所</th>
 			<th class="col-md-1">學分</th>
 			<th class="col-md-2">採計學分</th>
-			<th class="col-md-1">動作</th>
+			<th class="col-md-2">動作</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% if (o.length > 0){ %}
 			{% for(var i=0 ; i<o.length ; i++){ %}
 				{% var list = o[i] ;%}
-				<tr class="row" list_id="{%= list.id%}">
-					<td class="col-md-1"></td>
+				{% if(list.groups){ %}
+					<tr class="row zopl" list_id="{%=list.id%}" style=''  >
+				{% }else{ %}
+					<tr class="row" list_id="{%=list.id%}" >
+				{% } %}
+					<td class="col-md-1 clickable-hover" onclick="toggleGroup({%=list.id%});" >
+					{% if(list.groups){ %}
+						
+						<%=fa_icon 'plus'%>
+
+					{% } %}
+					</td>
 					<td class="col-md-3">{%=list.course_name %}</td>
 					<td class="col-md-2">{%=list.dep %}</td>
 					<td class="col-md-1">{%=list.credit %}</td>
@@ -34,8 +56,8 @@
 				{% if(list.groups){ %}
 					{% for(var j=0 ; j<list.groups.length ; j++){ %}
 						{% var group = list.groups[j] ; %}
-						<tr class="row" list_id="{%= list.id%}" bgcolor="#81F781">
-							<td class="col-md-1"><%=fa_icon 'angle-right'%></td>
+						<tr class="row group-{%= list.id%} " style="display:none;" >
+							<td class="col-md-1"><%=fa_icon "angle-right"%></td>
 							<td class="col-md-3">{%=group.course_name %}</td>	
 							<td class="col-md-2">{%=group.dep %}</td>
 							<td class="col-md-1">{%=group.credit %}</td>
