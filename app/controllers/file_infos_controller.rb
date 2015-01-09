@@ -3,10 +3,8 @@ class FileInfosController < ApplicationController
   # GET /files.json
   layout false, :only =>[:list_by_ct, :index]
   
-  before_filter :checkLogin, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
-  #before_filter :checkCourseManager(params[:id]), :only=>[:edit, :update]
+  before_filter :checkE3Login, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
   
-	
 	def index
 		if params[:ct_id]
 			@files = FileInfo.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
@@ -34,6 +32,8 @@ class FileInfosController < ApplicationController
   # GET /files/1.json
   def show
     @file = FileInfo.find(params[:id])
+		@file.download_times+=1
+		@file.save
 		send_file @file.download_url#, :type => @file.document_content_type, :disposition => 'inline'
 		#respond_to do |format|
 		#	format.html # show.html.erb
@@ -100,9 +100,11 @@ class FileInfosController < ApplicationController
   
   def edit
     @file=FileInfo.find(params[:_id])
-		@file.description=params[:_description]
-		@file.semester_id=params[:_semester_id]
-		@file.save!
+		if @file.owner_id==current_user.id
+			@file.description=params[:_description]
+			@file.semester_id=params[:_semester_id]
+			@file.save!
+		end
 		respond_to do |format|
 			 format.html {
 						render :json => [@file.to_jq_upload(current_user)].to_json,
@@ -117,7 +119,9 @@ class FileInfosController < ApplicationController
   # DELETE /files/1.json
   def destroy
     @file = FileInfo.find(params[:id])
-    @file.destroy
+		if @file.owner_id==current_user.id
+			@file.destroy
+		end
 
     respond_to do |format|
       format.html { redirect_to file_infos_url }
@@ -129,16 +133,6 @@ class FileInfosController < ApplicationController
     @files=FileInfo.where(:owner_id=>current_user.id)
   end
   
-	def add_count
-		@file=FileInfo.find(params[:file_id])
-		if @file
-			@file.download_times+=1
-			@file.save
-			render :nothing => true, :status => 200, :content_type => 'text/html'
-		else
-			render :nothing => true, :status => 400, :content_type => 'text/html'
-		end
-	end
 	
 	
   private

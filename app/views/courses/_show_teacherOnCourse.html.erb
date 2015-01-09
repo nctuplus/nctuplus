@@ -201,8 +201,8 @@
 	
 	
 	function checkComment(){
-		if(!confirm("確定資料無誤嗎？"))
-			return false ;
+		//if(!confirm("確定資料無誤嗎？"))
+		//	return false ;
 		var isEmpty = ($('#comment').val().length==0)?true:false ;
 		if(isEmpty){
 			$('#comment-group').addClass('has-error');
@@ -217,12 +217,12 @@
 
 		if(link.html()=="編輯"){
 			link.html("收回");
-			$('#'+type+'_form').load("/courses/course_raider?ct_id="+id+"&type="+get_type);
+			$('#'+type+'_form').load("/course_content/raider?ct_id="+id+"&type="+get_type);
 			$('#'+type+'_form').show() ;
 			$('#course_content_'+type).hide() ;
 		}else{
 			link.html("編輯");
-			$('#course_content_'+type).load('/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type='+(get_type-2)) ;
+			$('#course_content_'+type).load('/course_content/raider?ct_id=<%=j @ct.id.to_s %>&type='+(get_type-2)) ;
 			$('#'+type+'_form').html('').hide() ;
 			$('#course_content_'+type).show() ;
 		}	

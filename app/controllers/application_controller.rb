@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
   	flag = true
     if current_user.nil?
 			msg, flag = '請先登入,謝謝' , false
-		elsif current_user.student_id.nil?
+		elsif current_user.student_id.blank?
 			msg, flag = '請綁定e3,謝謝' , false
 		end
 		if !flag	

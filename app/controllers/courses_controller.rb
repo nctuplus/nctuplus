@@ -224,15 +224,15 @@ class CoursesController < ApplicationController
   
   private
 	def custom_search(showDefault,pageble)
-		if params[:custom_search]&&params[:custom_search]!=""
-			@q = CourseDetail.search({:course_ch_name_or_time_or_brief_cont=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})
+		if !params[:custom_search].blank?
+			@q = CourseDetail.search({:course_ch_name_or_time_or_brief_cont=>params[:custom_search],:semester_id_eq=>params[:q] ? params[:q][:semester_id_eq] : ""})
 			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 			if cds.empty? #search teacher
-				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search],:semester_id_eq=>params[:q][:semester_id_eq]})		
+				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search],:semester_id_eq=>params[:q] ? params[:q][:semester_id_eq] : ""})		
 				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 			end
 		else
-			if showDefault
+			if params[:action]=="index"
 				@q = CourseDetail.search(params[:q])
 			else
 				@q=CourseDetail.search({:id_in=>[0]})
@@ -242,7 +242,7 @@ class CoursesController < ApplicationController
 		
 		cds=cds.order("view_times DESC")
 
-		return pageble ? cds.page(params[:page]) : cds
+		return params[:action]=="index" ? cds.page(params[:page]) : cds
 	end
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)

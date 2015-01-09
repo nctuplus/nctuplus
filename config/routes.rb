@@ -108,7 +108,6 @@ Nctuplus::Application.routes.draw do
   #----------for files---------------
   
 	get "file_infos/list_by_ct"
-	get "file_infos/add_count"
   get "file_infos/edit"
   resources :file_infos
   

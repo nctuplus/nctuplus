@@ -14,7 +14,7 @@
 		</div>
 		<div class="col-sm-7">
 			<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-			<%= f.select :department_id_eq, options_from_collection_for_select(Department.searchable, "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select();"} %>
+			<%= f.select :department_id_eq, options_from_collection_for_select(Department.searchable, "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
 		</div>
 	</div>
 

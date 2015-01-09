@@ -22,12 +22,11 @@ class FileInfo < ActiveRecord::Base
 	end
 	 
   def to_jq_upload(user)
-    if user
-	  _uid=user.id
-	else 
-	  _uid=0
-	end
-	
+		if user
+			_uid=user.id
+		else 
+			_uid=0
+		end
     {
       "name" => read_attribute(:upload_file_name),
       "size" => read_attribute(:upload_file_size),
