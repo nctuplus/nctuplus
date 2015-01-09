@@ -1,4 +1,6 @@
 $(function () {
+<% if @show_flag & 2 == 2 %>
+		
     $('#container').highcharts({
     	chart:{defaultSeriesType: "column"},
 		colors: [
@@ -48,7 +50,10 @@ $(function () {
         	
         
     });
-<% if @show_flag==1%>
+<%else%>
+$('#container').remove() ;
+<% end %>        
+<% if @show_flag & 1 == 1 %>
 		
     $('#container-score').highcharts({
     	chart:{type: 'column'/*defaultSeriesType: "column"*/},
@@ -91,6 +96,9 @@ $(function () {
 $('#container-score').remove() ;
 //alert("no data");
 <% end %>    
+<% if @show_flag == 0%>
+$('#statistics-header').append(' 無資料');
+<% end %>
 });
 
 

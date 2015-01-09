@@ -11,6 +11,11 @@
 				<% if @cds.last.semester_id!=latest_semester.id%>
 					(本學期無開課)
 				<% end %>
+				查看更多 
+				<%=link_to("javascript:void(0);", :class=>"see-more-course") do%>
+					
+					<%=fa_icon "search-plus"%>
+				<% end %>
 			</h4>
 			<table class="table">
 				<tr>
@@ -58,23 +63,21 @@
 					</tr>    
 				<%end%>
 			</table>
-			<%=link_to("javascript:void(0);", :class=>"see-more-course pull-right") do%>
-				<i class="fa fa-search-plus"></i>查看更多
-			<% end %>
+			
 		</h2>	
 	</div>
  
 <!-- statistics -->  
    <div id="reg_nums" class="panel-heading">
 		<h2 class="panel-title">
-			<p>
+			<p id="statistics-header">
 				<i class="fa fa-align-left"></i>				
 				歷年統計：
 			</p>	
 		</h2>	
 	</div>
 	<div id="container" style="height: 400px; width: 800px;"></div></br>
-	<div id="container-score" style="height: 400px; width: 800px;"></div></br>
+	<div id="container-score" style="height: 400px; width: 800px;"></div>
 <!-- course's content and tick -->    
     <div id="course-tips" class="panel-heading">
 		<h2 class="panel-title">
@@ -175,21 +178,23 @@
 	$(document).ready(function(){	
 	
 		$.ajax({
-   		 	type: "GET",
-   		 	dataType: "script",
-    		url: '/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=5',//'/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=5',
-    		error: function(res){alert("Some error happened in chart :( ");}
-  		});		
+			type: "GET",
+			dataType: "script",
+			url: '/course_content/raider?ct_id=<%=j @ct.id.to_s %>&type=5',
+			error: function(res){
+				alert("Some error happened in chart :( ");
+			}
+  	});		
 
-	    $('#course_content_head').load('/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=1') ;
-		$('#course_content_list').load('/courses/course_raider?ct_id=<%=j @ct.id.to_s %>&type=2') ;
+	  $('#course_content_head').load('/course_content/raider?ct_id=<%=j @ct.id.to_s %>&type=1') ;
+		$('#course_content_list').load('/course_content/raider?ct_id=<%=j @ct.id.to_s %>&type=2') ;
 		$('#head_form').hide() ;
 		$('#head_list').hide() ;
 	
 		$('.old-course').hide();
 		$('.see-more-course').click(function(){
-			$('.old-course').show();
-			$('.see-more-course').hide();
+			$('.old-course').toggle();
+			$(this).find('.fa').toggleClass("fa-search-minus");
 		});
 	});
 	
@@ -288,50 +293,7 @@
 		
 		return false ;
 	}
-/*	
-	function addRow(){
-		var f = true ;
-		var cnt = 0 ;
-		$('#raider_content_table input').each(function(index){
-			if($(this).val()==""){
-				alert("請填完空白部分再新增謝謝");
-				f = false ;		
-			}	
-			cnt+=1 ;
-		});
-		//alert(cnt);
-		if(f)
-			$('#raider_content_table > tbody:first').append(
-			'<tr id="content_list_new_'+cnt+'">'+
-			'<td style="display: none;"></td>'+
-			'<td style="display: none;"><span class="col-sm-6"></span><span class="col-sm-4"></span>'+
-			'<span class="col-sm-2">'+
-			"<div class=\"btn btn-success btn-circle\" name=\"button\" onclick=\"return EditOld($(this).parent('span').parent('td'));\"><i class=\"fa fa-pencil\"></i></div> "+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return Del($(this));"><i class="fa fa-trash-o"></i></div>'+
-			'</span>'+
-			'</td>'+
-			'<td><select class="form-control" id="content_list_type" name="content_list_type">'+
-			'<option value="1">[考試]</option>'+
-			'<option value="2">[作業]</option>'+
-			'<option value="3">[上課]</option>'+
-			'<option value="4">[其他]</option>'+
-			'</select></td>'+
-			'<td><span class="col-sm-10"><input class="form-control" id="content_list" name="content_list" type="text" value=""></span>'+
-			'<span class="col-sm-2">'+
-			'<div class="btn btn-success btn-circle" name="button" onclick="return Submit($(this));"><i class="fa fa-check"></i></div> '+
-			'<div class="btn btn-danger btn-circle" name="button" onclick="return RemoveRow('+cnt+');"><i class="fa fa-times"></i></div>'+
-			'</span></td>'+
-			'</tr>');
-	}
-	
-	function RemoveRow(cnt){
-		//var target = $('#raider_content_table tr:last') ;
-		//if(target.attr('id')=="content_list_new_0")
-		//	target.remove() ;	
-		$('#content_list_new_'+cnt).remove() ;
-			
-	}
-*/	
+
 	function preferClick(pre, id){
 		var str ="" ;
 		if(pre==1)
@@ -345,7 +307,7 @@
 		$.ajax({
 			type: "GET",
 			dataType: "script",
-  			url: "/courses/raider_list_like" ,
+  			url: "/course_content/raider_list_like" ,
   			data:{
   				like_type: pre ,
   				list_id : id 
@@ -415,7 +377,7 @@
   			},
   			success: function(){
   				$('#toggle-msg-list').addClass('text-color-green').html('刪除成功').show().fadeOut(3000);
-  				$('#list_form').load("/courses/course_raider?ct_id="+ctid+"&type=4");
+  				$('#list_form').load("/course_content/raider?ct_id="+ctid+"&type=4");
   			}
 		});
 		
@@ -432,11 +394,7 @@
 		if(tr.find('input').val()==""){
 			alert("內容不可留白謝謝");
 			return false ;
-		}	
-	//	alert(id);
-	//	alert(tr.find('select').val());
-	//	alert(tr.find('input').val()) ;
-	//	return false ;
+		}
 		$.ajax({
 			type: "POST",
 			dataType: "script",
@@ -450,7 +408,7 @@
   			},
   			success: function(){
   				$('#toggle-msg-list').addClass('text-color-green').html('更新成功').show().fadeOut(4000);
-  				$('#list_form').load("/courses/course_raider?ct_id="+ctid+"&type=4");
+  				$('#list_form').load("/course_content/raider?ct_id="+ctid+"&type=4");
   			}
 		});
 		

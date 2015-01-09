@@ -33,7 +33,7 @@ class SessionsController < ApplicationController
     	alertmesg("info",'Sorry','綁定失敗')  			
     end	
     
-    redirect_to root_url
+    redirect_to "/user/special_list"
   end
 
 	def get_courses

@@ -1,60 +1,6 @@
 module CourseHelper
-	def get_mixed_info2(cds)
-		#courses=Course.join(:course_teachership).where(:id=>cds.map{|cd|cd.course_teachership})
-		return [] if cds.empty?
-		depts=Department.where(:id=>cds.map{|cd|cd.course.department_id}.uniq)
-		dept_dulp=cds.map{|cd| depts.select{|d|d.id==cd.course.department_id}.first}
-		return cds.zip(dept_dulp)
-	end
-	def get_mixed_info(cds)
-		#courses=Course.join(:course_teachership).where(:id=>cds.map{|cd|cd.course_teachership})
-		return [] if cds.empty?
-		courses=Course.where(:id=>cds.map{|cd|cd.course_teachership.course_id})
-		courses_dulp=cds.map{|cd| courses.select{|c|c.id==cd.course_teachership.course_id}.first}
-		teachers=Teacher.where(:id=>cds.map{|cd|cd.course_teachership.teacher_id})
-		teachers_dulp=cds.map{|cd| teachers.select{|t|t.id==cd.course_teachership.teacher_id}.first}
-		return cds.zip(courses_dulp,teachers_dulp)
-	end
+
 	
-	
-	def get_autocomplete_vars
-		@departments=Department.where("dept_type != 'no_courses'")#.merge(Department.where(:dept_type=>'common'))
-		@departments_all_select=@departments.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_grad_select=@departments.select{|d|d.degree=='2'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_under_grad_select=@departments.select{|d|d.degree=='3'}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@departments_common_select=@departments.select{|d|d.degree=='0'||d.degree=="5"}.map{|d| {"walue"=>d.id, "label"=>d.ch_name}}.to_json
-		@degree_select=[{"walue"=>'3', "label"=>"大學部[U]"},{"walue"=>'2', "label"=>"研究所[G]"},{"walue"=>'0', "label"=>"大學部共同課程[C]"}].to_json
-	end
-	def join_course_detail(courses,semester_id)
-		course_ids=courses.map{|c| c.id}
-		ct_ids=CourseTeachership.select(:id).where(:course_id=>course_ids).pluck(:id)#@courses.map{|c|c.course_teacherships.map{|ct| ct.id}}
-		if semester_id!=0
-			course_details=CourseDetail.includes(:course_teachership, :semester).where(:course_teachership_id=>ct_ids, :semester_id=>semester_id).references(:course_teachership).order(:time)
-		else
-			course_details=CourseDetail.includes(:course_teachership, :semester).where(:course_teachership_id=>ct_ids).references(:course_teachership).order("semester_id DESC")
-		end
-		return course_details
-	end
-	
-	def get_dept_ids(dept_id)
-	  return nil if dept_id==0
-		
-	  dept_ids=[]
-		@dept_main=Department.where(:id=>dept_id).take
-		dept_ids.append(@dept_main.id)
-		if @dept_main.dept_type=="dept"
-			dept_college=Department.where(:degree => @dept_main.degree, :college_id=>@dept_main.college_id, :dept_type => 'college').take
-			dept_ids.append(dept_college.id) if !dept_college.nil?
-		end
-		return dept_ids
-	end
-	
-	def join_dept(course,dept_ids)
-		dept_ids.each do |dept_id|
-		  return true if course.department_id==dept_id
-		end
-		return false
-	end
 	
 	def has_rated(ctr_id,ectr_arr)
 		return current_user && ectr_arr.include?(ctr_id)
@@ -223,7 +169,5 @@ module CourseHelper
 		return "<td class=\"grid-default\" > </td>".html_safe
 	end
 	
-	def numeric?(lookAhead)
-  		lookAhead =~ /[[:digit:]]/
-	end
+	
 end

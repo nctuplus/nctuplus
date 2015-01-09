@@ -7,14 +7,13 @@
 		$("#copare_container").html(tmpl("compare_tmpl",ctCopare));
 
 		for(var i=0,ct,userRated;ct=ctCopare[i],userRated=userCtRated[i];i++){
-			console.log("!!!");
+
 			gen_raty(ct.id,"cold",ct.cold.avg_score,userRated.cold); 
 			gen_raty(ct.id,"sweety",ct.sweety.avg_score,userRated.sweety); 
 			gen_raty(ct.id,"hardness",ct.hardness.avg_score,userRated.hardness); 
 		}
 	});
 	function gen_raty(ct_id,r_type,show_score,rated){
-		console.log("!!!!!!!"+ct_id);
 		$("#rating_"+r_type+'_'+ct_id).raty({
 			score:show_score,
 			readOnly :<%=current_user.nil? ||!current_user.uid %>,
@@ -42,12 +41,12 @@
 			res+="</div></div>";
 		return res;
 	}
-	<% if current_user &&current_user.uid %>
+	<% if current_user.try(:uid)  %>
 	function rate_course(ct_id,r_type,score){
 		
 		$.ajax({
 			type: "GET",
-			url: "/courses/rate_cts",
+			url: "/course_content/rate_cts",
 			dataType :"json",
 			data: {
 				ct_id: ct_id,
@@ -56,7 +55,7 @@
 			},
 			success: function(data){
 				var d=data;//JSON.parse(data);
-				console.log(d);
+				
 				var new_count="<label>"+d.avg_score+"("+d.rate_count+")</label>";
 				$("#rating_"+r_type+'_'+ct_id+"_counts").html(new_count);
 				$("#rating_"+r_type+'_'+ct_id).raty('set',{

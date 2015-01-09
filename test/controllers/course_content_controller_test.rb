@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CoursePostshipTest < ActiveSupport::TestCase
+class CourseContentControllerTest < ActionController::TestCase
   # test "the truth" do
   #   assert true
   # end

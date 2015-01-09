@@ -4,18 +4,17 @@ class Course < ActiveRecord::Base
 	belongs_to :user
 
 	has_many :course_field_lists
+	validates_associated :course_field_lists
 	has_many :course_fields, :through=>:course_field_lists
 	has_many :course_teacherships, :dependent => :destroy
+	validates_associated :course_teacherships
 	has_many :course_details, :through=> :course_teacherships#, :source=>course_details
 	
 	#has_many :teachers, :through => :course_teacherships
 	
 	has_many :semesters, :through => :course_details
 
-	
-	has_many :reviews
-	
-	
+		
 	def to_result(semester_name)
     {
 			"id" => read_attribute(:id),

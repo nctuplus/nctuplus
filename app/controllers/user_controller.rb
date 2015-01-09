@@ -4,7 +4,7 @@ class UserController < ApplicationController
 	include CourseHelper
 	include CourseMapsHelper 
 
-  before_filter :checkTopManager, :only=>[:manage, :permission]
+
 	before_filter :checkLogin, :only=>[:add_course,  :special_list, :select_dept, :statistics_table]
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
@@ -197,7 +197,7 @@ class UserController < ApplicationController
 					#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
 					course=Course.where(:real_id=>a[:real_id]).take
 					if !course.nil?
-						Rails.logger.debug "[debug] "+course.ch_name
+						#Rails.logger.debug "[debug] "+course.ch_name
 						cd_temp=course.course_details.take#.where(:credit=>a[:credit]).first
 						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過",
 												:memo=>a[:memo], :import_fail=>0, :cos_type=>a[:cos_type])
@@ -264,10 +264,7 @@ class UserController < ApplicationController
 		update_cs_cfids(cm,current_user)
 		redirect_to :controller=> "user", :action=>"special_list"
 	end
-  def manage
-    @users=User.includes(:semester, :department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
-	#@top_managers=TopManager.all.pluck(:user_id)
-  end
+ 
   def select_cm
 		
 		
@@ -283,20 +280,7 @@ class UserController < ApplicationController
 			render :nothing => true, :status => 200, :content_type => 'text/html'
 		end
   end
-  def permission
-    @user=User.find_by(params[:id])
-	@departments=Department.all
-    if request.post?
-			CourseManager.destroy_all(:user_id=>@user.id)
-			if params[:department]
-				params[:department][:checked].each do |key,value|
-					@course_manager=CourseManager.new(:user_id=>@user.id)
-					@course_manager.department_id=key
-					@course_manager.save!
-				end
-			end
-		end
-	end
+
   
   def statistics_table
 		user = nil
@@ -371,8 +355,8 @@ class UserController < ApplicationController
 			status = 0
 		end
 		respond_to do |format|
-       		format.html { render :text => status.to_s.html_safe }
-   		end	
+			format.html { render :text => status.to_s.html_safe }
+		end	
 	end
 	
 	

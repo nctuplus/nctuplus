@@ -387,9 +387,13 @@ class CourseMapsController < ApplicationController
 		render :text=> data
 	end
 	
-	def statistics_table
-		# only send html file
-		render :layout=> false
+	def update_cm_head # ajax post
+		cm = CourseMap.find(params[:map_id])
+		cm.department_id = params[:dep]
+		cm.semester_id = params[:sem]
+		cm.desc = params[:desc]
+		cm.save!
+		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 
 private

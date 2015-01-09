@@ -180,15 +180,6 @@ ActiveRecord::Schema.define(version: 20141230191423) do
   add_index "course_simulations", ["semester_id"], name: "index_course_simulations_on_semester_id", using: :btree
   add_index "course_simulations", ["user_id"], name: "index_course_simulations_on_user_id", using: :btree
 
-  create_table "course_teacher_ratings", force: true do |t|
-    t.integer "course_teachership_id"
-    t.integer "total_rating_counts"
-    t.float   "avg_score"
-    t.string  "rating_type"
-  end
-
-  add_index "course_teacher_ratings", ["course_teachership_id"], name: "index_course_teacher_ratings_on_course_teachership_id", using: :btree
-
   create_table "course_teacherships", force: true do |t|
     t.integer "course_id"
     t.string  "teacher_id"
@@ -244,17 +235,6 @@ ActiveRecord::Schema.define(version: 20141230191423) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
-  create_table "each_course_teacher_ratings", force: true do |t|
-    t.integer  "course_teacher_rating_id"
-    t.integer  "user_id"
-    t.integer  "score"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "each_course_teacher_ratings", ["course_teacher_rating_id"], name: "index_each_course_teacher_ratings_on_course_teacher_rating_id", using: :btree
-  add_index "each_course_teacher_ratings", ["user_id"], name: "index_each_course_teacher_ratings_on_user_id", using: :btree
-
   create_table "file_infos", force: true do |t|
     t.integer  "owner_id"
     t.integer  "course_teachership_id"
@@ -281,94 +261,10 @@ ActiveRecord::Schema.define(version: 20141230191423) do
   add_index "new_course_teacher_ratings", ["course_teachership_id"], name: "index_new_course_teacher_ratings_on_course_teachership_id", using: :btree
   add_index "new_course_teacher_ratings", ["user_id"], name: "index_new_course_teacher_ratings_on_user_id", using: :btree
 
-  create_table "new_old_cts", force: true do |t|
-    t.integer  "old_ct_id"
-    t.integer  "new_ct_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "old_course_details", force: true do |t|
-    t.string   "unique_id"
-    t.integer  "course_teachership_id"
-    t.integer  "semester_id"
-    t.string   "grade"
-    t.string   "time"
-    t.string   "room"
-    t.string   "temp_cos_id"
-    t.string   "brief"
-    t.text     "memo"
-    t.string   "reg_num"
-    t.string   "students_limit"
-    t.string   "cos_type"
-    t.string   "credit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "new_courseteachership_id"
-  end
-
-  add_index "old_course_details", ["course_teachership_id"], name: "index_course_details_on_course_teachership_id", using: :btree
-  add_index "old_course_details", ["semester_id"], name: "index_course_details_on_semester_id", using: :btree
-
-  create_table "old_course_teacherships", force: true do |t|
-    t.integer "course_id"
-    t.integer "teacher_id"
-  end
-
-  add_index "old_course_teacherships", ["course_id"], name: "index_course_teacherships_on_course_id", using: :btree
-  add_index "old_course_teacherships", ["teacher_id"], name: "index_course_teacherships_on_teacher_id", using: :btree
-
-  create_table "old_courses", force: true do |t|
-    t.string   "ch_name"
-    t.string   "eng_name"
-    t.integer  "credit"
-    t.integer  "department_id"
-    t.string   "real_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.float    "rate"
-  end
-
-  add_index "old_courses", ["department_id"], name: "index_courses_on_department_id", using: :btree
-  add_index "old_courses", ["real_id"], name: "index_courses_on_real_id", using: :btree
-
-  create_table "old_departments", force: true do |t|
-    t.string   "ch_name"
-    t.string   "eng_name"
-    t.string   "real_id"
-    t.string   "degree"
-    t.integer  "college_id"
-    t.string   "dept_type"
-    t.integer  "credit"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "old_departments", ["college_id"], name: "index_departments_on_college_id", using: :btree
-  add_index "old_departments", ["degree"], name: "index_departments_on_degree", using: :btree
-  add_index "old_departments", ["real_id"], name: "index_departments_on_real_id", using: :btree
-
-  create_table "old_teachers", force: true do |t|
-    t.string   "real_id"
-    t.string   "name"
-    t.boolean  "is_deleted"
-    t.integer  "department_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "semesters", force: true do |t|
     t.string  "name"
     t.integer "year"
     t.integer "half"
-  end
-
-  create_table "semestersZZ", force: true do |t|
-    t.string   "name"
-    t.string   "year"
-    t.string   "half"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "sub_discusses", force: true do |t|
@@ -407,14 +303,6 @@ ActiveRecord::Schema.define(version: 20141230191423) do
     t.string   "cos_type",         default: ""
   end
 
-  create_table "top_managers", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "all_users"
-    t.integer  "all_departments"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"
     t.integer  "user_id"
@@ -426,11 +314,10 @@ ActiveRecord::Schema.define(version: 20141230191423) do
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
   create_table "user_scores", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "target_id"
+    t.integer  "user_id",                                 null: false
+    t.integer  "target_id",                               null: false
     t.integer  "course_field_id",             default: 0
     t.boolean  "is_agreed"
-    t.text     "cos_type",        limit: 255
     t.text     "score",           limit: 255
     t.string   "status"
     t.datetime "created_at"

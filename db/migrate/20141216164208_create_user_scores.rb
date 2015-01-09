@@ -1,11 +1,10 @@
 class CreateUserScores < ActiveRecord::Migration
   def change
     create_table :user_scores do |t|
-			t.integer :user_id
-			t.integer :target_id
+			t.integer :user_id, :null=>false
+			t.integer :target_id, :null=>false
 			t.integer :course_field_id, :default=>0
 			t.boolean :is_agreed
-			t.text :cos_type, :limit=>30
 			t.text :score, :limit=>10
 			t.string :status
       t.timestamps

@@ -1,17 +1,17 @@
 <h3>課程地圖 - <%=@course_map.name%></h3>  
 
 <div class="well">
-<h3>課程介紹</h3>
+<h3>課程介紹 <small><%=link_to '編輯', 'javascript:void(0);', :class=>'cm-edit-head'%></small></h3>
 <table class="table table-bordered">
 	<tr>
 		<td>適用系所：</td>
-		<td><%=(@course_map.department_id==0)? "不指定" : @course_map.department.ch_name%></td>
+		<td class='cm-head-dep'><%=(@course_map.department_id==0)? "不指定" : @course_map.department.ch_name%></td>
 		<td>適用學期：</td>
-		<td><%=(@course_map.semester_id==0)? "不指定" : @course_map.semester.year%></td>
+		<td class='cm-head-sem'><%=(@course_map.semester_id==0)? "不指定" : @course_map.semester.year%></td>
 	<tr>
 	<tr>
 		<td colspan="4"><p>說明：</p>
-			<p><%=@course_map.desc%></p>
+			<p class='cm-head-desc'><%=@course_map.desc%></p>
 		</td>
 	</tr>	
 </table>
@@ -23,39 +23,55 @@
 
 <script>
 var map_id = <%=j @course_map.id.to_s %> ;
+var cm_head_info = { dep: $('.cm-head-dep').text(), sem: $('.cm-head-sem').text(), desc:$('.cm-head-desc').text() };
+
 $(document).ready(function(){
 	$('#start2_content').load('/course_maps/start2?map_id='+map_id);
-});
-function add_to_user_statics(map_id){
-	$.ajax({
-			type: "GET",
-  			url: "/course_maps/add_usercoursemapship" ,
-  			data:{
-  				map_id : map_id,
-  			},	
-  			success: function(data){
-					alert(data);
-  			},	
-  			error: function(){
-  				alert("add_to_user_statics failed..");
-  			}
-  	});	
-	return false ;
 	
-}
-function statistic_table(map_id, user_id){
-	$.ajax({
-			type: "GET",
-  			url: "/course_maps/statistic_table" ,
-  			data:{
-  				map_id : map_id,
-  				user_id : user_id,
-  			},	
-  			success: function(data){
-  			},	
-  			error: function(){
-  				alert("table generating failed..");
-  			}
-  	});	
-}
+	$('.cm-edit-head').click(function(){
+		if($(this).html()=='編輯'){
+			$('.cm-head-dep').html('<%=j select_tag "dep", options_from_collection_for_select(Department.where("degree IN (2,3) AND use_type != ?", "no_courses").order("degree DESC"),"id","ch_name"), :prompt=>"不指定"  %>');
+			$('.cm-head-sem').html('<%=j select_tag "sem", options_for_select(Semester.where("half=1").map{ |u| [u.year, u.id] }), :prompt=>"不指定" %>');
+			$("#dep option").each(function() {
+  				if($(this).text() == cm_head_info['dep']) {
+    				$(this).attr('selected', 'selected');            
+  				}                        
+			});
+			$("#sem option:contains(" + cm_head_info['sem'] + ")").attr('selected', 'selected');
+			$('.cm-head-desc').html('<%=j text_area_tag "desc", '', {class:"form-control"}%>');
+			$('#desc').html(cm_head_info['desc']);
+			$(this).html('<%=fa_icon "check",:class=>"btn btn-circle btn-success" %>');
+		}else{//post 
+			var dep = ($('#dep').val()) ? $('#dep').val() : 0 ;
+			var sem = ($('#sem').val()) ? $('#sem').val() : 0 ;		
+			cm_head_info['dep'] = $('#dep option:selected').text() ;
+			cm_head_info['sem'] = $('#sem option:selected').text() ;
+			cm_head_info['desc'] = $('#desc').val() ;
+			
+			$.ajax({
+				//async: false ,
+				type: "POST",
+				url: "update_cm_head" ,
+				data:{
+					map_id: map_id,
+					dep: dep,
+					sem: sem,
+					desc: $('#desc').val()
+				},	
+				success: function(data){			
+					$('.cm-head-dep').html(cm_head_info['dep']);
+					$('.cm-head-sem').html(cm_head_info['sem']);
+					$('.cm-head-desc').html(cm_head_info['desc'] );			
+				},	
+				error: function(){
+					alert('internal server error.. please reload');
+				}
+			});
+			$(this).html('編輯');
+			
+		}
+	});
+
+});
+
 </script>

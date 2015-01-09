@@ -19,7 +19,7 @@
 	
 	<div class="col-sm-2">
 		<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間" %>
+		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間/向度" %>
 
 	</div>
 	<button class="btn btn-success" id="search" onclick="search_by_text();">

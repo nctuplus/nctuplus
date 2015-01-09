@@ -20,7 +20,7 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<% if current_user.role==0 %>
-							<li><a href="/user/manage" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+							<li><a href="/admin/users" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
 						<% end %>
 							<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 							<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>

@@ -100,8 +100,9 @@ module ApiHelper
 		@cd.time=""
 		@cd.room=""
 		costime.each do |t|
-			@cd.time<<t.partition('-')[0]
-			@cd.room<<t.partition('-')[2]
+			_time=t.partition('-')
+			@cd.time<<_time[0]
+			@cd.room<<_time[2]
 		end
 		@cd.cos_type=data["cos_type"]
 		@cd.temp_cos_id=data["cos_id"]
@@ -147,7 +148,8 @@ module ApiHelper
 		score.split("\r\n").each do |s|
 			s2=s.split("\t")
 			if s2.length>3 && s2[2].match(/[[:digit:]]{5}+/)
-				student_id=s2[2]
+				student_id=s2[2].delete(' ') #delete is for FF
+				#Rails.logger.debug "[debug] id:"+student_id
 				dept=s2[0]
 				student_name=s2[4]
 			elsif s2.length>5 && s2[0].match(/[[:digit:]]/)
@@ -158,7 +160,14 @@ module ApiHelper
 				elsif s2[1].include?('.')
 					course=course
 				elsif s2[1].match(/[[:digit:]]{3}+/) && s2[2].match(/[[:digit:]]{4}/)
-					course={'sem'=>s2[1], 'cos_id'=>s2[2], 'score'=>s2[7], 'name'=>s2[4], 'cos_type'=>s2[5]||""}
+					#Rails.logger.debug "[debug] score:"+s2[7]
+					course={
+						'sem'=>s2[1],
+						'cos_id'=>s2[2],
+						'score'=>s2[7].delete(' '), #delete is for FF
+						'name'=>s2[4],
+						'cos_type'=>s2[5]||""
+					}
 					normal.append(course)
 				end	
 			end 

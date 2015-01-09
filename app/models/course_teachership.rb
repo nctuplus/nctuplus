@@ -7,13 +7,17 @@ class CourseTeachership < ActiveRecord::Base
   has_many :course_details, :dependent=> :destroy
 	#has_many :course_teacher_ratings, :dependent=> :destroy
 	has_many :new_course_teacher_ratings, :dependent=> :destroy
-	has_many :discusses
+	validates_associated :new_course_teacher_ratings
+	
 
   has_one :course_content_head
   has_many :course_content_lists
 
 	has_many :file_infos
-  #has_one :course_teacher_page_content
+	validates_associated :file_infos
+	has_many :discusses
+	validates_associated :discusses
+
 	class ScoreObj
 		attr_accessor :rate_count, :avg_score, :arr
 		def initialize(obj)

@@ -32,7 +32,8 @@ class CourseDetail < ActiveRecord::Base
 			:credit=>self.course_credit,
 			:dept_name=>self.department_ch_name,
 			:teacher_name=>self.teacher_name,
-			:ct_id=>self.course_teachership_id
+			:ct_id=>self.course_teachership_id,
+			:brief=>self.brief
 		}
 	end
 	

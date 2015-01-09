@@ -1,10 +1,9 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm]
 	def testttt
-		#UserScore.create(:user_id=>3, :target_id=>2, :is_agreed=>0)
-		uc=UserScore.find(1)
-		#@x=uc.course_detail.id
-		@x=uc.course_detail.id#.id
+		#current_user.agree_courses.create(:target_id=>555)
+		#@x=current_user.agree_courses.first.course_detail.id
+		#@x=current_user.agree_courses.first.course_detail.id
 	end
 	def tempcs_change_to_new_sem_id
 		TempCourseSimulation.includes(:course_detail).where("semester_id != 0").all.each do |tempcs|

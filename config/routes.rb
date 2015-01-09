@@ -1,30 +1,34 @@
 Nctuplus::Application.routes.draw do
-
+	
+	root :to => "main#index"
+	
+	
+	
+#--------- login control and session --------------
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 	get "sessions/get_courses"
 	
-	root :to => "main#index"
+	
 
 #--------- for many usage --------------
+	get "main/index"
   post "main/temp_student_action"
-  get "main/open"
 	get "main/E3Login"
 	post "main/E3Login_Check"
 	get "main/student_import"
 	post "main/student_import"
   get "main/test"
-	get "main/testttt"
-	get "main/testtt11t"
 	post "main/send_report"
-	get "main/hidden_prepare"
-  get "main/index"
-#---------- for many usage end -----------
+  
+#---------- admin page -----------
 	
 	get "admin/ee104"
+	get "admin/users"
 	
-#---------- user ----------------	
+#---------- user ----------------
+	get "user/change_role" #in admin/users
 	get "user/add_course"
 	get "user/get_courses"
 	get "user/this_sem"
@@ -35,35 +39,30 @@ Nctuplus::Application.routes.draw do
 	get "user/select_cm"
 	post "user/select_cm"
 	get "user/select_cf"
-	get "user/change_role"
+	
 	get "user/statistics_table"
-  get "user/manage"
-	get "user/import_course"
+
   get "user/special_list"
 	get "user/all_courses"
 	get "user/statistics"
-  get "user/:id/permission", to: "user#permission"
-  post "user/:id/permission", to: "user#permission"
 	post "user/select_dept"
-  post "user/create"
+
 	
 #--------- user end -------------
+	post "course_content/raider"
+	get "course_content/raider"	
+	get "course_content/raider_list_like"
+	get "course_content/rate_cts"
 	
-
+	
 	post "courses/comment_submit"
-	post "courses/course_raider"
 	post "courses/course_content_post"
-	get "courses/groups"
 	get "courses/get_compare"	
 	get "courses/search_mini"
 	get "courses/search_mini_cm"
-	get "courses/course_raider"
-	get "courses/list_all_courses"
-  get "courses/rate_cts"
+  
 	get "courses/simulation"
-	#get "courses/get_user_courses"
-	get "courses/get_sem_form"
-	get "courses/raider_list_like"
+	
   get "courses/timetable"
 	get "courses/add_to_cart"
 	get "courses/show_cart"
@@ -83,13 +82,13 @@ Nctuplus::Application.routes.draw do
 	get "course_maps/show_course_group_list"
 	post "course_maps/course_group_action"
 	get "course_maps/start2"
+	post "course_maps/update_cm_head"
 	resources :course_maps
 ####
 	
-	resources :departments do
-    resources :courses
-	end
-		
+	resources :departments
+	
+	
 	get "discusses/list_by_course"
 	get "discusses/like"
 	post "discusses/new_discuss"
@@ -113,15 +112,6 @@ Nctuplus::Application.routes.draw do
   get "file_infos/edit"
   resources :file_infos
   
-  
-  #----------for user---------------
-
-
-
-  
-	get "course_details/mini"
-	get "course_details/course_group"
-  resources :course_details
-  
+    
 
 end
