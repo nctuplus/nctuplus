@@ -13,23 +13,11 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-
 //= require jquery-ui
-
-//= require jquery-fileupload
-
 //= require bootstrap.min
 
-//= require jquery-bootpag.min
-
-//= require jquery.raty.min
-//= require share.min
-//= require jquery.scrollTo.min
-//= require jquery.svginject
-//= require highcharts-custom
-
+//= require tmpl.min
 //= require custom-array-handler
 //= require custom-helper
 //= require cm-stat-helper
-//= require bootstrap-treeview
 //= require toastr.min

@@ -23,6 +23,7 @@
 					<td><%=fa_icon "bank" %> 單位</td>
 					<td><%=fa_icon "pencil" %> 課號</td>
 					<td><%=fa_icon "book" %> 選別</td>
+					<td><%=fa_icon "users" %> 修課人數/上限</td>
 					<td><%=fa_icon "bell" %> 時間</td>
     			<td><%=fa_icon "building" %> 教室</td>
     			<td><%=fa_icon "tag" %> 年級</td>					
@@ -33,11 +34,15 @@
 						<td><%=cd.semester.name%></td>
 						<td><%=cd.department.ch_name%></td>
 						<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
-						<td>
-							<%=cd.cos_type%>
+						<td>							
 							<% if cd.cos_type=="通識"%>
-								(<%=cd.brief%>)
+								<%=cd.brief%>
+							<% else %>
+								<%=cd.cos_type%>
 							<% end %>
+						</td>
+						<td class="text-center">
+							<%= cd.reg_num %>/<%=cd.students_limit.to_i==9999 ? "不限" : cd.students_limit%>
 						</td>
 						<td><%=cd.time%></td>
 						<td><%=cd.room%></td>
@@ -50,11 +55,15 @@
 						<td><%=cd.semester.name%></td>
 						<td><%=cd.department.ch_name%></td>
 						<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
-						<td>
-							<%=cd.cos_type%>
+						<td>							
 							<% if cd.cos_type=="通識"%>
-								(<%=cd.brief%>)
+								<%=cd.brief%>
+							<% else %>
+								<%=cd.cos_type%>
 							<% end %>
+						</td>
+						<td class="text-center">
+							<%= cd.reg_num %>/<%=cd.students_limit.to_i==9999 ? "不限" : cd.students_limit%>
 						</td>
 						<td><%=cd.time%></td>
 						<td><%=cd.room%></td>

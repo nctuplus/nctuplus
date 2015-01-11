@@ -11,21 +11,29 @@ class SessionsController < ApplicationController
     			cs.save! 
     		end
     	end
-		if !current_user.user_coursemapships.empty?
+			if !current_user.user_coursemapships.empty?
     		user.user_coursemapships.destroy_all
     		current_user.user_coursemapships.each do |cm|
     			cm.user_id = user.id
     			cm.save! 
     		end
     	end
+			
+			if !current_user.file_infos.empty?
+    		current_user.file_infos.each do |file|
+					file.user_id = user.id
+    			file.save!
+				end
+    	end
+			
     	user.student_id = current_user.student_id
-		user.semester_id = current_user.semester_id if user.semester_id.nil?||user.semester_id==0
-		user.department_id = current_user.department_id if user.department_id.nil?||user.department_id==0
-		user.role = current_user.role
-		user.agree = current_user.agree
-		
+			user.semester_id = current_user.semester_id if user.semester_id.nil?||user.semester_id==0
+			user.department_id = current_user.department_id if user.department_id.nil?||user.department_id==0
+			user.role = current_user.role
+			user.agree = current_user.agree	
     	user.save!
-    	current_user.destroy
+			
+    	current_user.destroy # delete e3 user
     	session[:user_id] = user.id	
     elsif not current_user
     	session[:user_id] = user.id

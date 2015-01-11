@@ -61,6 +61,7 @@ class MainController < ApplicationController
 	
 	
 	def test
+
 	end
 	
 	def send_report

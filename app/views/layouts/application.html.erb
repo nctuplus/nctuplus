@@ -55,7 +55,7 @@
 		<% if flash[:notice] %>
 			toastr.warning("<%= flash[:notice][:message] %>");
 		<% end %>
-		$('.masterTooltip').hover(function(){
+		$('.toolTip').hover(function(){
 						// Hover over code
 						var title = $(this).attr('title');
 						$(this).data('tipText', title).removeAttr('title');
@@ -73,6 +73,15 @@
 						$('.toolTipText')
 						.css({ top: mousey, left: mousex })
 		});
+		
+		/*$(".masterToolti").popover({
+			title:"",
+			content:$(this).attr('tiptext'),
+			placement:"auto",
+			trigger :"hover",
+			container :"body"
+			
+		});*/
 		
 	});
 <% if Rails.env.production? %>
