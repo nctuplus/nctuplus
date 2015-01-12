@@ -1,4 +1,6 @@
 <script>
+
+
 	function addCourseSimulation(id,addordel,from){
 		var this_row=$("#cd_"+id);
 		var name=this_row.find(".course_name").text();
@@ -22,6 +24,7 @@
 				slot_ids.push(row_id);
 				if(addordel=="add"&&$(row_id).text()!=""){
 					$(row_id).removeClass("schedule-slot-empty");
+					$(row_id).removeClass('tslt');
 					//$(row_id).addClass("danger");
 					$(row_id).css("background-color","#FFCECD");
 					conflict=true;
@@ -118,6 +121,7 @@
 						{% } %}
 						年級: {%=cd.grade%} | 
 						<strong class="course_time">{%= cd.time %}</strong>
+						| <%=fa_icon "user" %> <strong>{%= cd.reg_num %}</strong>/<strong>{%= cd.reg_limit %}</strong>
 						| <%=fa_icon "graduation-cap" %> <strong>{%= cd.credit %}</strong>
 					</p>
 				</td>

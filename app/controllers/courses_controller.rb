@@ -224,7 +224,13 @@ class CoursesController < ApplicationController
   
   private
 	def custom_search(showDefault,pageble)
-		if !params[:custom_search].blank?
+		if !params[:dimension_search].blank?
+			@q= CourseDetail.search({:semester_id_eq=>latest_semester.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
+		elsif !params[:timeslot_search].blank?
+			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>latest_semester.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
+			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
+		elsif !params[:custom_search].blank?
 			@q = CourseDetail.search({:course_ch_name_or_time_or_brief_cont=>params[:custom_search],:semester_id_eq=>params[:q] ? params[:q][:semester_id_eq] : ""})
 			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 			if cds.empty? #search teacher
@@ -232,10 +238,10 @@ class CoursesController < ApplicationController
 				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 			end
 		else
-			if params[:action]=="index"
-				@q = CourseDetail.search(params[:q])
-			else
+			if params[:action]=="search_mini" && params[:q].blank?
 				@q=CourseDetail.search({:id_in=>[0]})
+			else
+				@q = CourseDetail.search(params[:q])
 			end
 			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).order("semester_id DESC")
 		end

@@ -33,6 +33,8 @@ class CourseDetail < ActiveRecord::Base
 			:dept_name=>self.department_ch_name,
 			:teacher_name=>self.teacher_name,
 			:ct_id=>self.course_teachership_id,
+			:reg_num=>self.reg_num,
+			:reg_limit=>self.students_limit=="9999" ? "不限" : self.students_limit,
 			:brief=>self.brief
 		}
 	end

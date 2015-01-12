@@ -9,12 +9,17 @@
 								<font color="white"><%=fa_icon "check"%></font>
 							</button>	
 							課程查詢
+							<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
+								<font color="white"><%=fa_icon "search" %></font>
+							</button>
 							<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="show_cart_select()" style="margin-top: -5px;">
 								<font color="white"><%=fa_icon "shopping-cart"%></font>
 							</button>
+							
 						</h4>
 					</div>
 					<div class="panel-body">
+						<%= render "suggest_btns" %>
 						<div id="search_div" class="row schedule-search-bar"></div>
 					</div>
 				</div>
@@ -26,6 +31,9 @@
 
 
 <script>
+function show_search(){
+	$("#search_div").find('form').toggleClass("hidden");
+}
 $(document).ready(function(){
 	$('#cart-btn').popover({
 		content: "顯示觀察名單",
@@ -40,21 +48,70 @@ $(document).ready(function(){
 		container :"body"
 	});
 	
+	$(".btn-default").popover({
+			//content : $(this).attr('tiptext'),
+			trigger :"hover",
+			container :"body",
+			placement : "auto"
+	});
+	
+	
 	//sidebar search
 	$("#search_div").load("/courses/search_mini?sem_id=<%=latest_semester.id%>",function(){
 		show_has_select();
-	});	
+		//show_search();
+	});		
+	
 	//course table
-	load_course_table(<%=latest_semester.id%>);
+	load_course_table(<%=latest_semester.id%>, true);
+	
+	
 	
 	
 });
-	function load_course_table(semester_id){
+	
+	function searchLackCourses(){
+		<% if current_user.is_undergrad %>
+			$(".scrollable").html("<%=j loadingImg%>");
+			$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
+				var result=get_check_res(data.pass_score,data.last_sem_id,data.user_courses.success);
+				var arr="[";
+				for(var dimension in result['common']){
+					if (result['common'][dimension]==0){ 
+						arr+='"'+dimension+'",';
+					}
+				}
+				if(arr.length==1)
+					toastr["info"]("你已經修完了喔^_^");
+				else{
+					arr=arr.substr(0,arr.length-1);
+					arr+=']';					
+					$("#dimension_search").val(arr);
+					$("form").submit();
+				}
+			});
+		<% else %>
+			toastr["info"]("你不需要修通識喔^_^");
+		<% end %>
+		
+	}
+	
+	
+	function load_course_table(semester_id, selectable){
 		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
 			//xtmpl is in header
 			$("#schedule_div").html(tmpl("course_table", data.semester_info));
 			table_popover();
-			if(data.courses.length>0) add_time_slot(data.courses, data.semester_info.isNow, false) ;		
+			if(data.courses.length>0) add_time_slot(data.courses, data.semester_info.isNow, false) ;
+			if(selectable){
+				$('.tslt').click(function(){
+					if($(this).hasClass('td-selected'))
+						$(this).removeClass('td-selected').removeClass("schd-grid-selected");
+					else	
+						$(this).addClass('td-selected').addClass("schd-grid-selected");
+					
+				});
+			}
 		});
 	}
 	function show_has_select(){
@@ -71,6 +128,41 @@ $(document).ready(function(){
 		$("#search_div").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	}
 
+	function get_selected_time_slot(){
+		var times = ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] ;
+		//var result = [] ;
+		var arr="[";
+		for(var i=1 ; i<=7;++i){
+			var tmp = 0 ;
+			for(var j=0,t; t=times[j]; ++j){
+				var td = $("#day_"+i+"_time_"+t) ;
+				if(td.hasClass('td-selected')){
+					if(tmp!=0)
+						tmp += t;
+					else	
+						tmp = i+t;
+				}else{
+					if(tmp!=0){
+						//result.push(tmp);
+						arr+='"'+tmp+'",';
+					}
+					tmp=0;	
+				}
+			}
+		}
+		//console.log(result);
+		if(arr.length>1){
+			//$('#timeslot_search').val(result.join(''));
+			arr=arr.substr(0,arr.length-1);
+			arr+=']';
+			$('#timeslot_search').val(arr);
+			$(".scrollable").html("<%=j loadingImg%>");
+			$("form").submit();
+		}
+		else
+			toastr["warning"]("請先在右方課表選取時間");
+	//	return result ;
+	}
 </script>
 
 <%=render "courses/search/xtmpl_results_mini"%>
