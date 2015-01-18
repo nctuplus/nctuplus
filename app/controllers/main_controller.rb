@@ -8,7 +8,8 @@ class MainController < ApplicationController
 	before_filter :checkTopManager, :only=>[:student_import]
 	include CourseMapsHelper	
 	include ApiHelper
-	
+	def policay_page
+	end
   def index
 
   end
