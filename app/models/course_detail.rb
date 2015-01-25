@@ -17,7 +17,7 @@ class CourseDetail < ActiveRecord::Base
 	def incViewTimes!
 		update_attributes(:view_times=>self.view_times+1)
 	end
-	
+
 	def self.flit_semester(sem_id)
 		self.select{|cd| cd.semester_id==sem_id}
 	end

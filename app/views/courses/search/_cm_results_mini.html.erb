@@ -17,7 +17,7 @@ function add_all_class(){
 }
 </script>
 
-		<%=search_form_for @q, url:"/course_details/course_group",id:"search", class:"form-horizontal", remote:true do |f| %>
+		<%=search_form_for @q, url:"/courses/search_mini_cm",id:"search", class:"form-horizontal", remote:true do |f| %>
 
 			<div class="row schedule-search-bar" >
 				<%=hidden_field_tag "hide_group",params[:hide_group] %>

@@ -1,0 +1,37 @@
+<script type="text/x-tmpl" id="content-head">
+{% if($.isEmptyObject(o)){} %}
+
+考試週：（該週可能有考試）    		
+<div class="btn-group">		
+{%for(var i=1; i<=18; ++i){ %}
+	{% if(Math.pow(2, i-1) & o.exam_record){ %}
+    <button type="button" class="btn btn-danger exam" style="border-color: #fff; border-width: 0px;">
+  {% }else{ %}
+    <button type="button" class="btn btn-default exam" style="border-color: #fff;border-width: 0px;">
+  {% } %}
+    <span>{%=i%}</span>
+  </button> 
+{% } %}        	 	
+</div>    	
+</br></br>
+作業週：（該週可能有作業）  	
+<div class="btn-group">
+{%for(var i=1; i<=18; ++i){ %}
+	{% if(Math.pow(2, i-1) & o.homework_record){ %}
+	<button type="button" class="btn btn-warning hw" style="border-color: #fff;border-width: 0px;" >
+  {% }else{ %}
+  <button type="button" class="btn btn-default hw" style="border-color: #fff;border-width: 0px;">
+  {% } %}
+    <span>{%=i%}</span>
+  </button> 
+{% } %} 	
+</div> 
+</br></br>
+<%=fa_icon "eye"%> 點名頻率： 
+{% if(!$.isEmptyObject(o)){ %}
+<span class="label label-{%=o.rollcall_info.color%} rollcall" id="{%=o.rollcall_info.id%}" style="font-size:16px">{%=o.rollcall_info.name%}</span>	
+{% }else{ %}
+<span class="label rollcall" id="0" style="font-size:16px"></span>
+{% } %}
+
+</script>

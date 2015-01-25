@@ -117,7 +117,7 @@ class CoursesController < ApplicationController
 		@ct_compare_json=[]
 		@user_rated_json=[]
 		t_name=[]
-		@cts.includes(:new_course_teacher_ratings).each do |ct|
+		@cts.includes(:new_course_teacher_ratings, :course_details).each do |ct|
 			next if t_name.include?(ct.teacher_name)
 			t_name.push(ct.teacher_name)
 			
@@ -127,6 +127,7 @@ class CoursesController < ApplicationController
 			
 			res={
 				:id=>ct.id,
+				:cd_id=>ct.course_details.last.id,
 				:name=>ct.teacher_name,
 				:cold=>cold_ratings,
 				:sweety=>sweety_ratings,
@@ -145,6 +146,7 @@ class CoursesController < ApplicationController
 	
 	
   def show
+=begin	
 		cd=CourseDetail.find(params[:id])
 		cd.incViewTimes!
 
@@ -155,7 +157,22 @@ class CoursesController < ApplicationController
 		@first_show=params[:first_show]||"tc"
 		@target_rank=999
 		@sems=@course.semesters.uniq
+=end
+		cd=CourseDetail.find(params[:id])	
+		cd.incViewTimes!
 
+		@data = {
+			:course_id=>cd.course.id.to_s,
+			:course_detail_id=>cd.id.to_s,
+			:course_teachership_id=>cd.course_teachership.id.to_s,
+			:course_name=>cd.course_ch_name,
+			:course_teachers=>cd.teacher_name,
+			:course_real_id=>cd.course.real_id.to_s,
+			:course_credit=>cd.course.credit,
+			:open_on_latest=>(cd.course_teachership.course_details.last.semester==latest_semester) ? true : false ,
+			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
+		}
+		render "/course_content/show"
   end
 	
   def simulation  

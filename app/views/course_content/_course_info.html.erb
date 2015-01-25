@@ -1,0 +1,68 @@
+<h2 class="panel-title">
+	<h4>
+		永久課號: <%=@data[:course_real_id]%>
+		學分: <%=@data[:course_credit]%>
+		<% if not @data[:open_on_latest]%>
+			(本學期無開課)
+		<% end %>
+		查看更多 
+		<%=link_to("javascript:void(0);", :class=>"see-more-course") do%>	
+			<%=fa_icon "search-plus"%>
+		<% end %>
+	</h4>
+	<table class="table">
+		<tr>
+			<td><%=fa_icon "calendar-o" %> 學期</td>
+			<td><%=fa_icon "bank" %> 單位</td>
+			<td><%=fa_icon "pencil" %> 課號</td>
+			<td><%=fa_icon "book" %> 選別</td>
+			<td><%=fa_icon "users" %> 修課人數/上限</td>
+			<td><%=fa_icon "bell" %> 時間</td>
+			<td><%=fa_icon "building" %> 教室</td>
+			<td><%=fa_icon "tag" %> 年級</td>					
+			<td class="col-md-4"><%=fa_icon "bookmark" %> 備註</td>
+    	</tr>
+		<% @data[:related_cds].select{|cd| cd.semester==latest_semester}.each do |cd| %>  
+		<tr>
+			<td><%=cd.semester.name%></td>
+			<td><%=cd.department.ch_name%></td>
+			<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
+			<td>							
+				<% if cd.cos_type=="通識"%>
+					<%=cd.brief%>
+				<% else %>
+					<%=cd.cos_type%>
+				<% end %>
+			</td>
+			<td class="text-center">
+				<%= cd.reg_num %>/<%=cd.students_limit.to_i==9999 ? "不限" : cd.students_limit%>
+			</td>
+			<td><%=cd.time%></td>
+			<td><%=cd.room%></td>
+			<td><%= cd.grade=='*' ? 'all' : cd.grade %></td>						
+			<td><%=cd.memo%></td>
+		</tr>    
+		<%end%>
+		<% @data[:related_cds].reject{|cd| cd.semester==latest_semester}.each do |cd| %>  
+		<tr class="old-course">
+			<td><%=cd.semester.name%></td>
+			<td><%=cd.department.ch_name%></td>
+			<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
+			<td>							
+				<% if cd.cos_type=="通識"%>
+					<%=cd.brief%>
+				<% else %>
+					<%=cd.cos_type%>
+				<% end %>
+			</td>
+			<td class="text-center">
+				<%= cd.reg_num %>/<%=cd.students_limit.to_i==9999 ? "不限" : cd.students_limit%>
+			</td>
+			<td><%=cd.time%></td>
+			<td><%=cd.room%></td>
+			<td><%= cd.grade=='*' ? 'all' : cd.grade %></td>							
+			<td><%=cd.memo%></td>
+		</tr>    
+		<%end%>
+	</table>
+</h2>	

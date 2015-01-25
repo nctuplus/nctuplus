@@ -5,11 +5,7 @@
 		$("#course-list-"+id).find(".fa-plus").toggleClass("fa-minus");
 	}
 </script>
-<style>
-.zopl{
-	background-color:#BBFFEE;
-}
-</style>
+
 <script type="text/x-tmpl" id="table-format">
 
 <table class="table course-table">
@@ -28,7 +24,7 @@
 			{% for(var i=0 ; i<o.length ; i++){ %}
 				{% var list = o[i] ;%}
 				{% if(list.groups){ %}
-					<tr class="row zopl" list_id="{%=list.id%}" style=''  >
+					<tr class="row zopl" list_id="{%=list.id%}" style='background-color:#BBFFEE;'  >
 				{% }else{ %}
 					<tr class="row" list_id="{%=list.id%}" >
 				{% } %}

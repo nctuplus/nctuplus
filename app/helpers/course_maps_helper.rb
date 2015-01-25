@@ -1,7 +1,7 @@
 module CourseMapsHelper
 
 	def cf_trace(cf, funcA, funcB=nil)
-  	    if cf.field_type < 3
+  	if cf.field_type < 3
 			data = send(funcA, cf)	
 		else 
 			nodes = []

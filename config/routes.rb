@@ -54,6 +54,10 @@ Nctuplus::Application.routes.draw do
 	get "course_content/raider_list_like"
 	get "course_content/rate_cts"
 	
+	###
+	get "course_content/get_course_info"
+	get "course_content/show" # testing
+	post "course_content/course_action"
 	
 	post "courses/comment_submit"
 	post "courses/course_content_post"

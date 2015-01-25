@@ -1,0 +1,38 @@
+<script type="text/x-tmpl" id="course-comments">
+<table class="table ptt-style comment-lists" >
+<tbody>
+{% for(var i=0, list; list=o[i]; ++i){ %}
+	{% include("course-comment-cell", list); %}
+{% } %}	
+{% if(o.length==0){ %}
+	<p class="text-center no-comment"><strong>尚無討論</strong></p>
+{% } %}
+</tbody>
+</table>
+
+</script>
+<script type="text/x-tmpl" id="course-comment-cell">
+<tr>
+		<td style="	border:none;"><p><b>
+<span class="col-sm-9">		
+{%if(o.content_type.id==1){ %}
+			<font class="text-color-white">推</font> 
+{% }else if(o.content_type.id==2){ %}
+			<font class="text-color-red">→</font> 
+{% }else{ %}
+			<font class="text-color-red">噓</font> 
+{% } %}
+			
+{%if(o.content_type.id != 3){ %}			
+			<font class="text-color-yellow">{%=o.user_name %}</font>
+{% }else{ %}
+			<font class="text-color-black">{%=o.user_name %}</font>
+{% } %}			
+			 : {%=o.content%}
+</span>
+<span class="col-sm-3">			
+			<span class="text-right">{%=o.time%}</span>
+</span>			
+		</p></td>
+	</tr>			
+</script>

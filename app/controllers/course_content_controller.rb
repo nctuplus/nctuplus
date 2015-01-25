@@ -1,82 +1,7 @@
 class CourseContentController < ApplicationController
 	include CourseContentHelper
-		before_filter :checkLogin, :only=>[ :raider_list_like, :rate_cts]
+		before_filter :checkLogin, :only=>[ :course_action, :rate_cts]
 		
-	def raider
-		ct = CourseTeachership.find(params[:ct_id])
-		@ct_id = ct.id	
-		case params[:type].to_i
-			when 1
-				@page = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence || nil			
-				render "course_content_head", :layout=>false
-			when 2
-				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i)
-				render "course_content_list", :layout=>false
-			when 3  #3  -> head form
-				@head = CourseContentHead.where(:course_teachership_id => params[:ct_id].to_i).first.presence ||
-								CourseContentHead.new(:exam_record=>0, :homework_record=>0)	
-				render "content_head_form", :layout=>false
-			when 4	#4 -> list form
-				@list = CourseContentList.where(:course_teachership_id => params[:ct_id].to_i).presence || nil		
-				render "content_list_form", :layout=>false
-			else # 5 -> chart			
-				c_id = ct.course_id				
-				sems=Course.includes(:semesters).find(c_id).semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}				
-				@row_name = sems.map{|s|s.name}				
-				@row_id = sems.map{|s| s.id}
-				if @row_id.length ==5
-					@row_id.shift
-					@row_name.shift
-				end
-				@tmp = Course.find(c_id).course_details.where(:semester_id=>@row_id).order(:semester_id)				
-				@simu = CourseSimulation.where(:semester_id=>@row_id, :course_detail_id=>@tmp.map{|ctd| ctd.id})  		
-				@res = []
-				@res_score = []
-				@res_score_drill=[]
-				@show_flag = 0
-				@tmp.map{|ctd| {:teacher=>ctd.teacher_name, :cdid=>ctd.id, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
-				.group_by{|t| t[:teacher]}.each do |k1, k2|
-					@tmp_num = [0,0,0,0]
-					@tmp_score = [{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1}]
-					k2.each do |hash|
-						@tmp_num[@row_id.index(hash[:sem])] = hash[:num].to_i						
-						score_sum = 0 
-						score_count = 0
-						@simu.select{|sim| sim.semester_id==hash[:sem]&&sim.course_detail_id==hash[:cdid]}.each do |s|
-							if s.score.presence and numeric?(s.score) #and s.score.to_i >=60
-								score_sum+= s.score.to_i
-								score_count+=1
-								@show_flag |= 1
-							end
-						end
-					#	Rails.logger.debug "[debug] "+@row_name.to_s
-						@tmp_score[@row_id.index(hash[:sem])][:y] = (score_count==0) ? 0 : score_sum/score_count*1.0
-						@tmp_score[@row_id.index(hash[:sem])][:nums] = score_count
-					end
-					@res.push({:name=>k1, :data=>@tmp_num})
-					@res_score.push({:name=>k1, :data=>@tmp_score})
-				end			
-				#Rails.logger.debug "[debug] "+ @res.to_s 
-				if @res.count > 0
-					@show_flag |= 2 
-				end
-				render "course_chart", :layout=>false
-		end
-	end
-	
-	def raider_list_like
-		if ContentListRank.where(:user_id=>current_user.id, :course_content_list_id=>params[:list_id]).first.presence
-			render :nothing => true, :status => 200, :content_type => 'text/html' #已給過評
-		else
-			@like = ContentListRank.new(:user_id=>current_user.id, :course_content_list_id=>params[:list_id],:rank=>params[:like_type])	
-			if @like.save
-				render "raider_list_like"
-			else
-				render :nothing => true, :status => 200, :content_type => 'text/html'
-			end				
-		end	
-	end
-	
 	def rate_cts
     ct=CourseTeachership.find(params[:ct_id])
 		score=params[:score].to_i
@@ -120,6 +45,105 @@ class CourseContentController < ApplicationController
 			format.json{render json:result}
 		end
 
+	end
+	
+	def show # for testing
+		cd=CourseDetail.find(25600)
+		cd.incViewTimes!
+
+		@data = {
+			:course_id=>cd.course.id.to_s,
+			:course_detail_id=>cd.id.to_s,
+			:course_teachership_id=>cd.course_teachership.id.to_s,
+			:course_name=>cd.course_ch_name,
+			:course_teachers=>cd.teacher_name,
+			:course_real_id=>cd.course.real_id.to_s,
+			:course_credit=>cd.course.credit,
+			:open_on_latest=>(cd.course_teachership.course_details.last.semester==latest_semester) ? true : false ,
+			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
+		}
+		
+	end
+
+	def get_course_info
+		data = {}
+		cd = CourseDetail.find(params[:cd_id])
+		case params[:content]
+			when 'chart'
+				data = cd.course.to_chart(latest_semester)			
+			when 'content_head'
+				data = cd.course_teachership.try(:course_content_head).try(:to_hash)  || {}
+			when 'content_lists'
+				istop = checkTopManagerNoReDirect
+				data = cd.course_teachership.try(:course_content_lists).includes(:user).order('updated_at DESC')
+					   .map{ |list| list.to_content_list(((current_user==list.user)||istop), current_user) } || {}	
+			when 'course_comments'
+				data = cd.course_teachership.comments.order('updated_at ASC').map{|c| c.to_hash}
+		end 
+		respond_to do |format|
+   	 		format.json {render :layout => false, :text=>data.to_json}
+    	end
+	end	
+	
+	def course_action
+		data = {}
+		case params[:type]
+			when 'content-head'
+				ct = CourseDetail.find(params[:cd_id]).course_teachership
+				ch = ct.try(:course_content_head)
+				if ch
+					ch.update_attributes(:exam_record=>params[:exam_data], :homework_record=>params[:hw_data], 
+							:course_rollcall=>params[:rollcall], :last_user_id=>current_user.id)
+				else
+					ch = CourseContentHead.new
+					ch.course_teachership_id = ct.id
+					ch.exam_record, ch.homework_record = params[:exam_data], params[:hw_data]
+					ch.course_rollcall = params[:rollcall]
+					ch.last_user_id = current_user.id
+					ch.save!
+				end
+				data = ch.to_hash
+			when 'content-list-edit'
+				list = CourseContentList.find(params[:list_id])	
+				if not (list.content_type==params[:list_type].to_i and list.content==params[:list_content])		
+					list.update_attributes(:user_id=>((checkTopManagerNoReDirect) ? list.user_id : current_user.id) ,
+					:content_type=>params[:list_type], :content=>params[:list_content]) 
+					ismy = (current_user==list.user)||checkTopManagerNoReDirect
+					data = list.to_content_list(ismy, current_user)	
+					data[:update] = true
+				else
+					ismy = true
+					data = list.to_content_list(ismy, current_user)	
+					data[:update] = false
+				end		
+							
+			when 'content-list-delete'
+				list = CourseContentList.find(params[:list_id])
+				list.destroy
+			when 'content-list-new'
+				ct = CourseDetail.find(params[:cd_id]).course_teachership
+				list = CourseContentList.new
+				list.user_id, list.course_teachership_id  = current_user.id, ct.id 
+				list.content_type, list.content =params[:list_type], params[:list_content]
+				list.save!
+				data = list.to_content_list(true, current_user)
+			when 'content-list-rank'
+				list = CourseContentList.find(params[:list_id])
+				new_rank = ContentListRank.new
+				new_rank.course_content_list_id = list.id
+				new_rank.user_id, new_rank.rank = current_user.id, params[:rank_type]
+				new_rank.save!
+			when 'comment-new'	
+				cd = CourseDetail.find(params[:cd_id])
+				comment = Comment.new
+				comment.user_id, comment.course_teachership_id = current_user.id, cd.course_teachership.id
+				comment.content_type, comment.content = params[:comment_type], params[:comment_content]
+				comment.save!
+				data = comment.to_hash
+		end
+		respond_to do |format|
+   	 		format.json {render :layout => false, :text=>data.to_json}
+    	end
 	end
 	
 end
