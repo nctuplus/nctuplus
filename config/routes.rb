@@ -21,6 +21,7 @@ Nctuplus::Application.routes.draw do
 	post "main/student_import"
   get "main/test"
 	post "main/send_report"
+	get "main/policy_page"
   
 #---------- admin page -----------
 	
