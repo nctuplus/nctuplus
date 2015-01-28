@@ -1,7 +1,7 @@
 module CourseMapsHelper
 
 	def cf_trace(cf, funcA, funcB=nil)
-  	    if cf.field_type < 3
+  	if cf.field_type < 3
 			data = send(funcA, cf)	
 		else 
 			nodes = []
@@ -11,7 +11,7 @@ module CourseMapsHelper
 			data= send(funcB, cf, nodes) if funcB
 		end
 		return data
-    end
+  end
 	
 	def statistic_map(map) # course_map header 
 		group_list = map.course_field_groups
@@ -262,7 +262,11 @@ module CourseMapsHelper
   	data={
   		:id=>cf.id,
 			:cf_name=>cf.name,
-			:credit_need=>cf.credit_need,
+			:credit_need=>cf.cf_credits.first.credit_need,
+			:credit_list=>cf.cf_credits.map{|credit|{
+				:name=>credit.memo,
+				:credit_need=>credit.credit_need
+			}},
 			:cf_type=>cf.field_type,
 			:courses=>_get_courses_struct(cf.courses),#.map{|c|{:name=>c.ch_name, :id=>c.id, :credit=>c.credit}},
 			:course_groups=>cf.course_groups.where(:gtype=>0).includes(:courses).map{|cg|{

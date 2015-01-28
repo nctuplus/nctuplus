@@ -58,6 +58,9 @@ gem "koala", "~> 1.10.0rc"
 gem "eventmachine"
 gem 'em-resolv-replace', :require => false
 
+#for events
+gem "tinymce-rails"
+gem "tinymce-rails-langs"
 
 #gem 'google-analytics-rails'
 # Use ActiveModel has_secure_password

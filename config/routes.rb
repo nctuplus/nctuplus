@@ -3,6 +3,7 @@ Nctuplus::Application.routes.draw do
 	root :to => "main#index"
 	
 	
+	resources :events
 	
 #--------- login control and session --------------
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
@@ -72,6 +73,9 @@ Nctuplus::Application.routes.draw do
 
 #### course map block 	
 	#get "course_maps/add_usercoursemapship"		
+	get "course_maps/get_credit_list"
+	post "course_maps/credit_action"
+	
 	get "course_maps/get_course_tree"
 	get "course_maps/get_group_tree"
 	post "course_maps/course_action"

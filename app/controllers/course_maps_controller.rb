@@ -96,8 +96,8 @@ class CourseMapsController < ApplicationController
 		end# if
 	
 		respond_to do |format|
-   	 		format.json {render :layout => false, :text=>list.to_json}
-    	end
+   		format.json {render :layout => false, :text=>list.to_json}
+    end
 	end
 	
 	def get_group_tree
@@ -131,7 +131,15 @@ class CourseMapsController < ApplicationController
 		cf = CourseField.new
 		cf.name, cf.field_type, cf.user_id = name, field_type, current_user.id
 		cf.save!
+	# if not 必修, add credit_need table row	
+		if field_type>=2
+			credit = CfCredit.new
+			credit.course_field_id=cf.id
+			credit.save!
+		end
+		
 	# if 領域, add field_need table row
+		
 		if field_type==3
 			fd = CfFieldNeed.new
 			fd.course_field_id, fd.field_need = cf.id, 0
@@ -396,8 +404,59 @@ class CourseMapsController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 
+	def get_credit_list
+		
+		res=_get_credit_list(params[:id])
+		respond_to do |format|
+			format.json {render :json=>res.to_json, :status => :ok}
+    end
+	end
+	
+	def credit_action
+		case params[:type]
+			when "update","delete"
+				@credit=CfCredit.find(params[:id])			
+			when "add"
+				cf=CourseField.find(params[:cf_id])
+				
+				@credit=CfCredit.new(:course_field_id=>cf.id,:index=>cf.cf_credits.count)
+		end
+		case params[:type]
+			when "update","add"
+				@credit.memo=params[:memo]
+				@credit.credit_need=params[:credit_need]
+				@credit.save!
+			when "delete"
+				if CfCredit.where(:course_field_id=>params[:cf_id]).count > 1
+					@credit.destroy!
+				end
+		end	
+		
+		res=_get_credit_list(params[:cf_id])
+		
+		
+		respond_to do |format|
+			format.json {render :json=>res.to_json, :status => :ok}
+    end
+		
+	end
+	
 private
-
+	
+	def _get_credit_list(cf_id)
+		@cf=CourseField.find(cf_id)
+		if @cf.field_type>=2
+			res=@cf.cf_credits.map{|credit|{
+					:id=>credit.id,
+					:name=>credit.memo,
+					:credit_need=>credit.credit_need.to_s
+			}}
+		else
+			res=[]
+		end
+		return res
+	end
+	
   def trace_cm(target, cf, funcA)
 	if cf.field_type < 3
 			send(funcA, target.id, cf)	
@@ -436,7 +495,7 @@ private
 			:label=>chead, 
 			:name=>cf.name,
 			:icon => (cf.field_type==3) ? "fa fa-star" : "fa fa-check-square-o",
-			:credit_need => (cf.field_type==3) ? "N/A" : cf.credit_need.to_s,
+			#:credit_need => (cf.field_type==3) ? "N/A" : cf.cf_credits.first.credit_need,			
 			:tag=>cf.field_type==2 ? [cf.credit_need.to_s] : ""
 		}  
 

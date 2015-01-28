@@ -1,0 +1,121 @@
+<%= javascript_include_tag "event_create", "data-turbolinks-track" => true %>
+<%= tinymce_assets %>
+<style>
+.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+.ui-timepicker-div dl { text-align: left; }
+.ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
+.ui-timepicker-div dl dd { margin: 0 10px 10px 45%; }
+.ui-timepicker-div td { font-size: 90%; }
+.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+
+.ui-timepicker-rtl{ direction: rtl; }
+.ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
+.ui-timepicker-rtl dl dt{ float: right; clear: right; }
+.ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
+</style>
+
+
+
+<div class="container col-md-offset-1">
+<%=form_for @event, :html => { :multipart => true } do |f| %>
+	<div id="imageContainer" style="min-width:880px;min-height:440px;width:880px;background-color:white;"></div>
+	<%= file_field_tag "img" %>
+	<!--<input type="file" id="file-input">-->
+	<div class="row">		
+		<div class="col-md-10">
+			<%=f.text_field :title,:class=>"form-control", :placeholder=>"活動/事件名稱", :required=>"true"%>
+		</div>
+	</div>
+	<div class="row">		
+		<div class="col-md-2">
+			主辦單位<br>
+			<%=f.text_field :organization, :class=>"form-control", :placeholder=>"主辦單位(選填)"%>
+		</div>		
+		<div class="col-md-2">
+			活動網址<br>
+			<%=f.text_field :url, :class=>"form-control", :placeholder=>"網址(選填)"%>
+		</div>		
+	</div>
+	<div class="row">		
+		<div class="col-md-2">
+			開始時間<br>
+			<%=f.text_field :begin_time, :class=>"form-control datepicker", :placeholder=>"開始時間", :data_behaviour=>'datepicker'%>
+		</div>		
+		<div class="col-md-2">
+			結束時間<br>
+			<%=f.text_field :end_time, :class=>"form-control datepicker", :placeholder=>"結束時間", :data_behaviour=>'datepicker'%>
+		</div>		
+	</div>
+	<div class="row">
+		<div class="col-md-10">
+			<%=f.text_area :content,{:maxlength=>5, :size=>10, :class=>"tinymce", :placeholder=>"內容"}%>
+		</div>
+	</div>
+	<%=f.submit "送出",class:"btn btn-success"%>
+<% end %>
+</div>
+
+
+<script>
+
+$(document).ready(function(){
+	$('#img').change(function (e) {
+		loadImage(
+			e.target.files[0],
+			function (img) {
+				$("#imageContainer").html(img);
+			},
+			{maxWidth: 880,maxHeight:440} // Options
+		);
+	});
+/*
+	$('.datepicker').datetimepicker({
+		dateFormat: "yy-mm-dd",
+		timeFormat: 'HH:mm',
+		//startDate: "2013/11/17",
+		language: "zh-TW"
+	});
+*/
+	var startDateTextBox = $('#event_begin_time');
+	var endDateTextBox = $('#event_end_time');
+	startDateTextBox.datetimepicker({ 
+		dateFormat: "yy-mm-dd",
+		timeFormat: 'HH:mm',
+		
+		onClose: function(dateText, inst) {
+			if (endDateTextBox.val() != '') {
+				var testStartDate = startDateTextBox.datetimepicker('getDate');
+				var testEndDate = endDateTextBox.datetimepicker('getDate');
+				if (testStartDate > testEndDate)
+					endDateTextBox.datetimepicker('setDate', testStartDate);
+			}
+			else {
+				endDateTextBox.val(dateText);
+			}
+		},
+		onSelect: function (selectedDateTime){
+			endDateTextBox.datetimepicker('option', 'minDate', startDateTextBox.datetimepicker('getDate') );
+		}
+	});
+	endDateTextBox.datetimepicker({ 
+		dateFormat: "yy-mm-dd",
+		timeFormat: 'HH:mm',
+		onClose: function(dateText, inst) {
+			if (startDateTextBox.val() != '') {
+				var testStartDate = startDateTextBox.datetimepicker('getDate');
+				var testEndDate = endDateTextBox.datetimepicker('getDate');
+				if (testStartDate > testEndDate)
+					startDateTextBox.datetimepicker('setDate', testEndDate);
+			}
+			else {
+				startDateTextBox.val(dateText);
+			}
+		},
+		onSelect: function (selectedDateTime){
+			startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
+		}
+	});
+});
+</script>
+
+<%= tinymce :language => "zh_TW" %>

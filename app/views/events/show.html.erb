@@ -1,0 +1,35 @@
+
+<div class="" style="width:880px;height:440px;display:inline-block;overflow:hidden;">
+
+<% if @event.event_image %>
+<%= image_tag @event.event_image.img.url,style:"width:100%;height:100%;"  %>
+
+<% end %>
+
+</div>
+<div class="row">
+	<div class="col-md-2">
+	標題
+	</div>
+	<div class="col-md-2">
+		<%=@event.title%>
+	</div>
+</div>
+<% if !@event.url.blank? %>
+<div class="row">
+	<div class="col-md-2">
+	活動網址
+	</div>
+	<div class="col-md-2">
+		<%=link_to @event.url,@event.url, target:"blank"%>
+	</div>
+</div>
+<% end %>
+<div class="row">
+	<div class="col-md-2">
+	內容
+	</div>
+	<div class="col-md-10">
+		<%=@event.content.html_safe%>
+	</div>
+</div>

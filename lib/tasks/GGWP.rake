@@ -33,16 +33,13 @@ puts result.data.rows.inspect
 	end
 
 	
-	desc "update those cf import fail"
-	task :update_cf => :environment do 
-		cg_ids = CourseGroupList.where(:updated_at=> DateTime.now.ago(24.hour)..DateTime.now)
-		.map{|cgl| cgl.course_group_id}
-		cm_ids = CourseGroup.where(:id=>cg_ids, :gtype=>1).map{|cg| cg.course_map_id }
-		cm_ids.each do |cm_id|
-			UserCoursemapship.where(:course_map_id=>cm_id)
-			.map{|ucs| User.find(ucs.user_id)}.each do |u|
-				p u.name
-			end
+	desc "create cf_credits"
+	task :create_cf_credit => :environment do 
+		CourseField.all.each do |cf|
+			credit=CfCredit.new
+			credit.course_field_id=cf.id
+			credit.credit_need=cf.credit_need
+			credit.save
 		end
 	end
 	

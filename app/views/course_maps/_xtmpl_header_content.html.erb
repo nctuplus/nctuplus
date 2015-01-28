@@ -1,33 +1,35 @@
 <script type="text/x-tmpl" id="header-content-format">
-<div class="row">
-	<h4 class="col-md-2 header-type" style="display: none;"></h4> 
-	<h4 class="col-md-6 field-header-name">{%= o.head_node.text %}</h4> 
-</div>
-<div class="row">
-	<div class="col-md-1"></div>
-{% if(o.head_node.type > 1 ){ %}		
-	<div class="col-md-2">至少學分數</div>
-	<div class="col-md-2 credit-need">{%=o.head_node.credit_need %}</div>
-{% } %}	
-{% if(o.head_node.type == 3 ){ %}	
-	<div class="col-md-3 cfg">至少子領域數</div>
-	<div class="col-md-2 cfg field-need">{%=o.head_node.field_need %}</div>	
-{% } %}	
-	<div class="col-md-2">
-		<button type="button" class="btn btn-circle btn-warning update">
-			<%=fa_icon "pencil"%>
-		</button>
-		{% if(o.head_node.type < 3){ %}
-		<button type="button" class="btn btn-circle btn-sucess change-type" ftype="{%=o.head_node.type%}">
-			<%=fa_icon "arrows-h"%>
-		</button>
-		{% } %}
-		<button type="button" class="btn btn-circle btn-danger delete" >
-			<%=fa_icon "trash-o"%>
-		</button>
-		
+	<div class="row">
+		<h4 class="col-md-2 header-type" style="display: none;"></h4> 
+		<h4 class="col-md-4 field-header-name">{%= o.head_node.text %}</h4>
+		<div class="hidden" id="cf_id">{%=o.head_node.cf_id%}</div>
+		<div class="col-md-4">
+			{% if(o.head_node.type >= 2){ %}	
+				<button type="button" class="btn btn-circle btn-success add_credit_list">
+					<%=fa_icon "plus"%>
+				</button>
+			{% } %}
+				<button type="button" class="btn btn-circle btn-info update">
+					<%=fa_icon "pencil"%>
+				</button>
+				<button type="button" class="btn btn-circle btn-danger delete" >
+					<%=fa_icon "trash-o"%>
+				</button>
+			{% if(o.head_node.type < 3){ %}
+				<button type="button" class="btn btn-circle btn-sucess change-type" ftype="{%=o.head_node.type%}">
+					<%=fa_icon "arrows-h"%>
+				</button>			
+			{% } %}
+		</div>
 	</div>
-</div>		
-<hr>
+	<div class="row">
+		<div class="col-md-1"></div>
+		{% if(o.head_node.type == 3 ){ %}	
+			<div class="col-md-2 cfg">至少子領域數</div>
+			<div class="col-md-1 cfg field-need">{%=o.head_node.field_need %}</div>	
+		{% } %}		
+	</div>
+	<div id="credit_list"></div>
+	<hr>
 
 </script>
