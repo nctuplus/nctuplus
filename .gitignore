@@ -18,7 +18,7 @@
 /config/initializers/smtp.rb
 /public/
 /file_upload/
-
+/event_images/
 # Ignore all logfiles and tempfiles.
 /log/
 /tmp
