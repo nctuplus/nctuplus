@@ -38,6 +38,7 @@ namespace :course do
 		diff_cos_ids=old_cos_ids-data_cos_ids
 		
 		CourseDetail.where(:semester_id=>Semester.last.id, :temp_cos_id=>diff_cos_ids).destroy_all
+		CourseDetail.where(:department_id=>0).destroy_all
 		puts "#{datas.length} courses has imported!"
 		puts "Deleted : #{diff_cos_ids.length}"
 		puts "Created : #{stat["Create"]}"

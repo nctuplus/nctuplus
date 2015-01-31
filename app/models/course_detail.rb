@@ -10,7 +10,7 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :semester
 	delegate :name, :to=>:semester, :prefix=>true
 	belongs_to :department
-	delegate :ch_name, :to=>:department, :prefix=>true
+	delegate :ch_name, :to=>:department, :prefix=>true, allow_nil: true
 
 	has_many :course_simulations, :dependent=> :destroy
 	

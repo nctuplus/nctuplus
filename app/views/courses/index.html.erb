@@ -51,6 +51,7 @@
 	<tbody>
 	<% if !@cds.empty? %>
 		<% @cds.each do |cd| %>
+			
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
 					<td class="text-center">
 						<%=cd.semester_name%>
