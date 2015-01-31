@@ -17,9 +17,14 @@
 	<div class="panel panel-default bs-callout-success" id="discuss_<%=discuss.id%>" style="border-left-width:5px;">
 		<div class="panel-heading row no-margin-left" >
 			<div class="col-md-1">
-			<a href="https://www.facebook.com/<%=discuss.user.uid%>" target="_blank" class="masterTooltip" title="<%=discuss.user.name%>">
-			<%= image_tag "http://graph.facebook.com/"<<discuss.user.uid<<"/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
-			</a>
+			<% if discuss.is_anonymous %>
+				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:"匿名" %>
+			<% else %>
+				<a href="https://www.facebook.com/<%=discuss.user.uid%>" target="_blank" class="masterTooltip" title="<%=discuss.user.name%>">
+					<%= image_tag "http://graph.facebook.com/"<<discuss.user.uid<<"/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
+				</a>
+			<% end %>
+			
 			</div>
 			<div class="col-md-6" id="main_title_<%=discuss.id%>">
 			<h4 id="title_<%=discuss.id%>" ><%=discuss.title%></h4>
@@ -63,10 +68,10 @@
 		<div class="panel-footer row" style="background-color:white;margin-left:0px;">
 			<% discuss.sub_discusses.each do |sub_d| %>
 				<div class="sub-discussion col-md-offset-1 col-md-11" >
-					<div class="col-md-1">
+					<div class="col-md-1">						
 						<a href="https://www.facebook.com/<%=sub_d.user.uid%>" target="_blank" class="masterTooltip" title="<%=sub_d.user.name%>">
 							<%= image_tag "http://graph.facebook.com/"<<sub_d.user.uid<<"/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
-						</a>
+						</a>											
 						<br>
 					</div>
 						<div class="col-md-8 " id="sub_content_<%=sub_d.id%>">

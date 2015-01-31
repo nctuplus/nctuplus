@@ -56,6 +56,7 @@ class DiscussesController < ApplicationController
 		@discuss.dislikes=0
 		@discuss.title=@title
 		@discuss.content=content
+		@discuss.is_anonymous=params[:anonymous]=="yes"
 		@discuss.save!
 		
 		render "new_discuss_ok"
@@ -83,6 +84,7 @@ class DiscussesController < ApplicationController
 			#@discuss=Discuss.find(params[:discuss_id])
 			@discuss.content=params[:content]
 			@discuss.title=params[:title]
+			
 			@discuss.save!
 		elsif params[:type]=="sub"
 			#@discuss=SubDiscuss.find(params[:discuss_id])

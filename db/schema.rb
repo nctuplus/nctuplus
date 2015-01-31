@@ -11,7 +11,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141230191423) do
+ActiveRecord::Schema.define(version: 20150131065849) do
+
+  create_table "books", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "cf_credits", force: true do |t|
+    t.integer  "course_field_id"
+    t.integer  "index",           default: 0
+    t.integer  "credit_need",     default: 0
+    t.string   "memo",            default: "default"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "cf_credits", ["course_field_id"], name: "index_cf_credits_on_course_field_id", using: :btree
 
   create_table "cf_field_need", force: true do |t|
     t.integer  "course_field_id"
@@ -228,12 +245,45 @@ ActiveRecord::Schema.define(version: 20141230191423) do
     t.integer  "dislikes"
     t.string   "title"
     t.text     "content"
+    t.boolean  "is_anonymous",          default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
+
+  create_table "event_images", force: true do |t|
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "img_file_name"
+    t.string   "img_content_type"
+    t.integer  "img_file_size"
+    t.datetime "img_updated_at"
+  end
+
+  add_index "event_images", ["event_id"], name: "index_event_images_on_event_id", using: :btree
+
+  create_table "events", force: true do |t|
+    t.string   "event_type"
+    t.integer  "event_category_id"
+    t.string   "title"
+    t.string   "organization"
+    t.text     "url"
+    t.text     "content",           limit: 2147483647
+    t.datetime "begin_time"
+    t.datetime "end_time"
+    t.integer  "user_id"
+    t.integer  "location_id"
+    t.integer  "likes"
+    t.integer  "view_times"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["location_id"], name: "index_events_on_location_id", using: :btree
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "file_infos", force: true do |t|
     t.integer  "owner_id"
@@ -273,6 +323,7 @@ ActiveRecord::Schema.define(version: 20141230191423) do
     t.integer  "likes"
     t.integer  "dislikes"
     t.text     "content"
+    t.boolean  "is_anonymous", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

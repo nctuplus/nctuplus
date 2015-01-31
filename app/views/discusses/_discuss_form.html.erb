@@ -36,6 +36,9 @@
 			同步分享至FB
 			<input type="checkbox" name="share" id="sync-share" onchange="change_check($(this))" class="" value="no" >
 			&nbsp;&nbsp;
+			匿名
+			<input type="checkbox" name="anonymous" id="anonymous" onchange="change_check($(this))" class="" value="no" >
+			&nbsp;&nbsp;
 			<%= submit_tag "送出", :class=>"btn btn-primary " %>
 			</p>
 		<% else %>
