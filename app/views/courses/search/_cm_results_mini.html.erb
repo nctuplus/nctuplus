@@ -28,18 +28,20 @@ function add_all_class(){
 					<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']],params[:degree]), prompt: "分類", class: "form-control", onchange: "change_degree($(this))" %>
 
 				</div>
-				<div class="col-sm-7">
-					<div class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-					<%= f.select :department_id_eq, options_from_collection_for_select(Department.where.not(:dept_type=>['no_courses','for_user']), "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"$('#search').submit();"} %>
+				<div class="col-sm-7" >
+					<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+					<%= f.select :department_id_eq, options_from_collection_for_select(Department.where.not(:dept_type=>['no_courses','for_user']), "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select($(this))"} %>
 				</div>
 			</div>
 
 			<div class="row schedule-search-bar"style="margin-top:5px;">
+				
 				<div class="col-sm-8 no-padding-left ">
+					<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
 					<%= f.search_field :ch_name_cont, class: "form-control",placeholder:"課名" %>
 				</div>
 				<div class="col-sm-3 no-padding-left" style="">
-					<button class="btn btn-primary" onclick="$('#search').submit();"><%=fa_icon "search"%></button>
+					<button class="btn btn-primary" onclick="search_by_text();"><%=fa_icon "search"%></button>
 				</div>
 			</div>
 
@@ -65,10 +67,10 @@ function add_all_class(){
 			<tr id="<%=course.id%>" class="row course">
 				<td class="">
 				<p id="" class="text-left">
-					<%= link_to course.ch_name, course_path(course.course_teacherships.last), :class=>"course_name", :target=>"_blank" %> | 
+					<%= link_to course.ch_name, course_path(course.course_details.last), :class=>"course_name", :target=>"_blank" %> | 
 			<!--		<%= cd.cos_type %> | -->
 					<%=fa_icon "graduation-cap" %> <strong><%=course.credit%></strong>｜
-					<%=course.department.ch_name%>
+					<%=course.department.nil? ? "N/A" : course.department.ch_name %>
 					<button class="btn btn-success btn-circle pull-right" onclick="add_class([<%=course.id%>])">
 						<span class="glyphicon glyphicon-plus"></span>
 					</button>
