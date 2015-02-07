@@ -1,8 +1,8 @@
 class DiscussesController < ApplicationController
 
-	layout false, :only =>[:list_by_course]
+	#layout false, :only =>[:list_by_course]
 	before_filter :checkLogin, :only=>[:new_discuss, :new_sub_discuss, :update_discuss, :like]
-	before_filter :checkDiscussOwner, :only=>[:update_discuss, :delete_discuss]
+	before_filter :checkOwner, :only=>[:update_discuss, :delete_discuss]
 	def like
 		@like=DiscussLike.new
 		@like.user_id=current_user.id
@@ -41,7 +41,7 @@ class DiscussesController < ApplicationController
 		#@ct_id=
 		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
 		@discusses=@ct.discusses.includes(:sub_discusses, :user, :discuss_likes).order("updated_at DESC")
-		render "show_discussion"
+		render "show_discussion", :layout=>false
 	end
 	
 	def new_discuss
@@ -80,12 +80,12 @@ class DiscussesController < ApplicationController
 	def update_discuss
 		
 		if params[:type]=="main"
-			#@discuss=Discuss.find(params[:discuss_id])
+			@discuss=Discuss.find(params[:discuss_id])
 			@discuss.content=params[:content]
 			@discuss.title=params[:title]
 			@discuss.save!
 		elsif params[:type]=="sub"
-			#@discuss=SubDiscuss.find(params[:discuss_id])
+			@discuss=SubDiscuss.find(params[:discuss_id])
 			@discuss.content=params[:content]
 			@discuss.save!
 		#else
@@ -97,7 +97,11 @@ class DiscussesController < ApplicationController
 	end
 	
 	def delete_discuss
-		
+		if params[:type]=="main"
+			@discuss=Discuss.find(params[:discuss_id])
+		elsif params[:type]=="sub"
+			@discuss=SubDiscuss.find(params[:discuss_id])
+		end
 		@discuss.destroy!
 		redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
 	end

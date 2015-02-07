@@ -117,9 +117,10 @@
 	$.ajax({
 		type: "GET",
 		url: "/file_infos/edit",
-		data: {_description: description,//main or sub
-			   _semester_id: semester_id,
-			   _id: id, //comment id
+		data: {
+			description: description,//main or sub
+			semester_id: semester_id,
+			id: id, //comment id
 		},
 		success: function(data) {
 			var file=JSON.parse(data)[0];

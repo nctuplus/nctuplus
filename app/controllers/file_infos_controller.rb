@@ -4,7 +4,7 @@ class FileInfosController < ApplicationController
   layout false, :only =>[:list_by_ct, :index]
   
   before_filter :checkE3Login, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
-  
+  before_filter :checkOwner, :only=>[:edit, :destroy]
 	def index
 		if params[:ct_id]
 			@files = FileInfo.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
@@ -82,29 +82,14 @@ class FileInfosController < ApplicationController
     end
   end
 
-  # PUT /files/1
-  # PUT /files/1.json
-  def update
-    @file = FileInfo.find(params[:id])
-
-    respond_to do |format|
-      if @file.update_attributes(params[:file_info])
-        format.html { redirect_to @file, notice: 'FileInfo was successfully updated.' }
-        format.json { head :no_content }
-      else
-        format.html { render action: "edit" }
-        format.json { render json: @file.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-  
+	
   def edit
-    @file=FileInfo.find(params[:_id])
-		if @file.owner_id==current_user.id
-			@file.description=params[:_description]
-			@file.semester_id=params[:_semester_id]
-			@file.save!
-		end
+    @file=FileInfo.find(params[:id])
+		#if @file.owner_id==current_user.id
+		@file.description=params[:description]
+		@file.semester_id=params[:semester_id]
+		@file.save!
+		#end
 		respond_to do |format|
 			 format.html {
 						render :json => [@file.to_jq_upload(current_user)].to_json,
@@ -119,10 +104,10 @@ class FileInfosController < ApplicationController
   # DELETE /files/1.json
   def destroy
     @file = FileInfo.find(params[:id])
-		if @file.owner_id==current_user.id
-			@file.destroy
-		end
-
+		#if @file.owner_id==current_user.id
+		#	
+		#end
+		@file.destroy
     respond_to do |format|
       format.html { redirect_to file_infos_url }
       format.json { head :no_content }
