@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   end
 	
 	def now_semester
-		Semester.find(13)
+		Semester.last#find(13)
 	end
   
   def record_not_found

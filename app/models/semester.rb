@@ -2,7 +2,7 @@ class Semester < ActiveRecord::Base
   has_many :semester_courseships, :dependent => :destroy
   has_many :courses, :through => :semester_courseships
 	has_many :course_details
-	scope :current,->{find 13}
+	scope :current,->{find 14}
 	def self.create_new	#when import new course needed
 		name=['上','下','暑']
 		new_sem=Semester.new
