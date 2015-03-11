@@ -263,8 +263,9 @@ module CourseMapsHelper
   		:id=>cf.id,
 			:cf_name=>cf.name,
 			:credit_need=>cf.cf_credits.first.credit_need,
-			:credit_list=>cf.cf_credits.map{|credit|{
+			:credit_list=>cf.cf_credits.order(:index).map{|credit|{
 				:name=>credit.memo,
+				#:index=>credit.index,
 				:credit_need=>credit.credit_need
 			}},
 			:cf_type=>cf.field_type,

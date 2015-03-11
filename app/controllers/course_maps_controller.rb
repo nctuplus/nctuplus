@@ -294,8 +294,10 @@ class CourseMapsController < ApplicationController
 					else	
 						cfl.course_id = c_id
 					end
-					cf.credit_need += Course.find(c_id).credit
 					cfl.save!
+					if cf.field_type==1 # if 必修 then add credit
+						cf.cf_credits.first.credit_need += Course.find(c_id).credit
+					end
 					success_cnt += 1
 				end
 				cf.save!					

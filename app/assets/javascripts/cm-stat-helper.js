@@ -1,4 +1,4 @@
-function get_check_res(pass_score,last_sem_id,user_courses){
+function commonCheck(pass_score,last_sem_id,user_courses){
 	var result={}; 
 	result['art_after102']=0; 
 	result['phe_1']=0; 
@@ -90,9 +90,11 @@ function get_sem_name(sem_id){
 	return begin_year.toString()+half;
 }
 function get_cf_list(cfs,course){
+	
 	var res=[];
 	for(var i = 0,cf;cf=cfs[i];i++){
 		_get_course_cf(res,null,cf,course);
+		//console.log(cf);
 	}
 
 	var selected=0;
@@ -105,7 +107,7 @@ function get_cf_list(cfs,course){
 	var tmp=res[0];
 	res[0]=res[selected];
 	res[selected]=tmp;
-
+	//console.log(res);
 	return res;
 }
 function join_cf_courses(cf,courses){
@@ -135,7 +137,14 @@ function _get_course_cf(res,parent_cf,cf,course){
 	if(cf.cf_type<3){
 		if(check_course_match(course,cf)){
 			var name=parent_cf ? parent_cf.cf_name+" - "+cf.cf_name : cf.cf_name;
-			res.push({id:cf.id,name:name});
+			res.push({
+				id:cf.id,
+				name:name,
+				match_credit:cf.match_credit,
+				credit_list_match:cf.credit_list_match
+				//credit_list:cf.credit_list
+				//credit_need:credit_match_need
+			});
 		}
 	}
 	else{
@@ -148,7 +157,7 @@ function _get_course_cf(res,parent_cf,cf,course){
 }
 
 function _check_user_course(user_courses, course){
-	//console.log(user_courses[0].name);
+
 	for(var j=0, user_course;user_course=user_courses[j];j++){
 		if(course.id==user_course.course_id)   // TODO : score judge
 			return true;
@@ -159,17 +168,18 @@ function _check_user_course(user_courses, course){
 // for bottom node, check match
 function _cf_course_match(user_courses, cf){
 	var match_credit = 0, c_match=true ;
+	
+	
 	var joined_courses=join_cf_courses(cf,user_courses);
 	for(var i = 0,cf_course;cf_course=cf.courses[i];i++){ // for each cf course
-		//console.log(cf_course.name);
+		
 		if(_check_user_course(joined_courses, cf_course)){
 			match_credit += cf_course.credit ;
-			//console.log(cf_course.name);
 		}else{
 			c_match = false ;
 		}
 	}
-	//console.log('all_match1 '+c_match);
+
 	var cg_match = true ;
 	if(cf.course_groups){
 		for(var i = 0,course_group;course_group=cf.course_groups[i];i++){ // for each cg
@@ -178,37 +188,40 @@ function _cf_course_match(user_courses, cf){
 				if(_check_user_course(joined_courses, cg_course)){
 					match_credit += cg_course.credit ;
 					local_match = true ;
-					//console.log(cg_course.name);
 					break ;
 				}	
 			}
 			if(!local_match)
 				cg_match = false ;
 		}
-	}	
-	//console.log('all_match2 '+cg_match);
+	}
+	
 	return {match_credit: match_credit, all_match: (c_match && cg_match)} ;
 }
 
-function check_cf(user_courses,cf){
-	//console.log(user_courses);
+function check_cf(user_courses,cf){	//最上層的check
+
 	
 	switch(cf.cf_type){
-		case 1:
-			//console.log('[必修] cf_name : '+cf.cf_name) ;
+		case 1:	//必修
 			var res=_cf_course_match(user_courses, cf) ;
+			cf.match_credit=res.match_credit;
 			return {match_credit: res.match_credit, result: res.all_match};
 			
 			break;
-		case 2:
-		//	console.log('[x選y] cf_name : '+cf.cf_name) ;
+		case 2:	//X選Y
+		
 			var res = _cf_course_match(user_courses, cf) ;
 			var match = (res.match_credit >= cf.credit_need) ? true : false;
-			//console.log("xy result "+res.match_credit);
-			return {match_credit: res.match_credit, result: match}; 		
+			var match_arr=[];
+			for(var j = 0, credit; credit=cf.credit_list[j]; j++){
+				match_arr.push(res.match_credit >= credit.credit_need);
+			}
+			cf.match_credit=res.match_credit;
+			//console.log(match_arr);
+			return {match_credit: res.match_credit, result: match,new_result:match_arr}; 		
 			break;
-		case 3:
-		//	console.log('[領域群組] cf_name : '+cf.cf_name) ;
+		case 3:	//領域群組
 			var match_credit = 0, match_field = 0 ;
 			for(var i = 0, sub_cf;sub_cf=cf.child_cf[i];i++){
 				var res = check_cf(user_courses, sub_cf) ;
@@ -219,24 +232,72 @@ function check_cf(user_courses,cf){
 			var match = (match_field >= cf.field_need && match_credit >= cf.credit_need) ? true : false ;	
 			return {match_credit: match_credit, result: match}; 
 			break;
-		case 4:
+		case 4:	//領域
 		//	console.log('[領域] cf_name : '+cf.cf_name) ;
 			var match_credit = 0, match = true;
 			var credit_all = 0 ;
 			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
-				credit_all += sub_cf.credit_need ;
+				credit_all += sub_cf.credit_need ;	//sum of credit for this field
 			}
-			
+
+			var final_res=[];
 			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
-				if(sub_cf.credit_need==0)
+				if(sub_cf.credit_need==0)	//if 必修,看無QQ
 					sub_cf.credit_need = cf.credit_need - credit_all ;
 				var res = check_cf(user_courses, sub_cf) ;
 				match_credit += res.match_credit ;
-				if(!res.result) 
-					match = false ;
+				if(sub_cf.cf_type==2){
+					if(final_res.length==0)
+						final_res=res.new_result;
+					else{
+						for(var j = 0 ; j<res.new_result.length;j++){
+							final_res[j]=final_res[j] && res.new_result[j];
+						}					
+					}
+				}
+				else{ //if 必修 
+					match = res.result ;
+				}
+				
+				
 			}
 			
-			return {match_credit: match_credit, result: match}; 
+			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
+				if(sub_cf.cf_type==2){				
+					for(var j = 0 ; j<final_res.length;j++){
+						if(final_res[j]){
+							sub_cf["credit_list_match"]={
+								name: sub_cf.credit_list[j].name,
+								credit_need: sub_cf.credit_list[j].credit_need,								
+							}
+							//console.log(sub_cf);
+							
+							break;
+						}
+					}
+				}
+			}
+			
+			//console.log(cf);
+			
+			var i = 0;
+			if(match){	//if 必修 match才判斷選修
+				var any_match=false;			
+				for(; i<res.new_result.length;i++){				
+					if(final_res[i]){
+						any_match=true;
+						//console.log(cf.child_cf[0].credit_list[i].name);
+						break;
+					}
+				}
+				match=match&&any_match;//match 必修 and one of 選修's credit list
+			}
+			
+			return {
+				match_credit: match_credit,
+				result: match,
+				//match_index:i
+			}; 
 			break;
 	}
 }
@@ -253,36 +314,39 @@ function parse_cf_tree(cfs,user_courses,maxColSpan){
 	return res;
 }
 function get_node_data(cf,user_courses,maxColSpan){
-	var res="";
+	var str="";
+	var result=[];
 	if(cf.cf_type==3){
 		if(cf.child_cf){
-			res+='<tr class="row">';
-			res+='<td rowspan="2">'+cf.cf_name+"</td>";
+			str+='<tr class="row">';
+			str+='<td rowspan="2">'+cf.cf_name+"</td>";
 			for(var i = 0,_cf;_cf=cf.child_cf[i];i++){
-				res+="<td class='text-center'>"+_cf.cf_name+"</td>";
+				str+="<td class='text-center'>"+_cf.cf_name+"</td>";
 			}
-			res+="</tr><tr class='row'>";
+			str+="</tr><tr class='row'>";
 			for(var i = 0,_cf;_cf=cf.child_cf[i];i++){
-				res+="<td class='text-center'>";
+				str+="<td class='text-center'>";
 				var check=check_cf(user_courses,_cf);
+				
 				if(check["result"])
-					res+=green_check();
+					str+=green_check();
 				else
-					res+=check["match_credit"]+"/"+_cf.credit_need;
-				res+="</td>";
+					str+=check["match_credit"]+"/"+_cf.credit_need;
+				str+="</td>";
 			}
-			res+="</tr>";
+			str+="</tr>";
 		}
 	}
 	else{
-		res+="<tr class='row'><td class='col-md-2'><a href='javascript:void(0);' onclick='show_list("+JSON.stringify(cf,null,4)+")'>"+cf.cf_name+"</a></td>";
-		res+="<td class='col-md-10 text-center' colspan='"+maxColSpan+"'>";
+		str+="<tr class='row'><td class='col-md-2'><a href='javascript:void(0);' onclick='show_list("+JSON.stringify(cf,null,4)+")'>"+cf.cf_name+"</a></td>";
+		str+="<td class='col-md-10 text-center' colspan='"+maxColSpan+"'>";
 		
 		var check=check_cf(user_courses,cf);
+
 		if(check["result"])
-			res+=green_check();
-		else res+=check["match_credit"]+"/"+cf.credit_need;
-		res+="</td></tr>";
+			str+=green_check();
+		else str+=check["match_credit"]+"/"+cf.credit_need;
+		str+="</td></tr>";
 	}
-	return res;
+	return str;
 }

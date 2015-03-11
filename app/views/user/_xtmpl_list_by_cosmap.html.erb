@@ -5,7 +5,7 @@
 <table class="table "style="border:0px">
 	{% if(user_fails.length > 0){ %}
 		<tr class="row warning" >
-			<td class="col-md-12">匯入失敗的(系辦會自行檢查)</td>
+			<td class="col-md-12">匯入失敗的</td>
 		</tr>
 		{% for(var i=0, f; f=user_fails[i]; ++i){ %}
 			<tr class="row" >
@@ -38,12 +38,17 @@
 			</tr>
 		{% }else{ %}
 		{% var cfs=get_cf_list(cm.cfs,course); %}
-		{% var tmp=cfs[0].name; %}
-		{% if(cfname.indexOf(tmp)==-1) { %}
-			{% cfname.push(cfs[0].name); %}
+		{% console.log(cfs[0]); %}
+		{% var tmp=cfs[0]; %}
+		{% if(cfname.indexOf(tmp.name)==-1) { %}
+			{% cfname.push(tmp.name); %}
 			<tr class="row success" >
 				<td class="col-md-12">
-					{%=tmp%}
+					{%=tmp.name%}
+					
+					{% if (tmp.credit_list_match){ %}
+					<strong>{%=tmp.match_credit%}/{%=tmp.credit_list_match.credit_need%}</strong>
+					{% } %}
 				</td>
 			</tr>
 		{% } %}
