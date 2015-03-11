@@ -11,7 +11,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150124094520) do
+
+ActiveRecord::Schema.define(version: 20150131065849) do
+
+  create_table "books", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -239,6 +247,7 @@ ActiveRecord::Schema.define(version: 20150124094520) do
     t.integer  "dislikes"
     t.string   "title"
     t.text     "content"
+    t.boolean  "is_anonymous",          default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -316,6 +325,7 @@ ActiveRecord::Schema.define(version: 20150124094520) do
     t.integer  "likes"
     t.integer  "dislikes"
     t.text     "content"
+    t.boolean  "is_anonymous", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

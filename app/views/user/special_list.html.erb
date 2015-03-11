@@ -46,7 +46,11 @@
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
 		<li><a class="tab-link" id='toggle-a' href="#others" data-toggle="tab" url="/user/this_sem?uid=<%=params[:uid]%>" >本學期</a></li>
 		<li><a class="tab-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
+		<% if @user.course_simulations.count==0 %>
+		<li><a class="tab-link" id='toggle-c' href="/user/import_course" onclick="toastr['info']('請先匯入成績!');">畢業學分計算</a></li>
+		<% else %>
 		<li><a class="tab-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics?uid=<%=params[:uid]%>">畢業學分計算</a></li>
+		<% end %>
 	</ul>
 	<br>
 	<div class="tab-content" style="overflow:hidden;" id="gg">

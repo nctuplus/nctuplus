@@ -11,12 +11,14 @@ class ApplicationController < ActionController::Base
   end
 	
 	def now_semester
-		Semester.find(13)
+		Semester.last#find(13)
 	end
   
   def record_not_found
 		alertmesg("info",'Sorry',"無此欄位!")
-    redirect_to action: :index
+		if !request.xhr?
+			redirect_to action: :index
+		end
   end
 	
 	def ajax_flash(_class,title,mesg)
@@ -82,7 +84,11 @@ class ApplicationController < ActionController::Base
   end
   
   def checkTopManagerNoReDirect
-		return current_user.role==0
+		if current_user and current_user.role==0
+			true
+		else 
+			false
+		end
   end
   
   def checkTopManager

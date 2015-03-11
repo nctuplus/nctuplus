@@ -1,0 +1,17 @@
+<!--
+	<form>
+	  <div class="form-group">
+		<label for="exampleInputName">更改姓名</label>
+		<input type="text" class="form-control" id="InputName" placeholder="更改姓名">
+	  </div>
+   </form>
+
+	<button type="button" id="myButton" data-loading-text="Loading..." class="btn btn-primary" autocomplete="off">
+	  Loading state
+	</button>
+-->
+<%= form_tag "edit_name",method:"POST" do %>
+	<%=label_tag '更改姓名:'%>
+	<%=text_field_tag "name",current_user.name,class:"form-control"%>
+	<%=submit_tag "更改", class: "btn btn-primary"%>
+<% end %>

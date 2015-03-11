@@ -1,7 +1,10 @@
-$(function () {
-<% if @show_flag & 2 == 2 %>
-		
-    $('#container').highcharts({
+function show_chart_reg(data){	
+	if(!data.show_reg){
+		$('#container-reg-num').hide();
+		return false ;
+	}
+			
+    $('#container-reg-num').highcharts({
     	chart:{defaultSeriesType: "column"},
 		colors: [
 					'#50B432', '#AA4643', '#FF3EFF', '#80699B', '#3D96AE', 
@@ -15,7 +18,7 @@ $(function () {
         },      
         xAxis: {
 					
-            categories: <%=raw @row_name.to_json%>
+            categories: data.semester_name
         },         
         yAxis: {
        			min: 0,
@@ -23,38 +26,21 @@ $(function () {
                     text: '人數'
                 }
         },
-
         tooltip: {
           formatter: function() {
         		return '<b>' + this.series.name + '</b>老師<br>修課人數: <b>' + this.y + '</b>';
     		}
         },
-        plotOptions: {
-        /*
-            column: {
-            
-                stacking: 'normal',
-                dataLabels: {  //stack上的數字樣式設定
-                    enabled: true,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
-                    style: {
-                        textShadow: '0 0 3px black, 0 0 3px black'
-                    }
-                }
-                 
-            }
-           */
-        },
-        series: 
-        <%=@res.to_json.to_s.html_safe%>
+        series: data.reg_data
         	
-        
     });
-<%else%>
-$('#container').remove() ;
-<% end %>        
-<% if @show_flag & 1 == 1 %>
-		
+}
+        
+function show_chart_score(data){
+	if(!data.show_score){
+		$('#container-score').hide();
+		return false ;
+	}	
     $('#container-score').highcharts({
     	chart:{type: 'column'/*defaultSeriesType: "column"*/},
 		colors: [
@@ -68,7 +54,7 @@ $('#container').remove() ;
             text: '歷年修課平均分數'
         },      
         xAxis: {
-          categories: <%=raw @row_name.to_json%>
+          categories: data.semester_name
         },         
         yAxis: {
        			min: 0,
@@ -81,24 +67,7 @@ $('#container').remove() ;
         		return '<b>' + this.series.name + '</b>老師<br>平均: <b>' + this.y + '</b>分/共<b>'+this.point.nums+"</b>人";
 					}
         },
-
-        plotOptions: {
-
-        },
-
-        series: <%=@res_score.to_json.to_s.html_safe%>
-				
-        
-				
-           
+        series: data.score_data        
     });
-<%else%>
-$('#container-score').remove() ;
-//alert("no data");
-<% end %>    
-<% if @show_flag == 0%>
-$('#statistics-header').append(' 無資料');
-<% end %>
-});
-
+}
 

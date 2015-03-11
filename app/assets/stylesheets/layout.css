@@ -138,12 +138,17 @@ background-color: black  ;
 .ptt-style{
 	background-color: black  ;
 	color: #DBA901;
+
 }
+
 .backgorund-color-grey{
 	background-color: #BDBDBD  ;
 }
 .text-color-white{
 	color: white;
+}
+.text-color-black{
+	color: black;
 }
 .text-color-blue{
 	color: blue;

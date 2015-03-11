@@ -10,14 +10,14 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :semester
 	delegate :name, :to=>:semester, :prefix=>true
 	belongs_to :department
-	delegate :ch_name, :to=>:department, :prefix=>true
+	delegate :ch_name, :to=>:department, :prefix=>true, allow_nil: true
 
 	has_many :course_simulations, :dependent=> :destroy
 	
 	def incViewTimes!
 		update_attributes(:view_times=>self.view_times+1)
 	end
-	
+
 	def self.flit_semester(sem_id)
 		self.select{|cd| cd.semester_id==sem_id}
 	end

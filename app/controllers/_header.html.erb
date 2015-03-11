@@ -26,13 +26,15 @@
 							<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>
 							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
 							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>								
+							<li><a href="/admin/weekly_report" rel="nofollow">每週捷報</li>
 						</ul>	
 					</li>
 				<% end %>
 
 				<li><a href="/courses/" rel="nofollow">全校課程</a></li>
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
-				<li><a href="/events/" rel="nofollow">talk</a></li>
+				<li><a href="/admin/balala">TEST!!!!!</a></li>
+				
 			<% if current_user and current_user.student_id %>	
 				<li class="dropdown">
 					<a href="#" class="dropdown-toggle" data-toggle="dropdown">歷年課表<b class="caret"></b></a>
@@ -81,10 +83,10 @@
 						<li>
 							<%= link_to  "綁定FaceBook帳號", '/auth/facebook', :confirm=>'注意! 綁定後無法反悔', :onclick=>"disale_submit()"%>
 						</li>
-					<% end %>	
+					<% end %>						
 						<li>
 							<%= link_to  "登出", signout_path, id: "sign_out" %>
-						</li>					
+						</li>
 					</ul>
 				</li>
 		<% else %>

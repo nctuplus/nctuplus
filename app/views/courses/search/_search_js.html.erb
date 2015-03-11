@@ -23,10 +23,11 @@
 		if(obj.attr("id")=="q_department_id_eq")
 			clean_input($("#text_div"));
 		
-		$('#course_detail_search').submit();
+		//$('#course_detail_search').submit();
+		$("form").submit();
 	}
 	$(document).ready(function(){
 		change_degree($("#degree"));
-		//$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
+		$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
 	});
 </script>
