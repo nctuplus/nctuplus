@@ -27,4 +27,5 @@ class CourseField < ActiveRecord::Base
 	end
 
 	
+	
 end
