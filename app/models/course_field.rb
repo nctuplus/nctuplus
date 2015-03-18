@@ -17,6 +17,9 @@ class CourseField < ActiveRecord::Base
 	has_one :parent_course_fieldship, :dependent => :destroy, foreign_key: "child_id", :class_name=>"CourseFieldSelfship"
 	has_one :parent_cf, :through =>:parent_course_fieldship
 
+	has_many :cf_credits, :dependent => :destroy
+	
+	
 	
 	def field_need
 		if self.cf_field_need
@@ -26,6 +29,24 @@ class CourseField < ActiveRecord::Base
 		end
 	end
 
+	def update_credit
+		if self.field_type==1
+			self.reload
+			credit=0
+			self.course_field_lists.each do |cfl|
+				if cfl.record_type==1
+					if cfl.course
+						credit+=cfl.course.credit
+					elsif cfl.course_groups
+						credit+=cfl.course_group.lead_course.credit
+					end
+				end
+			end
+			
+			self.cf_credits.first.update_attributes(:credit_need=>credit)
+		end
+		
+	end
 	
 	
 end

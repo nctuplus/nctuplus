@@ -1,0 +1,19 @@
+<script type="text/x-tmpl" id="xtmpl-credit-list">
+	{% for(var i = 0,credit;credit=o.credit_list[i];i++){ %}
+		<div class="row" id="{%=credit.id%}">
+			<div class="col-md-2 memo">{%=credit.name%}</div>
+			<div class="col-md-3">至少學分數 </div>
+			<div class="col-md-2 credit-need">{%=credit.credit_need %}</div>
+			<div class="col-md-3">
+				{% if(o.cf_type !=1) { %}
+				<button type="button" class="btn btn-circle btn-warning update-credit">
+					<%=fa_icon "pencil"%>
+				</button>
+				<button type="button" class="btn btn-circle btn-danger delete-credit" >
+					<%=fa_icon "trash-o"%>
+				</button>
+				{% } %}
+			</div>
+		</div>
+	{% } %}
+</script>

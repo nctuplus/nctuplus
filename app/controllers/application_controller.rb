@@ -101,7 +101,29 @@ class ApplicationController < ActionController::Base
 			end	  	
 		end
   end
-    
+  
+	def checkOwner
+		case params[:controller]
+			when "discusses"
+				case params[:type]
+					when "main"
+						target=Discuss.find(params[:discuss_id])
+					when "sub"
+						target=SubDiscuss.find(params[:discuss_id])
+					else
+						redirect_to :back
+				end
+			when "events"
+				target=Event.find(params[:id])
+			when "file_infos"
+				target=FileInfo.find(params[:id])
+		end
+		if current_user != target.user
+			alertmesg("danger",'Sorry',"您沒有操作此動作的權限")
+			redirect_to :back
+		end
+	end
+	
   def checkDiscussOwner
 		case params[:type]
 			when "main"
@@ -113,6 +135,7 @@ class ApplicationController < ActionController::Base
 		end
 		
 		if current_user != @discuss.user
+			alertmesg("danger",'Sorry',"您沒有操作此動作的權限")
 			redirect_to :back
 		end
 	end

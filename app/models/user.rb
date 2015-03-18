@@ -2,7 +2,7 @@ class User < ActiveRecord::Base
 	
 	belongs_to :department
 	belongs_to :semester
-	has_many :file_infos
+	has_many :file_infos, :foreign_key=>"owner_id"
 	has_many :discusses
 	has_many :course_content_lists
 	has_many :content_list_ranks
@@ -13,9 +13,10 @@ class User < ActiveRecord::Base
 	has_many :course_maps, :through=> :user_coursemapships
 
 	
-	has_many :agree_courses, :class_name=> "UserScore", :conditions=>"is_agreed = TRUE"
-	has_many :normal_courses, :class_name=> "UserScore", :conditions=>"is_agreed = FALSE"
+	has_many :agree_courses, class_name: "UserScore", conditions: {is_agreed: TRUE}
+	has_many :normal_courses, class_name: "UserScore", conditions: {is_agreed: FALSE}
 	
+	has_many :new_course_teacher_ratings
 	
 	validates :uid, :uniqueness => {:scope => [ :student_id]}
 	

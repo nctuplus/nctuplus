@@ -290,28 +290,26 @@ class UserController < ApplicationController
 			course_map = user.course_maps.last 
 			data1 = (course_map.presence) ? get_cm_tree(course_map) : nil
 			if data1.presence
-				data2 = user.all_courses.map{
-				|cs| 
-				{
-				 :id=> cs.course.id,
-				 :uni_id=> cs.id,
-				 :name=>cs.course.ch_name, 
-				 :credit=>cs.course.credit,
-				 :score=>cs.score,
-				 :cos_type=>cs.course_detail.cos_type,
-				 :sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
-				 :cf_id=>cs.course_field_id,
-				 :memo=>cs.memo||"",
-				 :degree=>cs.course.department.degree,
+				data2 = user.all_courses.map{|cs|{
+					:id=> cs.course.id,
+					:uni_id=> cs.id,
+					:name=>cs.course.ch_name, 
+					:credit=>cs.course.credit,
+					:score=>cs.score,
+					:cos_type=>cs.course_detail.cos_type,
+					:sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
+					:cf_id=>cs.course_field_id,
+					:memo=>cs.memo||"",
+					:degree=>cs.course.department.degree,
 				}}
 				# if has course_map, user must have semester, dept
 				user_info = {
-							:sem=>{:year=>user.semester.year, :half=>user.semester.half}, 
-							:degree=>user.department.degree, 
-							:sem_now=>{:year=>latest_semester.year, :half=>latest_semester.half}, 
-							:map_name=>course_map.name,
-							:student_id=>user.student_id 
-							}
+					:sem=>{:year=>user.semester.year, :half=>user.semester.half}, 
+					:degree=>user.department.degree, 
+					:sem_now=>{:year=>latest_semester.year, :half=>latest_semester.half}, 
+					:map_name=>course_map.name,
+					:student_id=>user.student_id 
+				}
 			else
 				data2 = nil
 				user_info = nil

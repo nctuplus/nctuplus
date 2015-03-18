@@ -1,18 +1,14 @@
 class FileInfo < ActiveRecord::Base
   #attr_accessible :upload
-  
+  belongs_to :user, :foreign_key=>"owner_id"
   belongs_to :course_teachership#, counter_cache: true
   #validates_presence_of :semester_id, :course_teachership_id
-	
-  #has_attached_file :upload,  
-  #  :storage => :dropbox,
-  #  :dropbox_credentials => Rails.root.join("config/dropbox.yml"),
-	#:path => ":ct_id/:userid/:filename"
+
 	has_attached_file :upload,  
 
 	:path => ":rails_root/file_upload/:ct_id/:userid/:filename",
   :url => "/file_infos/:id"
-	#:url => ":rails_root/file_upload/:ct_id/:userid/:filename"
+
 	do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
 	
