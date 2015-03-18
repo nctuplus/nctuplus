@@ -34,7 +34,11 @@ function add_class(c_ids){ //action="add"
   				load_course_list(cf_show_id) ;
   				if(res.success>0)
   					$('#alert-msg').html('新增成功').removeClass().addClass('text-color-green').show().fadeOut(3000);
-  			},
+					if(res.new_credit){
+						$(".credit-need").text(res.new_credit);
+					}
+					
+				},
   			error: function(){
   				$('#alert-msg').html('新增失敗').removeClass().addClass('text-color-red').show().fadeOut(3000);	
   				alert("Add course failed..");

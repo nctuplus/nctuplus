@@ -20,6 +20,7 @@ class CourseField < ActiveRecord::Base
 	has_many :cf_credits, :dependent => :destroy
 	
 	
+	
 	def field_need
 		if self.cf_field_need
 			return cf_field_need.field_need
@@ -28,5 +29,23 @@ class CourseField < ActiveRecord::Base
 		end
 	end
 
+	def update_credit
+		if self.field_type==1
+			self.reload
+			credit=0
+			self.course_field_lists.each do |cfl|
+				if cfl.record_type==1
+					if cfl.course
+						credit+=cfl.course.credit
+					elsif cfl.course_groups
+						credit+=cfl.course_group.lead_course.credit
+					end
+				end
+			end
+			
+			self.cf_credits.first.update_attributes(:credit_need=>credit)
+		end
+		
+	end
 	
 end

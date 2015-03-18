@@ -8,6 +8,17 @@ class CourseMapsController < ApplicationController
 		@course_maps=CourseMap.all.order('name  asc')
 	end
 
+	def xyz
+		CourseMap.all.each do |cm|
+			cm.course_fields.each do |cf|
+				CfCredit.create(
+					:course_field_id=>cf.id,
+					:credit_need=>cf.credit_need
+				)
+			end
+		end
+	end
+	
 	def show
 		@course_map=CourseMap.find(params[:id])
 	end
@@ -37,25 +48,43 @@ class CourseMapsController < ApplicationController
 			copy_from.course_fields.each do |cf|
 				#Rails.logger.debug "[debug] cfcfcf"
 				new_cf = CourseField.new(:user_id=>current_user.id)
-				new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = cf.name, cf.credit_need, cf.color, cf.field_type
+				new_cf.name, new_cf.color, new_cf.field_type = cf.name, cf.color, cf.field_type
 				new_cf.save!
-				cmcfship = CmCfship.new(:course_map_id=>@course_map.id, :course_field_id=>new_cf.id)
-				cmcfship.save!
-				if new_cf.field_type==3
-					cffneed = CfFieldNeed.new(:course_field_id=>new_cf.id, :field_need=>0)
-					cffneed.save!
+				cmcfship = CmCfship.create(:course_map_id=>@course_map.id, :course_field_id=>new_cf.id)
+				
+				if new_cf.field_type==3 #copy cf_field_needs
+					cffneed = CfFieldNeed.create(:course_field_id=>new_cf.id, :field_need=>0)
+					
 				end
+				
+				#copy cf_credits
+				cf.cf_credits.each do |credit|
+					new_credit=CfCredit.create(
+						:course_field_id=>new_cf.id,
+						:index=>credit.index,
+						:memo=>credit.memo,
+						:credit_need=>credit.credit_need
+					)
+				end
+				
 				trace_cm(new_cf, cf, :_copy_cfl)
 			end
 			
 			copy_from.course_groups.each do |cg|
-				new_cg = CourseGroup.new(:user_id=>current_user.id, :course_map_id=>@course_map.id)
-				new_cg.gtype = cg.gtype 
-				new_cg.save!
+				new_cg = CourseGroup.create(
+					:user_id=>current_user.id,
+					:course_map_id=>@course_map.id,
+					:gtype => cg.gtype 
+				)
+				
 				cg.course_group_lists.each do |cgl|
-					new_cgl = CourseGroupList.new(:user_id=>current_user.id, :course_group_id=>new_cg.id)
-					new_cgl.course_id, new_cgl.lead = cgl.course_id, cgl.lead
-					new_cgl.save!
+					new_cgl = CourseGroupList.create(
+						:user_id=>current_user.id,
+						:course_group_id=>new_cg.id,
+						:course_id=>cgl.course_id,
+						:lead =>  cgl.lead
+					)
+					
 				end
 			end
 			
@@ -131,12 +160,13 @@ class CourseMapsController < ApplicationController
 		cf = CourseField.new
 		cf.name, cf.field_type, cf.user_id = name, field_type, current_user.id
 		cf.save!
+		
 	# if not 必修, add credit_need table row	
-		if field_type>=2
-			credit = CfCredit.new
-			credit.course_field_id=cf.id
-			credit.save!
-		end
+		#if field_type>=2
+		credit = CfCredit.new
+		credit.course_field_id=cf.id
+		credit.save!
+		#end
 		
 	# if 領域, add field_need table row
 		
@@ -294,13 +324,12 @@ class CourseMapsController < ApplicationController
 					else	
 						cfl.course_id = c_id
 					end
-					cfl.save!
-					if cf.field_type==1 # if 必修 then add credit
-						cf.cf_credits.first.credit_need += Course.find(c_id).credit
-					end
+					cfl.save
+				
 					success_cnt += 1
 				end
-				cf.save!					
+				#cf.save!
+				#cf.update_credit					
 				data[:success], data[:fail] = success_cnt, fail_cnt
 			when 'add_group'
 				cg = CourseGroup.find(params[:cg_id])
@@ -321,33 +350,31 @@ class CourseMapsController < ApplicationController
 					cgl.save!
 					success_cnt += 1
 				end
-				
+
 				data[:success], data[:fail] = success_cnt, fail_cnt	
 			when 'update'
 				cfl = CourseFieldList.find(params[:target_id])
+				cf=cfl.course_field
 				cfl.record_type = params[:rtype].to_i
-				cfl.save!
+				cfl.save
+
 				data[:success] = 1	
 			when 'delete'
 				cf = CourseField.find(params[:cf_id])
-				cfl = CourseFieldList.find(params[:target_id])
-				if cf.field_type.to_i==1
-					credit = 0
-					if cfl.course_group_id
-						credit = cfl.course_group.lead_group_list.course.credit
-					else
-						credit = cfl.course.credit
-					end
-					cf.credit_need -= credit
-					cf.save!
-				end
+				cfl = CourseFieldList.find(params[:target_id])		
 				cfl.destroy
-				
 				
 				data[:success] = 1	
 			else
 				data[:fail] = 1	
 		end
+		
+		#cf.update_credit
+		if cf && cf.field_type==1
+			cf.update_credit
+			data[:new_credit]=cf.cf_credits.first.credit_need
+		end
+		
 		render :text=>data.to_json#, :layout=> false
 	end
 	
@@ -447,12 +474,17 @@ private
 	
 	def _get_credit_list(cf_id)
 		@cf=CourseField.find(cf_id)
-		if @cf.field_type>=2
-			res=@cf.cf_credits.map{|credit|{
-					:id=>credit.id,
-					:name=>credit.memo,
-					:credit_need=>credit.credit_need.to_s
-			}}
+		if @cf.field_type>=1
+			res={
+				cf_type:@cf.field_type,
+				credit_list:
+					@cf.cf_credits.map{|credit|{
+						:id=>credit.id,
+						:name=>credit.memo,
+						:credit_need=>credit.credit_need.to_s
+					}}
+				
+			}
 		else
 			res=[]
 		end

@@ -26,6 +26,23 @@ class SessionsController < ApplicationController
 				end
     	end
 			
+			current_user.new_course_teacher_ratings.each do |ctr|
+				ctr.user_id = user.id
+				ctr.save!
+			end
+    	current_user.course_content_lists.each do |ctr|
+				ctr.user_id = user.id
+				ctr.save!
+			end
+			current_user.comments.each do |ctr|
+				ctr.user_id = user.id
+				ctr.save!
+			end
+			current_user.content_list_ranks.each do |ctr|
+				ctr.user_id = user.id
+				ctr.save!
+			end
+			
     	user.student_id = current_user.student_id
 			user.semester_id = current_user.semester_id if user.semester_id.nil?||user.semester_id==0
 			user.department_id = current_user.department_id if user.department_id.nil?||user.department_id==0

@@ -111,6 +111,7 @@ function credit_list_action(id,memo,credit_need,type){
 		success: function(data){
 			genCreditList(data);
 			$('#alert-msg').removeClass().addClass('text-color-green').html('更新成功').show().fadeOut(2200);
+		
 		},	
 		error: function(){
 			$('#alert-msg').removeClass().addClass('text-color-red').html('更新失敗').show().fadeOut(2200);
@@ -335,13 +336,14 @@ function bind_course_group_but(){  // for course group
   			url: "/course_maps/course_group_action" ,
   			data:{
   				type: 'delete',
-				target: 'cgl',
+					target: 'cgl',
   				list_id : list_id,
-				cg_id: cg_id
+					cg_id: cg_id
   			},
 			success: function(){
 				//list_tr.remove();
 				load_group_treeview(cg_id);
+				
 			},error: function(){
 				alert('delete course group list failed..');
 			}
@@ -367,6 +369,10 @@ function bind_course_list_button(){
 			success: function(data){
 				//console.log(data);
 				//target_tr.remove();
+				res=JSON.parse(data);
+				if(res.new_credit){
+					$(".credit-need").text(res.new_credit);
+				}
 				$('.course-table [list_id='+list_id+']').remove();
 			},	
 			error: function(){
@@ -393,7 +399,12 @@ function bind_course_list_button(){
   				type : 'update'
   			},	
   			success: function(data){
-  				console.log('course update success');
+					
+  				//console.log('course update success');
+					res=JSON.parse(data);
+					if(res.new_credit){
+						$(".credit-need").text(res.new_credit);
+					}
   				icon.attr('rtype', rtype) ;
   				icon.switchClass(change_table1[rtype], change_table1[(rtype+1)%2]);
   				icon.switchClass(change_table2[rtype], change_table2[(rtype+1)%2]);
@@ -406,20 +417,23 @@ function bind_course_list_button(){
 }
 
 function genCreditList(data){
+	console.log(data);
 	$("#credit_list").html(tmpl("xtmpl-credit-list",data));
 	bind_credit_list_button();
 }
 
 function load_header_content(data){
 	$("#header_content_div").html(tmpl("header-content-format", data));
-	//console.log(data);
-	if(data.head_node.type>=2){
+	
+	if(data.head_node.type>=1){
 		$.getJSON("get_credit_list?id="+data.head_node.cf_id, function (data) {		
-			//$("#credit_list").html(tmpl("xtmpl-credit-list",data));
-			//bind_credit_list_button();
+			
 			genCreditList(data);
 		});
 	}
+	/*else{
+	
+	}*/
 	bind_header_button(data.head_node);
 }
 

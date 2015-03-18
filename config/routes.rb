@@ -76,7 +76,9 @@ Nctuplus::Application.routes.draw do
 	
 
 #### course map block 	
-	#get "course_maps/add_usercoursemapship"		
+	#get "course_maps/add_usercoursemapship"
+	get "course_maps/xyz"
+	#post "course_maps/xyz"
 	get "course_maps/get_credit_list"
 	post "course_maps/credit_action"
 	

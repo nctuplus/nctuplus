@@ -16,7 +16,7 @@
 	function gen_raty(ct_id,r_type,show_score,rated){
 		$("#rating_"+r_type+'_'+ct_id).raty({
 			score:show_score,
-			readOnly :<%=current_user.nil? ||!current_user.uid %>,
+			readOnly :<%=current_user.nil? %>,
 			cancel :rated,
 			cancelOff : 'cancel-custom-off.png',
 			cancelOn  : 'cancel-custom-on.png',
@@ -41,7 +41,7 @@
 			res+="</div></div>";
 		return res;
 	}
-	<% if current_user.try(:uid)  %>
+	
 	function rate_course(ct_id,r_type,score){
 		
 		$.ajax({
@@ -71,7 +71,7 @@
 			},
 		});
 	}
-	<% end %>
+	
 </script>
 
 <script type="text/x-tmpl" id="compare_tmpl">
