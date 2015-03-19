@@ -9,14 +9,7 @@ class CourseMapsController < ApplicationController
 	end
 
 	def xyz
-		CourseMap.all.each do |cm|
-			cm.course_fields.each do |cf|
-				CfCredit.create(
-					:course_field_id=>cf.id,
-					:credit_need=>cf.credit_need
-				)
-			end
-		end
+		
 	end
 	
 	def show
