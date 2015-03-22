@@ -1,6 +1,6 @@
 Nctuplus::Application.routes.draw do
 	
-	root :to => "main#index"
+	root :to => "main#welcome"
 	
 	
 	resources :events
@@ -14,6 +14,7 @@ Nctuplus::Application.routes.draw do
 	
 
 #--------- for many usage --------------
+	get "main/welcome"
 	get "main/index"
   post "main/temp_student_action"
 	get "main/E3Login"
