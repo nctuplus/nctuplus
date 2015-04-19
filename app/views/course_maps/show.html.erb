@@ -10,9 +10,11 @@
 		<td class='cm-head-dep'><%=(@course_map.department_id==0)? "不指定" : @course_map.department.ch_name%></td>
 		<td>適用學期：</td>
 		<td class='cm-head-sem'><%=(@course_map.semester_id==0)? "不指定" : @course_map.semester.year%></td>
+		<td>應修學分：</td>
+		<td class='cm-head-grade'><%=@course_map.total_credit%></td>
 	<tr>
 	<tr>
-		<td colspan="4"><p>說明：</p>
+		<td colspan="6"><p>說明：</p>
 			<p class='cm-head-desc'><%=@course_map.desc%></p>
 		</td>
 	</tr>	
@@ -34,6 +36,7 @@ $(document).ready(function(){
 		if($(this).html()=='編輯'){
 			$('.cm-head-dep').html('<%=j select_tag "dep", options_from_collection_for_select(Department.where("degree IN (2,3) AND use_type != ?", "no_courses").order("degree DESC"),"id","ch_name"), :prompt=>"不指定"  %>');
 			$('.cm-head-sem').html('<%=j select_tag "sem", options_for_select(Semester.where("half=1").map{ |u| [u.year, u.id] }), :prompt=>"不指定" %>');
+			$('.cm-head-grade').html('<%=j text_field_tag "grade", @course_map.total_credit%>');
 			$("#dep option").each(function() {
   				if($(this).text() == cm_head_info['dep']) {
     				$(this).attr('selected', 'selected');            
@@ -46,10 +49,10 @@ $(document).ready(function(){
 		}else{//post 
 			var dep = ($('#dep').val()) ? $('#dep').val() : 0 ;
 			var sem = ($('#sem').val()) ? $('#sem').val() : 0 ;		
+			var grade = ($('#grade').val()) ? $('#grade').val() : 0 ;	
 			cm_head_info['dep'] = $('#dep option:selected').text() ;
 			cm_head_info['sem'] = $('#sem option:selected').text() ;
 			cm_head_info['desc'] = $('#desc').val() ;
-			
 			$.ajax({
 				//async: false ,
 				type: "POST",
@@ -58,11 +61,13 @@ $(document).ready(function(){
 					map_id: map_id,
 					dep: dep,
 					sem: sem,
+					grade: grade,
 					desc: $('#desc').val()
 				},	
 				success: function(data){			
 					$('.cm-head-dep').html(cm_head_info['dep']);
 					$('.cm-head-sem').html(cm_head_info['sem']);
+					$('.cm-head-grade').html(grade);
 					$('.cm-head-desc').html(cm_head_info['desc'] );			
 				},	
 				error: function(){

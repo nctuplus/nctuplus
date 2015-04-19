@@ -1,3 +1,14 @@
+/*
+ * app/assets/javascript/courses/chart.js
+ *
+ * Copyright (C) 2014 NCTU+
+ * 
+ * For courses/show/:id , reg_nums and scores chart init 
+ *  
+ *
+ * Updated at 2015/3/24
+ */
+ 
 function show_chart_reg(data){	
 	if(!data.show_reg){
 		$('#container-reg-num').hide();

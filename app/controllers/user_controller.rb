@@ -109,7 +109,12 @@ class UserController < ApplicationController
 			#update_cs_cfids(course_map,@user)
 
 			if course_map
-				course_map_res=get_cm_res(course_map)
+				course_map_res=	{
+					:name=>course_map.name,
+					:id=>course_map.id,
+					:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
+					:cfs=>course_map.to_tree_json		
+				}#get_cm_res(course_map)
 			end
 			res={
 				:user_id=>@user.id,
@@ -288,7 +293,7 @@ class UserController < ApplicationController
 		if request.xhr? 				
 			user = (params[:user_id].presence and checkTopManagerNoReDirect) ? getUserByIdForManager(params[:user_id]) : current_user
 			course_map = user.course_maps.last 
-			data1 = (course_map.presence) ? get_cm_tree(course_map) : nil
+			data1 = (course_map.presence) ? course_map.to_tree_json : nil
 			if data1.presence
 				data2 = user.all_courses.map{|cs|{
 					:id=> cs.course.id,

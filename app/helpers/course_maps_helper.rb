@@ -1,5 +1,5 @@
 module CourseMapsHelper
-
+=begin
 	def cf_trace(cf, funcA, funcB=nil)
   	if cf.field_type < 3
 			data = send(funcA, cf)	
@@ -48,7 +48,7 @@ module CourseMapsHelper
 		msg += "==== 總共需要修習 <b class='text-color-red'>"+res.to_s+"</b> 學分 ====</br>"
 		return msg
 	end
-	
+
 	def course_field_must_credit_check(cf_id, group_type) # on update course_field.credit_need
 		course_field = CourseField.find(cf_id)
 		must_credit = 0
@@ -85,7 +85,7 @@ module CourseMapsHelper
 		cfg.field_need = (cfg.child_cfs.count < cfg.field_need) ? cfg.child_cfs.count : cfg.field_need
 		cfg.save!
 	end
-
+	
   def statistic_level2(map_id, user_courses, cf)
   	match = false
 
@@ -171,7 +171,7 @@ module CourseMapsHelper
   		end		
   		return res
   end	
-	
+=end	
 	# update cs cf_id, deep to level 2
 	def update_cs_cfids(course_map,user)
 		#user.all_courses.each do |cs|
@@ -250,14 +250,17 @@ module CourseMapsHelper
 	def courses_join_cf(user_courses,cf)
 		return user_courses.select{|pc|pc.course_field==cf}.map{|cs|cs.course}
 	end
+=begin	
 	def get_cm_res(course_map)
 		{
 			:name=>course_map.name,
 			:id=>course_map.id,
 			:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
 			:cfs=>get_cm_tree(course_map)
+			
 		}
 	end
+	
 	def _get_bottom_node(cf)		
   	data={
   		:id=>cf.id,
@@ -269,17 +272,23 @@ module CourseMapsHelper
 				:credit_need=>credit.credit_need
 			}},
 			:cf_type=>cf.field_type,
-			:courses=>_get_courses_struct(cf.courses),#.map{|c|{:name=>c.ch_name, :id=>c.id, :credit=>c.credit}},
+			:courses=>cf.courses_to_json,#_get_courses_struct2(cf.course_field_lists),
+			#:courses=>_get_courses_struct(cf.courses),
+			:course_groups=>cf.course_groups_to_json
 			:course_groups=>cf.course_groups.where(:gtype=>0).includes(:courses).map{|cg|{
+				:id=>cg.id,
 				:credit=> cg.lead_course.credit,
 				:lead_course_name=>cg.lead_course.ch_name,
 				:lead_course_id=>cg.lead_course.id,
 				:lead_course=>cg.lead_course.to_json_for_stat,#_get_course_struct(cg.lead_course),
 				:courses=>_get_courses_struct(cg.courses)#.map{
 			}}
+
+
 		}
 		return data
   end
+
 	def _get_middle_node(cf,nodes)		
 		{
   		:id=>cf.id,
@@ -290,13 +299,26 @@ module CourseMapsHelper
 			:child_cf=>nodes
 		}
   end
-
+	
 	def _get_courses_struct(courses)
 		courses.map{|c|
 			#_get_course_struct(c)
 			c.to_json_for_stat
 		}
 	end
+	
+	def _get_courses_struct2(cfls)
+		ret=[]
+		cfls.each do |cfl|
+			next if cfl.course.nil?
+			temp=cfl.course.to_json_for_stat
+			temp[:grade]=cfl.grade
+			temp[:half]=cfl.half
+			ret.push(temp)
+		end
+		return ret
+	end
+
 	def get_cm_tree(course_map)
 		return course_map.course_fields.includes(:courses, :child_cfs).map{|cf|
 			cf.field_type < 3 ? 
@@ -309,4 +331,6 @@ module CourseMapsHelper
 		return cf_trace(cf,:_get_bottom_node,:_get_middle_node)
 		
 	end
+=end	
 end
+

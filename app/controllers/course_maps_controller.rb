@@ -1,11 +1,91 @@
 class CourseMapsController < ApplicationController
 	include CourseMapsHelper
 
-	before_filter :checkCourseMapPermission #:checkTopManager
+	before_filter :checkCourseMapPermission,:except=>[:index, :public] #:checkTopManager
 
 ##### resource controller
+
+	def public #return json for index
+		if request.format=="json"
+			sem_id=params[:sem_id].blank? ? 13 : params[:sem_id]
+			course_map=CourseMap.where(:department_id=>params[:dept_id], :semester_id=>sem_id).take
+			
+			@res={
+				:dept_name=>Department.where(:id=>params[:dept_id]).take.try(:ch_name),
+				:dept_id=>params[:dept_id],
+				:year=>Semester.where(:id=>params[:sem_id]).take.try(:year),
+				:course_map=>course_map.nil? ? nil : {
+					:id => course_map.id,
+					#:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
+					:total_credit=>course_map.total_credit,
+					:desc => course_map.desc,
+					:cfs=>course_map.to_tree_json,
+					:comments=>course_map.comments
+				}
+			}
+		end
+		respond_to do |format|
+			#format.html{}
+			format.json{render json:@res}
+		end
+		
+	end
+	
+	# handle Q&A post (ajax)
+	def cm_public_comment_action
+		if request.post?
+			if params[:parent_id].to_i==0
+				CourseMapPublicComment.create(
+					:course_map_id => params[:cm_id],
+					:user_id => current_user.id,
+					:comments => params[:comment]
+				)
+			else
+				CourseMapPublicSubComment.create(
+					:course_map_id => params[:cm_id],
+					:user_id => current_user.id,
+					:comments => params[:comment],
+					:course_map_public_comment_id=> params[:parent_id]
+				)
+			end
+		end
+		
+		render "/course_maps/public/cm_public_comment_return", :layout=>false 
+	end
+	
 	def index
-		@course_maps=CourseMap.all.order('name  asc')
+	
+		if !params[:dept_id].blank?
+			@dept=Department.where(:id=>params[:dept_id]).take
+			if !@dept.try( :majorable? )
+				redirect_to "/course_maps/"
+				return
+			end
+		end
+
+		@depts=CourseMap.all.group(:department_id).map{|cm|cm.department}
+=begin
+		if request.format=="json"
+			sem_id=params[:sem_id].blank? ? 13 : params[:sem_id]
+			course_map=CourseMap.where(:department_id=>params[:dept_id], :semester_id=>sem_id).take
+			@res=course_map.nil? ? nil :
+				{
+					:id => course_map.id,
+					:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
+					:total_credit=>course_map.total_credit,
+					:desc => course_map.desc,
+					:cfs=>course_map.to_tree_json
+				}
+			
+			#@res=get_cm_res(course_map)
+		end
+=end
+		respond_to do |format|
+			format.html{}
+			#format.json{render json:@res}
+		end
+		
+		
 	end
 
 	def xyz
@@ -25,7 +105,7 @@ class CourseMapsController < ApplicationController
 
 	def new
 		@res={}
-		@cm = CourseMap.all
+		@cm = CourseMap.all.order('name desc')
 		@cm.each do |c|
 			@res[c.id]={:sem_id=>c.semester_id, :dept_id=>c.department_id}
 		end
@@ -34,40 +114,40 @@ class CourseMapsController < ApplicationController
 		render "_form"
 	end
 
-	def create
+	def create	
+		@course_map = CourseMap.create(
+			:semester_id=> (params[:semester_id].presence) ? params[:semester_id] : 0	,
+			:name=> params[:name],
+			:department_id=> params[:course_map][:department_id],
+			:desc=> params[:course_map][:desc],
+			:user_id=> current_user.id
+		)
 		
-		@course_map = CourseMap.new
-		@course_map.semester_id = (params[:semester_id].presence) ? params[:semester_id] : 0	
-		@course_map.name, @course_map.department_id = params[:name], params[:course_map][:department_id]
-		@course_map.desc = params[:course_map][:desc]
-		@course_map.user_id, @course_map.like = current_user.id, 0
-		@course_map.save!
 		if params[:copy].to_i != 0
 			copy_from = CourseMap.find(params[:copy])
+			@course_map.update_attributes(:total_credit=>copy_from.total_credit)
+			
 			#Rails.logger.debug "[debug] in1 "+copy_from.course_fields.count.to_s
 			copy_from.course_fields.each do |cf|
 				#Rails.logger.debug "[debug] cfcfcf"
-				new_cf = CourseField.new(:user_id=>current_user.id)
-				new_cf.name, new_cf.color, new_cf.field_type = cf.name, cf.color, cf.field_type
-				new_cf.save!
+				new_cf = CourseField.create(
+					:user_id=>current_user.id,
+					:name=>cf.name,
+					:color=>cf.color,
+					:field_type=>cf.field_type
+				) 
+				
 				cmcfship = CmCfship.create(:course_map_id=>@course_map.id, :course_field_id=>new_cf.id)
 				
-				if new_cf.field_type==3 #copy cf_field_needs
-					cffneed = CfFieldNeed.create(:course_field_id=>new_cf.id, :field_need=>0)
+				if cf.field_type==3 #copy cf_field_needs
+					cffneed = CfFieldNeed.create(:course_field_id=>new_cf.id, :field_need=>cf.field_need)
 					
 				end
 				
 				#copy cf_credits
-				cf.cf_credits.each do |credit|
-					new_credit=CfCredit.create(
-						:course_field_id=>new_cf.id,
-						:index=>credit.index,
-						:memo=>credit.memo,
-						:credit_need=>credit.credit_need
-					)
-				end
 				
-				trace_cm(new_cf, cf, :_copy_cfl)
+				
+				trace_cm(new_cf, cf, :_copy_cfl_and_credit)
 			end
 			
 			copy_from.course_groups.each do |cg|
@@ -89,13 +169,13 @@ class CourseMapsController < ApplicationController
 			end
 			
 		end
-		redirect_to @course_map
+		redirect_to "/admin/course_maps"
 	end
 	
 	def destroy
 		@map = CourseMap.find(params[:id])
 		@map.destroy
-		redirect_to :action => :index
+		redirect_to "/admin/course_maps"
 	end
 	
 	def edit
@@ -118,7 +198,7 @@ class CourseMapsController < ApplicationController
 			list = []
 			data = CourseMap.find(params[:map_id])
 			data.course_fields.order('field_type ASC').each do |cf|	
-				sub = cf_trace(cf, :_get_field_content_data, :_get_add_field_node)											
+				sub = cf.treeview_trace										
 				list.push(sub)	
 			end		
 			list.push({:text=>'新增類別', :type=>-1, :icon=>'fa fa-plus text-success', :parent_id=>params[:map_id]})
@@ -233,10 +313,12 @@ class CourseMapsController < ApplicationController
 		
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
+	
 	def show_course_list	
 		
 		cf = CourseField.find(params[:target_id])
 		data = []
+		
 		cf.course_field_lists.includes(:course).each do |list|
 			course = nil
 			if list.course_group_id  # it is a group header
@@ -248,7 +330,12 @@ class CourseMapsController < ApplicationController
 						course = cgl.course
 					else
 						c = cgl.course
-						tmp2 = {:course_name=>c.ch_name, :dep=> c.department.ch_name, :credit=> c.credit}
+						tmp2 = {
+							:course_name=>c.ch_name,
+							:dep=> c.try(:department).try(:ch_name),
+							:credit=> c.credit,
+							:real_id=>c.real_id
+						}
 						groups.push(tmp2)
 					end
 				end
@@ -259,38 +346,43 @@ class CourseMapsController < ApplicationController
 			end		
 			
 			tmp = {
-			:id=>list.id, 
-			:course_id=>course.id ,
-			:course_name=>course.ch_name,
-			:dep=>course.department.ch_name,
-			:credit=>course.credit,
-			:record_type=>list.record_type,
-			:groups=> groups
+				:id=>list.id, 
+				:course_id=>course.id ,
+				:course_name=>course.ch_name,
+				:dep=>course.try(:department).try(:ch_name),
+				:real_id=>course.real_id,
+				:credit=>course.credit,
+				:record_type=>list.record_type,
+				:grade=> list.grade,
+				:half=> list.half,
+				:groups=> groups 
 			 }
 			
 			data.push(tmp)	
 		end
+		
 	#	Rails.logger.debug "[debug] " + data.to_s
 		respond_to do |format|
-   	 		format.json {render :layout => false, :text=>data.to_json}
-    	end
+   	 	format.json {render json: data}
+    end
+
 	end
 	
 	def show_course_group_list
 		cg = CourseGroup.find(params[:target_id])
-		data = []
-		cg.course_group_lists.each do |l|
-			course = l.course
-			tmp = {:id=>l.id, :course_id=>l.course_id ,:course_name=>course.ch_name,
-				   :dep=>course.department.ch_name,:credit=>course.credit,
-				   :leader=>(l.lead==0) ? false : true }
-			
-			data.push(tmp)
-		end
+		data=cg.course_group_lists.includes(:course).map{|l|{
+			:id=>l.id,
+			:course_id=>l.course_id,
+			:course_name=>l.course.ch_name,
+			:real_id=>l.course.real_id,
+			:dep=>l.course.try(:department).try(:ch_name),
+			:credit=>l.course.credit,
+			:leader=>(l.lead==0) ? false : true 
+		}}
 		
 		respond_to do |format|
-   	 		format.json {render :layout => false, :text=>data.to_json}
-    	end
+   	 	format.json {render json: data}
+    end
 	end
 	
 	def course_action # ajax 
@@ -308,22 +400,28 @@ class CourseMapsController < ApplicationController
 									 .map{|cg| [cg.id, cg.lead_group_list.course_id]}
 #Rails.logger.debug "[debug hit] " + course_group_leads.to_s	
 				c_ids.each do |c_id|
-					if all_courses.include? c_id.to_i
+=begin
+					if all_courses.include? c_id.to_i #check same
 						fail_cnt +=1
 						next
 					end
-				
+=end				
 					cfl = CourseFieldList.new
 					cfl.course_field_id = cf.id
 					cfl.user_id = current_user.id
 					
 					# check course group
 					hit = course_group_leads.select{|d1, d2| d2==c_id.to_i}
-					if not hit.empty?					
-						cfl.course_group_id = hit.last[0]
+					if not hit.empty?
+						cg_id=hit.last[0]
+						cfl.course_group_id = cg_id
+						cd=CourseGroup.find(cg_id).lead_course.course_details.last
 					else	
 						cfl.course_id = c_id
+						cd=Course.find(c_id).course_details.last						
 					end
+					cfl.grade=cd.grade
+					cfl.half=cd.semester.half
 					cfl.save
 				
 					success_cnt += 1
@@ -339,10 +437,12 @@ class CourseMapsController < ApplicationController
 				success_cnt = 0
 				has_lead = (cg.lead_group_list.presence) ? true : false
 				c_ids.each do |c_id|
-					if all_courses.include? c_id.to_i
+=begin
+					if all_courses.include? c_id.to_i #check same
 						fail_cnt +=1
 						next
 					end
+=end
 					cgl = CourseGroupList.new
 					cgl.course_group_id, cgl.course_id = cg.id, c_id
 					cgl.user_id= current_user.id
@@ -353,11 +453,16 @@ class CourseMapsController < ApplicationController
 
 				data[:success], data[:fail] = success_cnt, fail_cnt	
 			when 'update'
-				cfl = CourseFieldList.find(params[:target_id])
-				cf=cfl.course_field
-				cfl.record_type = params[:rtype].to_i
-				cfl.save
-
+				if params[:rtype].to_i ==2 # update grade or half
+					cfl = CourseFieldList.find(params[:target_id])
+					cfl[params[:target]] = params[:value]
+					cfl.save!
+				else
+					cfl = CourseFieldList.find(params[:target_id])
+					cf=cfl.course_field
+					cfl.record_type = params[:rtype].to_i
+					cfl.save
+				end
 				data[:success] = 1	
 			when 'delete'
 				cf = CourseField.find(params[:cf_id])
@@ -382,10 +487,11 @@ class CourseMapsController < ApplicationController
 		data = nil
 		case params[:type]
 			when 'new' # new course group
-				cg = CourseGroup.new
-				cg.course_map_id, cg.user_id = params[:map_id], current_user.id
-				cg.gtype = 0 ;
-				cg.save!
+				cg = CourseGroup.create(
+					:course_map_id=> params[:map_id],
+					:user_id=>current_user.id,
+					:gtype=>0
+				)
 				data = cg.id
 			when 'update' # update course list type or set leader
 				if params[:target]=='gtype'
@@ -428,6 +534,7 @@ class CourseMapsController < ApplicationController
 		cm = CourseMap.find(params[:map_id])
 		cm.department_id = params[:dep]
 		cm.semester_id = params[:sem]
+		cm.total_credit = params[:grade]
 		cm.desc = params[:desc]
 		cm.save!
 		render :nothing => true, :status => 200, :content_type => 'text/html'
@@ -492,9 +599,9 @@ private
 	end
 	
   def trace_cm(target, cf, funcA)
-	if cf.field_type < 3
+	#if cf.field_type < 3
 			send(funcA, target.id, cf)	
-	else 	
+	#else 	
 		cf.child_cfs.each do |sub|
 			new_cf = CourseField.new(:user_id=>current_user.id)
 			new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = sub.name, sub.credit_need, sub.color, sub.field_type
@@ -507,16 +614,26 @@ private
 			end
 			trace_cm(new_cf, sub, funcA)
 		end
-	end
+	#end
 	return
   end
 
-  def _copy_cfl(target_id, cf)
-	cf.course_field_lists.each do |cfl|
-		new_cfl = CourseFieldList.new(:user_id=>current_user.id, :course_field_id=>target_id )
-		new_cfl.course_id, new_cfl.record_type, new_cfl.course_group_id = cfl.course_id, cfl.record_type, cfl.course_group_id
-		new_cfl.save!
-	end
+  def _copy_cfl_and_credit(target_id, cf)
+		cf.course_field_lists.each do |cfl|
+			new_cfl = CourseFieldList.new(:user_id=>current_user.id, :course_field_id=>target_id )
+			new_cfl.course_id, new_cfl.record_type, new_cfl.course_group_id = cfl.course_id, cfl.record_type, cfl.course_group_id
+			new_cfl.grade=cfl.grade
+			new_cfl.half=cfl.half
+			new_cfl.save!
+		end
+		cf.cf_credits.each do |credit|
+			CfCredit.create(
+				:course_field_id=>target_id,
+				:index=>credit.index,
+				:memo=>credit.memo,
+				:credit_need=>credit.credit_need
+			)
+		end
   end
 
   
@@ -536,6 +653,7 @@ private
 		return data
   end
   
+	
   
   def _get_add_field_node(cf,nodes)
 		chead = (cf.field_type==3) ? "[領域群組] " : "[領域] "

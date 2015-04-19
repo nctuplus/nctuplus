@@ -17,7 +17,7 @@
 //= require bootstrap.min
 
 //= require tmpl.min
-//= require custom-array-handler
-//= require custom-helper
-//= require cm-stat-helper
+//= require array-groupby
+//= require coursemap-helper
+//= require coursemap-checker
 //= require toastr.min

@@ -1,3 +1,13 @@
+/*
+ * app/assets/javascript/array-groupby.js
+ *
+ * Copyright (C) 2014 NCTU+
+ *
+ * 對一個Hash array的某一個Key 做 grouping
+ * For User#special_list & User#all_courses
+ * Modified at 2015/3/24
+ */
+ 
 function groupBy( array , f ){
   var groups = {};
   array.forEach( function( o )
@@ -10,7 +20,4 @@ function groupBy( array , f ){
   {
     return groups[group]; 
   })
-}
-function check_pass(score,needed){
-	return (score=="通過" || score>=needed);
 }

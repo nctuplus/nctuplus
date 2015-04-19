@@ -1,3 +1,14 @@
+/*
+ * app/assets/javascript/courses/main.js
+ *
+ * Copyright (C) 2014 NCTU+
+ * 
+ * For courses/show/:id , page function control
+ *  
+ *
+ * Updated at 2015/3/24
+ */
+ 
 function head_binding(allow, cd_id){
 	$('.edit-head').click(function(){
 		

@@ -27,6 +27,7 @@
 		<tr class="row">
 			<th class="col-md-3">課名</th>
 			<th class="col-md-2">開課系所</th>
+			<th class="col-md-2">永久課號</th>
 			<th class="col-md-1">學分</th>
 			<th class="col-md-3">動作</th>
 		</tr>
@@ -38,6 +39,7 @@
 				<tr class="row" list_id="{%= list.id%}">
 					<td class="col-md-3">{%=list.course_name %}</td>
 					<td class="col-md-2">{%=list.dep %}</td>
+					<td class="col-md-2">{%=list.real_id %}</td>
 					<td class="col-md-1">{%=list.credit %}</td>
 					<td class="col-md-3">
 					{% if(!list.leader){ %}

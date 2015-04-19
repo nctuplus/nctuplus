@@ -9,9 +9,31 @@ class CoursesController < ApplicationController
 	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
 	def index
-		@cds=custom_search(true,true)
+		if !params[:custom_search].blank?	#if user key in something
+			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
+		else
+			@q = CourseDetail.search(params[:q])		
+		end
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
+		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
 	end
+	
 	def search_mini
+		
+		if !params[:dimension_search].blank?	#search by 向度 (推薦系統)
+			@q= CourseDetail.search({:semester_id_eq=>latest_semester.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
+		elsif !params[:timeslot_search].blank? #search by time (推薦系統)
+			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>latest_semester.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
+		elsif !params[:custom_search].blank? #search by text
+			@q = CourseDetail.searchByText(params[:custom_search],latest_semester.id)
+		else
+			if params[:q].blank?
+				@q=CourseDetail.search({:id_in=>[0]})
+			else
+				@q=CourseDetail.search(params[:q])				
+			end
+		end
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
 		@result={
 			:view_type=>"schedule",
 			:use_type=>"add",
@@ -38,61 +60,6 @@ class CoursesController < ApplicationController
 		render "courses/search/course_map", :layout=>false
 	end
 	
-	
-	
-	def course_content_post
-
-		if params[:post_type].to_i==0 #head
-			@head = CourseContentHead.where(:course_teachership_id=> params[:ct_id]).first.presence || 
-							CourseContentHead.new(:course_teachership_id=> params[:ct_id])
-			@head.last_user_id = current_user.id
-			@head.exam_record = params[:test].to_i
-			@head.homework_record = params[:hw].to_i
-			@head.course_rollcall = params[:rollcall].to_i
-			@head.save!
-
-			render "content_head_update"
-		else #list
-			tr_id = params[:id][17..-1].to_i
-			if params[:id].include?("new") #new
-				@list = CourseContentList.new(:course_teachership_id=>params[:ct_id],:user_id=>current_user.id)
-				@list.content_type = params[:content_type].to_i
-				@list.content = params[:content]
-				@list.save!
-			else #update old
- 				@list = CourseContentList.find(tr_id)
- 				if params[:del].to_i==1
- 					@list.destroy
- 				else	
- 					@list.content_type = params[:content_type].to_i
-					@list.content = params[:content]
-					@list.save!
-					if @list.content_list_ranks.presence
-						@list.content_list_ranks.destroy_all
-					end	
-				end
-			end
-			@trid = params[:id]
-			render "content_list_update"
-		end
-	end
-	
-	
-	
-	
-	def comment_submit
-		@com = Comment.new(:content=>params[:comment], :content_type=>params[:type].to_i)
-		@com.user_id = current_user.id
-		@com.course_teachership_id = params[:ctship]
-		
-		if @com.save
-			render 'comment_submit'	
-		else
-			render :nothing => true, :status => 200, :content_type => 'text/html'	
-		end
-		#render :nothing => true, :status => 200, :content_type => 'text/html'
-  	 	
-  end
 
 	def timetable
 		sem_id=params[:sem_id].to_i
@@ -110,54 +77,11 @@ class CoursesController < ApplicationController
 	
 	
 
-	def get_compare
-		@course = Course.includes(:course_teacherships).find(params[:c_id])
-
-		@cts=@course.course_teacherships.includes(:new_course_teacher_ratings, :course_details)
-		@ct_compare_json=[]
-		@user_rated_json=[]
-		t_name=[]
-		@cts.includes(:new_course_teacher_ratings, :course_details).each do |ct|
-			next if t_name.include?(ct.teacher_name)
-			t_name.push(ct.teacher_name)
-			
-			cold_ratings=ct.cold_ratings
-			sweety_ratings=ct.sweety_ratings
-			hardness_ratings=ct.hardness_ratings
-			
-			res={
-				:id=>ct.id,
-				:cd_id=>ct.course_details.last.id,
-				:name=>ct.teacher_name,
-				:cold=>cold_ratings,
-				:sweety=>sweety_ratings,
-				:hardness=>hardness_ratings,
-			}
-			user_ratings={
-				:cold=>!cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
-				:sweety=>!sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
-				:hardness=>!hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty?
-			}
-			@ct_compare_json.push(res)
-			@user_rated_json.push(user_ratings)
-		end
-		render "show_compare"
-	end
+	
 	
 	
   def show
-=begin	
-		cd=CourseDetail.find(params[:id])
-		cd.incViewTimes!
 
-		@ct=cd.course_teachership
-		@course = @ct.course#Course.includes(:semesters).find(params[:id])
-		@cds=@ct.course_details.includes(:semester,:department)
-		zz=@ct.cold_ratings.avg_score
-		@first_show=params[:first_show]||"tc"
-		@target_rank=999
-		@sems=@course.semesters.uniq
-=end
 		cd=CourseDetail.find(params[:id])	
 		cd.incViewTimes!
 
@@ -172,7 +96,7 @@ class CoursesController < ApplicationController
 			:open_on_latest=>(cd.course_teachership.course_details.last.semester==latest_semester) ? true : false ,
 			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
 		}
-		render "/course_content/show"
+		#render "/course_content/show"
   end
 	
   def simulation  

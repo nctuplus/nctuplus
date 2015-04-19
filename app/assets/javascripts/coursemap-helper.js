@@ -1,3 +1,31 @@
+/*
+ * app/assets/javascript/coursemap-helper.js
+ *
+ * Copyright (C) 2014 NCTU+
+ *
+ * 將傳出來的JSON補充一些資訊(讓client來做而非server)
+ * 
+ * Modified at 2015/3/24
+ */
+
+function get_sem_name(sem_id){
+	sem_id-=1;
+	var begin_year=99;
+	begin_year+=Math.floor(sem_id/3);
+	var half;
+	switch(sem_id%3){
+		case 0:
+			half="上";
+			break;
+		case 1:
+			half="下";
+			break;
+		case 2:
+			half="暑";
+	}
+	return begin_year.toString()+half;
+}
+
 function get_cf_type(cf_type){
 	switch (cf_type){
 		case 1:
@@ -10,6 +38,8 @@ function get_cf_type(cf_type){
 			return "領域";
 	}
 }
+
+
 
 function green_check(){
 	return '<i class="fa fa-check fa-2x" style="color:#5cb85c"></i>'

@@ -1,34 +1,131 @@
-<h3>課程地圖 <%= link_to '新增', new_course_map_path, :class=>"btn btn-warning" %></h3>
-<table class="table">
-	<tr>
-		<th>標題</th>
-		<th>適用之系所</th>
-		<th>適用之入學年度</th>
-		<th>建立者</th>
-		<th>功能</th>
-	</tr>
-<% @course_maps.each do |cm| %>
-  <tr> 
-  	<td><%= link_to cm.name, course_map_path(cm) %></td>
-  	<td>
-  		<% if cm.department_id != 0%>
-  		<%=cm.department.ch_name%>	
-  		<% else%>
-  		未指定
-  		<% end %>
-  	</td>
-  	<td><%= (cm.semester.presence) ? cm.semester.year.to_s : '未指定' %></td>
-  	<td><%= cm.user.name%></td>
-  	<td>
-<!--  	<%=link_to "加入我的統計", "/user/select_cm?uid=#{current_user.id}&cm_id=#{cm.id}"%> -->
-	<!-- if current_user.id==cm.user_id -->  
-    	<%= link_to '刪除', course_map_path(cm),
-              method: :delete,
-              data: { confirm: 'Are you sure?' } %>
-	<!-- end -->              
-  	</td>
+<%= javascript_include_tag asset_path("course_maps/public"), "data-turbolinks-track" => true %>
 
-  <tr>
-<% end %>
-</table>
+<div class="row" style="min-height:1000px;height:100%;">
+	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;/*min-height:100%;*/">
+		<%=render "course_maps/public/dept_sidebar"%>
+	</div>
+	</div>
+	
+	<div id="central-view" class="col-md-7" style="margin-left:300px;">
+		<div class="panel panel-default">
+			<div class="panel-body" id="cm-desc">
+				<% if params[:dept_id].blank? %>
+				<h4>請先至左方選擇系!</h4>
+				<% end %>
+			</div>
+		</div>
+		<div class="panel panel-default" id="QandA">
+			<div class="panel-body">
+				
+			</div>
+		</div>
+	</div>
+	
+	<div class="col-md-2 col-md-offset-">
+		<div class="scroll-sidebar hidden-xs hidden-sm" style="font-size:16px;position:fixed;margin-top:40px;"></div>
+	</div>
+	
+</div>
+<script>
+	function load_cm(dept_id,sem_id){
+		
+		$.getJSON("/course_maps/public",{
+			dept_id: dept_id,
+			sem_id: sem_id
+		},
+		function(data){
+			console.log(data);
+			$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
+				$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });
+			});
+			$("#cm-desc").html(tmpl("cm_public", data),function(){});
+			$("#sem-"+sem_id).addClass("disabled");
+			$("#cf-btn").click();
+			$('body').scrollspy('refresh');
+			$('.main-menu li a').click(function(event) {
+					event.preventDefault();
+					$('body').scrollTo($(this).attr('href'),700,{offset:-60});
+			});
+			get_piechart_data("#chart-content", data.course_map);
+			// QandA
+			$("#QandA").children().first().html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
+		});
 
+	}
+	$(document).ready(function(){
+		
+		var dept_id=<%=params[:dept_id]||0%>;
+		var sem_id=<%=params[:sem_id]||0%>;
+		if(dept_id!=0){
+			$("#dept-"+dept_id).parent().parent().prev().click();		
+			$("#dept-"+dept_id).addClass("selected");
+			if(sem_id!=0){
+				load_cm(dept_id,sem_id);	
+			}
+		}
+	
+	});
+
+	function load_qa(dept_id,sem_id){
+		var qa_div = $('#QandA').children().first() ;
+		$('#QandA').show();
+		
+	}
+	
+	function genCfTree(cf){
+		
+		str='<li class="cf-li"><a href="#'+cf.id+'">'+cf.cf_name+'</a></li>';
+		if(cf.cf_type==3){
+			str+='<ul class="nav sub-sub-menu">';
+			for(var i=0,child_cf;child_cf=cf.child_cf[i];i++){
+				str+=genCfTree(child_cf);
+			}
+			str+='</ul>'
+		}
+		return str;
+	}
+	
+	function toggleGroup(obj,cf_id,id){
+		var target=$(".cf-"+cf_id+"-"+id);
+		target.toggle(600,function(){
+			if(target.is(":visible")){
+				obj.find(".fa-plus").toggleClass("fa-minus fa-plus");
+			}
+			else{
+				obj.find(".fa-minus").toggleClass("fa-minus fa-plus");
+			}
+		});
+		
+	}
+	function toggleBtn(obj){
+		var x=obj.attr('type');
+		if(x=="show"){
+			obj.text("收回課程群組");
+			$("[class*=cf-]").show();
+			obj.attr('type','hide');
+		}
+		else{
+			obj.text("展開課程群組");
+			$("[class*=cf-]").hide();
+			obj.attr('type','show');
+		}
+	}
+	
+	
+	
+</script>
+
+<%= render "/course_maps/public/xtmpl_scrollbar" %>
+
+
+<%= render "/course_maps/public/xtmpl_course_table" %>
+
+<%= render "/course_maps/public/xtmpl_qa" %>
+
+<style>
+	.lead_course {
+		background-color:#BBFFEE;
+	}
+	html, body{height:100%;}
+
+</style>

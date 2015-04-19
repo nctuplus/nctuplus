@@ -1,6 +1,12 @@
 class AdminController < ApplicationController
 	include CourseMapsHelper
-	before_filter :checkTopManager
+	before_filter :checkTopManager,:only=>[:user, :ee104]
+	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
+	
+	def course_maps
+		@course_maps=CourseMap.all.order('name asc')
+  end
+	
 	def users
     @users=User.includes(:semester, :department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
   end

@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-	helper_method :latest_semester, :now_semester
+	helper_method :latest_semester, :now_semester, :current_user
   def latest_semester
 		Semester.last
   end
@@ -21,16 +21,14 @@ class ApplicationController < ActionController::Base
 		end
   end
 	
-	def ajax_flash(_class,title,mesg)
-
-	end
 	def getUserByIdForManager(uid)
 		return checkTopManagerNoReDirect &&uid.presence&& uid!="" ? User.find(uid) : current_user
 	end
+	
   def current_user
     @current_user ||= User.find(session[:user_id]) if session[:user_id]
   end
-  helper_method :current_user
+
   def checkLogin
     unless current_user
 			alertmesg("info",'Sorry',"請先登入,謝謝!")

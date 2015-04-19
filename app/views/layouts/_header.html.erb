@@ -13,7 +13,7 @@
 		</div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
-    <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-">
+    <div class="navbar-collapse collapse" >
       <ul class="nav navbar-nav">
 				<% if current_user && current_user.role!=1 %>
 					<li class="dropdown">
@@ -23,7 +23,7 @@
 							<li><a href="/admin/users" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
 						<% end %>
 							<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
-							<li><a href="/course_maps/" rel="nofollow">課程地圖</a></li>
+							<li><a href="/admin/course_maps/" rel="nofollow">課程地圖</a></li>
 							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
 							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>								
 						</ul>	
@@ -32,6 +32,7 @@
 
 				<li><a href="/courses/" rel="nofollow">全校課程</a></li>
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
+				<li><a href="/course_maps" rel="nofollow">課程地圖</a></li>
 				<!--<li><a href="/events/" rel="nofollow">talk</a></li>-->
 			<% if current_user and current_user.student_id %>	
 				<li class="dropdown">

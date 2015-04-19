@@ -1,11 +1,4 @@
-﻿<div class="container" style="position:absolute; top: 50px;z-index:200;">
-		<div class="col-md-8 col-md-offset-1" style="/*height:300px; background-color:black;*/">
-			<p style="color:white; font-size:82px; font-weight:bold;font-family:Arial; display:inline-block;">NCTU<sup>+</sup></p>
-			<p style="color:white; font-size:46px; font-weight:bold;display:inline-block;">交大智慧選課系統</p>
-		</div>
-</div>
-
-<div id="head_bg" class="carousel slide" data-ride="carousel" style="width:100%;margin-top:-45px;">
+﻿<div id="head_bg" class="carousel slide" data-ride="carousel" style="width:100%;margin-top:-45px;">
   <!-- Indicators -->
   <ol class="carousel-indicators hidden" style="//visibility:hidden">
     <li data-target="#head_bg" data-slide-to="0" class="active"></li>
@@ -31,37 +24,56 @@
   </div>
 
   <!-- Controls -->
-	
-  <a style="margin-top:400px;z-index:5000;" class="left carousel-control"href="#head_bg" role="button" data-slide="prev">
+	<!--
+  <a style="margin-top:400px;z-index:5000;" class="left carousel-control hidden-xs" href="#head_bg" role="button" data-slide="prev">
 		<%= fa_icon("chevron-left 4x")%>
   </a>
-  <a style="margin-top:400px;z-index:5000;" class="right carousel-control" href="#head_bg" role="button" data-slide="next">
+  <a style="margin-top:400px;z-index:5000;" class="right carousel-control hidden-xs" href="#head_bg" role="button" data-slide="next">
     <%= fa_icon("chevron-right 4x")%>
   </a>
+	-->
 </div>
+<div class="container">
+
+	<div class="col-md-12" style="margin-top:4%;">
+		<p style="color:white; font-size:82px; font-weight:bold;font-family:Arial; /*display:inline-block;*/">NCTU<sup>+</sup></p>
+		<p class="hidden-xs " style="color:white; font-size:46px; font-weight:bold;display:inline-block;">交大智慧選課系統</p>
+	</div>
 
 
-	<div class="col-md-12" style="position:absolute;margin-top:30%;margin-bottom:3%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000; ">
-		<div class="row" style="">
+
+
+	<div class="col-md-12 hidden-sm hidden-md hidden-lg">
+		<div href="/courses/" class="sm-func-container clickable-hover" >
+			<p class="text-center index-func-desc" style=""><%=fa_icon "search" %>找課程</p>
+		</div>
+		<div href="/courses/" class="sm-func-container clickable-hover" >
+			<p class="text-center index-func-desc" style=""><%=fa_icon "file-text-o" %>找心得</p>
+		</div>
+		<div href="/courses/" class="sm-func-container clickable-hover" >
+			<p class="text-center index-func-desc" style=""><%=fa_icon "graduation-cap" %>算學分</p>
+		</div>
+	</div>
+	
+	<div class="col-md-12 hidden-xs " style="/*position:absolute;margin-top:30%;margin-bottom:3%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000;*/ ">
 		
-			<div class="container icon-container col-md-offset-4 col-sm-offset-2" >
+		<div class="row" style="margin-top:35%;">
+		
+			<div class="container icon-container col-md-offset-3 col-sm-offset-2" >
 				<div class="row row-margin" >
-				<div class="circle clickable-hover" href="/courses/">
-					<%=fa_icon "search 5x" %>
+					<div class="circle clickable-hover" href="/courses/">
+						<%=fa_icon "search 5x" %>
+					</div>
 				</div>
-				</div>
-				
-				<p class="text-center function-desc" style="">找課程</p>
-				
+					<p class="text-center function-desc" style="">找課程</p>
 			</div>
+			
 			<div class="container icon-container" >
 				<div class="row row-margin">
-				<div class="circle clickable-hover" href="/courses/">	
-					<%=fa_icon "file-text-o 5x" %>
-					
-				</div>
-				<p class="text-center function-desc" >找心得</p>
-
+					<div class="circle clickable-hover" href="/courses/">	
+						<%=fa_icon "file-text-o 5x" %>					
+					</div>
+					<p class="text-center function-desc" >找心得</p>
 				</div>
 			</div>
 			
@@ -75,35 +87,51 @@
 					<p class="text-center function-desc" >算學分</p>
 				</div>
 			</div>
-<!--
 			
-			
-			
-			<div class="container icon-container">
-				<div class="row row-margin">
-				<div class="circle clickable-hover" href="#">	
-					<%=fa_icon "user 5x" %>
-				</div>
-					<p class="text-center function-desc" >找同學</p>
-				</div>
-			</div>
 		</div>
-
 	</div>
--->
-	
+</div>
 
+	
+<style>
+	.sm-func-container{
+		//padding: 10px 40px; 
+		//border:1px solid;
+		min-width:100%;
+		border-radius:8px;
+		background-color: rgba(255,255,255, 0.5);
+	}
+	.sm-func-container:hover{
+		/*padding: 10px 40px; 
+		border:1px solid;
+		min-width:100%;
+		border-radius:100%;*/
+		background-color: rgba(0,0,0, 0.5);
+	}
+	.index-func-desc:hover {
+		color:rgb(255,255,255);
+		background-color: rgba(0, 0, 0, 0.5);
+		/* width and height can be anything, as long as they're equal */
+	}
+	.index-func-desc{
+		font-size: 24px;
+		font-weight: bold;
+		
+	}
+</style>
 
 <script>
 	$(document).ready(function() {
-			$("#content").attr("class","col-md-12");
-			$("#global_bgcolor").removeClass("well");
+			//$("#content").attr("class","col-md-12");
+			//$("#global_bgcolor").removeClass("well");
+			$("#global_bgcolor").attr("class","");
+			
 			$(".circle").hover(
 				function(){$(this).find("i").css("color","white");},
 				function(){$(this).find("i").css("color","");}
 			);
 
-			$(".circle").click(function() {
+			$(".clickable-hover").click(function() {
 				window.document.location = $(this).attr("href");
 			});			
 	});

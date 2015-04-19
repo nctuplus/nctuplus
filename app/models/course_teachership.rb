@@ -1,13 +1,13 @@
 class CourseTeachership < ActiveRecord::Base
 	#alias_method_chain :belongs_to, :polymorphism
   belongs_to :course
-	belongs_to :teachers#, polymorphic: true
-
-	#has_many :teachers
+	
+	belongs_to :teacher
+	
   has_many :course_details, :dependent=> :destroy
-	#has_many :course_teacher_ratings, :dependent=> :destroy
-	has_many :new_course_teacher_ratings, :dependent=> :destroy
-	validates_associated :new_course_teacher_ratings
+
+	has_many :course_teacher_ratings, :dependent=> :destroy
+	validates_associated :course_teacher_ratings
 	
 
   has_one :course_content_head
@@ -18,6 +18,8 @@ class CourseTeachership < ActiveRecord::Base
 	has_many :discusses
 	validates_associated :discusses
 
+
+	
 	class ScoreObj
 		attr_accessor :rate_count, :avg_score, :arr
 		def initialize(obj)
@@ -29,13 +31,13 @@ class CourseTeachership < ActiveRecord::Base
 	end
 
 	def cold_ratings
-		return ScoreObj.new(self.new_course_teacher_ratings.where(:rating_type=>1).all)
+		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>1).all)
 	end
 	def sweety_ratings
-		return ScoreObj.new(self.new_course_teacher_ratings.where(:rating_type=>2).all)
+		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>2).all)
 	end
 	def hardness_ratings
-		return ScoreObj.new(self.new_course_teacher_ratings.where(:rating_type=>3).all)
+		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>3).all)
 	end
 	
 	def _teachers

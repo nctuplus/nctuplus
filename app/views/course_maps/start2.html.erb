@@ -354,7 +354,6 @@ function bind_course_group_but(){  // for course group
 function bind_course_list_button(){
 	//course delete
 	$('.course-table .course-delete').click(function(){
-
 		var target_tr = $(this).parent('td').parent('tr') ;
 		var list_id = target_tr.attr('list_id') ;
 		//console.log(list_id);
@@ -385,7 +384,8 @@ function bind_course_list_button(){
 	//course update
 	$('.course-table .course-update').click(function(){
 		var target_tr = $(this).parent('td').parent('tr') ;
-		var rtype = ($(this).attr('rtype')==1) ? 0 : 1 ;
+		//console.log($(this).attr('rtype'));
+		var rtype = ($(this).attr('rtype')==1) ? 0 : 1 ; // change credit-take
 
 		var icon = $(this) ;
 		var change_table1 = ['fa-check', 'fa-times'] ;
@@ -405,15 +405,40 @@ function bind_course_list_button(){
 					if(res.new_credit){
 						$(".credit-need").text(res.new_credit);
 					}
-  				icon.attr('rtype', rtype) ;
-  				icon.switchClass(change_table1[rtype], change_table1[(rtype+1)%2]);
-  				icon.switchClass(change_table2[rtype], change_table2[(rtype+1)%2]);
+			
+					icon.attr('rtype', rtype) ;
+					icon.switchClass(change_table1[rtype], change_table1[(rtype+1)%2]);
+					icon.switchClass(change_table2[rtype], change_table2[(rtype+1)%2]);
+				
   			},	
   			error: function(){
   				alert('update course failed.');
   			}
   		});
 	});
+	// course grade & half update
+	$('.grade-select, .half-select').change(function(){
+		var target_tr = $(this).parent('td').parent('tr') ;
+		var target = ($(this).attr('class')=="grade-select") ? "grade" : "half" ;
+		var value = $(this).val();
+		//console.log(target_tr.attr('list_id'));
+		//return false ;
+		$.ajax({
+			type: "POST",
+  		url: "course_action" ,
+  		data:{
+  				target_id : target_tr.attr('list_id'),
+					type : 'update',
+  				rtype : 2,
+  				target : target,
+					value: value
+				},
+			error: function(){
+  				alert('update grade, half failed.');
+  		}
+		});			
+	});
+	
 }
 
 function genCreditList(data){
@@ -441,6 +466,7 @@ function load_course_list(target_id){
 	if(!target_id)
 		return false;
 	$.getJSON("show_course_list.json?target_id="+target_id, function (data) {
+	//	console.log(data);
 		$("#course_content").html(tmpl("table-format", data));	
 		bind_course_list_button();
 	});

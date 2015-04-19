@@ -1,0 +1,32 @@
+
+.affix-sidebar{
+	padding-right:0; 
+	//font-size:small;
+	padding-left: 0;
+	height:100%;
+	position :fixed;
+} 
+
+.sidebar-ul {
+	margin: 0;
+	width:100%;
+}
+.navbar-nav li .selected{
+	background-color: #e7e7e7;
+	//color: white;
+	font-weight:bold;
+}
+.sidebar-li{
+	//margin-left:10px;
+	width:100%;
+}
+.navbar-collapse{
+	padding: 0;
+}
+.sidebar-nav .navbar li a:hover {
+	background-color: #428bca;
+	color: white;
+}
+.sidebar-nav .navbar li a > .caret {
+	margin-top: 8px;
+} 

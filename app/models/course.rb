@@ -17,14 +17,16 @@ class Course < ActiveRecord::Base
 		
 	def to_result(semester_name)
     {
-		"id" => read_attribute(:id),
-		"semester_name" => semester_name,
-      	"ch_name" => read_attribute(:ch_name),
-      	"eng_name" => read_attribute(:eng_name),
-      	"real_id" => read_attribute(:real_id),
+			"id" => read_attribute(:id),
+			"semester_name" => semester_name,
+      "ch_name" => read_attribute(:ch_name),
+      "eng_name" => read_attribute(:eng_name),
+      "real_id" => read_attribute(:real_id),
 			"department_name" => Department.find(read_attribute(:department_id)).ch_name#, # no use	 
     }
-  	end
+  end
+	
+	#def to_json_for
 	
 	def to_json_for_stat
 		{
@@ -32,7 +34,8 @@ class Course < ActiveRecord::Base
 			:name=>self.ch_name,
 			:id=>self.id,
 			:credit=>self.credit,
-			:dept=>self.department ? self.department.ch_name : ""
+			#:dept=>self.department ? self.department.ch_name : "",
+			:real_id=>self.real_id,
 		}
 	end	
 	

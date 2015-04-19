@@ -1,0 +1,55 @@
+/*
+ * app/assets/stylesheets/scroll-sidebar.css.scss
+ *
+ * Copyright (C) 2014 NCTU+
+ * 
+ * course_maps/public & courses/show
+ * Rememer to add scroll-sidebar class in parent
+ * Modified at 2015/4/15
+ */
+ 
+.scroll-sidebar ul{
+  list-style-type: none;
+	padding: 0;
+
+}
+
+.scroll-sidebar .active{
+	color: #11427D !important;
+	text-decoration: none;
+	border-left: 5px solid #11427D;
+}
+
+.scroll-sidebar .main-menu a {
+  display: block;
+	font-size: 16px;
+	font-weight: 500;
+	color: #000;
+	padding: 4px 20px;
+	background-color: transparent !important;
+}
+
+.scroll-sidebar .main-menu a:hover {
+	color: #11427D;
+	text-decoration: none;
+	background-color: transparent;
+	border-left: 5px solid #11427D;
+}
+
+.scroll-sidebar .sub-menu a {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 30px;
+	font-size: 14px;
+	font-weight: 400;
+	//background-color: transparent !important;
+}
+
+.scroll-sidebar .sub-sub-menu a {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	padding-left: 40px;
+	font-size: 14px;
+	font-weight: 400;
+	//background-color: transparent !important;
+}

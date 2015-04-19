@@ -1,0 +1,77 @@
+<script type="text/x-tmpl" id="cm_public_comments">
+	{% for(var i=0,qa ; qa = o.comments[i]; ++i){ %}
+
+		<div class="row">
+			<div class="col-md-3">
+				{%=qa.user.name%}:
+			</div>
+			<div class="col-md-7">
+			{%=qa.comments%}
+			</div>
+<% if current_user %>		
+			<div class="col-md-2">
+			<a href="javascript:void(0);" qa_id="{%=qa.id%}" onclick="qa_reply($(this), {%=o.cm_id%});">reply</a>
+			</div>
+<% end %>		
+		</div>
+
+		{% if(qa.child_comments.length!=0){ %}
+			{% for(var j=0, sub_qa; sub_qa= qa.child_comments[j]; j++){ %}
+			<div class="sub_qa row">
+				<div class="col-md-offset-1 col-md-3">
+				 {%=sub_qa.user.name%}:
+				</div>
+				<div class="col-md-7">
+				 {%=sub_qa.comments%} 
+				</div> 
+			</div>	
+			{% } %}
+		{% } %}
+
+	{% } %} 
+<% if current_user %>		
+	<div>
+		<a href="javascript:void(0);" qa_id="0" onclick="qa_reply($(this), {%=o.cm_id%});">reply</a>
+	</div> 
+<% end %>
+</script>
+<% if current_user %>
+<script type="text/x-tmpl" id="cm_public_comment_form">
+<%= form_tag("/course_maps/cm_public_comment_action", :remote=>true, :class=>"qa_form") do %>	
+	<input id="cm_id" name="cm_id" type="hidden" value="{%=o.cm_id%}">
+		<input id="parent_id" name="parent_id" type="hidden" value="{%=o.parent_id%}">
+
+	<div class="row">
+		<div class="col-md-1" style="margin-top: 6px ;">
+			<%=current_user.name %>
+		</div>
+		<div class="col-md-10">
+			<%=text_field_tag :comment, "", :class=>"form-control", :maxlength=>64 %>
+		</div>
+		<div class="col-md-1">
+			<button class="btn btn-success btn-circle" >
+				<%=fa_icon "check" %>
+			</button>
+		</div>
+	</div>	
+<% end %>
+</script>
+
+<script>
+	function qa_reply(this_link, cm_id){
+		
+		var parent_id = this_link.attr('qa_id') ;
+		var this_div = this_link.parent() ;
+		$('.qa_form').remove();
+		this_div.after(tmpl("cm_public_comment_form", {"cm_id": cm_id,"parent_id": parent_id}));
+		
+		if(this_div==0)
+			this_div.remove();
+		else
+			this_link.remove();
+			
+		return false ;
+	}
+	
+</script>
+<% end %>

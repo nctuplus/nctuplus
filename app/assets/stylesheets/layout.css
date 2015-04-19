@@ -1,17 +1,8 @@
 
 
-body
-{	
+body{	
 	font-family :Noto Sans T Chinese Medium ,Microsoft JhengHei, 'Lato', Calibri, Arial, sans-serif;
-;
-	//color :white;
-	//width:800px;
 	height: 100%;
-	//text-align:center;
-	//padding-left:10%;
-	//padding-right:10%;
-    //padding-top: 60px;
-  //background-color: #eeeeee;
 }	
 
 .fb-bg-color{
@@ -85,23 +76,22 @@ a.back-to-prev:hover{
 
 a:hover{
 	text-decoration:none;
-	
 }
+
 .course-clean{
-//display: none;
-position:absolute;
-top: -7px;
-right: -2px;
+
+	position:absolute;
+	top: -7px;
+	right: -2px;
 }
 .pos-relative{
-position:relative;
+	position:relative;
 }
 
 .user-reg {
-    width: 280px !important;
-		padding-left :30px;
-		z-index :0 !important;
-    //height: 400px !important;
+	width: 280px !important;
+	padding-left :30px;
+	z-index :0 !important;
 }
 
 .ui-autocomplete { position: absolute; cursor: default;z-index:2000 !important;}  
@@ -112,33 +102,23 @@ position:relative;
 }
 
 
-.clickable-hover/*>tbody>tr*/ {
+.clickable-hover {
 	cursor: pointer;
 }
 .scrollable{
 	height :600px;
 	overflow-y :scroll;
 }
- 
- 
-.test{
-background-color: black  ; 
-} 
+
  
 .global-background-color{  
 	background-color: rgba(255,255,255,0.8); 
-	//opacity :0.75
 }
 
-.global-background-color2{  
-	background-color: #eeeeee;
-	//opacity :0.75
-}
 
 .ptt-style{
 	background-color: black  ;
 	color: #DBA901;
-
 }
 
 .backgorund-color-grey{
@@ -163,19 +143,10 @@ background-color: black  ;
 	color: green;
 }
 
-#rank-icon{
-//	position: absolution ;	
-}
-#teacher-name{
-//	position: absolution ;
-}
-
 
 .number-right-top {
-
 	width: 20px;
 	height: 20px;
-	//padding: 6px 0;
 	border-radius: 10px;
 	text-align: center;
 	font-size: 10px;
@@ -188,7 +159,6 @@ background-color: black  ;
 	left:-13px;
 	top:-20px;
 	font-weight:bold;
-	//line-height: 1.428571429;
 }
 
 
@@ -199,7 +169,6 @@ background-color: black  ;
 	border-radius: 15px;
 	text-align: center;
 	font-size: 12px;
-	//line-height: 1.428571429;
 }
 
 .bs-callout {
@@ -253,21 +222,15 @@ img.header{
 	position: fixed;
 	min-height: 900px;
 	height :100%;
-	//padding-right:0px;
-  //top: 0;
-  //left: 0;
-	//z-index : 10;
 	transform: translate3d(0,0,0);
 }
 img.bg {
   /* Set rules to fill background */
   min-height: 100%;
   min-width: 1280px;
-	
   /* Set up proportionate scaling */
   width: 100%;
   height: auto;
-	
   /* Set up positioning */
   position: fixed;
   top: 0;

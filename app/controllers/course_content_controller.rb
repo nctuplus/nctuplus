@@ -19,7 +19,7 @@ class CourseContentController < ApplicationController
 				return
 			
 		end
-		@ntr=NewCourseTeacherRating.find_or_create_by(:user_id=>current_user.id, :course_teachership_id=>params[:ct_id],:rating_type=>r_type)
+		@ntr=CourseTeacherRating.find_or_create_by(:user_id=>current_user.id, :course_teachership_id=>params[:ct_id],:rating_type=>r_type)
 		if score==0
 			@ntr.destroy
 		else
@@ -46,11 +46,8 @@ class CourseContentController < ApplicationController
 		end
 
 	end
-	
+=begin	
 	def show # for testing
-		cd=CourseDetail.find(25600)
-		cd.incViewTimes!
-
 		@data = {
 			:course_id=>cd.course.id.to_s,
 			:course_detail_id=>cd.id.to_s,
@@ -62,9 +59,8 @@ class CourseContentController < ApplicationController
 			:open_on_latest=>(cd.course_teachership.course_details.last.semester==latest_semester) ? true : false ,
 			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
 		}
-		
 	end
-
+=end	
 	def get_course_info
 		data = {}
 		cd = CourseDetail.find(params[:cd_id])
@@ -95,12 +91,13 @@ class CourseContentController < ApplicationController
 					ch.update_attributes(:exam_record=>params[:exam_data], :homework_record=>params[:hw_data], 
 							:course_rollcall=>params[:rollcall], :last_user_id=>current_user.id)
 				else
-					ch = CourseContentHead.new
-					ch.course_teachership_id = ct.id
-					ch.exam_record, ch.homework_record = params[:exam_data], params[:hw_data]
-					ch.course_rollcall = params[:rollcall]
-					ch.last_user_id = current_user.id
-					ch.save!
+					ch = CourseContentHead.create(
+						:course_teachership_id=> ct.id,
+						:exam_record=> params[:exam_data],
+						:homework_record=> params[:hw_data],
+						:course_rollcall=> params[:rollcall],
+						:last_user_id => current_user.id
+					)				
 				end
 				data = ch.to_hash
 			when 'content-list-edit'
@@ -118,32 +115,71 @@ class CourseContentController < ApplicationController
 				end		
 							
 			when 'content-list-delete'
-				list = CourseContentList.find(params[:list_id])
-				list.destroy
+				CourseContentList.find(params[:list_id]).try(:destroy)
 			when 'content-list-new'
 				ct = CourseDetail.find(params[:cd_id]).course_teachership
-				list = CourseContentList.new
-				list.user_id, list.course_teachership_id  = current_user.id, ct.id 
-				list.content_type, list.content =params[:list_type], params[:list_content]
-				list.save!
+				list = CourseContentList.create(
+					:user_id=> current_user.id,
+					:course_teachership_id=> ct.id, 
+					:content_type=> params[:list_type],
+					:content => params[:list_content],
+				)
 				data = list.to_content_list(true, current_user)
 			when 'content-list-rank'
 				list = CourseContentList.find(params[:list_id])
-				new_rank = ContentListRank.new
-				new_rank.course_content_list_id = list.id
-				new_rank.user_id, new_rank.rank = current_user.id, params[:rank_type]
-				new_rank.save!
+				new_rank = ContentListRank.create(
+					:course_content_list_id=> list.id,
+					:user_id=> current_user.id,
+					:rank=> params[:rank_type]
+				)			 
 			when 'comment-new'	
 				cd = CourseDetail.find(params[:cd_id])
-				comment = Comment.new
-				comment.user_id, comment.course_teachership_id = current_user.id, cd.course_teachership.id
-				comment.content_type, comment.content = params[:comment_type], params[:comment_content]
-				comment.save!
+				comment = Comment.create(
+					:user_id=> current_user.id,
+					:course_teachership_id=> cd.course_teachership.id,
+					:content_type=> params[:comment_type],
+					:content=> params[:comment_content]
+				)			
 				data = comment.to_hash
 		end
 		respond_to do |format|
    	 		format.json {render :layout => false, :text=>data.to_json}
     	end
+	end
+	
+	def get_compare
+		@course = Course.includes(:course_teacherships).find(params[:c_id])
+
+		@cts=@course.course_teacherships.includes(:course_teacher_ratings, :course_details)
+		@ct_compare_json=[]
+		@user_rated_json=[]
+		t_name=[]
+		@cts.includes(:course_teacher_ratings, :course_details).each do |ct|
+			next if t_name.include?(ct.teacher_name) || ct.course_details.empty?
+			t_name.push(ct.teacher_name)
+			
+			cold_ratings=ct.cold_ratings
+			sweety_ratings=ct.sweety_ratings
+			hardness_ratings=ct.hardness_ratings
+			
+			res={
+				:id=>ct.id,
+				:cd_id=>ct.course_details.last.id,
+				:name=>ct.teacher_name,
+				:cold=>cold_ratings,
+				:sweety=>sweety_ratings,
+				:hardness=>hardness_ratings,
+			}
+			
+			user_ratings={
+				:cold=>current_user && !cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
+				:sweety=>current_user && !sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
+				:hardness=>current_user && !hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty?
+			}
+			@ct_compare_json.push(res)
+			@user_rated_json.push(user_ratings)
+		end
+		render "show_compare", :layout=>false
 	end
 	
 end

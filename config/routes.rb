@@ -28,7 +28,7 @@ Nctuplus::Application.routes.draw do
 	
 	get "admin/ee104"
 	get "admin/users"
-	
+	get "admin/course_maps" #, to: "course_maps#admin_index"
 #---------- user ----------------
 	get "user/change_role" #in admin/users
 	get "user/add_course"
@@ -55,15 +55,15 @@ Nctuplus::Application.routes.draw do
 	get "course_content/raider"	
 	get "course_content/raider_list_like"
 	get "course_content/rate_cts"
-	
+	get "course_content/get_compare"	
 	###
 	get "course_content/get_course_info"
-	get "course_content/show" # testing
+	#get "course_content/show" # testing
 	post "course_content/course_action"
 	
-	post "courses/comment_submit"
-	post "courses/course_content_post"
-	get "courses/get_compare"	
+#	post "courses/comment_submit"
+#	post "courses/course_content_post"
+
 	get "courses/search_mini"
 	get "courses/search_mini_cm"
   
@@ -94,6 +94,10 @@ Nctuplus::Application.routes.draw do
 	post "course_maps/course_group_action"
 	get "course_maps/start2"
 	post "course_maps/update_cm_head"
+	get "course_maps/public"
+	get "course_maps/public2"
+	post "course_maps/cm_public_comment_action"
+	
 	resources :course_maps
 ####
 	

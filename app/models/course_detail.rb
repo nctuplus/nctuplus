@@ -14,6 +14,17 @@ class CourseDetail < ActiveRecord::Base
 
 	has_many :course_simulations, :dependent=> :destroy
 	
+
+	def self.searchByText(text,sem_id)
+		search({
+			:course_ch_name_or_time_or_brief_cont=>text,
+			:semester_id_eq=>sem_id,
+			:m=>"or",
+			:by_teacher_name_in=>text
+		})
+	end
+	
+	
 	def incViewTimes!
 		update_attributes(:view_times=>self.view_times+1)
 	end
@@ -67,13 +78,10 @@ class CourseDetail < ActiveRecord::Base
 	
 private
   ransacker :by_teacher_name, :formatter => proc {|v| 
-		zz=Teacher.where("name like ?","%#{v}%")
-		if zz.empty?
-			[0]
-		else
-			zz.map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten
-		end
-	},:splat_param => true do |parent|
+		teachers=Teacher.includes(:course_teacherships).where("name like ?","%#{v}%")
+		ct_ids=teachers.map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten
+		ct_ids.empty? ? [0] :ct_ids
+	},:splat_param => false do |parent|
 			parent.table[:course_teachership_id]
   end
 

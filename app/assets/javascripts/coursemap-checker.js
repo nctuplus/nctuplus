@@ -1,3 +1,14 @@
+/*
+ * app/assets/javascript/coursemap-checker.js
+ *
+ * Copyright (C) 2014 NCTU+
+ *
+ * For user/statistics
+ * 此檔案是check同學的通識及必選修有沒有過的演算法 
+ *
+ * Modified at 2015/3/24
+ */
+ 
 function commonCheck(pass_score,last_sem_id,user_courses){
 	var result={}; 
 	result['art_after102']=0; 
@@ -64,31 +75,19 @@ function commonCheck(pass_score,last_sem_id,user_courses){
 function get_pass_courses(pass_score,last_sem_id,courses){
 	var res=[];
 	for(var i = 0,course;course=courses[i];i++){
-		if(course.sem_id==0||(course.sem_id!=last_sem_id&&check_pass(pass_score,course.score)))
+		if(course.sem_id==0 /*抵免*/ ||
+			(course.sem_id!=last_sem_id /*非本學期*/ &&
+			check_pass(pass_score,course.score))/*成績通過*/
+		)
 			res.push(course);
 	}
 	return res;
 }
+
 function check_pass(pass_score,score){
 	return score=="通過" || parseInt(score)>=pass_score
 }
-function get_sem_name(sem_id){
-	sem_id-=1;
-	var begin_year=99;
-	begin_year+=Math.floor(sem_id/3);
-	var half;
-	switch(sem_id%3){
-		case 0:
-			half="上";
-			break;
-		case 1:
-			half="下";
-			break;
-		case 2:
-			half="暑";
-	}
-	return begin_year.toString()+half;
-}
+
 function get_cf_list(cfs,course){
 	
 	var res=[];
@@ -110,7 +109,8 @@ function get_cf_list(cfs,course){
 	//console.log(res);
 	return res;
 }
-function join_cf_courses(cf,courses){
+
+function join_cf_courses(cf,courses){//將課程與領域做對應
 	var res=[];
 	for(var i = 0,course;course=courses[i];i++){
 		if(course.cf_id==cf.id)
@@ -118,12 +118,12 @@ function join_cf_courses(cf,courses){
 	}
 	return res;
 }
+
 function check_course_match(uc,cf){
 	for(var i = 0,course;course=cf.courses[i];i++){
 		if(uc.course_id==course.id)
 			return true;
 	}
-	//check course_group
 	for(var i = 0,cg;cg=cf.course_groups[i];i++){
 		for(var j = 0,course;course=cg.courses[j];j++){
 		if(uc.course_id==course.id)
@@ -142,8 +142,6 @@ function _get_course_cf(res,parent_cf,cf,course){
 				name:name,
 				match_credit:cf.match_credit,
 				credit_list_match:cf.credit_list_match
-				//credit_list:cf.credit_list
-				//credit_need:credit_match_need
 			});
 		}
 	}
@@ -201,7 +199,6 @@ function _cf_course_match(user_courses, cf){
 
 function check_cf(user_courses,cf){	//最上層的check
 
-	
 	switch(cf.cf_type){
 		case 1:	//必修
 			var res=_cf_course_match(user_courses, cf) ;
@@ -233,7 +230,6 @@ function check_cf(user_courses,cf){	//最上層的check
 			return {match_credit: match_credit, result: match}; 
 			break;
 		case 4:	//領域
-		//	console.log('[領域] cf_name : '+cf.cf_name) ;
 			var match_credit = 0, match = true;
 			var credit_all = 0 ;
 			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
@@ -261,7 +257,6 @@ function check_cf(user_courses,cf){	//最上層的check
 				
 				
 			}
-			
 			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
 				if(sub_cf.cf_type==2){				
 					for(var j = 0 ; j<final_res.length;j++){
@@ -277,9 +272,6 @@ function check_cf(user_courses,cf){	//最上層的check
 					}
 				}
 			}
-			
-			//console.log(cf);
-			
 			var i = 0;
 			if(match){	//if 必修 match才判斷選修
 				var any_match=false;			
@@ -302,15 +294,11 @@ function check_cf(user_courses,cf){	//最上層的check
 	}
 }
 
-function parse_cf_tree(cfs,user_courses,maxColSpan){
+function parse_cf_tree(cfs,user_courses,maxColSpan){//產生check的table html
 	var res="";
-	
 	for(var i = 0,cf;cf=cfs[i];i++){
-		//res+='<tr class="row">';
 		res+=get_node_data(cf,user_courses,maxColSpan);
-		//res+="</tr>"
 	}
-	
 	return res;
 }
 function get_node_data(cf,user_courses,maxColSpan){
