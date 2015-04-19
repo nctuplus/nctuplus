@@ -64,28 +64,9 @@ class CourseMapsController < ApplicationController
 		end
 
 		@depts=CourseMap.all.group(:department_id).map{|cm|cm.department}
-=begin
-		if request.format=="json"
-			sem_id=params[:sem_id].blank? ? 13 : params[:sem_id]
-			course_map=CourseMap.where(:department_id=>params[:dept_id], :semester_id=>sem_id).take
-			@res=course_map.nil? ? nil :
-				{
-					:id => course_map.id,
-					:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
-					:total_credit=>course_map.total_credit,
-					:desc => course_map.desc,
-					:cfs=>course_map.to_tree_json
-				}
-			
-			#@res=get_cm_res(course_map)
-		end
-=end
 		respond_to do |format|
 			format.html{}
-			#format.json{render json:@res}
-		end
-		
-		
+		end		
 	end
 
 	def xyz

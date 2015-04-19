@@ -1,5 +1,5 @@
-<% dept_undergrad=Department.can_majored.undergraduate.map{|d| [d.ch_name,d.id]} %>
-<% dept_grad=Department.can_majored.graduate.map{|d| [d.ch_name,d.id]} %>
+<% dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]} %>
+<% dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]} %>
 <% dept=@user.department %>
 <%= form_tag "/user/select_dept", class:"form-inline", id:"user_form" do %>
 	<div class="form-group col-md-3">

@@ -1,10 +1,34 @@
-<%= form_for @department do |f| %>
-    <%= f.label :ch_name, "中文名稱" %>
-    <%= f.text_field :ch_name %>
-	<br>
-	<%= f.label :dept_type, "Type" %>
-	<%= f.select :dept_type, options_for_select(Department.all.group(:dept_type).pluck(:dept_type),@department.dept_type) %>
-		
-	<br>
-    <%= f.submit %>
+<div class="container">
+<%= form_for @department,class:"form-horizontal " do |f| %>
+  <div class="form-group row">
+		<%= f.label :ch_name, "中文名稱",class:"col-sm-1 control-label col-md-offset-2" %>
+		<div class="col-sm-3">
+			<%= f.text_field :ch_name, class:"form-control",required:"true" %>
+		</div>
+  </div>
+	<div class="form-group row">
+		<%= f.label :college, "學院",class:"col-sm-1 control-label col-md-offset-2" %>
+		<div class="col-sm-3">
+			<%= f.select :college_id,options_from_collection_for_select(College.all,:id,:name,@department.college_id),{prompt:"請選擇..."}, class:"form-control" %>
+		</div>
+  </div>
+	<div class="form-group row">
+		<%= f.label :dept_type, "Dept Type",class:"col-sm-1 control-label col-md-offset-2" %>
+		<div class="col-sm-3">
+			<%= f.select :dept_type,options_for_select(Department.all.group(:dept_type).pluck(:dept_type),@department.dept_type),{prompt:"請選擇..."}, class:"form-control" %>
+		</div>
+  </div>
+	<div class="form-group row">
+		<%= f.label :use_type, "可主修",class:"col-md-1 control-label col-md-offset-2" %>
+		<div class="col-sm-3">
+			<%= f.select :majorable,options_for_select([[true,true],[false,false]],@department.majorable),{prompt:"請選擇..."}, class:"form-control" %>
+		</div>
+  </div>
+	<div class="form-group row">
+		<div class="col-md-6">
+			<%= f.submit "送出", class:"btn btn-success pull-right" %>
+		</div>
+	</div>
+    
 <% end %>
+</div>

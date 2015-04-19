@@ -5,9 +5,9 @@
 	}
 	function change_degree(obj){
 		var dept_sel=[];
-		dept_sel['3']='<%=j options_from_collection_for_select(Department.where(:degree=>3, :use_type=>"dept"),'id','ch_name')%>'
-		dept_sel['2']='<%=j options_from_collection_for_select(Department.where(:degree=>2, :use_type=>"dept"),'id','ch_name')%>'
-		dept_sel['0']='<%=j options_from_collection_for_select(Department.where(:degree=>['0','5']),'id','ch_name')%>'
+		dept_sel['3']='<%=j options_from_collection_for_select(Department.where(:degree=>'3').searchable,'id','ch_name')%>'
+		dept_sel['2']='<%=j options_from_collection_for_select(Department.where(:degree=>'2').searchable,'id','ch_name')%>'
+		dept_sel['0']='<%=j options_from_collection_for_select(Department.where(:degree=>['0','5']).searchable,'id','ch_name')%>'
 		
 		$("#q_department_id_eq").html(dept_sel[obj.val()]);
 	}

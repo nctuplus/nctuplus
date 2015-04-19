@@ -1,17 +1,17 @@
 class DepartmentsController < ApplicationController
   before_filter :checkTopManager
   def index
-    @departments=Department.all
-	
+    @departments=Department.where(:majorable=>true).order("college_id DESC")	
   end
   def show
     @department = Department.find(params[:id])
-	@courses = @department.courses
-	@teachers = @department.teachers
+		@courses = @department.courses
+		@teachers = @department.teachers
 	
   end
   def new
     @department=Department.new
+		render "_form"
   end
   def create
     @department = Department.new(department_param)
@@ -23,6 +23,7 @@ class DepartmentsController < ApplicationController
   def edit
     
     @department = Department.find(params[:id])
+		render "_form"
   end
   def update
     @department = Department.find(params[:id])
@@ -40,7 +41,7 @@ class DepartmentsController < ApplicationController
   private
   def department_param
     
-	params.require(:department).permit(:ch_name, :credit, :dept_type)
+	params.require(:department).permit(:ch_name, :dept_type, :majorable, :college_id)
   end
   
 end

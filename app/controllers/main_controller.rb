@@ -10,9 +10,10 @@ class MainController < ApplicationController
 	include ApiHelper
 	def policay_page
 	end
+	
   def index
-
   end
+	
 	def E3Login_Check
 		
 		std_id = params[:id]
@@ -61,23 +62,7 @@ class MainController < ApplicationController
 	end
 	
 	
-	def test
 
-	end
-	
-	def send_report
-		@name=params[:report][:name]
-		@email=params[:report][:email]
-		
-		if current_user
-			@email='https://www.facebook.com/'<<current_user.uid
-		end
-		
-		@content=params[:report][:content]
-		UserMailer.report(@name,@email,@content).deliver
-		#render :nothing => true, :status => 200, :content_type => 'text/html'
-		render "send_success"
-	end
 	
 
 	def get_specified_classroom_schedule
@@ -186,11 +171,5 @@ class MainController < ApplicationController
 			render :layout=>false, :text=>data.to_json
 		end
 	end
-  
-	private
-
-
-	
-  
   
 end

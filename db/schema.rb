@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150417063256) do
+ActiveRecord::Schema.define(version: 20150419123054) do
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -243,9 +243,11 @@ ActiveRecord::Schema.define(version: 20150417063256) do
     t.integer  "degree"
     t.string   "dept_type"
     t.string   "dep_id"
-    t.integer  "college_id", default: 0
+    t.integer  "college_id",  default: 0
     t.string   "ch_name"
     t.string   "eng_name"
+    t.boolean  "has_courses", default: false
+    t.boolean  "majorable",   default: false
     t.string   "use_type"
     t.datetime "created_at"
     t.datetime "updated_at"
