@@ -110,8 +110,10 @@ class UserController < ApplicationController
 
 			if course_map
 				course_map_res=	{
-					:name=>course_map.name,
+					:name=>course_map.department.ch_name+" 入學年度:"+course_map.semester.year.to_s,
 					:id=>course_map.id,
+					:dept_id=>course_map.department_id,
+					:sem_id=>course_map.semester_id,
 					:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
 					:cfs=>course_map.to_tree_json		
 				}#get_cm_res(course_map)
@@ -136,8 +138,6 @@ class UserController < ApplicationController
 	end
 
 	def import_course_2
-
-		
 	end
 	
 	def import_course
@@ -331,9 +331,7 @@ class UserController < ApplicationController
 		cd_id=params[:cd_id].to_i
 		cd=CourseDetail.find(cd_id)
 		_type=params[:type]
-		if params[:from]=="cart"
-			session[:cd].delete(cd_id)
-		end
+		
 		if _type=="add"
 			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>cd.semester_id, :course_detail_id=>cd.id, :score=>'修習中')
 			redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
@@ -346,23 +344,6 @@ class UserController < ApplicationController
 		end
 		
 	end
-	def del_course
-		sem_id = params[:sem_id].to_i
-		cid = params[:cid].to_i
-		cd_ids=current_user.course_simulations.filter_semester(sem_id).select{|ps| ps.course_detail.id==cid}
-		if cd_ids.size == 1
-			target = current_user.course_simulations.where(:semester_id=>sem_id, :course_detail_id=>cid).first
-			status = CourseDetail.where(:id=>cid).map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_teachership.course.ch_name,"course_id"=>cd.id}}.to_json
-			target.delete	
-		else
-			status = 0
-		end
-		respond_to do |format|
-			format.html { render :text => status.to_s.html_safe }
-		end	
-	end
-	
-	
 	
   private
 

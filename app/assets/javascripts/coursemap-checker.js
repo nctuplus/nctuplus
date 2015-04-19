@@ -326,7 +326,7 @@ function get_node_data(cf,user_courses,maxColSpan){
 		}
 	}
 	else{
-		str+="<tr class='row'><td class='col-md-2'><a href='javascript:void(0);' onclick='show_list("+JSON.stringify(cf,null,4)+")'>"+cf.cf_name+"</a></td>";
+		str+="<tr class='row'><td class='col-md-2'>"+cf.cf_name+"</td>";
 		str+="<td class='col-md-10 text-center' colspan='"+maxColSpan+"'>";
 		
 		var check=check_cf(user_courses,cf);

@@ -38,7 +38,7 @@
 			</tr>
 		{% }else{ %}
 		{% var cfs=get_cf_list(cm.cfs,course); %}
-		{% console.log(cfs[0]); %}
+		
 		{% var tmp=cfs[0]; %}
 		{% if(cfname.indexOf(tmp.name)==-1) { %}
 			{% cfname.push(tmp.name); %}

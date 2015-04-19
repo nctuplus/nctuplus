@@ -108,7 +108,7 @@ class CoursesController < ApplicationController
 		
 		if params[:type]=="add"
 			cd_id=params[:cd_id].to_i
-			session[:cd]=[] if !session[:cd]
+			session[:cd]=[] if session[:cd].nil?
 			if CourseDetail.where(:id=>cd_id).empty?
 				alt_class="warning"
 				mesg="查無此門課!"
@@ -133,21 +133,12 @@ class CoursesController < ApplicationController
 				alt_class="warning"
 				mesg="你未加入此課程!"
 			end
-		end
-		
+		end	
 		respond_to do |format|
-			format.html {
-				render :text => ajax_flash(alt_class,title,mesg),
-							 :content_type => 'text/html',
-							 :layout => false
-			}
 			format.json {
 				render :json => {:class=>alt_class, :text=>mesg}
 			}
 		end
-		#render :nothing => true, :status => 200, :content_type => 'text/html'
-
-		
 	end
 	
 
