@@ -203,6 +203,8 @@ protected
 		return data
 	end
 	
+=begin
+<<<<<<< HEAD
 	def _get_field_content_data(cf)	
 		chead = (cf.field_type==1) ? "[必修] " : "[X選Y] "
 		data = {
@@ -235,4 +237,8 @@ protected
 		}
 		return data
   end
+=======
+	
+>>>>>>> master
+=end
 end
