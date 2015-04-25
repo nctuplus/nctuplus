@@ -351,7 +351,7 @@ class UserController < ApplicationController
 			:cf_name=>cs.course_field ? cs.course_field.name : "",
 			:credit=>cs.course.credit,
 			:temp_cos_id=>cs.course_detail.temp_cos_id,
-			:file_count=>cs.course_teachership.file_infos.count.to_s,
+			:file_count=>cs.course_teachership.past_exams.count.to_s,
 			:discuss_count=>cs.course_teachership.discusses.count.to_s,
 			:score=>cs.score
 		}}

@@ -246,7 +246,9 @@ img.bg {
 	zoom:1;
 }
 
-.vertical-text {
-	transform: rotate(90deg);
-	transform-origin: left top 0;
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+  display: flex;
+  align-items: center;
 }
