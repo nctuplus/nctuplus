@@ -1,7 +1,7 @@
 class CourseDetail < ActiveRecord::Base
 	belongs_to :course_teachership
 	delegate :teacher_name, :to=>:course_teachership
-	has_many :file_infos, :through=>:course_teachership
+	has_many :past_exams, :through=>:course_teachership
 	has_many :discusses, :through=>:course_teachership
 	has_one :course, :through=>:course_teachership
 	delegate :ch_name,:credit, :to=>:course, :prefix=>true

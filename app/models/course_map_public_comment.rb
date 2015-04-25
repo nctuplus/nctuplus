@@ -11,7 +11,7 @@ has_many :course_map_public_sub_comments
 			:comments=> self.comments,
 			:checked=> self.checked,
 			:time=>self.updated_at.strftime("%F %R"),
-			:child_comments=> self.course_map_public_sub_comments.map{|sub_comment| sub_comment.to_hash}		
+			:child_comments=> self.course_map_public_sub_comments.order('updated_at ASC').map{|sub_comment| sub_comment.to_hash}		
 		}
 	end
 

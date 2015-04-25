@@ -8,10 +8,7 @@ class Course < ActiveRecord::Base
 	has_many :course_fields, :through=>:course_field_lists
 	has_many :course_teacherships, :dependent => :destroy
 	validates_associated :course_teacherships
-	has_many :course_details, :through=> :course_teacherships#, :source=>course_details
-	
-	#has_many :teachers, :through => :course_teacherships
-	
+	has_many :course_details, :through=> :course_teacherships
 	has_many :semesters, :through => :course_details
 
 		

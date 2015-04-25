@@ -1,6 +1,7 @@
 <%= javascript_include_tag asset_path("course_content"), "data-turbolinks-track" => true %>
 <%= javascript_include_tag asset_path("courses/chart"), "data-turbolinks-track" => true %>
 <%= javascript_include_tag asset_path("courses/main"), "data-turbolinks-track" => true %>
+
 <div class="row">
 	<div class="col-md-9 scroll-content col-md-offset-1">
 		<div class="row" id="tc" >
@@ -156,9 +157,9 @@
 		//teacher compare & rank
 		$("#compare").load("/course_content/get_compare?c_id=<%=j @data[:course_id]%>", function() {
 			$('body').scrollspy('refresh');
-			$("#discuss").load("/discusses/list_by_course?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
+			$("#discuss").load("/discusses/show?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
 				$('body').scrollspy('refresh');
-				$("#files").load("/file_infos/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>", function() {
+				$("#files").load("/past_exams/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>", function() {
 					$('body').scrollspy('refresh');
 					$('body').scrollTo("#course-name",10,{offset:-80});
 					<% if params[:first_show]=="discussion" %>

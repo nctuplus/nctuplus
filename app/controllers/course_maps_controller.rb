@@ -1,8 +1,8 @@
 class CourseMapsController < ApplicationController
 	include CourseMapsHelper
 
-	before_filter :checkCourseMapPermission,:except=>[:index, :public] #:checkTopManager
-
+	before_filter :checkCourseMapPermission, :except=>[:index, :public, :cm_public_comment_action] #:checkTopManager
+	before_filter :checkLogin, :only=>[:cm_public_comment_action]
 ##### resource controller
 
 	def public #return json for index
@@ -33,24 +33,31 @@ class CourseMapsController < ApplicationController
 	
 	# handle Q&A post (ajax)
 	def cm_public_comment_action
+		res = []
 		if request.post?
-			if params[:parent_id].to_i==0
-				CourseMapPublicComment.create(
-					:course_map_id => params[:cm_id],
-					:user_id => current_user.id,
-					:comments => params[:comment]
-				)
-			else
-				CourseMapPublicSubComment.create(
-					:course_map_id => params[:cm_id],
-					:user_id => current_user.id,
-					:comments => params[:comment],
-					:course_map_public_comment_id=> params[:parent_id]
-				)
-			end
+			if params[:type]=="reply"
+				if params[:parent_id].to_i==0
+					res = CourseMapPublicComment.create(
+						:course_map_id => params[:cm_id],
+						:user_id => current_user.id,
+						:comments => params[:comment]
+					)
+				else
+					res = CourseMapPublicSubComment.create(
+						:course_map_id => params[:cm_id],
+						:user_id => current_user.id,
+						:comments => params[:comment],
+						:course_map_public_comment_id=> params[:parent_id]
+					)
+				end
+			elsif params[:type]=="check"
+				res = CourseMapPublicComment.find(params[:qa_id])
+				res.checked = true
+				res.save!
+			end	
 		end
 		
-		render "/course_maps/public/cm_public_comment_return", :layout=>false 
+		render :text=>res.to_hash.to_json, :layout=>false 
 	end
 	
 	def index
@@ -512,12 +519,12 @@ class CourseMapsController < ApplicationController
 	end
 	
 	def update_cm_head # ajax post
-		cm = CourseMap.find(params[:map_id])
-		cm.department_id = params[:dep]
-		cm.semester_id = params[:sem]
-		cm.total_credit = params[:grade]
-		cm.desc = params[:desc]
-		cm.save!
+		cm = CourseMap.find(params[:map_id]).update_attributes(
+			:department_id=> params[:dep],
+			:semester_id=> params[:sem],
+			:total_credit=> params[:grade],
+			:desc=> params[:desc]
+		)
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 

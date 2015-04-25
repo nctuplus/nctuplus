@@ -16,16 +16,16 @@
   {% for (var i=0, file; file=o.files[i]; i++) { %}
   <tr class="template-upload fade" >
     
-    <input type="hidden" class="upload_ct_id" name="file_info[course_teachership_id]" value="">
+    <input type="hidden" class="upload_ct_id" name="past_exam[course_teachership_id]" value="<%=@ct_id%>">
     <!--<td class="preview"><span class="fade"></span></td>-->
     <td>0</td>
 	<td class="semester"><span>
 	
-	<%=select_tag "file_info[semester_id]", options_from_collection_for_select(Semester.all, "id", "name"), :onchange=>"update_input($(this));" %>
-	<input id="new_semester_id" type="hidden" name="file_info[semester_id]" value="<%=@sems.first.id %>">
+	<%=select_tag "past_exam[semester_id]", options_from_collection_for_select(Semester.all, "id", "name"), :onchange=>"update_input($(this));" %>
+	<input id="new_semester_id" type="hidden" name="past_exam[semester_id]" value="<%=@sems.first.id %>">
 
 	</span></td>
-	<td class="col-md-2 description"><input name="file_info[description]" rows="1" style="width:200px;"></td>
+	<td class="col-md-2 description"><input name="past_exam[description]" rows="1" style="width:200px;"></td>
 	<td class="filename">{%=file.name%}</td>
 	<td class="size"><span>{%=o.formatFileSize(file.size)%}</span></td>
     {% if (file.error) { %}

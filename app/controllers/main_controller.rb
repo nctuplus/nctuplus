@@ -8,25 +8,39 @@ class MainController < ApplicationController
 	before_filter :checkTopManager, :only=>[:student_import]
 	include CourseMapsHelper	
 	include ApiHelper
-	def policay_page
-	end
+
 	
-  def index
-  end
+ 	def index
+  	end
 	
 	def E3Login_Check
 		
 		std_id = params[:id]
 		
 		@sendE3={:key=>Nctuplus::Application.config.secret_key_base ,:id=>std_id, :pwd=>params[:pwd]}		
-		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/Authentication",@sendE3)
+		
+		@config = YAML.load_file("#{Rails.root}/config/E3.yml")
+		http=Curl.post(@config["prefix_url"]+"Authentication",@sendE3)
+		
 		@res=http.body_str
 		Rails.logger.debug "[debug] res="+@res.to_s
 		data = 'fail'
 		
 		if @res.to_s=='"OK"'
 			find_user = User.where(:student_id=>std_id).take
-			
+=begin
+			if find_user.nil?
+				new_user = User.new	
+				new_user.student_id, new_user.name = std_id, std_id
+				new_user.save!
+				session[:user_id] = new_user.id
+			else
+				session[:user_id] = find_user.id
+			end
+			data = 'success'
+=end
+		#end	
+
 			if current_user and find_user #有兩個獨立的帳號(fb, e3), merge	
 				if find_user.uid.nil?
 					if not find_user.course_simulations.empty? 
@@ -57,7 +71,7 @@ class MainController < ApplicationController
 			end			
 			data = 'success'		
 		end
-		
+
 		render :text=> data
 	end
 	

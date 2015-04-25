@@ -20,6 +20,24 @@ class User < ActiveRecord::Base
 	
 	validates :uid, :uniqueness => {:scope => [ :student_id]}
 	
+	def hasFb?
+		return self.provider=="facebook"
+	end
+	
+## role func
+	def isAdmin?
+		return self.role==0
+	end
+	
+	def isOffice?
+		return self.role==2
+	end	
+	
+	def isNormal?
+		return self.role==1
+	end
+	
+##	
 	def is_undergrad
 		self.department && self.department.degree==3
 	end
@@ -65,6 +83,15 @@ class User < ActiveRecord::Base
 		}}
 	end
 	
+	def update_omniauth(auth)
+    update_attributes(
+      :provider => auth.provider,
+      :uid => auth.uid,
+      :name => auth.info.name,
+      :oauth_token => auth.credentials.token,
+      :oauth_expires_at => Time.at(auth.credentials.expires_at)
+    )
+  end
 	
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
@@ -75,5 +102,22 @@ class User < ActiveRecord::Base
       user.oauth_expires_at = Time.at(auth.credentials.expires_at)
       user.save!
     end
+  end
+  
+  
+  def self.e3_login(username, password)
+
+  		return if not username and not password
+require 'open-uri'
+require 'net/http' 			
+		sendE3={:key=>Nctuplus::Application.config.secret_key_base ,:id=>username, :pwd=>password}				
+		config = YAML.load_file("#{Rails.root}/config/E3.yml")
+		res = Curl.post(config["prefix_url"]+"Authentication",sendE3).body_str.to_s	
+		
+		if res=='"OK"'
+			return {:e3_auth=>true, :user=>User.where(:student_id=>username).take}
+		else
+			return {:e3_auth=>false}	
+  		end
   end
 end

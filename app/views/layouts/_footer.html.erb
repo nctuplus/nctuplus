@@ -1,4 +1,4 @@
-﻿<div class="navbar navbar-inverse navbar-fixed-bottom " style="min-height:35px;">
+﻿<div class="navbar navbar-inverse navbar-fixed-bottom hidden-xs hidden-sm" style="min-height:35px;">
 	<div class="container" >
 		<p class="navbar-text pull-left footer-text">© 2014 NCTU<sup>+</sup><!--交大網頁及系統優化小組-->
 		<a href="#" data-toggle="modal" data-target="#global_modal" onclick="contactus();" style="margin-left:10px;">Contact Us</a>
@@ -13,12 +13,6 @@
 	</div>
 </div>
 
-<script>
-	function contactus(){
-		$("#global_modal .modal-content").html(tmpl("contact_us"));
-	}
-</script>
-<%=render "/layouts/modal_content/xtmpl_footer_contactus"%>
 
 
 

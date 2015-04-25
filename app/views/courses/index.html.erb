@@ -72,7 +72,7 @@
 					<td class="text-center">
 					<%= cd.reg_num %>/<%=cd.students_limit.to_i==9999 ? "不限" : cd.students_limit%>
 					</td>
-					<td class="text-center"><%= "#{cd.discusses.count}/#{cd.file_infos.count}" %></td>
+					<td class="text-center"><%= "#{cd.discusses.count}/#{cd.past_exams.count}" %></td>
 					<td class="text-center"><%= cd.view_times %></td>
 				</tr>
 		<% end %>

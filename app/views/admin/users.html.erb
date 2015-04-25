@@ -30,11 +30,11 @@
 		var uid = $(this).attr('user_id');
 		var role = $(this).val();
 		$.ajax({
-			url: "/user/change_role",
-			type: "GET",
+			url: "/admin/change_role",
+			type: "POST",
 			data :{uid: uid, role: role},
 			success: function(){
-				alert('update success.');
+				toastr["success"]("update success.");
 			},
 			error: function(){
 				alert('Internal server error.');

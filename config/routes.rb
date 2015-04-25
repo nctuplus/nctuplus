@@ -8,16 +8,19 @@ Nctuplus::Application.routes.draw do
 #--------- login control and session --------------
   match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
-  match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
+  match 'signout', to: 'sessions#destroy', via: [:get, :post]
+  match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
 	get "sessions/get_courses"
 	
 	
 
 #--------- for many usage --------------
+	
+	
 	get "main/index"
-  post "main/temp_student_action"
-	get "main/E3Login"
-	post "main/E3Login_Check"
+ 	post "main/temp_student_action"
+	#get "main/E3Login"
+	#post "main/E3Login_Check"
 	get "main/student_import"
 	post "main/student_import"
   get "main/test"
@@ -28,9 +31,10 @@ Nctuplus::Application.routes.draw do
 	
 	get "admin/ee104"
 	get "admin/users"
+	post "admin/change_role"
 	get "admin/course_maps" #, to: "course_maps#admin_index"
 #---------- user ----------------
-	get "user/change_role" #in admin/users
+	
 	get "user/add_course"
 	get "user/get_courses"
 	get "user/this_sem"
@@ -104,12 +108,11 @@ Nctuplus::Application.routes.draw do
 	resources :departments
 	
 	
-	get "discusses/list_by_course"
+	get "discusses/show"
 	get "discusses/like"
-	post "discusses/new_discuss"
-	post "discusses/new_sub_discuss"
-	post "discusses/update_discuss"
-	post "discusses/delete_discuss"
+	post "discusses/new"
+	post "discusses/update"
+	post "discusses/delete"
  
 
 	
@@ -122,9 +125,9 @@ Nctuplus::Application.routes.draw do
 	get "api/testttt"
   #----------for files---------------
   
-	get "file_infos/list_by_ct"
-  get "file_infos/edit"
-  resources :file_infos
+	get "past_exams/list_by_ct"
+  get "past_exams/edit"
+  resources :past_exams
   
     
 

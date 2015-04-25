@@ -14,7 +14,7 @@ class CoursesController < ApplicationController
 		else
 			@q = CourseDetail.search(params[:q])		
 		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
 		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
 	end
 	
@@ -33,7 +33,7 @@ class CoursesController < ApplicationController
 				@q=CourseDetail.search(params[:q])				
 			end
 		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@result={
 			:view_type=>"schedule",
 			:use_type=>"add",

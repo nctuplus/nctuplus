@@ -1,7 +1,0 @@
-$("#discuss").load("/discusses/list_by_course?ct_id=<%=@ct_id%>",
-function(){
-	<% if params[:share] %>
-	$("#discuss_<%=@discuss.id%>").find(".entypo-facebook").click();
-	<% end %>
-}
-);

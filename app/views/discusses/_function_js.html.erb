@@ -1,0 +1,113 @@
+<script>
+	function show_sub_form(id){
+		<% if current_user and current_user.uid %>
+			$(".sub-form").html("");
+			$("#sub_form_"+id).html('<%=j render "sub_form" %>');
+			$("#reply_discuss_id").val(id);
+			$("#sub_content").focus();
+		<% else %>
+			alert("請先登入!");
+		<% end %>
+	}
+
+<% if current_user and current_user.uid%>
+	function like(_like,type,id,obj){
+
+	$.ajax({
+		type: "GET",
+		url: "/discusses/like",
+		data: {
+			type: type,
+			discuss_id: id,
+			like: _like,   
+		},
+		success: function(data){
+			obj.next().text(parseInt(obj.next().text())+1);
+			obj.parent().find(".clickable-hover").attr("onclick","");
+			obj.parent().find(".clickable-hover").removeClass("clickable-hover");
+		}
+	});
+
+}
+function edit_sub(id){
+	content=$("#sub_content_"+id);
+	content_text=content.find("textcontent");
+	var content_input='<textarea class="form-control" rows="5" id="content_edit_sub_'+id+'" required>'+content_text.text()+'</textarea>';
+	var but_submit='<p class="text-right"><button class="btn btn-primary" onclick="send_edit('+id+',\'sub\')">送出</button>  ';
+	var but_cancel='<button class="btn btn-danger" onclick="cancel('+id+',\'sub\')">取消</button></p>';
+	content.append(content_input+but_submit+but_cancel);
+	content_text.hide();
+	$("#edit_sub_but_"+id).hide();
+}
+
+function edit(id,type){
+	if(type=="main"){
+		title=$("#main_title_"+id);
+		title_h4=title.find("h4");
+
+		var title_input='<input type="text" class="form-control" id="title_edit_'+id+'" value="'+title_h4.text()+'" required>';
+		title_h4.hide();
+		title.find("p").hide();
+		title.append(title_input);
+		$("#reply_but_"+id).hide();
+	}
+	content=$("#"+type+"_content_"+id);
+	content_text=content.find("textcontent");
+	var content_input='<textarea class="form-control" rows="5" id="content_edit_'+type+'_'+id+'" required>'+content_text.text()+'</textarea>';
+	var but_submit='<p class="text-right"><button class="btn btn-primary" onclick="send_edit('+id+",'"+type+'\')">送出</button>  ';
+	var but_cancel='<button class="btn btn-warning" onclick="cancel('+id+",'"+type+'\')">取消</button></p>';
+	var but_delete='<button class="btn btn-danger" onclick="delete_discuss('+id+",'"+type+'\')">刪除</button>  ';
+	content.append(content_input+but_submit+but_delete+but_cancel);
+	content_text.hide();
+	$("#edit_"+type+"_but_"+id).hide();
+}
+function delete_discuss(id,type){
+	if (confirm('確定刪除此文章?')) {
+		$("#discuss").load("/discusses/delete",{
+			ct_id : <%=@ct.id%>,
+			type :type,
+			id: id,					
+		});
+	}
+
+}
+function cancel(id,type){
+	if (type=="main"){
+		title=$("#main_title_"+id);
+		title.find("h4").show();
+		title.find("p").show();
+		title.find("input").hide();
+		$("#reply_but_"+id).show();
+	}
+	content=$("#"+type+"_content_"+id);
+	content.find("textarea").hide();
+	content.find("button").hide();
+	content.find("textcontent").show();
+	$("#edit_"+type+"_but_"+id).show();
+	
+	
+}
+function send_edit(id,type){
+	//alert("!!!");
+	var title=$("#title_edit_"+id);
+	var content=$("#content_edit_"+type+"_"+id);
+	if(type=="main"&&title.val()==''){
+		title.focus();
+		return;
+	}
+	if(content.val()==''){
+		content.focus();
+		return;
+	}
+	
+	$("#discuss").load("/discusses/update",{
+		ct_id : <%=@ct.id%>,
+		type :type,
+		id: id,
+		title : title.val(),
+		content : content.val(),			
+	});
+}
+<% end %>
+
+</script>

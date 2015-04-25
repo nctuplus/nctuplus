@@ -1,7 +1,7 @@
 Paperclip::interpolates :ct_id do |attachment, style|
-  attachment.instance.course_teachership_id # or whatever you've named your User's login/username/etc. attribute
+  attachment.instance.course_teachership_id 
 end
 
-Paperclip::interpolates :userid do |attachment, style|
-  attachment.instance.owner_id # or whatever you've named your User's login/username/etc. attribute
+Paperclip::interpolates :user_id do |attachment, style|
+  attachment.instance.user_id
 end

@@ -21,3 +21,22 @@
 //= require coursemap-helper
 //= require coursemap-checker
 //= require toastr.min
+
+$('.toolTip').hover(function(){
+						// Hover over code
+						var title = $(this).attr('title');
+						$(this).data('tipText', title).removeAttr('title');
+						$('<p style="z-index:5000;"class="toolTipText "></p>')
+						.text(title)
+						.appendTo('body')
+						.fadeIn('slow');
+		}, function() {
+						// Hover out code
+						$(this).attr('title', $(this).data('tipText'));
+						$('.toolTipText').remove();
+		}).mousemove(function(e) {
+						var mousex = e.pageX + 20; //Get X coordinates
+						var mousey = e.pageY + 10; //Get Y coordinates
+						$('.toolTipText')
+						.css({ top: mousey, left: mousex })
+		});

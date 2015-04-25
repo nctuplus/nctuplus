@@ -1,0 +1,20 @@
+
+<%= form_tag '/discusses/new', :class=>"sub-discussion col-md-offset-1 col-md-11", :role=>"form", :remote=>"true" do %>
+	
+	<div class="col-md-1">
+		<%= image_tag "http://graph.facebook.com/#{current_user.uid}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
+		<br>
+	</div>
+	<div class="col-md-8">
+		<textarea class="form-control " name="content" id="sub_discuss_content" rows="5" placeholder="內容..." required></textarea>
+		<input type="hidden" value="sub" name="type" id="type">
+		<input type="hidden" value="" name="reply_discuss_id" id="reply_discuss_id">
+		<input type="hidden" value="<%=@ct.id%>" name="ct_id" id="ct_id">
+	</div>
+	<div class="col-md-3" style="">
+		<p>
+		<br><br><br><br>
+		<%= submit_tag "送出", :class=>"btn btn-primary " %>
+		</p>
+	</div>
+<% end %>

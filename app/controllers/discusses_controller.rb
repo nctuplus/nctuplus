@@ -1,8 +1,9 @@
 class DiscussesController < ApplicationController
-
+	# 
 	#layout false, :only =>[:list_by_course]
-	before_filter :checkLogin, :only=>[:new_discuss, :new_sub_discuss, :update_discuss, :like]
-	before_filter :checkOwner, :only=>[:update_discuss, :delete_discuss]
+	before_filter :checkLogin, :only=>[:new, :update, :like]
+	before_filter :checkOwner, :only=>[:update, :delete]
+	
 	def like
 		@like=DiscussLike.new
 		@like.user_id=current_user.id
@@ -37,75 +38,61 @@ class DiscussesController < ApplicationController
 		
 	end
 	
-	def list_by_course
+	def show
 		#@ct_id=
 		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
 		@discusses=@ct.discusses.includes(:sub_discusses, :user, :discuss_likes).order("updated_at DESC")
-		render "show_discussion", :layout=>false
+		render :layout=>false
 	end
 	
-	def new_discuss
-		#@share=params[:share]
-		@title=params[:main_title]
-		content=params[:main_content]
-		@ct_id=params[:ct_id]
-		@discuss=Discuss.new
-		@discuss.course_teachership_id=@ct_id
-		@discuss.user_id=current_user.id
-		@discuss.likes=0
-		@discuss.dislikes=0
-		@discuss.title=@title
-		@discuss.content=content
-		@discuss.is_anonymous=params[:anonymous]=="yes"
-		@discuss.save!
-		
-		render "new_discuss_ok"
-	end
-	
-	def new_sub_discuss
-
-		content=params[:sub_content]
-		discuss_id=params[:reply_discuss_id]
-		@ct_id=params[:ct_id]
-		@discuss=SubDiscuss.new
-		@discuss.discuss_id=discuss_id
-		@discuss.user_id=current_user.id
-		@discuss.likes=0
-		@discuss.dislikes=0
-
-		@discuss.content=content
-		@discuss.save!
-		render "new_discuss_ok"
-	end
-	
-	def update_discuss
-		
+	def new
 		if params[:type]=="main"
-			@discuss=Discuss.find(params[:discuss_id])
-			@discuss.content=params[:content]
-			@discuss.title=params[:title]
-			
-			@discuss.save!
+			@discuss=Discuss.create(
+				:course_teachership_id=>params[:ct_id],
+				:user_id=>current_user.id,
+				:likes=>0,
+				:dislikes=>0,
+				:title=>params[:title],
+				:content=>params[:content],
+				:is_anonymous=>params[:anonymous]=="yes"
+			)
 		elsif params[:type]=="sub"
-			@discuss=SubDiscuss.find(params[:discuss_id])
-			@discuss.content=params[:content]
-			@discuss.save!
-		#else
-		#	redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
-		#	return false
+			@discuss=SubDiscuss.create(
+				:discuss_id=>params[:reply_discuss_id],
+				:user_id=>current_user.id,
+				:likes=>0,
+				:dislikes=>0,
+				:content=>params[:content]
+			)
 		end
-
-		redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
+		
+		#render "new_discuss_ok"
 	end
 	
-	def delete_discuss
+
+	
+	def update	
 		if params[:type]=="main"
-			@discuss=Discuss.find(params[:discuss_id])
+			@discuss=Discuss.find(params[:id])
+			@discuss.content=params[:content]
+			@discuss.title=params[:title]			
+			@discuss.save!
 		elsif params[:type]=="sub"
-			@discuss=SubDiscuss.find(params[:discuss_id])
+			@discuss=SubDiscuss.find(params[:id])
+			@discuss.content=params[:content]
+			@discuss.save!
+		end
+		redirect_to :action=> :show, :ct_id=>params[:ct_id]
+	end
+	
+	def delete
+		if params[:type]=="main"
+			@discuss=Discuss.find(params[:id])
+		elsif params[:type]=="sub"
+			@discuss=SubDiscuss.find(params[:id])
 		end
 		@discuss.destroy!
-		redirect_to :action=> :list_by_course, :ct_id=>params[:ct_id]
+		redirect_to :action=> :show, :ct_id=>params[:ct_id]
 	end
 
 	

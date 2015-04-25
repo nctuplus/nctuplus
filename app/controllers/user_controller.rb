@@ -65,14 +65,6 @@ class UserController < ApplicationController
 		end
 		
 	end
-
-	def change_role
-		user = User.find(params[:uid])
-		user.role = params[:role].to_i
-		user.save!
-		
-		render :layout=>false, :nothing=> true, :status=>200, :content_type => 'text/html'
-	end
 	
 	def special_list
 		@user=getUserByIdForManager(params[:uid])

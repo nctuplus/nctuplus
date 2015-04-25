@@ -3,10 +3,8 @@ class Discuss < ActiveRecord::Base
 	belongs_to :user
 	has_many :discuss_likes, :dependent => :destroy
 	has_many :sub_discusses, :dependent => :destroy
-	validates_presence_of :title, :content
+	delegate :name, :uid, :to=>:user, :prefix=>true
+	validates_presence_of :title, :content, :user_id, :course_teachership_id
+
 	
-	def check_owner()
-	
-	end
-	#validates_presence_of :content
 end

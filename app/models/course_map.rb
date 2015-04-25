@@ -16,6 +16,6 @@ class CourseMap < ActiveRecord::Base
 	end
 	
 	def comments
-		return self.course_map_public_comments.map{|comment| comment.to_hash}
+		return self.course_map_public_comments.order('updated_at DESC').map{|comment| comment.to_hash}
 	end
 end

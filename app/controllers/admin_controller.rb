@@ -10,6 +10,14 @@ class AdminController < ApplicationController
 	def users
     @users=User.includes(:semester, :department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
   end
+  
+  def change_role
+		user = User.find(params[:uid])
+		user.role = params[:role].to_i
+		user.save!
+		
+		render :layout=>false, :nothing=> true, :status=>200, :content_type => 'text/html'
+	end
 	
 	def ee104
 		if request.format=="json"

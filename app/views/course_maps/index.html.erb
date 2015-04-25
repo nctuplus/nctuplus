@@ -13,12 +13,15 @@
 				<h4>請先至左方選擇系!</h4>
 				<% end %>
 			</div>
+			<h3><strong>Q&A</strong></h3>
+			<hr>
+			
+				<div id="QandA" style="display: none;">
+				</div>
+			
 		</div>
-		<div class="panel panel-default" id="QandA">
-			<div class="panel-body">
-				
-			</div>
-		</div>
+		
+		
 	</div>
 	
 	<div class="col-md-2 col-md-offset-">
@@ -47,8 +50,10 @@
 					$('body').scrollTo($(this).attr('href'),700,{offset:-60});
 			});
 			get_piechart_data("#chart-content", data.course_map);
+			
 			// QandA
-			$("#QandA").children().first().html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
+			$('#QandA').show();
+			$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
 		});
 
 	}
@@ -126,6 +131,6 @@
 	.lead_course {
 		background-color:#BBFFEE;
 	}
-	html, body{height:100%;}
+	/*html, body{height:100%;}*/
 
 </style>

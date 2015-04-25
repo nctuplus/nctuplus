@@ -1,0 +1,53 @@
+<script>
+	function change_check(obj){
+		if(obj.val()=="yes")
+			obj.val("no");
+		else
+			obj.val("yes");
+	}
+</script>
+<%= form_tag '/discusses/new', :role=>"form", :remote=>"true" do %>
+	<div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
+
+		<div class="panel-heading row no-margin-left">
+			<% if current_user && current_user.uid %>
+				<div class="col-md-1">
+					<%= image_tag "http://graph.facebook.com/#{current_user.uid}/picture", size: "50x50", style:"display:inline-block" %>
+				</div>
+				<div class="col-md-11">
+					<br>
+					<input type="text" class="form-control" name="title" id="main_discuss_title" placeholder="標題..." style="" required>
+					<input type="hidden" value="<%=@ct.id%>" name="ct_id">
+					<input type="hidden" value="main" name="type" id="type">
+				</div>
+			<% else %>
+				<input type="text" class="form-control" id="main_title" placeholder="請先登入" disabled="true">
+			<% end %>	
+		</div>
+
+		<div class="panel-body row">
+			<div class="col-md-12">
+				<textarea class="form-control " name="content" id="main_discuss_content" rows="5" placeholder="內容..." required></textarea>
+			</div>
+		</div>
+		<div class="panel-footer row no-margin-left">
+			<div class="col-md-12">
+			<% if current_user && current_user.uid %>
+				<p class="pull-right">
+				同步分享至FB
+				<input type="checkbox" name="share" id="sync-share" onchange="change_check($(this))" class="" value="no" >
+				&nbsp;&nbsp;
+				匿名
+				<input type="checkbox" name="anonymous" id="anonymous" onchange="change_check($(this))" class="" value="no" >
+				&nbsp;&nbsp;
+				<%= submit_tag "送出", :class=>"btn btn-primary " %>
+				</p>
+			<% else %>
+				<%=link_to "/auth/facebook", class:"btn btn-primary pull-right" do %>
+					<%=fa_icon "facebook"%> fb登入
+				<% end %>
+			<% end %>
+			</div>
+		</div>
+	</div>
+<% end %>

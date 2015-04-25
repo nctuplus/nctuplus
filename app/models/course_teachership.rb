@@ -13,8 +13,8 @@ class CourseTeachership < ActiveRecord::Base
   has_one :course_content_head
   has_many :course_content_lists
 	has_many :comments
-	has_many :file_infos
-	validates_associated :file_infos
+	has_many :past_exams
+	validates_associated :past_exams
 	has_many :discusses
 	validates_associated :discusses
 
