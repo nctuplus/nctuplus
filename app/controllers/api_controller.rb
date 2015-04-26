@@ -10,7 +10,7 @@ class ApiController < ApplicationController
 			tempcs.semester_id=tempcs.course_detail.semester_id
 			tempcs.save
 		end
-	end
+	end     
 	def change_to_newdept_id
 		Course.includes(:department).all.each do |course|
 			dept=course.department
