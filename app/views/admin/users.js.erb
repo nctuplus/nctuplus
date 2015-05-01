@@ -1,2 +1,2 @@
-$('#body').html('<%= escape_javascript render "manage_user_lists" %>');
-$('#paginator').html('<%= escape_javascript(paginate(@users, :window=>2, :remote => true).to_s) %>');
+$('#body').html('<%=j render :partial=>"manage_user_lists", :collection => @users, :as => :user%>');
+$('#paginator').html('<%=j paginate(@users, :window=>2, :remote => true).to_s %>');

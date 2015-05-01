@@ -30,7 +30,7 @@
 					</div>
 					<div class="col-md-5">
 
-						<%= f.select :department_id, options_from_collection_for_select(Department.where('degree IN (2,3) AND use_type != ?', "no_courses").order("degree DESC").prepend(test),"id","ch_name"),{} ,{:class=>"form-control"}  %>
+						<%= f.select :department_id, options_from_collection_for_select(Department.majorable.order("degree DESC").prepend(test),"id","ch_name"),{} ,{:class=>"form-control"}  %>
 					</div>
 				</div>
 				<div class="row">
@@ -38,7 +38,7 @@
 						<h4 class="text-right">適用年度</h4>
 					</div>
 					<div class="col-md-5">
-					<%=select_tag :semester_id, options_for_select(Semester.where('half=1').map{ |u| [u.year, u.id] }), :class=>'form-control', :prompt=>'不指定' %>
+					<%=select_tag :year, options_for_select(Semester::YEARS.map{ |y| [y, y] }), :class=>'form-control', :prompt=>'不指定' %>
 					</div>
 				</div>
 				<div class="row">
@@ -90,7 +90,7 @@ $(document).ready(function(){
 		if(!cm_id)
 			return false ;
 	
-		$('#semester_id').find('option[value="'+all_cm[cm_id].sem_id+'"]').attr("selected",true);
+		$('#year').find('option[value="'+all_cm[cm_id].year+'"]').attr("selected",true);
 		$('#course_map_department_id').find('option[value="'+all_cm[cm_id].dept_id+'"]').attr("selected",true);
 		$('#name').val(name);
 		

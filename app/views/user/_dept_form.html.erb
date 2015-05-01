@@ -3,7 +3,6 @@
 <% dept=@user.department %>
 <%= form_tag "/user/select_dept", class:"form-inline", id:"user_form" do %>
 	<div class="form-group col-md-3">
-	
 	<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],dept.nil? ? 3 :dept.degree), class:'form-control', onChange:"change_degree();"%>
 	</div>
 	<div class="form-group col-md-4">
@@ -17,7 +16,7 @@
 	</h4>
 	</div>
 	<div class="col-md-8">
-	<%=select_tag 'grade_select', options_from_collection_for_select(Semester.all.group(:year).order(:id),:id,:year, @user.semester_id), class:'form-control'%>
+	<%=select_tag 'grade_select', options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, @user.year), class:'form-control'%>
 	</div>
 	</div>
 	<%=submit_tag "送出", class: "btn btn-success"%>

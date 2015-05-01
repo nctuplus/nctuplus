@@ -1,6 +1,5 @@
 ﻿<script>
 	$(document).ready(function(){
-		
 		<% if params[:show_static] %>
 			$("#toggle-c").click();
 		<% end %>
@@ -24,10 +23,6 @@
 			alert("<%=params[:msg]%>");
 		<% end %>
 	});
-	function no_dept_alert(){	
-		alert('請先輸入系級,謝謝!');
-		$('#degree_select').focus();
-	}
 </script>
 <% if @user.course_simulations.count==0 %>
 <div class="jumbotron bs-callout bs-callout-info border-info" style="background-color:rgba(0,0,0,0);">

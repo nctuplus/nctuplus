@@ -1,0 +1,55 @@
+<!-- The template to display files available for upload -->
+<script id="template-upload" type="text/x-tmpl">
+  {% for (var i=0, file; file=o.files[i]; i++) { %}
+		<tr class="template-upload fade" > 
+			<input type="hidden" class="upload_ct_id" name="past_exam[course_teachership_id]" value="<%=@ct_id%>">
+			<td>0</td>
+			<td class="semester">
+				<span>
+					<%=select_tag "past_exam[semester_id]", options_from_collection_for_select(@sems, "id", "name"), :onchange=>"update_input($(this));" %>
+					<input id="new_semester_id" type="hidden" name="past_exam[semester_id]" value="<%=@sems.first.id %>">
+				</span>
+			</td>
+			<td class="col-md-2 description">
+				<input name="past_exam[description]" rows="1" style="width:200px;">
+			</td>
+			<td class="filename">
+				{%=file.name%}
+			</td>
+			<td class="size">
+				<span>{%=o.formatFileSize(file.size)%}</span>
+			</td>
+			{% if (file.error) { %}
+				<td class="error" colspan="2">
+					<span class="label label-important">{%=locale.fileupload.error%}</span> 
+					{%=locale.fileupload.errors[file.error] || file.error%}
+				</td>
+			{% } else if (o.files.valid && !i) { %}
+				<td colspan="2">
+					<div class="progress progress-success progress-striped active">
+						<div class="bar progress-bar" style="width:0%;"></div>
+					</div>
+				</td>
+				<td class="function col-md-1">
+				{% if (!o.options.autoUpload) { %}
+					<div class="start" style="display:inline-block;">
+						<button class="btn btn-success btn-xs">
+						<span class="glyphicon glyphicon-arrow-up"></span>
+						<!--<span>{%=locale.fileupload.start%}</span>-->
+						</button>
+					</div>
+				{% } %}
+				{% if (!i) { %}
+					<div class="cancel" style="display:inline-block;">
+						<button class="btn btn-warning btn-xs">
+						<span class="glyphicon glyphicon-remove"></span>
+						<!--<span>{%=locale.fileupload.cancel%}</span>-->
+						</button>
+					</div>
+				{% } %}
+				</td>
+			{% } %}
+		</tr>
+  {% } %}
+
+</script>

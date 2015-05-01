@@ -63,8 +63,7 @@
 			},
 			success: function(data) {
 				console.log(data);
-				//$("#schedule_div").load("/courses/get_user_courses?sem_id=<%=latest_semester.id%>&type=schd");
-				load_course_table(<%=latest_semester.id%>); 
+				load_course_table(<%=Semester::LAST.id%>); 
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");
 			}	

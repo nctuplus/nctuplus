@@ -7,7 +7,7 @@ namespace :course do
 	desc "import course from e3"
 	task :build => :environment do 
 		Semester.all.each do |sem|
-			datas=get_course_from_e3(sem)
+			datas=E3Service.get_course(sem)
 			cds=CourseDetail.where(:semester_id=>sem.id)
 			datas.each do |data|
 				update_cd(data,cds,sem)
@@ -20,7 +20,7 @@ namespace :course do
 		updateDepartmentList
 		updateTeacherList
 		sem=Semester.last
-		datas=get_course_from_e3(sem) #get course
+		datas=E3Service.get_course(sem) #get course
 		stat={"Create"=>0, "Update"=>0}
 
 		datas.each do |data|
@@ -52,7 +52,7 @@ namespace :course do
 		new_sem.save!
 		updateDepartmentList
 		updateTeacherList
-		datas=get_course_from_e3(new_sem) #get course
+		datas=E3Service.get_course(new_sem) #get course
 		datas.each do |data|
 			course_id=get_cid_by_real_id(data)
 			tids=[]

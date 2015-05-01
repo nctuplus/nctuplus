@@ -1,0 +1,124 @@
+<style>
+th, td {
+	text-align: center;
+} 
+</style>
+<div class="row" style="margin-left:10px;" >
+	<div class="row">
+		<div class="col-md-3 well" id="search_div"></div>
+		<div class="col-md-6 well">
+			<div class="row" id="new_form_div"></div>	
+			<div class="row" id="header_content_div"></div>
+			<div class="row" id="course_content"></div>
+		</div>
+		<div class="col-md-3 col-sm-5 well">
+			
+			<ul id="myTab" class="nav nav-tabs" role="tablist">
+		      <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">課程總覽</a></li>
+		      <li role="presentation" class=""><a href="#group" role="tab" id="group-tab" data-toggle="tab" aria-controls="group" aria-expanded="false">課程群組</a></li>
+		      <small id="alert-msg"></small>
+		     
+		    </ul>
+		    <div id="myTabContent" class="tab-content">
+		      <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
+				<div id="course_tree"></div>
+		      </div>
+		      <div role="tabpanel" class="tab-pane fade" id="group" aria-labelledby="group-tab">
+		        <div id="group_tree">0.0</div>
+		      </div>
+		      
+		    </div>		
+		
+			
+		</div>
+	</div>
+</div>
+
+
+<%=render "xtmpl_header_content" %>
+<%=render "xtmpl_new_form" %>
+<%=render "xtmpl_course_list" %>
+<%=render "xtmpl_course_group_list" %>
+<%=render "xtmpl_credit_list" %>
+
+<script>
+var cf_show_id = null ;
+var cg_show_id = null ;
+
+$(document).ready(function(){
+
+	// init in home-tab
+	$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;		
+	load_treeview(0, map_id);
+	load_group_treeview(0, map_id);
+	
+	// change tab, change search cond
+	$('#group-tab').click(function(){
+		$('#search_div').load("/courses/search_mini_cm?hide_group=false") ;
+		reset_data();
+	});
+	$('#home-tab').click(function(){
+		$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;
+		reset_data();
+	});
+	
+	// course_tree onSelect
+	$('#course_tree').on('nodeSelected', function(event, node) {
+		reset_data(); // reset new-form & header-content
+		cf_show_id = null ; // reset course table target id
+	//	console.log(node.cf_id) ;
+		if(node.type > 0){
+			load_header_content({head_node: node}) ;
+			if(node.type < 3){ // 1: 必修, 2: x選y
+    			cf_show_id = node.cf_id ;  			
+      			load_course_list(cf_show_id);  			
+      		}			   		
+		}else{ // new form 
+	//		console.log("[course_tree select] " + node.type);
+			load_new_form({
+						level : node.type, 
+						header_name: '新增類別',
+         			    parent_id: node.parent_id}); 
+		}
+		
+		if(node.type<0){ // new something
+			$('#header_content').hide() ;
+			$('#course_content').empty();	
+		}else if(node.type!=0){
+			$('#course_content').empty();		
+		}	
+    	return false ;
+	});
+
+	// group_tree onSelect
+	$('#group_tree').on('nodeSelected', function(event, node) {
+		reset_data(); // reset new-form & header-content
+		if(node.type==-1){ // new group
+			$.ajax({
+				type: "POST",
+				url: "course_group_action" ,
+				data:{
+					type: "new",
+					map_id : map_id
+				},	
+				success: function(data){
+					load_group_treeview(data, map_id);
+				},	
+				error: function(){
+					alert('new course group failed..');
+				}
+			});
+		}else{ // group content
+			cg_show_id = node.cg_id ;
+			$.getJSON("show_course_group_list.json?target_id="+node.cg_id, function (data) {
+				//console.log(data);
+				data.push({name: node.text, gtype: node.gtype, cg_id: node.cg_id}); // store header info
+				$("#course_content").html(tmpl("group-table-format", data));	
+				bind_course_group_but();
+			});
+		}
+	});
+	
+}); // end of document ready
+
+</script>

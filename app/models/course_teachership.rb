@@ -5,7 +5,7 @@ class CourseTeachership < ActiveRecord::Base
 	belongs_to :teacher
 	
   has_many :course_details, :dependent=> :destroy
-
+	has_many :semesters, :through=> :course_details
 	has_many :course_teacher_ratings, :dependent=> :destroy
 	validates_associated :course_teacher_ratings
 	

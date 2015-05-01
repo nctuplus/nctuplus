@@ -1,14 +1,14 @@
 class CoursesController < ApplicationController
   #before_filter :find_department, :only=>[ :index, :new, :edit]
   
-	include CourseHelper
-  
-	layout false, :only => [:show_cart, :get_compare]
-
+	#include CourseHelper
 
 	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
 	def index
+		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
+		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
+		@dept_sel=Department.searchable.pluck(:ch_name, :id)
 		if !params[:custom_search].blank?	#if user key in something
 			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
 		else
@@ -18,14 +18,16 @@ class CoursesController < ApplicationController
 		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
 	end
 	
-	def search_mini
+	def search_mini	#for course simulation search & result
 		
+		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
+		@dept_sel=Department.searchable.pluck(:ch_name, :id)
 		if !params[:dimension_search].blank?	#search by 向度 (推薦系統)
-			@q= CourseDetail.search({:semester_id_eq=>latest_semester.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
+			@q= CourseDetail.search({:semester_id_eq=>Semester::LAST.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
 		elsif !params[:timeslot_search].blank? #search by time (推薦系統)
-			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>latest_semester.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
+			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>Semester::LAST.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
 		elsif !params[:custom_search].blank? #search by text
-			@q = CourseDetail.searchByText(params[:custom_search],latest_semester.id)
+			@q = CourseDetail.searchByText(params[:custom_search],Semester::LAST.id)
 		else
 			if params[:q].blank?
 				@q=CourseDetail.search({:id_in=>[0]})
@@ -37,13 +39,15 @@ class CoursesController < ApplicationController
 		@result={
 			:view_type=>"schedule",
 			:use_type=>"add",
-			:courses=>custom_search(!params[:q].blank?,false).map{|cd|
+			:courses=>cds.map{|cd|
 				cd.to_search_result
 			}
 		}
 		render "courses/search/mini", :layout=>false
 	end
+	
 	def search_mini_cm
+	
 		if !params[:q].blank?
 			@q = Course.search(params[:q])
 		else
@@ -93,15 +97,15 @@ class CoursesController < ApplicationController
 			:course_teachers=>cd.teacher_name,
 			:course_real_id=>cd.course.real_id.to_s,
 			:course_credit=>cd.course.credit,
-			:open_on_latest=>(cd.course_teachership.course_details.last.semester==latest_semester) ? true : false ,
+			:open_on_latest=>(cd.course_teachership.course_details.last.semester_id==Semester::LAST.id) ? true : false ,
 			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
 		}
 		#render "/course_content/show"
   end
 	
   def simulation  
-		@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
-		@user_sem_ids.append(latest_semester.id)	
+		#@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
+		#@user_sem_ids.append(Semester::LAST.id)	
   end
 	
 	def add_to_cart
@@ -151,37 +155,12 @@ class CoursesController < ApplicationController
 				cd.to_search_result
 			}
 		}
+		render :layout=>false
 	end
 		
   
   private
-	def custom_search(showDefault,pageble)
-		if !params[:dimension_search].blank?
-			@q= CourseDetail.search({:semester_id_eq=>latest_semester.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
-		elsif !params[:timeslot_search].blank?
-			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>latest_semester.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
-		elsif !params[:custom_search].blank?
-			@q = CourseDetail.search({:course_ch_name_or_time_or_brief_cont=>params[:custom_search],:semester_id_eq=>params[:q] ? params[:q][:semester_id_eq] : ""})
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
-			if cds.empty? #search teacher
-				@q = CourseDetail.search({:by_teacher_name_in=>params[:custom_search],:semester_id_eq=>params[:q] ? params[:q][:semester_id_eq] : ""})		
-				cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses)
-			end
-		else
-			if params[:action]=="search_mini" && params[:q].blank?
-				@q=CourseDetail.search({:id_in=>[0]})
-			else
-				@q = CourseDetail.search(params[:q])
-			end
-			cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :file_infos, :discusses).order("semester_id DESC")
-		end
-		
-		cds=cds.order("view_times DESC")
 
-		return params[:action]=="index" ? cds.page(params[:page]) : cds
-	end
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)
   end

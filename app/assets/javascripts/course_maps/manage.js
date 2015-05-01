@@ -1,52 +1,6 @@
-<style>
-th, td {
-	text-align: center;
-} 
-</style>
-<div class="row" style="margin-left:10px;" >
-	<div class="row">
-		<div class="col-md-3 well" id="search_div"></div>
-		<div class="col-md-6 well">
-			<div class="row" id="new_form_div"></div>	
-			<div class="row" id="header_content_div"></div>
-			<div class="row" id="course_content"></div>
-		</div>
-		<div class="col-md-3 col-sm-5 well">
-			
-			<ul id="myTab" class="nav nav-tabs" role="tablist">
-		      <li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">課程總覽</a></li>
-		      <li role="presentation" class=""><a href="#group" role="tab" id="group-tab" data-toggle="tab" aria-controls="group" aria-expanded="false">課程群組</a></li>
-		      <small id="alert-msg"></small>
-		     
-		    </ul>
-		    <div id="myTabContent" class="tab-content">
-		      <div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
-				<div id="course_tree"></div>
-		      </div>
-		      <div role="tabpanel" class="tab-pane fade" id="group" aria-labelledby="group-tab">
-		        <div id="group_tree">0.0</div>
-		      </div>
-		      
-		    </div>		
-		
-			
-		</div>
-	</div>
-</div>
+//= require bootstrap-treeview
 
-
-<%=render "xtmpl_header_content" %>
-<%=render "xtmpl_new_form" %>
-<%=render "xtmpl_course_list" %>
-<%=render "xtmpl_course_group_list" %>
-<%=render "xtmpl_credit_list" %>
-<%=javascript_include_tag asset_path("bootstrap-treeview.js") %>
-<script>
-var cf_show_id = null ;
-var cg_show_id = null ;
-var map_id = <%=j @course_map.id.to_s%> ;
-
-function load_treeview(target_id){
+function load_treeview(target_id, map_id){
 	$.getJSON( "get_course_tree.json?map_id="+map_id, function(res){
 		console.log('load course tree success');
 		$('#course_tree').treeview({data: res, map_id: map_id});
@@ -56,24 +10,14 @@ function load_treeview(target_id){
 	});
 	return ;
 }
-function load_group_treeview(target_id){
+
+function load_group_treeview(target_id, map_id){
 	$.getJSON( "get_group_tree.json?map_id="+map_id, function(res){
 		console.log('load group tree success');
 		$('#group_tree').treeview({data: res, map_id: map_id});
 		if (target_id!=0)
 			$('#group_tree').treeview('activateNode', ['cg_id', target_id]);
 	});
-	return ;
-}
-
-function reset_data(){
-	// reset new form;
-	$('#new_form_div').empty();
-	// reset header content
-	cg_show_id = null ;cf_show_id = null ;
-	$('#header_content_div').empty();
-	// reset course list content
-	$('#course_content').empty();
 	return ;
 }
 
@@ -89,12 +33,26 @@ function load_new_form(data){
   			url: "action_new" ,
   			data: $(this).serialize(),
   			success: function(data){
-				load_treeview(data);
+				load_treeview(data, map_id);
   			}
 		});
 		return false;
 	});
 }
+
+
+function reset_data(){
+	// reset new form;
+	$('#new_form_div').empty();
+	// reset header content
+	cg_show_id = null ;cf_show_id = null ;
+	$('#header_content_div').empty();
+	// reset course list content
+	$('#course_content').empty();
+	return ;
+}
+
+
 
 function credit_list_action(id,memo,credit_need,type){
 	$.ajax({
@@ -131,7 +89,7 @@ function bind_credit_list_button(){
 		}else{		
 			memo_tag.html('<input type="text" value="'+memo_tag.text()+'" class="form-control">');
 			credit_tag.html('<input type="text" value="'+credit_tag.text()+'" class="form-control">');
-			$(this).html('<%=fa_icon "check"%>').switchClass('btn-warning','btn-success');
+			$(this).html('<i class="fa fa-check"></i>').switchClass('btn-warning','btn-success');
 			$(this).addClass('edit') ;			
 		}
 		
@@ -158,7 +116,7 @@ function bind_header_button(header_node){
 				form+='<div class="col-md-3">至少學分數</div>';
 				form+='<div class="col-md-2">';
 				form+='<input type="text" id="new_credit_need" class="form-control"></div>';
-				form+='<div class="col-md-3"><button class="btn btn-circle btn-success" onclick="create_credit();"><%=fa_icon "check"%></button></div>';
+				form+='<div class="col-md-3"><button class="btn btn-circle btn-success" onclick="create_credit();"><i class="fa fa-check"></i></button></div>';
 				form+="</div>";
 			$("#credit_list").prepend(form);
 		}
@@ -176,7 +134,7 @@ function bind_header_button(header_node){
   			success: function(data){
   				reset_data();
   				$('#alert-msg').removeClass().addClass('text-color-green').html('更新成功').show().fadeOut(2200);
-  				load_treeview(0);
+  				load_treeview(0, map_id);
   				$('#course_content').empty() ;
   			},	
   			error: function(){
@@ -213,7 +171,7 @@ function bind_header_button(header_node){
 	  			success: function(data){
 	  				reset_data();		
 	  				$('#alert-msg').removeClass().addClass('text-color-green').html('更新成功').show().fadeOut(2200);
-	  				load_treeview(target_id);
+	  				load_treeview(target_id, map_id);
 	  			},	
 	  			error: function(){
 	  				reset_data();	
@@ -231,7 +189,7 @@ function bind_header_button(header_node){
 			//	credit_tag.html('<input type="text" value="'+header_node.credit_need+'" class="form-control">');
 			if(field_tag)
 				field_tag.html('<input type="text" value="'+header_node.field_need+'" class="form-control">');			
-			$(this).html('<%=fa_icon "check"%>').switchClass('btn-warning','btn-success');
+			$(this).html('<i class="fa fa-check"></i>').switchClass('btn-warning','btn-success');
 			$(this).addClass('edit') ;			
 		}
 		
@@ -251,7 +209,7 @@ function bind_header_button(header_node){
   				target_id : target_id,
   			},	
   			success: function(data){
-				load_treeview(target_id);
+				load_treeview(target_id, map_id);
   			},	
   			error: function(){
   				$('#alert-msg').removeClass().addClass('text-color-red').html('更新失敗').show().fadeOut(2200);
@@ -297,7 +255,7 @@ function bind_course_group_but(){  // for course group
 				list_id: list_id 
   			},
 			success: function(){
-				load_group_treeview(cg_id);
+				load_group_treeview(cg_id, map_id);
 			},error: function(){
 				alert('update course leader failed..');
 			}
@@ -316,7 +274,7 @@ function bind_course_group_but(){  // for course group
   				cg_id : $('.list-header').attr('cg_id')
   			},
 			success: function(){
-				load_group_treeview(0);
+				load_group_treeview(0, map_id);
 				$('#course_content').empty();
 			},error: function(){
 				alert('delete course group failed..');
@@ -342,7 +300,7 @@ function bind_course_group_but(){  // for course group
   			},
 			success: function(){
 				//list_tr.remove();
-				load_group_treeview(cg_id);
+				load_group_treeview(cg_id, map_id);
 				
 			},error: function(){
 				alert('delete course group list failed..');
@@ -442,7 +400,7 @@ function bind_course_list_button(){
 }
 
 function genCreditList(data){
-	console.log(data);
+	//console.log(data);
 	$("#credit_list").html(tmpl("xtmpl-credit-list",data));
 	bind_credit_list_button();
 }
@@ -456,9 +414,6 @@ function load_header_content(data){
 			genCreditList(data);
 		});
 	}
-	/*else{
-	
-	}*/
 	bind_header_button(data.head_node);
 }
 
@@ -473,81 +428,3 @@ function load_course_list(target_id){
 	
 	return true;
 }
-
-$(document).ready(function(){
-
-	// init in home-tab
-	$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;		
-	load_treeview(0);
-	load_group_treeview(0);
-	
-	// change tab, change search cond
-	$('#group-tab').click(function(){
-		$('#search_div').load("/courses/search_mini_cm?hide_group=false") ;
-		reset_data();
-	});
-	$('#home-tab').click(function(){
-		$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;
-		reset_data();
-	});
-	
-	// course_tree onSelect
-	$('#course_tree').on('nodeSelected', function(event, node) {
-		reset_data(); // reset new-form & header-content
-		cf_show_id = null ; // reset course table target id
-	//	console.log(node.cf_id) ;
-		if(node.type > 0){
-			load_header_content({head_node: node}) ;
-			if(node.type < 3){ // 1: 必修, 2: x選y
-    			cf_show_id = node.cf_id ;  			
-      			load_course_list(cf_show_id);  			
-      		}			   		
-		}else{ // new form 
-	//		console.log("[course_tree select] " + node.type);
-			load_new_form({
-						level : node.type, 
-						header_name: '新增類別',
-         			    parent_id: node.parent_id}); 
-		}
-		
-		if(node.type<0){ // new something
-			$('#header_content').hide() ;
-			$('#course_content').empty();	
-		}else if(node.type!=0){
-			$('#course_content').empty();		
-		}	
-    	return false ;
-	});
-
-	// group_tree onSelect
-	$('#group_tree').on('nodeSelected', function(event, node) {
-		reset_data(); // reset new-form & header-content
-		if(node.type==-1){ // new group
-			$.ajax({
-				type: "POST",
-				url: "course_group_action" ,
-				data:{
-					type: "new",
-					map_id : map_id
-				},	
-				success: function(data){
-					load_group_treeview(data);
-				},	
-				error: function(){
-					alert('new course group failed..');
-				}
-			});
-		}else{ // group content
-			cg_show_id = node.cg_id ;
-			$.getJSON("show_course_group_list.json?target_id="+node.cg_id, function (data) {
-				//console.log(data);
-				data.push({name: node.text, gtype: node.gtype, cg_id: node.cg_id}); // store header info
-				$("#course_content").html(tmpl("group-table-format", data));	
-				bind_course_group_but();
-			});
-		}
-	});
-	
-}); // end of document ready
-
-</script>

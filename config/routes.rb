@@ -48,7 +48,7 @@ Nctuplus::Application.routes.draw do
 	
 	get "user/statistics_table"
 
-  get "user/special_list"
+  get "user", to: "user#show"
 	get "user/all_courses"
 	get "user/statistics"
 	post "user/select_dept"
@@ -81,8 +81,7 @@ Nctuplus::Application.routes.draw do
 
 #### course map block 	
 	#get "course_maps/add_usercoursemapship"
-	get "course_maps/xyz"
-	#post "course_maps/xyz"
+
 	get "course_maps/get_credit_list"
 	post "course_maps/credit_action"
 	
@@ -96,7 +95,7 @@ Nctuplus::Application.routes.draw do
 	get "course_maps/show_course_list" 
 	get "course_maps/show_course_group_list"
 	post "course_maps/course_group_action"
-	get "course_maps/start2"
+	get "course_maps/course_map_content"
 	post "course_maps/update_cm_head"
 	get "course_maps/public"
 	get "course_maps/public2"

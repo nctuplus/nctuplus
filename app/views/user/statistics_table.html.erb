@@ -8,6 +8,7 @@
 <html>
 <head>
 	<title class='title'>NCTU+</title>
+
 	<%=javascript_include_tag asset_path("application.js")%>
 	<%=javascript_include_tag asset_path("tmpl.min.js")%>
 	<%= stylesheet_link_tag asset_path("application.css") %>
@@ -16,10 +17,10 @@
 <hr>
 </html>
 <script type="text/x-tmpl" id="table-content">
-{% var result = parse_course(o.course_map, o.user_courses, o.user_info);%}
+{% var result = parseCouseMap(o.course_map, o.user_courses);/*parse_course(o.course_map, o.user_courses);*/%}
+
 {% var data = result.data;%}
-{% console.log('result data:'); console.log(data); %}
-{% console.log('match uni_id array:'); console.log(result.match); %}
+
 <table class='table table-bordered text-family '>
 	<tr>
 		<td colspan="14" bgcolor="#A9F5BC"><p class="text-center">ㄧ. 本系所專業科目</p></td>
@@ -88,7 +89,7 @@
 	{% } %}
 {% } %}
 
-{% o.user_courses = get_remains(o.user_courses, result.match); %}
+{% o.user_courses = getRemains(o.user_courses, result.match); %}
 {% var remains = o.user_courses.filter(function(e){ return e.degree!=0 ;}); %}
 
 
@@ -113,7 +114,7 @@
 		<td><p class="text-center">備註</p></td>
 	</tr>
 	{% for(var i=0, r; r=remains[i]; ++i){ %}
-		{% var course_info = check_course( r, o.user_info) ; %}
+		{% var course_info = checkCourse(r)[0] ; %}
 		<tr>
 			<td colspan='2'></td>
 			<td>{%=r.name%}</td>
@@ -154,7 +155,7 @@
 		<td><p class="text-center">備註</p></td>
 	</tr>
 	{% for(var i=0, r; r=others[i]; ++i){ %}
-		{% var course_info = check_course(r, o.user_info) ; %}
+		{% var course_info = checkCourse(r)[0] ; %}
 		<tr>
 			<td colspan='2'></td>
 			<td>{%=r.name%}</td>
@@ -177,7 +178,9 @@
 
 <script>
 
-function get_remains(user_courses, matchs){
+var user_info = null ;
+
+function getRemains(user_courses, matchs){
 	var re = user_courses.filter(function(e1){
 		return ($.grep(matchs, function(e2){return e2==e1.uni_id ;})==0);
 	});
@@ -185,141 +188,166 @@ function get_remains(user_courses, matchs){
 	return re ;
 }
 
-function check_course(user_course, user_info){ // course passORfail , check sem
-	var pass_score = (user_info.degree==2) ? 70 :60 ;
+// check a course is pass or fail, and determine where to place it 
+function checkCourse(user_course){ 
+	var pass_score = (user_info.degree==2) ? 70 : 60 ;
 	var pass = (user_course.score=='通過' || user_course.score >= pass_score) ? true : false ;	
-	var note = '', sem=0 ; 
+	//console.log(user_course.name+ " "+pass);
+	var note = '', show_place=0 ;  
 	//console.log(user_course.name);
-	if((user_course.sem.year-user_info.sem_now.year)==0 && 
-	   (user_course.sem.half-user_info.sem_now.half)==0) user_course.score = '修習中';
-	
-	if(user_course.sem.year==0 /* && user_course.memo.length>0*/){// 大學部或轉學帶課
+	if(user_course.sem.year==user_info.year_now && user_course.sem.half==user_info.half_now)
+		user_course.score = '修習中';
+	if(user_course.sem.year==0){// 大學部或轉學帶課
 		//console.log('[take] '+user_course.memo);
 		note += user_course.memo ;
-		sem = -1  ;
-	}else if(user_info.sem.half==3){ // 暑修
-		note += user_info.sem.year+'年暑修';
-		sem = -1 ;
+		show_place = -1  ;
+	}else if(user_course.sem.half==3){ // 暑修
+		note += user_course.sem.year+'年暑修 ';
+		show_place = -1 ; // 暑修或抵免的課不屬於大一到大四
 	}else{  // normal case
-		var dy = user_course.sem.year - user_info.sem.year ;
-		var dh = user_course.sem.half - user_info.sem.half ;
-		sem = dy*2+dh ;	
+		var dy = user_course.sem.year - user_info.year ;
+		var dh = user_course.sem.half - 1 ;
+		show_place = dy*2+dh ;	//顯示成績的位置(大一上, 大一下...)
 	}	
 	//console.log(user_course.score);
-	return { score: user_course.score, pass: pass, sem: sem, note: note }	
+	return [{ score: user_course.score, sem: show_place, pass:pass }, note];
 }
 
-function check_pass_and_group(cf, courses, data, user_info){
-	var match = []; 
-	for(var i=0, course; course=cf.courses[i];++i){
-		var course_info= {name : course.name, cs:[], credit: course.credit, note:''} ;
-		
-		var search = $.grep(courses,  function(e){ return e.id == course.id; }) ;
-		if(search.length > 0){
-			//console.log(search);
-			course_info['pass'] = 0 ;
-			search.forEach(function(user_course) {
-				match.push(user_course.uni_id);
-				var res = check_course(user_course, user_info);
-				course_info.cs.push(res) ;
-				if(res.pass) course_info['pass'] += 1 ;
-				course_info['note'] += res.note ;
+//input course_field and the course belongs to it. map course to cf's course(course, course group )
+function generateCourseData(cf, courses, record, dataTo){
+	cf.courses.forEach(function(cf_course){
+		var course_info= {name : cf_course.name, cs:[], credit: cf_course.credit, note:'', pass:false} ;
+		var search = $.grep(courses,  function(e){ return e.id == cf_course.id; }) ;
+		if(search.length>0)
+		{
+			search.forEach(function(user_course) {	
+				var res = checkCourse(user_course);				
+				course_info['note'] += res[1] ;	// append note 
+				course_info['pass'] |= res[0].pass ;
+				course_info.cs.push(res[0]) ; 		
 			});
 		}
-		if (course_info.cs.length>0){
-			data.cf_courses.push(course_info) ;	
-		}		
-	}
-	for(var i=0, cg; cg=cf.course_groups[i];++i){
-		var course_info= {name : cg.lead_course_name, cs:[], credit: cg.credit, note:''} ;
-		course_info['pass'] = 0 ;
-		for(var j=0, course; course=cg.courses[j] ; ++j){
-			var search = $.grep(courses,  function(e){ return e.id == course.id; }) ;
-			if(search.length > 0){				
-				search.forEach(function(user_course) {	
-					match.push(user_course.uni_id);
-					var res = check_course(user_course, user_info);			
-					if(cg.lead_course_id!=user_course.id)		//若不是leader就顯示note
+		if(record || search.length>0)
+			dataTo.push(course_info);
+	});
+	cf.course_groups.forEach(function(cg){
+		var course_info= {name : cg.lead_course.name, cs:[], credit: cg.credit, note:'', pass: false} ;
+		var match = false;
+		cg.courses.forEach(function(cg_course){
+			var search = $.grep(courses,  function(e){ return e.id == cg_course.id; }) ;
+			if(search.length>0)
+			{
+				match = true ;
+				search.forEach(function(user_course){
+					var res = checkCourse(user_course);			
+					if(cg.lead_course_id != user_course.id)		//若不是leader就顯示note
 						course_info['note'] += '['+user_course.name+'] ';
-					course_info['note'] += res.note ;	
-					course_info.cs.push(res) ;
-					if(res.pass)
-						course_info['pass'] += 1 ;
+					course_info['note'] += res[1];	
+					course_info['pass'] |= res[0].pass ;
+					course_info.cs.push(res[0]) ;
+
 				});	
-			}	
-		}
-		if(course_info['pass'] > 1 ) course_info['note'] += ' * 有兩門課被排在一起，請檢查排課或自行修改 ';
-		if (course_info.cs.length>0)
-			data.cf_courses.push(course_info) ;	
-	}
-				
-	return {rowspan: data.cf_courses.length, match: match} ; 
-	//return true ;//data ;
+			}
+		});
+		if(record || match)
+			dataTo.push(course_info);
+	});
+	
+	return ;
 }
 
-function parse_course(course_map, user_courses, user_info){
-	var data = [] ;
-	var match = [] ;
-	for(var i=0, cf; cf = course_map[i];++i){
-		var cf_data = {cf_name: cf.cf_name, sub_cf:[], cf_courses:[], cf_type: cf.cf_type, rowspan:0} ;
-		
-		if(cf.cf_type < 3){// bottom level
-			var filter = user_courses.filter(function(x) { return (x.cf_id==cf.id); });
-			var res = check_pass_and_group(cf, filter, cf_data, user_info);
+function recordMatch(ary, matchs){
+	matchs.forEach(function(c){
+		ary.push(c.uni_id);	
+	});
+	return ;
+}
 
-			match = match.concat(res.match);
-			cf_data['rowspan'] = res.rowspan;
-		}else if(cf.cf_type==3){ //領域群組
-			for(var j=0, sub_cf; sub_cf=cf.child_cf[j]; j++){ //領域
-				var sub_data = {cf_name: sub_cf.cf_name, sub_cf:[], cf_courses:[], cf_type: sub_cf.cf_type, rowspan:0} ;
-
-				for(var k=0, bottom; bottom=sub_cf.child_cf[k];++k){//bottom levels
-					var filter = user_courses.filter(function(x) { return (x.cf_id==bottom.id); });
-					var res = check_pass_and_group(bottom, filter, sub_data, user_info);
-					match = match.concat(res.match);
-					sub_data['rowspan'] += res.rowspan ;
+function parseCouseMap(course_map, user_courses)
+{
+	match_ary = [] ;
+	course_map_to_print = [] ;
+	for(var i=0, cf; cf = course_map[i];++i)
+	{
+		var cf_data = {cf_name: cf.cf_name, cf_courses:[], sub_cf:[], cf_type: cf.cf_type, rowspan:0} ;
+		switch(cf.cf_type)
+		{
+			case 1://必修
+			case 2://x選y
+				var match_courses = user_courses.filter(function(x) { return (x.cf_id==cf.id); });
+				if(match_courses.length>0)
+				{
+					recordMatch(match_ary, match_courses);
+					generateCourseData(cf, match_courses, (cf.cf_type==1), cf_data.cf_courses);
+					cf_data['rowspan'] = cf_data.cf_courses.length ;
 				}
-				cf_data['rowspan'] += sub_data['rowspan'] ;
-	//			console.log(sub_cf.cf_name+' span: '+sub_data['rowspan']);
-				if(sub_data['rowspan'] > 0)
-					cf_data.sub_cf.push(sub_data);			
-			}
-		}else{ //cf_type == 4  領域
-			for(var j=0, bottom; bottom=cf.child_cf[j]; j++){ // bottom level
-				var filter = user_courses.filter(function(x) { return (x.cf_id==bottom.id); });
-				var sub_data = {cf_name: bottom.cf_name, sub_cf:[], cf_courses:[], cf_type: bottom.cf_type, rowspan:0} ;
-				var res = check_pass_and_group(bottom, filter, sub_data, user_info) ;
-				match = match.concat(res.match);
-				sub_data['rowspan'] = res.rowspan;
-				cf_data.sub_cf.push(sub_data);
-				cf_data['rowspan'] += sub_data.rowspan ;				
-			}
-		}
-		//console.log(cf_data);
-		data.push(cf_data);
-	}
-	
-	return {data: data, match: match} ;
-}	  
+				break;
+			case 3:
+				for(var j=0, sub_cf; sub_cf=cf.child_cf[j]; j++)
+				{
+					var sub_data = {cf_name: sub_cf.cf_name, sub_cf:[], cf_courses:[], cf_type: sub_cf.cf_type, rowspan:0} ;
+					for(var k=0, bottom; bottom=sub_cf.child_cf[k];++k)
+					{
+						var match_courses = user_courses.filter(function(x) { return (x.cf_id==bottom.id); });
+						if(match_courses.length>0)
+						{
+							recordMatch(match_ary, match_courses);
+							generateCourseData(bottom, match_courses, (bottom.cf_type==1), sub_data.cf_courses) ;
+							sub_data['rowspan'] += sub_data.cf_courses.length ;
+						}
+					}
+					cf_data['rowspan'] += sub_data['rowspan'] ;
+					if(sub_data['rowspan'] > 0)
+						cf_data.sub_cf.push(sub_data);	
+				}
+				
+				break;
+			case 4:
+				for(var j=0, bottom; bottom=cf.child_cf[j]; j++)
+				{
+					var sub_data = {cf_name: bottom.cf_name, sub_cf:[], cf_courses:[], cf_type: bottom.cf_type, rowspan:0} ;
+					var match_courses = user_courses.filter(function(x) { return (x.cf_id==bottom.id); });
+					if(match_courses.length>0)
+					{	
+						recordMatch(match_ary, match_courses);
+						generateCourseData(bottom, match_courses, (bottom.cf_type==1), sub_data.cf_courses) ;
+						sub_data['rowspan'] = sub_data.cf_courses.length;
+						cf_data['rowspan'] += sub_data.rowspan ;
+						cf_data.sub_cf.push(sub_data);								
+					}
+				}			
+				break;
+			default:
+				break ;
+		}//switch
+		course_map_to_print.push(cf_data);
+		
+	}//for
+	console.log(course_map_to_print);
+	return {data:course_map_to_print, match: match_ary};
+}
 
 $(document).ready(function(){
 <% if params[:user_id].presence %>
-	$.getJSON( "/user/statistics_table.json?user_id=<%=j params[:user_id]%>",
+	$.getJSON( "/user/statistics_table?user_id=<%=j params[:user_id]%>",
 <% else %>
-	$.getJSON( "/user/statistics_table.json",
+	$.getJSON( "/user/statistics_table",
 <% end %>
 	function(res){
+		console.log(res);
 		if(!res.course_map){
 			alert("沒有對應的學程");
 			$('#table').html('請確認你的系別系級，或通知管理員建立一個新的學程地圖');
 			return false ;
 		}	
 		if(res.user_info.student_id){
+			user_info = res.user_info ;
 			$('.title').html(res.user_info.student_id+" "+res.user_info.map_name);
 			$("#table").html(tmpl("table-content", res));	
+			//parseCouseMap(res.course_map, res.user_courses);
 		}else{
 			alert('沒有學號資料');
-			$('#table').html('請綁定e3帳號 謝謝');
+			$('#table').html('請匯入成績');
 			return false ;
 		}
 	});

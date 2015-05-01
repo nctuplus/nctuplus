@@ -3,10 +3,10 @@
 		
 		{%= o.dept_name %} 入學年度:
 		<div class="btn-group" style="margin-top:-2px;">
-			<a id="sem-4" class="btn btn-info" href="?dept_id={%=o.dept_id%}&sem_id=4">100</a>
-			<a id="sem-7" class="btn btn-info" href="?dept_id={%=o.dept_id%}&sem_id=7">101</a>
-			<a id="sem-10" class="btn btn-info" href="?dept_id={%=o.dept_id%}&sem_id=10">102</a>
-			<a id="sem-13" class="btn btn-info" href="?dept_id={%=o.dept_id%}&sem_id=13">103</a>
+			<a id="year-100" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=100">100</a>
+			<a id="year-101" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=101">101</a>
+			<a id="year-102" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=102">102</a>
+			<a id="year-103" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=103">103</a>
 		</div>
 	{% var cm=o.course_map; %}
 	{% if(!cm){ %}

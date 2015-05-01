@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
-	include CourseMapsHelper
-	before_filter :checkTopManager,:only=>[:user, :ee104]
+	#include CourseMapsHelper
+	before_filter :checkTopManager,:only=>[:users, :ee104]
 	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
 	
 	def course_maps
@@ -8,7 +8,11 @@ class AdminController < ApplicationController
   end
 	
 	def users
-    @users=User.includes(:semester, :department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
+		@users=User.includes(:semester, :department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
+		@course_map = CourseMap.all
+		unless request.xhr?
+			@data = User.all.joins(:department).group(:ch_name).count
+		end	
   end
   
   def change_role
@@ -34,7 +38,7 @@ class AdminController < ApplicationController
 			res={
 				:users=>user_res,
 				:course_map=>get_cm_res(@cm),
-				:last_sem_id=>Semester.last.id,
+				:last_sem_id=>Semester::LAST.id,
 				:pass_score=>60
 			}
 		end

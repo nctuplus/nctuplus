@@ -17,15 +17,10 @@
   		未指定
   		<% end %>
   	</td>
-  	<td><%= (cm.semester.presence) ? cm.semester.year.to_s : '未指定' %></td>
+  	<td><%= cm.year.to_s%></td>
   	<td><%= cm.user.name%></td>
   	<td>
-<!--  	<%=link_to "加入我的統計", "/user/select_cm?uid=#{current_user.id}&cm_id=#{cm.id}"%> -->
-	<!-- if current_user.id==cm.user_id -->  
-    	<%= link_to '刪除', course_map_path(cm),
-              method: :delete,
-              data: { confirm: 'Are you sure?' } %>
-	<!-- end -->              
+    <%= link_to '刪除', course_map_path(cm), method: :delete, data: { confirm: 'Are you sure?' }  %>            
   	</td>
 
   <tr>

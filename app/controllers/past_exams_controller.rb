@@ -5,22 +5,21 @@ class PastExamsController < ApplicationController
   
   before_filter :checkE3Login, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
   before_filter :checkOwner, :only=>[:edit, :destroy]
-	def index
-		if params[:ct_id]
+	
+	def index	#get by ct_id
+		if !params[:ct_id].blank?
 			@files = PastExam.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
-		else
-			@files = PastExam.where(:owner_id=>current_user.id)#.select(:file
 		end
 		respond_to do |format|
-			format.html # index.html.erb
 			format.json { render json: @files.map{|file| file.to_jq_upload(current_user) } }
 		end
   end
   
 	def list_by_ct
 		@ct_id=params[:ct_id]
-		sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>@ct_id).pluck(:semester_id)
-		@sems=Semester.where(:id=>sem_ids).order("id DESC")
+		@sems=CourseTeachership.find(@ct_id).semesters
+		#sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>@ct_id).pluck(:semester_id)
+		#@sems=Semester.where(:id=>sem_ids).order("id DESC")
 		
 	end
   

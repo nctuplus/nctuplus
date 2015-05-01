@@ -1,6 +1,6 @@
 class CourseContentController < ApplicationController
-	include CourseContentHelper
-		before_filter :checkLogin, :only=>[ :course_action, :rate_cts]
+	#include CourseContentHelper
+	before_filter :checkLogin, :only=>[ :course_action, :rate_cts]
 		
 	def rate_cts
     ct=CourseTeachership.find(params[:ct_id])
@@ -46,27 +46,13 @@ class CourseContentController < ApplicationController
 		end
 
 	end
-=begin	
-	def show # for testing
-		@data = {
-			:course_id=>cd.course.id.to_s,
-			:course_detail_id=>cd.id.to_s,
-			:course_teachership_id=>cd.course_teachership.id.to_s,
-			:course_name=>cd.course_ch_name,
-			:course_teachers=>cd.teacher_name,
-			:course_real_id=>cd.course.real_id.to_s,
-			:course_credit=>cd.course.credit,
-			:open_on_latest=>(cd.course_teachership.course_details.last.semester==latest_semester) ? true : false ,
-			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
-		}
-	end
-=end	
+
 	def get_course_info
 		data = {}
 		cd = CourseDetail.find(params[:cd_id])
 		case params[:content]
 			when 'chart'
-				data = cd.course.to_chart(latest_semester)			
+				data = cd.course.to_chart(Semester::LAST)			
 			when 'content_head'
 				data = cd.course_teachership.try(:course_content_head).try(:to_hash)  || {}
 			when 'content_lists'

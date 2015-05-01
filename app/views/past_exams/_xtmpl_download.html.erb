@@ -1,0 +1,58 @@
+<!-- The template to display files available for download -->
+
+
+<script id="template-download" type="text/x-tmpl">
+	{% if (o.files.length==0) { %}
+		<tr class="template-download fade" >
+		<td class="no-files-yet"colspan="8"><h4 class="text-center">尚無檔案!</h4></td>
+		</tr>
+	{% } %}
+	
+  {% for (var i=0, file; file=o.files[i]; i++) { %}
+   
+		<tr class="template-download fade" id="download_{%=file.id%}">
+		{% if (file.error) { %}
+			<td class="name text-center"><span>{%=file.name%}</span></td>
+			<td class="size text-center"><span>{%=o.formatFileSize(file.size)%}</span></td>
+			<td class="error text-center" colspan="2"><span class="label label-important">{%=locale.fileupload.error%}</span> {%=locale.fileupload.errors[file.error] || file.error%}</td>
+		{% } else { %}
+	
+			<td class="download_times text-center">{%= file.download_times %}</td>
+			<td class="semester_{%=file.id%} text-center">
+				<span>{%= file.semester_name %}</span>
+			</td>
+			<td class="description_{%=file.id%} text-center">
+				{%= file.description %}
+			</td>
+			<td class="name text-center">
+				<a href="{%=file.url%}" title="{%=file.name%}">{%=file.name%}</a>
+			</td>
+			<td class="size text-center">
+				<span>{%=o.formatFileSize(file.size)%}</span>
+			</td>
+			<td class="text-center">{%=file.owner_name%}</td>
+			<td class="text-center">{%=file.create_time%}</td>
+		{% } %}
+			<td class="function text-center">
+			{% if (file.editable) { %}
+				<a href="javascript: void(0)" class="btn btn-default btn-xs" id="edit_but_{%=file.id%}" onclick="change_to_edit({%=JSON.stringify(file, null, 4)%})" >
+					<span class="glyphicon glyphicon-pencil"></span>
+				</a>
+				<a href="javascript: void(0)"  class="btn btn-default btn-xs" id="save_but_{%=file.id%}" onclick="save_update({%=file.id%});" style="display:none;">
+					<span class="glyphicon glyphicon-saved"></span>
+				</a>
+			{% } %}
+	
+				<span class="delete">
+				<button id="delete_{%=file.id%}" class="btn btn-default btn-xs" data-type="DELETE" data-url="/past_exams/{%=file.id%}" style="display:none;">
+
+				 <span class="glyphicon glyphicon-trash"></span>
+
+				</button>
+
+
+	
+			</td>
+		</tr>
+	{% } %}
+</script>

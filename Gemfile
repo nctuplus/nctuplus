@@ -62,6 +62,10 @@ gem 'em-resolv-replace', :require => false
 gem "tinymce-rails"
 gem "tinymce-rails-langs"
 
+#group :development do
+#gem "rails-erd", github: "ready4god2513/rails-erd", branch: "rails-4.2-support-fix" #, group: :development
+#end
+
 #gem 'google-analytics-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'

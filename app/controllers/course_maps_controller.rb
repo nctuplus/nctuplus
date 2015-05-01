@@ -1,19 +1,19 @@
 class CourseMapsController < ApplicationController
-	include CourseMapsHelper
+	#include CourseMapsHelper
 
-	before_filter :checkCourseMapPermission, :except=>[:index, :public, :cm_public_comment_action] #:checkTopManager
+	before_filter :checkCourseMapPermission, :except=>[:index, :public, :cm_public_comment_action, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action] #:checkTopManager
 	before_filter :checkLogin, :only=>[:cm_public_comment_action]
 ##### resource controller
 
 	def public #return json for index
 		if request.format=="json"
-			sem_id=params[:sem_id].blank? ? 13 : params[:sem_id]
-			course_map=CourseMap.where(:department_id=>params[:dept_id], :semester_id=>sem_id).take
+			year=params[:year].blank? ? Semester::CURRENT.year : params[:year]
+			course_map=CourseMap.where(:department_id=>params[:dept_id], :year=>year).take
 			
 			@res={
 				:dept_name=>Department.where(:id=>params[:dept_id]).take.try(:ch_name),
 				:dept_id=>params[:dept_id],
-				:year=>Semester.where(:id=>params[:sem_id]).take.try(:year),
+				:year=>year,#Semester.where(:id=>params[:sem_id]).take.try(:year),
 				:course_map=>course_map.nil? ? nil : {
 					:id => course_map.id,
 					#:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
@@ -75,10 +75,6 @@ class CourseMapsController < ApplicationController
 			format.html{}
 		end		
 	end
-
-	def xyz
-		
-	end
 	
 	def show
 		@course_map=CourseMap.find(params[:id])
@@ -88,7 +84,7 @@ class CourseMapsController < ApplicationController
 		@res={}
 		@cm = CourseMap.all.order('name desc')
 		@cm.each do |c|
-			@res[c.id]={:sem_id=>c.semester_id, :dept_id=>c.department_id}
+			@res[c.id]={:year=>c.year, :dept_id=>c.department_id}
 		end
 		
 		@course_map=CourseMap.new
@@ -97,13 +93,14 @@ class CourseMapsController < ApplicationController
 
 	def create	
 		@course_map = CourseMap.create(
-			:semester_id=> (params[:semester_id].presence) ? params[:semester_id] : 0	,
+			:year=> params[:year] || 0	,
 			:name=> params[:name],
 			:department_id=> params[:course_map][:department_id],
 			:desc=> params[:course_map][:desc],
 			:user_id=> current_user.id
 		)
-		
+
+# handle copy 		
 		if params[:copy].to_i != 0
 			copy_from = CourseMap.find(params[:copy])
 			@course_map.update_attributes(:total_credit=>copy_from.total_credit)
@@ -169,9 +166,9 @@ class CourseMapsController < ApplicationController
     redirect_to :action => :index
 	end
 	
-	def start2
+	def course_map_content
 		@course_map = CourseMap.find(params[:map_id])
-		render "start2", :layout=>false		
+		render :layout=>false		
 	end
 	
 	def get_course_tree
@@ -211,7 +208,8 @@ class CourseMapsController < ApplicationController
    	 		format.json {render :layout => false, :text=>list.to_json}
     	end
 	end
-	
+
+# handle course_field new	
 	def action_new
 		level = params[:level].to_i
 		parent_id = params[:parent_id]
@@ -301,7 +299,7 @@ class CourseMapsController < ApplicationController
 		data = []
 		
 		cf.course_field_lists.includes(:course).each do |list|
-			course = nil
+			course = 0
 			if list.course_group_id  # it is a group header
 				cg = list.course_group
 			#	leader = cg.lead_group_list
@@ -514,7 +512,7 @@ class CourseMapsController < ApplicationController
 	def update_cm_head # ajax post
 		cm = CourseMap.find(params[:map_id]).update_attributes(
 			:department_id=> params[:dep],
-			:semester_id=> params[:sem],
+			:year=> params[:year],
 			:total_credit=> params[:grade],
 			:desc=> params[:desc]
 		)
@@ -584,14 +582,16 @@ private
 			send(funcA, target.id, cf)	
 	#else 	
 		cf.child_cfs.each do |sub|
-			new_cf = CourseField.new(:user_id=>current_user.id)
-			new_cf.name, new_cf.credit_need, new_cf.color, new_cf.field_type = sub.name, sub.credit_need, sub.color, sub.field_type
-			new_cf.save!
-			cfship = CourseFieldSelfship.new(:parent_id=>target.id, :child_id=>new_cf.id)
-			cfship.save!
+			new_cf = CourseField.create(
+				:user_id=>current_user.id,
+				:name=> sub.name,
+				:credit_need=>sub.credit_need,
+				:color=>sub.color,
+				:field_type=>sub.field_type
+			)
+			cfship = CourseFieldSelfship.create(:parent_id=>target.id, :child_id=>new_cf.id)
 			if new_cf.field_type==3
-				cffneed = CfFieldNeed.new(:course_field_id=>new_cf.id, :field_need=>0)
-				cffneed.save!
+				cffneed = CfFieldNeed.create(:course_field_id=>new_cf.id, :field_need=>0)
 			end
 			trace_cm(new_cf, sub, funcA)
 		end
@@ -601,11 +601,16 @@ private
 
   def _copy_cfl_and_credit(target_id, cf)
 		cf.course_field_lists.each do |cfl|
-			new_cfl = CourseFieldList.new(:user_id=>current_user.id, :course_field_id=>target_id )
-			new_cfl.course_id, new_cfl.record_type, new_cfl.course_group_id = cfl.course_id, cfl.record_type, cfl.course_group_id
-			new_cfl.grade=cfl.grade
-			new_cfl.half=cfl.half
-			new_cfl.save!
+			CourseFieldList.create(
+				:user_id=>current_user.id, 
+				:course_field_id=>target_id,
+				:course_id=>cfl.course_id,
+				:record_type=>cfl.record_type,
+				:course_group_id=>cfl.course_group_id,
+				:grade=>cfl.grade,
+				:half=>cfl.half
+			)
+			
 		end
 		cf.cf_credits.each do |credit|
 			CfCredit.create(
@@ -617,7 +622,7 @@ private
 		end
   end
 
-  
+=begin  
   def _get_field_content_data(cf)		
 		chead = (cf.field_type==1) ? "[必修] " : "[X選Y] "
 		data = {
@@ -633,9 +638,9 @@ private
 
 		return data
   end
-  
+=end  
 	
-  
+=begin  
   def _get_add_field_node(cf,nodes)
 		chead = (cf.field_type==3) ? "[領域群組] " : "[領域] "
 		nodes.push({:text=>'新增類別', :type=>(cf.field_type==3) ? -2 : -3, :parent_id=>cf.id, :icon=>'fa fa-plus text-success'})	
@@ -652,7 +657,7 @@ private
 		}
 		return data
   end
-
+=end
   
 	
 end

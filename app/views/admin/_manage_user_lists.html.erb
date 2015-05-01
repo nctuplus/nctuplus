@@ -1,4 +1,3 @@
-<%@users.each do |user| %>
 	<tr class="row">
 	<td>
 		<% if user.uid%>
@@ -16,11 +15,11 @@
 		<td>尚未填寫</td>
 	<% end %>
 	<td>
-		<%=link_to user.total_credit,"/user/special_list?uid="<<user.id.to_s %>
+		<%=link_to user.total_credit, "/user/special_list?uid=#{user.id}" %>
 	</td>
 	<td>
 	<% cm_id=user.course_maps.first.nil? ? 0 :user.course_maps.first.id %>  
-		<%=select_tag "course_map", options_from_collection_for_select(CourseMap.all, :id, :name, cm_id), prompt:"none", class:"course_map form-control", id:user.id%>
+		<%=select_tag "course_map", options_from_collection_for_select(@course_map, :id, :name, cm_id), prompt:"none", class:"course_map form-control", id:user.id%>
 	</td>
 <% unless user.semester.nil? %>
 <% sem=user.semester.name%>
@@ -30,8 +29,7 @@
 <% end %>
 
 <td>
-<%=select_tag :role, options_for_select([[ "一般使用者",1 ], ["學校系辦單位",2 ], ["系統管理員", 0]], user.role), :class=>'form-control role', :user_id=>user.id%>
+<%=select_tag :role, options_for_select([[ "一般使用者",1 ], ["學校系辦單位",2 ], ["系統管理員", 0]], user.role), :class=>'form-control admin-user-role', :user_id=>user.id%>
 </td>
 
 </tr>
-<% end %>

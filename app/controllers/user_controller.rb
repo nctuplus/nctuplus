@@ -5,7 +5,7 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:add_course,  :special_list, :select_dept, :statistics_table]
+	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept, :statistics_table]
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
@@ -19,39 +19,37 @@ class UserController < ApplicationController
 		#if request.format=="json"
 			case params[:type]
 				when "stat"
-					if !params[:sem_id]
-					cs_agree=@user.courses_agreed.map{|cs|{
-						:name=>cs.course.ch_name,
-						:credit=>cs.course.credit,
-						:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
-						:cf_name=>cs.course_field ? cs.course_field.name : ""
-					}}
-					cs_taked=convert_to_json(@user.courses_taked)
+					if params[:sem_id].blank?
+						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}
+						#cs_taked=convert_to_json(@user.courses_taked)
+						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}
 					else 
-						cs_taked=convert_to_json(@user.all_courses.where(:semester_id=>params[:sem_id]))
+						cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}#convert_to_json(@user.all_courses.where(:semester_id=>params[:sem_id]))
 						cs_agree=[]
 					end
 					result={
 						:pass_score=>@user.pass_score,
-						:last_sem_id=>Semester.current.id,
+						:last_sem_id=>Semester::CURRENT.id,
 						:agreed=>cs_agree,
 						:taked=>cs_taked,
-						:list_type=>params[:type]
+						#:list_type=>params[:type]
 					}
 				when "simulation"
 					result={
-						:use_type=>"delete",
+						:use_type=>"delete", #for delete button of your current courses
 						:view_type=>"schedule",
-						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>latest_semester.id).map{|cs|
+						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>Semester::LAST.id).map{|cs|
 							cs.course_detail.to_search_result
 						}
 					}
 				when "course_table"
 					semester = Semester.find(params[:sem_id])
 					result={
-						:semester_info=>{	:isNow=> (semester.id == latest_semester.id),
-											:semester_id=> semester.id,
-								 			:semester_name=> semester.name },
+						:semester_info=>{	
+							:isNow=> (semester.id == Semester::LAST.id),
+							:semester_id=> semester.id,
+							:semester_name=> semester.name 
+						},
 						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>semester.id).map{|cs|
 							cs.course_detail.to_course_table_result
 						}
@@ -66,18 +64,20 @@ class UserController < ApplicationController
 		
 	end
 	
-	def special_list
+	def show
+		
 		@user=getUserByIdForManager(params[:uid])
 		if @user.course_maps.empty?  
-			cm=CourseMap.where(:department_id=>@user.department_id, :semester_id=>@user.semester_id).take
+			cm=CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
 			if cm
-				UserCoursemapship.create(:user_id=>@user.id, :course_map_id=>cm.id)
+				@user.user_course_mapships.create(:course_map_id=>cm.id)
 				if !@user.course_simulations.empty?
 					update_cs_cfids(cm,@user)
 				end
 			end
 		end
 	end
+	
 	def all_courses
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
@@ -91,21 +91,15 @@ class UserController < ApplicationController
 	end
 	def statistics
 		@user=getUserByIdForManager(params[:uid])
-
-		
 		if request.format=="json"
-			ls=latest_semester
-			
 			course_map=@user.course_maps.first
-
 			#update_cs_cfids(course_map,@user)
-
 			if course_map
 				course_map_res=	{
-					:name=>course_map.department.ch_name+" 入學年度:"+course_map.semester.year.to_s,
+					:name=>course_map.department.ch_name+" 入學年度:"+course_map.year.to_s,
 					:id=>course_map.id,
 					:dept_id=>course_map.department_id,
-					:sem_id=>course_map.semester_id,
+					#:sem_id=>course_map.semester_id,
 					:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
 					:cfs=>course_map.to_tree_json		
 				}#get_cm_res(course_map)
@@ -113,13 +107,12 @@ class UserController < ApplicationController
 			res={
 				:user_id=>@user.id,
 				:pass_score=>@user.pass_score,
-				:last_sem_id=>Semester.current.id,
+				:last_sem_id=>Semester::CURRENT.id,
 				:user_courses=>{
 					:success=>@user.courses_json,
 					:fail=>@user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2}
 				},
 				:course_map=>course_map_res||nil,
-				#:user_fails=> @user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2} ,
 			}
 		end
 		
@@ -151,7 +144,7 @@ class UserController < ApplicationController
 			
 			if student_id!=current_user.student_id
 				msg="成績驗證錯誤，請匯入自己的成績，謝謝!"
-				redirect_to :action =>"special_list", :msg=>msg
+				redirect_to :action =>"show", :msg=>msg
 				return
 			end
 
@@ -194,13 +187,18 @@ class UserController < ApplicationController
 					#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
 					course=Course.where(:real_id=>a[:real_id]).take
 					if !course.nil?
-						#Rails.logger.debug "[debug] "+course.ch_name
 						cd_temp=course.course_details.take#.where(:credit=>a[:credit]).first
-						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cd_temp.id, :semester_id=>0, :score=>"通過",
-												:memo=>a[:memo], :import_fail=>0, :cos_type=>a[:cos_type])
+						CourseSimulation.create(
+							:user_id=>current_user.id,
+							:course_detail_id=>cd_temp.id,
+							:semester_id=>0,
+							:score=>"通過",
+							:memo=>a[:memo],
+							:import_fail=>0,
+							:cos_type=>a[:cos_type]
+						)
 						@success_added+=1
 					else
-					
 						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>0, :semester_id=>0, :score=>"通過",
 												:memo=>a[:memo], :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name], :import_fail=>1, :cos_type=>a[:cos_type])
 						@fail_added+=1
@@ -219,8 +217,14 @@ class UserController < ApplicationController
 					if sem
 						cds=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
 						if cds	
-							CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>cds.id, :semester_id=>cds.semester_id,
-													:score=>n['score'], :course_field_id=>0, :cos_type=>n['cos_type'])
+							CourseSimulation.create(
+								:user_id=>current_user.id,
+								:course_detail_id=>cds.id,
+								:semester_id=>cds.semester_id,
+								:score=>n['score'],
+								:course_field_id=>0,
+								:cos_type=>n['cos_type']
+							)
 							@success_added+=1
 						else
 							#fail_course_name.append()
@@ -250,16 +254,17 @@ class UserController < ApplicationController
 		else
 			dept=params[:dept_under_select].to_i
 		end
-		current_user.update_attributes(:semester_id=>grade,:department_id=>dept)
-		UserCoursemapship.where(:user_id=>current_user.id).destroy_all#.each do |uc|
-			#uc.destroy!
-		#end
-		cm=CourseMap.where(:department_id=>current_user.department_id, :semester_id=>current_user.semester_id).take
+		current_user.update_attributes(:year=>grade,:department_id=>dept)
+		
+		UserCoursemapship.where(:user_id=>current_user.id).destroy_all
+		
+		cm=CourseMap.where(:department_id=>current_user.department_id, :year=>grade).take
 		if cm
 			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
 		end
 		update_cs_cfids(cm,current_user)
-		redirect_to :controller=> "user", :action=>"special_list"
+		
+		redirect_to :controller=> "user", :action=>"show"
 	end
  
   def select_cm
@@ -280,8 +285,6 @@ class UserController < ApplicationController
 
   
   def statistics_table
-		user = nil
-		course_map = nil
 		if request.xhr? 				
 			user = (params[:user_id].presence and checkTopManagerNoReDirect) ? getUserByIdForManager(params[:user_id]) : current_user
 			course_map = user.course_maps.last 
@@ -301,9 +304,10 @@ class UserController < ApplicationController
 				}}
 				# if has course_map, user must have semester, dept
 				user_info = {
-					:sem=>{:year=>user.semester.year, :half=>user.semester.half}, 
+					:year=>user.year, 
+					:year_now=>Semester::CURRENT.year,
+					:half_now=>Semester::CURRENT.half,
 					:degree=>user.department.degree, 
-					:sem_now=>{:year=>latest_semester.year, :half=>latest_semester.half}, 
 					:map_name=>course_map.name,
 					:student_id=>user.student_id 
 				}
@@ -314,7 +318,7 @@ class UserController < ApplicationController
 		end
 		
 		respond_to do |format|
-			format.html {  }
+			format.html { }
 			format.json { render :text => {:user_info=>user_info, :course_map=>data1, :user_courses=>data2 }.to_json}
 		end
 	end
@@ -325,54 +329,21 @@ class UserController < ApplicationController
 		_type=params[:type]
 		
 		if _type=="add"
-			CourseSimulation.create(:user_id=>current_user.id, :semester_id=>cd.semester_id, :course_detail_id=>cd.id, :score=>'修習中')
-			redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
+			session[:cd].delete(cd_id) if session[:cd].include?(cd_id)			
+			current_user.course_simulations.create(
+				#:user_id=>current_user.id,
+				:semester_id=>cd.semester_id,
+				:course_detail_id=>cd.id,
+				:score=>'修習中'
+			)
 		else # delete
 			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
-			status=CourseDetail.where(:id=>cd_id).map{|cd|{"time"=>cd.time,"class"=>cos_type_class(cd.cos_type),"room"=>cd.room,"name"=>cd.course_ch_name,"course_id"=>cd.id}}.to_json
-			respond_to do |format|
-				format.html { render :text => status.to_s.html_safe }
-			end	
+			
 		end
-		
+		redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
 	end
 	
   private
-
-	def convert_to_json(courses)
-		return courses.map{|cs|{
-			:name=>cs.course.ch_name,
-			:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
-			:cos_id=>cs.course.id,
-			:cd_id=>cs.course_detail_id,
-			:sem_id=>cs.semester_id,
-			:t_id=>0,
-			:t_name=>cs.course_detail.teacher_name,
-			:cf_name=>cs.course_field ? cs.course_field.name : "",
-			:credit=>cs.course.credit,
-			:temp_cos_id=>cs.course_detail.temp_cos_id,
-			:file_count=>cs.course_teachership.past_exams.count.to_s,
-			:discuss_count=>cs.course_teachership.discusses.count.to_s,
-			:score=>cs.score
-		}}
-	end
-	
-
-	
-	
-	
-	
-	def get_cm_cfs(course_map)
-		return course_map.course_fields.includes(:courses, :child_cfs).map{|cf|
-			cf.field_type < 3 ? 
-				_get_bottom_node(cf) : 
-				_get_middle_node(cf,cf.child_cfs.includes(:courses).map{|child_cf|get_cf_tree(child_cf)})
-		}
-	end
-	
-	def check_passed(cs,user)
-		return cs.semester_id!=latest_semester.id&&(cs.score=="通過"||cs.score.to_i > user.pass_score)
-	end
 
   def user_params
     params.require(:user).permit(:email)

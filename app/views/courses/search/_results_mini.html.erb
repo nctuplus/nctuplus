@@ -10,11 +10,11 @@
 		<%=f.search_field :semester_id_eq,class:"hidden", value:params[:sem_id]||params[:q][:semester_id_eq]%>
 
 		<div class="col-sm-5 no-padding-left">
-			<%= select_tag "degree" ,options_for_select([['大學部','3'],['研究所','2'],['大學部共同','0']],params[:degree]), prompt: "分類", class: "form-control", onchange: "change_degree($(this))" %>
+			<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control", onchange: "change_degree($(this))" %>
 		</div>
 		<div class="col-sm-7">
 			<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-			<%= f.select :department_id_eq, options_from_collection_for_select(Department.searchable, "id", "ch_name", @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
+			<%= f.select :department_id_eq, options_for_select(@dept_sel, @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
 		</div>
 	</div>
 

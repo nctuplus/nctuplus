@@ -20,7 +20,7 @@
 						
 						<% college.departments.each do |dept| %>
 							<li id="dept-<%=dept.id%>" style="padding-left :20px;">
-								<a href="?dept_id=<%="#{dept.id}&sem_id=13"%>"><%=dept.ch_name%></a>
+								<a href="?dept_id=<%="#{dept.id}&year=#{Semester::CURRENT.year}"%>"><%=dept.ch_name%></a>
 							</li>
 						<% end %>
 					</ul>

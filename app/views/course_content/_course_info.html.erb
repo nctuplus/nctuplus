@@ -22,7 +22,7 @@
 			<td><%=fa_icon "tag" %> 年級</td>					
 			<td class="col-md-4"><%=fa_icon "bookmark" %> 備註</td>
     	</tr>
-		<% @data[:related_cds].select{|cd| cd.semester==latest_semester}.each do |cd| %>  
+		<% @data[:related_cds].select{|cd| cd.semester_id==Semester::LAST.id}.each do |cd| %>  
 		<tr>
 			<td><%=cd.semester.name%></td>
 			<td><%=cd.department.ch_name%></td>
@@ -43,7 +43,7 @@
 			<td><%=cd.memo%></td>
 		</tr>    
 		<%end%>
-		<% @data[:related_cds].reject{|cd| cd.semester==latest_semester}.each do |cd| %>  
+		<% @data[:related_cds].reject{|cd| cd.semester_id==Semester::LAST.id}.each do |cd| %>  
 		<tr class="old-course">
 			<td><%=cd.semester.name%></td>
 			<td><%=cd.department.ch_name%></td>

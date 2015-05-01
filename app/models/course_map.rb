@@ -5,9 +5,11 @@ class CourseMap < ActiveRecord::Base
 	has_many :course_groups, :dependent => :destroy
 	has_many :user_coursemapships, :dependent => :destroy
 	has_many :course_map_public_comments, :dependent => :destroy
-	belongs_to :semester
+	
 	belongs_to :department
 	belongs_to :user
+	
+	
 	
 	def to_tree_json
 		self.course_fields.includes(:course_field_lists, :courses, :child_cfs, :cf_credits).map{|cf|

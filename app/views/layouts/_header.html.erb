@@ -65,7 +65,7 @@
 				</li>
 			
 				<li class="dropdown">		
-					<%= link_to  "/user/special_list", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
+					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
 						<% if current_user.uid.presence%>
 							<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
 						<% else %>
@@ -95,7 +95,7 @@
 		// small timetable
 		$("#sm_schd_button").click(
 			function(){	
-				var data = show_timetable_on_modal(<%=latest_semester.id%>, false);
+				var data = show_timetable_on_modal(<%=Semester::LAST.id%>, false);
 				$("#small_timetable").html(tmpl("small_course_table"));
 				if(data.courses.length>0)
 					add_time_slot(data.courses, false, true);			//for small_timetable		

@@ -30,11 +30,11 @@
 	
 </div>
 <script>
-	function load_cm(dept_id,sem_id){
+	function load_cm(dept_id,year){
 		
 		$.getJSON("/course_maps/public",{
 			dept_id: dept_id,
-			sem_id: sem_id
+			year: year
 		},
 		function(data){
 			console.log(data);
@@ -42,7 +42,7 @@
 				$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });
 			});
 			$("#cm-desc").html(tmpl("cm_public", data),function(){});
-			$("#sem-"+sem_id).addClass("disabled");
+			$("#year-"+year).addClass("disabled");
 			$("#cf-btn").click();
 			$('body').scrollspy('refresh');
 			$('.main-menu li a').click(function(event) {
@@ -60,12 +60,12 @@
 	$(document).ready(function(){
 		
 		var dept_id=<%=params[:dept_id]||0%>;
-		var sem_id=<%=params[:sem_id]||0%>;
+		var year=<%=params[:year]||0%>;
 		if(dept_id!=0){
 			$("#dept-"+dept_id).parent().parent().prev().click();		
 			$("#dept-"+dept_id).addClass("selected");
-			if(sem_id!=0){
-				load_cm(dept_id,sem_id);	
+			if(year!=0){
+				load_cm(dept_id,year);	
 			}
 		}
 	

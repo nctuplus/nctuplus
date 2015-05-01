@@ -69,20 +69,20 @@ class SessionsController < ApplicationController
 		
     #end
 		
-    redirect_to "/user/special_list"
-  end
+    redirect_to "/user"
+  end 
 
 	def sign_in
 		if current_user
 			redirect_to :root 
 		else	
 			if request.post?
-				data = User.e3_login(params[:username], params[:password])
+				data = E3Service.login(params[:username], params[:password])
 				if data[:e3_auth]
 					if data[:user]
 						session[:user_id] = data[:user].id
 					else
-						new_user = User.new(
+						new_user = User.create(
 							:student_id=>params[:username],
 							:name=>params[:username]
 						)	

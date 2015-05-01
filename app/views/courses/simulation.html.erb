@@ -57,13 +57,12 @@ $(document).ready(function(){
 	
 	
 	//sidebar search
-	$("#search_div").load("/courses/search_mini?sem_id=<%=latest_semester.id%>",function(){
+	$("#search_div").load("/courses/search_mini?sem_id=<%=Semester::LAST.id%>",function(){
 		show_has_select();
-		//show_search();
 	});		
 	
 	//course table
-	load_course_table(<%=latest_semester.id%>, true);
+	load_course_table(<%=Semester::LAST.id%>, true);
 	
 	
 	
@@ -71,7 +70,7 @@ $(document).ready(function(){
 });
 	
 	function searchLackCourses(){
-		<% if current_user.is_undergrad %>
+		<% if current_user.is_undergrad? %>
 			$(".scrollable").html("<%=j loadingImg%>");
 			$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
 				var result=get_check_res(data.pass_score,data.last_sem_id,data.user_courses.success);
@@ -130,7 +129,6 @@ $(document).ready(function(){
 
 	function get_selected_time_slot(){
 		var times = ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] ;
-		//var result = [] ;
 		var arr="[";
 		for(var i=1 ; i<=7;++i){
 			var tmp = 0 ;
@@ -150,9 +148,7 @@ $(document).ready(function(){
 				}
 			}
 		}
-		//console.log(result);
 		if(arr.length>1){
-			//$('#timeslot_search').val(result.join(''));
 			arr=arr.substr(0,arr.length-1);
 			arr+=']';
 			$('#timeslot_search').val(arr);
@@ -161,7 +157,6 @@ $(document).ready(function(){
 		}
 		else
 			toastr["warning"]("請先在右方課表選取時間");
-	//	return result ;
 	}
 </script>
 

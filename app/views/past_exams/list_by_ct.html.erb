@@ -1,110 +1,78 @@
 <h2>考古題區</h2>
-
-<!--<div class="container">-->
-  
-  <%= form_for PastExam.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
-    <!-- The table listing the files available for upload/download -->
-    <table class="table well" >
-			<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+<%= form_for PastExam.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
+	<!-- The table listing the files available for upload/download -->
+	<table class="table well" >
+		<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
 			<tr>
-				<th class="col-md-1">下載次數</th>
-				<th class="col-md-1">年度</th>
-				<th class="col-md-2">檔案說明</th>
-				<th class="col-md-2">檔名</th>
-				<th class="col-md-1">大小</th>
-				<th class="col-md-1">提供者</th>
-				<th class="col-md-1">上傳時間</th>
-				<th class="col-md-1">動作</th>
+				<th class="col-md-1 text-center">下載次數</th>
+				<th class="col-md-1 text-center">年度</th>
+				<th class="col-md-2 text-center">檔案說明</th>
+				<th class="col-md-2 text-center">檔名</th>
+				<th class="col-md-1 text-center">大小</th>
+				<th class="col-md-1 text-center">提供者</th>
+				<th class="col-md-1 text-center">上傳時間</th>
+				<th class="col-md-1 text-center">動作</th>
 			</tr>
-	<tr id="loading"><td colspan="8" ><p class="text-center"><%=loading_img%></p></td></tr>
-	</tbody>
-    </table>
-  
+			<tr id="loading"><td colspan="8" ><p class="text-center"><%=loading_img%></p></td></tr>
+		</tbody>
+	</table>
 	<hr>
 	<div class="panel panel-default">
 	  <div class="panel-heading">
-		<h2 class="panel-title">
-		Upload file
-		</h2>
-		
+			<h2 class="panel-title">
+				上傳檔案
+			</h2>
 	  </div>
 	  <div class="panel-body ">
-		<h4>請尊重智慧財產權!</h4>
-		<p>本區只開放上傳考古題，若上傳非相關檔案或未授權檔案後果請自行負責!</p>
-		<p>目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip/rar</p>
-		<p>每個檔案的大小限制為10mb</p>     
-		<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
-		<% if current_user %>
-			<div class="fileupload-buttonbar">
-				<!-- The fileinput-button span is used to style the file input field as button -->
-				<span class="btn btn-success fileinput-button">		  
-					<span class="glyphicon glyphicon-plus"></span>
-					<span>Add files...</span>
-					<%= f.file_field :upload, :multiple=>""%>
-				</span>
-				<button type="submit" class="btn btn-primary start">
-					<span class="glyphicon glyphicon-arrow-up"></span>
-					<span>Start upload</span>
-				</button>
-				<button type="reset" class="btn btn-warning cancel">
-				 
-					<span class="glyphicon glyphicon-remove"></span>
-					<span>Cancel upload</span>
-				</button>
-				<!---<button type="button" class="btn btn-danger delete">
-					<span class="glyphicon glyphicon-trash"></span>
-					<span>Delete</span>
-				</button>
-				<input type="checkbox" class="toggle">--->
-			</div>
-		<% else %>
-			請先登入後才能上傳、下載檔案!
-		<%end%>
-		
+			<h4>請尊重智慧財產權!</h4>
+			<p>
+				本區只開放上傳考古題，若上傳非相關檔案或未授權檔案後果請自行負責!<br>
+				目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip/rar<br>
+				每個檔案的大小限制為10mb
+			</p>     
+			<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+			<% if current_user %>
+				<div class="fileupload-buttonbar">
+					<!-- The fileinput-button span is used to style the file input field as button -->
+					<span class="btn btn-success fileinput-button">		  
+						<span class="glyphicon glyphicon-plus"></span>
+						<span>Add files...</span>
+						<%= f.file_field :upload, :multiple=>""%>
+					</span>
+					<button type="submit" class="btn btn-primary start">
+						<span class="glyphicon glyphicon-arrow-up"></span>
+						<span>Start upload</span>
+					</button>
+					<button type="reset" class="btn btn-warning cancel">
+						<span class="glyphicon glyphicon-remove"></span>
+						<span>Cancel upload</span>
+					</button>
+				</div>
+			<% else %>
+				請先使用E3登入後才能上傳、下載檔案!
+			<%end%>
 		</div>
 	</div>
   <% end %>
 
-<!--</div>-->
-
-<script>
-  var fileUploadErrors = {
-  maxFileSize: 'File is too big',
-  minFileSize: 'File is too small',
-  acceptFileTypes: 'Filetype not allowed',
-  maxNumberOfFiles: 'Max number of files exceeded',
-  uploadedBytes: 'Uploaded bytes exceed file size',
-  emptyResult: 'Empty file upload result'
-  };
-</script>
-
-<%= render :partial=>"template_upload" %>
-
-
-<%= render :partial=>"template_download" %>
+<%= render :partial=>"xtmpl_upload" %>
+<%= render :partial=>"xtmpl_download" %>
 
 
 <script type="text/javascript" charset="utf-8">
 
-  function update_input(obj){
-      
-	  obj.next().val(obj.val());
-  }
   function change_to_edit(file){
-    //alert();
-
-	var semester_select="<%=j select_tag("past_exam[semester_id]", options_from_collection_for_select(@sems, "id", "name"))%>";
-	$("#download_"+file.id+" td[class=semester_"+file.id+"]").html(semester_select);
-	$("td.semester_"+file.id+" select").val(file.semester_id);
-	
-	var description_input='<input rows="1" name="past_exam[description]" value="'+file.description+'">';
-	$("#download_"+file.id+" td[class=description_"+file.id+"]").html(description_input);
-	
-	$("#edit_but_"+file.id).hide();
-	$("#save_but_"+file.id).show();
-	$("#delete_"+file.id).show();
-	
-	
+		var semester_select="<%=j select_tag("past_exam[semester_id]", options_from_collection_for_select(@sems, "id", "name"))%>";
+		$("#download_"+file.id+" td[class=semester_"+file.id+"]").html(semester_select);
+		$("td.semester_"+file.id+" select").val(file.semester_id);
+		
+		var description_input='<input rows="1" name="past_exam[description]" value="'+file.description+'">';
+		$("#download_"+file.id+" td[class=description_"+file.id+"]").html(description_input);
+		
+		$("#edit_but_"+file.id).hide();
+		$("#save_but_"+file.id).show();
+		$("#delete_"+file.id).show();
+		
   }
   
   function save_update(id){

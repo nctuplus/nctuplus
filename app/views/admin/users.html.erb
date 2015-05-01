@@ -16,17 +16,17 @@
 </thead>
 
 <tbody id="body">
-<%= render "manage_user_lists"%>
+<%= render :partial=>"manage_user_lists", :collection => @users, :as => :user%>
 </tbody>
 
 </table>
 <div id="paginator">
-	<%= paginate @users, :window=>2, :remote => true %>
+	<%= paginate @users, :window=>2, :remote => true, :method=>"POST" %>
 </div>
 
 <script>
 
-	$('.role').change(function(){
+	$('.admin-user-role').change(function(){
 		var uid = $(this).attr('user_id');
 		var role = $(this).val();
 		$.ajax({
@@ -43,7 +43,6 @@
 		return false ;
 	});
 
-<% data = User.all.joins(:department).group(:ch_name).count %>
 $(function () {
     $('#container').highcharts({
         chart: {
@@ -56,7 +55,7 @@ $(function () {
             text: ''
         },
         xAxis: {
-            categories: <%=raw data.keys.to_json%>
+            categories: <%=raw @data.keys.to_json%>
         },
         yAxis: {
             min: 0,
@@ -80,7 +79,7 @@ $(function () {
         },
         series: [{
             name: '人數',
-            data: <%=raw data.values.to_json%>
+            data: <%=raw @data.values.to_json%>
 
         }]
     });

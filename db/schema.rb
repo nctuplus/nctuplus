@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150419123054) do
+ActiveRecord::Schema.define(version: 20150430091004) do
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -184,7 +184,7 @@ ActiveRecord::Schema.define(version: 20150419123054) do
     t.integer  "department_id"
     t.string   "name"
     t.text     "desc",                      null: false
-    t.integer  "semester_id"
+    t.integer  "year"
     t.integer  "total_credit",  default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -248,7 +248,6 @@ ActiveRecord::Schema.define(version: 20150419123054) do
     t.string   "eng_name"
     t.boolean  "has_courses", default: false
     t.boolean  "majorable",   default: false
-    t.string   "use_type"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -315,8 +314,8 @@ ActiveRecord::Schema.define(version: 20150419123054) do
   add_index "events", ["location_id"], name: "index_events_on_location_id", using: :btree
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
-  create_table "file_infos", force: true do |t|
-    t.integer  "owner_id"
+  create_table "past_exams", force: true do |t|
+    t.integer  "user_id"
     t.integer  "course_teachership_id"
     t.integer  "semester_id"
     t.string   "description"
@@ -383,7 +382,7 @@ ActiveRecord::Schema.define(version: 20150419123054) do
 
   create_table "users", force: true do |t|
     t.string   "name"
-    t.integer  "semester_id"
+    t.integer  "year",             default: 0
     t.string   "activate_token"
     t.string   "provider"
     t.string   "uid"

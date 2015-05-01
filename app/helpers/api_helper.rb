@@ -1,17 +1,8 @@
 module ApiHelper
-	def get_course_from_e3(sem)
-		sendE3={:acy=>sem.year, :sem=>sem.half}
-
-		@config = YAML.load_file("#{Rails.root}/config/E3.yml")
-		http=Curl.post(@config["prefix_url"]+"CourseList",sendE3)
-
-		ret=JSON.parse(http.body_str.force_encoding("UTF-8"))
-		return ret
-	end
 	
 	def updateTeacherList
-		http=Curl.get("http://dcpc.nctu.edu.tw/plug/n/nctup/TeacherList",{})
-		teachers=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		
+		teachers=E3Service.get_teacher_list
 		
 		tids=teachers.map{|t|t["TeacherId"]}
 		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
@@ -30,8 +21,8 @@ module ApiHelper
 	end
 	
 	def updateDepartmentList
-		http=Curl.post("http://dcpc.nctu.edu.tw/plug/n/nctup/DepartmentList",{})
-		new_depts=JSON.parse(http.body_str.force_encoding("UTF-8"))
+		
+		new_depts=E3Service.get_department_list
 		
 		#new_dept_ids=new_depts.map{|dept|dept["degree"]+dept["dep_id"]}
 		#zzz=new_depts
@@ -67,22 +58,8 @@ module ApiHelper
 				tids.push(t.id)
 			end
 			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
-			#end
 			save_cd(data,nct.id,sem.id)
-			
 		else
-=begin
-			costime=data['cos_time'].split(',')
-			@cd.time=""
-			@cd.room=""
-			costime.each do |t|
-				@cd.time<<t.partition('-')[0]
-				@cd.room<<t.partition('-')[2]
-			end
-			@cd.department_id=get_deptid(data["degree"].to_i,data["dep_id"])
-			@cd.save!
-=end		
-			#puts "Update success,id=#{@cd.id}\n"
 		end	
 	end
 	

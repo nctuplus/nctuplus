@@ -5,15 +5,8 @@ class ApplicationController < ActionController::Base
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-	helper_method :latest_semester, :now_semester, :current_user
-  def latest_semester
-		Semester.last
-  end
-	
-	def now_semester
-		Semester.last#find(13)
-	end
-  
+	helper_method :current_user
+
   def record_not_found
 		alertmesg("info",'Sorry',"無此欄位!")
 		if !request.xhr?
