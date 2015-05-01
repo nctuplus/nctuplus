@@ -4,13 +4,13 @@ class ApiController < ApplicationController
 		#current_user.agree_courses.create(:target_id=>555)
 		#@x=current_user.agree_courses.first.course_detail.id
 		#@x=current_user.agree_courses.first.course_detail.id
-	end
+	end   
 	def tempcs_change_to_new_sem_id
 		TempCourseSimulation.includes(:course_detail).where("semester_id != 0").all.each do |tempcs|
 			tempcs.semester_id=tempcs.course_detail.semester_id
 			tempcs.save
 		end
-	end
+	end     
 	def change_to_newdept_id
 		Course.includes(:department).all.each do |course|
 			dept=course.department
