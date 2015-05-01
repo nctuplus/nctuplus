@@ -8,5 +8,6 @@ Rails.application.config.assets.precompile +=[
 	'bootstrap-treeview.js',
 	'courses/main.js',
 	'courses/chart.js',
-	'course_maps/public.js'
+	'course_maps/public.js',
+	'user/coursemap-checker.js'
 ]
