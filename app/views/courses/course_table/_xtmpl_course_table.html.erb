@@ -19,14 +19,14 @@
 		</tr>	
 		{% for(var i=0,t; t=time[i]; ++i){ %}
 			<tr>
-				<th id="time_{%=t %}" class="schedule-grid"><p class="text-center">{%=t %}</p></th>
+				<td id="time_{%=t %}" class="schedule-grid"><p class="text-center">{%=t %}</p></td>
 				{% for(var j=1; j<=days.length; ++j){ %}
 					<td id="day_{%=j %}_time_{%=t %}" class="schd-slot-empty pos-relative tslt" ></td>
 				{% } %}
 			</tr>
 
 		{% } %}	
-	</table>
+	</table>	
 </div>
 </script>
 
@@ -94,25 +94,25 @@ function del_course(cd_id){
 	$.ajax({
 		type: "GET",
 		dataType: "text",
-		url: "/user/add_course" ,
+		url: "/user/delete_course" ,
 		data:{
 			cd_id: cd_id,
-			type : "delete" 
 		},	
 		success: function(result){
-			if(result!=0){
-				var json_str = JSON.parse(result)[0] ;
+		  console.log(result);
+			if(result){
+				var json_str = JSON.parse(result) ;
 				var timearr=json_str.time.match(/[0-9][A-Z]+/g);
 				for(var j = 0 ; j < timearr.length ; j++){
 					var day=timearr[j][0];
 					for(var k = 1 ; k < timearr[j].length ; k++){
-						var row_id = "#day_"+day+"_time_"+timearr[j][k] ;
-						$(row_id).removeClass("schd-slot-empty"); // remove old color
-						$(row_id).removeClass(json_str.class);
-						$(row_id).css("background-color","#FFFFFF");
-						$(row_id).html('') ;
-						$(row_id).popover('disable');
-						$(row_id).addClass('tslt');
+						var target_row = $("#day_"+day+"_time_"+timearr[j][k]) ;
+						target_row.removeClass("schd-slot-empty"); // remove old color
+						target_row.removeClass(json_str.class);
+						target_row.css("background-color","#FFFFFF");
+						target_row.html('') ;
+						target_row.popover('disable');
+						target_row.addClass('tslt');
 					}
 				}	
 				//$("#has-select-btn").click();

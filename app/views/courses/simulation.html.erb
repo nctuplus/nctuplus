@@ -26,15 +26,30 @@
 			</div>
 		</div>
 	</div>
-	<div class="col-md-6 " id="schedule_div"></div>
+	<div class="col-md-6 " id="schedule_div">
+		<div class="panel panel-primary ">
+			<div class="panel-heading" style="background-color:#4c66a4;">
+				<h4 class="text-center">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
+					<a href="/courses/timetable.xlsx?sem_id=<%=Semester::LAST.id%>" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
+						<i class="fa fa-download"></i>
+					</a>
+				</h4>		
+			</div>
+			<table class="table table-bordered" id="schedule_table"></table>
+		</div>	
+	</div>
+	
 </div>
 
-
+<%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 <script>
 function show_search(){
 	$("#search_div").find('form').toggleClass("hidden");
 }
 $(document).ready(function(){
+
 	$('#cart-btn').popover({
 		content: "顯示觀察名單",
 		placement:"auto",
@@ -98,19 +113,18 @@ $(document).ready(function(){
 	
 	function load_course_table(semester_id, selectable){
 		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
-			//xtmpl is in header
-			$("#schedule_div").html(tmpl("course_table", data.semester_info));
-			table_popover();
-			if(data.courses.length>0) add_time_slot(data.courses, data.semester_info.isNow, false) ;
-			if(selectable){
-				$('.tslt').click(function(){
-					if($(this).hasClass('td-selected'))
-						$(this).removeClass('td-selected').removeClass("schd-grid-selected");
-					else	
-						$(this).addClass('td-selected').addClass("schd-grid-selected");
-					
-				});
-			}
+			console.log(data);
+			data.config = {
+				deletable: true ,
+				selectable: true,
+				popover: true,
+				cancelButtonFunc: function(arg){
+					var course_id = arg.data.course_id;
+					//todo ajax
+					$('#schedule_table').CourseTable('deleteCourse', course_id);
+				}
+			};
+			$('#schedule_table').CourseTable(data);
 		});
 	}
 	function show_has_select(){
@@ -128,30 +142,15 @@ $(document).ready(function(){
 	}
 
 	function get_selected_time_slot(){
-		var times = ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'] ;
-		var arr="[";
-		for(var i=1 ; i<=7;++i){
-			var tmp = 0 ;
-			for(var j=0,t; t=times[j]; ++j){
-				var td = $("#day_"+i+"_time_"+t) ;
-				if(td.hasClass('td-selected')){
-					if(tmp!=0)
-						tmp += t;
-					else	
-						tmp = i+t;
-				}else{
-					if(tmp!=0){
-						//result.push(tmp);
-						arr+='"'+tmp+'",';
-					}
-					tmp=0;	
-				}
-			}
-		}
-		if(arr.length>1){
-			arr=arr.substr(0,arr.length-1);
-			arr+=']';
-			$('#timeslot_search').val(arr);
+		var selected = [] ;
+		$('#schedule_table').CourseTable('getSelectedSlot', selected);
+		if(selected.length>0){
+			var arr_str = '[';
+			for(var i=0, ele;ele=selected[i]; ++i)
+				arr_str+= '"'+ele+'",';
+			arr_str=arr_str.substr(0,arr_str.length-1);
+			arr_str+=']';
+			$('#timeslot_search').val(arr_str);
 			$(".scrollable").html("<%=j loadingImg%>");
 			$("form").submit();
 		}

@@ -8,7 +8,6 @@ require 'open-uri'
 require 'net/http'
 	sendE3={:key=>Nctuplus::Application.config.secret_key_base ,:id=>username, :pwd=>password}				
 	res = Curl.post("#{E3::URL}/Authentication",sendE3).body_str.to_s	
-	
 	if res=='"OK"'
 		return {:e3_auth=>true, :user=>User.where(:student_id=>username).take}
 	else

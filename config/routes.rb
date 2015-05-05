@@ -36,6 +36,7 @@ Nctuplus::Application.routes.draw do
 #---------- user ----------------
 	
 	get "user/add_course"
+	get "user/delete_course"
 	get "user/get_courses"
 	get "user/this_sem"
 	post "user/import_course"
@@ -68,6 +69,7 @@ Nctuplus::Application.routes.draw do
 #	post "courses/comment_submit"
 #	post "courses/course_content_post"
 
+=begin
 	get "courses/search_mini"
 	get "courses/search_mini_cm"
   
@@ -75,16 +77,27 @@ Nctuplus::Application.routes.draw do
 	
   get "courses/timetable"
 	get "courses/add_to_cart"
+
 	get "courses/show_cart"
-	resources :courses
+=end
+	
+	resources :courses, :only => [:index, :show] do
+		collection do
+			get "search_mini"
+			get "search_mini_cm"
+			get "simulation"
+			get "timetable"
+			get "add_to_cart"
+			get "show_cart"
+		end
+	end
 	
 
 #### course map block 	
 	#get "course_maps/add_usercoursemapship"
 
 	get "course_maps/get_credit_list"
-	post "course_maps/credit_action"
-	
+	post "course_maps/credit_action"	
 	get "course_maps/get_course_tree"
 	get "course_maps/get_group_tree"
 	post "course_maps/course_action"
@@ -95,10 +108,9 @@ Nctuplus::Application.routes.draw do
 	get "course_maps/show_course_list" 
 	get "course_maps/show_course_group_list"
 	post "course_maps/course_group_action"
-	get "course_maps/course_map_content"
+	get "course_maps/content"
 	post "course_maps/update_cm_head"
 	get "course_maps/public"
-	get "course_maps/public2"
 	post "course_maps/cm_public_comment_action"
 	
 	resources :course_maps
@@ -122,11 +134,14 @@ Nctuplus::Application.routes.draw do
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
 	get "api/testttt"
+	
   #----------for files---------------
-  
-	get "past_exams/list_by_ct"
-  get "past_exams/edit"
-  resources :past_exams
+  resources :past_exams, :except=>[:update] do
+		collection do
+			get "list_by_ct"
+			get "edit"
+		end
+	end
   
     
 

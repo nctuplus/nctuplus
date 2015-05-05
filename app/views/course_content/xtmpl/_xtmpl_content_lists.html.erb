@@ -7,7 +7,7 @@
 {% } %}	
 	<tr class="new-list" style="display: none;">
 		<td>
-			<%= select_tag :list_type, options_for_select([["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]],"[考試]"), :class=>"form-control" %>
+			<%= select_tag :list_type, options_for_select(@list_type), :class=>"form-control" %>
 		</td>
 		<td>
 			<span class="col-sm-10"><%=text_field_tag :list_content, "", :maxlength=>"32", :class=>"form-control"%></span>

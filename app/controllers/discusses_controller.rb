@@ -5,9 +5,8 @@ class DiscussesController < ApplicationController
 	before_filter :checkOwner, :only=>[:update, :delete]
 	
 	def like
-		@like=DiscussLike.new
-		@like.user_id=current_user.id
-		@like.like=params[:like]
+		@like=current_user.discuss_likes.create(:like=>params[:like])
+		
 		case params[:type] 
 			when "main"
 				@like.discuss_id=params[:discuss_id]

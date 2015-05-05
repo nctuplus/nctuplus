@@ -60,45 +60,50 @@
 
 
 <script type="text/javascript" charset="utf-8">
+	
+	function change_to_edit(file_id,sem_id,desc){
+		var semester_select="<%=j select_tag("past_exam[semester_id]", options_from_collection_for_select(@sems, "id", "name"), class:"form-control")%>";
+		var $row=$("#download_"+file_id);
+		$row.find("#js-sem").html(semester_select);
+		$row.find("select").val(sem_id);
 
-  function change_to_edit(file){
-		var semester_select="<%=j select_tag("past_exam[semester_id]", options_from_collection_for_select(@sems, "id", "name"))%>";
-		$("#download_"+file.id+" td[class=semester_"+file.id+"]").html(semester_select);
-		$("td.semester_"+file.id+" select").val(file.semester_id);
+		var description_input='<input rows="1" name="past_exam[description]" value="'+desc+'" class="form-control">';
+		$row.find("#js-desc").html(description_input);
+		$row.find("input").val(desc);
 		
-		var description_input='<input rows="1" name="past_exam[description]" value="'+file.description+'">';
-		$("#download_"+file.id+" td[class=description_"+file.id+"]").html(description_input);
+		$row.find("#edit_but").hide();
+		$row.find("#save_but").show();
+		$row.find("#delete_but").show();
 		
-		$("#edit_but_"+file.id).hide();
-		$("#save_but_"+file.id).show();
-		$("#delete_"+file.id).show();
-		
+		return false;  //prevent form submit
   }
-  
+
   function save_update(id){
-		var description=$("td.description_"+id+" input").val();
-		var semester_id=$("td.semester_"+id+" select").val();
+		var $row=$("#download_"+id);
+		var description=$row.find("input").val();
+		var semester_id=$row.find("select").val();
 		$.ajax({
 			type: "GET",
 			url: "/past_exams/edit",
 			data: {
-				description: description,//main or sub
+				description: description,
 				semester_id: semester_id,
-				id: id, //comment id
+				id: id,
 			},
 			success: function(data) {
 				var file=JSON.parse(data)[0];
-				$("#edit_but_"+file.id).attr("onclick","change_to_edit("+JSON.stringify(file, null, 4)+")");
-				$("#download_"+file.id+" td[class=semester_"+file.id+"]").html(file.semester_name);
-				$("#download_"+file.id+" td[class=description_"+file.id+"]").html(file.description);
-				$("#edit_but_"+file.id).show();
-				$("#save_but_"+file.id).hide();
-				$("#delete_"+file.id).hide();
+				$row.find("#edit_but").attr("onclick","return change_to_edit("+file.id+','+file.semester_id+',"'+file.description+'")');
+				$row.find("#js-sem").html(file.semester_name);
+				$row.find("#js-desc").html(file.description);
+				$row.find("#edit_but").show();
+				$row.find("#save_but").hide();
+				$row.find("#delete_but").hide();
 			},
 			error :function(){
 				alert("ERROR");
 			}
 		});
+		return false;
   }
   
 

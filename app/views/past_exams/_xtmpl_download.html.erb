@@ -18,10 +18,10 @@
 		{% } else { %}
 	
 			<td class="download_times text-center">{%= file.download_times %}</td>
-			<td class="semester_{%=file.id%} text-center">
+			<td class="text-center" id="js-sem">
 				<span>{%= file.semester_name %}</span>
 			</td>
-			<td class="description_{%=file.id%} text-center">
+			<td class="text-center" id="js-desc">
 				{%= file.description %}
 			</td>
 			<td class="name text-center">
@@ -35,23 +35,18 @@
 		{% } %}
 			<td class="function text-center">
 			{% if (file.editable) { %}
-				<a href="javascript: void(0)" class="btn btn-default btn-xs" id="edit_but_{%=file.id%}" onclick="change_to_edit({%=JSON.stringify(file, null, 4)%})" >
+				<button class="btn btn-default btn-xs" id="edit_but" onclick="return change_to_edit({%=file.id%},{%=file.semester_id%},'{%=file.description%}');" >
 					<span class="glyphicon glyphicon-pencil"></span>
-				</a>
-				<a href="javascript: void(0)"  class="btn btn-default btn-xs" id="save_but_{%=file.id%}" onclick="save_update({%=file.id%});" style="display:none;">
-					<span class="glyphicon glyphicon-saved"></span>
-				</a>
-			{% } %}
-	
-				<span class="delete">
-				<button id="delete_{%=file.id%}" class="btn btn-default btn-xs" data-type="DELETE" data-url="/past_exams/{%=file.id%}" style="display:none;">
-
-				 <span class="glyphicon glyphicon-trash"></span>
-
 				</button>
-
-
-	
+				<button class="btn btn-default btn-xs" id="save_but" onclick="return save_update({%=file.id%});" style="display:none;">
+					<span class="glyphicon glyphicon-saved"></span>
+				</button>
+			{% } %}
+				<span class="delete">	<!-- dont remove thin span -->
+					<button id="delete_but" class="btn btn-default btn-xs" data-type="DELETE" data-url="/past_exams/{%=file.id%}" style="display:none;">
+					 <span class="glyphicon glyphicon-trash"></span>
+					</button>
+				</span>
 			</td>
 		</tr>
 	{% } %}

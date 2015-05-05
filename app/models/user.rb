@@ -2,21 +2,32 @@ class User < ActiveRecord::Base
 	
 	belongs_to :department
 	delegate :ch_name, :to=> :department, :prefix=>true
-	
+	delegate :degree, :to=> :department
 	
 	has_many :past_exams
 	has_many :discusses
+	has_many :sub_discusses
+	has_many :discuss_likes
 	has_many :course_content_lists
 	has_many :content_list_ranks
 	has_many :comments
-	has_many :course_simulations
-
-	has_many :user_coursemapships
-	has_many :course_maps, :through=> :user_coursemapships
-
 	has_many :course_teacher_ratings
 	
+	has_many :course_simulations, :dependent=> :destroy
+	has_many :user_coursemapships, :dependent=> :destroy
+	has_many :course_maps, :through=> :user_coursemapships
+	
 	validates :uid, :uniqueness => {:scope => [ :student_id]}
+
+	
+	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
+		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name}
+		table_to_be_moved.each do |table_name|
+			self.send(table_name).update_all(:user_id=>new_user.id)
+		end
+		self.destroy
+	end
+
 	
 	def hasFb?
 		return self.provider=="facebook"
@@ -56,15 +67,14 @@ class User < ActiveRecord::Base
 		self.course_simulations.includes(:course_detail, :course, :course_field).import_success.agreed#where("course_detail_id != 0 AND semester_id = 0")
 	end
 	
-	#def pass_courses
-	#	self.course_simulations.includes(:course, :course_detail).where("(semester_id !=0) AND (score = '通過' OR score>= ?)",self.pass_score)
-	#end
 	
-	
-	
-	#def total_credit
-	#	return self.pass_courses.map{|cs|cs.course.credit.to_i}.reduce(:+)||0
-	#end
+
+	def total_credit
+		def pass_courses
+			self.course_simulations.includes(:course, :course_detail).where("(semester_id !=0) AND (score = '通過' OR score>= ?)",self.pass_score)
+		end
+		return self.pass_courses.map{|cs|cs.course.credit.to_i}.reduce(:+)||0
+	end
 	
 	def courses_json
 		return self.all_courses.order("course_field_id DESC").map{|cs|{

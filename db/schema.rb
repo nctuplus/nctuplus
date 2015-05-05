@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150430091004) do
+ActiveRecord::Schema.define(version: 20150502070259) do
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -30,6 +30,8 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "cf_field_need", ["course_field_id"], name: "index_cf_field_need_on_course_field_id", using: :btree
 
   create_table "cm_cfships", force: true do |t|
     t.integer  "course_map_id"
@@ -112,6 +114,7 @@ ActiveRecord::Schema.define(version: 20150430091004) do
   end
 
   add_index "course_details", ["course_teachership_id"], name: "index_new_course_details_on_course_teachership_id", using: :btree
+  add_index "course_details", ["department_id"], name: "index_course_details_on_department_id", using: :btree
   add_index "course_details", ["semester_id"], name: "index_new_course_details_on_semester_id", using: :btree
 
   create_table "course_field_lists", force: true do |t|
@@ -125,6 +128,11 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "course_field_lists", ["course_field_id"], name: "index_course_field_lists_on_course_field_id", using: :btree
+  add_index "course_field_lists", ["course_group_id"], name: "index_course_field_lists_on_course_group_id", using: :btree
+  add_index "course_field_lists", ["course_id"], name: "index_course_field_lists_on_course_id", using: :btree
+  add_index "course_field_lists", ["user_id"], name: "index_course_field_lists_on_user_id", using: :btree
 
   create_table "course_field_selfships", force: true do |t|
     t.integer  "parent_id"
@@ -145,6 +153,8 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.integer  "field_type",  default: 0
   end
 
+  add_index "course_fields", ["user_id"], name: "index_course_fields_on_user_id", using: :btree
+
   create_table "course_group_lists", force: true do |t|
     t.integer  "course_group_id"
     t.integer  "course_id"
@@ -154,6 +164,10 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "updated_at"
   end
 
+  add_index "course_group_lists", ["course_group_id"], name: "index_course_group_lists_on_course_group_id", using: :btree
+  add_index "course_group_lists", ["course_id"], name: "index_course_group_lists_on_course_id", using: :btree
+  add_index "course_group_lists", ["user_id"], name: "index_course_group_lists_on_user_id", using: :btree
+
   create_table "course_groups", force: true do |t|
     t.integer  "user_id"
     t.integer  "gtype",         default: 0
@@ -161,6 +175,9 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "course_groups", ["course_map_id"], name: "index_course_groups_on_course_map_id", using: :btree
+  add_index "course_groups", ["user_id"], name: "index_course_groups_on_user_id", using: :btree
 
   create_table "course_map_public_comments", force: true do |t|
     t.integer  "user_id"
@@ -171,14 +188,21 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.integer  "checked",       default: 0
   end
 
+  add_index "course_map_public_comments", ["course_map_id"], name: "index_course_map_public_comments_on_course_map_id", using: :btree
+  add_index "course_map_public_comments", ["user_id"], name: "index_course_map_public_comments_on_user_id", using: :btree
+
   create_table "course_map_public_sub_comments", force: true do |t|
     t.integer  "user_id"
-    t.integer  "course_map_public_comment_id"
+    t.integer  "comment_id"
     t.integer  "course_map_id"
     t.string   "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "course_map_public_sub_comments", ["comment_id"], name: "index_course_map_public_sub_comments_on_comment_id", using: :btree
+  add_index "course_map_public_sub_comments", ["course_map_id"], name: "index_course_map_public_sub_comments_on_course_map_id", using: :btree
+  add_index "course_map_public_sub_comments", ["user_id"], name: "index_course_map_public_sub_comments_on_user_id", using: :btree
 
   create_table "course_maps", force: true do |t|
     t.integer  "department_id"
@@ -190,6 +214,9 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "updated_at"
     t.integer  "user_id"
   end
+
+  add_index "course_maps", ["department_id"], name: "index_course_maps_on_department_id", using: :btree
+  add_index "course_maps", ["user_id"], name: "index_course_maps_on_user_id", using: :btree
 
   create_table "course_simulations", force: true do |t|
     t.integer  "user_id"
@@ -228,6 +255,7 @@ ActiveRecord::Schema.define(version: 20150430091004) do
   end
 
   add_index "course_teacherships", ["course_id"], name: "index_new_course_teacherships_on_course_id", using: :btree
+  add_index "course_teacherships", ["teacher_id"], name: "index_course_teacherships_on_teacher_id", using: :btree
 
   create_table "courses", force: true do |t|
     t.string   "real_id"
@@ -238,6 +266,8 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "courses", ["department_id"], name: "index_courses_on_department_id", using: :btree
 
   create_table "departments", force: true do |t|
     t.integer  "degree"
@@ -328,6 +358,10 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "updated_at"
   end
 
+  add_index "past_exams", ["course_teachership_id"], name: "index_past_exams_on_course_teachership_id", using: :btree
+  add_index "past_exams", ["semester_id"], name: "index_past_exams_on_semester_id", using: :btree
+  add_index "past_exams", ["user_id"], name: "index_past_exams_on_user_id", using: :btree
+
   create_table "semesters", force: true do |t|
     t.string  "name"
     t.integer "year"
@@ -345,6 +379,7 @@ ActiveRecord::Schema.define(version: 20150430091004) do
   end
 
   add_index "sub_discusses", ["discuss_id"], name: "index_sub_discusses_on_discuss_id", using: :btree
+  add_index "sub_discusses", ["user_id"], name: "index_sub_discusses_on_user_id", using: :btree
 
   create_table "teachers", force: true do |t|
     t.string   "real_id"
@@ -369,6 +404,10 @@ ActiveRecord::Schema.define(version: 20150430091004) do
     t.datetime "updated_at"
     t.string   "cos_type",         default: ""
   end
+
+  add_index "temp_course_simulations", ["course_detail_id"], name: "index_temp_course_simulations_on_course_detail_id", using: :btree
+  add_index "temp_course_simulations", ["course_field_id"], name: "index_temp_course_simulations_on_course_field_id", using: :btree
+  add_index "temp_course_simulations", ["semester_id"], name: "index_temp_course_simulations_on_semester_id", using: :btree
 
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"

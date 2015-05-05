@@ -7,7 +7,7 @@
 <table class="table table-bordered">
 	<tr>
 		<td>適用系所：</td>
-		<td class='cm-head-dep'><%=(@course_map.department_id==0)? "不指定" : @course_map.department.ch_name%></td>
+		<td class='cm-head-dep'><%=(@course_map.department_id==0)? "不指定" : @course_map.department_ch_name%></td>
 		<td>適用學期：</td>
 		<td class='cm-head-year'><%=(@course_map.year==0)? "不指定" : @course_map.year%></td>
 		<td>應修學分：</td>
@@ -30,7 +30,7 @@ var map_id = <%=j @course_map.id.to_s %> ;
 var cm_head_info = { dep: $('.cm-head-dep').text(), year: $('.cm-head-year').text(), desc:$('.cm-head-desc').text() };
 
 $(document).ready(function(){
-	$('#course-map-content').load('/course_maps/course_map_content?map_id='+map_id);
+	$('#course-map-content').load('/course_maps/content?map_id='+map_id);
 	
 	$('.cm-edit-head').click(function(){
 		if($(this).html()=='編輯'){

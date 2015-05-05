@@ -70,7 +70,7 @@ function add_all_class(){
 					<%= link_to course.ch_name, course_path(course.course_details.last), :class=>"course_name", :target=>"_blank" %> | 
 			<!--		<%= cd.cos_type %> | -->
 					<%=fa_icon "graduation-cap" %> <strong><%=course.credit%></strong>｜
-					<%=course.department.nil? ? "N/A" : course.department.ch_name %>
+					<%=course.department.nil? ? "N/A" : course.dept_name %>
 					<button class="btn btn-success btn-circle pull-right" onclick="add_class([<%=course.id%>])">
 						<span class="glyphicon glyphicon-plus"></span>
 					</button>

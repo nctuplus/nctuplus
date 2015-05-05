@@ -96,7 +96,7 @@ class UserController < ApplicationController
 			#update_cs_cfids(course_map,@user)
 			if course_map
 				course_map_res=	{
-					:name=>course_map.department.ch_name+" 入學年度:"+course_map.year.to_s,
+					:name=>course_map.department_ch_name+" 入學年度:"+course_map.year.to_s,
 					:id=>course_map.id,
 					:dept_id=>course_map.department_id,
 					#:sem_id=>course_map.semester_id,
@@ -300,14 +300,14 @@ class UserController < ApplicationController
 					:sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
 					:cf_id=>cs.course_field_id,
 					:memo=>cs.memo||"",
-					:degree=>cs.course.department.degree,
+					:degree=>cs.course.department.try(:degree)||0,
 				}}
 				# if has course_map, user must have semester, dept
 				user_info = {
 					:year=>user.year, 
 					:year_now=>Semester::CURRENT.year,
 					:half_now=>Semester::CURRENT.half,
-					:degree=>user.department.degree, 
+					:degree=>user.degree, 
 					:map_name=>course_map.name,
 					:student_id=>user.student_id 
 				}
@@ -326,21 +326,22 @@ class UserController < ApplicationController
 	def add_course
 		cd_id=params[:cd_id].to_i
 		cd=CourseDetail.find(cd_id)
-		_type=params[:type]
-		
-		if _type=="add"
-			session[:cd].delete(cd_id) if session[:cd].include?(cd_id)			
-			current_user.course_simulations.create(
-				#:user_id=>current_user.id,
-				:semester_id=>cd.semester_id,
-				:course_detail_id=>cd.id,
-				:score=>'修習中'
-			)
-		else # delete
-			CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
-			
-		end
+	
+    session[:cd].delete(cd_id) if session[:cd].present? && session[:cd].include?(cd_id)			
+    current_user.course_simulations.create(
+      #:user_id=>current_user.id,
+      :semester_id=>cd.semester_id,
+      :course_detail_id=>cd.id,
+      :score=>'修習中'
+    )		
 		redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
+	end
+	
+	def delete_course
+	  cd=CourseDetail.find(params[:cd_id])
+	  CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
+	  
+	  render :text=>cd.to_course_table_result.to_json, :layout=>false
 	end
 	
   private

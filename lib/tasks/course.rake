@@ -24,13 +24,14 @@ namespace :course do
 		stat={"Create"=>0, "Update"=>0}
 
 		datas.each do |data|
-			course_id=get_cid_by_real_id(data)
+			#course_id=get_cid_by_real_id(data)
+			course_id=Course.get_from_e3(data)
 			tids=[]
 			Teacher.where(:real_id=>data['teacher'].split(',')).each do |t|
 				tids.push(t.id)
 			end
 			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
-			stat[save_cd(data,nct.id,sem.id)]+=1
+			stat[CourseDetail.save_from_e3(data,nct.id,sem.id)]+=1
 		end
 
 		data_cos_ids=datas.map{|data|data['cos_id']}

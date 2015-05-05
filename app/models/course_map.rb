@@ -7,8 +7,19 @@ class CourseMap < ActiveRecord::Base
 	has_many :course_map_public_comments, :dependent => :destroy
 	
 	belongs_to :department
+	delegate :ch_name, :to=>:department, :prefix=>true
 	belongs_to :user
 	
+	def to_public_json
+		{
+			:id => self.id,
+			#:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
+			:total_credit=>self.total_credit,
+			:desc => self.desc,
+			:cfs=>self.to_tree_json,
+			:comments=>self.comments
+		}
+	end
 	
 	
 	def to_tree_json

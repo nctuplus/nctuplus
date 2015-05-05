@@ -50,6 +50,7 @@ class CourseContentController < ApplicationController
 	def get_course_info
 		data = {}
 		cd = CourseDetail.find(params[:cd_id])
+		
 		case params[:content]
 			when 'chart'
 				data = cd.course.to_chart(Semester::LAST)			
@@ -61,10 +62,19 @@ class CourseContentController < ApplicationController
 					   .map{ |list| list.to_content_list(((current_user==list.user)||istop), current_user) } || {}	
 			when 'course_comments'
 				data = cd.course_teachership.comments.order('updated_at ASC').map{|c| c.to_hash}
+		  else
+		    istop = checkTopManagerNoReDirect
+		    data = {
+		      :chart=>cd.course.to_chart(Semester::LAST),
+		      :head=>cd.course_teachership.try(:course_content_head).try(:to_hash)  || {},
+		      :list=>cd.course_teachership.try(:course_content_lists).includes(:user).order('updated_at DESC')
+					   .map{ |list| list.to_content_list(((current_user==list.user)||istop), current_user) } || {},
+					:comment=>cd.course_teachership.comments.order('updated_at ASC').map{|c| c.to_hash}
+		    }
 		end 
 		respond_to do |format|
-   	 		format.json {render :layout => false, :text=>data.to_json}
-    	end
+   	 	format.json {render :json=>data.to_json}
+    end
 	end	
 	
 	def course_action

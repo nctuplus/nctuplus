@@ -125,35 +125,28 @@
 			$(this).find('.fa').toggleClass("fa-search-minus");
 		});	
 			
-		// charts
-		$.getJSON("/course_content/get_course_info.json?cd_id=<%=@data[:course_detail_id]%>&content=chart", function (data) {		
-			show_chart_reg(data);
+			
+		$.getJSON("/course_content/get_course_info.json?cd_id=<%=@data[:course_detail_id]%>", function (json_data) {		
+		  
+		  var data = json_data.chart ;
+		  show_chart_reg(data);
 			show_chart_score(data);
 			if(!(data.show_reg || data.show_score))
 				$('#statistics-header').append(' 無資料');
-		});	
 		
-		// course content head 
-		$.getJSON("/course_content/get_course_info.json?cd_id=<%=@data[:course_detail_id]%>&content=content_head", function (data) {		
-				//console.log(data);
-				$("#course_content_head").html(tmpl("content-head", data));
-				head_binding(<%=j (current_user) ? "true" : "false"%>, cd_id);			
-		});	
+		  data = json_data.head ;
+		  $("#course_content_head").html(tmpl("content-head", data));
+			head_binding(<%=j (current_user) ? "true" : "false"%>, cd_id);	
 		
-		// course content lists
-		$.getJSON("/course_content/get_course_info.json?cd_id="+cd_id+"&content=content_lists", function (data) {		
-				//console.log(data);
-				$('#course_content_lists').html(tmpl("content-lists", data));
-				lists_binding(<%=j (current_user) ? "true" : "false"%>, cd_id);			
+		  data = json_data.list; 
+		  $('#course_content_lists').html(tmpl("content-lists", data));
+			lists_binding(<%=j (current_user) ? "true" : "false"%>, cd_id);			
+		
+		  data = json_data.comment ;
+		  $('#comments').html(tmpl("course-comments", data));
+			comment_binding(cd_id);
 		});
-		
-		// course comments
-		$.getJSON("/course_content/get_course_info.json?cd_id="+cd_id+"&content=course_comments", function (data) {		
-			  //console.log(data);
-			  $('#comments').html(tmpl("course-comments", data));
-			  comment_binding(cd_id);
-		});
-		
+	
 		//teacher compare & rank
 		$("#compare").load("/course_content/get_compare?c_id=<%=j @data[:course_id]%>", function() {
 			$('body').scrollspy('refresh');

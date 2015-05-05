@@ -14,14 +14,7 @@ class CourseMapsController < ApplicationController
 				:dept_name=>Department.where(:id=>params[:dept_id]).take.try(:ch_name),
 				:dept_id=>params[:dept_id],
 				:year=>year,#Semester.where(:id=>params[:sem_id]).take.try(:year),
-				:course_map=>course_map.nil? ? nil : {
-					:id => course_map.id,
-					#:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
-					:total_credit=>course_map.total_credit,
-					:desc => course_map.desc,
-					:cfs=>course_map.to_tree_json,
-					:comments=>course_map.comments
-				}
+				:course_map=>course_map.try(:to_public_json)
 			}
 		end
 		respond_to do |format|
@@ -47,7 +40,7 @@ class CourseMapsController < ApplicationController
 						:course_map_id => params[:cm_id],
 						:user_id => current_user.id,
 						:comments => params[:comment],
-						:course_map_public_comment_id=> params[:parent_id]
+						:comment_id=> params[:parent_id]
 					)
 				end
 			elsif params[:type]=="check"
@@ -166,7 +159,7 @@ class CourseMapsController < ApplicationController
     redirect_to :action => :index
 	end
 	
-	def course_map_content
+	def content
 		@course_map = CourseMap.find(params[:map_id])
 		render :layout=>false		
 	end
@@ -342,7 +335,7 @@ class CourseMapsController < ApplicationController
 		
 	#	Rails.logger.debug "[debug] " + data.to_s
 		respond_to do |format|
-   	 	format.json {render json: data}
+   	 	format.json {render :json=> data}
     end
 
 	end
@@ -360,7 +353,7 @@ class CourseMapsController < ApplicationController
 		}}
 		
 		respond_to do |format|
-   	 	format.json {render json: data}
+   	 	format.json {render :json=> data}
     end
 	end
 	
@@ -562,7 +555,7 @@ private
 		@cf=CourseField.find(cf_id)
 		if @cf.field_type>=1
 			res={
-				cf_type:@cf.field_type,
+				cf_type: @cf.field_type,
 				credit_list:
 					@cf.cf_credits.map{|credit|{
 						:id=>credit.id,

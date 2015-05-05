@@ -88,7 +88,7 @@ class CoursesController < ApplicationController
 
 		cd=CourseDetail.find(params[:id])	
 		cd.incViewTimes!
-
+		@list_type=[["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]]
 		@data = {
 			:course_id=>cd.course.id.to_s,
 			:course_detail_id=>cd.id.to_s,

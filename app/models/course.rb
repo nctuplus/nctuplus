@@ -10,20 +10,11 @@ class Course < ActiveRecord::Base
 	validates_associated :course_teacherships
 	has_many :course_details, :through=> :course_teacherships
 	has_many :semesters, :through => :course_details
-
+	has_many :departments, :through => :course_details
 		
-	def to_result(semester_name)
-    {
-			"id" => read_attribute(:id),
-			"semester_name" => semester_name,
-      "ch_name" => read_attribute(:ch_name),
-      "eng_name" => read_attribute(:eng_name),
-      "real_id" => read_attribute(:real_id),
-			"department_name" => Department.find(read_attribute(:department_id)).ch_name#, # no use	 
-    }
-  end
-	
-	#def to_json_for
+	def dept_name
+		self.departments.pluck("DISTINCT  ch_name").join(",")
+	end
 	
 	def to_json_for_stat
 		{
@@ -81,11 +72,16 @@ class Course < ActiveRecord::Base
 				:score_data=>res_score}
 	end
 	
-	
-	#UNRANSACKABLE_ATTRIBUTES = ["ch_name"]
+	def self.get_from_e3(data)
+		#create a new course if cos_code wasn't found in current,
+		#otherwise, return an existing one
+		Course.find_or_create_by(:real_id=>data["cos_code"]) do |course|
+			course.real_id=data["cos_code"]
+			course.ch_name=data["cos_cname"]
+			course.eng_name=data["cos_ename"]
+			course.credit=data["cos_credit"].to_i
+		end
+	end
 
-  #def self.ransackable_attributes auth_object = nil
-  #  (column_names - UNRANSACKABLE_ATTRIBUTES) + _ransackers.keys
-  #end
 	
 end

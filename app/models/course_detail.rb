@@ -60,21 +60,36 @@ class CourseDetail < ActiveRecord::Base
 		}
 	end
 	
-	def to_result(course)
-	
-    {
-			"id" => course.id,
-			"semester_name" => "!!",#,course.semester_name,
-      "ch_name" => course.ch_name,
-      #"eng_name" => course.eng_name,
-      "real_id" => course.real_id,
-			"department_name" => course.department.ch_name,
-	    "teacher_name" => Teacher.find(read_attribute(:teacher_id)).name,
-	  #"teacher_id" => read_attribute(:teacher_id),
+	def self.save_from_e3(data,ct_id,sem_id)
+		cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
+		if cd.nil?
+			cd=CourseDetail.new 
+			ret="Create"
+		else
+			ret="Update"
+		end
+		cd.course_teachership_id=ct_id
+		cd.department_id=Department.get_by_degree_and_depid(data["degree"].to_i,data["dep_id"])
+		cd.semester_id=sem_id
+		cd.grade=data["grade"]
+		costime=data['cos_time'].split(',')
+		cd.time=""
+		cd.room=""
+		costime.each do |t|
+			_time=t.partition('-')
+			cd.time<<_time[0]
+			cd.room<<_time[2]
+		end
+		cd.cos_type=data["cos_type"]
+		cd.temp_cos_id=data["cos_id"]
+		cd.memo=data["memo"]
+		cd.students_limit=data["num_limit"]
+		cd.reg_num=data["reg_num"]
+		cd.brief=data["brief"]
+		cd.save!
+		return ret
+	end
 
-	 
-    }
-  end
 	
 private
   ransacker :by_teacher_name, :formatter => proc {|v| 

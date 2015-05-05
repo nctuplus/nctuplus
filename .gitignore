@@ -22,3 +22,4 @@
 # Ignore all logfiles and tempfiles.
 /log/
 /tmp
+/vendor/cache

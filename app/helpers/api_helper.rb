@@ -1,44 +1,30 @@
 module ApiHelper
 	
 	def updateTeacherList
-		
-		teachers=E3Service.get_teacher_list
-		
+		teachers=E3Service.get_teacher_list	
 		tids=teachers.map{|t|t["TeacherId"]}
 		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
 		puts "#{@deleted} Teacher deleted"
 		all_now=Teacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
 		@new=teachers - all_now
 		@new.each do |t|
-			@teacher=Teacher.new
-			@teacher.real_id=t["TeacherId"]
-			@teacher.name=t["Name"]
-			@teacher.is_deleted=false
+			@teacher=Teacher.create(
+				:real_id=>t["TeacherId"],
+				:name=>t["Name"],
+				:is_deleted=>false
+			)
 			puts "Teacher #{@teacher.name} created"
-			@teacher.save!
 		end
 		puts "#{@new.length} teachers created"
 	end
 	
 	def updateDepartmentList
-		
 		new_depts=E3Service.get_department_list
-		
-		#new_dept_ids=new_depts.map{|dept|dept["degree"]+dept["dep_id"]}
-		#zzz=new_depts
 		Department.all.each do |dept|
 			new_depts=new_depts.reject{|new_dept|new_dept["degree"].to_i==dept.degree&&new_dept["dep_id"]==dept.dep_id}
 		end
-		#puts new_depts	
 		new_depts.each do |dept|
-			@dept=Department.new
-			@dept.dep_id=dept["dep_id"]
-			@dept.degree=dept["degree"].to_i
-			@dept.dept_type=dept["depType"]
-			@dept.ch_name=dept["dep_cname"]
-			@dept.eng_name=dept["dep_ename"]
-			@dept.use_type="dept"
-			@dept.save!
+			Department.new_from_e3(dept)
 			puts "Department #{@dept.ch_name} created"
 		end
 		puts "#{new_depts.length} departments created"
@@ -46,23 +32,20 @@ module ApiHelper
 	
 	
 	
-	def update_cd(data,cds,sem)
-		#@cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
+	def update_cd(data,cds,sem)		
 		@cd=cds.select{|cd|cd.temp_cos_id==data["cos_id"]}.first
 		if @cd.nil?
 			puts "CourseDetail not found,sem_id=#{sem.id}&cos_id=#{data["cos_id"]}\n"
-			course_id=get_cid_by_real_id(data)
-			#if data['teacher']!=""
-			tids=[]
-			Teacher.where(:real_id=>data['teacher'].split(',')).each do |t|
-				tids.push(t.id)
-			end
+			#course_id=get_cid_by_real_id(data)
+			course_id=Course.get_from_e3(data).id
+			tids=Teacher.where(:real_id=>data['teacher'].split(',')).map{|t|t.id}
 			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
-			save_cd(data,nct.id,sem.id)
-		else
-		end	
+			#save_cd(data,nct.id,sem.id)
+			CourseDetail.save_from_e3(data,ct_id,sem_id)
+		end
 	end
 	
+=begin		
 	def save_cd(data,ct_id,sem_id)
 		@cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
 		if @cd.nil?
@@ -88,15 +71,13 @@ module ApiHelper
 		@cd.memo=data["memo"]
 		@cd.students_limit=data["num_limit"]
 		@cd.reg_num=data["reg_num"]
-		
-
 		@cd.brief=data["brief"]
 		@cd.save!
 		return ret
 	end
 	
 
-	
+
 	def get_cid_by_real_id(data)
 		course=Course.where(:real_id=>data["cos_code"]).take
 		if course.nil?
@@ -117,7 +98,8 @@ module ApiHelper
 		dept=Department.where(:degree=>degree, :dep_id=>dep_id).take
 		return dept.nil? ? 0 : dept.id 
 	end
-	
+=end	
+
 	def parse_scores(score)
 		agree=[]
 		normal=[]

@@ -110,7 +110,7 @@ class MainController < ApplicationController
 				if cs.course_detail_id==0
 					name = "No match"
 				else
-					name = CourseDetail.find(cs.course_detail_id).course.ch_name
+					name = CourseDetail.find(cs.course_detail_id).course_ch_name
 				end
 				tmp2 = {:name=>name}
 				tmp1.push(tmp2)

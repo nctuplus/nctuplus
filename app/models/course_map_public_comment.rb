@@ -1,8 +1,8 @@
 class CourseMapPublicComment < ActiveRecord::Base
 
-belongs_to :user
-belongs_to :course_map
-has_many :course_map_public_sub_comments
+	belongs_to :user
+	belongs_to :course_map
+	has_many :course_map_public_sub_comments, :foreign_key=>"comment_id"
 
 	def to_hash
 		return {
