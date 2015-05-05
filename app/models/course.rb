@@ -11,7 +11,19 @@ class Course < ActiveRecord::Base
 	has_many :course_details, :through=> :course_teacherships
 	has_many :semesters, :through => :course_details
 	has_many :departments, :through => :course_details
+	
+	def self.create_from_import_fail(data)
 		
+		arr=data.split('/')
+		Course.find_or_create_by(:real_id=>arr[0]) do |course|
+			course.credit=arr[1].to_i
+			course.ch_name=arr[2]
+			course.department_id=0
+			course.is_virtual=true
+		end
+		
+	end
+	
 	def dept_name
 		self.departments.pluck("DISTINCT  ch_name").join(",")
 	end

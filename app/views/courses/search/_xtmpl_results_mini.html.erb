@@ -55,15 +55,14 @@
 	function save_course(cd_id,addordel,from){
 		$.ajax({
 			type: "GET",
-			url: "/user/add_course",
+			url: "/user/"+addordel+"_course",
 			data: {
 				cd_id: cd_id,
-				type: addordel,
-				from: from
+	//			from: from
 			},
 			success: function(data) {
 				console.log(data);
-				load_course_table(<%=Semester::LAST.id%>); 
+		//		load_course_table(<%=Semester::LAST.id%>); 
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");
 			}	

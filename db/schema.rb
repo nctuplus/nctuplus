@@ -11,7 +11,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150502070259) do
+ActiveRecord::Schema.define(version: 20150505185634) do
+
+  create_table "agreed_scores", force: true do |t|
+    t.integer "user_id",         default: 0,    null: false
+    t.integer "course_id",       default: 0,    null: false
+    t.integer "course_field_id", default: 0,    null: false
+    t.string  "cos_type",        default: "",   null: false
+    t.string  "score",           default: "通過", null: false
+    t.string  "memo",            default: "",   null: false
+  end
+
+  add_index "agreed_scores", ["course_field_id"], name: "index_agreed_scores_on_course_field_id", using: :btree
+  add_index "agreed_scores", ["course_id"], name: "index_agreed_scores_on_course_id", using: :btree
+  add_index "agreed_scores", ["user_id"], name: "index_agreed_scores_on_user_id", using: :btree
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -263,6 +276,7 @@ ActiveRecord::Schema.define(version: 20150502070259) do
     t.string   "eng_name"
     t.integer  "credit"
     t.integer  "department_id"
+    t.boolean  "is_virtual",    default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -343,6 +357,18 @@ ActiveRecord::Schema.define(version: 20150502070259) do
 
   add_index "events", ["location_id"], name: "index_events_on_location_id", using: :btree
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
+
+  create_table "normal_scores", force: true do |t|
+    t.integer "user_id",          default: 0
+    t.integer "course_detail_id", default: 0
+    t.integer "course_field_id",  default: 0
+    t.string  "cos_type",         default: ""
+    t.string  "score",            default: ""
+  end
+
+  add_index "normal_scores", ["course_detail_id"], name: "index_normal_scores_on_course_detail_id", using: :btree
+  add_index "normal_scores", ["course_field_id"], name: "index_normal_scores_on_course_field_id", using: :btree
+  add_index "normal_scores", ["user_id"], name: "index_normal_scores_on_user_id", using: :btree
 
   create_table "past_exams", force: true do |t|
     t.integer  "user_id"
