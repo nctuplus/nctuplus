@@ -10,4 +10,7 @@ Our goals include but not limit to information transparency, user experience imp
 
 We also develop cool tools for NCTUers.
 
-Resent project: NCTU+ learning management system.
+Resent project: 
+* Learning management system
+* Student activities notice board
+* Second-hand book sales platform
