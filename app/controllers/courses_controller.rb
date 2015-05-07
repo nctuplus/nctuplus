@@ -87,7 +87,14 @@ class CoursesController < ApplicationController
   def show
 
 		cd=CourseDetail.find(params[:id])	
-		cd.incViewTimes!
+
+        current_time = Time.new
+        c_id=cd.course.id.to_s
+        if session[c_id] != current_time.min
+            session[c_id] = current_time.min
+            cd.incViewTimes!
+        end
+        
 		@list_type=[["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]]
 		@data = {
 			:course_id=>cd.course.id.to_s,
