@@ -1,6 +1,6 @@
 == README
 
-===http://nctuplus.nctucs.net/
+http://nctuplus.nctucs.net
 
 NCTU+ is A gathering of designers and programmers.
 
