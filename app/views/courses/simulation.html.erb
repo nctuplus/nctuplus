@@ -43,7 +43,6 @@
 	
 </div>
 
-<%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 <script>
 function show_search(){
 	$("#search_div").find('form').toggleClass("hidden");
@@ -119,9 +118,9 @@ $(document).ready(function(){
 				selectable: true,
 				popover: true,
 				cancelButtonFunc: function(arg){
-					var course_id = arg.data.course_id;
-					//TODO
-					$('#schedule_table').CourseTable('deleteCourse', course_id);
+					var cd_id = arg.data.cd_id;
+					save_course(cd_id,'delete','load_course_table');
+			//		$('#schedule_table').CourseTable('deleteCourse', cd_id);
 				}
 			};
 			$('#schedule_table').CourseTable(data);

@@ -65,58 +65,40 @@ Nctuplus::Application.routes.draw do
 	get "course_content/get_course_info"
 	#get "course_content/show" # testing
 	post "course_content/course_action"
-	
-#	post "courses/comment_submit"
-#	post "courses/course_content_post"
 
-=begin
-	get "courses/search_mini"
-	get "courses/search_mini_cm"
-  
-	get "courses/simulation"
-	
-  get "courses/timetable"
-	get "courses/add_to_cart"
-
-	get "courses/show_cart"
-=end
-	
 	resources :courses, :only => [:index, :show] do
 		collection do
 			get "search_mini"
 			get "search_mini_cm"
 			get "simulation"
-			get "timetable"
+			get "export_timetable"
 			get "add_to_cart"
 			get "show_cart"
 		end
 	end
 	
+	resources :course_maps, :except=>[:edit] do
+	  collection do
+	    	get "get_course_tree"
+	      get "get_group_tree"
+	      get "show_course_list" 
+	      get "show_course_group_list"
+	      get "get_credit_list"
+	      post "credit_action"
+	      post "course_action"
+        post "action_new"
+        post "action_update"
+        post "action_delete"	
+        post "action_fchange"
+        post "course_group_action"
+        get "content"
+        post "update_cm_head"
+        get "public"
+        post "cm_public_comment_action"
+	  end
+	end
 
-#### course map block 	
-	#get "course_maps/add_usercoursemapship"
-
-	get "course_maps/get_credit_list"
-	post "course_maps/credit_action"	
-	get "course_maps/get_course_tree"
-	get "course_maps/get_group_tree"
-	post "course_maps/course_action"
-	post "course_maps/action_new"
-	post "course_maps/action_update"
-	post "course_maps/action_delete"	
-	post "course_maps/action_fchange"
-	get "course_maps/show_course_list" 
-	get "course_maps/show_course_group_list"
-	post "course_maps/course_group_action"
-	get "course_maps/content"
-	post "course_maps/update_cm_head"
-	get "course_maps/public"
-	post "course_maps/cm_public_comment_action"
-	
-	resources :course_maps
-####
-	
-	resources :departments
+	resources :departments, :except=>[:show, :destroy]
 	
 	
 	get "discusses/show"

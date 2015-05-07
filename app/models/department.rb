@@ -6,7 +6,7 @@ class Department < ActiveRecord::Base
 	scope :majorable,->{where majorable: true}
 	scope :undergraduate,->{where degree: 3}
 	scope :graduate,->{where degree: 2}
-	def self.new_from_e3(data)
+	def self.create_from_e3(data)
 		Department.find_or_create_by(:dep_id=>data["dep_id"],:degree=>data["degree"].to_i ) do |dept|
 			dept.data_type=data["dataype"]
 			dept.ch_name=data["dep_cname"]

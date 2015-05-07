@@ -1,55 +1,16 @@
 <script>
 
 
-	function addCourseSimulation(id,addordel,from){
-		var this_row=$("#cd_"+id);
-		var name=this_row.find(".course_name").text();
-		var time=this_row.find(".course_time").text();
-		if(time==""){//for 藝文賞析
-			console.log(1);
-			save_course(id,addordel);
-			if(addordel=="delete")
-				this_row.remove();
-			return;
-		}
-		var timearr=time.match(/[0-9][A-Z]+/g);
-		var slot_ids=[];
-		var conflict=false;
-		for(var i = 0 ; i < timearr.length ; i++){
-			var day=timearr[i][0];
-			
-			for(var j = 1 ; j < timearr[i].length ; j++){
-				
-				var row_id="#day_"+day+"_time_"+timearr[i][j];
-				slot_ids.push(row_id);
-				if(addordel=="add"&&$(row_id).text()!=""){
-					$(row_id).removeClass("schedule-slot-empty");
-					$(row_id).removeClass('tslt');
-					//$(row_id).addClass("danger");
-					$(row_id).css("background-color","#FFCECD");
-					conflict=true;
-				//	break ;
-				}
-			}
-		}
-		if(conflict){
-			toastr['error']("衝堂囉!");
-		}
-		else{
-			for(var i = 0 ; i < slot_ids.length;i++){
-				if(addordel=="add"){
-					$(slot_ids[i]).text(name);
-					$(".danger").removeClass("danger");
-				}
-				else{
-					$(slot_ids[i]).text("");
-					$(slot_ids[i]).attr("class","schedule-slot-empty");
-				}
-			}
-			save_course(id,addordel,from);
-			if(addordel=="delete")
-				this_row.remove();
-		}
+	function addCourseSimulation(this_but, cd_id, time, addordel,from){
+		if(addordel=="add"){
+			var data = {time: time, result: false } ;
+			$('#schedule_table').CourseTable('checkConflictByTime',data);
+			if(data.result)
+				return ;
+		}else if(addordel=="delete"){
+			this_but.parent().parent().remove();
+		}	
+		save_course(cd_id,addordel,from);		
 	}
 	
 	function save_course(cd_id,addordel,from){
@@ -58,11 +19,14 @@
 			url: "/user/"+addordel+"_course",
 			data: {
 				cd_id: cd_id,
-	//			from: from
+				from: from
 			},
 			success: function(data) {
-				console.log(data);
-		//		load_course_table(<%=Semester::LAST.id%>); 
+			//	console.log(data);
+				if(addordel=="add")
+					$('#schedule_table').CourseTable('addCourses', [$.parseJSON(data)]);
+				else
+					$('#schedule_table').CourseTable('deleteCourse', cd_id);	
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");
 			}	
@@ -90,11 +54,11 @@
 						{%= cd.teacher_name %}
 						{% if(o.view_type=="schedule"){ %}
 							{% if(o.use_type=="add"){ %}
-								<button class="btn btn-success btn-circle pull-right" onclick="addCourseSimulation({%=cd.id%},'add','search')">
+								<button class="btn btn-success btn-circle pull-right" onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
 									<span class="glyphicon glyphicon-plus"></span>
 								</button>
 							{% }else if(o.use_type=="delete"){ %}
-								<button class="btn btn-warning btn-circle pull-right" onclick="addCourseSimulation({%=cd.id%},'delete','search')">
+								<button class="btn btn-warning btn-circle pull-right" onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}','delete','search')">
 									<span class="glyphicon glyphicon-minus"></span>
 								</button>
 							{% } %}

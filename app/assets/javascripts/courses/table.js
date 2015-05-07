@@ -6,11 +6,7 @@
 	
 	var Table = function(element, options){
 		this.$element = $(element);
-		this._element = element;
-		this._elementId = this._element.id;
-
 		this.cells = [] ;
-		//this.course_data = $.extend(true, [], options.courses); //copy data 
 		this.config = options.config || {} ;
 		
 		this._init($.extend(true, [], options.courses));	
@@ -23,14 +19,42 @@
 		selected_class: "schd-grid-selected",
 		$cancel_but : $($('<div>').addClass('course-clean').css("display", "none")
 									.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),	
-
 		cancelButtonFunc: function(args){
-			// args.data.xxxxx
-			logDebug("callback function is not define.");
+			logDebug("Callback function is not define.");
 		}
 	};
 	
 	Table.prototype = {
+		
+		checkConflictByTime: function(args){
+			var times = args.time ;
+			if(!times) return false ;
+			logDebug(times);
+			var conflict = false ;
+			var timearr = times.match(/[0-9][A-Z]+/g);
+			for(var i=0,slot;slot=timearr[i];++i)
+			{
+					var day = slot[0];
+					for(var j=1,time; time=slot[j];++j)
+					{
+						var idx_y = $.inArray(time,Table.defaults.times) ;
+						if(idx_y>=0)
+						{
+							var idx_x = day-1 ;
+							var $cell = this.cells[idx_x][idx_y];
+							if($cell.cd_id)
+							{
+								conflict = true ;
+								$cell.addClass('course-conflict').removeClass('course-conflict',4000);;
+							}
+						}	
+					}
+			}		
+			if(conflict) 
+				toastr['error']("衝堂囉!");
+			args.result = conflict ;
+			return ;
+		},
 		
 		getSelectedSlot: function(res){
 			//var res = [];
@@ -56,6 +80,7 @@
 		},
 		
 		addCourses: function(args){
+		//	logDebug(this.config.popover);
 			for(var k=0, course; course=args[k]; k++)
 			{		
 				if(!course.time) continue ;//藝文欣賞
@@ -71,21 +96,15 @@
 						{
 							var idx_x = day-1 ;
 							var $cell = this.cells[idx_x][idx_y];
+							
 							$cell.html(course.name).addClass(course.class).selectable = false;
 							
 							if(this.config.deletable)
 							{
-								var bb = Table.defaults.$cancel_but.clone(false).extend({course_id: course.course_id});
+								var bb = Table.defaults.$cancel_but.clone(false).extend({cd_id: course.cd_id});
 								//logDebug(bb);
-								bb.click({course_id: course.course_id}, Table.defaults.cancelButtonFunc );
-								$cell.append(bb).extend({course_id: course.course_id});
-								if(this.config.popover)
-									$cell.popover({ 
-										content:"教室:"+course.room,
-										placement:"auto",
-										trigger : "hover",
-										container :"body"
-									});
+								bb.click({cd_id: course.cd_id}, Table.defaults.cancelButtonFunc );
+								$cell.append(bb).extend({cd_id: course.cd_id});							 
 							//	logDebug($cell);
 								$cell.mouseover(function(){
 									$(this).find('div').show();					
@@ -93,12 +112,22 @@
 									$(this).find('div').hide();
 								});
 								$cell.selectable = false ;
+								this._setCellSelectFunc($cell);
 							}
-							
+							if(this.config.popover)
+							{
+									$cell.popover({ 
+										content:"教室:"+course.room,
+										placement:"auto",
+										trigger : "hover",
+										container :"body"
+									});
+							}	
 						}
 					}
 				}	
 			}
+			
 			return ;
 		},
 
@@ -114,7 +143,7 @@
 			
 		  this._build();
 			this.addCourses(courses);
-			this._setSelectFunc();
+		  this._setSelectFunc();
 		},
 		
 		_build: function(){
@@ -132,7 +161,7 @@
 					.addClass('schedule-grid')
 					.html($('<p>').addClass('text-center').html(t)); 
 				
-				if(Table.defaults.popover)				
+				if(this.config.popover)				
 					$last_td.popover({
 						content: Table.defaults.real_times[i], 
 						placement: "auto", 
@@ -162,7 +191,7 @@
 				{
 					for(var j=0; j<this.cells[i].length; ++j)
 					{
-						if(this.cells[i][j].course_id==c_id)
+						if(this.cells[i][j].cd_id==c_id)
 							res.push( this.cells[i][j] );
 					}
 				}
@@ -174,27 +203,32 @@
 			{
 				for(var j=0; j<this.cells[i].length; ++j)
 				{
-					if(this.cells[i][j].selectable){
-						var $target = this.cells[i][j] ;
-						this.cells[i][j].click({cell: $target}, function(args){
-							$(this).toggleClass(Table.defaults.selected_class);
-							args.data.cell.selected = $(this).hasClass(Table.defaults.selected_class);
-						});
-					}	
+					var $cell = this.cells[i][j] ;
+					this._setCellSelectFunc($cell);
 				}
 			}
 		},
 		
-		_clearCell(cell){
-			cell.empty().removeClass().addClass('pos-relative');
-			if(this.config.popover)
-				cell.popover('disable');
-			cell.selectable = this.config.selectable ;
-			if(cell.selectable)
-				cell.click({cell: cell}, function(args){
+		_setCellSelectFunc: function($cell){
+			
+			if($cell.selectable){		
+				$cell.click({cell: $cell}, function(args){
 					$(this).toggleClass(Table.defaults.selected_class);
 					args.data.cell.selected = $(this).hasClass(Table.defaults.selected_class);
 				});
+			}else{
+				$cell.selected = false ;
+				$cell.removeClass(Table.defaults.selected_class);
+				$cell.unbind('click');
+			}	
+		},
+		
+		_clearCell($cell){
+			$cell.empty().removeClass().addClass('pos-relative').cd_id=undefined;
+			if(this.config.popover)
+				$cell.popover('disable');
+			$cell.selectable = this.config.selectable ;
+			this._setCellSelectFunc($cell);
 			return ;
 		}
 	}  
@@ -210,7 +244,6 @@
 	};
 	
 	$.fn[pluginName] = function(options, args) {
-		
 		return this.each(function() { // 'this' is the target table
 			var self = $.data(this, 'plugin_' + pluginName);
 			if (typeof options === 'string') {

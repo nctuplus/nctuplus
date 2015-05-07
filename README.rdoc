@@ -1,28 +1,7 @@
 == README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
-
-
-Please feel free to use a different markup language if you do not plan to run
-<tt>rake doc:app</tt>.
+NCTU+ is A gathering of designers and programmers. 
+We devote ourselves to improving everyone's daily life in NCTU campus. 
+Our goals include but not limit to information transparency, user experience improvement, and getting our programming skills sharpen. 
+We also develop cool tools for NCTUers. 
+Resent project: NCTU+ learning management system (http://nctuplus.nctucs.net/).

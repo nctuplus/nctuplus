@@ -1,10 +1,11 @@
 module ApiHelper
 	
-	def updateTeacherList
+	def update_teacher_list
+		COURSE_LOGGER.info "Updating Teacher..."
 		teachers=E3Service.get_teacher_list	
 		tids=teachers.map{|t|t["TeacherId"]}
 		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
-		puts "#{@deleted} Teacher deleted"
+		COURSE_LOGGER.info "[Teacher] Total #{@deleted}  Deleted."
 		all_now=Teacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
 		@new=teachers - all_now
 		@new.each do |t|
@@ -13,21 +14,22 @@ module ApiHelper
 				:name=>t["Name"],
 				:is_deleted=>false
 			)
-			puts "Teacher #{@teacher.name} created"
+			COURSE_LOGGER.info "[Teacher] - #{@teacher.name} Created."
 		end
-		puts "#{@new.length} teachers created"
+		COURSE_LOGGER.info "[Teacher] Total:#{@new.length} Created."
 	end
 	
-	def updateDepartmentList
+	def update_department_list
+		COURSE_LOGGER.info "Updating Department..."
 		new_depts=E3Service.get_department_list
 		Department.all.each do |dept|
 			new_depts=new_depts.reject{|new_dept|new_dept["degree"].to_i==dept.degree&&new_dept["dep_id"]==dept.dep_id}
 		end
 		new_depts.each do |dept|
-			Department.new_from_e3(dept)
-			puts "Department #{@dept.ch_name} created"
+			Department.create_from_e3(dept)
+			COURSE_LOGGER.info "[Department] - #{@dept.ch_name} Created."
 		end
-		puts "#{new_depts.length} departments created"
+		COURSE_LOGGER.info "[Department] Total:#{new_depts.length} Created."
 	end
 	
 	

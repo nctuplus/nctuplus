@@ -148,9 +148,6 @@ class CourseMapsController < ApplicationController
 		@map.destroy
 		redirect_to "/admin/course_maps"
 	end
-	
-	def edit
-	end
 
 	def update
 		@course_group=CourseGroup.find(params[:id])
@@ -615,42 +612,4 @@ private
 		end
   end
 
-=begin  
-  def _get_field_content_data(cf)		
-		chead = (cf.field_type==1) ? "[必修] " : "[X選Y] "
-		data = {
-			:text=>(chead+cf.name),
-			:type=>cf.field_type,
-			:cf_id=>cf.id,
-			:label=>chead, 
-			:name=>cf.name,
-			:icon => (cf.field_type==3) ? "fa fa-star" : "fa fa-check-square-o",
-			#:credit_need => (cf.field_type==3) ? "N/A" : cf.cf_credits.first.credit_need,			
-			:tag=>cf.field_type==2 ? [cf.credit_need.to_s] : ""
-		}  
-
-		return data
-  end
-=end  
-	
-=begin  
-  def _get_add_field_node(cf,nodes)
-		chead = (cf.field_type==3) ? "[領域群組] " : "[領域] "
-		nodes.push({:text=>'新增類別', :type=>(cf.field_type==3) ? -2 : -3, :parent_id=>cf.id, :icon=>'fa fa-plus text-success'})	
-		data = {
-			:text=>(chead + cf.name),
-			:type=>cf.field_type,
-			:cf_id=>cf.id,
-			:label=>chead,
-			:name=>cf.name,
-			:icon=>'fa fa-share-alt-square',
-			:credit_need=>cf.credit_need,
-			:field_need=>cf.field_type==3 ? cf.field_need : nil,
-			:nodes=>nodes
-		}
-		return data
-  end
-=end
-  
-	
 end

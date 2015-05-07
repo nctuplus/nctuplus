@@ -90,6 +90,7 @@
   </div><!-- /.container -->
 </ul>
 
+<%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 <script>
 	$(document).ready(function(){	
 		// small timetable
@@ -105,7 +106,7 @@
 		// shopping cart
 		$("#cart_but").click(
 			function(){		
-			  	$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
+			  $("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
 				$("#global_modal .modal-body").load("/courses/show_cart");
 				$("#global_modal").modal('show');
 			}
@@ -126,10 +127,15 @@
 			dataType: "json",
 			success: function(data){
 				$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>');
-				$("#global_modal .modal-body").html(tmpl("course_table", data.semester_info));
-				table_popover(); 	
-				if(data.courses.length>0)	
-					add_time_slot(data.courses, false, false);		//for timetable in modal
+				var $table = $('<table>').addClass('table table-bordered');
+        data.config = {
+          deletable: false ,
+          selectable: false,
+          popover: true
+        };
+								
+				$("#global_modal .modal-body").html($table.CourseTable(data));
+
 				if(showNow)	
 					$("#global_modal").modal('show');	
 				result = data ;
@@ -162,5 +168,4 @@
 
 </script>
 
-<%=render "/courses/course_table/xtmpl_course_table" if current_user%>
 <%=render "/courses/course_table/xtmpl_small_course_table" if current_user%>

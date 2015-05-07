@@ -52,7 +52,7 @@ class CourseDetail < ActiveRecord::Base
 	
 	def to_course_table_result
 		{
-			:course_id=>self.id,
+			:cd_id=>self.id,
 			:time=>self.time,
 			:class=>cos_type_class(self.cos_type),
 			:room=>self.room,

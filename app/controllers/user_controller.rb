@@ -333,8 +333,9 @@ class UserController < ApplicationController
       :semester_id=>cd.semester_id,
       :course_detail_id=>cd.id,
       :score=>'修習中'
-    )		
-		redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
+    )
+		render :text=>cd.to_course_table_result.to_json, :layout=>false
+		#redirect_to "/user/get_courses?uid=#{current_user.id}&type=simulation"
 	end
 	
 	def delete_course

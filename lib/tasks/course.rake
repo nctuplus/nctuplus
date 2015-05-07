@@ -17,12 +17,15 @@ namespace :course do
 	end
 	
 	task :update => :environment do
-		updateDepartmentList
-		updateTeacherList
+		COURSE_LOGGER.info "==========Starting update=========="
+		update_department_list
+		update_teacher_list
 		sem=Semester.last
 		datas=E3Service.get_course(sem) #get course
+		COURSE_LOGGER.info "[Course Detail] #{datas.length} courses from E3 getted."
+		
 		stat={"Create"=>0, "Update"=>0}
-
+		
 		datas.each do |data|
 			#course_id=get_cid_by_real_id(data)
 			course_id=Course.get_from_e3(data)
@@ -39,12 +42,12 @@ namespace :course do
 		diff_cos_ids=old_cos_ids-data_cos_ids
 		
 		CourseDetail.where(:semester_id=>Semester.last.id, :temp_cos_id=>diff_cos_ids).destroy_all
-		CourseDetail.where(:department_id=>0).destroy_all
-		puts "#{datas.length} courses has imported!"
-		puts "Deleted : #{diff_cos_ids.length}"
-		puts "Created : #{stat["Create"]}"
-		puts "Updated : #{stat["Update"]}"
+		COURSE_LOGGER.info "[Course Detail] Deleted : #{diff_cos_ids.length}."
 		
+		COURSE_LOGGER.info "[Course Detail] Created : #{stat["Create"]}."
+		COURSE_LOGGER.info "[Course Detail] Updated : #{stat["Update"]}."
+		
+		COURSE_LOGGER.info "==========Update Finished=========="
 	end
 	
 	task :import_new => :environment do
