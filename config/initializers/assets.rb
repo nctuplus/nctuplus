@@ -9,5 +9,6 @@ Rails.application.config.assets.precompile +=[
 	'courses/main.js',
 	'courses/chart.js',
 	'course_maps/public.js',
-	'user/coursemap-checker.js'
+	'user/coursemap-checker.js',
+	'courses/table.js'
 ]
