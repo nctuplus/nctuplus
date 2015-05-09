@@ -1,7 +1,16 @@
 == README
 
-NCTU+ is A gathering of designers and programmers. 
-We devote ourselves to improving everyone's daily life in NCTU campus. 
-Our goals include but not limit to information transparency, user experience improvement, and getting our programming skills sharpen. 
-We also develop cool tools for NCTUers. 
-Resent project: NCTU+ learning management system (http://nctuplus.nctucs.net/).
+http://nctuplus.nctucs.net
+
+NCTU+ is A gathering of designers and programmers.
+
+We devote ourselves to improving everyone's daily life in NCTU campus.
+
+Our goals include but not limit to information transparency, user experience improvement, and getting our programming skills sharpen.
+
+We also develop cool tools for NCTUers.
+
+Resent projects: 
+* Learning management system
+* Student activities notice board
+* Second-hand book sales platform
