@@ -2,17 +2,13 @@ module CourseMapsHelper
 
 	# update cs cf_id, deep to level 2
 	def update_cs_cfids(course_map,user)
-		#user.all_courses.each do |cs|
-		#		cs.course_field_id=0
-		#		cs.save
-		#end
 		return if course_map.nil?
-		return if user.all_courses.empty?
+		taked=user.normal_scores.includes(:course_detail, :course)
+		agreed=user.agreed_scores.includes(:course)
+		return if agreed.empty? && taked.empty?
 		course_fields = course_map.course_fields.includes(:child_cfs)
-#Rails.logger.debug "[all_courses] "+user.all_courses.map{|cs| [cs.id, cs.course.ch_name]}.to_s
-		all_courses=user.all_courses#.select{|cs|cs.course_field_id==0}
-		all_courses.each do |cs|
-			
+		
+		(taked+agreed).each do |cs|
 			cf_id=0
 			course_fields.each do |cf| # level 1
 				cf_id=_cf_search(cs,cf)
@@ -22,30 +18,22 @@ module CourseMapsHelper
 			end		
 			cs.course_field_id = cf_id
 			cs.save!
-
 		end
-		agreed=all_courses.select{|cs|cs.semester_id==0&&cs.memo.include?("同意免修")}
-		taked=all_courses.select{|cs|cs.semester_id!=0}
+		agreed=agreed.select{|cs|cs.memo.include?("同意免修")}
+		#taked=all_courses.select{|cs|cs.semester_id!=0}
 		course_map.course_groups.where(:gtype=>1).each do |cg|
 			agreed.each do |agree|
-				#match_fail = true
 				next if !cg.courses.include?(agree.course)
 				taked.each do |take|
 					if cg.courses.include?(take.course)
-						agree.memo="("+take.course.ch_name+")"+agree.memo
+						agree.memo="(以"+take.ch_name+"抵免)"+agree.memo
 						agree.score=take.score
 						agree.save!
 						take.destroy!
-						#match_fail = false
 						break
 					end
 				end
-				#if match_fail
-				#	agree.import_fail = 1 
-				#	agree.save!
-				#end
-			end
-			
+			end		
 		end
 	end
 	

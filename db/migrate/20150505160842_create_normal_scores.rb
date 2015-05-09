@@ -14,9 +14,9 @@ class CreateNormalScores < ActiveRecord::Migration
 			NormalScore.create(
 				:user_id=>cs.user_id,
 				:course_detail_id=>cs.course_detail_id,
-				:course_field_id=>cs.course_detail_id,
+				:course_field_id=>cs.course_field_id,
 				:cos_type=>cs.cos_type,
-				:score=>cs.score,
+				:score=>cs.score
 			)
 		end
   end

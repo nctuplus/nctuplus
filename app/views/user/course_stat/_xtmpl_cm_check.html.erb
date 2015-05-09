@@ -1,5 +1,32 @@
+<script>
+	function select_cf(is_agreed,user_id,obj){
+		$.ajax({
+			type:"GET",
+			url:"/user/select_cs_cf",
+			data:{
+				cs_id:obj.attr('id'),
+				is_agreed:is_agreed,
+				cf_id:obj.val()
+			},
+			success:function(){
+				$.getJSON("/user/statistics?uid="+user_id, function (data) {
+					$("#cosmap_check_div").html(tmpl("cosmap_check",data));
+				});
+				obj.parent().parent().append("<span id='' class='fader text-success'>選擇成功!</span>");
+				$(".fader").fadeOut(3000,function(){
+					$(this).remove();
+					obj.parent().toggleClass("hidden");
+				});
+			},
+			error:function(){
+				alert("Error!");
+			}
+		});
+	}
+</script>
+
 <script type="text/x-tmpl" id="cosmap_check">
-{% var cm=o.course_map,user_courses=o.user_courses.success; %}
+{% var cm=o.course_map,user_courses=o.user_courses; %}
 <table class="table table-bordered "style="border:0px">
 	<tr class="row" >
 		<td class="col-md-12" colspan="{%=cm.max_colspan+1%}">

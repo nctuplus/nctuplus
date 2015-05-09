@@ -34,21 +34,7 @@
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
 				<!--<li><a href="/course_maps" rel="nofollow">課程地圖</a></li>-->
 				<!--<li><a href="/events/" rel="nofollow">talk</a></li>-->
-			<% if current_user.try(:student_id) %>	
-				<li class="dropdown">
-					<a href="#" class="dropdown-toggle" data-toggle="dropdown">歷年課表<b class="caret"></b></a>
-					<ul class="dropdown-menu">
-						<% sems = current_user.course_simulations.where("semester_id !=0").pluck(:semester_id).uniq %>
-						<% if sems.count==0 %>
-						<li class="text-center">無資料</li>
-						<% end %>
-						<% sems.each do |sem| %>
-						<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.to_s %>"><%=Semester.find(sem).name %></a></li>						
-						<% end %>
-					</ul>	
-				</li>
-			<% end %>	
-		
+			
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">
@@ -60,8 +46,14 @@
 				<li>
 					<a href="#" class="toolTip dropdown-toggle toolTip" data-toggle="dropdown" title="課表"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
 						<ul class="dropdown-menu">
-							<li id="small_timetable"></li>
-						</ul>
+							<% sems = current_user.semesters.uniq %>
+							<% if sems.count==0 %>
+							<li class="text-center">無資料</li>
+							<% end %>
+							<% sems.each do |sem| %>
+							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.to_s %>"><%=Semester.find(sem).name %></a></li>						
+							<% end %>
+					</ul>	
 				</li>
 			
 				<li class="dropdown">		
@@ -94,15 +86,24 @@
 <script>
 	$(document).ready(function(){	
 		// small timetable
+/*
 		$("#sm_schd_button").click(
 			function(){	
 				var data = show_timetable_on_modal(<%=Semester::LAST.id%>, false);
-				$("#small_timetable").html(tmpl("small_course_table"));
-				if(data.courses.length>0)
-					add_time_slot(data.courses, false, true);			//for small_timetable		
+				data.config = {
+          deletable: false ,
+          selectable: false,
+          popover: false,
+					small: true
+        };
+			var $table = $('<table>').addClass('table table-bordered no-margin-bottom');
+				console.log(data);
+				$("#small_timetable").html($table);
+				$("#small_timetable").CourseTable(data);
+
 			}
 		);
-
+*/
 		// shopping cart
 		$("#cart_but").click(
 			function(){		
@@ -121,11 +122,13 @@
 	
 	function show_timetable_on_modal(semester_id, showNow){
 		var result=0 ;
+		$("#global_modal .modal-content").html('loading..');
 		$.ajax({
-			async: false, // This will make call synchronous
+			//async: true, // This will make call synchronous
 			url: "/user/get_courses?type=course_table&sem_id="+semester_id,
 			dataType: "json",
 			success: function(data){
+				var result = $.extend(true, [], data);
 				$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>');
 				var $table = $('<table>').addClass('table table-bordered');
         data.config = {
@@ -138,8 +141,8 @@
 
 				if(showNow)	
 					$("#global_modal").modal('show');	
-				result = data ;
-      		}
+				
+      }
 		});
 		return result ;
 	}
@@ -157,15 +160,10 @@
 				toastr[data["class"]](data["text"]);
 				if(type=="delete"){
 					$("#global_modal .modal-body").load("/courses/show_cart");
-				}
-				//$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
-				//$("#global_modal .modal-body").html('').html('<%=loading_img%>');
-				
+				}			
 			}
 		
 		});
 	}
 
 </script>
-
-<%=render "/courses/course_table/xtmpl_small_course_table" if current_user%>

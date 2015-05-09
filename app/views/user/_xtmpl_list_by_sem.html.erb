@@ -2,14 +2,14 @@
 
 {% var credits={}; %}
 <table class="table" id="by_cos_type">
-	{% var grouped=groupBy(o.taked,function(item){return item.sem_id;}); %}
+	{% var grouped=groupBy(o.taked,function(item){return item.sem_name;}); %}
 	
 	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
 		
 		{% var local_credits={};%}
 		<tr class="row fb-bg-color">
 			<th colspan="2" class="col-md-12">
-				{%=get_sem_name(courses[0].sem_id)%}
+				{%= courses[0].sem_name %}
 			</th>
 		</tr>
 		

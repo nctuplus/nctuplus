@@ -1,13 +1,12 @@
-﻿<div class="container panel ">
-<div class=" bs-callout bs-callout-info well">
-	<h2><%=fa_icon "upload"%>選擇學程</h2>
-	<h4>
-	<%=params[:msg]%><br>
-	請選擇以下課程的所屬學程
-	</h4>
-	
-</div>
-
+﻿<%= javascript_include_tag "user/coursemap-checker", "data-turbolinks-track" => true %>
+<div class="container panel ">
+	<div class=" bs-callout bs-callout-info well">
+		<h2><%=fa_icon "upload"%>選擇學程</h2>
+		<h4>
+			<%=params[:msg]%><br>
+			請選擇以下課程的所屬學程
+		</h4>	
+	</div>
 	<div id="common_check_div" class=""></div>
 	<div id="cosmap_check_div" class=""></div>
 	<div id="course_list" class=""></div>
@@ -16,14 +15,14 @@
 <script>
 $(document).ready(function(){
 	$.getJSON("/user/statistics", function (data) {
-		<% if current_user.is_undergrad %>
+		<% if current_user.is_undergrad? %>
 		$("#common_check_div").html(tmpl("common_check",data));
 		<% end %>
 		if(data["course_map"]){
 			$("#cosmap_check_div").html(tmpl("cosmap_check",data));
 		}
 		$("#course_list").html(tmpl("select_cf",data));
-		console.log(data);
+		
 	});
 	
 });
@@ -32,8 +31,8 @@ $(document).ready(function(){
 
 <% @show_report=false %>
 
-<% if current_user.is_undergrad %>
-<%=render :partial=>"/user/xtmpl_common_check"%>
+<% if current_user.is_undergrad? %>
+	<%=render :partial=>"/user/course_stat/xtmpl_common_check"%>
 <% end %>
-<%=render :partial=>"/user/xtmpl_cm_check"%>
+<%=render :partial=>"/user/course_stat/xtmpl_cm_check"%>
 <%=render :partial=>"/user/xtmpl_select_cf"%>

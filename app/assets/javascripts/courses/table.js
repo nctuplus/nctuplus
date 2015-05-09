@@ -7,20 +7,30 @@
 	var Table = function(element, options){
 		this.$element = $(element);
 		this.cells = [] ;
+		this.courses = [] ;
 		this.config = options.config || {} ;
-		
-		this._init($.extend(true, [], options.courses));	
+		// self-define cancel buton callback
+    if(this.config.cancelButtonFunc)
+      Table.defaults.cancelButtonFunc =  this.config.cancelButtonFunc;
+      Table.defaults.popoover |= this.config.popover ;
+			
+				
+		this._init(options.courses);	
 	};
+	
+	Table.specReturnMethod = ["checkConflictByTime", "getSelectedSlot", "getAllCourses"] ;
 	
 	Table.defaults = {
 		days :['Mon','Tue','Wed','Thu','Fri','Sat'],
-  	times : ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'],
+		daysInCh :['一','二','三','四','五','六','日'],
+		times : ['M','N','A','B','C','D','X','E','F','G','H','Y','I','J','K','L'],
 		real_times : ['6:00 ~ 6:50','7:00 ~ 7:50','8:00 ~ 8:50','9:00 ~ 9:50','10:10 ~ 11:00','11:10 ~ 12:00','12:20 ~ 13:10','13:20 ~ 14:10','14:20 ~ 15:10','15:30 ~ 16:20','16:30 ~ 17:20','17:30 ~ 18:20','18:30 ~ 19:20','19:30 ~ 20:20','20:30 ~ 21:20','21:30 ~ 22:20'],
 		selected_class: "schd-grid-selected",
+		conflict_class: "course-conflict",
 		$cancel_but : $($('<div>').addClass('course-clean').css("display", "none")
-									.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),	
+					.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),	
 		cancelButtonFunc: function(args){
-			logDebug("Callback function is not define.");
+			logDebug("Callback function is not defined.");
 		}
 	};
 	
@@ -29,10 +39,10 @@
 		checkConflictByTime: function(args){
 			var times = args.time ;
 			if(!times) return false ;
-			logDebug(times);
+		//	logDebug(times);
 			var conflict = false ;
 			var timearr = times.match(/[0-9][A-Z]+/g);
-			for(var i=0,slot;slot=timearr[i];++i)
+			for(var i=0,slot; slot=timearr[i]; ++i)
 			{
 					var day = slot[0];
 					for(var j=1,time; time=slot[j];++j)
@@ -45,44 +55,56 @@
 							if($cell.cd_id)
 							{
 								conflict = true ;
-								$cell.addClass('course-conflict').removeClass('course-conflict',4000);;
+								$cell.addClass(Table.defaults.conflict_class).removeClass(Table.defaults.conflict_class, 3000);
 							}
 						}	
 					}
 			}		
 			if(conflict) 
 				toastr['error']("衝堂囉!");
-			args.result = conflict ;
-			return ;
+			return conflict ;
+			
 		},
 		
-		getSelectedSlot: function(res){
-			//var res = [];
+		getAllCourses: function(){
+		  return this.courses ;
+		},
+		
+		//get the time slot that are selected.(1A, 3D, 4G ...)
+		getSelectedSlot: function(){
+		  var result = [] ;
 			for(var i=0 ; i<this.cells.length; ++i)
 			{
 				for(var j=0; j<this.cells[i].length; ++j)
 				{
 					if(this.cells[i][j].selected)
 					{				
-						res.push( this.cells[i][j].time );
+						result.push( this.cells[i][j].time );
 					}
 				}
 			}
 			
-			return res ;
+			return result ;
 		},
 		
-		deleteCourse: function(cid){
-			var res = this._findCellByCourseId(cid) ;
-			for(var i=0, cell; cell=res[i];++i){
-				this._clearCell(cell);
+		deleteCourse: function(cd_id){
+			var res = this._findCellByCourseDetailId(cd_id) ;
+			if(res.length==0)
+			{
+			  logError("No such course in the object record");
+			  return ;
+			}
+			for(var i=0, $cell; $cell=res[i];++i){
+				this._clearCell($cell);
 			}
 		},
 		
 		addCourses: function(args){
 		//	logDebug(this.config.popover);
+		 
 			for(var k=0, course; course=args[k]; k++)
 			{		
+			  this.courses.push($.extend(true, {}, course));//record course
 				if(!course.time) continue ;//藝文欣賞
 				var timearr = course.time.match(/[0-9][A-Z]+/g);
 				//logDebug(timearr);
@@ -101,10 +123,10 @@
 							
 							if(this.config.deletable)
 							{
-								var bb = Table.defaults.$cancel_but.clone(false).extend({cd_id: course.cd_id});
-								//logDebug(bb);
-								bb.click({cd_id: course.cd_id}, Table.defaults.cancelButtonFunc );
-								$cell.append(bb).extend({cd_id: course.cd_id});							 
+								var $button = Table.defaults.$cancel_but.clone(false);
+								$button.click({cd_id: course.cd_id}, Table.defaults.cancelButtonFunc );
+								//only deletable cell need to record which course (point to this.course element)
+								$cell.append($button).extend({course: course});							 
 							//	logDebug($cell);
 								$cell.mouseover(function(){
 									$(this).find('div').show();					
@@ -136,10 +158,6 @@
 		  for(var i=0; i< Table.defaults.days.length;++i)
 		  	this.cells.push([]);
 			
-			// self-define cancel buton callback
-			if(this.config.cancelButtonFunc)
-				Table.defaults.cancelButtonFunc =  this.config.cancelButtonFunc;
-				Table.defaults.popoover |= this.config.popover ;
 			
 		  this._build();
 			this.addCourses(courses);
@@ -147,10 +165,10 @@
 		},
 		
 		_build: function(){
-
+			var days = Table.defaults.days ;
 			var row = '<tr><th class=""></th>';
 			
-			for(var i = 0, t; t=Table.defaults.days[i]; i++)					
+			for(var i = 0, t; t=days[i]; i++)					
 				row += '<th class="col-md-2"><p class="text-center">'+t+'</p></th>';			
 			this.$element.append(row+'</tr>');
 			for (var i = 0, t; t=Table.defaults.times[i]; i++) 
@@ -168,10 +186,10 @@
 						trigger : "hover", 
 						container: "body"});	
 						
-				for(var j=Table.defaults.days.length; j>0; --j)
+				for(var j=days.length; j>0; --j)
 				{
 					this.cells[j-1].push($('<td>').insertAfter($last_td)
-					.attr('id','day_'+j+'_time_'+t)
+					//.attr('id','day_'+j+'_time_'+t)
 					.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
@@ -185,13 +203,14 @@
 			}
 			return ;
 		},
-		_findCellByCourseId: function(c_id){
+		_findCellByCourseDetailId: function(cd_id){
 				var res = [];
 				for(var i=0 ; i<this.cells.length; ++i)
 				{
 					for(var j=0; j<this.cells[i].length; ++j)
 					{
-						if(this.cells[i][j].cd_id==c_id)
+					  var $cell = this.cells[i][j] ;
+						if($cell.course && $cell.course.cd_id==cd_id)
 							res.push( this.cells[i][j] );
 					}
 				}
@@ -223,14 +242,16 @@
 			}	
 		},
 		
-		_clearCell($cell){
-			$cell.empty().removeClass().addClass('pos-relative').cd_id=undefined;
+		_clearCell: function($cell){
+		  this.courses.splice( $.inArray($cell.course, this.courses), 1 );
+			$cell.empty().removeClass().addClass('pos-relative').course=undefined;
 			if(this.config.popover)
 				$cell.popover('disable');
 			$cell.selectable = this.config.selectable ;
 			this._setCellSelectFunc($cell);
 			return ;
 		}
+			
 	}  
 	var logError = function(message) {
 		if(window.console) {
@@ -244,29 +265,45 @@
 	};
 	
 	$.fn[pluginName] = function(options, args) {
-		return this.each(function() { // 'this' is the target table
-			var self = $.data(this, 'plugin_' + pluginName);
-			if (typeof options === 'string') {
-				if (!self) {
-					logError('Not initialized, can not call method : ' + options);
-				}
-				else if (!$.isFunction(self[options]) || options.charAt(0) === '_') {
-					logError('No such method : ' + options);
+		//here are not return self
+		if(typeof options === 'string' 
+		   && ($.inArray(options, Table.specReturnMethod)!=-1) )
+		{		
+			var self ;
+			this.each(function() { self = $.data(this, 'plugin_' + pluginName);});
+			if (!self){
+				logError('Not initialized, can not call method : ' + options);
+				return ;
+			}else
+				return self[options].call(self, args) ;	
+		}
+		else
+		{					
+			return this.each(function() { // 'this' is the target table. It'll return itself.
+				var self = $.data(this, 'plugin_' + pluginName);
+				if (typeof options === 'string') {
+					//block undefine method
+					if (!self) {
+						logError('Not initialized, can not call method : ' + options);
+					}
+					//block using private method
+					else if (!$.isFunction(self[options]) || options.charAt(0) === '_') {
+						logError('No such method : ' + options);
+					}
+					else {
+						self[options].call(self, args) ;// .apply 會自動拆掉一層 []
+					}
 				}
 				else {
-					self[options].call(self, args) ;// .apply 會自動拆掉一層 []
+					if (!self) {
+						$.data(this, 'plugin_' + pluginName, new Table(this, $.extend(true, {}, options)));
+					}
+					else {
+						self._init(options);
+					}
 				}
-			}
-			else {
-				if (!self) {
-					$.data(this, 'plugin_' + pluginName, new Table(this, $.extend(true, {}, options)));
-				}
-				else {
-					self._init(options);
-				}
-			}
-		});
-		
+			});
+		}
 	};
 	
 })(jQuery, window, document);

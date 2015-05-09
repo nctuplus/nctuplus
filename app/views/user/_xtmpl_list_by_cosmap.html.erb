@@ -1,22 +1,9 @@
 <script type="text/x-tmpl" id="list_by_cosmap">
 {% var cm=o.course_map,user_courses=o.user_courses; %}
-{% var user_fails=user_courses.fail; %}
 {% var cfname=[]; %}
 <table class="table "style="border:0px">
-	{% if(user_fails.length > 0){ %}
-		<tr class="row warning" >
-			<td class="col-md-12">匯入失敗的</td>
-		</tr>
-		{% for(var i=0, f; f=user_fails[i]; ++i){ %}
-			<tr class="row" >
-				<td class="col-md-12">
-					<h4 class="text-left">{%=f %}</h4>
-				</td>
-			</tr>
-		{% } %}
-	{% } %}
 	{% var first_time=true; %} 
-	{% for(var i = 0,course ;course=user_courses.success[i];i++){ %}
+	{% for(var i = 0,course ;course=user_courses[i];i++){ %}
 		{% if(course.cf_id==0){ %}
 			{% if(first_time){ %}
 				{% first_time=false; %}
@@ -29,7 +16,7 @@
 			<tr class="row" >
 					<td class="col-md-12">
 						<h4 class="text-left">
-						{%=course.sem_id==0 ? "抵免" :get_sem_name(course.sem_id) %} | 
+						{%=course.sem_name %} | 
 						{%=course.name%} | 
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit%}</strong> | 
 						<%= fa_icon "flag-checkered"%> <strong>{%=course.score %}</strong>
@@ -55,14 +42,14 @@
 			<tr class="row" >		
 				<td class="col-md-12">
 					<h4 class="text-left">
-						{%=course.sem_id==0 ? "抵免" : get_sem_name(course.sem_id) %} | 
+						{%=course.sem_name %} | 
 						{%=course.name%} | 
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit %}</strong> | 
 						<%= fa_icon "flag-checkered"%> <strong>{%=course.score %}</strong>
 						{% if(cfs.length>1){ %} 
 						<button class="btn btn-sm btn-default" onclick="$(this).next().toggleClass('hidden');">選擇學程</button>
 						<div class="hidden" style="width:250px;display:inline-block;">
-							<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=o.user_id%},$(this));">
+							<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=course.sem_name=="抵免"%},{%=o.user_id%},$(this));">
 							{% for(var j = 0,cf ;cf=cfs[j];j++){ %}
 								<option value="{%=cf.id%}" {%= cf.id==course.cf_id ? "selected":""%}>{%=cf.name%}</option>
 							{% } %}

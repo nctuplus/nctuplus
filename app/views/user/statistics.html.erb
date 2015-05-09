@@ -4,7 +4,6 @@
 		<h4 class="text-center">畢業學分計算</h4>
 	</div>
 	</br>
-	 
 	<div id="common_check_div" class="container">
 	</div>
 	<div id="cosmap_check_div" class="container"></div>
@@ -12,12 +11,7 @@
 </div>
 
 <div class="modal fade" id="courselist_modal" tabindex="-1" role="dialog" aria-hidden="true" >
-	<div class="modal-dialog" >	
-        <!--<div class="modal-footer">
-            <button type="button" class="btn btn-primary">Purchase</button>
-            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>-->
-	</div>
+	<div class="modal-dialog" ></div>
 </div>
 
 <script>
@@ -26,15 +20,12 @@ $(document).ready(function(){
 		<% if @user.is_undergrad? %>
 			$("#common_check_div").html(tmpl("common_check",data));
 		<% end %>
-
+		console.log(data);
 		if(data["course_map"]){
 			$("#cosmap_check_div").html(tmpl("cosmap_check",data));
-			/*var cm=o.course_map,user_courses=o.user_courses.success;
-			var pass_courses=get_pass_courses(o.pass_score,o.last_sem_id,user_courses);
-			parse_cf_tree(cm.cfs,pass_courses,cm.max_colspan);*/
 		}
 		$("#course_list").html(tmpl("list_by_cosmap",data));
-
+		
 	});
 	
 });

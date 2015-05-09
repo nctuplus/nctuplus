@@ -3,9 +3,7 @@
 
 	function addCourseSimulation(this_but, cd_id, time, addordel,from){
 		if(addordel=="add"){
-			var data = {time: time, result: false } ;
-			$('#schedule_table').CourseTable('checkConflictByTime',data);
-			if(data.result)
+			if($('#schedule_table').CourseTable('checkConflictByTime',{time: time}))
 				return ;
 		}else if(addordel=="delete"){
 			this_but.parent().parent().remove();
@@ -17,6 +15,7 @@
 		$.ajax({
 			type: "GET",
 			url: "/user/"+addordel+"_course",
+			dataType: "json",
 			data: {
 				cd_id: cd_id,
 				from: from
@@ -24,9 +23,11 @@
 			success: function(data) {
 			//	console.log(data);
 				if(addordel=="add")
-					$('#schedule_table').CourseTable('addCourses', [$.parseJSON(data)]);
-				else
-					$('#schedule_table').CourseTable('deleteCourse', cd_id);	
+					$('#schedule_table').CourseTable('addCourses', [data]);
+				else{
+					$('#schedule_table').CourseTable('deleteCourse', cd_id);
+				//	$('#course_table').find('tr[id="cd_'+cd_id+'"]').remove();
+				}		
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");
 			}	

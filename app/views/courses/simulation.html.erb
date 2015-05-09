@@ -112,7 +112,7 @@ $(document).ready(function(){
 	
 	function load_course_table(semester_id, selectable){
 		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
-			console.log(data);
+			//console.log(data);
 			data.config = {
 				deletable: true ,
 				selectable: true,
@@ -120,10 +120,9 @@ $(document).ready(function(){
 				cancelButtonFunc: function(arg){
 					var cd_id = arg.data.cd_id;
 					save_course(cd_id,'delete','load_course_table');
-			//		$('#schedule_table').CourseTable('deleteCourse', cd_id);
 				}
 			};
-			$('#schedule_table').CourseTable(data);
+			$('#schedule_table').CourseTable(data);	
 		});
 	}
 	function show_has_select(){
@@ -141,8 +140,7 @@ $(document).ready(function(){
 	}
 
 	function get_selected_time_slot(){
-		var selected = [] ;
-		$('#schedule_table').CourseTable('getSelectedSlot', selected);
+		var selected = $('#schedule_table').CourseTable('getSelectedSlot');
 		if(selected.length>0){
 			var arr_str = '[';
 			for(var i=0, ele;ele=selected[i]; ++i)

@@ -39,9 +39,9 @@ class Course < ActiveRecord::Base
 		}
 	end	
 	
-	def to_chart(latest_semester)
+	def to_chart(last_sem)
 		# take 5, for case if have latest_semester
-		sems=self.semesters.order(:id).uniq.last(5).reject{|s|s==latest_semester}		
+		sems=self.semesters.order(:id).uniq.last(5).reject{|s|s==last_sem}		
 		row_name = sems.map{|s|s.name}				
 		row_id = sems.map{|s| s.id}
 		if row_id.length ==5
@@ -49,7 +49,7 @@ class Course < ActiveRecord::Base
 			row_name.shift
 		end
 		tmp = self.course_details.where(:semester_id=>row_id).order(:semester_id)				
-		simu = CourseSimulation.where(:course_detail_id=>tmp.map{|ctd| ctd.id})  		
+		simu = NormalScore.where(:course_detail_id=>tmp.map{|ctd| ctd.id})  		
 		res = []
 		res_score = []
 		show_score = false
@@ -75,13 +75,13 @@ class Course < ActiveRecord::Base
 			res.push({:name=>k1, :data=>tmp_num})
 			res_score.push({:name=>k1, :data=>tmp_score})
 		end			
-				#Rails.logger.debug "[debug] "+ @res.to_s 
-
-		return {:show_reg=>(res.count > 0),
-				:show_score=>show_score,
-				:semester_name=>row_name, 
-				:reg_data=>res, 
-				:score_data=>res_score}
+		return {
+			:show_reg=>(res.count > 0),
+			:show_score=>show_score,
+			:semester_name=>row_name, 
+			:reg_data=>res, 
+			:score_data=>res_score
+		}
 	end
 	
 	def self.get_from_e3(data)

@@ -13,9 +13,16 @@ class User < ActiveRecord::Base
 	has_many :comments
 	has_many :course_teacher_ratings
 	
-	has_many :course_simulations, :dependent=> :destroy
+	#has_many :course_simulations, :dependent=> :destroy
+	
 	has_many :user_coursemapships, :dependent=> :destroy
 	has_many :course_maps, :through=> :user_coursemapships
+	
+	has_many :agreed_scores, :dependent=> :destroy
+	
+	has_many :normal_scores, :dependent=> :destroy
+	has_many :course_details, :through=> :normal_scores
+	has_many :semesters, :through=> :course_details
 	
 	validates :uid, :uniqueness => {:scope => [ :student_id]}
 
@@ -55,42 +62,49 @@ class User < ActiveRecord::Base
 		return self.is_undergrad? ? 60 : 70
 	end
 	
+	
+	
+	
+=begin
 	def all_courses
 		self.course_simulations.import_success.includes(:course_detail, :course_teachership, :course, :course_field)
 	end
-
 	def courses_taked
 		self.all_courses.normal
 	end
+
 	
 	def courses_agreed
-		self.course_simulations.includes(:course_detail, :course, :course_field).import_success.agreed#where("course_detail_id != 0 AND semester_id = 0")
+		self.course_simulations.includes(:course_detail, :course, :course_field).import_success.agreed
+	end
+=end
+	
+	def courses_taked
+		self.normal_scores.includes(:course_detail, :semester, :course_teachership, :course, :course_field)
 	end
 	
+	def courses_agreed
+		self.agreed_scores.includes(:course, :course_field)
+	end
 	
 
 	def total_credit
 		def pass_courses
-			self.course_simulations.includes(:course, :course_detail).where("(semester_id !=0) AND (score = '通過' OR score>= ?)",self.pass_score)
+			self.normal_scores.includes(:course, :course_detail).where("score = '通過' OR score >= ?",self.pass_score)
 		end
-		return self.pass_courses.map{|cs|cs.course.credit.to_i}.reduce(:+)||0
+		return (self.pass_courses+self.agreed_scores).map{|cs|cs.credit.to_i}.reduce(:+)||0
 	end
 	
 	def courses_json
-		return self.all_courses.order("course_field_id DESC").map{|cs|{
-			:name=>cs.course.ch_name,
-			:cs_id=>cs.id,
-			:course_id=>cs.course.id,
-			:ct_id=>cs.course_teachership.id,
-			:cos_type=>cs.cos_type=="" ? cs.course_detail.cos_type : cs.cos_type,
-			:sem_id=>cs.semester_id,
-			:brief=>cs.course_detail.brief,
-			:credit=>cs.course.credit,
-			:cf_id=>cs.course_field_id ? cs.course_field_id : 0,
-			:score=>cs.semester_id==0 ? cs.memo : cs.semester_id==Semester::LAST.id ? "修習中" : cs.score
-		}}
+		taked=self.courses_taked.order("course_field_id DESC").map{|cs|
+			cs.to_stat_json
+		}
+		agreed=self.courses_agreed.order("course_field_id DESC").map{|cs|
+			cs.to_stat_json
+		}
+		return (taked+agreed).sort_by{|x| x[:cf_id] }
 	end
-		
+			
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
       user.provider = auth.provider

@@ -20,11 +20,15 @@ class UserController < ApplicationController
 			case params[:type]
 				when "stat"
 					if params[:sem_id].blank?
+						#cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}
+						
 						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}
-						#cs_taked=convert_to_json(@user.courses_taked)
+						
 						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}
+						
 					else 
-						cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}#convert_to_json(@user.all_courses.where(:semester_id=>params[:sem_id]))
+						#cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}
+						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_advance_json}
 						cs_agree=[]
 					end
 					result={
@@ -38,19 +42,14 @@ class UserController < ApplicationController
 					result={
 						:use_type=>"delete", #for delete button of your current courses
 						:view_type=>"schedule",
-						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>Semester::LAST.id).map{|cs|
+						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(Semester::LAST.id).map{|cs|
 							cs.course_detail.to_search_result
 						}
 					}
 				when "course_table"
 					semester = Semester.find(params[:sem_id])
 					result={
-						:semester_info=>{	
-							:isNow=> (semester.id == Semester::LAST.id),
-							:semester_id=> semester.id,
-							:semester_name=> semester.name 
-						},
-						:courses=>@user.course_simulations.includes(:course_detail).where(:semester_id=>semester.id).map{|cs|
+						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(Semester::LAST.id).map{|cs|
 							cs.course_detail.to_course_table_result
 						}
 					}	
@@ -71,9 +70,7 @@ class UserController < ApplicationController
 			cm=CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
 			if cm
 				@user.user_course_mapships.create(:course_map_id=>cm.id)
-				if !@user.course_simulations.empty?
-					update_cs_cfids(cm,@user)
-				end
+				update_cs_cfids(cm,@user)
 			end
 		end
 	end
@@ -84,12 +81,18 @@ class UserController < ApplicationController
 	end
 
 	def select_cs_cf
-		cs=CourseSimulation.find(params[:cs_id])
-		cs.course_field_id=params[:cf_id]
-		cs.save!
+		if params[:is_agreed]=="true"
+			cs=AgreedScore.find(params[:cs_id])
+		else
+			cs=NormalScore.find(params[:cs_id])
+		end
+		cs.update_attributes(:course_field_id=>params[:cf_id])
+		#cs.save!
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
+	
 	def statistics
+		
 		@user=getUserByIdForManager(params[:uid])
 		if request.format=="json"
 			course_map=@user.course_maps.first
@@ -108,10 +111,8 @@ class UserController < ApplicationController
 				:user_id=>@user.id,
 				:pass_score=>@user.pass_score,
 				:last_sem_id=>Semester::CURRENT.id,
-				:user_courses=>{
-					:success=>@user.courses_json,
-					:fail=>@user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2}
-				},
+				:user_courses=>@user.courses_json,
+				#:user_courses=>@user.normal_scores.to_stat_json,
 				:course_map=>course_map_res||nil,
 			}
 		end
@@ -157,90 +158,48 @@ class UserController < ApplicationController
 			@pass=0
 			if normal.length>0
 				#CourseSimulation.where("user_id = ? AND semester_id != ? ",current_user.id,Semester.last.id).destroy_all
-				current_user.course_simulations.destroy_all
-			
+				current_user.normal_scores.destroy_all
+				current_user.agreed_scores.destroy_all
 			else
 				msg="匯入失敗!"
 				redirect_to :action=>"import_course_2", :msg=>msg
 				return
-			end
-			tcss=TempCourseSimulation.where(:student_id=>current_user.student_id)
-			
-			if !tcss.empty? # from temp
-				tcss.each do |tcs|
-					tcs.has_added=1
-					tcs.save!
-					CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>tcs.course_detail_id, :semester_id=>tcs.semester_id, 
-											:course_field_id=>0, :score=>tcs.score, :memo=>tcs.memo, :memo2=>tcs.memo2, :cos_type=>tcs.cos_type)
-					if tcs.score=="通過" || tcs.score.to_i>=@pass_score
-						@pass+=1
-					else
-						@no_pass+=1
-					end
+			end	
+			agree.each do |a|
+				#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
+				course=Course.where(:real_id=>a[:real_id]).take
+				if course.nil?
+					course=Course.create(a)
 				end
-				@success_added=tcss.select{|tcs|tcs.course_detail_id!=0}.length
-				@fail_added=tcss.select{|tcs|tcs.course_detail_id==0}.length
-			
-			else # from user import	
-			
-				agree.each do |a|
-					#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
-					course=Course.where(:real_id=>a[:real_id]).take
-					if !course.nil?
-						cd_temp=course.course_details.take#.where(:credit=>a[:credit]).first
-						CourseSimulation.create(
-							:user_id=>current_user.id,
-							:course_detail_id=>cd_temp.id,
-							:semester_id=>0,
-							:score=>"通過",
-							:memo=>a[:memo],
-							:import_fail=>0,
-							:cos_type=>a[:cos_type]
-						)
+				AgreedScore.create_form_import(current_user.id,course.id,a)
+				@success_added+=1
+			end
+			@now_taking=0
+			normal.each do |n|
+				if n['score']=="通過" || n['score'].to_i>=@pass_score
+					@pass+=1
+				elsif n['score']==""
+					@now_taking+=1
+				else
+					@no_pass+=1
+				end
+				sem=n['sem']
+				sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
+				if sem
+					cd=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
+					if cd
+						NormalScore.create_form_import(current_user.id,cd.id,n)
 						@success_added+=1
 					else
-						CourseSimulation.create(:user_id=>current_user.id, :course_detail_id=>0, :semester_id=>0, :score=>"通過",
-												:memo=>a[:memo], :memo2=>a[:real_id]+"/"+a[:credit].to_s+"/"+a[:name], :import_fail=>1, :cos_type=>a[:cos_type])
 						@fail_added+=1
 					end
+				else
+					@fail_added+=1
 				end
-
-				normal.each do |n|
-					#dept_id=Department.select(:id).where(:ch_name=>n['dept_name']).take
-					if n['score']=="通過" || n['score'].to_i>=@pass_score
-						@pass+=1
-					else
-						@no_pass+=1
-					end
-					sem=n['sem']
-					sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
-					if sem
-						cds=CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>n['cos_id']).take
-						if cds	
-							CourseSimulation.create(
-								:user_id=>current_user.id,
-								:course_detail_id=>cds.id,
-								:semester_id=>cds.semester_id,
-								:score=>n['score'],
-								:course_field_id=>0,
-								:cos_type=>n['cos_type']
-							)
-							@success_added+=1
-						else
-							#fail_course_name.append()
-							@fail_added+=1
-						end
-					else
-						@fail_added+=1
-					end
-				end
-			end
-			
+			end		
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
-			#if cm
 			update_cs_cfids(cm,current_user)
-			#end
-			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 未通過:#{@no_pass}"
+			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 未通過:#{@no_pass} 修習中:#{@now_taking}"
 			redirect_to :action=>"import_course_2", :msg=>msg
 		end
 	end
@@ -328,7 +287,7 @@ class UserController < ApplicationController
 		cd=CourseDetail.find(cd_id)
 	
     session[:cd].delete(cd_id) if session[:cd].present? && session[:cd].include?(cd_id)			
-    current_user.course_simulations.create(
+    current_user.normal_scores.create(
       #:user_id=>current_user.id,
       :semester_id=>cd.semester_id,
       :course_detail_id=>cd.id,
@@ -340,7 +299,7 @@ class UserController < ApplicationController
 	
 	def delete_course
 	  cd=CourseDetail.find(params[:cd_id])
-	  CourseSimulation.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
+	  NormalScores.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
 	  
 	  render :text=>cd.to_course_table_result.to_json, :layout=>false
 	end
