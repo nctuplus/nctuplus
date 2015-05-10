@@ -45,17 +45,19 @@
 			for(var i=0,slot; slot=timearr[i]; ++i)
 			{
 					var day = slot[0];
+					
 					for(var j=1,time; time=slot[j];++j)
 					{
 						var idx_y = $.inArray(time,Table.defaults.times) ;
+						//logDebug(day+time);						
 						if(idx_y>=0)
 						{
 							var idx_x = day-1 ;
 							var $cell = this.cells[idx_x][idx_y];
-							if($cell.cd_id)
+							if($cell.course && $cell.course.cd_id)
 							{
 								conflict = true ;
-								$cell.addClass(Table.defaults.conflict_class).removeClass(Table.defaults.conflict_class, 3000);
+								$cell.addClass(Table.defaults.conflict_class).removeClass(Table.defaults.conflict_class, 3500);
 							}
 						}	
 					}
@@ -133,7 +135,7 @@
 								}).mouseleave(function(){
 									$(this).find('div').hide();
 								});
-								$cell.selectable = false ;
+								//$cell.selectable = false ;
 								this._setCellSelectFunc($cell);
 							}
 							if(this.config.popover)
@@ -193,7 +195,7 @@
 					.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
-						selectable: true, 
+						selectable: this.config.selectable, 
 						deletable: this.config.deletable || Table.defaults.deletable,
 						selected: false 
 					}));

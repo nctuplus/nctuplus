@@ -51,7 +51,7 @@
 							<li class="text-center">無資料</li>
 							<% end %>
 							<% sems.each do |sem| %>
-							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.to_s %>"><%=Semester.find(sem).name %></a></li>						
+							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.id.to_s %>"><%=sem .name %></a></li>						
 							<% end %>
 					</ul>	
 				</li>
@@ -85,25 +85,6 @@
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 <script>
 	$(document).ready(function(){	
-		// small timetable
-/*
-		$("#sm_schd_button").click(
-			function(){	
-				var data = show_timetable_on_modal(<%=Semester::LAST.id%>, false);
-				data.config = {
-          deletable: false ,
-          selectable: false,
-          popover: false,
-					small: true
-        };
-			var $table = $('<table>').addClass('table table-bordered no-margin-bottom');
-				console.log(data);
-				$("#small_timetable").html($table);
-				$("#small_timetable").CourseTable(data);
-
-			}
-		);
-*/
 		// shopping cart
 		$("#cart_but").click(
 			function(){		
@@ -136,7 +117,7 @@
           selectable: false,
           popover: true
         };
-								
+								console.log(data);
 				$("#global_modal .modal-body").html($table.CourseTable(data));
 
 				if(showNow)	

@@ -288,8 +288,6 @@ class UserController < ApplicationController
 	
     session[:cd].delete(cd_id) if session[:cd].present? && session[:cd].include?(cd_id)			
     current_user.normal_scores.create(
-      #:user_id=>current_user.id,
-      :semester_id=>cd.semester_id,
       :course_detail_id=>cd.id,
       :score=>'修習中'
     )
@@ -299,7 +297,7 @@ class UserController < ApplicationController
 	
 	def delete_course
 	  cd=CourseDetail.find(params[:cd_id])
-	  NormalScores.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
+	  NormalScore.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
 	  
 	  render :text=>cd.to_course_table_result.to_json, :layout=>false
 	end

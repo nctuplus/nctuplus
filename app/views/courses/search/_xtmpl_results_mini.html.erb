@@ -3,7 +3,9 @@
 
 	function addCourseSimulation(this_but, cd_id, time, addordel,from){
 		if(addordel=="add"){
-			if($('#schedule_table').CourseTable('checkConflictByTime',{time: time}))
+			//console.log(time);
+			var res = $('#schedule_table').CourseTable('checkConflictByTime',{time: time}) ;
+			if(res)
 				return ;
 		}else if(addordel=="delete"){
 			this_but.parent().parent().remove();

@@ -127,6 +127,7 @@ $(document).ready(function(){
 	}
 	function show_has_select(){
 		$.getJSON("/user/get_courses?type=simulation",function(data){
+			//console.log(data);
 			$(".scrollable").html(tmpl("search_result", data));
 		});
 	}
