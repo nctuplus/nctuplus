@@ -1,14 +1,17 @@
 /*
- * app/assets/javascript/courses/main.js
- *
  * Copyright (C) 2014 NCTU+
  * 
+ * require is plug-in for 分享&統計圖&教授比一比&考古題系統
  * For courses/show/:id , page function control
- *  
- *
- * Updated at 2015/3/24
+ * Updated at 2015/5/11
  */
  
+//= require jquery.raty.min
+//= require share.min
+//= require jquery.scrollTo.min
+//= require highcharts-custom
+//= require jquery-fileupload
+
 function head_binding(allow, cd_id){
 	$('.edit-head').click(function(){
 		
@@ -64,12 +67,12 @@ function head_binding(allow, cd_id){
 						rollcall: rollcall,
 					},	
 					success: function(data){
-						toastr["success"]("UPDATE SUCCESSFUL");
+						toastr["success"]("更新成功!");
 						$('.rollcall').removeClass().addClass('label rollcall label-'+data.rollcall_info.color).html(data.rollcall_info.name).show();
 						$('.rollcall').attr('id',data.rollcall_info.id);
 					},	
 					error: function(){
-						toastr["error"]("UPDATE FAIL");
+						toastr["error"]("更新失敗!");
 						reset_head();
 					}
 				});	
@@ -246,12 +249,12 @@ function _bind_edit_delete_rank(b_edit, b_delete, b_rank){
 				list_id: this_list.attr('id'),
 			},	
 			success: function(data){
-				toastr["success"]("UPDATE SUCCESSFUL");
+				toastr["success"]("更新成功!");
 				this_list.remove();
 			},	
 			error: function(){
 				alert('Something error happen. Please reload :(((');
-				toastr["error"]("UPDATE FAIL");					
+				toastr["error"]("更新失敗!");					
 			}
 		});		
 		
@@ -357,7 +360,7 @@ function comment_binding(cd_id){
 			},	
 			success: function(data){
 				//console.log(data);
-				toastr["success"]("UPDATE SUCCESSFUL");
+				toastr["success"]("更新成功!");
 				comment_content.val('');
 				if($('.comment-lists tr:last').length >0)
 					$('.comment-lists tr:last').after(tmpl("course-comment-cell",data));
@@ -367,7 +370,7 @@ function comment_binding(cd_id){
 			},	
 			error: function(){
 				alert('Something error happen. Please reload :(((');
-				toastr["error"]("UPDATE FAIL");					
+				toastr["error"]("更新失敗!");					
 			}
 		});
 	});

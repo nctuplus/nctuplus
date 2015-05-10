@@ -102,9 +102,18 @@ class User < ActiveRecord::Base
 		agreed=self.courses_agreed.order("course_field_id DESC").map{|cs|
 			cs.to_stat_json
 		}
-		return (taked+agreed).sort_by{|x| x[:cf_id] }
+		return (taked+agreed).sort_by{|x|x[:cf_id]}.reverse
 	end
-			
+	def courses_stat_table_json
+		taked=self.courses_taked.order("course_field_id DESC").map{|cs|
+			cs.to_stat_table_json
+		}
+		agreed=self.courses_agreed.order("course_field_id DESC").map{|cs|
+			cs.to_stat_json
+		}
+		return (taked+agreed).sort_by{|x|x[:cf_id]}.reverse
+	end
+	
   def self.from_omniauth(auth)
     where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
       user.provider = auth.provider

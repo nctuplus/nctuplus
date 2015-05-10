@@ -39,10 +39,11 @@
 			
 			<ul class="nav navbar-nav navbar-right">
 			<% if current_user %>	
+<!--			
 				<li>
 					<a class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :class=>"toolTip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %></a>
 				</li>		
-		
+-->		
 				<li>
 					<a href="#" class="toolTip dropdown-toggle toolTip" data-toggle="dropdown" title="課表"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
 						<ul class="dropdown-menu">
@@ -86,6 +87,7 @@
 <script>
 	$(document).ready(function(){	
 		// shopping cart
+/*		
 		$("#cart_but").click(
 			function(){		
 			  $("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
@@ -93,7 +95,7 @@
 				$("#global_modal").modal('show');
 			}
 		);
-
+*/
 		//歷年課表
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
@@ -109,15 +111,18 @@
 			url: "/user/get_courses?type=course_table&sem_id="+semester_id,
 			dataType: "json",
 			success: function(data){
+			//	console.log(data);
 				var result = $.extend(true, [], data);
 				$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>');
 				var $table = $('<table>').addClass('table table-bordered');
         data.config = {
           deletable: false ,
           selectable: false,
-          popover: true
+          popover: true,
+		  downloadable: true,
+		  semester_id: semester_id
         };
-								console.log(data);
+								
 				$("#global_modal .modal-body").html($table.CourseTable(data));
 
 				if(showNow)	

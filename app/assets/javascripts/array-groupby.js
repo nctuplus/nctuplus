@@ -1,6 +1,4 @@
 /*
- * app/assets/javascript/array-groupby.js
- *
  * Copyright (C) 2014 NCTU+
  *
  * 對一個Hash array的某一個Key 做 grouping

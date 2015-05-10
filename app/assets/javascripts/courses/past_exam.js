@@ -1,10 +1,8 @@
 /*
- *
  * Copyright (C) 2014 NCTU+
  * 
  * For past_exams/list_by_ct , edit function control
  *  
- *
  * Updated at 2015/4/28
  */
  

@@ -9,8 +9,9 @@
 <head>
 	<title class='title'>NCTU+</title>
 
-	<%=javascript_include_tag asset_path("application.js")%>
-	<%=javascript_include_tag asset_path("tmpl.min.js")%>
+	<%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "tmpl.min", "data-turbolinks-track" => true %>
+	<%= javascript_include_tag "coursemap-checker", "data-turbolinks-track" => true %>
 	<%= stylesheet_link_tag asset_path("application.css") %>
 </head>
 <div id="table">Loading...</div>
@@ -188,10 +189,14 @@ function getRemains(user_courses, matchs){
 	return re ;
 }
 
-// check a course is pass or fail, and determine where to place it 
+function parseSemseterStr(sem_str){
+  var res = [] ;
+  return res ;
+}
+
+// determine where to place 
 function checkCourse(user_course){ 
-	var pass_score = (user_info.degree==2) ? 70 : 60 ;
-	var pass = (user_course.score=='通過' || user_course.score >= pass_score) ? true : false ;	
+	var pass = check_pass(user_course.pass_score, user_course.score) ;	
 	//console.log(user_course.name+ " "+pass);
 	var note = '', show_place=0 ;  
 	//console.log(user_course.name);
@@ -335,6 +340,10 @@ $(document).ready(function(){
 <% end %>
 	function(res){
 		console.log(res);
+		var aaa = "上夏";
+		if(!parseInt(aaa))
+		  console.log(parseInt(aaa));
+		return ;
 		if(!res.course_map){
 			alert("沒有對應的學程");
 			$('#table').html('請確認你的系別系級，或通知管理員建立一個新的學程地圖');

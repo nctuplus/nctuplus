@@ -49,7 +49,7 @@ class UserController < ApplicationController
 				when "course_table"
 					semester = Semester.find(params[:sem_id])
 					result={
-						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(Semester::LAST.id).map{|cs|
+						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
 						}
 					}	
@@ -249,6 +249,8 @@ class UserController < ApplicationController
 			course_map = user.course_maps.last 
 			data1 = (course_map.presence) ? course_map.to_tree_json : nil
 			if data1.presence
+				data2=user.courses_stat_table_json
+=begin
 				data2 = user.all_courses.map{|cs|{
 					:id=> cs.course.id,
 					:uni_id=> cs.id,
@@ -261,6 +263,7 @@ class UserController < ApplicationController
 					:memo=>cs.memo||"",
 					:degree=>cs.course.department.try(:degree)||0,
 				}}
+=end
 				# if has course_map, user must have semester, dept
 				user_info = {
 					:year=>user.year, 
@@ -286,7 +289,7 @@ class UserController < ApplicationController
 		cd_id=params[:cd_id].to_i
 		cd=CourseDetail.find(cd_id)
 	
-    session[:cd].delete(cd_id) if session[:cd].present? && session[:cd].include?(cd_id)			
+ #   session[:cd].delete(cd_id) if session[:cd].present? && session[:cd].include?(cd_id)			
     current_user.normal_scores.create(
       :course_detail_id=>cd.id,
       :score=>'修習中'

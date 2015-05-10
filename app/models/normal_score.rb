@@ -5,6 +5,9 @@ class NormalScore < ActiveRecord::Base
 	has_one :semester, :through=>:course_detail
 	delegate :name, :to=>:semester, :prefix=>true
 	
+	has_one :department, :through=>:course_detail
+	delegate :ch_name, :to=>:department, :prefix=>true
+	
 	has_one :course_teachership, :through=>:course_detail
 	
 	has_one :course, :through=>:course_detail
@@ -49,15 +52,22 @@ class NormalScore < ActiveRecord::Base
 	def to_stat_json
 		{
 			:name=>self.ch_name,
-			:cs_id=>self.id,
+			:id=>self.id,
 			:course_id=>self.course.id,
 			:cos_type=>self.cos_type=="" ? self.course_detail.cos_type : self.cos_type,
 			:sem_name=>self.semester_name,			
 			:credit=>self.credit,
 			:cf_id=>self.course_field_id,
+			:brief=>self.brief,
 			:score=>self.score
 		}
 	end
-	
+	def to_stat_table_json
+		self.to_stat_json.merge({
+			#:degree=>self.department.try(:degree)||0,
+			:pass_score=>self.department.pass_score,
+			:memo=>""
+		})
+	end
 	
 end

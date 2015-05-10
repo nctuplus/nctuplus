@@ -12,10 +12,11 @@
 							<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
 								<font color="white"><%=fa_icon "search" %></font>
 							</button>
+<!--							
 							<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="show_cart_select()" style="margin-top: -5px;">
 								<font color="white"><%=fa_icon "shopping-cart"%></font>
 							</button>
-							
+-->							
 						</h4>
 					</div>
 					<div class="panel-body">
@@ -48,13 +49,14 @@ function show_search(){
 	$("#search_div").find('form').toggleClass("hidden");
 }
 $(document).ready(function(){
-
+/*
 	$('#cart-btn').popover({
 		content: "顯示觀察名單",
 		placement:"auto",
 		trigger : "hover",
 		container :"body"
 	});
+*/	
 	$('#has-select-btn').popover({
 		content: "已選課程",
 		placement:"auto",

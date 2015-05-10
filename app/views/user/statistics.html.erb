@@ -1,4 +1,5 @@
-<%= javascript_include_tag "user/coursemap-checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
 <div class="panel panel-primary" >
 	<div class="panel-heading" >
 		<h4 class="text-center">畢業學分計算</h4>
@@ -17,10 +18,11 @@
 <script>
 $(document).ready(function(){
 	$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
+		console.log(data);
 		<% if @user.is_undergrad? %>
 			$("#common_check_div").html(tmpl("common_check",data));
 		<% end %>
-		console.log(data);
+		
 		if(data["course_map"]){
 			$("#cosmap_check_div").html(tmpl("cosmap_check",data));
 		}

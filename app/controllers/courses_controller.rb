@@ -68,11 +68,11 @@ class CoursesController < ApplicationController
 	def export_timetable
 		sem_id=params[:sem_id].to_i
 		@sem=Semester.find(sem_id)
-		cd_ids=current_user.course_simulations.where(:semester_id=>sem_id).map{|ps| ps.course_detail.id}
+		cd_ids=current_user.courses_taked.search_by_sem_id(sem_id).map{|ps| ps.course_detail.id}
 		@course_details=CourseDetail.where(:id=>cd_ids).order(:time)
 
 		respond_to do |format|
-			 format.xlsx{
+			 format.xls{
 			 	response.headers['Content-Type'] = "application/vnd.ms-excel"
 			 	response.headers['Content-Disposition'] = " attachment; filename=\"#{@sem.name}.xls\" "	
 			 }

@@ -1,6 +1,5 @@
-<%= javascript_include_tag "course_content", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "courses/content", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/chart", "data-turbolinks-track" => true %>
-<%= javascript_include_tag "courses/main", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/past_exam", "data-turbolinks-track" => true %>
 <div class="row">
 	<div class="col-md-9 scroll-content col-md-offset-1">
@@ -14,10 +13,11 @@
 				<span class="pull-right">
 					<br>
 					<% if @data[:open_on_latest] %>
-					
+<!--					
 					<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=j @data[:course_detail_id] %>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
 					<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
 					</button>
+-->					
 					&nbsp;
 					<% end %>
 					<span style="display:inline-block">

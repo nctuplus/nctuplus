@@ -1,6 +1,4 @@
 /*
- * app/assets/javascript/coursemap-helper.js
- *
  * Copyright (C) 2014 NCTU+
  *
  * 將傳出來的JSON補充一些資訊(讓client來做而非server)
