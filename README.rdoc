@@ -12,5 +12,5 @@ We also develop cool tools for NCTUers.
 
 Resent projects: 
 * Learning management system
-* Student activities notice board
-* Second-hand book sales platform
+* Student activities bulletin board
+* Second-hand book trading platform

@@ -250,27 +250,11 @@ class UserController < ApplicationController
 			data1 = (course_map.presence) ? course_map.to_tree_json : nil
 			if data1.presence
 				data2=user.courses_stat_table_json
-=begin
-				data2 = user.all_courses.map{|cs|{
-					:id=> cs.course.id,
-					:uni_id=> cs.id,
-					:name=>cs.course.ch_name, 
-					:credit=>cs.course.credit,
-					:score=>cs.score,
-					:cos_type=>cs.course_detail.cos_type,
-					:sem=>((cs.semester_id==0) ? {:year=>0, :half=>0} : {:year=>cs.semester.year, :half=>cs.semester.half}),
-					:cf_id=>cs.course_field_id,
-					:memo=>cs.memo||"",
-					:degree=>cs.course.department.try(:degree)||0,
-				}}
-=end
-				# if has course_map, user must have semester, dept
 				user_info = {
 					:year=>user.year, 
 					:year_now=>Semester::CURRENT.year,
 					:half_now=>Semester::CURRENT.half,
 					:degree=>user.degree, 
-					:map_name=>course_map.name,
 					:student_id=>user.student_id 
 				}
 			else

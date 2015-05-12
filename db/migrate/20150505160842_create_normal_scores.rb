@@ -1,11 +1,11 @@
 class CreateNormalScores < ActiveRecord::Migration
   def change
     create_table :normal_scores, :options => 'ENGINE=InnoDB DEFAULT CHARSET=utf8' do |t|
-			t.integer :user_id, :default=>0, :nil=>false
-			t.integer :course_detail_id, :default=>0, :nil=>false
-			t.integer :course_field_id, :default=>0, :nil=>false
-			t.string :cos_type, :default=>"", :nil=>false
-			t.string :score, :default=>"", :nil=>false
+			t.integer :user_id, :default=>0, :null=>false
+			t.integer :course_detail_id, :default=>0, :null=>false
+			t.integer :course_field_id, :default=>0, :null=>false
+			t.string :cos_type, :default=>"", :null=>false
+			t.string :score, :default=>"", :null=>false
 		end
 		add_index :normal_scores, :user_id
 		add_index :normal_scores, :course_detail_id

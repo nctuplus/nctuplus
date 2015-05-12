@@ -4,6 +4,6 @@ class CourseLogger < Logger
   end
 end
  
-logfile = File.open("#{Rails.root}/log/import_course.log", 'a')  # create log file
+logfile = File.open("#{Rails.root}/log/import_course.log", 'a:UTF-8"')  # create log file
 logfile.sync = true  # automatically flushes data to file
 COURSE_LOGGER = CourseLogger.new(logfile)  # constant accessible anywhere
