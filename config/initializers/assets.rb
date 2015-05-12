@@ -11,5 +11,6 @@ Rails.application.config.assets.precompile +=[
 	'course_maps/manage.js',
 	'course_maps/public.js',
 	'user_course_stat/checker.js',
-	'user_course_stat/cm_check-helper.js'
+	'user_course_stat/cm_check-helper.js',
+	'user_course_stat/report-table.js'
 ]
