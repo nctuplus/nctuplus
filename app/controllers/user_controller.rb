@@ -69,7 +69,7 @@ class UserController < ApplicationController
 		if @user.course_maps.empty?  
 			cm=CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
 			if cm
-				@user.user_course_mapships.create(:course_map_id=>cm.id)
+				@user.user_coursemapships.create(:course_map_id=>cm.id)
 				update_cs_cfids(cm,@user)
 			end
 		end
@@ -102,7 +102,7 @@ class UserController < ApplicationController
 					:name=>course_map.department_ch_name+" 入學年度:"+course_map.year.to_s,
 					:id=>course_map.id,
 					:dept_id=>course_map.department_id,
-					#:sem_id=>course_map.semester_id,
+					:year=>course_map.year,
 					:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
 					:cfs=>course_map.to_tree_json		
 				}#get_cm_res(course_map)

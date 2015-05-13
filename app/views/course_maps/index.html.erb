@@ -5,7 +5,7 @@
 		<%=render "course_maps/public/dept_sidebar"%>
 	</div>
 	</div>
-	
+	<div id="tip-test"></div>
 	<div id="central-view" class="col-md-7" style="margin-left:300px;">
 		<div class="panel panel-default">
 			<div class="panel-body" id="cm-desc">
@@ -15,18 +15,40 @@
 			</div>
 			<h3><strong>Q&A</strong></h3>
 			<hr>
-			
-				<div id="QandA" style="display: none;">
-				</div>
-			
+			<div id="QandA" style="display: none;">
+			</div>
 		</div>
-		
-		
 	</div>
 	
-	<div class="col-md-2 col-md-offset-">
+	<div class="col-md-2">
 		<div class="scroll-sidebar hidden-xs hidden-sm" style="font-size:16px;position:fixed;margin-top:40px;"></div>
 	</div>
+	<ol id="joyRideTipContent">
+		
+		<li data-id="year-selector" data-button="Next">
+			<h4>選取入學年度</h4>
+			<p></p>
+		</li>
+		<li data-id="rules" data-button="Next" data-options="tipLocation:right">
+			<h2>修課規定</h2>
+			<p>至少需修0學分通常為該領域的其他選修即可滿足該領域的條件，若非上述情形則請回報</p>			
+		</li>
+		<li data-id="course-table" data-button="Next" data-options="tipLocation:right">
+			<h2>課程列表</h2>
+			<ol>
+				<li>藍底色的列為可互相抵免的課程列表，可按左邊的+展開</li>
+			</ol>
+		</li>
+		<li data-text="Next" class="">
+			<h2>Tips</h2>
+			<p>
+			此頁面是由團隊成員將學校的<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3">必修科目表</a>手動輸入至系統，若有錯誤請至下方Q&A區回報，我們將會儘快處理<br>
+			我們正與一些系洽談中，之後希望由系助理來協助輸入，若同學願意擔任該系管理員請至粉專私訊 :)<br>
+			目前可以幫同學計算列表上的必修/必選修等課程，但<strong>系外選修</strong>、<strong>任選理工科目</strong>、<strong>英文授課</strong>等較特殊的規則目前無法計算<br>			
+			</p>
+		</li>
+		
+  </ol>
 	
 </div>
 <script>
@@ -40,6 +62,7 @@
 			console.log(data);
 			$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
 				$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });
+				
 			});
 			$("#cm-desc").html(tmpl("cm_public", data),function(){});
 			$("#year-"+year).addClass("disabled");
@@ -51,9 +74,25 @@
 			});
 			get_piechart_data("#chart-content", data.course_map);
 			
-			// QandA
+			$("#sem-btn").click();
+			
+			$('#joyRideTipContent').joyride({
+				autoStart : true,
+				postStepCallback : function (index, tip) {
+					if (index == 1) {
+						$(".toggle-group:visible")[0].click();
+					}						
+				},
+				modal:true,
+				expose: true
+			});
+				
+			
+			
+			/* QandA
 			$('#QandA').show();
 			$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
+			*/
 		});
 
 	}
@@ -108,11 +147,13 @@
 			obj.text("收回課程群組");
 			$("[class*=cf-]").show();
 			obj.attr('type','hide');
+			$(".fa-plus").attr("class","fa fa-minus");
 		}
 		else{
 			obj.text("展開課程群組");
 			$("[class*=cf-]").hide();
 			obj.attr('type','show');
+			$(".fa-minus").attr("class","fa fa-plus");
 		}
 	}
 	

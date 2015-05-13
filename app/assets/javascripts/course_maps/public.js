@@ -1,16 +1,16 @@
 /*
- * app/assets/javascript/coursemap/public.js
- *
  * Copyright (C) 2014 NCTU+
  *
- * Scroll&圖表
+ * Scroll&圖表&使用教學
  * For course_maps/index
  * Modified at 2015/3/24
  */
 
 //= require jquery.scrollTo.min
 //= require highcharts-custom
-
+//= require page-tour/jquery.cookie
+//= require page-tour/modernizr.mq
+//= require page-tour/jquery.joyride-2.1
 
 function toggle_cf_table(type){
 	var _class={true:'cf',false:'sem'};
