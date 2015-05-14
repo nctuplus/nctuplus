@@ -52,49 +52,45 @@
 	
 </div>
 <script>
-	function load_cm(dept_id,year){
-		
+	function load_cm(dept_id,year){		
 		$.getJSON("/course_maps/public",{
 			dept_id: dept_id,
 			year: year
-		},
-		function(data){
-			console.log(data);
-			$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
-				$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });
+			},
+			function(data){
+				console.log(data);
+				$("#cm-desc").html(tmpl("cm_public", data));
+				$("#year-"+year).addClass("disabled");
+				$("#cf-btn").click();
+				//$("#sem-btn").click();
+				get_piechart_data("#chart-content", data.course_map);
+				if(!isMobile){
+					$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
+						$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });						
+					});
+					$('body').scrollspy('refresh');
+					$('.main-menu li a').click(function(event) {
+							event.preventDefault();
+							$('body').scrollTo($(this).attr('href'),700,{offset:-60});
+					});
+				}
 				
-			});
-			$("#cm-desc").html(tmpl("cm_public", data),function(){});
-			$("#year-"+year).addClass("disabled");
-			$("#cf-btn").click();
-			$('body').scrollspy('refresh');
-			$('.main-menu li a').click(function(event) {
-					event.preventDefault();
-					$('body').scrollTo($(this).attr('href'),700,{offset:-60});
-			});
-			get_piechart_data("#chart-content", data.course_map);
-			
-			$("#sem-btn").click();
-			
-			$('#joyRideTipContent').joyride({
-				autoStart : true,
-				postStepCallback : function (index, tip) {
-					if (index == 1) {
-						$(".toggle-group:visible")[0].click();
-					}						
-				},
-				modal:true,
-				expose: true
-			});
-				
-			
-			
-			/* QandA
-			$('#QandA').show();
-			$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
-			*/
-		});
-
+				$('#joyRideTipContent').joyride({
+					autoStart : true,
+					postStepCallback : function (index, tip) {
+						if (index == 1) {
+							$(".toggle-group:visible")[0].click();
+						}						
+					},
+					modal:true,
+					expose: true
+				});
+				/* QandA
+				$('#QandA').show();
+				$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
+				*/
+			}
+		);
 	}
 	$(document).ready(function(){
 		

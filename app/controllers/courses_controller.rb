@@ -5,6 +5,19 @@ class CoursesController < ApplicationController
 
 	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
+	def index_new
+		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
+		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
+		@dept_sel=Department.searchable.pluck(:ch_name, :id)
+		if !params[:custom_search].blank?	#if user key in something
+			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
+		else
+			@q = CourseDetail.search(params[:q])		
+		end
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
+		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
+	end
+	
 	def index
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
 		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]

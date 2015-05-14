@@ -68,6 +68,7 @@ Nctuplus::Application.routes.draw do
 
 	resources :courses, :only => [:index, :show] do
 		collection do
+			get "index_new"
 			get "search_mini"
 			get "search_mini_cm"
 			get "simulation"

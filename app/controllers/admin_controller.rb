@@ -9,7 +9,7 @@ class AdminController < ApplicationController
 	
 	def users
 		@role_sel=[[ "一般使用者",1 ], ["學校系辦單位",2 ], ["系統管理員", 0]]
-		@users=User.includes(:department, :course_simulations, :course_maps).page(params[:page]).per(20)#limit(50)
+		@users=User.includes(:department, :course_maps).page(params[:page]).per(20)#limit(50)
 		@course_map = CourseMap.all
 		unless request.xhr?
 			@data = User.all.joins(:department).group(:ch_name).count
