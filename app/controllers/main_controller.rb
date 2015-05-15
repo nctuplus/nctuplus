@@ -10,7 +10,7 @@ class MainController < ApplicationController
 
 	
  	def index
-		session[:user_id]=3
+		
   end
 
 	def get_specified_classroom_schedule
