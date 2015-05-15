@@ -69,7 +69,7 @@ class UserController < ApplicationController
 		if @user.course_maps.empty?  
 			cm=CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
 			if cm
-				@user.user_course_mapships.create(:course_map_id=>cm.id)
+				@user.user_coursemapships.create(:course_map_id=>cm.id)
 				update_cs_cfids(cm,@user)
 			end
 		end

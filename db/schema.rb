@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150511183409) do
+ActiveRecord::Schema.define(version: 20150513155526) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -25,6 +25,24 @@ ActiveRecord::Schema.define(version: 20150511183409) do
   add_index "agreed_scores", ["course_field_id"], name: "index_agreed_scores_on_course_field_id", using: :btree
   add_index "agreed_scores", ["course_id"], name: "index_agreed_scores_on_course_id", using: :btree
   add_index "agreed_scores", ["user_id"], name: "index_agreed_scores_on_user_id", using: :btree
+
+  create_table "auth_e3s", force: true do |t|
+    t.integer  "user_id"
+    t.string   "student_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "auth_facebooks", force: true do |t|
+    t.integer  "user_id"
+    t.string   "name"
+    t.string   "email"
+    t.string   "uid"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -447,18 +465,23 @@ ActiveRecord::Schema.define(version: 20150511183409) do
 
   create_table "users", force: true do |t|
     t.string   "name"
-    t.integer  "year",             default: 0
-    t.string   "activate_token"
+    t.integer  "year",                   default: 0
     t.string   "provider"
-    t.string   "uid"
-    t.string   "oauth_token"
-    t.datetime "oauth_expires_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "department_id"
-    t.string   "student_id"
-    t.boolean  "agree",            default: false
-    t.integer  "role",             default: 1
+    t.boolean  "agree",                  default: false
+    t.integer  "role",                   default: 1
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.integer  "sign_in_count",          default: 0,     null: false
+    t.datetime "current_sign_in_at"
+    t.datetime "last_sign_in_at"
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
   end
 
   add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree

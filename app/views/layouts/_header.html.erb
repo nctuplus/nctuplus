@@ -59,8 +59,8 @@
 			
 				<li class="dropdown">		
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<% if current_user.uid.presence%>
-							<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
+						<% if current_user.hasFb? %>
+							<%= image_tag "http://graph.facebook.com/"<<current_user.auth_facebook.uid<<"/picture", size: "25x25" %>
 						<% else %>
 							學號 
 						<% end %>

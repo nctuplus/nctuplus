@@ -1,12 +1,16 @@
 Nctuplus::Application.routes.draw do
 	
+  devise_for :users, :skip=>[:registrations, :sessions, :confirmations, :passwords], :controllers => { :omniauth_callbacks => "callbacks" }
+
+	
+	
 	root :to => "main#index"
 	
 	
 	resources :events
 	
 #--------- login control and session --------------
-  match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
+ # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
   match 'auth/failure', to: redirect('/'), via: [:get, :post]
   match 'signout', to: 'sessions#destroy', via: [:get, :post]
   match 'signin', to: 'sessions#sign_in', via: [:get, :post]	

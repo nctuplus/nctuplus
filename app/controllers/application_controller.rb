@@ -40,8 +40,8 @@ class ApplicationController < ActionController::Base
   	flag = true
     if current_user.nil?
 			msg, flag = '請先登入,謝謝' , false
-		elsif current_user.student_id.blank?
-			msg, flag = '請綁定e3,謝謝' , false
+		elsif current_user.provider !="e3"
+			msg, flag = '必須由E3登入才可使用' , false
 		end
 		if !flag	
 			alertmesg("info",'Sorry',msg)
@@ -55,8 +55,8 @@ class ApplicationController < ActionController::Base
   	flag = true
     if current_user.nil?
 			msg, flag = '請先登入,謝謝' , false
-		elsif current_user.uid.nil?
-			msg, flag = '請綁定FB,謝謝' , false
+		elsif current_user.provider!="facebook"
+			msg, flag = '必須由facebook登入才可使用' , false
 		end
 		if !flag	
 			alertmesg("info",'Sorry',msg)

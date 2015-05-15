@@ -29,8 +29,8 @@
 				<p class="form-title">
 					NCTU<sup>+</sup> Log In
 				</p>
-				
-				<%=form_tag("signin",:class=>"login", :id=>"login-form", :autocomplete=>"off") do %>
+				<!--  -->
+				<%=form_tag("/auth/E3/callback",:class=>"login", :id=>"login-form", :autocomplete=>"off") do %>
 					<%=text_field_tag :username,"", placeholder: "Username", class: "username", required: "true" %>
 					<%=password_field_tag :password,"", placeholder: "Password", class: "password", required: "true" %>
 
