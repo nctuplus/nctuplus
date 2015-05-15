@@ -62,7 +62,11 @@
 <script>
 	$(document).ready(function() {
 		<% if flash[:notice] %>
-			toastr.warning("<%= flash[:notice][:message] %>");
+      <% if flash[:notice].kind_of? String%>
+		    toastr.warning("<%= flash[:notice] %>");
+		  <% else %>
+			  toastr.warning("<%= flash[:notice][:message] %>");
+		  <% end %>
 		<% end %>
 		$('#login-fb').click(function(){
 			$(this).attr('disabled', 'disabled');

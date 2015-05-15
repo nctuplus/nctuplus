@@ -1,6 +1,12 @@
 class AuthE3 < ActiveRecord::Base
   belongs_to :user
   
+  def to_json
+    {
+      :student_id=> self.student_id
+    }
+  end
+  
   def self.from_omniauth(student_id, password)
     data = E3Service.login(student_id, password)
     if data[:auth]

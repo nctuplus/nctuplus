@@ -136,11 +136,11 @@
 		
 		  data = json_data.head ;
 		  $("#course_content_head").html(tmpl("content-head", data));
-			head_binding(<%=j (current_user) ? "true" : "false"%>, cd_id);	
+			head_binding(<%=j (user_signed_in?) ? "true" : "false"%>, cd_id);	
 		
 		  data = json_data.list; 
 		  $('#course_content_lists').html(tmpl("content-lists", data));
-			lists_binding(<%=j (current_user) ? "true" : "false"%>, cd_id);			
+			lists_binding(<%=j (user_signed_in?) ? "true" : "false"%>, cd_id);			
 		
 		  data = json_data.comment ;
 		  $('#comments').html(tmpl("course-comments", data));

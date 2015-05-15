@@ -59,7 +59,7 @@
 			
 				<li class="dropdown">		
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<% if current_user.hasFb? %>
+						<% if session[:auth_facebook].presence %>
 							<%= image_tag "http://graph.facebook.com/"<<current_user.auth_facebook.uid<<"/picture", size: "25x25" %>
 						<% else %>
 							學號 
@@ -68,7 +68,7 @@
 					<% end %>
 					<ul class="dropdown-menu">
 						<li>
-							<%= link_to  "登出", "/signout" %>
+							<%= link_to  "登出", destroy_user_session_path, :method => :delete %>
 						</li>					
 					</ul>
 				</li>

@@ -1,35 +1,13 @@
 class SessionsController < ApplicationController
+=begin
   def create
     user = User.from_omniauth(env["omniauth.auth"])
     session[:user_id] = user.id
     redirect_to "/user"
   end 
-
+=end
 	def sign_in
-		if current_user
-			redirect_to :root 
-		else	
-			if request.post?
-				data = E3Service.login(params[:username], params[:password])
-				if data[:e3_auth]
-					if data[:user]
-						session[:user_id] = data[:user].id
-					else
-						new_user = User.create(
-							:student_id=>params[:username],
-							:name=>params[:username]
-						)	
-						session[:user_id] = new_user.id
-					end
-					redirect_to :root
-				else
-					alertmesg("info",'warning',"登入失敗") 
-					render "/main/sign_in", :layout=>false
-				end	
-			else
-				render "/main/sign_in",  :layout=>false	
-			end	
-		end	
+		render "/main/sign_in", :layout=>false
 	end
 	
 
@@ -50,7 +28,10 @@ class SessionsController < ApplicationController
 	
 	
   def destroy
-    session[:user_id] = nil
+    #session[:user_id] = nil
+    session[:auth_e3] = nil
+    session[:auth_fb] = nil
+    sign_out current_user
     redirect_to root_url
   end
 end

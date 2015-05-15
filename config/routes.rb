@@ -1,7 +1,9 @@
 Nctuplus::Application.routes.draw do
 	
-  devise_for :users, :skip=>[:registrations, :sessions, :confirmations, :passwords], :controllers => { :omniauth_callbacks => "callbacks" }
-
+  devise_for :users, :skip=>[:registrations, :confirmations, :passwords], :controllers => { :omniauth_callbacks => "callbacks" }
+  devise_scope :users do
+   get "sign_out", to: "sessions/destroy"
+  end
 	
 	
 	root :to => "main#index"

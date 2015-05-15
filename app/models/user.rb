@@ -124,7 +124,6 @@ class User < ActiveRecord::Base
     user.name = hash[:name]
     user.email = hash[:email]
     user.password = hash[:password] 
-    user.provider=hash[:provider]
     user.save!
     return user
   end

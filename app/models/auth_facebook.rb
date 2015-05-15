@@ -1,6 +1,15 @@
 class AuthFacebook < ActiveRecord::Base
   belongs_to :user
   
+  
+  def to_json
+    {
+      :uid=>self.uid,
+      :name=>self.name,
+      :email=>self.email
+    }
+  end
+  
   def self.from_omniauth(auth)
     auth_facebook = where(auth.slice(:uid)).first_or_initialize.tap do |f|
       f.uid = auth.uid
