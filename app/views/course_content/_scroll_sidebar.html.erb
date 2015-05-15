@@ -15,11 +15,13 @@
 
 <script>
 $(document).ready(function() {
-	$('body').scrollspy({ target: '#sidebar-menu',offset:60 });
-  	var sidebarMainMenu = $('#sidebar-menu .main-menu');
-	$('.main-menu li a').click(function(event) {
-    	event.preventDefault();
-		$('body').scrollTo($(this).attr('href'),700,{offset:-60});
-	});
+	if(!isMobile){
+		$('body').scrollspy({ target: '#sidebar-menu',offset:60 });
+			var sidebarMainMenu = $('#sidebar-menu .main-menu');
+		$('.main-menu li a').click(function(event) {
+				event.preventDefault();
+			$('body').scrollTo($(this).attr('href'),700,{offset:-60});
+		});
+	}
 });
 </script>

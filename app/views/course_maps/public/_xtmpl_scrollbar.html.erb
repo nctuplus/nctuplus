@@ -1,9 +1,9 @@
 <script type="text/x-tmpl" id="cf_scrolllist">
 	{% if(o){ %}
 		<ul class="nav main-menu">
-			<li class=""><a href="#title">{%=o.dept_name+" "+o.year%}</a></li>
+			<li><a id="title-scroller" href="#title">{%=o.dept_name+" "+o.year%}</a></li>
 		{% if(o.course_map){ %}
-			<li class=""><a href="#memo">備註</a></li>
+			
 			<li class=""><a href="#rules">修課規定</a></li>
 			<li class=""><a href="#chart-content">圖表</a></li>
 			<li class=""><a href="#course-table">課程列表</a></li>
@@ -12,6 +12,7 @@
 				{% print(genCfTree(cf),true); %}	
 			{% } %}
 			</ul>
+			<li class=""><a href="#memo">備註</a></li>
 			<li class=""><a href="#QandA">Q&A</a></li>
 		{% } %}
 			

@@ -1,0 +1,44 @@
+<%=render 'courses/search/search_js' %>
+
+<div id="bg-image" style="">
+	<div id="results" class="row vertical-center">
+		<div class="col-md-12 col-sm-12 col-xs-12 text-center">
+			<%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
+					<button class="btn btn-warning" id="" onclick="">
+						<%= fa_icon "cog" %>
+					</button>
+					<div style="width:300px;display:inline-block;">
+						<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
+						<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間/向度" %>
+					</div>
+					<button class="btn btn-success" id="search" onclick="search_by_text();">
+						<%= fa_icon "search" %>
+					</button>
+					<button class="btn btn-success" id="" onclick="">
+						<%= fa_icon "star" %>
+					</button>
+			<% end %>
+			<br>
+			<button class="btn btn-info" id="search" onclick="">
+				<%= fa_icon "book" %>
+			</button>
+			<button class="btn btn-info" id="search" onclick="">
+				<%= fa_icon "pencil" %>
+			</button>
+			<button class="btn btn-info" id="search" onclick="">
+				<%= fa_icon "file-text-o" %>
+			</button>
+		</div>
+	</div>
+	
+</div>
+
+<style>
+	#bg-image{
+		background: url(<%=asset_path("head_3.jpg")%>); //50% 64% no-repeat;
+		-webkit-background-size: cover;
+		-moz-background-size: cover;
+		-o-background-size: cover;
+		background-size: cover;
+	}
+</style>
