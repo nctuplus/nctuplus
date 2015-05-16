@@ -1,22 +1,25 @@
 Nctuplus::Application.routes.draw do
 	
-  devise_for :users, :skip=>[:registrations, :confirmations, :passwords], :controllers => { :omniauth_callbacks => "callbacks" }
-  devise_scope :users do
-   get "sign_out", to: "sessions/destroy"
-  end
-	
-	
 	root :to => "main#index"
 	
+#--------- [devise] user account concerned --------------	
+	devise_for :users, :skip=>[:registrations, :confirmations, :passwords],
+             :controllers => { :omniauth_callbacks => "callbacks" },
+             :path=>"/",
+             :path_names => {
+              :sign_in  => 'login',
+              :sign_out => 'logout' }
+
 	
+#--------- events --------------	
 	resources :events
 	
-#--------- login control and session --------------
+#--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
-  match 'auth/failure', to: redirect('/'), via: [:get, :post]
-  match 'signout', to: 'sessions#destroy', via: [:get, :post]
-  match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
-	get "sessions/get_courses"
+ # match 'auth/failure', to: redirect('/'), via: [:get, :post]
+ # match 'signout', to: 'sessions#destroy', via: [:get, :post]
+ # match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
+# get "sessions/get_courses"
 	
 	
 

@@ -12,11 +12,7 @@
 							<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
 								<font color="white"><%=fa_icon "search" %></font>
 							</button>
-<!--							
-							<button id="cart-btn" class="btn btn-circle btn-info pull-right" onclick="show_cart_select()" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "shopping-cart"%></font>
-							</button>
--->							
+						
 						</h4>
 					</div>
 					<div class="panel-body">
@@ -133,11 +129,7 @@ $(document).ready(function(){
 			$(".scrollable").html(tmpl("search_result", data));
 		});
 	}
-	function show_cart_select(){
-		$.getJSON("/sessions/get_courses",function(data){
-			$(".scrollable").html(tmpl("search_result", data));
-		});
-	}
+
 	function show_cart(){
 		$("#search_div").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	}

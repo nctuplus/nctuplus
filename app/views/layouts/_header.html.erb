@@ -74,7 +74,7 @@
 				</li>
 		<% else %>
 				<li>
-					<%=link_to "登入","/signin" %>
+					<%=link_to "登入", new_user_session_path %>
 				</li>	
 		<% end %>  			
 			</ul>
@@ -86,16 +86,7 @@
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 <script>
 	$(document).ready(function(){	
-		// shopping cart
-/*		
-		$("#cart_but").click(
-			function(){		
-			  $("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
-				$("#global_modal .modal-body").load("/courses/show_cart");
-				$("#global_modal").modal('show');
-			}
-		);
-*/
+
 		//歷年課表
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
