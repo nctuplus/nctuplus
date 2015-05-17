@@ -8,6 +8,9 @@ class AuthE3 < ActiveRecord::Base
   end
   
   def self.from_omniauth(student_id, password, current_user)
+    if !student_id or !password
+      return {:auth=>false, :message=>"請輸入帳號密碼"}
+    end
     data = E3Service.login(student_id, password)
     if data[:auth]
       auth_e3 = where(:student_id=>student_id).first_or_initialize.tap do |e|
@@ -25,7 +28,7 @@ class AuthE3 < ActiveRecord::Base
             e.user_id = current_user.id # binding
           end  
         elsif current_user
-          return {:auth=>false, msg=>"此認證帳號已被使用"}
+          return {:auth=>false, :message=>"此認證帳號已被使用"}
         end 
         e.save!
       end
