@@ -31,10 +31,12 @@ class User < ActiveRecord::Base
 	has_many :course_details, :through=> :normal_scores
 	has_many :semesters, :through=> :course_details
 	
+
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
 	end
-	
+
+
 	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
 		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name}
 		table_to_be_moved.each do |table_name|

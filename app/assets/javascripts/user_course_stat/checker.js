@@ -187,11 +187,9 @@ function check_cf(user_courses,cf){	//最上層的check
 		case 1:	//必修
 			var res=_cf_course_match(user_courses, cf) ;
 			cf.match_credit=res.match_credit;
-			return {match_credit: res.match_credit, result: res.all_match};
-			
+			return {match_credit: res.match_credit, result: res.all_match};		
 			break;
 		case 2:	//X選Y
-		
 			var res = _cf_course_match(user_courses, cf) ;
 			var match = (res.match_credit >= cf.credit_need) ? true : false;
 			var match_arr=[];
@@ -199,19 +197,23 @@ function check_cf(user_courses,cf){	//最上層的check
 				match_arr.push(res.match_credit >= credit.credit_need);
 			}
 			cf.match_credit=res.match_credit;
-			//console.log(match_arr);
 			return {match_credit: res.match_credit, result: match,new_result:match_arr}; 		
 			break;
 		case 3:	//領域群組
-			var match_credit = 0, match_field = 0 ;
+			var match_credit = 0, match_field = 0,sub_res=[] ;
 			for(var i = 0, sub_cf;sub_cf=cf.child_cf[i];i++){
 				var res = check_cf(user_courses, sub_cf) ;
 				match_credit += res.match_credit ;
 				if(res.result)
-					match_field++ ;
+					match_field++;
+				sub_res.push({
+					cf_name: res.cf_name,
+					result: res.result,
+					res_text: res.match_credit+"/"+sub_cf.credit_need
+				});
 			}
-			var match = (match_field >= cf.field_need && match_credit >= cf.credit_need) ? true : false ;	
-			return {match_credit: match_credit, result: match}; 
+			var match = (match_field >= cf.field_need && match_credit >= cf.credit_need);	
+			return {match_credit: match_credit, match_field: match_field, result: match, sub_res: sub_res}; 
 			break;
 		case 4:	//領域
 			var match_credit = 0, match = true;
@@ -237,9 +239,7 @@ function check_cf(user_courses,cf){	//最上層的check
 				}
 				else{ //if 必修 
 					match = res.result ;
-				}
-				
-				
+				}				
 			}
 			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
 				if(sub_cf.cf_type==2){				
@@ -249,8 +249,6 @@ function check_cf(user_courses,cf){	//最上層的check
 								name: sub_cf.credit_list[j].name,
 								credit_need: sub_cf.credit_list[j].credit_need,								
 							}
-							//console.log(sub_cf);
-							
 							break;
 						}
 					}
@@ -262,14 +260,13 @@ function check_cf(user_courses,cf){	//最上層的check
 				for(; i<res.new_result.length;i++){				
 					if(final_res[i]){
 						any_match=true;
-						//console.log(cf.child_cf[0].credit_list[i].name);
 						break;
 					}
 				}
 				match=match&&any_match;//match 必修 and one of 選修's credit list
 			}
-			
 			return {
+				cf_name: cf.cf_name,
 				match_credit: match_credit,
 				result: match,
 				//match_index:i
