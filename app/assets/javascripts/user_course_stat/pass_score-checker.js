@@ -16,5 +16,9 @@ function get_pass_courses(pass_score,last_sem_id,courses){
 }
 
 function check_pass(pass_score,score){
-	return score=="通過" || score=="修習中" || parseInt(score)>=pass_score
+	return score=="通過" || /*score=="修習中" ||*/ parseInt(score)>=pass_score
+}
+
+function checkPassTaking(pass_score,score){
+	return  score=="修習中" || check_pass(pass_score,score)
 }

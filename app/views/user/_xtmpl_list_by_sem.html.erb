@@ -14,21 +14,24 @@
 		</tr>
 		
 		{% for (var j=0, course; course=courses[j]; j++) { %}
-			{% var pass_class=""; %}
-			{% if(course.sem_id==o.last_sem_id||check_pass(o.pass_score,course.score)) { %}
+			
+			{% if(checkPassTaking(o.pass_score,course.score)) { %}
 				{% if(local_credits[course.cos_type]){ %}
 					{% local_credits[course.cos_type]+=parseInt(course.credit); %}
 				{% }else{ %}
 					{% local_credits[course.cos_type]=parseInt(course.credit); %}
 				{% } %}
-			{% } else{ %}
-			{% pass_class="danger"; %}
 			{% } %}
-			<tr class="row {%=pass_class%}">
+			<tr class="row">
 				<td class="col-md-6">
 					<h4 class="text-center">
-						{% if(course.sem_id!=o.last_sem_id&&!check_pass(o.pass_score,course.score)) { %}
-								<%=image_tag asset_path("failed.png"),size:"70x30"%>
+						{% if(!checkPassTaking(o.pass_score,course.score)) { %}
+							{% if(course.score=="") %}
+								[<font color="red">缺(請重新匯入)</font>]
+							{% else if (course.score=="W")%}
+								(<font color="gray">退</font>)
+							{% else %}
+								<%=image_tag asset_path("failed.png"),size:"70x30"%>							
 						{% } %}
 						<a href="/courses/{%=course.cd_id%}" target="blank">{%=course.name%}</a> | 
 						{%=course.t_name%} | 

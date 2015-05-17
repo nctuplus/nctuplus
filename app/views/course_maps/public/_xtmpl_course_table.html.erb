@@ -6,17 +6,23 @@
 			<a id="year-101" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=101">101</a>
 			<a id="year-102" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=102">102</a>
 			<a id="year-103" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=103">103</a>
-		</div>
+		</div>		
 	{% var cm=o.course_map; %}
 	{% if(!cm){ %}
-		</h3>
-		<hr>
-		<h4>尚無資料!</h4>
+		<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
+			<%=fa_icon "bookmark-o"%>必修科目表
+		</a>
+	</h3>
+	<hr>
+	<h4>尚無資料!</h4>
 	{% } else{ %}
 		&nbsp;&nbsp;畢業學分:<strong>{%=cm.total_credit%}</strong>
-		</h3>
-		<hr>
-		
+		<button class="btn btn-info" onclick="show_tip();">使用導覽</button>
+		<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
+			<%=fa_icon "bookmark-o"%>必修科目表
+		</a>
+	</h3>
+	<hr>
 		<section id="rules">
 		<h3><strong>修課規定</strong></h3>
 		{% for(var i=0,cf;cf=cm.cfs[i];i++){ %}		

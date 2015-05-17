@@ -20,12 +20,9 @@ class UserController < ApplicationController
 			case params[:type]
 				when "stat"
 					if params[:sem_id].blank?
-						#cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}
-						
-						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}
-						
-						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}
-						
+						#cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
+						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
+						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}					
 					else 
 						#cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}
 						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_advance_json}

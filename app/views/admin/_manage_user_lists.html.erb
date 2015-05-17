@@ -15,7 +15,7 @@
 		<td>尚未填寫</td>
 	<% end %>
 	<td>
-		<%=link_to user.total_credit, "/user/special_list?uid=#{user.id}" %>
+		<%=link_to user.total_credit, "/user/?uid=#{user.id}" %>
 	</td>
 	<td>
 	<% cm_id=user.course_maps.first.nil? ? 0 :user.course_maps.first.id %>  

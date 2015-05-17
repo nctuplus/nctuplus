@@ -45,7 +45,15 @@
 						{%=course.sem_name %} | 
 						{%=course.name%} | 
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit %}</strong> | 
-						<%= fa_icon "flag-checkered"%> <strong>{%=course.score %}</strong>
+						<%= fa_icon "flag-checkered"%>
+						<strong>
+						{% if(course.score=="") { %}
+							<font color="red">缺(請重新匯入)</font>
+						{% }else{ %}
+							{%=course.score %}
+						{% } %}
+						
+						</strong>
 						{% if(cfs.length>1){ %} 
 						<button class="btn btn-sm btn-default" onclick="$(this).next().toggleClass('hidden');">選擇學程</button>
 						<div class="hidden" style="width:250px;display:inline-block;">

@@ -24,6 +24,12 @@
 		<div class="scroll-sidebar hidden-xs hidden-sm" style="font-size:16px;position:fixed;margin-top:40px;"></div>
 	</div>
 	<ol id="joyRideTipContent">
+		<li data-text="Next" class="">
+			<h2>Tips</h2>
+			<p>
+			請使用Enter鍵或滑鼠點擊灰色處觀看	
+			</p>
+		</li>
 		
 		<li data-id="year-selector" data-button="Next">
 			<h4>選取入學年度</h4>
@@ -35,12 +41,10 @@
 		</li>
 		<li data-id="course-table" data-button="Next" data-options="tipLocation:right">
 			<h2>課程列表</h2>
-			<ol>
-				<li>藍底色的列為可互相抵免的課程列表，可按左邊的+展開</li>
-			</ol>
+			<p>藍底色的列為可互相抵免的課程列表，可按左邊的+展開</p>
 		</li>
 		<li data-text="Next" class="">
-			<h2>Tips</h2>
+			<h2>We need help!</h2>
 			<p>
 			此頁面是由團隊成員將學校的<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3">必修科目表</a>手動輸入至系統，若有錯誤請至下方Q&A區回報，我們將會儘快處理<br>
 			我們正與一些系洽談中，之後希望由系助理來協助輸入，若同學願意擔任該系管理員請至粉專私訊 :)<br>
@@ -52,17 +56,24 @@
 	
 </div>
 <script>
+	function show_tip(){
+		$('#joyRideTipContent').joyride("destroy");
+		$('#joyRideTipContent').joyride({
+			autoStart : true,
+			cookieMonster: false
+		});
+	}
 	function load_cm(dept_id,year){		
 		$.getJSON("/course_maps/public",{
 			dept_id: dept_id,
 			year: year
 			},
 			function(data){
-				console.log(data);
+				//console.log(data);
 				$("#cm-desc").html(tmpl("cm_public", data));
 				$("#year-"+year).addClass("disabled");
-				$("#cf-btn").click();
-				//$("#sem-btn").click();
+				//$("#cf-btn").click();
+				$("#sem-btn").click();
 				get_piechart_data("#chart-content", data.course_map);
 				if(!isMobile){
 					$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
@@ -77,8 +88,10 @@
 				
 				$('#joyRideTipContent').joyride({
 					autoStart : true,
+					cookieMonster: true,           
+					cookieName: 'CourseMapPublicTip', 
 					postStepCallback : function (index, tip) {
-						if (index == 1) {
+						if (index == 2) {
 							$(".toggle-group:visible")[0].click();
 						}						
 					},
