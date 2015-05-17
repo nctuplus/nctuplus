@@ -39,11 +39,7 @@
 			
 			<ul class="nav navbar-nav navbar-right">
 			<% if current_user %>	
-<!--			
-				<li>
-					<a class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :class=>"toolTip clickable-hover", :id=>"cart_but", :title=>"觀察名單") %></a>
-				</li>		
--->		
+		
 				<li>
 					<a href="#" class="toolTip dropdown-toggle toolTip" data-toggle="dropdown" title="課表"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
 						<ul class="dropdown-menu">
@@ -59,8 +55,8 @@
 			
 				<li class="dropdown">		
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<% if current_user.uid.presence%>
-							<%= image_tag "http://graph.facebook.com/"<<current_user.uid<<"/picture", size: "25x25" %>
+						<% if session[:auth_facebook].presence %>
+							<%= image_tag "http://graph.facebook.com/"<<current_user.auth_facebook.uid<<"/picture", size: "25x25" %>
 						<% else %>
 							學號 
 						<% end %>
@@ -68,13 +64,13 @@
 					<% end %>
 					<ul class="dropdown-menu">
 						<li>
-							<%= link_to  "登出", "/signout" %>
+							<%= link_to  "登出", destroy_user_session_path, :method => :delete %>
 						</li>					
 					</ul>
 				</li>
 		<% else %>
 				<li>
-					<%=link_to "登入","/signin" %>
+					<%=link_to "登入", new_user_session_path %>
 				</li>	
 		<% end %>  			
 			</ul>
@@ -86,16 +82,7 @@
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 <script>
 	$(document).ready(function(){	
-		// shopping cart
-/*		
-		$("#cart_but").click(
-			function(){		
-			  $("#global_modal .modal-content").html('').append('<div class="modal-body"></div>') ;
-				$("#global_modal .modal-body").load("/courses/show_cart");
-				$("#global_modal").modal('show');
-			}
-		);
-*/
+
 		//歷年課表
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);

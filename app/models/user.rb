@@ -1,8 +1,15 @@
 class User < ActiveRecord::Base
-	
+  # Include default devise modules. Others available are:
+  # :confirmable, :lockable, :timeoutable and :omniauthable
+  devise :database_authenticatable, :registerable,
+         :recoverable, :rememberable, :trackable, :validatable,
+	       :omniauthable, :omniauth_providers => [:facebook, :E3]
 	belongs_to :department
 	delegate :ch_name, :to=> :department, :prefix=>true
 	delegate :degree, :to=> :department
+	
+	has_one :auth_facebook
+	has_one :auth_e3
 	
 	has_many :past_exams
 	has_many :discusses
@@ -24,8 +31,9 @@ class User < ActiveRecord::Base
 	has_many :course_details, :through=> :normal_scores
 	has_many :semesters, :through=> :course_details
 	
-	validates :uid, :uniqueness => {:scope => [ :student_id]}
-
+	def student_id
+	  self.try(:auth_e3).try(:student_id)
+	end
 	
 	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
 		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name}
@@ -113,18 +121,14 @@ class User < ActiveRecord::Base
 		}
 		return (taked+agreed).sort_by{|x|x[:cf_id]}.reverse
 	end
-	
-  def self.from_omniauth(auth)
-    where(auth.slice(:provider, :uid)).first_or_initialize.tap do |user|
-      user.provider = auth.provider
-      user.uid = auth.uid
-      user.name = auth.info.name
-      user.oauth_token = auth.credentials.token
-      user.oauth_expires_at = Time.at(auth.credentials.expires_at)
-      user.save!
-    end
+
+  def self.create_from_auth(hash)
+    user = self.new
+    user.name = hash[:name]
+    user.email = hash[:email]
+    user.password = hash[:password] 
+    user.save!
+    return user
   end
-   
-  
   
 end

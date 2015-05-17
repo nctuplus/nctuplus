@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html> 
+<head>
+<!--<link rel="shortcut icon" href="/favicon.ico" />-->
+  <title>NCTU+</title>
+  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
+  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
+
+  <%= csrf_meta_tags %>
+
+	<% if params[:controller]!="main"%>
+		<meta name="robots" content="noindex">
+	<% end %>
+	<meta name="description" content="NCTU+ 交大智慧選課系統">
+</head>
+
+<style>
+
+
+
+.wrap
+{
+	width: 100%;
+	height: 100%;
+	min-height: 100%;
+	/*position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 99;*/
+}
+
+p.form-title
+{
+    font-family: 'Open Sans' , sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+    color: #FFFFFF;
+    margin-top: 5%;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+form
+{
+	width: 250px;
+	margin: 0 auto;
+}
+
+form.login input[type="text"], form.login input[type="password"]
+{
+	width: 100% !important;
+	margin: 0;
+	padding: 5px 10px;
+	background: 0 !important;
+	border: 0;
+	border-bottom: 1px solid #FFFFFF;
+	outline: 0;
+	//font-style: italic;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: 1px;
+	margin-bottom: 5px ;
+	color: #FFFFFF !important;
+	outline: 0;
+}
+
+.login-btn
+{
+	width: 100%;
+	font-size: 14px;
+	//text-transform: uppercase;
+	font-weight: bold;
+	margin-top: 16px;
+	outline: 0;
+	cursor: pointer;
+	letter-spacing: 1px;
+}
+
+form.login input[type="submit"]:hover
+{
+  transition: background-color 0.5s ease;
+}
+
+form.login .remember-forgot
+{
+    float: left;
+    width: 100%;
+    margin: 10px 0 0 0;
+}
+form.login .forgot-pass-content
+{
+    min-height: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+form.login label, form.login a
+{
+    font-size: 12px;
+    font-weight: 400;
+    color: #FFFFFF;
+}
+
+form.login a
+{
+    transition: color 0.5s ease;
+}
+
+form.login a:hover
+{
+    color: #2ecc71;
+}
+
+.pr-wrap
+{
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 999;
+    display: none;
+}
+
+.show-pass-reset
+{
+    display: block !important;
+}
+
+.pass-reset
+{
+    margin: 0 auto;
+    width: 250px;
+    position: relative;
+    margin-top: 22%;
+    z-index: 999;
+    background: #FFFFFF;
+    padding: 20px 15px;
+}
+
+.pass-reset label
+{
+    font-size: 12px;
+    font-weight: 400;
+    margin-bottom: 15px;
+}
+
+.pass-reset input[type="email"]
+{
+    width: 100%;
+    margin: 5px 0 0 0;
+    padding: 5px 10px;
+    background: 0;
+    border: 0;
+    border-bottom: 1px solid #000000;
+    outline: 0;
+    font-style: italic;
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    color: #000000;
+    outline: 0;
+}
+
+.pass-reset input[type="submit"]
+{
+    width: 100%;
+    border: 0;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 10px;
+    outline: 0;
+    cursor: pointer;
+    letter-spacing: 1px;
+}
+
+.pass-reset input[type="submit"]:hover
+{
+    transition: background-color 0.5s ease;
+}
+
+	.login-or {
+    position: relative;
+    font-size: 18px;
+    color: #aaa;
+    margin-top: 10px;
+            margin-bottom: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+  }
+  .span-or {
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: -2px;
+    margin-left: -25px;
+    background-color: rgba(255,255,255,1);//#fff;
+    width: 50px;
+    text-align: center;
+  }
+  .hr-or {
+    width:110px;
+		display:inline-block;
+		
+  }
+
+</style>
+
+
+<body>
+
+<%= image_tag(asset_path("head_2.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
+
+<%= render 'layouts/header' %>
+
+
+<div class="container " style="">
+	<div class="row vertical-center">
+	
+		<div class="col-md-12 col-sm-12 col-xs-12">    
+			<div class="wrap">
+				<p class="form-title">
+					NCTU<sup>+</sup> Log In
+				</p>
+				<!--  -->
+				<%=form_tag(user_omniauth_callback_path(:E3), :class=>"login", :id=>"login-form", :autocomplete=>"off") do %>
+					<%=text_field_tag :username,"", placeholder: "Username", class: "username", required: "true" %>
+					<%=password_field_tag :password,"", placeholder: "Password", class: "password", required: "true" %>
+
+					<%=submit_tag "E3帳號登入", class:"btn btn-success btn-sm login-btn" %>
+				<% end %>
+			
+				<div class="" style="text-align:center;color:white;height:100px;">
+					<hr class="hr-or" >
+					<label style="position:relative;top:-15px;">OR</label>
+					<hr class="hr-or" >
+					<br>
+					<label style="width:250px;">
+					
+					<a href="<%=user_omniauth_authorize_path(:facebook)%>" class="btn btn-primary btn-sm login-btn" style="width:100%;margin-top:0px;" id="login-fb">
+						<%=fa_icon "facebook" %>acebook
+					</a>
+					
+					</label>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+
+<%= render 'layouts/footer' %>
+
+</body>
+<script>
+	$(document).ready(function() {
+		<% if flash[:notice] %>
+      <% if flash[:notice].kind_of? String%>
+		    toastr.warning("<%= flash[:notice] %>");
+		  <% else %>
+			  toastr.warning("<%= flash[:notice][:message] %>");
+		  <% end %>
+		<% end %>
+		$('#login-fb').click(function(){
+			$(this).attr('disabled', 'disabled');
+			$(this).html('<%=fa_icon "spinner spin 2x"%>');
+			//window.location = "/auth/facebook";
+		}); 	
+	});
+<% if Rails.env.production? %>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-54567036-1', 'auto');
+  ga('send', 'pageview');
+<% end %>
+</script>
+	
+</html>
+

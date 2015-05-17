@@ -18,12 +18,12 @@ class ApplicationController < ActionController::Base
 		return checkTopManagerNoReDirect &&uid.presence&& uid!="" ? User.find(uid) : current_user
 	end
 	
-  def current_user
-    @current_user ||= User.find(session[:user_id]) if session[:user_id]
-  end
+#  def current_user
+#    @current_user ||= User.find(session[:user_id]) if session[:user_id]
+#  end
 
   def checkLogin
-    unless current_user
+    unless user_signed_in?
 			alertmesg("info",'Sorry',"請先登入,謝謝!")
 			if request.env["HTTP_REFERER"].nil?
 				redirect_to :root
@@ -38,10 +38,10 @@ class ApplicationController < ActionController::Base
   def checkE3Login
   	msg = ''
   	flag = true
-    if current_user.nil?
+    if not user_signed_in?
 			msg, flag = '請先登入,謝謝' , false
-		elsif current_user.student_id.blank?
-			msg, flag = '請綁定e3,謝謝' , false
+		elsif session[:auth_e3].nil?
+			msg, flag = '必須由E3登入才可使用' , false
 		end
 		if !flag	
 			alertmesg("info",'Sorry',msg)
@@ -53,10 +53,10 @@ class ApplicationController < ActionController::Base
   def checkFBLogin
     msg = ''
   	flag = true
-    if current_user.nil?
+    if not user_signed_in?
 			msg, flag = '請先登入,謝謝' , false
-		elsif current_user.uid.nil?
-			msg, flag = '請綁定FB,謝謝' , false
+		elsif session[:auth_facebook].nil?
+			msg, flag = '必須由facebook登入才可使用' , false
 		end
 		if !flag	
 			alertmesg("info",'Sorry',msg)
@@ -67,7 +67,7 @@ class ApplicationController < ActionController::Base
   end
   
   def checkCourseMapPermission
-  	if current_user && (current_user.role==0 || current_user.role == 2)
+  	if user_signed_in? && (current_user.role==0 || current_user.role == 2)
   		return true
 		end
 		alertmesg("danger",'Sorry',"您沒有操作此動作的權限")  
@@ -75,7 +75,7 @@ class ApplicationController < ActionController::Base
   end
   
   def checkTopManagerNoReDirect
-		if current_user and current_user.role==0
+		if user_signed_in? and current_user.role==0
 			true
 		else 
 			false
@@ -125,7 +125,7 @@ class ApplicationController < ActionController::Base
   end
 	
 	def redirect_to_user_index
-		if current_user
+		if user_signed_in?
 			redirect_to :action=> "special_list", :controller=> "user"
 		end
 	end
