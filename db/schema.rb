@@ -22,7 +22,6 @@ ActiveRecord::Schema.define(version: 20150515092905) do
     t.string  "memo",            default: "",   null: false
   end
 
-  add_index "agreed_scores", ["course_field_id"], name: "index_agreed_scores_on_course_field_id", using: :btree
   add_index "agreed_scores", ["course_id"], name: "index_agreed_scores_on_course_id", using: :btree
   add_index "agreed_scores", ["user_id"], name: "index_agreed_scores_on_user_id", using: :btree
 
@@ -233,7 +232,6 @@ ActiveRecord::Schema.define(version: 20150515092905) do
 
   add_index "course_map_public_sub_comments", ["comment_id"], name: "index_course_map_public_sub_comments_on_comment_id", using: :btree
   add_index "course_map_public_sub_comments", ["course_map_id"], name: "index_course_map_public_sub_comments_on_course_map_id", using: :btree
-  add_index "course_map_public_sub_comments", ["user_id"], name: "index_course_map_public_sub_comments_on_user_id", using: :btree
 
   create_table "course_maps", force: true do |t|
     t.integer  "department_id"
@@ -344,38 +342,6 @@ ActiveRecord::Schema.define(version: 20150515092905) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
-  create_table "event_images", force: true do |t|
-    t.integer  "event_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "img_file_name"
-    t.string   "img_content_type"
-    t.integer  "img_file_size"
-    t.datetime "img_updated_at"
-  end
-
-  add_index "event_images", ["event_id"], name: "index_event_images_on_event_id", using: :btree
-
-  create_table "events", force: true do |t|
-    t.string   "event_type"
-    t.integer  "event_category_id"
-    t.string   "title"
-    t.string   "organization"
-    t.text     "url"
-    t.text     "content",           limit: 2147483647
-    t.datetime "begin_time"
-    t.datetime "end_time"
-    t.integer  "user_id"
-    t.integer  "location_id"
-    t.integer  "likes"
-    t.integer  "view_times"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "events", ["location_id"], name: "index_events_on_location_id", using: :btree
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
-
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
     t.integer "course_detail_id", default: 0,  null: false
@@ -463,6 +429,21 @@ ActiveRecord::Schema.define(version: 20150515092905) do
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
+  create_table "user_scores", force: true do |t|
+    t.integer  "user_id",                                 null: false
+    t.integer  "target_id",                               null: false
+    t.integer  "course_field_id",             default: 0
+    t.boolean  "is_agreed"
+    t.text     "score",           limit: 255
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_scores", ["course_field_id"], name: "index_user_scores_on_course_field_id", using: :btree
+  add_index "user_scores", ["target_id"], name: "index_user_scores_on_target_id", using: :btree
+  add_index "user_scores", ["user_id"], name: "index_user_scores_on_user_id", using: :btree
+
   create_table "users", force: true do |t|
     t.string   "name"
     t.integer  "year",                   default: 0
@@ -484,5 +465,6 @@ ActiveRecord::Schema.define(version: 20150515092905) do
   end
 
   add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
 
 end
