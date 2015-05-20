@@ -117,7 +117,7 @@
 		var dept_id=<%=params[:dept_id]||0%>;
 		var year=<%=params[:year]||0%>;
 		$('#fb-root').html('<div class="fb-comments" data-href="" data-numposts="5" width="100%" data-colorscheme="light"></div>');
-		$('.fb-comments').attr('data-href',"<%=j request.original_url%>");
+		$('.fb-comments').attr('data-href',"<%= request.original_url.html_safe%>");
 		if(dept_id!=0){
 			$("#dept-"+dept_id).parent().parent().prev().click();		
 			$("#dept-"+dept_id).addClass("selected");
