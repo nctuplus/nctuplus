@@ -5,13 +5,13 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
 	       :omniauthable, :omniauth_providers => [:facebook, :E3]
 	belongs_to :department
-	delegate :ch_name, :to=> :department, :prefix=>true
-	delegate :degree, :to=> :department
-	delegate :uid, :to=> :auth_facebook
-	
 	has_one :auth_facebook
 	has_one :auth_e3
 	
+	delegate :ch_name, :to=> :department, :prefix=>true
+	delegate :degree, :to=> :department
+	delegate :uid, :to=> :auth_facebook
+
 	has_many :past_exams
 	has_many :discusses
 	has_many :sub_discusses
