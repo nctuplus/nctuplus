@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 	belongs_to :department
 	delegate :ch_name, :to=> :department, :prefix=>true
 	delegate :degree, :to=> :department
+	delegate :uid, :to=> :auth_facebook
 	
 	has_one :auth_facebook
 	has_one :auth_e3

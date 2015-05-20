@@ -1,34 +1,47 @@
 <%=render 'courses/search/search_js' %>
 
-<div id="results">
+<div id="results" class="container">
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
-
-<div class="row">
-	
-	<div class="col-sm-1 col-md-offset-3 no-padding-left">
-		<div id="sem_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.select :semester_id_eq, options_for_select(@sem_sel, @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
+	<div class="row">	
+		<div class="col-md-12 text-center">
+			<div class="input-group" style="width:450px;display:inline-table;">
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", style:"/*width:250px;*/", placeholder:"課名/老師/時間/向度",required:"true" %>
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找課程 <span class="caret"></span></button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#">找課程</a></li>
+						<li><a href="#">找心得</a></li>
+					</ul>
+				</div><!-- /btn-group -->			
+				<div class="input-group-btn">
+					
+					<button type="submit" class="btn btn-primary" id="search" onclick="/*$('#course_detail_search').submit();*/"><%=fa_icon "search"%></button>        
+				</div><!-- /btn-group -->
+			</div><!-- /input-group -->
+			<div class="checkbox">
+				<label style="font-size:16px;">
+					<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');" %>
+					進階搜尋
+				</label>
+			</div>
+			<!--<button class="btn btn-default" onclick="return false;"></a>-->
+		</div>
 	</div>
-	<div class="col-sm-1 no-padding-left">
-		<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>
-	</div>	
-	<div class="col-sm-2 no-padding-left ">
-		<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.select :department_id_eq, options_for_select(@dept_sel, @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
+	<div class="hidden row" id="adv-search">
+		<br>
+		<div class="col-md-12 text-center">
+			<div style="width:150px;display:inline-block;">				
+				<%= f.select :semester_id_eq, options_for_select(@sem_sel, @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control"} %>
+			</div>
+			<div style="width:150px;display:inline-block;">
+				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
+			</div>	
+			<div style="width:300px;display:inline-block;">				
+				<%= f.select :department_id_eq, options_for_select(@dept_sel, @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control"} %>
+			</div>
+		</div>	
 	</div>
-	
-	<div class="col-sm-2">
-		<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間/向度" %>
-
-	</div>
-	<button class="btn btn-success" id="search" onclick="search_by_text();">
-		<%= fa_icon "search" %>
-	</button>
-	
-	
 <% end %>
-</div>
 <br>
 
 <table class="table table-hover table-bordered bg-white-transparent" id="course_table" >
@@ -92,6 +105,8 @@
 
 <script>
 $(function(){
+	if($("#adv_toggle").prop("checked"))
+		$("#adv-search").removeClass("hidden");
 	$(".clickable-row").click(function() {
 			window.document.location = $(this).attr("href");
 
