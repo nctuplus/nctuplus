@@ -9,8 +9,8 @@
 				<div class="input-group-btn">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找課程 <span class="caret"></span></button>
 					<ul class="dropdown-menu" role="menu">
-						<li><a href="#">找課程</a></li>
-						<li><a href="#">找心得</a></li>
+						<li><a href="javascript:void(0);">找課程</a></li>
+						<!--<li><a href="javascript:void(0);">找心得</a></li>-->
 					</ul>
 				</div><!-- /btn-group -->			
 				<div class="input-group-btn">
@@ -48,15 +48,14 @@
 	<tr class="row">
 		<th class="col-md text-center" style="width:70px;">學期</th>
 		<th class="col-md-2 text-center">
-			<%= sort_link @q,:department_id, "系所" %> /
-			<%= sort_link @q,:brief, "摘要" %>
+			系所/摘要
 		</th>
-		<th class="col-md-2 text-center"><%= sort_link @q,:course_ch_name, "課名" %></th>
-		<th class="col-md-2 text-center"><%= sort_link @q,:teacher_name, "老師" %></th>
+		<th class="col-md-2 text-center">課名</th>
+		<th class="col-md-2 text-center">老師</th>
 		<!--<th class="col-md-4">備註</th>-->
-		<th class="col-md- text-center"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
-		<th class="col-md- text-center"><%= sort_link @q,:credit, "學分" %></th>
-		<th class="col-md- text-center"><%= sort_link @q,:credit, "修課人數/上限" %></th>
+		<th class="col-md- text-center">年級/時間</th>
+		<th class="col-md- text-center">學分</th>
+		<th class="col-md- text-center">修課人數/上限</th>
 		<th class="col-md- text-center">文章/檔案數</th>
 		<th class="col-md- text-center">人氣</th>
 		<!--<th class="col-md-1"></th>-->

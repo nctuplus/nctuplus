@@ -117,7 +117,7 @@
 		var dept_id=<%=params[:dept_id]||0%>;
 		var year=<%=params[:year]||0%>;
 		$('#fb-root').html('<div class="fb-comments" data-href="" data-numposts="5" width="100%" data-colorscheme="light"></div>');
-		$('.fb-comments').attr('data-href',"<%=request.original_url%>");
+		$('.fb-comments').attr('data-href',"<%=j request.original_url%>");
 		if(dept_id!=0){
 			$("#dept-"+dept_id).parent().parent().prev().click();		
 			$("#dept-"+dept_id).addClass("selected");
@@ -128,14 +128,7 @@
 	
 	});
 
-	function load_qa(dept_id,sem_id){
-		var qa_div = $('#QandA').children().first() ;
-		$('#QandA').show();
-		
-	}
-	
-	function genCfTree(cf){
-		
+	function genCfTree(cf){	
 		str='<li class="cf-li"><a href="#'+cf.id+'">'+cf.cf_name+'</a></li>';
 		if(cf.cf_type==3){
 			str+='<ul class="nav sub-sub-menu">';
