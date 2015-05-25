@@ -25,7 +25,7 @@
 				<h4 class="text-center">
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
-					<a href="/courses/timetable.xlsx?sem_id=<%=Semester::LAST.id%>" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
+					<a href="/courses/export_timetable.xls?sem_id=<%=Semester::LAST.id%>" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
 						<i class="fa fa-download"></i>
 					</a>
 				</h4>		
@@ -40,15 +40,9 @@
 function show_search(){
 	$("#search_div").find('form').toggleClass("hidden");
 }
+
 $(document).ready(function(){
-/*
-	$('#cart-btn').popover({
-		content: "顯示觀察名單",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});
-*/	
+
 	$('#has-select-btn').popover({
 		content: "已選課程",
 		placement:"auto",
