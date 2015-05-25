@@ -12,13 +12,14 @@ class CoursesController < ApplicationController
 	def index
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
 		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
-		@dept_sel=Department.searchable.pluck(:ch_name, :id)
+		#@dept_sel=Department.searchable.pluck(:ch_name, :id)
 		if !params[:custom_search].blank?	#if user key in something
-			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
+			#@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
+			@q = CourseDetail.searchByText2(params[:custom_search],params[:q])
 		else
 			@q = CourseDetail.search(params[:q])		
 		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
 	end
 	
@@ -89,7 +90,7 @@ class CoursesController < ApplicationController
 	
 	
   def show
-		cd=CourseDetail.find(params[:id])	
+		cd=CourseDetail.includes(:course_teachership, :course, :semester, :department).find(params[:id])	
 		current_time = Time.new
 		c_id=cd.course.id.to_s
 		if session[c_id] != current_time.min
@@ -104,6 +105,9 @@ class CoursesController < ApplicationController
 			:course_name=>cd.course_ch_name,
 			:course_teachers=>cd.teacher_name,
 			:course_real_id=>cd.course.real_id.to_s,
+			:temp_cos_id=>cd.temp_cos_id,
+			:year=>cd.semester_year,
+			:half=>cd.semester_half,
 			:course_credit=>cd.course.credit,
 			:open_on_latest=>(cd.course_teachership.course_details.last.semester_id==Semester::LAST.id) ? true : false ,
 			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")

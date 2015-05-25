@@ -22,10 +22,8 @@ namespace :course do
 		update_teacher_list
 		sem=Semester.last
 		datas=E3Service.get_course(sem) #get course
-		COURSE_LOGGER.info "[Course Detail] #{datas.length} courses from E3 getted."
-		
-		stat={"Create"=>0, "Update"=>0}
-		
+		COURSE_LOGGER.info "[Course Detail] #{datas.length} courses from E3 getted."		
+		stat={"Create"=>0, "Update"=>0}		
 		datas.each do |data|
 			#course_id=get_cid_by_real_id(data)
 			course_id=Course.get_from_e3(data)
@@ -36,17 +34,13 @@ namespace :course do
 			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
 			stat[CourseDetail.save_from_e3(data,nct.id,sem.id)]+=1
 		end
-
 		data_cos_ids=datas.map{|data|data['cos_id']}
 		old_cos_ids=CourseDetail.where(:semester_id=>sem.id).map{|data|data.temp_cos_id}
-		diff_cos_ids=old_cos_ids-data_cos_ids
-		
+		diff_cos_ids=old_cos_ids-data_cos_ids		
 		CourseDetail.where(:semester_id=>Semester.last.id, :temp_cos_id=>diff_cos_ids).destroy_all
-		COURSE_LOGGER.info "[Course Detail] Deleted : #{diff_cos_ids.length}."
-		
+		COURSE_LOGGER.info "[Course Detail] Deleted : #{diff_cos_ids.length}."		
 		COURSE_LOGGER.info "[Course Detail] Created : #{stat["Create"]}."
-		COURSE_LOGGER.info "[Course Detail] Updated : #{stat["Update"]}."
-		
+		COURSE_LOGGER.info "[Course Detail] Updated : #{stat["Update"]}."		
 		COURSE_LOGGER.info "==========Update Finished=========="
 	end
 	

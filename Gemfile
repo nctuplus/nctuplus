@@ -69,6 +69,8 @@ group :development do
   gem "rails-erd"
 end
 
+gem "googlebooks"
+
 #gem 'google-analytics-rails'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.1.2'
@@ -83,4 +85,3 @@ end
 # gem 'debugger', group: [:development, :test]
 #
 #
-# TEST PULL OR NOT ZZZZZZZZZZZZZZZZZZZZZZ

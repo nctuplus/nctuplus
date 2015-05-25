@@ -1,25 +1,21 @@
-<div class="row" style="background-color:rgba(221,221,221,0.8)">
-	<div class="tabbable tabs-left col-md-4 col-md-offset-1">
-		<div class="tab-content" style="overflow:hidden;">
-		 <div class="tab-pane active" id="a">
-				<div class="panel panel-primary ">
-					<div class="panel-heading">
-						<h4 class="text-center">
-							<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="show_has_select()" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "check"%></font>
-							</button>	
-							課程查詢
-							<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "search" %></font>
-							</button>
-						
-						</h4>
-					</div>
-					<div class="panel-body">
-						<%= render "suggest_btns" %>
-						<div id="search_div" class="row schedule-search-bar"></div>
-					</div>
-				</div>
+<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<div class="row" style="">
+	<div class="col-md-5 col-md-offset-1">
+		<div class="panel panel-primary ">
+			<div class="panel-heading">
+				<h4 class="text-center">
+					<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="show_has_select()" style="margin-top: -5px;">
+						<font color="white"><%=fa_icon "check"%></font>
+					</button>	
+					課程查詢
+					<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
+						<font color="white"><%=fa_icon "search" %></font>
+					</button>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<%= render "suggest_btns" %>
+				<div id="search_div" class="row schedule-search-bar"></div>
 			</div>
 		</div>
 	</div>
@@ -58,16 +54,14 @@ $(document).ready(function(){
 		placement:"auto",
 		trigger : "hover",
 		container :"body"
-	});
-	
+	});	
 	$(".btn-default").popover({
 			//content : $(this).attr('tiptext'),
 			trigger :"hover",
 			container :"body",
 			placement : "auto"
 	});
-	
-	
+
 	//sidebar search
 	$("#search_div").load("/courses/search_mini?sem_id=<%=Semester::LAST.id%>",function(){
 		show_has_select();
@@ -75,17 +69,15 @@ $(document).ready(function(){
 	
 	//course table
 	load_course_table(<%=Semester::LAST.id%>, true);
-	
-	
-	
-	
+
 });
 	
 	function searchLackCourses(){
 		<% if current_user.is_undergrad? %>
 			$(".scrollable").html("<%=j loadingImg%>");
-			$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
-				var result=get_check_res(data.pass_score,data.last_sem_id,data.user_courses.success);
+			$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
+				console.log(data);
+				var result=commonCheck(data.pass_score,data.last_sem_id,data.taked);
 				var arr="[";
 				for(var dimension in result['common']){
 					if (result['common'][dimension]==0){ 

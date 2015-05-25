@@ -7,7 +7,11 @@ class MainController < ApplicationController
 	before_filter :checkTopManager, :only=>[:student_import]
 	include CourseMapsHelper	
 	include ApiHelper
-
+	
+	def book_test
+		#@books = GoogleBooks.search('9780470233993') # OS恐龍本
+		@books = GoogleBooks.search('9780345508553')
+  end
 	
  	def index
 		

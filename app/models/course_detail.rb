@@ -8,13 +8,20 @@ class CourseDetail < ActiveRecord::Base
 	has_many :teachers, :through=>:course_teachership	
 	
 	belongs_to :semester
-	delegate :name, :to=>:semester, :prefix=>true
+	delegate :name, :year, :half, :to=>:semester, :prefix=>true
 	belongs_to :department
 	delegate :ch_name, :to=>:department, :prefix=>true, allow_nil: true
 
 	has_many :course_simulations, :dependent=> :destroy
 	
-
+	def self.searchByText2(text,q)
+		search(q).result(distinct: true).search({
+			:course_ch_name_or_time_or_brief_cont=>text,
+			:m=>"or",
+			:by_teacher_name_in=>text
+		})
+	end
+	
 	def self.searchByText(text,sem_id)
 		search({
 			:course_ch_name_or_time_or_brief_cont=>text,

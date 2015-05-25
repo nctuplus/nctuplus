@@ -105,12 +105,12 @@ function join_cf_courses(cf,courses){//將課程與領域做對應
 
 function check_course_match(uc,cf){
 	for(var i = 0,course;course=cf.courses[i];i++){
-		if(uc.course_id==course.id)
+		if(uc.cos_id==course.id)
 			return true;
 	}
 	for(var i = 0,cg;cg=cf.course_groups[i];i++){
 		for(var j = 0,course;course=cg.courses[j];j++){
-		if(uc.course_id==course.id)
+		if(uc.cos_id==course.id)
 			return true;
 		}
 	}
@@ -141,7 +141,7 @@ function _get_course_cf(res,parent_cf,cf,course){
 function _check_user_course(user_courses, course){
 
 	for(var j=0, user_course;user_course=user_courses[j];j++){
-		if(course.id==user_course.course_id)   // TODO : score judge
+		if(course.id==user_course.cos_id)   // TODO : score judge
 			return true;
 	}
 	return false;
