@@ -1,4 +1,4 @@
-
+//= require courses/html2canvas
 ;(function($, window, document, undefined) {
 	
 	'use strict';
@@ -39,6 +39,16 @@
 	};
 	
 	Table.prototype = {
+		
+		renderImg: function(){
+		  html2canvas( this.$element.get(0), {
+        onrendered: function(canvas) {
+          var img = canvas.toDataURL("image/png");
+          window.open(img);
+        }
+      });
+      return;
+		},
 		
 		checkConflictByTime: function(args){
 			var times = args.time ;

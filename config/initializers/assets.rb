@@ -6,6 +6,7 @@ Rails.application.config.assets.precompile +=[
 	'bootstrap-treeview.js',
 	'courses/content.js',
 	'courses/chart.js',	
+	'courses/html2canvas.js',
 	'courses/table.js',
 	'courses/past_exam.js',
 	'course_maps/manage.js',
