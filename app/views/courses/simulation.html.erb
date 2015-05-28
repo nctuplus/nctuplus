@@ -25,9 +25,16 @@
 				<h4 class="text-center">
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
-					<a href="/courses/export_timetable.xls?sem_id=<%=Semester::LAST.id%>" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
-						<i class="fa fa-download"></i>
-					</a>
+
+					<div class="btn-group pull-right" style="margin-top: -5px">
+						<button type="button" class="btn btn-circle btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							 <i class="fa fa-download"></i>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/courses/export_timetable.xls?sem_id=<%=Semester::LAST.id%>">Excel</a></li>
+							<li><a href="#" onclick="$('#schedule_table').CourseTable('renderImg');">Image</a></li>
+						</ul>
+					</div>
 				</h4>		
 			</div>
 			<table class="table table-bordered" id="schedule_table"></table>
