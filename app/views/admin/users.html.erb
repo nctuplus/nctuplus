@@ -22,23 +22,8 @@
 </div>
 
 <script>
+
 	$(function () {
-		$('.admin-user-role').change(function(){
-			var uid = $(this).attr('user_id');
-			var role = $(this).val();
-			$.ajax({
-				url: "/admin/change_role",
-				type: "POST",
-				data :{uid: uid, role: role},
-				success: function(){
-					toastr["success"]("更新成功!");
-				},
-				error: function(){
-					toastr["error"]('更新失敗!');
-				}
-			});
-			return false ;
-		});
 		$(".course_map").change(function(){
 			var cm_id=$(this).val();
 			$.ajax({
@@ -51,6 +36,22 @@
 		});
 		initDeptChart();
 	});
+	function updateRole($obj){
+		var uid = $obj.attr('user_id');
+		var role = $obj.val();
+		$.ajax({
+			url: "/admin/change_role",
+			type: "POST",
+			data :{uid: uid, role: role},
+			success: function(){
+				toastr["success"]("更新成功!");
+			},
+			error: function(){
+				toastr["error"]('更新失敗!');
+			}
+		});
+		return false ;
+	}
 	function initDeptChart(){
 		$('#dept-stat-chart').highcharts({
 			chart: {

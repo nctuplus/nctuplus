@@ -23,7 +23,7 @@
 	</td>
 	<td><%= user.year==0 ? user.year : '尚未填寫' %></td>
 	<td>
-		<%=select_tag :role, options_for_select(@role_sel, user.role), :class=>'form-control admin-user-role', :user_id=>user.id%>
+		<%=select_tag :role, options_for_select(@role_sel, user.role), :class=>'form-control admin-user-role', :user_id=>user.id, :onchange=>"updateRole($(this));"%>
 	</td>
 
 </tr>
