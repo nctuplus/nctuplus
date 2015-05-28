@@ -48,17 +48,19 @@ namespace :course do
 		#create new semester
 		new_sem=Semester.create_new
 		new_sem.save!
-		updateDepartmentList
-		updateTeacherList
+		
+		update_department_list
+		update_teacher_list
 		datas=E3Service.get_course(new_sem) #get course
 		datas.each do |data|
-			course_id=get_cid_by_real_id(data)
+			course_id=Course.get_from_e3(data)
 			tids=[]
 			Teacher.where(:real_id=>data['teacher'].split(',')).each do |t|
 				tids.push(t.id)
 			end
 			nct=CourseTeachership.find_or_create_by(:course_id=>course_id, :teacher_id=>tids.to_s)
-			save_cd(data,nct.id,new_sem.id)
+			#save_cd(data,nct.id,new_sem.id)
+			CourseDetail.save_from_e3(data,nct.id,new_sem.id)
 		end
 		puts "#{datas.length} courses has imported !"
 	end

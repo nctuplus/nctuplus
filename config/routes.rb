@@ -134,6 +134,8 @@ Nctuplus::Application.routes.draw do
 			get "edit"
 		end
 	end
+	
+	post "sessions/save_lack_course"
   
     
 

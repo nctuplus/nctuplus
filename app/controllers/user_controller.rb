@@ -102,6 +102,7 @@ class UserController < ApplicationController
 			end
 			res={
 				:user_id=>@user.id,
+				:need_common_check=>@user.is_undergrad?,
 				:pass_score=>@user.pass_score,
 				:last_sem_id=>Semester::CURRENT.id,
 				:user_courses=>@user.courses_json,

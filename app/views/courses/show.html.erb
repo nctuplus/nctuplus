@@ -2,11 +2,11 @@
 <%= javascript_include_tag "courses/chart", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/past_exam", "data-turbolinks-track" => true %>
 <div class="row">
-	<div class="col-md-2 col-md-offset-1">
+	<div class="col-md-2">
 		<%= render "/course_content/scroll_sidebar"%>
 	</div>
 	
-	<div class="col-md-9 scroll-content ">
+	<div class="col-md-10 scroll-content ">
 		<div class="row" id="tc" >
 			<div class="col-md-10">
 				<h1 class="scroll-title" data-offset="100">	
@@ -108,13 +108,12 @@
 		</div>	
 		
 		<div class="row">
-			<div id="compare" class="well bs-callout" style="">
+			<div id="compare" class="bg-white container">
 			</div>
-			<div id="discuss" class="well bs-callout row" style="background-color:white;">
+			<div id="discuss" class="bg-white container">
 			</div>
-			<div id="files" class="well bs-callout" style="background-color:white;">
-			</div>
-			
+			<div id="files" class="bg-white container">
+			</div>		
 		</div>
 	</div>
 	

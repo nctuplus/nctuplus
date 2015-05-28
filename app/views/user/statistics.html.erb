@@ -22,13 +22,13 @@
 		$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
 			console.log(data);
 			<% if @user.is_undergrad? %>
-				$("#common_check_div").html(tmpl("common_check",data));
+				var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
+				$("#common_check_div").html(tmpl("common_check",pass_courses));
 			<% end %>		
 			if(data["course_map"]){
 				$("#cosmap_check_div").html(tmpl("cosmap_check",data));
 			}
 			$("#course_list").html(tmpl("list_by_cosmap",data));
-			
 		});
 	});
 </script>

@@ -26,7 +26,7 @@ module ApiHelper
 			new_depts=new_depts.reject{|new_dept|new_dept["degree"].to_i==dept.degree&&new_dept["dep_id"]==dept.dep_id}
 		end
 		new_depts.each do |dept|
-			Department.create_from_e3(dept)
+			@dept=Department.create_from_e3(dept)
 			COURSE_LOGGER.info "[Department] - #{@dept.ch_name} Created."
 		end
 		COURSE_LOGGER.info "[Department] Total:#{new_depts.length} Created."

@@ -8,7 +8,7 @@
 						<font color="white"><%=fa_icon "check"%></font>
 					</button>	
 					課程查詢
-					<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
+					<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="showSearch();" style="margin-top: -5px;">
 						<font color="white"><%=fa_icon "search" %></font>
 					</button>
 				</h4>
@@ -37,45 +37,46 @@
 </div>
 
 <script>
-function show_search(){
-	$("#search_div").find('form').toggleClass("hidden");
-}
+	$(document).ready(function(){
+		$('#has-select-btn').popover({
+			content: "已選課程",
+			placement:"auto",
+			trigger : "hover",
+			container :"body"
+		});	
+		$(".btn-default").popover({
+				//content : $(this).attr('tiptext'),
+				trigger :"hover",
+				container :"body",
+				placement : "auto"
+		});
 
-$(document).ready(function(){
-
-	$('#has-select-btn').popover({
-		content: "已選課程",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});	
-	$(".btn-default").popover({
-			//content : $(this).attr('tiptext'),
-			trigger :"hover",
-			container :"body",
-			placement : "auto"
+		//sidebar search
+		$("#search_div").load("/courses/search_mini?sem_id=<%=Semester::LAST.id%>",function(){
+			show_has_select();
+		});		
+		
+		//course table
+		load_course_table(<%=Semester::LAST.id%>, true);
+		
+		sessionTest();
+		
 	});
-
-	//sidebar search
-	$("#search_div").load("/courses/search_mini?sem_id=<%=Semester::LAST.id%>",function(){
-		show_has_select();
-	});		
 	
-	//course table
-	load_course_table(<%=Semester::LAST.id%>, true);
-
-});
-	
+	function showSearch(){
+		$("#search_div").find('form').toggleClass("hidden");
+	}
 	function searchLackCourses(){
 		<% if current_user.is_undergrad? %>
 			$(".scrollable").html("<%=j loadingImg%>");
 			$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
 				console.log(data);
-				var result=commonCheck(data.pass_score,data.last_sem_id,data.taked);
+				var result=commonCheck(data.pass_score,data.taked);
 				var arr="[";
 				for(var dimension in result['common']){
 					if (result['common'][dimension]==0){ 
 						arr+='"'+dimension+'",';
+						console.log(arr);
 					}
 				}
 				if(arr.length==1)
@@ -90,9 +91,7 @@ $(document).ready(function(){
 		<% else %>
 			toastr["info"]("你不需要修通識喔^_^");
 		<% end %>
-		
 	}
-	
 	
 	function load_course_table(semester_id, selectable){
 		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
