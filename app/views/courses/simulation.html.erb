@@ -45,6 +45,7 @@
 
 <script>
 	$(document).ready(function(){
+		toastr["success"]("已更新到104上的課程囉!!!");
 		$('#has-select-btn').popover({
 			content: "已選課程",
 			placement:"auto",
@@ -66,7 +67,7 @@
 		//course table
 		load_course_table(<%=Semester::LAST.id%>, true);
 		
-		sessionTest();
+		//sessionTest();
 		
 	});
 	
@@ -76,18 +77,18 @@
 	function searchLackCourses(){
 		<% if current_user.is_undergrad? %>
 			$(".scrollable").html("<%=j loadingImg%>");
-			$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
-				console.log(data);
-				var result=commonCheck(data.pass_score,data.taked);
+			$.getJSON("/user/statistics", function (data) {
+				var pass_courses=getPassCourses(checkPassTaking,data.pass_score,data.user_courses);
+				var result=commonCheck(pass_courses);
 				var arr="[";
 				for(var dimension in result['common']){
 					if (result['common'][dimension]==0){ 
 						arr+='"'+dimension+'",';
-						console.log(arr);
 					}
 				}
-				if(arr.length==1)
-					toastr["info"]("你已經修完了喔^_^");
+				if(arr.length==1){
+					$(".scrollable .text-center").text("你已經修完了喔^_^");
+				}
 				else{
 					arr=arr.substr(0,arr.length-1);
 					arr+=']';					
@@ -96,7 +97,7 @@
 				}
 			});
 		<% else %>
-			toastr["info"]("你不需要修通識喔^_^");
+			$(".scrollable .text-center").text("你不需要修通識喔^_^");
 		<% end %>
 	}
 	
