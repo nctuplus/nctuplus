@@ -17,12 +17,12 @@ function commonCheck(pass_courses){
 		foreign_basic: 0, 
 		foreign_advance: 0, 
 		common: { 
-			通識: 0, 
-			公民: 0, 
-			群已: 0, 
-			歷史: 0, 
-			文化: 0, 
-			自然: 0
+			'通識': 0, 
+			'公民': 0, 
+			'群已': 0, 
+			'歷史': 0, 
+			'文化': 0, 
+			'自然': 0
 		}
 	}; 
 
