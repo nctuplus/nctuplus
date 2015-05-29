@@ -75,6 +75,10 @@ namespace :course do
 		COURSE_LOGGER.info "Updating Department..."
 		new_depts=E3Service.get_department_list
 		Department.all.each do |dept|
+			if !dept.course_details.empty?
+				dept.has_courses=true
+				dept.save
+			end
 			new_depts=new_depts.reject{|new_dept|new_dept["degree"].to_i==dept.degree&&new_dept["dep_id"]==dept.dep_id}
 		end
 		new_depts.each do |dept|
