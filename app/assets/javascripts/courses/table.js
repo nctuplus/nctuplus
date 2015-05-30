@@ -27,12 +27,13 @@
 		conflict_class: "course-conflict",
 		$cancel_but : $($('<div>').addClass('course-clean').css("display", "none")
 					.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),	
+/*	
 		$download_link : function(sem_id){
 			return $('<a>').attr('href','/courses/export_timetable.xls?sem_id='+sem_id)
 				   .addClass('btn btn-success btn-circle')
 				   .html($('<i>').addClass('fa fa-download')) ;
 		},
-		
+*/		
 		cancelButtonFunc: function(args){
 			logDebug("Callback function is not defined.");
 		}
@@ -184,8 +185,9 @@
 			var days = Table.defaults.days ;
 			
 			var $leftupth = $('<th>') ;
-			if(this.config.downloadable)
-				$leftupth.html(Table.defaults.$download_link(this.config.semester_id));
+		// downloadable 
+		//	if(this.config.downloadable)
+		//		$leftupth.html(Table.defaults.$download_link(this.config.semester_id));
 			var $row = $('<tr>').append($leftupth);
 			for(var i = 0, t; t=days[i]; i++){
 				$row.find('th:last').after($('<th>').addClass('col-md-2')

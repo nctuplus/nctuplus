@@ -45,7 +45,8 @@ class UserController < ApplicationController
 					result={
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
-						}
+						},
+						:semester_name => semester.name # for 歷年課表 modal header 
 					}	
 				else
 					result={}
