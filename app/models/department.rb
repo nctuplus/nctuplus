@@ -20,7 +20,7 @@ class Department < ActiveRecord::Base
 	end
 	def self.create_from_e3(data)
 		Department.find_or_create_by(:dep_id=>data["dep_id"],:degree=>data["degree"].to_i ) do |dept|
-			
+			dept.dept_type=data["depType"]
 			dept.ch_name=data["dep_cname"]
 			dept.eng_name=data["dep_ename"]
 		end

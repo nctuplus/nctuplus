@@ -1,4 +1,3 @@
-
-$('#components').html('<%= loading_img %>');
-$('#components').html('<%=j render "courses/search/results_mini" %>');
-
+$(".scrollable").html(tmpl("search_result",<%=@result.to_json.html_safe%>));
+$("#dimension_search").val("");
+$("#timeslot_search").val("");

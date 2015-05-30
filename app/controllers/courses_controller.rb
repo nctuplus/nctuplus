@@ -7,29 +7,28 @@ class CoursesController < ApplicationController
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
 		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
 		if !params[:custom_search].blank?	#if user key in something			
-			@q = CourseDetail.searchByText2(params[:custom_search],params[:q])
+			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
 		elsif session[:lack_course]
 			@q = CourseDetail.search({
 				:brief_cont_any=>session[:lack_course]["dimension"]
 			})
-		else
-		
-		@q = CourseDetail.search(params[:q])
+		else	
+			@q = CourseDetail.search(params[:q])
 		end
 		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
 	end
 	
 	def search_mini	#for course simulation search & result
-		
 		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
 		@dept_sel=Department.searchable.pluck(:ch_name, :id)
+		
 		if !params[:dimension_search].blank?	#search by 向度 (推薦系統)
 			@q= CourseDetail.search({:semester_id_eq=>Semester::LAST.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
 		elsif !params[:timeslot_search].blank? #search by time (推薦系統)
 			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>Semester::LAST.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
 		elsif !params[:custom_search].blank? #search by text
-			@q = CourseDetail.searchByText(params[:custom_search],Semester::LAST.id)
+			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
 		else
 			if params[:q].blank?
 				@q=CourseDetail.search({:id_in=>[0]})
@@ -113,8 +112,9 @@ class CoursesController < ApplicationController
   end
 	
   def simulation  
-		#@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
-		#@user_sem_ids.append(Semester::LAST.id)	
+		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
+		@dept_sel=Department.searchable.pluck(:ch_name, :id)
+		@q=CourseDetail.search({:id_in=>[0]})
   end
 	
 	def add_to_cart
