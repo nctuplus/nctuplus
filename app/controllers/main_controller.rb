@@ -10,7 +10,9 @@ class MainController < ApplicationController
 	
 	def book_test
 		#@books = GoogleBooks.search('9780470233993') # OS恐龍本
-		@books = GoogleBooks.search('9780345508553')
+
+		#@books = GoogleBooks.search('Android', {:count => 20})
+		@books = GoogleBooks.search('網頁', {:count => 20})
   end
 	
  	def index
