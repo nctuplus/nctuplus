@@ -5,7 +5,7 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept, :statistics_table]
+	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept, :statistics_table, :edit, :update]
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
@@ -284,6 +284,15 @@ class UserController < ApplicationController
 	  NormalScore.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
 	  
 	  render :text=>cd.to_course_table_result.to_json, :layout=>false
+	end
+
+	def edit
+
+	end
+
+	def update
+		current_user.update_attributes(:name=>params[:name], :email=>params[:email])
+		#current_user.update_attributes(:name=>name, :email=>email)
 	end
 	
   private
