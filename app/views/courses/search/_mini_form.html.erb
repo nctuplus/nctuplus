@@ -1,0 +1,33 @@
+<%= search_form_for @q, url:"/courses/search_mini", class:"form-inline", remote: true do |f| %>
+	<div class="row">
+		<div class="col-md-12 text-center" >
+			<%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
+			<%=hidden_field_tag :dimension_search,"" %>
+			<%=hidden_field_tag :timeslot_search,"" %>
+			<div class="input-group" style="width:317px;display:inline-table;">
+					<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>		
+					<div class="input-group-btn">					
+						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+					</div><!-- /btn-group -->
+			</div><!-- /input-group -->
+			<div class="checkbox">
+				<label style="font-size:16px;">
+					<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
+					進階搜尋
+				</label>
+			</div>
+		</div>
+	</div>
+	<div class="hidden row" id="adv-search">
+	<br>
+		<div class="col-md-12 text-center">
+			<div style="width:120px;display:inline-block;">
+				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
+			</div>	
+			<div style="width:280px;display:inline-block;">				
+				<%= f.select :department_id_eq,"",{:prompt=> "系所"},{ :class=> "form-control"} %>
+			</div>
+		</div>	
+	</div>
+<% end %>
+<br>

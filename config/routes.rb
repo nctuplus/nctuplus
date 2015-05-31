@@ -28,7 +28,7 @@ Nctuplus::Application.routes.draw do
 
 #--------- for many usage --------------
 
-	
+	get "main/book_test"
 	get "main/index"
  	post "main/temp_student_action"
 	#get "main/E3Login"
@@ -140,6 +140,8 @@ Nctuplus::Application.routes.draw do
 			get "edit"
 		end
 	end
+	
+	post "sessions/save_lack_course"
   
     
 

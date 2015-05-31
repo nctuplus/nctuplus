@@ -21,5 +21,5 @@
 env :PATH, ENV['PATH']
 
 every 1.day, :at => '9:00 am' do
-	rake "course:update"
+	rake "course:import"
 end

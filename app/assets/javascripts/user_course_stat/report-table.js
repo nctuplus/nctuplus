@@ -130,7 +130,7 @@
 			var row_cnt= 0;
 		  for(var i=0, cf_course; cf_course = cf.courses[i]; ++i)
 		  {
-		    var matchs = $.grep(courses,  function(e){ return e.course_id == cf_course.id; }) ;
+		    var matchs = $.grep(courses,  function(e){ return e.cos_id == cf_course.id; }) ;
 				
 		    if( matchs.length>0 || recordAll){
 					row_cnt +=1;
@@ -141,8 +141,7 @@
 		  {
 		    var matchs = [] ;
 		    for(var j=0, cg_course; cg_course=cf_cg.courses[j]; ++j)
-		      matchs = matchs.concat( $.grep(courses, function(e){ return e.course_id == cg_course.id; }) );
-		    
+		      matchs = matchs.concat( $.grep(courses, function(e){ return e.cos_id == cg_course.id; }) );    
 				if( matchs.length>0 || recordAll){
 					row_cnt+=1;
 		      $rows.push(this._createOneRow(cf_cg.lead_course, matchs));

@@ -2,10 +2,10 @@
 	<h3 id="title">		
 		{%= o.dept_name %} 入學年度:
 		<div id="year-selector" class="btn-group" style="margin-top:-2px;">
-			<a id="year-100" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=100">100</a>
-			<a id="year-101" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=101">101</a>
-			<a id="year-102" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=102">102</a>
-			<a id="year-103" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=103">103</a>
+			<a id="year-100" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=100" data-no-turbolink>100</a>
+			<a id="year-101" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=101" data-no-turbolink>101</a>
+			<a id="year-102" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=102" data-no-turbolink>102</a>
+			<a id="year-103" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=103" data-no-turbolink>103</a>
 		</div>		
 	{% var cm=o.course_map; %}
 	{% if(!cm){ %}

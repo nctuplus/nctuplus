@@ -55,8 +55,8 @@
 			
 				<li class="dropdown">		
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<% if session[:auth_facebook].presence %>
-							<%= image_tag "http://graph.facebook.com/"<<current_user.auth_facebook.uid<<"/picture", size: "25x25" %>
+						<% if session[:auth_facebook] %>
+							<%= image_tag "http://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
 						<% else %>
 							學號 
 						<% end %>
@@ -109,8 +109,8 @@
           deletable: false ,
           selectable: false,
           popover: true,
-		  downloadable: true,
-		  semester_id: semester_id
+		      downloadable: true,
+		      semester_id: semester_id
         };
 								
 				$("#global_modal .modal-body").html($table.CourseTable(data));

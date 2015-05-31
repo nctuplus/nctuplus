@@ -1,0 +1,24 @@
+<table class="table">
+	<tr>
+		<td>圖片</td>
+		<td>書名</td>
+		<td>作者</td>
+		<td>isbn</td> 
+		<td>零售價</td> 
+	</tr>
+	<%@books.each do |book| %>
+		<tr>
+			<td><%=image_tag book.image_link%></td>
+			<td><%= link_to book.title,book.preview_link,target: "_blank" %></td>
+			<td><%= book.authors %></td>
+			<td><%= book.isbn %></td>	
+			<td>
+				<%= book.sale_info %>
+				<% price_info=book.sale_info["retailPrice"]%>
+				<% if price_info %>
+					<%=price_info['amount'].to_s+price_info['currencyCode'].to_s %>
+				<% end %>
+			</td>
+		</tr>
+	<% end %>
+</table>

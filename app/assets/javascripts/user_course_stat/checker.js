@@ -9,22 +9,23 @@
  * Modified at 2015/3/24
  */
  
-function commonCheck(pass_score,last_sem_id,user_courses){
-	var result={}; 
-	result['art_after102']=0; 
-	result['phe_1']=0; 
-	result['phe_optional']=0; 
-	result['foreign_basic']=0; 
-	result['foreign_advance']=0; 
-	result['common']={}; 
-	result['common']['通識']=0; 
-	result['common']['公民']=0; 
-	result['common']['群已']=0; 
-	result['common']['歷史']=0; 
-	result['common']['文化']=0; 
-	result['common']['自然']=0; 
+function commonCheck(pass_courses){
+	var result={
+		art_after102: 0, 
+		phe_1: 0, 
+		phe_optional: 0, 
+		foreign_basic: 0, 
+		foreign_advance: 0, 
+		common: { 
+			'通識': 0, 
+			'公民': 0, 
+			'群已': 0, 
+			'歷史': 0, 
+			'文化': 0, 
+			'自然': 0
+		}
+	}; 
 
-	var pass_courses=get_pass_courses(pass_score,last_sem_id,user_courses); 
 	for(var i = 0,course;course=pass_courses[i];i++){ 
 
 		if(course.name.search("服務學習")!=-1){ 
@@ -105,12 +106,12 @@ function join_cf_courses(cf,courses){//將課程與領域做對應
 
 function check_course_match(uc,cf){
 	for(var i = 0,course;course=cf.courses[i];i++){
-		if(uc.course_id==course.id)
+		if(uc.cos_id==course.id)
 			return true;
 	}
 	for(var i = 0,cg;cg=cf.course_groups[i];i++){
 		for(var j = 0,course;course=cg.courses[j];j++){
-		if(uc.course_id==course.id)
+		if(uc.cos_id==course.id)
 			return true;
 		}
 	}
@@ -141,7 +142,7 @@ function _get_course_cf(res,parent_cf,cf,course){
 function _check_user_course(user_courses, course){
 
 	for(var j=0, user_course;user_course=user_courses[j];j++){
-		if(course.id==user_course.course_id)   // TODO : score judge
+		if(course.id==user_course.cos_id)   // TODO : score judge
 			return true;
 	}
 	return false;
@@ -276,5 +277,37 @@ function check_cf(user_courses,cf){	//最上層的check
 }
 
 
+
+function sessionTest(){
+	var res={};
+	$.getJSON("/user/statistics", function (data) {
+		console.log(data);
+		var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
+		if (data.need_common_check){
+			var result=commonCheck(pass_courses);
+			var dimesions=[];
+			for(var dimension in result['common']){
+				if (result['common'][dimension]==0){ 
+					dimesions.push(dimension);
+				}
+			}
+			res["dimension"]=dimesions
+		}
+		if(data["course_map"]){			
+			getMatchCfCourseList(data.course_map.cfs,pass_courses);
+		}
+		/*$("#course_list").html(tmpl("list_by_cosmap",data));*/	
+	});
+	$.ajax({
+		url :"/sessions/save_lack_course",
+		type : "POST",
+		data : res,
+		success: function(data){console.log(data);}
+	});
+}
+
+function getMatchCfCourseList(cfs,user_courses){
+	
+}
 
 

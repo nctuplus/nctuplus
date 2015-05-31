@@ -2,7 +2,7 @@
 <%= form_tag '/discusses/new', :class=>"sub-discussion col-md-offset-1 col-md-11", :role=>"form", :remote=>"true" do %>
 	
 	<div class="col-md-1">
-		<%= image_tag "http://graph.facebook.com/#{current_user.uid}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
+		<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
 		<br>
 	</div>
 	<div class="col-md-8">

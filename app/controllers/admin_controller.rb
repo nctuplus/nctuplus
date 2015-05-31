@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
 	#include CourseMapsHelper
-	before_filter :checkTopManager,:only=>[:users, :ee104]
+	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role]
 	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
 	
 	def course_maps
