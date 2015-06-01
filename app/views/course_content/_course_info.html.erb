@@ -1,26 +1,15 @@
 <h2 class="panel-title">
-	<h4>
-		永久課號: <%=@data[:course_real_id]%>
-		學分: <%=@data[:course_credit]%>
-		<% if not @data[:open_on_latest]%>
-			(本學期無開課)
-		<% end %>
-		查看更多 
-		<%=link_to("javascript:void(0);", :class=>"see-more-course") do%>	
-			<%=fa_icon "search-plus"%>
-		<% end %>
-	</h4>
 	<table class="table">
 		<tr>
-			<td><%=fa_icon "calendar-o" %> 學期</td>
-			<td><%=fa_icon "bank" %> 單位</td>
-			<td><%=fa_icon "pencil" %> 課號</td>
-			<td><%=fa_icon "book" %> 選別</td>
-			<td><%=fa_icon "users" %> 修課人數/上限</td>
-			<td><%=fa_icon "bell" %> 時間</td>
-			<td><%=fa_icon "building" %> 教室</td>
-			<td><%=fa_icon "tag" %> 年級</td>					
-			<td class="col-md-4"><%=fa_icon "bookmark" %> 備註</td>
+			<td>學期</td>
+			<td>單位</td>
+			<td>課號</td>
+			<td>選別</td>
+			<td>修課人數/上限</td>
+			<td>時間</td>
+			<td>教室</td>
+			<td>年級</td>					
+			<td class="col-md-4">備註</td>
     	</tr>
 		<% @data[:related_cds].select{|cd| cd.semester_id==Semester::LAST.id}.each do |cd| %>  
 		<tr>

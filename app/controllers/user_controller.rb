@@ -19,13 +19,11 @@ class UserController < ApplicationController
 		#if request.format=="json"
 			case params[:type]
 				when "stat"
-					if params[:sem_id].blank?
-						#cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
+					if params[:sem_id].blank?				
 						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
-						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}					
-					else 
-						#cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}
-						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_advance_json}
+						cs_taked=@user.courses_taked.map{|cs|cs.to_basic_json}					
+					else 						
+						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_basic_json}
 						cs_agree=[]
 					end
 					result={
@@ -33,7 +31,6 @@ class UserController < ApplicationController
 						:last_sem_id=>Semester::CURRENT.id,
 						:agreed=>cs_agree,
 						:taked=>cs_taked,
-						#:list_type=>params[:type]
 					}
 				when "simulation"
 					result={
@@ -88,8 +85,7 @@ class UserController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 	
-	def statistics
-		
+	def statistics		
 		@user=getUserByIdForManager(params[:uid])
 		if request.format=="json"
 			course_map=@user.course_maps.first
@@ -106,6 +102,7 @@ class UserController < ApplicationController
 			end
 			res={
 				:user_id=>@user.id,
+				:need_common_check=>@user.is_undergrad?,
 				:pass_score=>@user.pass_score,
 				:last_sem_id=>Semester::CURRENT.id,
 				:user_courses=>@user.courses_json,

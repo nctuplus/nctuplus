@@ -17,33 +17,22 @@
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
 </head>
 
-<body>
+<body style="background-color:#e9eaed;">
 
-<%= image_tag(asset_path("head_1.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
+<% image_tag(asset_path("head_1.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
 
-
-	
 <div class="modal fade" id="global_modal" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" >
 		<div class="modal-content" ></div>
 	</div>
 </div>
 
-
 <!-- layouts/header start -->
 	<%= render 'layouts/header' %>
 <!-- layouts/header end -->
 
-
-
-<div id="content-contaier" class="container-fluid" style="margin-top:50px;" >
-	<div class="row">
-		<div id="content" class="col-md-12" style="padding-right:0px;">
-			<div id="global_bgcolor" class="well global-background-color" style="margin-bottom:0px;" >
-				<%= yield %>
-			</div>
-		</div>
-	</div>
+<div id="content-contaier" class="container" style="margin-top:60px;margin-bottom:30px;" >
+	<%= yield %>	
 </div>
 
 <%= render 'layouts/footer' %>

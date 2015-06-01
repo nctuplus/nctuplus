@@ -240,6 +240,10 @@ img.bg {
   left: 0;
 }
 
+.bg-white{
+	background-color:white;
+}
+
 .bg-white-transparent{
 	background-color:white;
 	opacity:0.75;

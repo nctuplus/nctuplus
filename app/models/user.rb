@@ -46,6 +46,9 @@ class User < ActiveRecord::Base
 		self.destroy
 	end
 
+	def has_imported?
+		return self.agree
+	end
 	
 	def hasFb?
 		return self.provider=="facebook"
