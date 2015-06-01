@@ -12,6 +12,6 @@
  *= require bootstrap
  *= require jquery.fileupload-ui
  *= require font-awesome
- *= require_tree .
+ *= require_directory .
 
  */

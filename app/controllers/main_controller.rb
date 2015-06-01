@@ -119,5 +119,9 @@ class MainController < ApplicationController
 			render :layout=>false, :text=>data.to_json
 		end
 	end
+
+	def member_intro
+		
+	end
   
 end
