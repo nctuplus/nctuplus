@@ -20,7 +20,7 @@ function genRow(cf,user_courses,maxColSpan){
 	var result=[];
 	if(cf.cf_type==3){
 		if(cf.child_cf){
-			var result=checkCf(user_courses,cf)
+			var result=check_cf(user_courses,cf)
 			console.log(result);
 			str+='<tr class="row">';
 			str+='<td class="text-center">'+cf.cf_name+"</td>";
@@ -48,7 +48,7 @@ function genRow(cf,user_courses,maxColSpan){
 	else{
 		str+="<tr class='row'><td class='col-md-2 text-center'>"+cf.cf_name+"</td>";
 		str+="<td class='col-md-10 text-center' colspan='"+maxColSpan+"'>";
-		var check=checkCf(user_courses,cf);
+		var check=check_cf(user_courses,cf);
 		if(check["result"])
 			str+=green_check();
 		else str+=check["match_credit"]+"/"+cf.credit_need;

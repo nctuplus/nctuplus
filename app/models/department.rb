@@ -1,5 +1,4 @@
 class Department < ActiveRecord::Base
-	has_many :course_details
   has_many :courses
 	has_many :users
 	belongs_to :college

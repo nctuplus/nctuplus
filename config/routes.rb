@@ -35,9 +35,15 @@ Nctuplus::Application.routes.draw do
   get "main/test"
 	post "main/send_report"
 	get "main/policy_page"
+
+#---------- book page ----------- 
   
+  get "book/book"
+  post "book/create"
 #---------- admin page -----------
 	
+  get "admin/statistics"
+    
 	get "admin/ee104"
 	get "admin/users"
 	post "admin/change_role"
