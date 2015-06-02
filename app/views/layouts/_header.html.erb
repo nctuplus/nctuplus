@@ -100,28 +100,19 @@
 			},
 			dataType: "json",
 			success: function(data){
-
 				var result = $.extend(true, [], data);
-
 				var $table = $('<table>').addClass('table table-bordered');
         data.config = {
           deletable: false ,
           selectable: false,
           popover: true,
 		      semester_id: semester_id
-
         };
-				showGlobalModal($("a[sem="+semester_id+"]").text(),$table.CourseTable(data));
-				
-
-				
 				var image_link_callback = function(){
 				  $table.CourseTable("renderImg");
 				};
-				
-				var $but_group = $table.CourseTable("generateDownloadButton", {"callback": image_link_callback, "sem_id": semester_id});
-				$header.append($but_group);
-
+				var $but_group = $table.CourseTable("generateDownloadButton", {"callback": image_link_callback, "sem_id": semester_id});				
+				showGlobalModal(data.semester_name/*+$but_group*/,$table.CourseTable(data));
       }
 		});
 		return ;
