@@ -13,7 +13,7 @@ Nctuplus::Application.routes.draw do
 	
 #--------- events --------------	
 	resources :events
-	
+	get "main/cts_search"
 #--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
  # match 'auth/failure', to: redirect('/'), via: [:get, :post]
