@@ -32,6 +32,8 @@ class User < ActiveRecord::Base
 	has_many :course_details, :through=> :normal_scores
 	has_many :semesters, :through=> :course_details
 	
+	has_many :user_share_images
+	
 # constants	
 	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 5) # (salt, length of encode string)
 

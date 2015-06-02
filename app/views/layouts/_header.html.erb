@@ -115,6 +115,12 @@
 				if(showNow)	
 					$("#global_modal").modal('show');	
 				
+				var image_link_callback = function(){
+				  $table.CourseTable("renderImg");
+				};
+				
+				var $but_group = $table.CourseTable("generateDownloadButton", {"callback": image_link_callback, "sem_id": semester_id});
+				$header.append($but_group);
       }
 		});
 		return ;
