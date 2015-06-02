@@ -110,6 +110,7 @@ GEM
       httparty
     haml (4.0.6)
       tilt
+    hashids (1.0.2)
     hashie (3.3.1)
     highline (1.6.21)
     hike (1.2.3)
@@ -278,6 +279,7 @@ DEPENDENCIES
   font-awesome-rails
   google-api-client
   googlebooks
+  hashids
   jbuilder (~> 1.2)
   jquery-fileupload-rails
   jquery-rails

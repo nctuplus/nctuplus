@@ -11,7 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 20150601181632) do
+=======
+ActiveRecord::Schema.define(version: 20150601172638) do
+>>>>>>> 8e6e49232c85661aa171647d99072d99a429c7f3
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -39,6 +43,19 @@ ActiveRecord::Schema.define(version: 20150601181632) do
     t.string   "uid"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "book_trade_infos", force: true do |t|
+    t.integer  "book_id",    default: 0,  null: false
+    t.integer  "user_id",    default: 0,  null: false
+    t.string   "book_name",  default: "", null: false
+    t.string   "image_url",  default: ""
+    t.integer  "price",      default: 0,  null: false
+    t.integer  "status",     default: 0,  null: false
+    t.integer  "view_times", default: 0,  null: false
+    t.text     "desc",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -402,6 +419,35 @@ ActiveRecord::Schema.define(version: 20150601181632) do
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
+<<<<<<< HEAD
+=======
+  create_table "user_scores", force: true do |t|
+    t.integer  "user_id",                                 null: false
+    t.integer  "target_id",                               null: false
+    t.integer  "course_field_id",             default: 0
+    t.boolean  "is_agreed"
+    t.text     "score",           limit: 255
+    t.string   "status"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "user_scores", ["course_field_id"], name: "index_user_scores_on_course_field_id", using: :btree
+  add_index "user_scores", ["target_id"], name: "index_user_scores_on_target_id", using: :btree
+  add_index "user_scores", ["user_id"], name: "index_user_scores_on_user_id", using: :btree
+
+  create_table "user_share_images", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "semester_id"
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+>>>>>>> 8e6e49232c85661aa171647d99072d99a429c7f3
   create_table "users", force: true do |t|
     t.string   "name"
     t.integer  "year",                   default: 0

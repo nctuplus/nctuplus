@@ -16,7 +16,7 @@
 		this._init(options.courses);	
 	};
 	
-	Table.specReturnMethod = ["checkConflictByTime", "getSelectedSlot", "getAllCourses"] ;
+	Table.specReturnMethod = ["checkConflictByTime", "getSelectedSlot", "getAllCourses", "generateDownloadButton"] ;
 	
 	Table.defaults = {
 		days :['Mon','Tue','Wed','Thu','Fri','Sat'],
@@ -27,18 +27,39 @@
 		conflict_class: "course-conflict",
 		$cancel_but : $($('<div>').addClass('course-clean').css("display", "none")
 					.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),	
+/*	
 		$download_link : function(sem_id){
 			return $('<a>').attr('href','/courses/export_timetable.xls?sem_id='+sem_id)
 				   .addClass('btn btn-success btn-circle')
 				   .html($('<i>').addClass('fa fa-download')) ;
 		},
-		
+*/		
 		cancelButtonFunc: function(args){
 			logDebug("Callback function is not defined.");
 		}
 	};
 	
 	Table.prototype = {
+		
+		generateDownloadButton: function(hash){
+		  var $group = $('<div>').addClass('btn-group pull-right').css('margin-top', '-5px');
+		  
+		  var $button = $('<button>').addClass('btn btn-circle btn-success dropdown-toggle')
+		                .attr('data-toggle', 'dropdown').attr('aria-expanded', false);
+		  var $icon = $('<i>').addClass('fa fa-download');
+		  $button.html($icon);
+		  
+		  var $lists = $('<lu>').addClass('dropdown-menu').attr('role', 'menu');  
+	    var $excel_link = $('<a>').attr('href', '/courses/export_timetable.xls?sem_id='+hash["sem_id"]).html('Excel');
+		  var $image_link = $('<a>').attr('href', '#').html('Image');
+		  	  
+		  $lists.html($('<li>').html($excel_link))
+		    .append($('<li>').html($image_link).click(hash["callback"]));
+		  
+		  $group.html($button).append($lists) ;
+		  return $group ;
+		},
+		
 		
 		renderImg: function(){
 		  html2canvas( this.$element.get(0), {
@@ -184,8 +205,9 @@
 			var days = Table.defaults.days ;
 			
 			var $leftupth = $('<th>') ;
-			if(this.config.downloadable)
-				$leftupth.html(Table.defaults.$download_link(this.config.semester_id));
+		// downloadable 
+		//	if(this.config.downloadable)
+		//		$leftupth.html(Table.defaults.$download_link(this.config.semester_id));
 			var $row = $('<tr>').append($leftupth);
 			for(var i = 0, t; t=days[i]; i++){
 				$row.find('th:last').after($('<th>').addClass('col-md-2')

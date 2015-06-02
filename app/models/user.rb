@@ -32,7 +32,15 @@ class User < ActiveRecord::Base
 	has_many :course_details, :through=> :normal_scores
 	has_many :semesters, :through=> :course_details
 	
+	has_many :user_share_images
+	
+# constants	
+	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 5) # (salt, length of encode string)
 
+	def encrypt_id
+    ENCRYTIONOBJ.encode(self.id)
+  end
+  
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
 	end
@@ -136,5 +144,6 @@ class User < ActiveRecord::Base
     user.save!
     return user
   end
+
   
 end
