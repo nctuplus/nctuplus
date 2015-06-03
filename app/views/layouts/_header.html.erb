@@ -106,13 +106,11 @@
           deletable: false ,
           selectable: false,
           popover: true,
+					downloadable: true,
 		      semester_id: semester_id
         };
-				var image_link_callback = function(){
-				  $table.CourseTable("renderImg");
-				};
-				var $but_group = $table.CourseTable("generateDownloadButton", {"callback": image_link_callback, "sem_id": semester_id});				
-				showGlobalModal(data.semester_name/*+$but_group*/,$table.CourseTable(data));
+				$table.CourseTable(data) ;		
+				showGlobalModal(data.semester_name, $table);
       }
 		});
 		return ;
