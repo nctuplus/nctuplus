@@ -81,4 +81,11 @@ Nctuplus::Application.configure do
 	
 	config.logger = Logger.new(config.paths["log"].first, 'daily') 
 
-	end
+	#email
+	config.action_mailer.delivery_method = :sendmail
+	config.action_mailer.default_url_options = { host: "nctuplus", port: 25}
+	config.action_mailer.perform_deliveries = true
+	config.action_mailer.raise_delivery_errors = true
+	
+	
+end
