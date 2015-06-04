@@ -63,7 +63,7 @@
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
-						<li>
+						<li  class="text-center">
 							<%= link_to  "登出", destroy_user_session_path, :method => :delete %>
 						</li>					
 					</ul>
@@ -80,16 +80,16 @@
 </ul>
 
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
+<% if current_user %>	
 <script>
 	$(document).ready(function(){	
-
 		//歷年課表
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
 		});
-	
+
 	});
-	
+
 	function show_timetable_on_modal(semester_id, showNow){
 		var result=0 ;
 		$.ajax({
@@ -109,30 +109,18 @@
 					downloadable: true,
 		      semester_id: semester_id
         };
-				$table.CourseTable(data) ;		
+				$table.CourseTable(data) ;			
 				showGlobalModal(data.semester_name, $table);
+				<% if current_user.canShare? %>
+				setTimeout(function(){ //wait for the modal show
+          $table.CourseTable("renderImg", "upload") ;
+          return false ;
+         }, 500);
+				<% end %>
       }
 		});
 		return ;
 	}
-/*
-	function add_to_cart(id,type){
-		$.ajax({
-			type: "GET",
-			url : "/courses/add_to_cart",
-			data : {
-				cd_id:id,
-				type:type
-			},
-			dataType : "json",
-			success : function(data){
-				toastr[data["class"]](data["text"]);
-				if(type=="delete"){
-					$("#global-modal .modal-body").load("/courses/show_cart");
-				}			
-			}
-		
-		});
-	}
-*/
+
 </script>
+<% end %>	

@@ -5,10 +5,12 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept, :statistics_table]
+	before_filter :checkLogin, :only=>[:upload_share_image, :all_courses, :this_sem, :add_course,  :show, :select_dept, :statistics_table, :get_courses]
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
+	USER_SHARE_DIR = "public/course_table_shares"
+	
 	def this_sem
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
@@ -43,7 +45,7 @@ class UserController < ApplicationController
 				when "course_table"
 					semester = Semester.find(params[:sem_id])
 					result={
-						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
+						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(semester.id).map{|cs|
 							cs.course_detail.to_course_table_result
 						},
 						:semester_name => semester.name # for 歷年課表 modal header 
@@ -53,7 +55,7 @@ class UserController < ApplicationController
 			end
 		#end
 		respond_to do |format|
-			format.json{render json:result}
+			format.json{render json: result}
 		end
 		
 	end
@@ -283,8 +285,61 @@ class UserController < ApplicationController
 	  
 	  render :text=>cd.to_course_table_result.to_json, :layout=>false
 	end
+
+# share course table 	
+  def upload_share_image
+    if request.post?  # web js lib will send image by post 
+			if params[:image] and params[:semester_id] and current_user
+				hash_user_id = current_user.encrypt_id
+				semester_id = params[:semester_id]
+				filename = "#{hash_user_id}_#{semester_id}.png"
+				path = File.join(USER_SHARE_DIR, filename)
+				File.open(path, "wb") { |f| f.write(params[:image].read) }
+			end	
+    end
+    render :nothing => true, :status => 200, :content_type => 'text/html'
+   
+  end
+  
+	def share # public method for share link	    
+    if params[:id] and params[:semester]
+      @user = User.find_by_hash_id(params[:id])
+      @semester = Semester.find(params[:semester])
+      if @user and @user.canShare? and @semester
+        @file_name = "#{params[:id]}_#{params[:semester]}.png"
+        respond_to do |format|
+          format.html { render :layout=>false }
+          format.json { render :json => {
+              :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
+                cs.course_detail.to_course_table_result},
+              :semester_name => @semester.name # for 歷年課表 modal header 
+            }
+          }
+        end   
+      else# user找不到或id亂打, 未開放share
+       not_found
+      end
+    else
+      not_found
+    end  
+
+	end
+	
+	
+	def settings # set share or not
+		if params[:type]=="share"
+			current_user.update_attribute(:agree_share, params[:data])
+		end
+		render :nothing => true, :status => 200, :content_type => 'text/html'
+		
+	end
+	
 	
   private
+
+  def not_found
+    raise ActionController::RoutingError.new('Not Found')
+  end
 
   def user_params
     params.require(:user).permit(:email)

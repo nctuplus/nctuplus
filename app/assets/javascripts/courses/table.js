@@ -35,7 +35,7 @@
 	Table.prototype = {
 		
 		_generateDownloadButton: function(sem_id){
-		  var $group = $('<div>').addClass('btn-group pull-right');
+		  var $group = $('<div>').addClass('btn-group');
 		  
 		  var $button = $('<button>').addClass('btn btn-circle btn-success dropdown-toggle')
 		                .attr('data-toggle', 'dropdown').attr('aria-expanded', false);
@@ -49,21 +49,67 @@
 			var $temp = this.$element		;
 		  $lists.html($('<li>').html($excel_link))
 		    .append($('<li>').html($image_link).click({"element": $temp}, function(event){ 
-						event.data.element.CourseTable('renderImg');
+						event.data.element.CourseTable('renderImg', "window");
 				}));
 		  
 		  $group.html($button).append($lists) ;
 		  return $group ;
 		},
 		
+		_dataURItoBlob: function(dataURI){
+			var byteString;
+			if (dataURI.split(',')[0].indexOf('base64') >= 0)
+					byteString = atob(dataURI.split(',')[1]);
+			else
+					byteString = unescape(dataURI.split(',')[1]);
+
+			// separate out the mime component
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+			// write the bytes of the string to a typed array
+			var ia = new Uint8Array(byteString.length);
+			for (var i = 0; i < byteString.length; i++) {
+					ia[i] = byteString.charCodeAt(i);
+			}
+
+			return new Blob([ia], {type:mimeString});
+					
+		},
 		
-		renderImg: function(){
-		  html2canvas( this.$element.get(0), {
+		renderImg: function(flag){
+
+			var _this = this ;	
+			_this.$element.find('.btn-group').hide() ;// hide the download button
+		  html2canvas( _this.$element.get(0), {
+				height: 1500 ,
         onrendered: function(canvas) {
-          var img = canvas.toDataURL("image/png");
-          window.open(img);
+					_this.$element.find('.btn-group').show();
+          var dataUrl = canvas.toDataURL("image/png" ,1.0);
+					if (flag=="window"){
+						window.open(dataUrl);
+						_this.$element.find('.btn-group').show() ;
+						return ;
+					}else if(flag=="url"){
+					  return dataUrl ;//////////////////////////////////////
+					}else if(flag=="upload"){  
+						var blob = _this._dataURItoBlob(dataUrl);
+						console.log("filesize: "+blob.size);
+						var fd = new FormData();
+						fd.append("image", blob);
+						fd.append("semester_id", _this.config.semester_id);			
+						$.ajax({
+							type: "post",
+							url: "/user/share",
+							data: fd,
+							cache:false,
+							contentType: false,
+							processData: false,
+							success: function(){console.log("good");}
+						});
+					}        
         }
       });
+			
       return;
 		},
 		

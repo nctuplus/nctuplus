@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601181632) do
+ActiveRecord::Schema.define(version: 20150603173130) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -415,17 +415,6 @@ ActiveRecord::Schema.define(version: 20150601181632) do
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
-  create_table "user_share_images", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "semester_id"
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", force: true do |t|
     t.string   "name"
     t.integer  "year",                   default: 0
@@ -433,6 +422,7 @@ ActiveRecord::Schema.define(version: 20150601181632) do
     t.datetime "updated_at"
     t.integer  "department_id"
     t.boolean  "agree",                  default: false
+    t.boolean  "agree_share",            default: false
     t.integer  "role",                   default: 1
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false

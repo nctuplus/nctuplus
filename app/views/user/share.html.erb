@@ -1,0 +1,25 @@
+<html>
+<head>
+  <title><%=@user.name%> <%=@semester.name%></title>
+  <meta property="og:title" content="<%=@user.name%>" ></meta>
+  <meta property="og:description" content="<%=@semester.name%> 課表" ></meta>
+  <meta property="og:url" content="http://nctuplus.nctucs.net:3999/shares/<%=params[:id]%>?semester=<%=params[:semester]%>" ></meta>
+  <meta property="og:image" content="http://nctuplus.nctucs.net:3999/course_table_shares/<%=@file_name%>"/>
+  <%=stylesheet_link_tag("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css")%>
+  <%=stylesheet_link_tag "course", "data-turbolinks-track" => true %>
+</head>
+<body>
+  <table class="table table-bordered" id="myCourseTable" style="height: 800px; width: 600px;"></table>
+</body>
+</html>
+
+<%=javascript_include_tag "http://code.jquery.com/jquery-2.1.4.min.js", "data-turbolinks-track" => true %>
+<%=javascript_include_tag "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js", "data-turbolinks-track" => true %>
+<%=javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
+<script>
+  var $table = $('#myCourseTable') ;
+  $.getJSON("/shares/<%=params[:id]%>?semester=<%=params[:semester]%>",function(data){
+			data.config = { popover: true };	
+			$table.CourseTable(data);	
+	});
+</script>

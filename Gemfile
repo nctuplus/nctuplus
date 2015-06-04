@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'therubyracer'
+
 gem 'google-api-client'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'

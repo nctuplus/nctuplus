@@ -21,6 +21,7 @@
 //= require array-groupby
 //= require course_class-helper
 //= require user_course_stat/pass_score-checker
+//= require share.min
 
 var isMobile = false; //initiate as false
 // device detection

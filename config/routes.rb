@@ -21,8 +21,10 @@ Nctuplus::Application.routes.draw do
  # match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
 # get "sessions/get_courses"
 	
-	
-
+#--------- for share course table page -----
+	match "shares/:id" , to: "user#share", via:[:get]
+	post "user/upload_share_image"
+	post "user/settings"
 #--------- for many usage --------------
 
 	get "main/book_test"
