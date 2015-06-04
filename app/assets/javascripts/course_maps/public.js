@@ -12,6 +12,7 @@
 //= require page-tour/modernizr.mq
 //= require page-tour/jquery.joyride-2.1
 
+
 function toggle_cf_table(type){
 	var _class={true:'cf',false:'sem'};
 	//alert(_class[type]);
@@ -100,8 +101,9 @@ function grade_sort(coursesbyGrade){
 	}); 
 	
 }
+//學程群組-> 無課
 
-function genTh(show_cf){
+function genTh(show_cf){   //學成second blank
 	//str='<table class="table table-bordere">';
 	
 	var str='<tr class="row"><th class="col-md-1"></th>';
@@ -114,13 +116,16 @@ function genTh(show_cf){
 	str+='</tr>';
 	return str;
 }
-function packCourse(course,cf,parent_cf){
-	var ret=course;
+function packCourse(course,cf,parent_cf){ //年級 table 加上 學程群組-
+	var ret=course; //除了學程以外的欄
 	var _parent_cf = parent_cf!=null ? {
 		cf_name:parent_cf.cf_name
 	} : null;
-	ret["cf"]=cf;
-	ret["parent_cf"]=_parent_cf;
+	ret["cf"]={
+		cf_name :cf.cf_name,
+		type: cf.type
+	};	//自己
+	ret["parent_cf"]=_parent_cf;//學程(有些是空的)
 	
 	return ret;
 }
@@ -164,7 +169,7 @@ function genCourseList(cf,show_cf,parent_cf){
 	res["courses"]=courses;
 	return res;
 }
-function parseCf(cf){
+function parseCf(cf){//修課規定 文字
 	var str='<ul>';
 	str+='<li>';
 	str+='['+get_cf_type(cf.cf_type)+']';

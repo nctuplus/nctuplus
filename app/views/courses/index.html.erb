@@ -31,15 +31,15 @@
 </div>
 <br>
 
-<table class="table table-hover table-bordered bg-white-transparent" id="course_table" >
+<table class="table table-hover  bg-white-transparent" id="course_table" style="width:85%;margin:auto">
 	<tr class="row">
 		<th class="col-md text-center" style="width:70px;">學期</th>
 		<th class="col-md-2 text-center">
 			<%= sort_link @q,:department_id, "系所" %> /
 			<%= sort_link @q,:brief, "摘要" %>
 		</th>
-		<th class="col-md-2 text-center"><%= sort_link @q,:course_ch_name, "課名" %></th>
-		<th class="col-md-2 text-center"><%= sort_link @q,:teacher_name, "老師" %></th>
+		<th class="col-md-3 text-center"><%= sort_link @q,:course_ch_name, "課名" %></th>
+		<th class="col-md- text-center"><%= sort_link @q,:teacher_name, "老師" %></th>
 		<!--<th class="col-md-4">備註</th>-->
 		<th class="col-md- text-center"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
 		<th class="col-md- text-center"><%= sort_link @q,:credit, "學分" %></th>
@@ -64,7 +64,7 @@
 					</td>
 					<!--<td><%= cd.brief %></td>-->
 
-					<td class="text-center"><%= cd.course_ch_name %></td>
+					<td class="text-center" style="color:#004B97"><b><%= cd.course_ch_name %></b></td>
 					<td class="text-center"><%= cd.teacher_name %></td>
 					<!--<td><%= cd.memo %></td>-->
 					<td class="text-center"><%= cd.grade %>/<%= cd.time %></td>

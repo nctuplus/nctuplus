@@ -1,20 +1,45 @@
 <%= javascript_include_tag "course_maps/public", "data-turbolinks-track" => true %>
 
+
 <div class="row" style="min-height:1000px;height:100%;">
 	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;/*min-height:100%;*/">
 		<%=render "course_maps/public/dept_sidebar"%>
 	</div>
 	</div>
 	<div id="tip-test"></div>
-	<div id="central-view" class="col-md-7" style="margin-left:300px;">
+	
+	<div id="central-view" class="col-md-9" style="margin-left:300px;">
 		<div class="panel panel-default">
-			<div class="panel-body" id="cm-desc">
+			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">
 				<% if params[:dept_id].blank? %>
-				<h4>請先至左方選擇系!</h4>
+				<h4><b>請先至左方選擇系或由搜尋欄查詢</b><br></h4><br>
+				<div class="search" style="width:30%">
+				<form action="#" class="search" method="get" id="searchform" >
+				　科系： <select name="Department">
+				　<option value="id1" >資工系 網多組</option>
+				　<option value="id2">資工系 資電組</option>
+				　<option value="id3">資工系 資工組</option>
+				　<option value="id4">資科工所</option>
+				  </select><br>
+				　年級： <select name="Grade">
+				　<option value="UnderGraduate1">一年級</option>
+				　<option value="UnderGraduate2">二年級</option>
+				　<option value="UnderGraduate3">三年級</option>
+				　<option value="UnderGraduate4">四年級</option>
+				  <option value="Graduate1">碩一</option>
+				　<option value="Graduate2">碩二</option>
+				  </select><button class="btn btn-primary" type="submit" form="searchform" value="Submit"
+				style="margin-left:100%;"
+				>送出</button>
+				</form>
+				
+				
+				</div>
 				<% end %>
 			</div>
-			<h3><strong>Q&A</strong></h3>
-			<hr>
+			<div class="panel-body" id="cm-desc">
+			
+			</div>
 			<div id="QandA" style="display: none;">
 			</div>
 		</div>
@@ -56,7 +81,10 @@
 	
 </div>
 <script>
+	
+	
 	function show_tip(){
+		
 		$('#joyRideTipContent').joyride("destroy");
 		$('#joyRideTipContent').joyride({
 			autoStart : true,
@@ -69,21 +97,22 @@
 			year: year
 			},
 			function(data){
-				//console.log(data);
-				$("#cm-desc").html(tmpl("cm_public", data));
+				console.log(data);
+				$("#cm-desc").html(tmpl("cm_public", data));//tmpl 插件
 				$("#year-"+year).addClass("disabled");
-				//$("#cf-btn").click();
-				$("#sem-btn").click();
+				
+				//$("#sem-btn").click();
+				
 				get_piechart_data("#chart-content", data.course_map);
 				if(!isMobile){
-					$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
+					/*$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
 						$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });						
 					});
 					$('body').scrollspy('refresh');
 					$('.main-menu li a').click(function(event) {
 							event.preventDefault();
 							$('body').scrollTo($(this).attr('href'),700,{offset:-60});
-					});
+					});*/
 				}
 				
 				$('#joyRideTipContent').joyride({
@@ -97,16 +126,18 @@
 					},
 					modal:true,
 					expose: true
+					
 				});
 				/* QandA
 				$('#QandA').show();
 				$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
 				*/
+				show_course();
 			}
 		);
 	}
 	$(document).ready(function(){
-		
+		//show_course();
 		var dept_id=<%=params[:dept_id]||0%>;
 		var year=<%=params[:year]||0%>;
 		if(dept_id!=0){
@@ -124,7 +155,75 @@
 		$('#QandA').show();
 		
 	}
-	
+	function show_course(){
+	//alert("!!!");
+	console.log($(".btn-course")[0]);
+	$( ".btn-course" ).mouseover(function(event){
+		var course=JSON.parse($(this).attr('data'));
+		var offset = $( this ).offset();
+		var id1 = $(this).attr('id');
+		var str="#"+id1;
+		var sty=("2px "+$(str).css("background")+" solid");
+			$( ".tooltip-course" ).css({
+			"left": (event.pageX-306),
+			"top": (event.pageY-35),
+			"display": "block",
+			"border-color":$(str).css("background-color")
+				});
+			$( ".course-name" ).css({
+			"background-color":$(str).css("background-color")
+				});
+			
+			$( ".course-content" ).html(course.name);
+			
+			
+			})
+			.mousemove(function(event){
+			var id1 = $(this).attr('id');
+			var color1="#FF0080";
+			var str="#"+id1;
+			//alert("event.pageX");
+			var sty=("2px "+$(str).css("background")+" solid");
+			$( ".tooltip-course" ).css({
+			"left": (event.pageX-306),
+			"top": (event.pageY-70),
+			"display": "block",
+			"border-color":$(str).css("background-color")
+				});
+			$( ".course-name" ).css({
+			"background-color":$(str).css("background-color")
+				});
+			})
+			.mouseout(function(event){
+				
+			var id1 = $(this).attr('id');
+			var color1="#FF0080";
+			
+			//alert("event.pageX");
+			$( ".tooltip-course" ).css({
+			"display": "none",
+			
+				});
+			});
+		$( ".tooltip-course" ).mouseover(function(){
+			$( this ).css({
+			"display": "block"
+			});
+			})
+			.mousemove(function(event){
+			
+			$( this ).css({
+			"display": "block"
+			});
+			})
+			.mouseout(function(event){
+			
+			//alert("event.pageX");
+			$( this).css({
+			"display": "none",
+				});
+			});
+}
 	function genCfTree(cf){
 		
 		str='<li class="cf-li"><a href="#'+cf.id+'">'+cf.cf_name+'</a></li>';
@@ -170,16 +269,120 @@
 	
 </script>
 
-<%= render "/course_maps/public/xtmpl_scrollbar" %>
-
-
+<!--<%= render "/course_maps/public/xtmpl_scrollbar" %>-->
 <%= render "/course_maps/public/xtmpl_course_table" %>
-
 <%= render "/course_maps/public/xtmpl_qa" %>
 
 <style>
+	.tooltip-course
+	{
+		background:#fff;
+		border:2px #ccc solid;
+		border-radius:6px;
+		position:absolute;
+		left:300px;
+		top:300px;
+		width:220px;
+		height:160px;
+		display:none;
+		z-index:1000;
+		opacity:0.9;
+		-webkit-box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
+		-moz-box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
+		box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
+	}
+	.course-name
+	{
+		overflow:hidden;
+		background:#aaa;
+		color:white;
+		padding:10px 5px;
+	}
+	.course-content
+	{
+		
+		color:#666;
+		padding:10px 15px;
+		
+	}
+	.widget-course
+	{
+		height:80px;
+		width:120px;
+		margin-bottom:20px;
+		margin-left:80%;
+	}
+	
+	.square-course
+	{
+		width:12px;
+		height:12px;
+		background:#666;
+		display:inline-block;
+		margin-left:15px;
+		margin-top:10px;
+		line-height:20px;
+	}
+	.widget-line
+	{
+		line-height:20px;
+	}
 	.lead_course {
-		background-color:#BBFFEE;
+		border-bottom: 3px solid #ddd;
+	 -moz-box-shadow:    inset 0 0 10px #000000;
+	   -webkit-box-shadow: inset 0 0 10px #000000;
+	   box-shadow:         inset 0 0 10px #000000;
+	}
+	.grade1
+	{
+		background:#333;
+		color:white;
+		
+	}
+	.grade2
+	{
+		border-left: 5px solid #ddd;
+	}
+	.semester1
+	{
+		background:#ccc
+	}
+	.semester2
+	{
+		background:#ccc;
+		border-left: 2px solid #fff;
+	}
+	.btn-course
+	{
+		padding:4px 8px;
+		margin:10px 0px;
+		color:#fff;
+		border-radius:4px;
+		font-size:12px;
+		text-align:center;
+		height:42px;
+		
+	}
+	.btn-course:hover
+	{
+		opacity:0.8;
+	}
+	#btn-course-required
+	{
+		background:#0080FF;
+	}
+	#btn-course-minor
+	{
+		background:#FF8040;
+	}
+	#btn-course-main
+	{
+		background:#FF0080;
+	}
+	
+	#table-gray-line
+	{
+		border-left:1px #aaa solid;
 	}
 	/*html, body{height:100%;}*/
 
