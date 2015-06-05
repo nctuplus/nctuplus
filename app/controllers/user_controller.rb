@@ -290,9 +290,9 @@ class UserController < ApplicationController
   def upload_share_image
     if request.post?  # web js lib will send image by post 
 			if params[:image] and params[:semester_id] and current_user
-				hash_user_id = current_user.encrypt_id
-				semester_id = params[:semester_id]
-				filename = "#{hash_user_id}_#{semester_id}.png"
+				hash_number = User.generate_hash([current_user.id, params[:semester_id].to_i])
+				
+				filename = "#{hash_number}.png"
 				path = File.join(USER_SHARE_DIR, filename)
 				File.open(path, "wb") { |f| f.write(params[:image].read) }
 			end	
@@ -302,13 +302,17 @@ class UserController < ApplicationController
   end
   
 	def share # public method for share link	    
-    if params[:id] and params[:semester]
-      @user = User.find_by_hash_id(params[:id])
-      @semester = Semester.find(params[:semester])
+    if params[:id]
+      data = User.find_by_hash_id(params[:id])
+      not_found if data.blank?
+      @user = data[0]
+      @semester = Semester.find(data[1])
       if @user and @user.canShare? and @semester
-        @file_name = "#{params[:id]}_#{params[:semester]}.png"
+        @file_name = "#{params[:id]}.png"
+        @fb_share_meta = true
+        @host = request.host
         respond_to do |format|
-          format.html { render :layout=>false }
+          format.html {}
           format.json { render :json => {
               :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
                 cs.course_detail.to_course_table_result},

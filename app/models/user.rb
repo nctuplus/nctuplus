@@ -38,17 +38,17 @@ class User < ActiveRecord::Base
 	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
 
 # share course table
-	def encrypt_id
-    ENCRYTIONOBJ.encode(self.id)
+
+  def self.generate_hash(data) # hash [user_id, semester_id]
+    ENCRYTIONOBJ.encode(data)
   end
   
-  
-	def self.find_by_hash_id(hash_id)
-	  decrypt_ary = ENCRYTIONOBJ.decode(hash_id)
-	  if decrypt_ary.size != 1
+	def self.find_by_hash_id(hash_data)
+	  decrypt_ary = ENCRYTIONOBJ.decode(hash_data)
+	  if decrypt_ary.size != 2
 	    return nil
 	  else	
-		  return find(decrypt_ary[0])
+		  return [find(decrypt_ary[0]), decrypt_ary[1]]
 		end
 	end
 	

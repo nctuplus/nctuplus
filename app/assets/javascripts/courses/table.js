@@ -279,8 +279,8 @@
 					.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
-						selectable: this.config.selectable, 
-						deletable: this.config.deletable || Table.defaults.deletable,
+						selectable: this.config.selectable || false, 
+						deletable: this.config.deletable || false,
 						selected: false 
 					}));
 				}
