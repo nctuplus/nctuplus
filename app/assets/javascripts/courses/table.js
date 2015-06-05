@@ -99,7 +99,7 @@
 						fd.append("semester_id", _this.config.semester_id);			
 						$.ajax({
 							type: "post",
-							url: "/user/share",
+							url: "/user/upload_share_image",
 							data: fd,
 							cache:false,
 							contentType: false,

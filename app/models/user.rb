@@ -35,7 +35,7 @@ class User < ActiveRecord::Base
 	has_many :user_share_images
 	
 # constants	
-	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 5) # (salt, length of encode string)
+	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
 
 # share course table
 	def encrypt_id
