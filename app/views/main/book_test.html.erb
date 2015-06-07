@@ -1,3 +1,53 @@
+<style>
+	.mouse-on{
+		height:auto !importan;
+		border-color: #66afe9;
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+		cursor: pointer;
+	}
+	
+	.supplemental-info{
+		background: #f8f8f8;
+		//margin: 15px 0 0;
+		padding: 10px;
+		border-top: 1px solid #ccc;
+		margin-left: -4px;
+		margin-right: -4px;
+	}
+	
+</style>
+<div class="container">
+  <div id="products" class="row">
+		<%@books.each do |book| %>
+			<div class="col-md-4 col-sm-6">
+				<div class="thumbnail" style="height:300px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">					
+					<%=image_tag book.image_link(:zoom=>1),style:"height:170px;min-height:150px;"%>		
+					<div style="min-height:71px;margin-top:3px;padding-left:4px;" >
+						<div class="text-center" style="font-size:14px;">
+							<span title="<%=book.title%>">
+								<strong><%=book.title.truncate(24)%></strong>
+							</span>
+						</div>
+						<p style="margin-top:5px;">
+							微積分(一)|李榮耀<br>
+							<img alt="Picture" height="25" src="http://graph.facebook.com/100000103364671/picture" width="25">簡子陽
+						</p>
+					</div>
+					<div class="supplemental-info">
+						<strong style="font-size:20px;">
+							<%=fa_icon "dollar" %>21.000 
+						</strong>
+						<span class="pull-right" style="margin-top:5px;">
+						<%=fa_icon "eye"%> <strong>300</strong>&nbsp;&nbsp;&nbsp;
+						<%=fa_icon "clock-o"%><%= time_ago_in_words((3.days + 14.minutes + 25.seconds).ago) %>
+						
+						</span>
+					</div>						
+				</div>
+			</div>
+		<% end %>
+</div>
+
 <table class="table">
 	<tr>
 		<td>圖片</td>

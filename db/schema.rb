@@ -11,8 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150525152644) do
-
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
     t.integer "course_id",       default: 0,    null: false
@@ -39,6 +37,19 @@ ActiveRecord::Schema.define(version: 20150525152644) do
     t.string   "uid"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "book_trade_infos", force: true do |t|
+    t.integer  "book_id",    default: 0,  null: false
+    t.integer  "user_id",    default: 0,  null: false
+    t.string   "book_name",  default: "", null: false
+    t.string   "image_url",  default: ""
+    t.integer  "price",      default: 0,  null: false
+    t.integer  "status",     default: 0,  null: false
+    t.integer  "view_times", default: 0,  null: false
+    t.text     "desc",                    null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

@@ -38,8 +38,8 @@ Nctuplus::Application.routes.draw do
 
 #---------- book page ----------- 
   
-  get "book/book"
-  post "book/create"
+  resources :books
+	
 #---------- admin page -----------
 	
   get "admin/statistics"
