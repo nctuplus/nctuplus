@@ -35,14 +35,29 @@ class User < ActiveRecord::Base
 	has_many :user_share_images
 	
 # constants	
-	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 5) # (salt, length of encode string)
+	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
 
-	def encrypt_id
-    ENCRYTIONOBJ.encode(self.id)
+# share course table
+
+  def self.generate_hash(data) # hash [user_id, semester_id]
+    ENCRYTIONOBJ.encode(data)
   end
-  
+
 	def self.decrypt_user_id(hash_id)
 		return ENCRYTIONOBJ.decode(hash_id)
+	end
+	
+	def self.find_by_hash_id(hash_data)
+	  decrypt_ary = ENCRYTIONOBJ.decode(hash_data)
+	  if decrypt_ary.size != 2
+	    return nil
+	  else	
+		  return [find(decrypt_ary[0]), decrypt_ary[1]]
+		end
+	end
+	
+	def canShare?
+	  return self.agree_share
 	end
 	
 	def student_id

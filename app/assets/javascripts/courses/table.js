@@ -73,14 +73,19 @@
 			}
 
 			return new Blob([ia], {type:mimeString});
+<<<<<<< HEAD
 			
 			
+=======
+					
+>>>>>>> 6dddc4b99e91d9fd695641f9e12a4487c3dd54b3
 		},
 		
 		renderImg: function(flag){
 
 			var _this = this ;	
 			_this.$element.find('.btn-group').hide() ;// hide the download button
+
 		  html2canvas( this.$element.get(0), {
 				height: 1500 ,
         onrendered: function(canvas) {
@@ -92,6 +97,7 @@
 						return ;
 					}else if(flag=="url"){
 					  return dataUrl ;//////////////////////////////////////
+
 						var blob = _this._dataURItoBlob(dataUrl);
 						var fd = new FormData();
 						fd.append("canvasImage", blob);
@@ -99,6 +105,17 @@
 						$.ajax({
 							type: "post",
 							url: "/user/share",
+
+					}else if(flag=="upload"){  
+						var blob = _this._dataURItoBlob(dataUrl);
+						console.log("filesize: "+blob.size);
+						var fd = new FormData();
+						fd.append("image", blob);
+						fd.append("semester_id", _this.config.semester_id);			
+						$.ajax({
+							type: "post",
+							url: "/user/upload_share_image",
+
 							data: fd,
 							cache:false,
 							contentType: false,
@@ -278,8 +295,8 @@
 					.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
-						selectable: this.config.selectable, 
-						deletable: this.config.deletable || Table.defaults.deletable,
+						selectable: this.config.selectable || false, 
+						deletable: this.config.deletable || false,
 						selected: false 
 					}));
 				}

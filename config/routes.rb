@@ -23,7 +23,10 @@ Nctuplus::Application.routes.draw do
 	
 #--------- for share course table page -----
 	match "shares/:id" , to: "user#share", via:[:get]
+
 	post "user/share"
+	post "user/upload_share_image"
+	post "user/settings"
 
 #--------- for many usage --------------
 
@@ -37,10 +40,20 @@ Nctuplus::Application.routes.draw do
   get "main/test"
 	post "main/send_report"
 	get "main/policy_page"
+
   post "main/set_cts"
 	get "main/book_show"
+
+
+#---------- book page ----------- 
+  
+  resources :books
+	post "books/google_book"
+
 #---------- admin page -----------
 	
+  get "admin/statistics"
+    
 	get "admin/ee104"
 	get "admin/users"
 	post "admin/change_role"
