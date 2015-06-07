@@ -22,9 +22,11 @@ Nctuplus::Application.routes.draw do
 # get "sessions/get_courses"
 	
 #--------- for share course table page -----
-	match "shares/:id" , to: "user#share", via:[:get]
-	post "user/upload_share_image"
-	post "user/settings"
+	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
+	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
+	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
+	
+	
 #--------- for many usage --------------
 
 	get "main/book_test"

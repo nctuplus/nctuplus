@@ -1,11 +1,11 @@
-  
+ 
 <div class="well" style="background-color:white;"> 
   <h4 class="text-center"><%=@user.name%> <%=@semester.name%></h4> 
   <table class="table table-bordered" id="myCourseTable"></table>
 </div>
 <script>
   var $table = $('#myCourseTable') ;
-  $.getJSON("/shares/<%=params[:id]%>?semester=<%=params[:semester]%>",function(data){
+  $.getJSON("/shares/<%=params[:id]%>",function(data){
 			data.config = { popover: true };	
 			$table.CourseTable(data);	
 	});

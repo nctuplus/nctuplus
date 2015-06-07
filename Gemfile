@@ -79,3 +79,4 @@ end
 
 gem "googlebooks"
 
+gem "bootstrap-switch-rails"

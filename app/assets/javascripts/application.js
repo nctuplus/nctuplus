@@ -22,6 +22,7 @@
 //= require course_class-helper
 //= require user_course_stat/pass_score-checker
 //= require share.min
+//= require bootstrap-switch
 
 var isMobile = false; //initiate as false
 // device detection

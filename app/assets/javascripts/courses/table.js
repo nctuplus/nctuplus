@@ -79,11 +79,19 @@
 		renderImg: function(flag){
 
 			var _this = this ;	
-			_this.$element.find('.btn-group').hide() ;// hide the download button
+			var $global_modal_header = $('#global-modal .modal-header'); 
+			
+			// hide the item we don't want to see in the picture	
+			_this.$element.find('.btn-group').hide() ;	
+			$global_modal_header.hide();
+			
 		  html2canvas( _this.$element.get(0), {
 				height: 1500 ,
         onrendered: function(canvas) {
+          //recover the hidden items
 					_this.$element.find('.btn-group').show();
+					$global_modal_header.show();
+					
           var dataUrl = canvas.toDataURL("image/png" ,1.0);
 					if (flag=="window"){
 						window.open(dataUrl);
@@ -93,18 +101,20 @@
 					  return dataUrl ;//////////////////////////////////////
 					}else if(flag=="upload"){  
 						var blob = _this._dataURItoBlob(dataUrl);
-						console.log("filesize: "+blob.size);
+						//console.log("filesize: "+blob.size);
 						var fd = new FormData();
 						fd.append("image", blob);
-						fd.append("semester_id", _this.config.semester_id);			
+						fd.append("semester_id", _this.config.semester_id);	
+						fd.append("type", "upload_share_image");			
 						$.ajax({
 							type: "post",
-							url: "/user/upload_share_image",
+							url: "/user/update",
 							data: fd,
 							cache:false,
 							contentType: false,
 							processData: false,
-							success: function(){console.log("good");}
+							success: function(){/*console.log("good");*/},
+							error: function(){console.log("upload fails");}
 						});
 					}        
         }

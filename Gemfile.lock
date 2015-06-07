@@ -51,6 +51,7 @@ GEM
       extlib (>= 0.9.15)
       multi_json (>= 1.0.0)
     bcrypt (3.1.10)
+    bootstrap-switch-rails (3.3.2)
     brakeman (3.0.3)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
@@ -275,6 +276,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bootstrap-switch-rails
   brakeman
   coffee-rails (~> 4.0.0)
   curb

@@ -48,7 +48,8 @@ class UserController < ApplicationController
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(semester.id).map{|cs|
 							cs.course_detail.to_course_table_result
 						},
-						:semester_name => semester.name # for 歷年課表 modal header 
+						:semester_name => semester.name, # for 歷年課表 modal header 
+						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
 					}	
 				else
 					result={}
@@ -287,56 +288,44 @@ class UserController < ApplicationController
 	end
 
 # share course table 	
-  def upload_share_image
-    if request.post?  # web js lib will send image by post 
-			if params[:image] and params[:semester_id] and current_user
-				hash_number = User.generate_hash([current_user.id, params[:semester_id].to_i])
-				
-				filename = "#{hash_number}.png"
-				path = File.join(USER_SHARE_DIR, filename)
-				File.open(path, "wb") { |f| f.write(params[:image].read) }
-			end	
-    end
-    render :nothing => true, :status => 200, :content_type => 'text/html'
-   
-  end
-  
-	def share # public method for share link	    
-    if params[:id]
-      data = User.find_by_hash_id(params[:id])
-      not_found if data.blank?
-      @user = data[0]
-      @semester = Semester.find(data[1])
-      if @user and @user.canShare? and @semester
-        @file_name = "#{params[:id]}.png"
-        @fb_share_meta = true
-        @host = request.host
-        respond_to do |format|
-          format.html {}
-          format.json { render :json => {
-              :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
-                cs.course_detail.to_course_table_result},
-              :semester_name => @semester.name # for 歷年課表 modal header 
-            }
-          }
-        end   
-      else# user找不到或id亂打, 未開放share
-       not_found
-      end
-    else
-      not_found
-    end  
 
+	def share # public method for share link	    
+    data = User.find_by_hash_id(params[:id])
+    not_found if data.blank?
+    @user = data[0]
+    @semester = Semester.find(data[1])
+    if @user and @user.canShare? and @semester
+      @file_name = "#{params[:id]}.png"
+      @fb_share_meta = true
+      @host = request.host
+      respond_to do |format|
+        format.html {}
+        format.json { render :json => {
+            :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
+              cs.course_detail.to_course_table_result},
+            :semester_name => @semester.name # for 歷年課表 modal header 
+          }
+        }
+      end   
+    else# user找不到或id亂打, 未開放share
+     not_found
+    end       
 	end
 	
+	def upload_share_image
+    hash_number = Hashid.user_share_encode([current_user.id, params[:semester_id].to_i])   
+    filename = "#{hash_number}.png"
+    path = File.join(USER_SHARE_DIR, filename)
+    File.open(path, "wb") { |f| f.write(params[:image].read) }
+    render :nothing => true, :status => 200, :content_type => 'text/html'   
+  end
 	
-	def settings # set share or not
-		if params[:type]=="share"
-			current_user.update_attribute(:agree_share, params[:data])
-		end
-		render :nothing => true, :status => 200, :content_type => 'text/html'
-		
+	def update_user_share
+	  current_user.update_attribute(:agree_share, params[:data])
+	 # Rails.logger.debug "[!!!!!!!!!!!!!!!!!!] #{params[:data].inspect}"
+	  render :json=>{:hash_share=>Hashid.user_share_encode([current_user.id, params[:sem_id].to_i])}
 	end
+
 	
 	
   private
