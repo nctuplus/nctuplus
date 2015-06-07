@@ -11,8 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+<<<<<<< HEAD
+=======
 ActiveRecord::Schema.define(version: 20150603173130) do
 
+>>>>>>> 83b46e996e2f5788b304b831f02ae4b0b0306691
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
     t.integer "course_id",       default: 0,    null: false
