@@ -1,9 +1,19 @@
+適用課程及教師列表
+<ul id="cts-list">
+	<% @book.course_teacherships.each do |cts| %>
+		<li><%=cts.course_ch_name%> | <%=cts.teacher_name%></li>
+	<% end %>
+</ul>
+<%=form_tag "/main/set_cts" do %>
+	<%=hidden_field_tag :book_id, params[:book_id] %>
+	<%=hidden_field_tag :cts_id_list %>
+	<%=submit_tag%>
+<% end %>
 <%= search_form_for @q, url:"/main/cts_search", class:"form-inline", remote:"true" do |f| %>
 	<%=f.search_field :course_ch_name_cont%>
 	<%=f.submit%>
 <% end %>
-<ul id="cts-list">
-</ul>
+
 
 <script type="text/x-tmpl" id="cts-res">
 	<table class="table table-hover">
@@ -12,7 +22,7 @@
 			<th>老師</th>
 		</tr>
 		{% for(var i=0,cts;cts=o[i];i++) { %}
-			<tr class="clickable-hover" onclick="addCtid({%=cts.id%},'{%=cts.course_name%}','{%=cts.teacher_name%}');">
+			<tr class="clickable-hover" id="ct-{%=cts.id%}" onclick="addCtid({%=cts.id%},'{%=cts.course_name%}','{%=cts.teacher_name%}');">
 				<td>{%=cts.course_name%}</td>
 				<td>{%=cts.teacher_name%}</td>
 			</tr>
@@ -23,5 +33,11 @@
 <script>
 	function addCtid(id,course_name,teacher_name){
 		$("#cts-list").append("<li>"+course_name+' '+teacher_name+"</li>");
+		var ids=$("#cts_id_list").val();
+		if(ids!="")
+			ids+=',';
+		ids+=id;
+		$("#cts_id_list").val(ids);
+		$("#ct-"+id).remove();
 	}
 </script>

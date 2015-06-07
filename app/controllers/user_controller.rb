@@ -328,6 +328,23 @@ class UserController < ApplicationController
 
 	
 	
+	def share 
+		
+		if request.post?
+			if params[:canvasImage] and params[:semester_id]
+				hash_user_id = current_user.encrypt_id
+				semester_id = params[:semester_id]
+				filename = "#{hash_user_id}_#{semester_id}.png"
+				path = File.join(USER_SHARE_DIR, filename)
+				File.open(path, "wb") { |f| f.write(params[:canvasImage].read) }
+			end	
+			render :nothing => true, :status => 200, :content_type => 'text/html'
+		else	
+			render :layout=>false
+		end
+
+	end
+	
   private
 
   def not_found

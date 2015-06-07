@@ -25,4 +25,4 @@
 /vendor/cache
 
 # except for the files
-!/config/locales/devise.zh_TW.yml
+!/config/locales/zh-TW.yml

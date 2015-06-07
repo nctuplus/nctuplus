@@ -73,20 +73,20 @@
 			}
 
 			return new Blob([ia], {type:mimeString});
-					
-		},
+  	},
 		
 		renderImg: function(flag){
 
 			var _this = this ;	
-			var $global_modal_header = $('#global-modal .modal-header'); 
+      var $global_modal_header = $('#global-modal .modal-header'); 
 			
 			// hide the item we don't want to see in the picture	
 			_this.$element.find('.btn-group').hide() ;	
 			$global_modal_header.hide();
 			
-		  html2canvas( _this.$element.get(0), {
-				height: 1500 ,
+
+		  html2canvas( this.$element.get(0), {
+        height: 1500 ,
         onrendered: function(canvas) {
           //recover the hidden items
 					_this.$element.find('.btn-group').show();
@@ -98,7 +98,8 @@
 						_this.$element.find('.btn-group').show() ;
 						return ;
 					}else if(flag=="url"){
-					  return dataUrl ;//////////////////////////////////////
+					  return dataUrl ;
+
 					}else if(flag=="upload"){  
 						var blob = _this._dataURItoBlob(dataUrl);
 						//console.log("filesize: "+blob.size);
@@ -108,8 +109,8 @@
 						fd.append("type", "upload_share_image");			
 						$.ajax({
 							type: "post",
-							url: "/user/update",
-							data: fd,
+              url: "/user/update",
+              data: fd,
 							cache:false,
 							contentType: false,
 							processData: false,

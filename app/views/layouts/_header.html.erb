@@ -64,6 +64,9 @@
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
+						<li>
+							分享課表 <input type="checkbox" name="my-checkbox" checked>
+						</li>
 						<li  class="text-center">
 							<%= link_to  "登出", destroy_user_session_path, :method => :delete %>
 						</li>					
@@ -88,7 +91,6 @@
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
 		});
-
 	});
 	
 

@@ -26,7 +26,6 @@ Nctuplus::Application.routes.draw do
 	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
 	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
 	
-	
 #--------- for many usage --------------
 
 	get "main/book_test"
@@ -40,11 +39,15 @@ Nctuplus::Application.routes.draw do
 	post "main/send_report"
 	get "main/policy_page"
 
+  post "main/set_cts"
+	get "main/book_show"
+
+
 #---------- book page ----------- 
   
   resources :books
 	post "books/google_book"
-	
+
 #---------- admin page -----------
 	
   get "admin/statistics"

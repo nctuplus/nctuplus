@@ -11,11 +11,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-=======
 ActiveRecord::Schema.define(version: 20150603173130) do
 
->>>>>>> 83b46e996e2f5788b304b831f02ae4b0b0306691
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
     t.integer "course_id",       default: 0,    null: false
@@ -46,6 +43,16 @@ ActiveRecord::Schema.define(version: 20150603173130) do
     t.datetime "updated_at"
   end
 
+  create_table "book_ctsships", force: true do |t|
+    t.integer  "book_id"
+    t.integer  "course_teachership_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "book_ctsships", ["book_id"], name: "index_book_ctsships_on_book_id", using: :btree
+  add_index "book_ctsships", ["course_teachership_id"], name: "index_book_ctsships_on_course_teachership_id", using: :btree
+
   create_table "book_trade_infos", force: true do |t|
     t.integer  "book_id",    default: 0,  null: false
     t.integer  "user_id",    default: 0,  null: false
@@ -58,6 +65,20 @@ ActiveRecord::Schema.define(version: 20150603173130) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "books", force: true do |t|
+    t.string   "title",        default: "", null: false
+    t.string   "isbn"
+    t.string   "authors"
+    t.text     "description"
+    t.text     "image_link"
+    t.text     "preview_link"
+    t.integer  "user_id",      default: 0,  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
