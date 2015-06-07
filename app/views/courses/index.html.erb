@@ -94,8 +94,8 @@
 		if($("#adv_toggle").prop("checked"))
 			$("#adv-search").removeClass("hidden");
 		$(".clickable-row").click(function() {
-				window.document.location = $(this).attr("href");
 
+				goToHref($(this).attr("href"));
 		});
 		toastr["success"]("已更新到104上的課程囉!!!");
 		<% if !current_user %>

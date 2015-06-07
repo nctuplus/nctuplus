@@ -6,6 +6,7 @@
         <div class="form-group">
           <label class="col-sm-2">書名</label>
           <%= f.text_field "book_name", :class => "form-control" %>
+					<label id="query" class=".btn">query</label>
         </div>
         <div class="form-group">
           <label class="col-sm-2">圖片網址</label>
@@ -51,8 +52,24 @@
   </div>
 </div>
 <script>
-$("#book_trade_info_book_name").click(function(){
-
-	showGlobalModal(title,content);
+$("#query").click(function(){
+	var title=$("#book_trade_info_book_name").val();	
+	$.ajax({
+		type : "POST",
+		data : {title : title},
+		url : "/books/google_book",
+		success : function(data) {
+			console.log(data);
+			var content=""	;
+			for(var i=0;i<5;i++) {
+				content+='<div id="'+i+'">';
+				content+="title: "+data[i].title+"<br>authors: "+data[i].authors+'<br>image: <img src="'+data[i].volume_info.imageLinks.thumbnail+'">';
+				content+='<br><br></div>';
+			}
+			
+			showGlobalModal(title, content);
+		}
+	});
+	
 });
 </script>

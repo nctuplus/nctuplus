@@ -26,13 +26,7 @@
 		selected_class: "schd-grid-selected",
 		conflict_class: "course-conflict",
 		$cancel_but : $($('<div>').addClass('course-clean').css("display", "none")
-					.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),	
-		$download_link : function(sem_id){
-			return $('<a>').attr('href','/courses/export_timetable.xls?sem_id='+sem_id)
-				   .addClass('btn btn-success btn-circle')
-				   .html($('<i>').addClass('fa fa-download')) ;
-		},
-		
+					.html($('<i>').addClass('fa fa-times').addClass('clickable-hover'))),			
 		cancelButtonFunc: function(args){
 			logDebug("Callback function is not defined.");
 		}
@@ -40,13 +34,82 @@
 	
 	Table.prototype = {
 		
-		renderImg: function(){
-		  html2canvas( this.$element.get(0), {
+		_generateDownloadButton: function(sem_id){
+		  var $group = $('<div>').addClass('btn-group');
+		  
+		  var $button = $('<button>').addClass('btn btn-circle btn-success dropdown-toggle')
+		                .attr('data-toggle', 'dropdown').attr('aria-expanded', false);
+		  var $icon = $('<i>').addClass('fa fa-download');
+		  $button.html($icon);
+		  
+		  var $lists = $('<lu>').addClass('dropdown-menu').attr('role', 'menu');  
+	    var $excel_link = $('<a>').attr('href', '/courses/export_timetable.xls?sem_id='+sem_id).html('Excel');
+		  var $image_link = $('<a>').attr('href', '#').html('Image');
+		  
+			var $temp = this.$element		;
+		  $lists.html($('<li>').html($excel_link))
+		    .append($('<li>').html($image_link).click({"element": $temp}, function(event){ 
+						event.data.element.CourseTable('renderImg', "window");
+				}));
+		  
+		  $group.html($button).append($lists) ;
+		  return $group ;
+		},
+		
+		_dataURItoBlob: function(dataURI){
+			var byteString;
+			if (dataURI.split(',')[0].indexOf('base64') >= 0)
+					byteString = atob(dataURI.split(',')[1]);
+			else
+					byteString = unescape(dataURI.split(',')[1]);
+
+			// separate out the mime component
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+			// write the bytes of the string to a typed array
+			var ia = new Uint8Array(byteString.length);
+			for (var i = 0; i < byteString.length; i++) {
+					ia[i] = byteString.charCodeAt(i);
+			}
+
+			return new Blob([ia], {type:mimeString});
+					
+		},
+		
+		renderImg: function(flag){
+
+			var _this = this ;	
+			_this.$element.find('.btn-group').hide() ;// hide the download button
+		  html2canvas( _this.$element.get(0), {
+				height: 1500 ,
         onrendered: function(canvas) {
-          var img = canvas.toDataURL("image/png");
-          window.open(img);
+					_this.$element.find('.btn-group').show();
+          var dataUrl = canvas.toDataURL("image/png" ,1.0);
+					if (flag=="window"){
+						window.open(dataUrl);
+						_this.$element.find('.btn-group').show() ;
+						return ;
+					}else if(flag=="url"){
+					  return dataUrl ;//////////////////////////////////////
+					}else if(flag=="upload"){  
+						var blob = _this._dataURItoBlob(dataUrl);
+						console.log("filesize: "+blob.size);
+						var fd = new FormData();
+						fd.append("image", blob);
+						fd.append("semester_id", _this.config.semester_id);			
+						$.ajax({
+							type: "post",
+							url: "/user/upload_share_image",
+							data: fd,
+							cache:false,
+							contentType: false,
+							processData: false,
+							success: function(){console.log("good");}
+						});
+					}        
         }
       });
+			
       return;
 		},
 		
@@ -184,8 +247,9 @@
 			var days = Table.defaults.days ;
 			
 			var $leftupth = $('<th>') ;
+		// downloadable 
 			if(this.config.downloadable)
-				$leftupth.html(Table.defaults.$download_link(this.config.semester_id));
+					$leftupth.html(this._generateDownloadButton(this.config.semester_id));
 			var $row = $('<tr>').append($leftupth);
 			for(var i = 0, t; t=days[i]; i++){
 				$row.find('th:last').after($('<th>').addClass('col-md-2')
@@ -215,8 +279,8 @@
 					.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
-						selectable: this.config.selectable, 
-						deletable: this.config.deletable || Table.defaults.deletable,
+						selectable: this.config.selectable || false, 
+						deletable: this.config.deletable || false,
 						selected: false 
 					}));
 				}

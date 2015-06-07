@@ -1,6 +1,6 @@
 class Department < ActiveRecord::Base
 	has_many :course_details
-  has_many :courses
+  has_many :courses, :through=> :course_details
 	has_many :users
 	belongs_to :college
 	scope :searchable,->{where has_courses: true}

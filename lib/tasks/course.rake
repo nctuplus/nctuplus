@@ -3,30 +3,34 @@
 namespace :course do
 	desc "import course from e3"
 	task :import => :environment do
-		COURSE_LOGGER.info "==========Starting update=========="
+		inform_mesg=""
 		
-		update_department_list
-		update_teacher_list
-		
+
+
+		inform_mesg << update_department_list
+		inform_mesg << update_teacher_list
+
 		sem=Semester.last
 		datas=E3Service.get_course(sem) #get course
-		COURSE_LOGGER.info "[Course Detail] #{datas.length} courses from E3 getted."
+		inform_mesg << "[Course Detail] Got : #{datas.length} courses from E3.<br>"
 		if datas.length == 0
-			COURSE_LOGGER.info "No courses, stop updating"
+			inform_mesg << "No courses, stop updating.<br>"
 		else
 			stat={"Create"=>0, "Update"=>0}
+			
+			data_cos_ids=datas.map{|data|data['cos_id']}
+			old_cos_ids=CourseDetail.where(:semester_id=>sem.id).map{|data|data.temp_cos_id}
+			diff_cos_ids=old_cos_ids-data_cos_ids
+			CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>diff_cos_ids).destroy_all
+			inform_mesg << "[Course Detail] Deleted : #{diff_cos_ids.length}.<br>"
 			datas.each do |data|
 				stat[do_update_coourse(data,sem)]+=1
 			end
-			data_cos_ids=datas.map{|data|data['cos_id']}
-			old_cos_ids=CourseDetail.where(:semester_id=>sem.id).map{|data|data.temp_cos_id}
-			diff_cos_ids=old_cos_ids-data_cos_ids		
-			CourseDetail.where(:semester_id=>Semester.last.id, :temp_cos_id=>diff_cos_ids).destroy_all
-			COURSE_LOGGER.info "[Course Detail] Deleted : #{diff_cos_ids.length}."		
-			COURSE_LOGGER.info "[Course Detail] Created : #{stat["Create"]}."
-			COURSE_LOGGER.info "[Course Detail] Updated : #{stat["Update"]}."		
+			inform_mesg << "[Course Detail] Created : #{stat["Create"]}.<br>"
+			inform_mesg << "[Course Detail] Updated : #{stat["Update"]}.<br>"		
 		end
-		COURSE_LOGGER.info "==========Update Finished=========="
+
+		InformMailer.course_import(inform_mesg).deliver
 	end
 	
 	task :create_new_sem => :environment do
@@ -36,28 +40,15 @@ namespace :course do
 		puts "#{new_sem.id} : #{new_sem.name} created."
 	end
 
-=begin
-	task :import_new => :environment do
-		#create new semester
-		new_sem=Semester.create_new
-		new_sem.save!
-		
-		update_department_list
-		update_teacher_list
-		datas=E3Service.get_course(new_sem) #get course
-		datas.each do |data|
-			do_update_coourse(data)
-		end
-		puts "#{datas.length} courses has imported !"
-	end
-=end
 	
 	def update_teacher_list
-		COURSE_LOGGER.info "Updating Teacher..."
+		inform_mesg=""
+		inform_mesg << "Updating Teacher...<br>"
 		teachers=E3Service.get_teacher_list	
+		inform_mesg << "[Teacher] Get #{teachers.length} from E3.<br>"
 		tids=teachers.map{|t|t["TeacherId"]}
 		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
-		COURSE_LOGGER.info "[Teacher] Total #{@deleted}  Deleted."
+		inform_mesg << "[Teacher] Total : #{@deleted}  Deleted.<br>"
 		all_now=Teacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
 		@new=teachers - all_now
 		@new.each do |t|
@@ -66,14 +57,17 @@ namespace :course do
 				:name=>t["Name"],
 				:is_deleted=>false
 			)
-			COURSE_LOGGER.info "[Teacher] - #{@teacher.name} Created."
+			inform_mesg << "[Teacher] - #{@teacher.name} Created.<br>"
 		end
-		COURSE_LOGGER.info "[Teacher] Total:#{@new.length} Created."
+		inform_mesg << "[Teacher] Total : #{@new.length} Created.<br><br>"
+		return inform_mesg
 	end
 	
 	def update_department_list
-		COURSE_LOGGER.info "Updating Department..."
+		inform_mesg=""
+		inform_mesg << "Updating Department...<br>"
 		new_depts=E3Service.get_department_list
+		inform_mesg << "[Department] Get #{new_depts.length} from E3.<br>"
 		Department.all.each do |dept|
 			if !dept.course_details.empty?
 				dept.has_courses=true
@@ -83,9 +77,10 @@ namespace :course do
 		end
 		new_depts.each do |dept|
 			@dept=Department.create_from_e3(dept)
-			COURSE_LOGGER.info "[Department] - #{@dept.ch_name} Created."
+			inform_mesg << "[Department] - #{@dept.ch_name} Created.<br>"
 		end
-		COURSE_LOGGER.info "[Department] Total:#{new_depts.length} Created."
+		inform_mesg << "[Department] Total : #{new_depts.length} Created.<br><br>"
+		return inform_mesg
 	end
 	
 	def do_update_coourse(data,sem)

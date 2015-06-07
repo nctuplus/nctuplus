@@ -13,7 +13,7 @@ Nctuplus::Application.routes.draw do
 	
 #--------- events --------------	
 	resources :events
-	
+	get "main/cts_search"
 #--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
  # match 'auth/failure', to: redirect('/'), via: [:get, :post]
@@ -21,8 +21,10 @@ Nctuplus::Application.routes.draw do
  # match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
 # get "sessions/get_courses"
 	
-	
-
+#--------- for share course table page -----
+	match "shares/:id" , to: "user#share", via:[:get]
+	post "user/upload_share_image"
+	post "user/settings"
 #--------- for many usage --------------
 
 	get "main/book_test"
@@ -39,6 +41,7 @@ Nctuplus::Application.routes.draw do
 #---------- book page ----------- 
   
   resources :books
+	post "books/google_book"
 	
 #---------- admin page -----------
 	
