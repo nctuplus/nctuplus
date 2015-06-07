@@ -1,0 +1,32 @@
+<div class="row bg-white">
+	<div class="col-md-12 col-xs-12 text-cente">
+		<table class="table">
+			<tr class="row">
+				<td><%=image_tag @book.image_link_with_zoom(2)%></td>
+				<td>
+					<h4><%=@book.title%></h4>
+					
+					by <%=@book.authors%><br>
+					ISBN <%=@book.isbn%><br>
+					
+					<%=link_to "搶先看 ",@book.preview_link,target:"_blank"%>(on GoogleBook)<br>
+					價格: <strong>500</strong> <br>
+					賣家: <%=@book.user.name%> <br>
+					書況: zzzzzzzzzzzzzzzzzzzz <br>
+					適用課程 - <br>
+					<% @book.course_teacherships.includes(:course,:course_details).each do |cts|%>
+						<%=link_to "#{cts.course_ch_name} #{cts.teacher_name}","/courses/#{cts.course_details.last.id}", target:"_blank" %><br>
+					<% end %>
+					
+					
+					
+				</td>
+			</tr>
+			<tr class="row" >
+				<td colspan="2">
+				<%=@book.description%>(by google book)
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>

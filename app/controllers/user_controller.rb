@@ -9,6 +9,8 @@ class UserController < ApplicationController
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
+	USER_SHARE_DIR = "public/course_table_shares"
+	
 	def this_sem
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
@@ -282,6 +284,23 @@ class UserController < ApplicationController
 	  NormalScore.where(:user_id=>current_user.id, :course_detail_id=>cd.id).destroy_all
 	  
 	  render :text=>cd.to_course_table_result.to_json, :layout=>false
+	end
+	
+	def share 
+		
+		if request.post?
+			if params[:canvasImage] and params[:semester_id]
+				hash_user_id = current_user.encrypt_id
+				semester_id = params[:semester_id]
+				filename = "#{hash_user_id}_#{semester_id}.png"
+				path = File.join(USER_SHARE_DIR, filename)
+				File.open(path, "wb") { |f| f.write(params[:canvasImage].read) }
+			end	
+			render :nothing => true, :status => 200, :content_type => 'text/html'
+		else	
+			render :layout=>false
+		end
+
 	end
 	
   private

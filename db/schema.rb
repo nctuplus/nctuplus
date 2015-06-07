@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150601181632) do
+ActiveRecord::Schema.define(version: 20150605132051) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -43,6 +43,16 @@ ActiveRecord::Schema.define(version: 20150601181632) do
     t.datetime "updated_at"
   end
 
+  create_table "book_ctsships", force: true do |t|
+    t.integer  "book_id"
+    t.integer  "course_teachership_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "book_ctsships", ["book_id"], name: "index_book_ctsships_on_book_id", using: :btree
+  add_index "book_ctsships", ["course_teachership_id"], name: "index_book_ctsships_on_course_teachership_id", using: :btree
+
   create_table "book_trade_infos", force: true do |t|
     t.integer  "book_id",    default: 0,  null: false
     t.integer  "user_id",    default: 0,  null: false
@@ -55,6 +65,20 @@ ActiveRecord::Schema.define(version: 20150601181632) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "books", force: true do |t|
+    t.string   "title",        default: "", null: false
+    t.string   "isbn"
+    t.string   "authors"
+    t.text     "description"
+    t.text     "image_link"
+    t.text     "preview_link"
+    t.integer  "user_id",      default: 0,  null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -415,17 +439,6 @@ ActiveRecord::Schema.define(version: 20150601181632) do
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
-  create_table "user_share_images", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "semester_id"
-    t.string   "image_file_name"
-    t.string   "image_content_type"
-    t.integer  "image_file_size"
-    t.datetime "image_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", force: true do |t|
     t.string   "name"
     t.integer  "year",                   default: 0
@@ -433,6 +446,7 @@ ActiveRecord::Schema.define(version: 20150601181632) do
     t.datetime "updated_at"
     t.integer  "department_id"
     t.boolean  "agree",                  default: false
+    t.boolean  "agree_share",            default: false
     t.integer  "role",                   default: 1
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false

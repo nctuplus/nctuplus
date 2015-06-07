@@ -41,6 +41,10 @@ class User < ActiveRecord::Base
     ENCRYTIONOBJ.encode(self.id)
   end
   
+	def self.decrypt_user_id(hash_id)
+		return ENCRYTIONOBJ.decode(hash_id)
+	end
+	
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
 	end
