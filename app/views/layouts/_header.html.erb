@@ -120,7 +120,7 @@
 
 				$table.CourseTable(data) ;			
 				showGlobalModal(data.semester_name, $table);
-				<% if current_user.canShare? %>
+				<% if current_user.try(:canShare?) %>
 				setTimeout(function(){ //wait for the modal show
           $table.CourseTable("renderImg", "upload") ;
           return false ;

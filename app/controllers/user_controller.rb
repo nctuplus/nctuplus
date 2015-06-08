@@ -26,10 +26,10 @@ class UserController < ApplicationController
 					if params[:sem_id].blank?
 						#cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
 						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
-						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}					
+						cs_taked=@user.courses_taked.map{|cs|cs.to_basic_json}					
 					else 
 						#cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}
-						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_advance_json}
+						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_basic_json}
 						cs_agree=[]
 					end
 					result={
@@ -296,7 +296,7 @@ class UserController < ApplicationController
 
 
 	def update
-		current_user.update_attributes(:name=>params[:name], :email=>params[:email], :department_id=>params[:department_id])
+		current_user.update_attributes(:name=>params[:name], :email=>params[:email])
 		#current_user.update_attributes(:name=>name, :email=>email)
 
 		degree=params[:degree_select].to_i
