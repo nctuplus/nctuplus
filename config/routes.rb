@@ -16,7 +16,7 @@ Nctuplus::Application.routes.draw do
 	
 #--------- events --------------	
 	resources :events
-	get "main/cts_search"
+	
 #--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
  # match 'auth/failure', to: redirect('/'), via: [:get, :post]
@@ -42,14 +42,15 @@ Nctuplus::Application.routes.draw do
 	post "main/send_report"
 	get "main/policy_page"
 
-  post "main/set_cts"
-	get "main/book_show"
+
+
 
 
 #---------- book page ----------- 
-  
-  resources :books
+  post "books/set_cts"
+  get "books/cts_search"
 	post "books/google_book"
+  resources :books
 
 #---------- admin page -----------
 	

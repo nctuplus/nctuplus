@@ -42,3 +42,6 @@ function showGlobalModal(title,content){
 	$("#global-modal").modal('show');
 
 }
+function justShowGlobalModal(){
+	$("#global-modal").modal('show');
+}

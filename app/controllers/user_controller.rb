@@ -9,6 +9,10 @@ class UserController < ApplicationController
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
+
+	USER_SHARE_DIR = "public/course_table_shares"
+	 
+
 	def this_sem
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
@@ -290,6 +294,7 @@ class UserController < ApplicationController
 
 	end
 
+
 	def update
 		current_user.update_attributes(:name=>params[:name], :email=>params[:email], :department_id=>params[:department_id])
 		#current_user.update_attributes(:name=>name, :email=>email)
@@ -312,6 +317,36 @@ class UserController < ApplicationController
 		update_cs_cfids(cm,current_user)
 		
 		redirect_to :controller=> "main", :action=>"index"
+
+	end
+	
+	
+	def share 
+		decode_data = Hashid.user_share_decode(params[:id])
+		if decode_data
+		  @user = User.find(decode_data[0])
+		  @semester = Semester.find(decode_data[1])
+		  if @user and @semester
+		    @file_name = "#{params[:id]}.png"
+		    @fb_share_meta = true
+		    @host = request.host
+		    
+		    respond_to do |format|
+	          format.html {}
+	          format.json { render :json => {
+	             :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
+	               cs.course_detail.to_course_table_result},
+	             :semester_name => @semester.name # for 歷年課表 modal header 
+	           		}
+	       		}
+	        end
+		  else
+		    not_found
+		  end
+		else
+		  not_found
+		end
+
 	end
 	
   private
