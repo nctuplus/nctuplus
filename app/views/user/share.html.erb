@@ -1,12 +1,17 @@
 <div class="well" style="background-color:white;"> 
   <h4 class="text-center"><%=@user.name%></h4> 
-  <h4 class="text-center"><%=@user.department.ch_name%> <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）</h4> 
+  <h4 class="text-center">
+    <%=@user.department.ch_name%>
+    <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
+  <!--  <%=link_to "加到我的收藏", "javascript:void(0);"%> -->
+  </h4> 
   <table class="table table-bordered" id="myCourseTable"></table>
 </div>
 <script>
   var $table = $('#myCourseTable') ;
   $.getJSON("/shares/<%=params[:id]%>",function(data){
-			data.config = { popover: true };	
+      console.log(data);
+			data.config = { popover: true, click_redirect: true };	
 			$table.CourseTable(data);	
 	});
 </script>
