@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603173130) do
+ActiveRecord::Schema.define(version: 20150607180137) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -54,17 +54,21 @@ ActiveRecord::Schema.define(version: 20150603173130) do
   add_index "book_ctsships", ["course_teachership_id"], name: "index_book_ctsships_on_course_teachership_id", using: :btree
 
   create_table "book_trade_infos", force: true do |t|
-    t.integer  "book_id",    default: 0,  null: false
-    t.integer  "user_id",    default: 0,  null: false
-    t.string   "book_name",  default: "", null: false
-    t.string   "image_url",  default: ""
-    t.integer  "price",      default: 0,  null: false
-    t.integer  "status",     default: 0,  null: false
-    t.integer  "view_times", default: 0,  null: false
-    t.text     "desc",                    null: false
+    t.integer  "book_id",     default: 0,  null: false
+    t.integer  "user_id",     default: 0,  null: false
+    t.integer  "contact_way"
+    t.string   "book_name",   default: "", null: false
+    t.string   "image_url",   default: ""
+    t.integer  "price",       default: 0,  null: false
+    t.integer  "status",      default: 0,  null: false
+    t.integer  "view_times",  default: 0,  null: false
+    t.text     "desc",                     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "book_trade_infos", ["book_id"], name: "index_book_trade_infos_on_book_id", using: :btree
+  add_index "book_trade_infos", ["user_id"], name: "index_book_trade_infos_on_user_id", using: :btree
 
   create_table "books", force: true do |t|
     t.string   "title",        default: "", null: false

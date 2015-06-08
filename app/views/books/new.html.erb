@@ -1,75 +1,154 @@
-<h1>Book Trade</h1>
-<div id="main-container" class="container">
+
+<div id="main-container" class="container bg-white">
+	
   <div class="row">
     <div class="col-md-6 col-md-offset-3">
-      <%= form_for @book, :url => { :controller => 'books', :action => 'create' } do |f| %>
+			<h1>我要賣書</h1>
+      <%= form_for @sale_book, :url => { :controller => 'books', :action => 'create' }, :html=>{class: "form-horizontal"} do |f| %>
         <div class="form-group">
-          <label class="col-sm-2">書名</label>
-          <%= f.text_field "book_name", :class => "form-control" %>
-					<label id="query" class=".btn">query</label>
+          <label class="col-sm-2 control-label">書名</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<%= f.text_field "book_name", :class => "form-control" %>
+							<div class="input-group-btn">
+								<%=button_tag "搜尋", class:"btn btn-success",onclick:"searchGoogleBook();return false;"%>
+							</div>
+						</div>
+					</div>	
         </div>
         <div class="form-group">
-          <label class="col-sm-2">圖片網址</label>
-          <%= f.url_field "image_url", :class => "form-control" %>
+          <label class="col-sm-2 control-label">圖片網址</label>
+					<div class="col-sm-10">
+						<%= f.url_field "image_url", :class => "form-control" %>
+					</div>
         </div>
         <div class="form-group">
-          <label class="col-sm-2">價格</label>
-          <%= f.text_field "price", :class => "form-control" %>
+          <label class="col-sm-2 control-label">價格</label>
+					<div class="col-sm-10">
+						<%= f.text_field "price", :class => "form-control",required: "true" %>
+					</div>
+        </div>
+				<div class="form-group">
+          <label class="col-sm-2 control-label">適用課程</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<%=text_field_tag "search-ct","", class:"form-control"%>
+							<label class="hidden" id="last-ct-search-term"></label>
+							<%=hidden_field_tag :cts_id_list %>
+							<div class="input-group-btn">
+								<%=button_tag "搜尋", class:"btn btn-success",onclick:"searchCourse();return false;"%>
+							</div>
+						</div>
+						<div class="row">
+							<ul id="cts-list">
+								<% @sale_book.course_teacherships.each do |cts| %>
+									<li><%=cts.course_ch_name%> | <%=cts.teacher_name%></li>
+								<% end %>
+							</ul>
+						</div>
+					</div>				
         </div>
         <div class="form-group">
-          <label class="col-sm-2">書況</label>
-          <%= f.text_area "desc", :class => "form-control" %>
+          <label class="col-sm-2 control-label">書況</label>
+					<div class="col-sm-10">
+						<%= f.text_area "desc", :class => "form-control",required: "true" %>
+					</div>
         </div>
         <div class="col-md-6 col-md-offset-6">
           <%= f.submit "新增品項", class: "btn btn-primary" %>
         </div>
       <% end %>
-	  <!--
-      <table>
-        <thead>
-          <tr>
-            <td>User id</td>
-            <td>Book name</td>
-            <td>Image url</td>
-            <td>Price</td>
-            <td>Desc</td>
-          </tr>
-        </thead>
-        <tbody>  
-        <% @list.each do |p| %>
-          <tr>
-            <td><%= p.user_id %></td>
-            <td><%= p.book_name %></td>
-            <td><%= p.image_url %></td>
-            <td><%= p.price %></td>
-            <td><%= p.desc %></td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
-	  -->
     </div>
   </div>
 </div>
+
+<%= search_form_for @q, url:"/books/cts_search", class:"hidden", remote:"true" do |f| %>
+	<%=f.search_field :course_ch_name_cont%>
+	<%=f.submit%>
+<% end %>
+
+<script type="text/x-tmpl" id="cts-res">
+	<table class="table table-hover" id="cts-res-table">
+		<tr class="">
+			<th></th>
+			<th>課程</th>
+			<th>老師</th>
+		</tr>
+		{% for(var i=0,cts;cts=o[i];i++) { %}
+			<tr class="" id="ct-{%=cts.id%}">
+				<td><input type="checkbox" id="cts-{%=cts.id%}" onchange="addCtid({%=cts.id%},'{%=cts.course_name%}','{%=cts.teacher_name%}');"></td>
+				<td>{%=cts.course_name%}</td>
+				<td>{%=cts.teacher_name%}</td>
+			</tr>
+		{% } %}
+	</table>
+</script>
+
+<script type="text/x-tmpl" id="googlebook-res">
+	<table class="table table-hover">
+		{% for(var i=0,book;book=o[i];i++) { %}
+			<tr class="clickable-hover" onclick="selectBook('{%=book.title%}','{%=book.isbn%}','{%=book.authors%}');">
+				
+				<td>{%=book.title%}</td>
+				<td>{%=book.authors%}</td>
+			</tr>
+		{% } %}
+	</table>
+</script>
+
 <script>
-$("#query").click(function(){
-	var title=$("#book_trade_info_book_name").val();	
-	$.ajax({
-		type : "POST",
-		data : {title : title},
-		url : "/books/google_book",
-		success : function(data) {
-			console.log(data);
-			var content=""	;
-			for(var i=0;i<5;i++) {
-				content+='<div id="'+i+'">';
-				content+="title: "+data[i].title+"<br>authors: "+data[i].authors+'<br>image: <img src="'+data[i].volume_info.imageLinks.thumbnail+'">';
-				content+='<br><br></div>';
-			}
-			
-			showGlobalModal(title, content);
-		}
-	});
 	
-});
+	function selectBook(title,isbn,authors){
+		//alert(title+isbn+authors);
+	}
+	function searchCourse(){
+		var last_term=$("#last-ct-search-term").text();
+		if($("#search-ct").val()=="")return;
+		if(last_term!=$("#search-ct").val()){
+			$("#q_course_ch_name_cont").val($("#search-ct").val());
+			$("#course_teachership_search").submit();
+			$("#last-ct-search-term").text($("#search-ct").val());
+		}
+		else{
+			justShowGlobalModal();
+		}
+		
+	}
+	function addCtid(id,course_name,teacher_name){
+		if($("#cts-"+id).prop("checked")){
+			if($("#cts-list").find("li[id="+id+']').length==0)
+				$("#cts-list").append("<li id='"+id+"'>"+course_name+' '+teacher_name+"</li>");
+		}
+		else{
+			$("#cts-list").find("li[id="+id+']').remove();
+		}
+		var ids=$("#cts_id_list").val();
+		if(ids!="")
+			ids+=',';
+		ids+=id;
+		$("#cts_id_list").val(ids);
+		//$("#ct-"+id).remove();
+	}
+	function searchGoogleBook(){
+		var title=$("#book_trade_info_book_name").val();	
+		$.ajax({
+			type : "POST",
+			data : {title : title},
+			url : "/books/google_book",
+			success : function(data) {
+				//console.log(data);
+				var content=tmpl("googlebook-res",data);
+				/*
+				var content=""	;
+				for(var i=0;i<5;i++) {
+					content+='<div id="'+i+'">';
+					content+="title: "+data[i].title+"<br>authors: "+data[i].authors+'<br>image: <img src="'+data[i].volume_info.imageLinks.thumbnail+'">';
+					content+='<br><br></div>';
+				}
+				*/
+				showGlobalModal(title, content);
+			}
+		});
+		
+	}
 </script>

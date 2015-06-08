@@ -33,6 +33,7 @@
 
 				<li><a href="/courses/" rel="nofollow">全校課程</a></li>
 				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
+				<li><a href="/books/" rel="nofollow">二手書</a></li>
 				<!--<li><a href="/course_maps" rel="nofollow">課程地圖</a></li>-->
 				<!--<li><a href="/events/" rel="nofollow">talk</a></li>-->
 			
@@ -88,73 +89,10 @@
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
 		});
+		<% if current_user %>
+			$("[name='my-checkbox']").bootstrapSwitch({size:"mini", state: false});
+		<% end %>
 	});
-	
-
-  function group_share(share_opt, id, data){
-    var $target = $('#'+id);
-    var share_link = function(div_id, share_url){
-      console.log(share_url);
-      new Share("#"+div_id,{
-          ui: {
-            flyout: "middle left",
-            button_text :"分享",
-            button_font : false,
-          },
-          networks: {
-            facebook: {
-              app_id: "<%=Facebook::APP_ID%>",
-              url :share_url,
-            },
-            google_plus:{ url :share_url },
-            twitter:{ url :share_url, },
-            pinterest:{ enabled:false },
-            email:{ enabled:false }
-          }
-      });
-    }; 
-    var switchOnChange = function(event, state){
-      if(state){
-        if(!confirm("開啟分享後，擁有連結的使用者皆可觀看您的課表。\n 確認要分享嗎?")){
-          $switch.bootstrapSwitch('toggleState','skip');
-          return false ;
-        }
-        //ajax 
-        $.ajax({
-          method: "POST",
-          url: "/user/update",
-          data: {type:"share", data:true, sem_id: data.semester_id},
-          success:function(res){                 
-              $switch.bootstrapSwitch('destroy');
-              $switch.remove();
-              $target.popover('disable');
-              toastr["success"]("您可以使用分享連結分享至社交網站");
-              share_link(id, "<%=j root_url %>shares/"+res.hash_share);     
-            }
-        });        
-      }
-    };
-    
-    if(share_opt){
-      $target.addClass('pull-right');
-    //  console.log("<%=j root_url %>shares/"+data.hash_share);
-      share_link(id, "<%=j root_url %>shares/"+data.hash_share);
-    }else{
-      $target.popover({ 
-        content:"開啟分享連結",
-        placement:"auto",
-        trigger : "hover",
-        container :"body"
-      });
-      var $switch = $('<input>').attr('type', 'checkbox').attr('id','bootstrap-switch');
-      $target.html($switch);
-      $switch.bootstrapSwitch({
-        size:'mini',
-        onColor: 'success',
-        onSwitchChange: switchOnChange
-      });  
-    }   
-  }//group_share
 
 	function show_timetable_on_modal(semester_id, showNow){
 		var result=0 ;
@@ -176,19 +114,13 @@
 		      semester_id: semester_id
         };
 				$table.CourseTable(data) ;			
-				
-				var share_div = '<div class="pull-right" id="share-opt" style="margin-right: 10px;"></div>';
-				showGlobalModal(data.semester_name + share_div, $table);
-				
+				showGlobalModal(data.semester_name, $table);
+				<% if current_user.canShare? %>
 				setTimeout(function(){ //wait for the modal show
-				if(data.hash_share){
           $table.CourseTable("renderImg", "upload") ;
-          group_share(true, 'share-opt', {hash_share: data.hash_share}) ;
-        }else{ 
-          group_share(false, 'share-opt', {semester_id: semester_id}) ;    
-        }
-			    return false ;
-        }, 500);
+          return false ;
+         }, 500);
+				<% end %>
       }
 		});
 		return ;

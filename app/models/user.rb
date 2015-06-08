@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
 	delegate :ch_name, :to=> :department, :prefix=>true
 	delegate :degree, :to=> :department
 	delegate :uid, :to=> :auth_facebook
-
+	
+	has_many :book_trade_infos
 	has_many :past_exams
 	has_many :discusses
 	has_many :sub_discusses
