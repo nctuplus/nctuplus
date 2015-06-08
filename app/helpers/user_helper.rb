@@ -20,4 +20,23 @@ module UserHelper
 	def red_x
 		return  fa_icon("times 2x", :style=>"color:#E35553")
 	end
+	
+	def grade_on_user(user, semester)
+	  dy = semester.year - user.year
+	  dhalf = semester.half 
+	  half_name = (dhalf==1) ? "上" : "下"
+	  case dy
+	    when 0
+	      year_name = "一"
+	    when 1
+	      year_name = "二"
+	    when 2
+	      year_name = "三"
+	    else
+	      year_name = "四"    
+	  end
+	  grade_name = user.department.degree==3 ? "大" : "研"
+	  return grade_name+year_name+half_name
+	end
+	
 end

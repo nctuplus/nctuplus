@@ -1,5 +1,6 @@
 <div class="well" style="background-color:white;"> 
-  <h4 class="text-center"><%=@user.name%> <%=@semester.name%></h4> 
+  <h4 class="text-center"><%=@user.name%></h4> 
+  <h4 class="text-center"><%=@user.department.ch_name%> <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）</h4> 
   <table class="table table-bordered" id="myCourseTable"></table>
 </div>
 <script>

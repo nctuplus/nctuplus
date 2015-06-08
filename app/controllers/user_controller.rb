@@ -10,7 +10,7 @@ class UserController < ApplicationController
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
 	USER_SHARE_DIR = "public/course_table_shares"
-	
+	 
 	def this_sem
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
@@ -329,20 +329,30 @@ class UserController < ApplicationController
 	
 	
 	def share 
-		
-		if request.post?
-			if params[:canvasImage] and params[:semester_id]
-				hash_user_id = current_user.encrypt_id
-				semester_id = params[:semester_id]
-				filename = "#{hash_user_id}_#{semester_id}.png"
-				path = File.join(USER_SHARE_DIR, filename)
-				File.open(path, "wb") { |f| f.write(params[:canvasImage].read) }
-			end	
-			render :nothing => true, :status => 200, :content_type => 'text/html'
-		else	
-			render :layout=>false
+		decode_data = Hashid.user_share_decode(params[:id])
+		if decode_data
+		  @user = User.find(decode_data[0])
+		  @semester = Semester.find(decode_data[1])
+		  if @user and @semester
+		    @file_name = "#{params[:id]}.png"
+		    @fb_share_meta = true
+		    @host = request.host
+		    
+		    respond_to do |format|
+	          format.html {}
+	          format.json { render :json => {
+	             :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
+	               cs.course_detail.to_course_table_result},
+	             :semester_name => @semester.name # for 歷年課表 modal header 
+	           		}
+	       		}
+	        end
+		  else
+		    not_found
+		  end
+		else
+		  not_found
 		end
-
 	end
 	
   private
