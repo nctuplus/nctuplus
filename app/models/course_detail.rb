@@ -12,7 +12,7 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :department
 	delegate :ch_name, :to=>:department, :prefix=>true, allow_nil: true
 
-	has_many :course_simulations, :dependent=> :destroy
+
 	
 	def self.search_by_q_and_text(q,text)
 		search(q).result(distinct: true).search({

@@ -32,7 +32,26 @@ class User < ActiveRecord::Base
 	has_many :course_details, :through=> :normal_scores
 	has_many :semesters, :through=> :course_details
 	
+	has_many :user_share_images
+	
+# constants	
+	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
 
+# share course table
+	def self.find_by_hash_id(hash_data)
+	  decrypt_ary = Hashid.user_share_decode(hash_data)
+	  if !decrypt_ary or decrypt_ary.size != 2
+	    return nil
+	  else	
+		  return [find(decrypt_ary[0]), decrypt_ary[1]]
+		end
+	end
+	
+	def canShare?
+	  return self.agree_share
+	end
+
+	
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
 	end
@@ -136,5 +155,6 @@ class User < ActiveRecord::Base
     user.save!
     return user
   end
+
   
 end
