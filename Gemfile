@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'therubyracer'
+
 gem 'google-api-client'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -66,6 +68,9 @@ gem 'em-resolv-replace', :require => false
 gem "tinymce-rails"
 gem "tinymce-rails-langs"
 
+#for course table share (id obfuscation)
+gem "hashids"
+
 group :development do
   gem 'brakeman', :require => false
   gem 'rails_best_practices', :require => false
@@ -74,3 +79,4 @@ end
 
 gem "googlebooks"
 
+gem "bootstrap-switch-rails"

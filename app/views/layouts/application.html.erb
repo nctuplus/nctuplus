@@ -12,18 +12,34 @@
 
 	<% if params[:controller]!="main"%>
 		<meta name="robots" content="noindex">
+		
 	<% end %>
-	<meta name="description" content="NCTU+ 交大智慧選課系統">
+	
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
+	<% if @fb_share_meta %>
+	  <meta property="og:title" content="<%=@user.name%>" ></meta>
+    <meta property="og:description" content="<%=@user.department.ch_name%> <%=@semester.name%> 課表" ></meta>
+    <meta property="og:url" content="<%=root_url%>shares/<%=params[:id]%>" ></meta>
+    <meta property="og:image" content="<%=root_url%>course_table_shares/<%=@file_name%>"/>
+  <% else %>
+    <meta name="description" content="NCTU+ 交大智慧選課系統">  
+	<% end %>
+	
 </head>
 
 <body style="background-color:#e9eaed;">
 
 <% image_tag(asset_path("head_1.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
 
-<div class="modal fade" id="global_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" >
-		<div class="modal-content" ></div>
+		<div class="modal-content" >
+			<div class="modal-header" >
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"></h4>
+			</div>
+			<div class="modal-body" ></div>
+		</div>
 	</div>
 </div>
 

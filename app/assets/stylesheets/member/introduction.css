@@ -72,6 +72,7 @@ Image placeholders: placemi.com
 .panel.panel-card .panel-body {
     padding-top: 40px;
     padding-bottom: 50px;
+    background-color: #fff;
 
     -webkit-transition: padding 400ms ease-in-out;
             transition: padding 400ms ease-in-out;

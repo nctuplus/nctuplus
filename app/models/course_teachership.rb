@@ -1,6 +1,7 @@
 class CourseTeachership < ActiveRecord::Base
 	#alias_method_chain :belongs_to, :polymorphism
   belongs_to :course
+	delegate :ch_name, :to=>:course, :prefix=>true
 	
 	belongs_to :teacher
 	

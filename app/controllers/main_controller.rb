@@ -8,11 +8,49 @@ class MainController < ApplicationController
 	include CourseMapsHelper	
 	include ApiHelper
 	
+	def cts_search
+		@q=CourseTeachership.search(params[:q])
+		if request.format=="js"
+			@res=@q.result(distinct: true).includes(:course).page(1).map{|cts|{
+				:id=>cts.id,
+				:course_name=>cts.course_ch_name,
+				:teacher_name=>cts.teacher_name
+			}}
+		else
+			@book=Book.find(params[:book_id])
+			#@cts_list=@book.course_teachership
+		end
+	end
+	
+	def set_cts
+		@book=Book.find(params[:book_id])
+		params[:cts_id_list].split(",").each do |ct_id|
+			@book.book_ctsships.create(:course_teachership_id=>ct_id)
+		end
+		redirect_to "/main/cts_search?book_id=#{params[:book_id]}"
+	end
+	
+	def book_show
+		@book=Book.find(params[:book_id])
+	end
+	
 	def book_test
-		#@books = GoogleBooks.search('9780470233993') # OS恐龍本
-
-		#@books = GoogleBooks.search('Android', {:count => 20})
+		@books=Book.all
+=begin
 		@books = GoogleBooks.search('網頁', {:count => 20})
+
+		@books.each do |book|
+			Book.create(
+				:title=>book.title,
+				:isbn=>book.isbn,
+				:authors=>book.authors,
+				:description=>book.description,
+				:image_link=>book.image_link,
+				:preview_link=>book.preview_link,
+				:user_id=>3#current_user.id
+			)
+		end
+=end
   end
 	
  	def index
