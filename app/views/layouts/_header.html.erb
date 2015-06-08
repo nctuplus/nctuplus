@@ -177,10 +177,10 @@
 		      semester_id: semester_id
         };
 				$table.CourseTable(data) ;			
-				
+		
 				var share_div = '<div class="pull-right" id="share-opt" style="margin-right: 10px;"></div>';
 				showGlobalModal(data.semester_name + share_div, $table);
-				
+
 				setTimeout(function(){ //wait for the modal show
 				if(data.hash_share){
           $table.CourseTable("renderImg", "upload") ;
