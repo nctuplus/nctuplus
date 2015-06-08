@@ -1,0 +1,94 @@
+
+
+<% dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]} %>
+<% dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]} %>
+
+<% dept = current_user.department %>
+
+<div class="well" style="text-align:left">
+  <h1>更改個人資料</h1>
+ <%= form_tag "/user/update", class:"form-inline" do %>  <!-- user_update_path -->
+  <div class="form-group col-md-12">
+  <h4><%=label_tag '更改姓名'%></h4>
+  <%=text_field_tag "name",current_user.name ,class:"form-control"%>
+  </div>
+
+  <div class="form-group col-md-12"> 
+  <h4><%=label_tag '更改email' %></h4>
+  <%=email_field_tag "email",current_user.email,class:"form-control" %>
+  </div>
+
+  <div class="form-group col-md-12">
+    <h4><%=label_tag '更改系級' %></h4>
+  </div>
+
+  <div class="form-group col-md-3">
+  <%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],dept.nil? ? 3 :dept.degree), class:'form-control', onChange:"change_degree();"%>
+  </div>
+  <div class="form-group col-md-5">
+  <%=select_tag 'dept_under_select', options_for_select(dept_undergrad,current_user.department_id), class:'form-control'%>
+  <%=select_tag 'dept_grad_select', options_for_select(dept_grad,current_user.department_id), class:'form-control'%>
+  </div>
+
+  <div class="form-group col-md-3 row no-margin-left no-padding-left">
+  <div class="col-md-6 no-padding-left no-padding-right">
+  <h4 style="margin-top:8px;">
+  入學年度
+  </h4>
+  </div>
+  <div class="col-md-6">
+  <%=select_tag 'grade_select', options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year), class:'form-control'%>
+  </div>
+  </div>
+
+  <%=submit_tag "確定", class: "btn btn-success" %>
+<% end %>
+
+
+</div>
+
+
+<script>
+  $(document).ready(function(){
+    
+    <% if !dept.nil? %>
+      $("#user_form").hide();
+      change_degree();
+    <% else %>
+      //$("#user_form").removeClass("hidden");
+      $("#dept_grad_select").hide();
+      $("#grade_grad_select").hide();
+    <% end %>
+    
+    
+    
+  });
+  
+  function show_form(obj){
+    if ($("#user_form").is(':visible')) {
+      $("#user_form").hide();
+      $("#user_info").show();
+      obj.text("修改系級");
+    }
+    else{
+      $("#user_form").show();
+      $("#user_info").hide();
+      obj.text("隱藏");
+    }
+  }
+  
+  function change_degree(){
+    var sel=$("#degree_select").val();
+    var arr=['grad','under']
+    sel-=2;
+    for(i=0;i<arr.length;i++){
+      if(i==sel){
+        $("#dept_"+arr[i]+"_select").show();
+      }
+      else{
+        $("#dept_"+arr[i]+"_select").hide();
+      }
+    }
+  }
+
+</script>
