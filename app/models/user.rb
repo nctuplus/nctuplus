@@ -35,6 +35,10 @@ class User < ActiveRecord::Base
 	
 	has_many :user_share_images
 	
+	
+	validates :email, uniqueness: true
+	validates :name, uniqueness: true
+	
 # constants	
 	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
 

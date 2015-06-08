@@ -52,7 +52,9 @@ class UserController < ApplicationController
 					result={
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
-						}
+						},
+						:semester_name => semester.name, # for 歷年課表 modal header 
+						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
 					}	
 				else
 					result={}
@@ -291,7 +293,8 @@ class UserController < ApplicationController
 	end
 
 	def edit
-
+    @dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]}
+    @dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]}
 	end
 
 
@@ -318,6 +321,20 @@ class UserController < ApplicationController
 		
 		redirect_to :controller=> "main", :action=>"index"
 
+	end
+	
+	def upload_share_image
+    hash_number = Hashid.user_share_encode([current_user.id, params[:semester_id].to_i])   
+    filename = "#{hash_number}.png"
+    path = File.join(USER_SHARE_DIR, filename)
+    File.open(path, "wb") { |f| f.write(params[:image].read) }
+    render :nothing => true, :status => 200, :content_type => 'text/html'   
+  end
+	
+	def update_user_share
+	  current_user.update_attribute(:agree_share, params[:data])
+	 # Rails.logger.debug "[!!!!!!!!!!!!!!!!!!] #{params[:data].inspect}"
+	  render :json=>{:hash_share=>Hashid.user_share_encode([current_user.id, params[:sem_id].to_i])}
 	end
 	
 	

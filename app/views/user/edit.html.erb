@@ -1,8 +1,3 @@
-
-
-<% dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]} %>
-<% dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]} %>
-
 <% dept = current_user.department %>
 
 <div class="well" style="text-align:left">
@@ -23,11 +18,11 @@
   </div>
 
   <div class="form-group col-md-3">
-  <%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],dept.nil? ? 3 :dept.degree), class:'form-control', onChange:"change_degree();"%>
+  <%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']], dept.nil? ? 3 : dept.degree), class:'form-control', onChange:"change_degree();"%>
   </div>
   <div class="form-group col-md-5">
-  <%=select_tag 'dept_under_select', options_for_select(dept_undergrad,current_user.department_id), class:'form-control'%>
-  <%=select_tag 'dept_grad_select', options_for_select(dept_grad,current_user.department_id), class:'form-control'%>
+  <%=select_tag 'dept_under_select', options_for_select(@dept_undergrad,current_user.department_id), class:'form-control'%>
+  <%=select_tag 'dept_grad_select', options_for_select(@dept_grad,current_user.department_id), class:'form-control'%>
   </div>
 
   <div class="form-group col-md-3 row no-margin-left no-padding-left">
