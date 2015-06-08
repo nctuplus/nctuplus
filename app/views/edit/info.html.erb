@@ -1,0 +1,13 @@
+<h1>Edit#info</h1>
+
+ <%= form_tag edit_about_path do %>
+  <%=label_tag '更改姓名:'%>
+  <%=text_field_tag "name",current_user.name,class:"form-control"%>
+
+
+  <%=label_tag '更改email' %>
+  <%=email_field_tag "email",current_user.email,class:"form-control" %>
+
+  <%=submit_tag "確定", class: "btn btn-default" %>
+<% end %>
+ 

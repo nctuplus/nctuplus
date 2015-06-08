@@ -1,5 +1,8 @@
 Nctuplus::Application.routes.draw do
 	
+  get "edit/info"
+  get "edit/about"
+  post "edit/about"
 	root :to => "main#index"
 	
 #--------- [devise] user account concerned --------------	
@@ -78,6 +81,9 @@ Nctuplus::Application.routes.draw do
 	get "user/statistics"
 	post "user/select_dept"
 
+	get "user/edit"
+	get "user/update"
+	post "user/update"
 	
 #--------- user end -------------
 	post "course_content/raider"

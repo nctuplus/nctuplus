@@ -25,8 +25,7 @@
 							<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 							<li><a href="/admin/course_maps/" rel="nofollow">課程地圖</a></li>
 							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
-							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>
-              <li><a href="/admin/statistics" rel="nofollow">使用統計</a></li>
+							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>								
 						</ul>	
 					</li>
 				<% end %>
@@ -65,7 +64,10 @@
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
-						<li  class="text-center">
+						<li>
+								<a href="/user/edit/">編輯個人資料</a>
+						</li>	
+						<li>
 							<%= link_to  "登出", destroy_user_session_path, :method => :delete %>
 						</li>					
 					</ul>
@@ -82,37 +84,40 @@
 </ul>
 
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
-<% if current_user %>	
 <script>
 	$(document).ready(function(){	
+
 		//歷年課表
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
 		});
+
 		<% if current_user %>
 			$("[name='my-checkbox']").bootstrapSwitch({size:"mini", state: false});
 		<% end %>
 	});
 
+
 	function show_timetable_on_modal(semester_id, showNow){
 		var result=0 ;
+		$("#global_modal .modal-content").html('loading..');
 		$.ajax({
-			url: "/user/get_courses",
-			data:{
-				type: "course_table",
-				sem_id: semester_id
-			},
+			//async: true, // This will make call synchronous
+			url: "/user/get_courses?type=course_table&sem_id="+semester_id,
 			dataType: "json",
 			success: function(data){
+			//	console.log(data);
 				var result = $.extend(true, [], data);
+				$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>');
 				var $table = $('<table>').addClass('table table-bordered');
         data.config = {
           deletable: false ,
           selectable: false,
           popover: true,
-					downloadable: true,
+		      downloadable: true,
 		      semester_id: semester_id
         };
+
 				$table.CourseTable(data) ;			
 				showGlobalModal(data.semester_name, $table);
 				<% if current_user.canShare? %>
@@ -121,10 +126,29 @@
           return false ;
          }, 500);
 				<% end %>
+
       }
 		});
-		return ;
+		return result ;
+	}
+
+	function add_to_cart(id,type){
+		$.ajax({
+			type: "GET",
+			url : "/courses/add_to_cart",
+			data : {
+				cd_id:id,
+				type:type
+			},
+			dataType : "json",
+			success : function(data){
+				toastr[data["class"]](data["text"]);
+				if(type=="delete"){
+					$("#global_modal .modal-body").load("/courses/show_cart");
+				}			
+			}
+		
+		});
 	}
 
 </script>
-<% end %>	

@@ -5,12 +5,14 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:upload_share_image, :all_courses, :this_sem, :add_course,  :show, :select_dept, :statistics_table, :get_courses]
+	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept, :statistics_table, :edit, :update]
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
+
 	USER_SHARE_DIR = "public/course_table_shares"
 	 
+
 	def this_sem
 		@user=getUserByIdForManager(params[:uid])
 		render :layout=>false
@@ -21,11 +23,13 @@ class UserController < ApplicationController
 		#if request.format=="json"
 			case params[:type]
 				when "stat"
-					if params[:sem_id].blank?				
+					if params[:sem_id].blank?
+						#cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
 						cs_agree=@user.courses_agreed.map{|cs|cs.to_basic_json}						
-						cs_taked=@user.courses_taked.map{|cs|cs.to_basic_json}					
-					else 						
-						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_basic_json}
+						cs_taked=@user.courses_taked.map{|cs|cs.to_advance_json}					
+					else 
+						#cs_taked=@user.all_courses.where(:semester_id=>params[:sem_id]).map{|cs|cs.to_advance_json}
+						cs_taked=@user.courses_taked.search_by_sem_id(params[:sem_id]).map{|cs|cs.to_advance_json}
 						cs_agree=[]
 					end
 					result={
@@ -33,6 +37,7 @@ class UserController < ApplicationController
 						:last_sem_id=>Semester::CURRENT.id,
 						:agreed=>cs_agree,
 						:taked=>cs_taked,
+						#:list_type=>params[:type]
 					}
 				when "simulation"
 					result={
@@ -45,18 +50,16 @@ class UserController < ApplicationController
 				when "course_table"
 					semester = Semester.find(params[:sem_id])
 					result={
-						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(semester.id).map{|cs|
+						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
-						},
-						:semester_name => semester.name, # for 歷年課表 modal header 
-						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
+						}
 					}	
 				else
 					result={}
 			end
 		#end
 		respond_to do |format|
-			format.json{render json: result}
+			format.json{render json:result}
 		end
 		
 	end
@@ -89,7 +92,8 @@ class UserController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
 	
-	def statistics		
+	def statistics
+		
 		@user=getUserByIdForManager(params[:uid])
 		if request.format=="json"
 			course_map=@user.course_maps.first
@@ -106,7 +110,6 @@ class UserController < ApplicationController
 			end
 			res={
 				:user_id=>@user.id,
-				:need_common_check=>@user.is_undergrad?,
 				:pass_score=>@user.pass_score,
 				:last_sem_id=>Semester::CURRENT.id,
 				:user_courses=>@user.courses_json,
@@ -287,45 +290,35 @@ class UserController < ApplicationController
 	  render :text=>cd.to_course_table_result.to_json, :layout=>false
 	end
 
-# share course table 	
+	def edit
 
-	def share # public method for share link	    
-    data = User.find_by_hash_id(params[:id])
-    not_found if data.blank?
-    @user = data[0]
-    @semester = Semester.find(data[1])
-    if @user and @user.canShare? and @semester
-      @file_name = "#{params[:id]}.png"
-      @fb_share_meta = true
-      @host = request.host
-      respond_to do |format|
-        format.html {}
-        format.json { render :json => {
-            :courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(@semester.id).map{|cs|
-              cs.course_detail.to_course_table_result},
-            :semester_name => @semester.name # for 歷年課表 modal header 
-          }
-        }
-      end   
-    else# user找不到或id亂打, 未開放share
-     not_found
-    end       
-	end
-	
-	def upload_share_image
-    hash_number = Hashid.user_share_encode([current_user.id, params[:semester_id].to_i])   
-    filename = "#{hash_number}.png"
-    path = File.join(USER_SHARE_DIR, filename)
-    File.open(path, "wb") { |f| f.write(params[:image].read) }
-    render :nothing => true, :status => 200, :content_type => 'text/html'   
-  end
-	
-	def update_user_share
-	  current_user.update_attribute(:agree_share, params[:data])
-	 # Rails.logger.debug "[!!!!!!!!!!!!!!!!!!] #{params[:data].inspect}"
-	  render :json=>{:hash_share=>Hashid.user_share_encode([current_user.id, params[:sem_id].to_i])}
 	end
 
+
+	def update
+		current_user.update_attributes(:name=>params[:name], :email=>params[:email], :department_id=>params[:department_id])
+		#current_user.update_attributes(:name=>name, :email=>email)
+
+		degree=params[:degree_select].to_i
+		grade=params[:grade_select].to_i
+		if degree==2
+			dept=params[:dept_grad_select].to_i
+		else
+			dept=params[:dept_under_select].to_i
+		end
+		current_user.update_attributes(:year=>grade,:department_id=>dept)
+		
+		UserCoursemapship.where(:user_id=>current_user.id).destroy_all
+		
+		cm=CourseMap.where(:department_id=>current_user.department_id, :year=>grade).take
+		if cm
+			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
+		end
+		update_cs_cfids(cm,current_user)
+		
+		redirect_to :controller=> "main", :action=>"index"
+
+	end
 	
 	
 	def share 
@@ -353,13 +346,10 @@ class UserController < ApplicationController
 		else
 		  not_found
 		end
+
 	end
 	
   private
-
-  def not_found
-    raise ActionController::RoutingError.new('Not Found')
-  end
 
   def user_params
     params.require(:user).permit(:email)
