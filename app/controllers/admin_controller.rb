@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
 	#include CourseMapsHelper
-	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role, :statistics]
+	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role]
 	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
 	
 	def course_maps
@@ -50,7 +50,7 @@ class AdminController < ApplicationController
 
 	end
     
-  def statistics
+  def user_statistics
     @sta=User.select("created_at").group("DATE_FORMAT((created_at),'%M')").order("date(created_at)").count
     
   end

@@ -54,7 +54,7 @@ Nctuplus::Application.routes.draw do
 
 #---------- admin page -----------
 	
-  get "admin/statistics"
+  get "admin/user_statistics"
     
 	get "admin/ee104"
 	get "admin/users"
