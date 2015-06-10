@@ -11,7 +11,7 @@ module Nctuplus
 		config.assets.paths << "#{Rails}/vendor/assets/fonts"
 		
     config.i18n.default_locale = "zh-TW"
-    I18n.enforce_available_locales = false
+ #   I18n.enforce_available_locales = false
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"

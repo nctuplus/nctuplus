@@ -40,11 +40,10 @@
 			
 			<ul class="nav navbar-nav navbar-right">
 			<% if current_user %>	
-		
 				<li>
 					<a href="#" class="toolTip dropdown-toggle toolTip" data-toggle="dropdown" title="課表"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
 						<ul class="dropdown-menu">
-							<% sems = current_user.semesters.uniq %>
+							<% sems = user_semester(current_user) %>
 							<% if sems.count==0 %>
 							<li class="text-center">無資料</li>
 							<% end %>
@@ -56,7 +55,7 @@
 			
 				<li class="dropdown">		
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<% if session[:auth_facebook] %>
+						<% if current_user.hasFb? %>
 							<%= image_tag "http://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
 						<% else %>
 							學號 

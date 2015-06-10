@@ -3,7 +3,9 @@
   <h4 class="text-center">
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
-  <!--  <%=link_to "加到我的收藏", "javascript:void(0);"%> -->
+		<% if can_add_to_collection?(current_user, @user, params[:id]) %>
+			<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection();'%> 
+		<% end %>	
   </h4> 
   <table class="table table-bordered" id="myCourseTable"></table>
 </div>
@@ -14,6 +16,19 @@
 			data.config = { popover: true, click_redirect: true };	
 			$table.CourseTable(data);	
 	});
+<% if can_add_to_collection?(current_user, @user, params[:id]) %>	
+	function record_collection(){
+		var item = '<%=j params[:id]%>' ;
+		$.ajax({
+			method: "post",
+			url:"",
+			data: {:item=>item},
+			success: function(){
+			
+			}
+		});
+	}
+<% end %>	
 </script>
 <style>
   #myCourseTable{

@@ -18,8 +18,15 @@ class AuthFacebook < ActiveRecord::Base
       f.oauth_expires_at = Time.at(auth.credentials.expires_at)
       f.email = auth.info.email
       
-      if not f.user_id 
-        if not current_user.presence
+      if f.user_id  # has auth fb
+        if current_user.try(:hasE3?) and not current_user.try(:hasFB?)
+					f.user.merge_child_to_newuser(current_user) # merge to e3 user 
+					f.user_id = current_user.id  
+				end
+      else # new auth fb user 
+				if current_user
+          f.user_id = current_user.id # binding
+        else# 
           user = User.create_from_auth({
             :provider=>"facebook",
             :name=>auth.info.name,
@@ -27,13 +34,8 @@ class AuthFacebook < ActiveRecord::Base
             :password=>Devise.friendly_token[0,20]
           })
           f.user_id = user.id
-        else
-          f.user_id = current_user.id # binding
         end
-      elsif f.user_id and current_user # 已登入但要bind一個使用過的auth
-        return {:auth=>false, :message=>"此認證帳號已被使用"}
       end
-      
       f.save!
     end
     return {:auth=>true, :user=>auth_facebook.user} 
