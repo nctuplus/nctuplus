@@ -17,4 +17,8 @@ module ApplicationHelper
     '<div class="alert alert-notice">'
   end
 
+	def user_semester(user)
+		return (user.year==0) ? [] : Semester.where("year >= ? AND half != 3", user.year)
+	end
+	
 end

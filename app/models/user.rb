@@ -30,10 +30,14 @@ class User < ActiveRecord::Base
 	has_many :agreed_scores, :dependent=> :destroy
 	
 	has_many :normal_scores, :dependent=> :destroy
-	has_many :course_details, :through=> :normal_scores
-	has_many :semesters, :through=> :course_details
+	#has_many :course_details, :through=> :normal_scores
+	#has_many :semesters, :through=> :course_details
 	
-	has_many :user_share_images
+	has_many :user_collections
+	
+	
+	validates :email, uniqueness: true
+	validates :name, uniqueness: true
 	
 # constants	
 	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
@@ -52,6 +56,9 @@ class User < ActiveRecord::Base
 	  return self.agree_share
 	end
 
+	def hasCollection?(item)
+		return self.user_collections.where(:item=>item).present?	
+	end
 	
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
@@ -71,7 +78,11 @@ class User < ActiveRecord::Base
 	end
 	
 	def hasFb?
-		return self.provider=="facebook"
+		return self.auth_facebook.present?
+	end
+	
+	def hasE3?
+		return self.auth_e3.present?
 	end
 	
 ## role func
@@ -95,8 +106,6 @@ class User < ActiveRecord::Base
 	def pass_score
 		return self.is_undergrad? ? 60 : 70
 	end
-	
-	
 	
 	
 =begin

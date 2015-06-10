@@ -39,4 +39,9 @@ module UserHelper
 	  return grade_name+year_name+half_name
 	end
 	
+# user share	
+	def can_add_to_collection?(current_user, user, item)
+		return nil #current_user and current_user != user and current_user.hasCollection?(params[:id])
+	end	
+	
 end

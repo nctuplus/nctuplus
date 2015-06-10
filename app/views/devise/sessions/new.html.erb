@@ -257,20 +257,6 @@ form.login a:hover
 
 </body>
 <script>
-	$(document).ready(function() {
-		<% if flash[:notice] %>
-      <% if flash[:notice].kind_of? String%>
-		    toastr.warning("<%= flash[:notice] %>");
-		  <% else %>
-			  toastr.warning("<%= flash[:notice][:message] %>");
-		  <% end %>
-		<% end %>
-		$('#login-fb').click(function(){
-			$(this).attr('disabled', 'disabled');
-			$(this).html('<%=fa_icon "spinner spin 2x"%>');
-			//window.location = "/auth/facebook";
-		}); 	
-	});
 <% if Rails.env.production? %>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),

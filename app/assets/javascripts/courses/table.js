@@ -235,6 +235,14 @@
 										container :"body"
 									});
 							}	
+							if(this.config.click_redirect) // This will conflict with cell selectable
+							{
+							  $cell.addClass("clickable-hover");
+							  $cell.click({cd_id: course.cd_id}, function(args){
+							    window.open("http://"+window.location.host+"/courses/"+args.data.cd_id);
+							    return true ;
+							  });
+							}
 						}
 					}
 				}	
@@ -335,7 +343,8 @@
 			}else{
 				$cell.selected = false ;
 				$cell.removeClass(Table.defaults.selected_class);
-				$cell.unbind('click');
+				if(!this.config.click_redirect)// avoid conflict
+				  $cell.unbind('click');
 			}	
 		},
 		
