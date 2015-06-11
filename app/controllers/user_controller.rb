@@ -299,27 +299,24 @@ class UserController < ApplicationController
 
 
 	def update
-		current_user.update_attributes(user_params)
-		current_user.update_attributes(:email=>params[:email]=="" ? current_user.email : params[:email])
-		degree=params[:degree_select].to_i
-		grade=params[:grade_select].to_i
-		if degree==2
-			dept=params[:dept_grad_select].to_i
+		
+		#current_user.update_attributes(:email=>params[:user][:email].blank? ? current_user.email : params[:user][:email])
+		last_dept_id=current_user.department_id
+		last_year=current_user.year
+		current_user.update(user_params)
+		if user_params[:department_id]!=last_dept_id || user_params[:year]!=last_year	
+			UserCoursemapship.where(:user_id=>current_user.id).destroy_all
+			cm=CourseMap.where(:department_id=>current_user.department_id, :year=>current_user.year).take
+			if cm
+				UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
+			end
+			update_cs_cfids(cm,current_user)
+		end
+		if request.xhr?
+			render :nothing=>true, :status=>200
 		else
-			dept=params[:dept_under_select].to_i
+			redirect_to :controller=> "main", :action=>"index"
 		end
-		current_user.update_attributes(:year=>grade,:department_id=>dept)
-		
-		UserCoursemapship.where(:user_id=>current_user.id).destroy_all
-		
-		cm=CourseMap.where(:department_id=>current_user.department_id, :year=>grade).take
-		if cm
-			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
-		end
-		update_cs_cfids(cm,current_user)
-		
-		redirect_to :controller=> "main", :action=>"index"
-
 	end
 	
 	def upload_share_image
@@ -368,7 +365,11 @@ class UserController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:name, :agree_share)
+    ret=params.require(:user).permit(:name, :agree_share, :year, :department_id, :email)
+		if ret[:email].blank?
+			ret.except!(:email)
+		end
+		return ret
   end
   
 end

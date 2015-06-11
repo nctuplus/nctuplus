@@ -1,80 +1,75 @@
-<% dept = current_user.department %>
-
-<div class="well" style="text-align:left">
-  <h1>更改個人資料</h1>
-<<<<<<< HEAD
- <%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
-  <div class="form-group">
-		<h4><%=label_tag 'Name',"Name",class:"col-sm-1 control-label"%></h4>
-		<div class="col-md-10">
-			<%=f.text_field :name,class:"form-control"%>
-		</div>
-=======
- <%= form_tag "/user/update", class:"form-inline" do %>  <!-- user_update_path -->
-  <div class="form-group col-md-12">
-  <h4><%=label_tag '更改姓名'%></h4>
-  <%=text_field_tag "name",current_user.name ,class:"form-control"%>
-  </div>
-
-  <div class="form-group col-md-12"> 
-  <h4><%=label_tag '更改email' %></h4>
-  <%=email_field_tag "email",current_user.email,class:"form-control" %>
-  </div>
-
-  <div class="form-group col-md-12">
-    <h4><%=label_tag '更改系級' %></h4>
-  </div>
-
-  <div class="form-group col-md-3">
-
-  <%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']], dept.nil? ? 3 : dept.degree), class:'form-control', onChange:"change_degree();"%>
-  </div>
-  <div class="form-group col-md-5">
-    <%=select_tag 'dept_under_select', options_for_select(@dept_undergrad,current_user.department_id), class:'form-control'%>
-    <%=select_tag 'dept_grad_select', options_for_select(@dept_grad,current_user.department_id), class:'form-control'%>
->>>>>>> 1b3f0707f69ecde7ae9ba0f30781fe0e36a0f67f
-  </div>
-
-  <div class="form-group "> 
-		<h4><%=label_tag 'Email',"Email",class:"col-sm-1 control-label" %></h4>
-		<div class="col-md-10">
-			<%=email_field_tag "user[email]",current_user.email.include?("please.change.me") ? "" : current_user.email,class:"form-control" %>
-		</div>
-		
-	</div>
-	<div class="form-group ">
-		<div class="col-md-offset-1">
-			<p class="">做為二手書連絡資訊用，NCTU+不會寄任何信件給您，請放心~</p>
-		</div>
-	</div>
-  <div class="form-group">
-    <h4><%=label_tag '系級',"系級",class:"col-sm-1 control-label" %></h4>
-		<div class="col-md-11">
-			<div class="col-md-2 no-padding-left">
-			<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],dept.nil? ? 3 :dept.degree), class:'form-control', onChange:"change_degree($(this).val());"%>
-		</div>
-		<div class="col-md-5 no-padding-left">
-			<%=f.select :department_id,options_for_select(@dept_undergrad,current_user.department_id),{}, {class:'form-control',id:"under_grad"}%>
-			<%=f.select :department_id,options_for_select(@dept_grad,current_user.department_id),{}, {class:'form-control',id:"grad"}%>
-		</div>
-		<div class="col-md-5 no-padding-left">
-			<div class="col-md-4"><h4 style="margin-top:8px;">入學年度</h4></div>
-			<div class="col-md-6">
-				<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{}, class:'form-control'%>
+<div class="container bg-white" >
+	<br>
+	
+	<%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
+		<div class="form-group">
+			<h4><%=label_tag '結合',"結合",class:"col-sm-2 control-label"%></h4>
+			<div class="col-md-9">
+				<%=link_to "/auth/facebook",class:"btn  btn-primary",disabled:current_user.hasFb? do%>
+					<%=fa_icon("facebook")%>acebook
+				<% end %>
 			</div>
 		</div>
+		<div class="form-group ">
+			<div class="col-md-9 col-md-offset-2">
+				<p class="">結合後可利用fb登入，另外在賣二手書時可以選擇直接連絡您的fb帳號</p>
+			</div>
 		</div>
-  </div>
-
-  <div class="form-group " >
-		<div class="col-md-12">
-		<%=submit_tag "送出", class: "btn btn-lg btn-success" %>
+		<div class="form-group">
+			<h4><%=label_tag '分享課表',"分享課表",class:"col-sm-2 control-label"%></h4>
+			<div class="col-md-9">
+				<%=f.check_box :agree_share%> 
+			</div>
 		</div>
-	</div>
-
-  
-<% end %>
-
+		<div class="form-group">
+			<div class="col-md-offset-1 col-md-10">
+			<h2>更改個人資訊</h2>
+			</div>
+		</div>
+		<div class="form-group">
+			<h4><%=label_tag 'Name',"Name",class:"col-sm-2 control-label"%></h4>
+			<div class="col-md-9">
+				<%=f.text_field :name,class:"form-control"%>
+			</div>
+		</div>
+		<div class="form-group "> 
+			<h4><%=label_tag 'Email',"Email",class:"col-sm-2 control-label" %></h4>
+			<div class="col-md-9">
+				<%=email_field_tag "user[email]",current_user.email.include?("please.change.me") ? "" : current_user.email,class:"form-control",required:"true" %>
+			</div>
+		</div>
+		<div class="form-group ">
+			<div class="col-md-9 col-md-offset-2">
+				<p class="">做為二手書連絡資訊用，NCTU+不會寄任何信件給您，請放心~</p>
+			</div>
+		</div>
+		<div class="form-group">
+			<h4><%=label_tag '系級',"系級",class:"col-sm-2 control-label" %></h4>
+			<div class="col-md-10">
+				<div class="col-md-2 no-padding-left">
+				<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],current_user.department.nil? ? 3 :current_user.degree), class:'form-control', onChange:"change_degree($(this).val());"%>
+				<%=f.hidden_field :department_id %>
+			</div>
+			<div class="col-md-5 no-padding-left">
+				<%=select_tag 'dept_under_grad', options_for_select(@dept_undergrad,current_user.department_id), class:'form-control',onChange:"$('#user_department_id').val($(this).val());"%>
+				<%=select_tag 'dept_grad', options_for_select(@dept_grad,current_user.department_id), class:'form-control',onChange:"$('#user_department_id').val($(this).val());"%>
+			</div>
+			<div class="col-md-5 no-padding-left">
+				<div class="col-md-4"><h4 style="margin-top:8px;">入學年度</h4></div>
+				<div class="col-md-6">
+					<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{}, class:'form-control'%>
+				</div>
+			</div>
+			</div>
+		</div>
+		<div class="form-group " >
+			<div class="col-md-1 col-md-offset-10 ">
+			<%=submit_tag "送出", class: "btn btn-success pull-right" %>
+			</div>
+		</div>
+	
+	<% end %>
+	
 
 </div>
 
@@ -82,15 +77,28 @@
 <script>
   $(document).ready(function(){
     
-    <% if !dept.nil? %>
-      $("#user_form").hide();
+    <% if current_user.try(:department).try(:degree) %>
       change_degree(<%=current_user.degree%>);
     <% else %>
-      //$("#user_form").removeClass("hidden");
-      $("#dept_grad_select").hide();
-      $("#grade_grad_select").hide();
+			change_degree(3);
     <% end %>
-    
+		
+    $("#user_agree_share").bootstrapSwitch({
+			size:'small',
+			onColor: 'success',
+			onSwitchChange: function(event, state){
+				if(state&&!confirm("開啟分享後，擁有連結的使用者皆可觀看您的課表。\n 確認要分享嗎?")){
+          $(this).bootstrapSwitch('toggleState','skip');
+          return false ;
+        }
+				$.ajax({
+					method: "PATCH",
+					url: "/user/update",
+					data :{"user[agree_share]":state},
+					sucess:function(data){console.log("!!!");}
+				});
+			}
+		});
     
     
   });
@@ -109,21 +117,17 @@
   }
   
   function change_degree(id){
-    //var sel=$("#degree_select").val();
-		
     var arr={
 			2:'grad',
 			3:'under_grad'
 		};
-		
-		arr[id].show();
-    //sel-=2;
-    for(i=0;i<arr.length;i++){
-      if(i==sel){
-        $("#"+arr[i]).show();
+    for(var index in arr){
+			//console.log(index);
+      if(index==id){
+        $("#dept_"+arr[index]).show();
       }
       else{
-        $("#"+arr[i]).hide();
+        $("#dept_"+arr[index]).hide();
       }
     }
   }

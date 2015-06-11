@@ -58,8 +58,6 @@
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
 						<% if current_user.hasFb? %>
 							<%= image_tag "http://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
-						<% else %>
-							學號 
 						<% end %>
 						<%=current_user.name%>
 					<% end %>

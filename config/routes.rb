@@ -82,7 +82,7 @@ Nctuplus::Application.routes.draw do
 	post "user/select_dept"
 
 	get "user/edit"
-	post "user/update"
+	patch "user/update"
 	
 #--------- user end -------------
 	post "course_content/raider"
