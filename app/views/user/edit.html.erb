@@ -2,37 +2,14 @@
 
 <div class="well" style="text-align:left">
   <h1>更改個人資料</h1>
-<<<<<<< HEAD
+
  <%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
   <div class="form-group">
 		<h4><%=label_tag 'Name',"Name",class:"col-sm-1 control-label"%></h4>
 		<div class="col-md-10">
 			<%=f.text_field :name,class:"form-control"%>
 		</div>
-=======
- <%= form_tag "/user/update", class:"form-inline" do %>  <!-- user_update_path -->
-  <div class="form-group col-md-12">
-  <h4><%=label_tag '更改姓名'%></h4>
-  <%=text_field_tag "name",current_user.name ,class:"form-control"%>
-  </div>
 
-  <div class="form-group col-md-12"> 
-  <h4><%=label_tag '更改email' %></h4>
-  <%=email_field_tag "email",current_user.email,class:"form-control" %>
-  </div>
-
-  <div class="form-group col-md-12">
-    <h4><%=label_tag '更改系級' %></h4>
-  </div>
-
-  <div class="form-group col-md-3">
-
-  <%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']], dept.nil? ? 3 : dept.degree), class:'form-control', onChange:"change_degree();"%>
-  </div>
-  <div class="form-group col-md-5">
-    <%=select_tag 'dept_under_select', options_for_select(@dept_undergrad,current_user.department_id), class:'form-control'%>
-    <%=select_tag 'dept_grad_select', options_for_select(@dept_grad,current_user.department_id), class:'form-control'%>
->>>>>>> 1b3f0707f69ecde7ae9ba0f30781fe0e36a0f67f
   </div>
 
   <div class="form-group "> 
