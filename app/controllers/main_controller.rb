@@ -11,7 +11,9 @@ class MainController < ApplicationController
 
 	
  	def index
-		
+		if current_user && (current_user.year==0 || current_user.department.nil?)
+			redirect_to "/user/edit"
+		end
   end
 
 	def get_specified_classroom_schedule

@@ -47,7 +47,11 @@
 					</div>
 					<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 						<% user=sale_book.user %>	
-						<%=image_tag "http://graph.facebook.com/#{user.uid}/picture",size:"25x25", style:"border-radius:3px;"%>
+						<% if user.hasFB? %>
+							<%=image_tag "http://graph.facebook.com/#{user.uid}/picture",size:"25x25", style:"border-radius:3px;"%>
+						<% else %>
+							
+						<% end %>
 						<%=user.name%>
 						
 						<%=fa_icon "book"%> <strong><%=user.book_trade_infos.count%></strong>

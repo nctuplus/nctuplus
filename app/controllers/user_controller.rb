@@ -293,15 +293,14 @@ class UserController < ApplicationController
 	end
 
 	def edit
-    @dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]}
+		@dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]}
     @dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]}
 	end
 
 
 	def update
-		current_user.update_attributes(:name=>params[:name], :email=>params[:email])
-		#current_user.update_attributes(:name=>name, :email=>email)
-
+		current_user.update_attributes(user_params)
+		current_user.update_attributes(:email=>params[:email]=="" ? current_user.email : params[:email])
 		degree=params[:degree_select].to_i
 		grade=params[:grade_select].to_i
 		if degree==2
@@ -369,7 +368,7 @@ class UserController < ApplicationController
   private
 
   def user_params
-    params.require(:user).permit(:email)
+    params.require(:user).permit(:name, :agree_share)
   end
   
 end
