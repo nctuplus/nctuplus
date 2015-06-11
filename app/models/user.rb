@@ -67,6 +67,7 @@ class User < ActiveRecord::Base
 
 	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
 		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name}
+			-["normal_scores","agree_scores"]
 		table_to_be_moved.each do |table_name|
 			self.send(table_name).update_all(:user_id=>new_user.id)
 		end
@@ -107,20 +108,6 @@ class User < ActiveRecord::Base
 		return self.is_undergrad? ? 60 : 70
 	end
 	
-	
-=begin
-	def all_courses
-		self.course_simulations.import_success.includes(:course_detail, :course_teachership, :course, :course_field)
-	end
-	def courses_taked
-		self.all_courses.normal
-	end
-
-	
-	def courses_agreed
-		self.course_simulations.includes(:course_detail, :course, :course_field).import_success.agreed
-	end
-=end
 	
 	def courses_taked
 		self.normal_scores.includes(:course_detail, :semester, :course_teachership, :course, :course_field)

@@ -9,7 +9,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 			
       result = AuthFacebook.from_omniauth(env["omniauth.auth"], current_user)
       if not result[:auth]
-        alertmesg("info",'warning',result[:message])
+        alertmesg('info','warning',result[:message])
 			  redirect_to :new_user_session
         return 
       end
@@ -21,7 +21,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 
     def E3
 			if current_user # block all user who has logined
-				alertmesg("info",'warning', "您已登入") 
+				alertmesg('info','warning', "您已登入") 
 				redirect_to :root
 				return
 			end
@@ -30,7 +30,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 				_additional_session(result[:user])
 				sign_in_and_redirect result[:user], :event => :authentication
 			else
-				alertmesg("info",'warning', result[:message]) 
+				alertmesg('info','warning', result[:message]) 
 				redirect_to :new_user_session
 			end	
     end

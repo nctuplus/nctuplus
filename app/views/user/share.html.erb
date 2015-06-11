@@ -3,7 +3,8 @@
   <h4 class="text-center">
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
-		<% if can_add_to_collection?(current_user, @user, params[:id]) %>
+		<% if true %>
+		<!-- can_add_to_collection?(current_user, @user, params[:id]) -->
 			<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection();'%> 
 		<% end %>	
   </h4> 
@@ -24,7 +25,7 @@
 			url:"",
 			data: {:item=>item},
 			success: function(){
-			
+				
 			}
 		});
 	}

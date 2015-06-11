@@ -49,7 +49,7 @@
 							<li class="text-center">無資料</li>
 							<% end %>
 							<% sems.each do |sem| %>
-							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.id.to_s %>"><%=sem .name %></a></li>						
+							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.id.to_s %>"><%=sem.name %></a></li>						
 							<% end %>
 					</ul>	
 				</li>
@@ -124,10 +124,11 @@
           method: "POST",
           url: "/user/update",
           data: {type:"share", data:true, sem_id: data.semester_id},
-          success:function(res){                 
+          success:function(res){            
+							data.table.CourseTable("renderImg", "upload") ;
               $switch.bootstrapSwitch('destroy');
               $switch.remove();
-              $target.popover('disable');
+              $target.popover('disable');							 
               toastr["success"]("您可以使用分享連結分享至社交網站");
               share_link(id, "<%=j root_url %>shares/"+res.hash_share);     
             }
@@ -184,7 +185,7 @@
           $table.CourseTable("renderImg", "upload") ;
           group_share(true, 'share-opt', {hash_share: data.hash_share}) ;
         }else{ 
-          group_share(false, 'share-opt', {semester_id: semester_id}) ;    
+          group_share(false, 'share-opt', {semester_id: semester_id, table: $table}) ;    
         }
 			    return false ;
         }, 500);

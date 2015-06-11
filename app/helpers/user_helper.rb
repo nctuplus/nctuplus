@@ -41,7 +41,7 @@ module UserHelper
 	
 # user share	
 	def can_add_to_collection?(current_user, user, item)
-		return nil #current_user and current_user != user and current_user.hasCollection?(params[:id])
+		return (current_user and current_user != user and current_user.hasCollection?(item))
 	end	
 	
 end
