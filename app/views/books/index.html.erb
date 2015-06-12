@@ -1,0 +1,72 @@
+<style>
+	.mouse-on{
+		height:auto !importan;
+		border-color: #66afe9;
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+		
+	}
+	
+	.supplemental-info{
+		background: #f8f8f8;
+		//margin: 15px 0 0;
+		padding: 10px;
+		border-top: 1px solid #ccc;
+		margin-left: -4px;
+		margin-right: -4px;
+		cursor :default;
+	}
+	
+</style>
+<div class="container">
+	<%=link_to "我要賣書",new_book_path,class:"btn btn-info" %>
+  <div id="products" class="row">
+		<%@sale_books.each do |sale_book| %>
+			<div class="col-md-4 col-sm-6">
+				<div href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:300px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'));">					
+					
+					<%=image_tag sale_book.image_url,style:"height:170px;min-height:150px;"%>		
+					<% if sale_book.status==1%>
+						<%=image_tag asset_path("soldout.png"),style:"position:absolute;z-index:10;top: 24px;left: 8px;"%>
+					<% end %>
+					<div style="min-height:64px;margin-top:3px;padding-left:4px;" >
+						<div class="text-center" style="font-size:14px;">
+							<span data-toggle="tooltip" title="<%=sale_book.book_name%>">
+								<strong><%=sale_book.book_name.truncate(24)%></strong>
+							</span>
+						</div>
+						<p data-toggle="tooltip" style="margin-top:5px;" title="
+							<% sale_book.course_teacherships.each do |cts|%>
+								<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
+							<% end %>">
+							<%="#{sale_book.course_teacherships.first.try(:course_ch_name)} #{sale_book.course_teacherships.first.try(:teacher_name)}" %><br>
+						</p>
+						<span class="pull-right" style="font-size:16px;margin-top:-5px;">
+						<%=fa_icon "eye"%> <strong><%=sale_book.view_times%></strong>&nbsp;&nbsp;&nbsp;
+						<%=fa_icon "clock-o"%><%= time_ago_in_words(sale_book.created_at) %>
+						</span>
+					</div>
+					<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
+						<% user=sale_book.user %>	
+						<% if user.hasFB? %>
+							<%=image_tag "http://graph.facebook.com/#{user.uid}/picture",size:"25x25", style:"border-radius:3px;"%>
+						<% else %>
+							
+						<% end %>
+						<%=user.name%>
+						
+						<%=fa_icon "book"%> <strong><%=user.book_trade_infos.count%></strong>
+						<%=link_to fa_icon("pencil"), edit_book_path(sale_book) %>
+						
+						<strong class="pull-right" style="font-size:20px;">
+							<%=fa_icon "dollar" %> <%=sale_book.price%>
+						</strong>
+					</div>						
+				</div>
+			</div>
+		<% end %>
+</div>
+<script>
+	$(function () {
+		$('[data-toggle="tooltip"]').tooltip({html:true,placement:"bottom"});
+	})
+</script>

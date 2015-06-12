@@ -11,7 +11,8 @@ class User < ActiveRecord::Base
 	delegate :ch_name, :to=> :department, :prefix=>true
 	delegate :degree, :to=> :department
 	delegate :uid, :to=> :auth_facebook
-
+	
+	has_many :book_trade_infos
 	has_many :past_exams
 	has_many :discusses
 	has_many :sub_discusses
@@ -29,10 +30,14 @@ class User < ActiveRecord::Base
 	has_many :agreed_scores, :dependent=> :destroy
 	
 	has_many :normal_scores, :dependent=> :destroy
-	has_many :course_details, :through=> :normal_scores
-	has_many :semesters, :through=> :course_details
+	#has_many :course_details, :through=> :normal_scores
+	#has_many :semesters, :through=> :course_details
 	
-	has_many :user_share_images
+	has_many :user_collections
+	
+	
+	validates :email, uniqueness: true
+	validates :name, uniqueness: true
 	
 # constants	
 	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
@@ -51,6 +56,9 @@ class User < ActiveRecord::Base
 	  return self.agree_share
 	end
 
+	def hasCollection?(item)
+		return self.user_collections.where(:item=>item).present?	
+	end
 	
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
@@ -59,6 +67,7 @@ class User < ActiveRecord::Base
 
 	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
 		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name}
+			-["normal_scores","agree_scores"]
 		table_to_be_moved.each do |table_name|
 			self.send(table_name).update_all(:user_id=>new_user.id)
 		end
@@ -70,7 +79,11 @@ class User < ActiveRecord::Base
 	end
 	
 	def hasFb?
-		return self.provider=="facebook"
+		return self.auth_facebook.present?
+	end
+	
+	def hasE3?
+		return self.auth_e3.present?
 	end
 	
 ## role func
@@ -95,22 +108,6 @@ class User < ActiveRecord::Base
 		return self.is_undergrad? ? 60 : 70
 	end
 	
-	
-	
-	
-=begin
-	def all_courses
-		self.course_simulations.import_success.includes(:course_detail, :course_teachership, :course, :course_field)
-	end
-	def courses_taked
-		self.all_courses.normal
-	end
-
-	
-	def courses_agreed
-		self.course_simulations.includes(:course_detail, :course, :course_field).import_success.agreed
-	end
-=end
 	
 	def courses_taked
 		self.normal_scores.includes(:course_detail, :semester, :course_teachership, :course, :course_field)

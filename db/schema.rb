@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603173130) do
+ActiveRecord::Schema.define(version: 20150610075532) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -54,17 +54,21 @@ ActiveRecord::Schema.define(version: 20150603173130) do
   add_index "book_ctsships", ["course_teachership_id"], name: "index_book_ctsships_on_course_teachership_id", using: :btree
 
   create_table "book_trade_infos", force: true do |t|
-    t.integer  "book_id",    default: 0,  null: false
-    t.integer  "user_id",    default: 0,  null: false
-    t.string   "book_name",  default: "", null: false
-    t.string   "image_url",  default: ""
-    t.integer  "price",      default: 0,  null: false
-    t.integer  "status",     default: 0,  null: false
-    t.integer  "view_times", default: 0,  null: false
-    t.text     "desc",                    null: false
+    t.integer  "book_id",     default: 0,  null: false
+    t.integer  "user_id",     default: 0,  null: false
+    t.integer  "contact_way"
+    t.string   "book_name",   default: "", null: false
+    t.string   "image_url",   default: ""
+    t.integer  "price",       default: 0,  null: false
+    t.integer  "status",      default: 0,  null: false
+    t.integer  "view_times",  default: 0,  null: false
+    t.text     "desc",                     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "book_trade_infos", ["book_id"], name: "index_book_trade_infos_on_book_id", using: :btree
+  add_index "book_trade_infos", ["user_id"], name: "index_book_trade_infos_on_user_id", using: :btree
 
   create_table "books", force: true do |t|
     t.string   "title",        default: "", null: false
@@ -428,6 +432,14 @@ ActiveRecord::Schema.define(version: 20150603173130) do
   add_index "temp_course_simulations", ["course_detail_id"], name: "index_temp_course_simulations_on_course_detail_id", using: :btree
   add_index "temp_course_simulations", ["course_field_id"], name: "index_temp_course_simulations_on_course_field_id", using: :btree
   add_index "temp_course_simulations", ["semester_id"], name: "index_temp_course_simulations_on_semester_id", using: :btree
+
+  create_table "user_collections", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "target_id"
+    t.integer  "semester_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"

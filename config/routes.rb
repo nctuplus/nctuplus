@@ -1,5 +1,8 @@
 Nctuplus::Application.routes.draw do
 	
+  get "edit/info"
+  get "edit/about"
+  post "edit/about"
 	root :to => "main#index"
 	
 #--------- [devise] user account concerned --------------	
@@ -13,7 +16,7 @@ Nctuplus::Application.routes.draw do
 	
 #--------- events --------------	
 	resources :events
-	get "main/cts_search"
+	
 #--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
  # match 'auth/failure', to: redirect('/'), via: [:get, :post]
@@ -40,18 +43,19 @@ Nctuplus::Application.routes.draw do
 	get "main/policy_page"
 	get "main/member_intro"
 
-  post "main/set_cts"
-	get "main/book_show"
+
+
 
 
 #---------- book page ----------- 
-  
-  resources :books
+  post "books/set_cts"
+  get "books/cts_search"
 	post "books/google_book"
+  resources :books
 
 #---------- admin page -----------
 	
-  get "admin/statistics"
+  get "admin/user_statistics"
     
 	get "admin/ee104"
 	get "admin/users"
@@ -78,6 +82,8 @@ Nctuplus::Application.routes.draw do
 	get "user/statistics"
 	post "user/select_dept"
 
+	get "user/edit"
+	patch "user/update"
 	
 #--------- user end -------------
 	post "course_content/raider"
