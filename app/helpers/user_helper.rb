@@ -44,4 +44,11 @@ module UserHelper
 		return (current_user and current_user != user and current_user.hasCollection?(item))
 	end	
 	
+	def generate_share_hashid(user_id, sem_id)
+	  return Hashid.user_share_encode [user_id, sem_id]
+	end
+	
+	def share_url(hasid)
+	  return "#{root_url}shares#{hashid}"
+	end
 end

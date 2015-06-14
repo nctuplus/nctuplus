@@ -19,8 +19,14 @@ Nctuplus::Application.routes.draw do
 	
 #--------- for share course table page -----
 	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
+	# update user share and return json hash id 
 	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
+	# update share course table image
 	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
+	# add to user collection
+	post "user/update", to: "user#add_user_collection", :constraints => lambda{ |req| req.params[:type]=="add_collection"}
+	# show user collections lists
+	get "user/collections"
 	
 #--------- for many usage --------------
 

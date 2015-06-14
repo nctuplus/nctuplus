@@ -62,6 +62,11 @@
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
+					  <% if current_user.user_collections.count > 0%>
+              <li>
+                <a href="/user/collections">我的收藏</a>
+              </li>
+					  <% end %>
 						<li>
 								<a href="/user/edit/">編輯個人資料</a>
 						</li>	
@@ -103,6 +108,7 @@
 				.children('input').first().val(share_url);   
 			$header_data.append($share_div);   
       new ZeroClipboard( $('#copy-it') ); //bind copy to clipboard
+      $('#copy-it').click(function(){ toastr["success"]('已複製到剪貼簿');});
       $('#copy-it').popover({
         content:"Copy to clipboard",
         placement:"bottom",
