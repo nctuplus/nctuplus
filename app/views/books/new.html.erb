@@ -54,6 +54,25 @@
 						<%= f.text_area "desc", :class => "form-control",required: "true" %>
 					</div>
         </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">聯絡方式</label>
+					<div class="col-sm-2">
+            <% user=current_user %>
+            <% if user.hasFb? %>
+              <%= f.radio_button "contact_way", "0",:class => "form-control" %> Facebook
+            <% end %>
+            <%= f.radio_button "contact_way", "1",:class => "form-control" , :checked => true %> Email
+					</div>
+        </div>
+        <div class="form-group">
+        <%= f.fields_for @book_con do |g| %>
+          <%=g.hidden_field :title %>
+          <%=g.hidden_field :isbn %>
+          <%=g.hidden_field :authors %>
+          <%=g.hidden_field :description %>
+          <%=g.hidden_field :preview_link %>
+        <% end %>
+        </div>
         <div class="col-md-6 col-md-offset-6">
           <%= f.submit "新增品項", class: "btn btn-primary" %>
         </div>
@@ -87,10 +106,14 @@
 <script type="text/x-tmpl" id="googlebook-res">
 	<table class="table table-hover">
 		{% for(var i=0,book;book=o[i];i++) { %}
-			<tr class="clickable-hover" onclick="selectBook('{%=book.title%}','{%=book.isbn%}','{%=book.authors%}');">
+			<tr class="clickable-hover" onclick="selectBook('{%=book.title%}','{%=book.isbn%}','{%=book.authors%}','{%=book.volume_info.imageLinks.thumbnail%}'
+      ,'{%=book.description%}','{%=book.preview_link%}');">
 				
 				<td>{%=book.title%}</td>
 				<td>{%=book.authors%}</td>
+        <td>
+          <img src={%=book.volume_info.imageLinks.thumbnail%}></img>
+        </td>
 			</tr>
 		{% } %}
 	</table>
@@ -98,8 +121,15 @@
 
 <script>
 	
-	function selectBook(title,isbn,authors){
-		//alert(title+isbn+authors);
+	function selectBook(title,isbn,authors,imageLink,description,preview_link){
+    showGlobalModal("已選擇", title);
+		$("#book_trade_info_image_url").val(imageLink);
+    $("#book_trade_info_book_name").val(title);
+    $("#book_trade_info_book_title").val(title);
+    $("#book_trade_info_book_isbn").val(isbn);
+    $("#book_trade_info_book_authors").val(authors);
+    $("#book_trade_info_book_description").val(description);
+    $("#book_trade_info_book_preview_link").val(preview_link);
 	}
 	function searchCourse(){
 		var last_term=$("#last-ct-search-term").text();
@@ -136,16 +166,8 @@
 			data : {title : title},
 			url : "/books/google_book",
 			success : function(data) {
-				//console.log(data);
+        console.log(data);
 				var content=tmpl("googlebook-res",data);
-				/*
-				var content=""	;
-				for(var i=0;i<5;i++) {
-					content+='<div id="'+i+'">';
-					content+="title: "+data[i].title+"<br>authors: "+data[i].authors+'<br>image: <img src="'+data[i].volume_info.imageLinks.thumbnail+'">';
-					content+='<br><br></div>';
-				}
-				*/
 				showGlobalModal(title, content);
 			}
 		});
