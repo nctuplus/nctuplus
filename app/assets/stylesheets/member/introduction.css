@@ -4,12 +4,14 @@ Follow me on Twitter @maridlcrmn
 Image credits: unsplash.com, uifaces.com/authorized
 Image placeholders: placemi.com
 */
-
+body {
+  background-image: url("/assets/member_background.jpg");
+}
 
 #t-cards {
     padding-top: 80px;
     padding-bottom: 80px;
-    background-color: #eceff1;
+
 }
 
 /********************************/
@@ -28,7 +30,6 @@ Image placeholders: placemi.com
     height: 200px;
     border-bottom-color: #fff;
     overflow: hidden;
-    background-color: #81d4fa;
     
     -webkit-transition: height 600ms ease-in-out;
             transition: height 600ms ease-in-out;
