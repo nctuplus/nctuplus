@@ -2,31 +2,36 @@
 	<div class="col-md-12 col-xs-12 text-cente">
 		<table class="table">
 			<tr class="row">
-				<td><%=image_tag @book.image_link_with_zoom(2)%></td>
+				<td style="width:40%;"><%=@sale_book.cover_image(2)%></td>
 				<td>
-					<h4><%=@book.title%></h4>
-					
+					<h4><%=@sale_book.book_name%></h4>
+					<% if @book.authors.present? %>
 					by <%=@book.authors%><br>
+					<% end %>
+					<% if @book.authors.present? %>
 					ISBN <%=@book.isbn%><br>
-					
+					<% end %>
+					<% if @book.preview_link.present? %>
 					<%=link_to "搶先看 ",@book.preview_link,target:"_blank"%>(on GoogleBook)<br>
-					價格: <strong>500</strong> <br>
-					賣家: <%=@book.user.name%> <br>
-					書況: zzzzzzzzzzzzzzzzzzzz <br>
+					<% end %>
+					價格: <strong><%=@sale_book.price%></strong> <br>
+					賣家: <%=@sale_book.user.name%> <br>
+					連絡方式: <%=@sale_book.contact_way==0 ? @sale_book.user.email : "Facebook" %><br>
+
+					書況: <%=@sale_book.desc%> <br>
 					適用課程 - <br>
-					<% @book.course_teacherships.includes(:course,:course_details).each do |cts|%>
+					<% @sale_book.course_teacherships.includes(:course,:course_details).each do |cts|%>
 						<%=link_to "#{cts.course_ch_name} #{cts.teacher_name}","/courses/#{cts.course_details.last.id}", target:"_blank" %><br>
 					<% end %>
-					
-					
-					
 				</td>
 			</tr>
+			<% if @book.description.present? %>
 			<tr class="row" >
 				<td colspan="2">
 				<%=@book.description%>(by google book)
 				</td>
 			</tr>
+			<% end %>
 		</table>
 	</div>
 </div>

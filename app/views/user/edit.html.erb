@@ -1,6 +1,7 @@
 <div class="container bg-white" >
 	<br>
 	<%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
+		<% if current_user.hasE3?%>
 		<div class="form-group">
 			<h4><%=label_tag '結合',"結合",class:"col-sm-2 control-label"%></h4>
 			<div class="col-md-9">
@@ -14,6 +15,7 @@
 				<p class="">結合後可利用fb登入，另外在賣二手書時可以選擇直接連絡您的fb帳號</p>
 			</div>
 		</div>
+		<% end %>
 		<div class="form-group">
 			<h4><%=label_tag '分享課表',"分享課表",class:"col-sm-2 control-label"%></h4>
 			<div class="col-md-9">

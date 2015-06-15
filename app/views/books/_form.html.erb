@@ -1,0 +1,159 @@
+<%= javascript_include_tag "books", "data-turbolinks-track" => true %>
+
+<div id="main-container" class="container bg-white">
+  <div class="row">
+    <div class="col-md-7 col-md-offset-2">
+			<h1>我要賣書</h1>
+      <%= form_for @sale_book, :url => { :controller => 'books', :action => @sale_book.new_record? ? 'create' : "update" }, :html=>{class: "form-horizontal",multipart: true,id:"book_trade_info-form"} do |f| %>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">書名</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<%= f.text_field "book_name", :class => "form-control",required:"true",onBlur:"checkAndEnable();",placeholder:"利用搜尋來快速填入其他資訊!" %>
+							<div class="input-group-btn">
+								<%=button_tag "搜尋",id:"search-GoogleBook", class:"btn btn-success",onclick:"searchGoogleBook();return false;"%>
+							</div>
+						</div>
+					</div>	
+        </div>
+				<div class="form-group">
+          <label class="col-sm-2 control-label">作者(選填)</label>
+					<div class="col-sm-10">
+						<%=text_field_tag "book[authors]",@book.authors, class: "form-control",placeholder:"" %>
+					</div>	
+        </div>
+				<div class="form-group">
+          <label class="col-sm-2 control-label">ISBN(選填)</label>
+					<div class="col-sm-10">
+						<%=text_field_tag "book[isbn]",@book.isbn, class: "form-control integer-only",placeholder:"不需以'-'隔開,10碼或13碼皆可,例:9789861994192" %>
+					</div>	
+        </div>	
+				<div class="form-group hidden">
+					<%=hidden_field_tag "book[selected]","false" %>
+          <%=hidden_field_tag "book[title]",@book.title %>         
+          <%=hidden_field_tag "book[description]",@book.description %>
+					<%=hidden_field_tag "book[image_link]",@book.image_link%>
+          <%=hidden_field_tag "book[preview_link]",@book.preview_link %>
+        </div>
+        <div class="form-group vertical-center" style="min-height:0vh;">
+					
+          <label class="col-sm-2 control-label" >圖片</label>
+					<div class="col-sm-10 col-xs-10">
+						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
+						<div id="image-container" onclick="showPreviewImg();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
+							點選以上傳圖片(需小於2MB)
+							<%=@sale_book.cover_image%>
+						</div>
+					</div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">價格</label>
+					<div class="col-sm-10">
+						<%= f.text_field "price", :class => "form-control integer-only",required: "true" %>
+					</div>
+        </div>
+				<div class="form-group">
+          <label class="col-sm-2 control-label">適用課程</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<%=text_field_tag "search-ct","", class:"form-control",placeholder:"輸入課名並搜尋來選擇適用課程"%>
+							<label class="hidden" id="last-ct-search-term"></label>							
+							<div class="input-group-btn">
+								<%=button_tag "搜尋",id:"search-ct-btn", class:"btn btn-success",onclick:"searchCourse();return false;"%>
+							</div>
+						</div>
+						<div class="row">
+							<ul id="cts-list">								
+								<% @sale_book.course_teacherships.each do |cts| %>
+									<li id="<%=cts.id%>">
+										<%=cts.course_ch_name%> | <%=cts.teacher_name%>
+										<a href="javascript:void(0);" onclick="removeCtId(<%=cts.id%>)"><%=fa_icon "times"%></a>
+									</li>
+								<% end %>
+							</ul>
+							<%=hidden_field_tag :cts_id_list %>
+						</div>
+					</div>				
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">書況</label>
+					<div class="col-sm-10">
+						<%= f.text_area "desc", :class => "form-control",required: "true" %>
+					</div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">聯絡方式</label>
+					<div class="col-sm-10" style="margin-top:4px;">
+            <%= f.radio_button :contact_way, "0" %>
+						<%= f.label :contact_way_email, "Email" %>
+						<% if current_user.hasFb? %>
+							<%= f.radio_button :contact_way, "1" %>
+							<%= f.label :contact_way_email_fb, "Facebook" %>
+						<% else %>
+							或至<%=link_to "編輯個人資訊","/user/edit"%> 結合facebook以利用fb連絡
+            <% end %>
+					</div>
+        </div>
+				<% if !@sale_book.new_record? %>
+					<div class="form-group" id="status-edit">
+						<label class="col-sm-2 control-label">售出</label>
+						<div class="col-sm-10" style="margin-top:4px;">
+							<%= f.radio_button :status, "0" %>
+							<%= f.label :status_not_soldout, "否" %>
+							<%= f.radio_button :status, "1" %>
+							<%= f.label :status_soldout, "是" %>
+						</div>
+					</div>
+				<% end %>
+        <div class="col-md-12">
+          <%= f.submit "送出", class: "btn btn-lg btn-primary pull-right" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= search_form_for @q, url:"/books/cts_search", class:"hidden", remote:"true" do |f| %>
+	<%=f.search_field :course_ch_name_cont%>
+	<%=f.submit%>
+<% end %>
+
+<script type="text/x-tmpl" id="cts-res">
+	<table class="table table-hover" id="cts-res-table">
+		<tr class="">
+			<th></th>
+			<th>課程</th>
+			<th>老師</th>
+		</tr>
+		{% for(var i=0,cts;cts=o[i];i++) { %}
+			<tr class="" id="ct-{%=cts.id%}">
+				<td><input type="checkbox" id="cts-{%=cts.id%}" onchange="addCtid({%=cts.id%},'{%=cts.course_name%}','{%=cts.teacher_name%}');"></td>
+				<td>{%=cts.course_name%}</td>
+				<td>{%=cts.teacher_name%}</td>
+			</tr>
+		{% } %}
+	</table>
+</script>
+
+<script type="text/x-tmpl" id="googlebook-res">
+	<table class="table table-hover">
+		{% if(o==null){ %}
+			查無結果!
+		{% }else{ %}
+			{% for(var i=0,book;book=o[i];i++) { %}
+				<tr class="clickable-hover" onclick="selectBook('{%=book.title%}','{%=book.isbn%}','{%=book.authors%}','{%=book.image_link%}'
+				,'{%=book.description%}','{%=book.preview_link%}');">				
+					<td>{%=book.title%}</td>
+					<td>{%=book.authors%}</td>
+					<td>
+						{% if(book.image_link) %}
+							<img src={%=book.image_link%}></img>
+						{% else{ %}
+							無圖片
+						{% } %}
+					</td>
+				</tr>
+			{% } %}
+		{% } %}
+	</table>
+</script>

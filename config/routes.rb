@@ -15,7 +15,7 @@ Nctuplus::Application.routes.draw do
 
 	
 #--------- events --------------	
-	resources :events
+	#resources :events
 	
 #--------- for share course table page -----
 	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}

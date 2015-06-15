@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150610075532) do
+ActiveRecord::Schema.define(version: 20150615090431) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -43,26 +43,29 @@ ActiveRecord::Schema.define(version: 20150610075532) do
     t.datetime "updated_at"
   end
 
-  create_table "book_ctsships", force: true do |t|
-    t.integer  "book_id"
+  create_table "book_trade_info_ctsships", force: true do |t|
+    t.integer  "book_trade_id"
     t.integer  "course_teachership_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "book_ctsships", ["book_id"], name: "index_book_ctsships_on_book_id", using: :btree
-  add_index "book_ctsships", ["course_teachership_id"], name: "index_book_ctsships_on_course_teachership_id", using: :btree
+  add_index "book_trade_info_ctsships", ["book_trade_id"], name: "index_book_trade_info_ctsships_on_book_trade_id", using: :btree
+  add_index "book_trade_info_ctsships", ["course_teachership_id"], name: "index_book_trade_info_ctsships_on_course_teachership_id", using: :btree
 
   create_table "book_trade_infos", force: true do |t|
-    t.integer  "book_id",     default: 0,  null: false
-    t.integer  "user_id",     default: 0,  null: false
+    t.integer  "book_id",            default: 0,  null: false
+    t.integer  "user_id",            default: 0,  null: false
     t.integer  "contact_way"
-    t.string   "book_name",   default: "", null: false
-    t.string   "image_url",   default: ""
-    t.integer  "price",       default: 0,  null: false
-    t.integer  "status",      default: 0,  null: false
-    t.integer  "view_times",  default: 0,  null: false
-    t.text     "desc",                     null: false
+    t.string   "book_name",          default: "", null: false
+    t.integer  "price",              default: 0,  null: false
+    t.integer  "status",             default: 0,  null: false
+    t.integer  "view_times",         default: 0,  null: false
+    t.text     "desc",                            null: false
+    t.string   "cover_file_name"
+    t.string   "cover_content_type"
+    t.integer  "cover_file_size"
+    t.datetime "cover_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -71,13 +74,14 @@ ActiveRecord::Schema.define(version: 20150610075532) do
   add_index "book_trade_infos", ["user_id"], name: "index_book_trade_infos_on_user_id", using: :btree
 
   create_table "books", force: true do |t|
-    t.string   "title",        default: "", null: false
+    t.boolean  "from_google",  default: false, null: false
+    t.string   "title",        default: "",    null: false
     t.string   "isbn"
     t.string   "authors"
     t.text     "description"
     t.text     "image_link"
     t.text     "preview_link"
-    t.integer  "user_id",      default: 0,  null: false
+    t.integer  "user_id",      default: 0,     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
