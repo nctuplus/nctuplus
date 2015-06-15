@@ -56,8 +56,8 @@ class User < ActiveRecord::Base
 	  return self.agree_share
 	end
 
-	def hasCollection?(item)
-		return self.user_collections.where(:item=>item).present?	
+	def hasCollection?(user_id, semester_id)
+		return self.user_collections.where(:target_id=>user_id, :semester_id=>semester_id).present?	
 	end
 	
 	def student_id

@@ -1,28 +1,42 @@
 <h3>我的收藏</h3>
 
-<div class="row well">
-  <% @collections.each do |c| %>
-  <% hashid = generate_share_hashid(c.target_id, c.semester_id) %>
-  <div class="col-xs-6 col-md-4">
-    <%=fa_icon "times 2x", :style=>"position: absolute; right: 18px; display: none;", :class=>"clickable-hover"%>
-    <a class="thumbnail collections" href="<%=root_url%>shares/<%=hashid%>" target="_blank" >  
-          
-      <div class="caption text-center">
-        <h3><%=c.user.department.ch_name %> <%=grade_on_user(c.user, c.semester)%></h3>
-        <p><%=c.user.name%></p>
-      </div>  
-      <div  class="text-center ">
-      <%=image_tag "#{root_url}course_table_shares/#{hashid}.png", :size=>"300x400", :alt=>":(" %>
-      </div>   
-    </a>
-  </div>
-  <% end %>
-</div>
+
+  <table class="table table-hover ">
+    <thead>
+      <tr class="row">
+        <th>名稱</th>
+        <th>系所</th>
+        <th>年級</th>
+        <th>動作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @collections.each do |c| %>
+      <% hashid = generate_share_hashid(c.target_id, c.semester_id) %>
+      <tr class="row collection-row" href="<%=root_url%>shares/<%=hashid%>" id="<%=hashid%>">
+        <td class="clickable-hover clickable-row"><%=c.user.name%></td>
+        <td class="clickable-hover clickable-row"><%=c.user.department.ch_name %></td>
+        <td class="clickable-hover clickable-row"><%=grade_on_user(c.user, c.semester)%>(<%=c.semester.year%>)</td>
+        <td><%=link_to "delete", "javascript:void(0);", :class=>"delete-collection"%></td>
+      </tr>
+      <% end %>  
+    </tbody>
+  </table>
 
 <script>
-  $('.collections').mouseover(function(){
-    $(this).prev().show();
-  }).mouseleave(function(){
-    $(this).prev().hide();
+  $(".collection-row").click(function() {
+   window.open( $(this).attr("href") );
+	});
+  $('.delete-collection').click(function(){
+    var $this_tr = $(this).parent().parent() ;
+    $.ajax({
+			method: "post",
+			url:"/user/update",
+			data: {type: "delete_collection",
+			       item: $this_tr.attr('id')},
+			success: function(){		
+				$this_tr.remove();
+			}
+		});
   });
 </script>
