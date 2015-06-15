@@ -5,7 +5,8 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept, :statistics_table, :edit, :update]
+	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept,
+	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
   before_filter :checkE3Login, :only=>[:import_course, :add_course]
 	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
 
@@ -327,12 +328,19 @@ class UserController < ApplicationController
     render :nothing => true, :status => 200, :content_type => 'text/html'   
   end
 	
+	# update share_agree and return json hashid
 	def update_user_share
 	  current_user.update_attribute(:agree_share, params[:data])
-	 # Rails.logger.debug "[!!!!!!!!!!!!!!!!!!] #{params[:data].inspect}"
 	  render :json=>{:hash_share=>Hashid.user_share_encode([current_user.id, params[:sem_id].to_i])}
 	end
 	
+	def add_user_collection
+	  result = Hashid.user_share_decode(params[:item])
+	  if result
+	    UserCollection.create(:user_id=>current_user.id, :target_id=>result[0], :semester_id=>result[1])    
+	  end
+	  render :nothing => true, :status => 200, :content_type => 'text/html'
+	end
 	
 	def share 
 		decode_data = Hashid.user_share_decode(params[:id])
@@ -360,6 +368,10 @@ class UserController < ApplicationController
 		  not_found
 		end
 
+	end
+	
+	def collections
+	  @collections = current_user.user_collections
 	end
 	
   private

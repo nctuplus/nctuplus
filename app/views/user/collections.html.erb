@@ -1,0 +1,28 @@
+<h3>我的收藏</h3>
+
+<div class="row well">
+  <% @collections.each do |c| %>
+  <% hashid = generate_share_hashid(c.target_id, c.semester_id) %>
+  <div class="col-xs-6 col-md-4">
+    <%=fa_icon "times 2x", :style=>"position: absolute; right: 18px; display: none;", :class=>"clickable-hover"%>
+    <a class="thumbnail collections" href="<%=root_url%>shares/<%=hashid%>" target="_blank" >  
+          
+      <div class="caption text-center">
+        <h3><%=c.user.department.ch_name %> <%=grade_on_user(c.user, c.semester)%></h3>
+        <p><%=c.user.name%></p>
+      </div>  
+      <div  class="text-center ">
+      <%=image_tag "#{root_url}course_table_shares/#{hashid}.png", :size=>"300x400", :alt=>":(" %>
+      </div>   
+    </a>
+  </div>
+  <% end %>
+</div>
+
+<script>
+  $('.collections').mouseover(function(){
+    $(this).prev().show();
+  }).mouseleave(function(){
+    $(this).prev().hide();
+  });
+</script>

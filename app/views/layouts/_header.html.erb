@@ -62,6 +62,11 @@
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
+					  <% if current_user.user_collections.count > 0%>
+              <li>
+                <a href="/user/collections">我的收藏</a>
+              </li>
+					  <% end %>
 						<li>
 								<a href="/user/edit/">編輯個人資料</a>
 						</li>	
@@ -91,26 +96,24 @@
 		});
 	});
 	
-  function group_share(share_opt, id, data){
-    var $target = $('#'+id);
-    var share_link = function(div_id, share_url){
-      console.log(share_url);
-      new Share("#"+div_id,{
-          ui: {
-            flyout: "middle left",
-            button_text :"分享",
-            button_font : false,
-          },
-          networks: {
-            facebook: {
-              app_id: "<%=Facebook::APP_ID%>",
-              url :share_url,
-            },
-            google_plus:{ url :share_url },
-            twitter:{ url :share_url, },
-            pinterest:{ enabled:false },
-            email:{ enabled:false }
-          }
+  function group_share(share_opt, $header_data, data){
+    var share_link = function(share_url){
+      var $share_div = $('<div>').addClass('col-md-offset-2 col-md-8 input-group');
+				$share_div.append($('<input>').attr('type','text').addClass('form-control')
+				  .attr('onclick','this.setSelectionRange(0, this.value.length);'));
+				$share_div.append($('<span>').addClass('input-group-btn')
+				    .html($('<button>').addClass('btn btn-info').attr('id','copy-it')
+				    .attr("data-clipboard-text", share_url)
+				    .html('<%=fa_icon "clipboard"%>')))
+				.children('input').first().val(share_url);   
+			$header_data.append($share_div);   
+      new ZeroClipboard( $('#copy-it') ); //bind copy to clipboard
+      $('#copy-it').click(function(){ toastr["success"]('已複製到剪貼簿');});
+      $('#copy-it').popover({
+        content:"Copy to clipboard",
+        placement:"bottom",
+        trigger :"hover",
+        container :"body"
       });
     }; 
     var switchOnChange = function(event, state){
@@ -130,21 +133,21 @@
               $switch.remove();
               $target.popover('disable');							 
               toastr["success"]("您可以使用分享連結分享至社交網站");
-              share_link(id, "<%=j root_url %>shares/"+res.hash_share);     
+              share_link("<%=j root_url %>shares/"+res.hash_share);     
             }
         });        
       }
     };
     
     if(share_opt){
-      $target.addClass('pull-right');
-    //  console.log("<%=j root_url %>shares/"+data.hash_share);
-      share_link(id, "<%=j root_url %>shares/"+data.hash_share);
+      share_link("<%=j root_url %>shares/"+data.hash_share);
     }else{
+      var $target = $('<div>').addClass('col-md-offset-8 col-md-2');
+      $header_data.append($target);
       $target.popover({ 
         content:"開啟分享連結",
         placement:"auto",
-        trigger : "hover",
+        trigger :"hover",
         container :"body"
       });
       var $switch = $('<input>').attr('type', 'checkbox').attr('id','bootstrap-switch');
@@ -174,18 +177,23 @@
           popover: true,
 					downloadable: true,
 		      semester_id: semester_id
-        };
+        };     
 				$table.CourseTable(data) ;			
 		
-				var share_div = '<div class="pull-right" id="share-opt" style="margin-right: 10px;"></div>';
-				showGlobalModal(data.semester_name + share_div, $table);
-
+				$('#global-modal .close').remove();
+        var $data = $('<div>').addClass('row');
+        $data.append($('<div>').addClass('col-md-2').css('margin-top','5px').html(data.semester_name));
+  
+				showGlobalModal( $data, $table);
+            
 				setTimeout(function(){ //wait for the modal show
 				if(data.hash_share){
+				  $data.hide();
           $table.CourseTable("renderImg", "upload") ;
-          group_share(true, 'share-opt', {hash_share: data.hash_share}) ;
+          group_share(true, $data, {hash_share: data.hash_share}) ;
+          $data.show();
         }else{ 
-          group_share(false, 'share-opt', {semester_id: semester_id, table: $table}) ;    
+          group_share(false, $data, {semester_id: semester_id, table: $table}) ;    
         }
 			    return false ;
         }, 500);

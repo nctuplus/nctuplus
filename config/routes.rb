@@ -17,25 +17,22 @@ Nctuplus::Application.routes.draw do
 #--------- events --------------	
 	resources :events
 	
-#--------- old --------------	
- # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
- # match 'auth/failure', to: redirect('/'), via: [:get, :post]
- # match 'signout', to: 'sessions#destroy', via: [:get, :post]
- # match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
-# get "sessions/get_courses"
-	
 #--------- for share course table page -----
 	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
+	# update user share and return json hash id 
 	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
+	# update share course table image
 	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
+	# add to user collection
+	post "user/update", to: "user#add_user_collection", :constraints => lambda{ |req| req.params[:type]=="add_collection"}
+	# show user collections lists
+	get "user/collections"
 	
 #--------- for many usage --------------
 
 	get "main/book_test"
 	get "main/index"
  	post "main/temp_student_action"
-	#get "main/E3Login"
-	#post "main/E3Login_Check"
 	get "main/student_import"
 	post "main/student_import"
   get "main/test"

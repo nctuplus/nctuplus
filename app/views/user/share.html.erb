@@ -3,9 +3,8 @@
   <h4 class="text-center">
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
-		<% if true %>
-		<!-- can_add_to_collection?(current_user, @user, params[:id]) -->
-			<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection();'%> 
+		<% if can_add_to_collection?(current_user, @user, params[:id]) %>
+			<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
 		<% end %>	
   </h4> 
   <table class="table table-bordered" id="myCourseTable"></table>
@@ -18,14 +17,15 @@
 			$table.CourseTable(data);	
 	});
 <% if can_add_to_collection?(current_user, @user, params[:id]) %>	
-	function record_collection(){
+	function record_collection($link){
 		var item = '<%=j params[:id]%>' ;
 		$.ajax({
 			method: "post",
-			url:"",
-			data: {:item=>item},
+			url:"/user/update",
+			data: {type: "add_collection", item: item},
 			success: function(){
-				
+				console.log("good");
+				$link.remove();
 			}
 		});
 	}
