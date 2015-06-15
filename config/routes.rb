@@ -15,7 +15,7 @@ Nctuplus::Application.routes.draw do
 
 	
 #--------- events --------------	
-	resources :events
+	#resources :events
 	
 #--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]

@@ -130,6 +130,10 @@ class UserController < ApplicationController
 	end
 	
 	def import_course
+		if current_user.department.nil?
+			alertmesg("info",'Oops',"請先輸入您的系級，謝謝!")
+			redirect_to "/user/edit"
+		end
 		if request.post?
 			if params[:user_agreement].to_i == 0
 				redirect_to :root_url

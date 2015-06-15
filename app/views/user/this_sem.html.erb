@@ -5,9 +5,8 @@
 	<br>
 	<div class="row">	
 		<div  class="col-md-8">
-			<%= render :partial=> "/user/dept_form"%>
 			<h4 id="user_info" class="text-center">
-				<% if !@user.department.nil? && !@user.year!=0 %>
+				<% if @user.department && !@user.year!=0 %>
 					<%=@user.department_ch_name%>
 					<% if @user.is_undergrad? %>
 						<strong><%=@user.year+4%></strong>級
@@ -18,21 +17,16 @@
 			</h4>
 		</div>
 		<div class="col-md-4">
-			<% if @user.department.present? %>
-				<button class="btn btn-success" onclick="show_form($(this));">修改系級</button>
-			<% end %>
-			<%=link_to "/courses/simulation", class:"btn btn-primary" ,id: "add_course" do %>
-				<%=fa_icon "plus" %>新增課程
-			<% end %>
-			<% if @user.department.nil? %>
-				<button class="btn btn-primary" id="import_course" onclick="toastr['info']('請先輸入系級,謝謝!');">
-					<%=fa_icon "upload" %>匯入課程
-				</button>
-			<% else %>	
+			<%=link_to "修改個人資訊","/user/edit", class:"btn btn-primary"%>
+			
 				<%=link_to "/user/import_course", class:"btn btn-primary",id:"import_course" do %>
 					<%=fa_icon "upload" %>匯入課程
 				<% end %>
-			<% end %>		
+
+			<%=link_to "/courses/simulation", class:"btn btn-primary" ,id: "add_course" do %>
+				<%=fa_icon "plus" %>模擬排課
+			<% end %>
+			
 		</div>
 	</div>
 	<br>

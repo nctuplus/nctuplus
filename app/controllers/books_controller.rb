@@ -31,62 +31,90 @@ class BooksController < ApplicationController
 	
 	def index
 		#@books=Book.all
-		@sale_books=BookTradeInfo.all
+		@sale_books=BookTradeInfo.all.order("created_at DESC,status ASC")
   end
 	
   def google_book
-		@res = GoogleBooks.search(params[:title],{:count => 5})
+		self_books=Book.all.map{|book|{
+			:title=>book.title,
+			:authors=>book.authors,
+			:isbn=>book.isbn,
+			:description=>book.description,
+			:image_link=>book.image_link,
+			:preview_link=>book.preview_link
+		}}
+		
+		google_books = GoogleBooks.search(params[:title],{:count => 20}).map{|book|{
+			:title=>book.title,
+			:authors=>book.authors,
+			:isbn=>book.isbn,
+			:description=>book.description,
+			:image_link=>book.image_link,
+			:preview_link=>book.preview_link
+		}}
+		@res=self_books+google_books
+		
 		respond_to do |format|
 			format.json{render json: @res}
 		end
   end
   
   def show
-    
+    @sale_book=BookTradeInfo.find(params[:id])
+		@book=@sale_book.book
   end
   
   def new
-    @sale_book = BookTradeInfo.new
-    @book_con = Book.new
+		
+    @sale_book = BookTradeInfo.new(:contact_way => 0)
+    @book = Book.new
 		@q=CourseTeachership.search(params[:q])
-    #@list = BookTradeInfo.all
+		render "_form"
   end
-  
+	
+  def edit
+    @sale_book = current_user.book_trade_infos.find(params[:id])
+    @book = @sale_book.book
+		@q=CourseTeachership.search(params[:q])
+		render "_form"
+  end
+	
+	def update	
+		@book_trade_info=current_user.book_trade_infos.find(params[:id])
+		@book_trade_info.update(
+			book_trade_info_params#.merge({:book_id=>@book.id})
+		)
+		@book_trade_info.book_trade_info_ctsships.destroy_all
+		params[:cts_id_list].split(",").uniq.each do |ct_id|
+			next if ct_id.blank?
+			@book_trade_info.book_trade_info_ctsships.create(:course_teachership_id=>ct_id)
+		end
+		redirect_to "/books/"
+	end
+	
   def create
-    params[:book_trade_info][:user_id]=current_user.id
-    exist = Book.where(title: params[:book_trade_info][:book_name]).exists?
-    
-    if exist==false
-      @book = BookTradeInfo.new(new_book_trade_info_params)
-      if @book.valid?
-        @book.save!
-        res = Book.where("title = ? ", params[:book_trade_info][:book_name]).first
-        book_id = res.id
-        @book.update_attributes(:book_id => book_id)
-        #redirect_to :action => "index"
-      end
-      
-    else
-      res = Book.where("title = ? ", params[:book_trade_info][:book_name]).first
-      book_id = res.id
-      params[:book_trade_info][:book_id] = book_id
-      @book = BookTradeInfo.new(book_trade_info_params)
-      if @book.valid?
-        @book.save!
-        redirect_to :action => "index"
-      end
-    end
-    
-    
-  end
-  
-private
-	def book_trade_info__params
-		params.require(:book_trade_info).permit(:user_id, :book_name, :image_url, :price, :desc, :contact_way, :book_id)
+		if book_params[:id].blank?
+			@book=Book.create(book_params.merge({:user_id=>current_user.id}))
+		else
+			@book=Book.find(book_params[:id])
+		end
+		@book_trade_info=current_user.book_trade_infos.create(
+			book_trade_info_params.merge({:book_id=>@book.id})
+		)
+		params[:cts_id_list].split(",").uniq.each do |ct_id|
+			next if ct_id.blank?
+			@book_trade_info.book_trade_info_ctsships.create(:course_teachership_id=>ct_id)
+		end
+		redirect_to "/books/"
 	end
   
-  def new_book_trade_info_params
-    params.require(:book_trade_info).permit(:user_id, :book_name, :image_url, :price, :desc, :contact_way, :book_attributes => [:title, :isbn, :authors, :description, :preview_link])
+private
+	
+  def book_trade_info_params
+    params.require(:book_trade_info).permit(:book_name, :price, :desc, :contact_way, :cover, :status)
   end
- 
+	
+	def book_params
+		params.require(:book).permit(:title, :isbn, :authors, :description, :image_link, :preview_link)
+	end
 end

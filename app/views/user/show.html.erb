@@ -30,10 +30,9 @@
   <h2>開始使用...</h2>
   <h3>
 		
-		&nbsp;&nbsp;&nbsp;1.<%=link_to'輸入系級',"javascript:void(0);",onclick:"$('#degree_select').focus();"%> <br> 
-		&nbsp;&nbsp;&nbsp;2.<%=link_to @user.department.present? ? "/user/import_course":"javascript:void(0);" , class:"", onclick:"no_dept_alert();" do %>匯入歷年課程
-		<% end %><br>
-		&nbsp;&nbsp;&nbsp;3.<%=link_to'新增本學期課程',"/courses/simulation"%>追蹤最新消息
+		&nbsp;&nbsp;&nbsp;1.<%=link_to '輸入系級',"/user/edit"%> <br> 
+		&nbsp;&nbsp;&nbsp;2.<%=link_to "匯入歷年課程算學分", "/user/import_course"%><br>
+		&nbsp;&nbsp;&nbsp;3.<%=link_to'使用模擬排課',"/courses/simulation"%>
 	</h3>
 </div>
 <% end %>
