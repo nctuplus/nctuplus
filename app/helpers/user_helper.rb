@@ -40,15 +40,12 @@ module UserHelper
 	end
 	
 # user share	
-	def can_add_to_collection?(current_user, user, item)
-		return (current_user and current_user != user and current_user.hasCollection?(item))
+	def can_add_to_collection?(current_user, user, semester)
+		return (current_user.present? and current_user != user and !current_user.hasCollection?(user.id, semester.id))
 	end	
 	
 	def generate_share_hashid(user_id, sem_id)
 	  return Hashid.user_share_encode [user_id, sem_id]
 	end
 	
-	def share_url(hasid)
-	  return "#{root_url}shares#{hashid}"
-	end
 end

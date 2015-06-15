@@ -334,10 +334,14 @@ class UserController < ApplicationController
 	  render :json=>{:hash_share=>Hashid.user_share_encode([current_user.id, params[:sem_id].to_i])}
 	end
 	
-	def add_user_collection
+	def user_collection_action
 	  result = Hashid.user_share_decode(params[:item])
 	  if result
-	    UserCollection.create(:user_id=>current_user.id, :target_id=>result[0], :semester_id=>result[1])    
+	    if params[:type]=="delete_collection"
+	      current_user.user_collections.where(:target_id=>result[0], :semester_id=>result[1]).try(:destroy_all)
+	    elsif params[:type]=="add_collection"
+	      UserCollection.create(:user_id=>current_user.id, :target_id=>result[0], :semester_id=>result[1])    
+	    end
 	  end
 	  render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
