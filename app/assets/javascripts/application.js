@@ -25,7 +25,7 @@
 //= require bootstrap-switch.min
 //= require share.min
 //= require bootstrap-switch
-
+//= require zeroclipboard
 
 var isMobile = false; //initiate as false
 // device detection
