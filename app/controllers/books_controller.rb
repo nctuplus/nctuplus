@@ -24,15 +24,13 @@ class BooksController < ApplicationController
 		end
 		redirect_to "/main/cts_search?book_id=#{params[:book_id]}"
 	end
-
-	def book_show
-		@book=Book.find(params[:book_id])
-	end
 	
 	def index
 		#@books=Book.all
-		@sale_books=BookTradeInfo.all.order("created_at DESC,status ASC")
-  end
+		
+		@q=BookTradeInfo.search_by_q(params[:custom_search])
+		@sale_books=@q.result(distinct: true).order("created_at DESC,status ASC")
+	end
 	
   def google_book
 		self_books=Book.all.map{|book|{
@@ -61,6 +59,7 @@ class BooksController < ApplicationController
   
   def show
     @sale_book=BookTradeInfo.find(params[:id])
+		@sale_book.incViewTimes!
 		@book=@sale_book.book
   end
   
