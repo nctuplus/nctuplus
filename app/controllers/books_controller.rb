@@ -83,12 +83,18 @@ class BooksController < ApplicationController
 		@book_trade_info.update(
 			book_trade_info_params#.merge({:book_id=>@book.id})
 		)
-		@book_trade_info.book_trade_info_ctsships.destroy_all
-		params[:cts_id_list].split(",").uniq.each do |ct_id|
-			next if ct_id.blank?
-			@book_trade_info.book_trade_info_ctsships.create(:course_teachership_id=>ct_id)
+		if params[:cts_id_list].present?
+			@book_trade_info.book_trade_info_ctsships.destroy_all
+			params[:cts_id_list].split(",").uniq.each do |ct_id|
+				next if ct_id.blank?
+				@book_trade_info.book_trade_info_ctsships.create(:course_teachership_id=>ct_id)
+			end
 		end
-		redirect_to "/books/"
+		if request.xhr?
+			render :nothing=>true, :status=>200
+		else
+			redirect_to "/books/"
+		end
 	end
 	
   def create

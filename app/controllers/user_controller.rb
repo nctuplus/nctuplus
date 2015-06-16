@@ -43,7 +43,7 @@ class UserController < ApplicationController
 				when "simulation"
 					result={
 						:use_type=>"delete", #for delete button of your current courses
-						:view_type=>"schedule",
+						:view_type=>"simulation",
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(Semester::LAST.id).map{|cs|
 							cs.course_detail.to_search_result
 						}
