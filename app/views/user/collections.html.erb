@@ -13,11 +13,11 @@
     <tbody>
       <% @collections.each do |c| %>
       <% hashid = generate_share_hashid(c.target_id, c.semester_id) %>
-      <tr class="row collection-row" href="<%=root_url%>shares/<%=hashid%>" id="<%=hashid%>">
+      <tr class="row" href="<%=root_url%>shares/<%=hashid%>" id="<%=hashid%>">
         <td class="clickable-hover clickable-row"><%=c.user.name%></td>
         <td class="clickable-hover clickable-row"><%=c.user.department.ch_name %></td>
         <td class="clickable-hover clickable-row"><%=grade_on_user(c.user, c.semester)%>(<%=c.semester.year%>)</td>
-        <td><%=link_to "delete", "javascript:void(0);", :class=>"delete-collection"%></td>
+        <td><%=link_to "刪除", "javascript:void(0);", :class=>"delete-collection"%></td>
       </tr>
       <% end %>  
     </tbody>
@@ -34,7 +34,8 @@
 			url:"/user/update",
 			data: {type: "delete_collection",
 			       item: $this_tr.attr('id')},
-			success: function(){		
+			success: function(){
+				toastr["success"]("已刪除");
 				$this_tr.remove();
 			}
 		});

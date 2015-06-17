@@ -1,6 +1,5 @@
 <% canAddCollection = can_add_to_collection?(current_user, @user, @semester)%>
-<div class="well" style="background-color:white;"> 
-  <h4 class="text-center"><%=@user.name%></h4> 
+<div class="well" style="background-color:white;">  
   <h4 class="text-center">
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）

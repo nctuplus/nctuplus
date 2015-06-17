@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  
+  before_filter :checkTopManager
 	before_filter :checkLogin, :only=>[:new, :create]
 	#before_filter :checkE3Login
 
