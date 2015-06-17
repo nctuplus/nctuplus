@@ -119,7 +119,7 @@ class CoursesController < ApplicationController
 	
 	def add_to_cart
 		cd_id=params[:cd_id].to_i
-		#cookies.signed[:cd]=JSON.generate([])# if cookies.signed[:cd].nil?
+		cookies.signed[:cd]=JSON.generate([]) if cookies.signed[:cd].nil?
 		cd_ids=JSON.parse(cookies.signed[:cd])
 		if params[:type]=="add"
 			if CourseDetail.where(:id=>cd_id).empty?

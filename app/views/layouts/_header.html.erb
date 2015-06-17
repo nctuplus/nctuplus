@@ -43,11 +43,11 @@
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">
-			<!--
+
 				<li>
 					<a onClick="showCart();" href="javascript:void(0);" class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :id=>"cart_but", :title=>"課程收藏") %></a>
 				</li>
-			-->	
+	
 			<% if current_user %>	
 				<li>
 					<a href="#" class="toolTip dropdown-toggle toolTip" data-toggle="dropdown" title="課表"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
@@ -70,9 +70,11 @@
 						<%=current_user.name%>
 					<% end %>
 					<ul class="dropdown-menu">
+				<!--	
             <li>
               <a href="/user/collections">課表收藏</a>
             </li>
+				-->
 						<li>
 								<a href="/user/edit/">編輯個人資料</a>
 						</li>	

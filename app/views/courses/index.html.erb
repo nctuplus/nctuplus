@@ -55,7 +55,7 @@
 		<th class="col-md- text-cente">收藏</th>
 	</tr>
 	<tbody>
-	<% cd_ids=JSON.parse(cookies.signed[:cd])||[] %>
+	<% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
 	<% if !@cds.empty? %>
 		<% @cds.each do |cd| %>
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">

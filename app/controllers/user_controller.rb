@@ -308,25 +308,30 @@ class UserController < ApplicationController
 		#current_user.update_attributes(:email=>params[:user][:email].blank? ? current_user.email : params[:user][:email])
 		last_dept_id=current_user.department_id
 		last_year=current_user.year
-		res = current_user.update(user_params)
-		if res
-			alertmesg('info','success', "修改成功")
-		else
-			alertmesg('info','warning', "修改失敗(Email或Name重複)")		
-		end
-		if user_params[:department_id]!=last_dept_id || user_params[:year]!=last_year	
-			UserCoursemapship.where(:user_id=>current_user.id).destroy_all
-			cm=CourseMap.where(:department_id=>current_user.department_id, :year=>current_user.year).take
-			if cm
-				UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
+		if current_user.update(user_params)
+			if user_params[:department_id]!=last_dept_id || user_params[:year]!=last_year	
+				UserCoursemapship.where(:user_id=>current_user.id).destroy_all
+				cm=CourseMap.where(:department_id=>current_user.department_id, :year=>current_user.year).take
+				if cm
+					UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
+				end
+				update_cs_cfids(cm,current_user)
 			end
-			update_cs_cfids(cm,current_user)
-		end
-		if request.xhr?
-			render :nothing=>true, :status=>200
+			alertmesg('info','success', "修改成功")
+			if request.xhr?
+				render :nothing=>true, :status=>200
+			else
+				redirect_to user_path
+			end
 		else
-			redirect_to user_edit_path
+			if request.xhr?
+				render :nothing=>true, :status=>200
+			else	
+				alertmesg('info','warning', "修改失敗(Email或Name重複)")	
+				redirect_to user_edit_path 
+			end
 		end
+	
 	end
 	
 	def upload_share_image
