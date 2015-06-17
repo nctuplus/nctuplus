@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
+	before_filter :redirect_if_old
   protect_from_forgery with: :exception
   protect_from_forgery
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
@@ -138,5 +139,11 @@ private
 				redirect_to :back
 			end
 	end
+		
+	def redirect_if_old
+    if request.host == 'nctuplus.nctucs.net'
+      redirect_to "#{request.protocol}plus.nctu.edu.tw:#{request.port}#{request.fullpath}", :status => :moved_permanently 
+    end
+  end
 	
 end

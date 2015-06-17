@@ -39,9 +39,6 @@ class User < ActiveRecord::Base
 	validates :email, uniqueness: true
 	validates :name, uniqueness: true
 	
-# constants	
-	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 8) # (salt, length of encode string)
-
 # share course table
 	def self.find_by_hash_id(hash_data)
 	  decrypt_ary = Hashid.user_share_decode(hash_data)

@@ -92,7 +92,7 @@
 					_this.$element.find('.btn-group').show();
 					$global_modal_header.show();
 					
-          var dataUrl = canvas.toDataURL("image/png" ,1.0);
+          var dataUrl = canvas.toDataURL("image/png");
 					if (flag=="window"){
 						window.open(dataUrl);
 						_this.$element.find('.btn-group').show() ;
@@ -385,7 +385,7 @@
 		}
 		else
 		{					
-			return this.each(function() { // 'this' is the target table. It'll return itself.
+			return this.each(function() { // 'this' is the target table. It returns itself.
 				var self = $.data(this, 'plugin_' + pluginName);
 				if (typeof options === 'string') {
 					//block undefine method
