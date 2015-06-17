@@ -1,14 +1,12 @@
 <script>
-
-
-	function addCourseSimulation(this_but, cd_id, time, addordel,from){
+	function addCourseSimulation($this_but, cd_id, time, addordel,from){
 		if(addordel=="add"){
 			//console.log(time);
 			var res = $('#schedule_table').CourseTable('checkConflictByTime',{time: time}) ;
 			if(res)
 				return ;
 		}else if(addordel=="delete"){
-			this_but.parent().parent().remove();
+			$this_but.parent().parent().remove();
 		}	
 		save_course(cd_id,addordel,from);		
 	}
