@@ -11,14 +11,15 @@
 # Ignore the default SQLite database.
 /db/*.sqlite3
 /db/*.sqlite3-journal
-#/config/database.yml
-#/config/dropbox.yml
+/db/schema.rb
+
 /config/initializers/secret_token.rb
 *.yml
 /config/initializers/smtp.rb
 /public/
 /file_upload/
 /event_images/
+
 # Ignore all logfiles and tempfiles.
 /log/
 /tmp

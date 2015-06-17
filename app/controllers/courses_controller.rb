@@ -160,6 +160,7 @@ class CoursesController < ApplicationController
 
 	
 	def show_cart
+		cookies.signed[:cd]=JSON.generate([]) if cookies.signed[:cd].nil?
 		@result={
 			:view_type=>params[:view_type],
 			:use_type=>params[:use_type],#"delete",
