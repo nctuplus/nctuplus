@@ -354,7 +354,14 @@ class UserController < ApplicationController
 	    if params[:type]=="delete_collection"
 	      current_user.user_collections.where(:target_id=>result[0], :semester_id=>result[1]).try(:destroy_all)
 	    elsif params[:type]=="add_collection"
-	      UserCollection.create(:user_id=>current_user.id, :target_id=>result[0], :semester_id=>result[1])    
+	      target_user = User.find(result[0])
+	      UserCollection.create(:user_id=>current_user.id, :target_id=>target_user.id, :semester_id=>result[1], :name=>target_user.name)    
+	    elsif params[:type]=="edit_collection"    
+        target = current_user.user_collections.where(:target_id=>result[0], :semester_id=>result[1]).take
+        target.update_attributes!(:name=>params[:name]) if params[:name].size > 0 and params[:name].size < 16
+        alertmesg('info','warning', "更新成功")
+	      redirect_to user_collections_path
+	      return 
 	    end
 	  end
 	  render :nothing => true, :status => 200, :content_type => 'text/html'
