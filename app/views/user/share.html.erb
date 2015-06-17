@@ -4,7 +4,9 @@
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
 		<% if canAddCollection %>
-			<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
+	<!--		
+		<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
+	-->	
 		<% end %>	
   </h4> 
   <table class="table table-bordered" id="myCourseTable"></table>

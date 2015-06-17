@@ -24,8 +24,8 @@
   </table>
 
 <script>
-  $(".collection-row").click(function() {
-   window.open( $(this).attr("href") );
+  $(".clickable-row").click(function() {
+   window.open( $(this).parent().attr("href") );
 	});
   $('.delete-collection').click(function(){
     var $this_tr = $(this).parent().parent() ;
