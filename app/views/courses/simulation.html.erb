@@ -4,11 +4,11 @@
 		<div class="panel panel-primary ">
 			<div class="panel-heading">
 				<h4 class="text-center">
-					<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="showHasSelected()" style="margin-top: -5px;">
+					<button id="has-select-btn" class="btn btn-circle btn-info pull-left pop-over" data-content="已選課程" onclick="showHasSelected()" style="margin-top: -5px;">
 						<font color="white"><%=fa_icon "check"%></font>
 					</button>	
 					課程查詢
-					<button id="" class="btn btn-circle btn-info pull-right" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
+					<button id="" class="btn btn-circle btn-info pull-right pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
 						<font color="white"><%=fa_icon "star"%></font>
 					</button>	
 				</h4>
@@ -49,20 +49,12 @@
 <script>
 	$(document).ready(function(){
 		toastr["success"]("已更新到104上的課程囉!!!");
-		$('#has-select-btn').popover({
-			content: "已選課程",
-			placement:"auto",
-			trigger : "hover",
-			container :"body"
-		});	
-		$(".btn-default").popover({
-				//content : $(this).attr('tiptext'),
+		$(".pop-over").popover({
 				trigger :"hover",
 				container :"body",
 				placement : "auto"
 		});
 		showHasSelected();
-	
 		//course table
 		load_course_table(<%=Semester::LAST.id%>, true);
 		//sessionTest();	
