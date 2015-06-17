@@ -8,7 +8,9 @@
 						<font color="white"><%=fa_icon "check"%></font>
 					</button>	
 					課程查詢
-
+					<button id="" class="btn btn-circle btn-info pull-right" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
+						<font color="white"><%=fa_icon "star"%></font>
+					</button>	
 				</h4>
 			</div>
 			<div class="panel-body">
@@ -88,11 +90,6 @@
 			$(".scrollable").html(tmpl("search_result", data));
 		});
 	}
-
-	function show_cart(){
-		$("#search_div").load("/course_details/mini?sem_id=<%=@sem_id%>");
-	}
-
 
 </script>
 

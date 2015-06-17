@@ -100,8 +100,8 @@ Nctuplus::Application.routes.draw do
 			get "search_mini_cm"
 			get "simulation"
 			get "export_timetable"
-	#		get "add_to_cart"
-	#		get "show_cart"
+			get "add_to_cart"
+			get "show_cart"
 		end
 	end
 	

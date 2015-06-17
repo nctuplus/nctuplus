@@ -7,7 +7,8 @@ class BookTradeInfo < ActiveRecord::Base
 	
 	has_many :book_trade_info_ctsships
 	has_many :course_teacherships, :through=>:book_trade_info_ctsships
-  
+  has_many :courses, :through=>:book_trade_info_ctsships
+	
 	validates_numericality_of :price, :only_integer => true
 	validates_length_of :desc, :maximum => 64
 	
@@ -18,6 +19,16 @@ class BookTradeInfo < ActiveRecord::Base
   validates_attachment :cover, 
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
+		
+	def self.search_by_q(q)
+		search({
+			:book_name_or_book_authors_or_course_ch_name_cont=>q,
+		})
+	end
+	
+	def incViewTimes!
+		update_attributes(:view_times=>self.view_times+1)
+	end
 	
 	def user_avatar
 		if self.contact_way==0
@@ -43,6 +54,6 @@ class BookTradeInfo < ActiveRecord::Base
 			return "" if self.book.nil?
 			url=self.book.image_link_with_zoom(zoom)
 		end
-		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "height:250px;")
+		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "/*height:250px;*/max-width:200px;")
 	end
 end

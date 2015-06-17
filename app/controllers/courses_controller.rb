@@ -38,7 +38,7 @@ class CoursesController < ApplicationController
 		end
 		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@result={
-			:view_type=>"schedule",
+			:view_type=>"simulation",
 			:use_type=>"add",
 			:courses=>cds.map{|cd|
 				cd.to_search_result
@@ -158,8 +158,8 @@ class CoursesController < ApplicationController
 	
 	def show_cart
 		@result={
-			:view_type=>"session",
-			:use_type=>"delete",
+			:view_type=>params[:view_type],
+			:use_type=>params[:use_type],#"delete",
 			:courses=>CourseDetail.where(:id=>session[:cd]).map{|cd|
 				cd.to_search_result
 			}

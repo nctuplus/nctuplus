@@ -5,7 +5,6 @@
 		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
 		
 	}
-	
 	.supplemental-info{
 		background: #f8f8f8;
 		//margin: 15px 0 0;
@@ -15,45 +14,80 @@
 		margin-right: -4px;
 		cursor :default;
 	}
-	
 </style>
+<br>
+
 <div class="container">
-	<%=link_to "我要賣書",new_book_path,class:"btn btn-info" %>
+	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
+		<div class="row">	
+			<div class="col-md-12 text-center">
+				<%=link_to "我要賣書",new_book_path,class:"",style:"font-size:20px;" %>
+				<div class="input-group" style="width:450px;display:inline-table;">
+					<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
+					<div class="input-group-btn">
+						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找二手書 <span class="caret"></span></button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="javascript:void(0);">找二手書</a></li>
+							<!--<li><a href="javascript:void(0);">找課程</a></li>-->
+						</ul>
+					</div><!-- /btn-group -->			
+					<div class="input-group-btn">			
+						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+					</div><!-- /btn-group -->
+				</div><!-- /input-group -->
+				<!--
+				<div class="checkbox">
+					<label style="font-size:16px;">
+						<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');" %>
+						進階搜尋
+					</label>
+				</div>
+				-->
+			</div>
+		</div>
+	<% end %>
   <div id="products" class="row">
 		<%@sale_books.each do |sale_book| %>
 			<div class="col-md-4 col-sm-6">
-				<div href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:300px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'));">					
+				<div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
+					<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
+						<% if sale_book.user==current_user && sale_book.status==0%>
+							<%=link_to fa_icon("pencil"), edit_book_path(sale_book),class:"btn btn-sm btn-info" %>
+							<%=button_tag fa_icon("check"), class:"btn btn-sm btn-info",onclick:"setBookSaled(#{sale_book.id});" %>
+						<% end %>
+					</div>
 					<%=sale_book.cover_image%>
-					<% if sale_book.status==1%>
-						<%=image_tag asset_path("soldout.png"),style:"position:absolute;z-index:10;top: 24px;left: 8px;"%>
-					<% end %>
-					<div style="min-height:64px;margin-top:3px;padding-left:4px;" >
-						<div class="text-center" style="font-size:14px;">
-							<span data-toggle="tooltip" title="<%=sale_book.book_name%>">
-								<strong><%=sale_book.book_name.truncate(24)%></strong>
+
+						<%=image_tag asset_path("soldout.png"),class:sale_book.status==0 ? "hidden":"",style:"position:absolute;z-index:10;top: 24px;left: 8px;"%>
+
+					<div style="min-height:50px;margin-top:3px;padding-left:4px;" >
+						<div class="text-center" >
+							<span style="font-size:14px;">
+								<strong data-toggle="tooltip" title="<%=sale_book.book_name%>" >
+									<%=sale_book.book_name.truncate(15)%>					
+								</strong><br>
+								<strong>
+									作者:<%=sale_book.book.authors%>
+								</strong>
 							</span>
+							<p data-toggle="tooltip" style="margin-top:3px;" title="
+								<% sale_book.course_teacherships.each do |cts|%>
+									<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
+								<% end %>">
+								<%="#{sale_book.course_teacherships.first.try(:course_ch_name)} #{sale_book.course_teacherships.first.try(:teacher_name)}" %><br>
+							</p>
 						</div>
-						<p data-toggle="tooltip" style="margin-top:5px;" title="
-							<% sale_book.course_teacherships.each do |cts|%>
-								<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
-							<% end %>">
-							<%="#{sale_book.course_teacherships.first.try(:course_ch_name)} #{sale_book.course_teacherships.first.try(:teacher_name)}" %><br>
-						</p>
-						<span class="pull-right" style="font-size:16px;margin-top:-5px;">
-						<%=fa_icon "eye"%> <strong><%=sale_book.view_times%></strong>&nbsp;&nbsp;&nbsp;
-						<%=fa_icon "clock-o"%><%= time_ago_in_words(sale_book.created_at) %>
-						</span>
+						
+
 					</div>
 					<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 						<% user=sale_book.user %>
-						<%=sale_book.user_avatar%>
-						<%=sale_book.user_name_with_tip%>
+						<font color="#696969">
+							<%=user.name%>
+							<%=sale_book.created_at.strftime("%m/%d %H:%M")%>
+						</font>
 						
-						<%=fa_icon "book"%> <strong><%=user.book_trade_infos.count%></strong>
-						<% if user==current_user && sale_book.status==0%>
-							<%=link_to fa_icon("pencil"), edit_book_path(sale_book) %>
-						<% end %>
-						<strong class="pull-right" style="font-size:20px;">
+						<strong class="pull-right" style="font-size:20px;margin-top:-5px;">
 							<%=fa_icon "dollar" %> <%=sale_book.price%>
 						</strong>
 					</div>						
@@ -65,4 +99,21 @@
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip({html:true,placement:"bottom"});
 	})
+	function setBookSaled(id){
+		if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))
+			return false;
+		$.ajax({
+			type:"PATCH",
+			url:"/books/"+id,
+			data:{
+				"book_trade_info[status]":1
+			},
+			success:function(){
+				$("#book-"+id).find("#control-bar").remove();
+				$("#book-"+id).find("img.hidden").removeClass("hidden");
+			}
+			
+		});
+		
+	}
 </script>
