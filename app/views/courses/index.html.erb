@@ -1,3 +1,4 @@
+
 <%=render 'courses/search/search_js' %>
 <br>
 <div id="results" class="container">
@@ -54,6 +55,7 @@
 		<th class="col-md- text-cente">收藏</th>
 	</tr>
 	<tbody>
+	<% cd_ids=JSON.parse(cookies.signed[:cd])||[] %>
 	<% if !@cds.empty? %>
 		<% @cds.each do |cd| %>
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
@@ -71,7 +73,7 @@
 						<%=cd.grade%>
 					</td>
 					<td class="text-cente" onclick="">
-						<% type=session[:cd].present?&&session[:cd].include?(cd.id) ? "delete":"add" %>
+						<% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
 						<%=button_tag fa_icon(type=="add" ? "plus" :"minus"),class:"btn btn-sm #{type=="add" ? "btn-primary" : "btn-warning"} cart-control", data: type%>
 					</td>
 				</tr>
