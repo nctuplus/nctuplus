@@ -12,13 +12,17 @@
   <tbody>
     <% @collections.each do |c| %>
     <% hashid = generate_share_hashid(c.target_id, c.semester_id) %>
-    <tr class="row ct-data" id="<%=hashid%>">
+    <% no_share_color = (!c.user.canShare?) ? "warning" : "" %>
+    <tr class="row ct-data <%=no_share_color%>" id="<%=hashid%>">
       <td><%=c.name%></td>
       <td><%=c.user.department.ch_name %></td>
       <td><%=grade_on_user(c.user, c.semester)%>(<%=c.semester.year%>)</td>
       <td>
+        <% if !c.user.canShare? %>
+        (使用者已關閉分享)
+        <% end %>
         <%=link_to "自訂名稱", "#", :class=>"edit-collection", "data-toggle"=>"modal", "data-target"=>".edit-collection-name"%>
-        <%=link_to "刪除", "javascript:void(0);", :class=>"delete-collection"%>
+        <%=link_to "刪除", "javascript:void(0);", :class=>"delete-collection"%>       
       </td>
     </tr>
     <% end %>  

@@ -373,6 +373,11 @@ class UserController < ApplicationController
 		  @user = User.find(decode_data[0])
 		  @semester = Semester.find(decode_data[1])
 		  if @user and @semester
+		    if not @user.canShare?
+		      alertmesg('info','warning', "使用者未開放分享")
+		      redirect_to :root
+		      return
+		    end
 		    @file_name = "#{params[:id]}.png"
 		    @fb_share_meta = true
 		    @host = request.host
