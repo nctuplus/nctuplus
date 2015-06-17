@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150615090431) do
+ActiveRecord::Schema.define(version: 20150617180753) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -44,13 +44,13 @@ ActiveRecord::Schema.define(version: 20150615090431) do
   end
 
   create_table "book_trade_info_ctsships", force: true do |t|
-    t.integer  "book_trade_id"
+    t.integer  "book_trade_info_id"
     t.integer  "course_teachership_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  add_index "book_trade_info_ctsships", ["book_trade_id"], name: "index_book_trade_info_ctsships_on_book_trade_id", using: :btree
+  add_index "book_trade_info_ctsships", ["book_trade_info_id"], name: "index_book_trade_info_ctsships_on_book_trade_id", using: :btree
   add_index "book_trade_info_ctsships", ["course_teachership_id"], name: "index_book_trade_info_ctsships_on_course_teachership_id", using: :btree
 
   create_table "book_trade_infos", force: true do |t|
@@ -441,6 +441,7 @@ ActiveRecord::Schema.define(version: 20150615090431) do
     t.integer  "user_id"
     t.integer  "target_id"
     t.integer  "semester_id"
+    t.string   "name",        default: ""
     t.datetime "created_at"
     t.datetime "updated_at"
   end

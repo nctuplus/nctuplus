@@ -22,7 +22,6 @@
 //= require course_class-helper
 //= require user_course_stat/pass_score-checker
 //= require courses/cart
-//= require bootstrap-switch.min
 //= require share.min
 //= require bootstrap-switch
 //= require zeroclipboard
@@ -36,9 +35,11 @@ function goToHref(href,new_tab){
 	if(new_tab){
 		var win = window.open(href,'_blank');
 		win.focus();
+
 	}
 	else{
 		window.document.location = href;
+
 	}
 	
 }

@@ -3,10 +3,8 @@
   <h4 class="text-center">
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
-		<% if canAddCollection %>
-	<!--		
-		<%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
-	-->	
+		<% if canAddCollection %>		
+		  <%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
 		<% end %>	
   </h4> 
   <table class="table table-bordered" id="myCourseTable"></table>
@@ -14,7 +12,7 @@
 <script>
   var $table = $('#myCourseTable') ;
   $.getJSON("/shares/<%=params[:id]%>",function(data){
-      console.log(data);
+    //  console.log(data);
 			data.config = { popover: true, click_redirect: true };	
 			$table.CourseTable(data);	
 	});

@@ -21,7 +21,7 @@ Nctuplus::Application.routes.draw do
 	# update share course table image
 	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
 	# add to user collection
-	post "user/update", to: "user#user_collection_action", :constraints => lambda{ |req| req.params[:type]=="add_collection" or req.params[:type]=="delete_collection"}
+	post "user/update", to: "user#user_collection_action", :constraints => lambda{ |req| req.params[:type].include? "collection"}
 	# show user collections lists
 	get "user/collections"
 	
