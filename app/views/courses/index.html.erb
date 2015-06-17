@@ -30,7 +30,7 @@
 		<br>
 		<div class="col-md-12 text-center">
 			<div style="width:108px;display:inline-block;">
-				<%= f.select :semester_id_eq, options_for_select(@sem_sel, @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control"} %>				
+				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : Semester::LAST.id),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
 			</div>
 			<div style="width:120px;display:inline-block;">
 				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
