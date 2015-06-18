@@ -28,13 +28,10 @@
 		<div class="panel panel-primary ">
 			<div class="panel-heading" style="background-color:#4c66a4;">
 				<h4 class="text-center">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
-
-
-          
-					<div class="btn-group pull-right header-button">
-						<button type="button" class="btn btn-circle btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>       
+					<div class="btn-group pull-right header-button pop-over" data-content="匯出" >
+						<button type="button" class="btn btn-circle btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 							 <i class="fa fa-download"></i>
 						</button>
 						<ul class="dropdown-menu" role="menu">
@@ -44,11 +41,10 @@
 					</div>
 					<% if current_user.canShare? %>
 					<button type="button" id="copy-it-simu" 
-					  class="btn btn-circle btn-warning pull-right header-button" 
-					  style="margin-right: 5px ;"
+					  class="btn btn-circle btn-info pull-left header-button pop-over" 
 					  data-content="複製分享連結" 
 					  data-clipboard-text="<%=root_url %>shares/<%=current_user.get_share_hasid(Semester::LAST.id)%>">
-							 <%=fa_icon "clipboard"%>
+							 <span class="glyphicon glyphicon-share"></span>
 					</button>
 					<% end %>
 				</h4>		
@@ -90,6 +86,11 @@
 <script>
 	$(document).ready(function(){
 		toastr["success"]("已更新到104上的課程囉!!!");
+<% if current_user.canShare? %>	
+    new ZeroClipboard( $('#copy-it-simu') );	
+		$('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
+<% end %>			
+		
 		$(".pop-over").popover({
 				trigger :"hover",
 				container :"body",
@@ -107,14 +108,7 @@
       modal:true,
       expose: true
     });
-<% if current_user.canShare? %>	
-    new ZeroClipboard( $('#copy-it-simu') );	
-		$('#copy-it-simu').popover({
-      placement:"bottom",
-      trigger :"hover",
-      container :"body"
-		}).click(function(){toastr["success"]('已複製到剪貼簿');});
-<% end %>		
+	
 	});
 
 	function load_course_table(semester_id, selectable){
