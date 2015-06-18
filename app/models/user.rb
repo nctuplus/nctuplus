@@ -40,13 +40,8 @@ class User < ActiveRecord::Base
 	validates :name, uniqueness: true
 	
 # share course table
-	def self.find_by_hash_id(hash_data)
-	  decrypt_ary = Hashid.user_share_decode(hash_data)
-	  if !decrypt_ary or decrypt_ary.size != 2
-	    return nil
-	  else	
-		  return [find(decrypt_ary[0]), decrypt_ary[1]]
-		end
+	def get_share_hasid(semester_id)
+	  return Hashid.user_share_encode([self.id, semester_id])
 	end
 	
 	def canShare?

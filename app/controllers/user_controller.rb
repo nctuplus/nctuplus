@@ -316,11 +316,11 @@ class UserController < ApplicationController
 					UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
 				end
 				update_cs_cfids(cm,current_user)
-			end
-			alertmesg('info','success', "修改成功")
+			end		
 			if request.xhr?
 				render :nothing=>true, :status=>200
 			else
+			  alertmesg('info','success', "修改成功")
 				redirect_to user_path
 			end
 		else

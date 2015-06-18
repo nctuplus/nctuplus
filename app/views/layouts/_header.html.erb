@@ -103,17 +103,17 @@
 		});
 	});
 
-  function group_share(share_opt, $header_data, data){
+  function group_share($header_data, data){
     var share_link = function(share_url){
       var $share_div = $('<div>').addClass('col-md-offset-2 col-md-8 input-group');
-				$share_div.append($('<input>').attr('type','text').addClass('form-control')
-				  .attr('onclick','this.setSelectionRange(0, this.value.length);'));
-				$share_div.append($('<span>').addClass('input-group-btn')
-				    .html($('<button>').addClass('btn btn-info').attr('id','copy-it')
-				    .attr("data-clipboard-text", share_url)
-				    .html('<%=fa_icon "clipboard"%>')))
-				.children('input').first().val(share_url);   
-			$header_data.append($share_div);   
+      $share_div.append($('<input>').attr('type','text').addClass('form-control')
+        .attr('onclick','this.setSelectionRange(0, this.value.length);'));
+      $share_div.append($('<span>').addClass('input-group-btn')
+        .html($('<button>').addClass('btn btn-info').attr('id','copy-it')
+        .attr("data-clipboard-text", share_url)
+        .html('<%=fa_icon "clipboard"%>')))
+        .children('input').first().val(share_url);   
+      $header_data.append($share_div);   
       new ZeroClipboard( $('#copy-it') ); //bind copy to clipboard
       $('#copy-it').click(function(){ toastr["success"]('已複製到剪貼簿');});
       $('#copy-it').popover({
@@ -122,50 +122,11 @@
         trigger :"hover",
         container :"body"
       });
-    }; 
-    var switchOnChange = function(event, state){
-      if(state){
-        if(!confirm("開啟分享後，擁有連結的使用者皆可觀看您的課表。\n 確認要分享嗎?")){
-          $switch.bootstrapSwitch('toggleState','skip');
-          return false ;
-        }
-        //ajax 
-        $.ajax({
-          method: "POST",
-          url: "/user/update",
-          data: {type:"share", data:true, sem_id: data.semester_id},
-          success:function(res){            
-							data.table.CourseTable("renderImg", "upload") ;
-              $switch.bootstrapSwitch('destroy');
-              $switch.remove();
-              $target.popover('disable');							 
-              toastr["success"]("您可以使用分享連結分享至社交網站");
-              share_link("<%=j root_url %>shares/"+res.hash_share);     
-            }
-        });        
-      }
-    };
+    };     
+    share_link("<%=j root_url %>shares/"+data.hash_share);
     
-    if(share_opt){
-      share_link("<%=j root_url %>shares/"+data.hash_share);
-    }else{
-      var $target = $('<div>').addClass('col-md-offset-8 col-md-2');
-      $header_data.append($target);
-      $target.popover({ 
-        content:"開啟分享連結",
-        placement:"auto",
-        trigger :"hover",
-        container :"body"
-      });
-      var $switch = $('<input>').attr('type', 'checkbox').attr('id','bootstrap-switch');
-      $target.html($switch);
-      $switch.bootstrapSwitch({
-        size:'mini',
-        onColor: 'success',
-        onSwitchChange: switchOnChange
-      });  
-    }   
   }//group_share
+  
 	function show_timetable_on_modal(semester_id, showNow){
 		var result=0 ;
 		$.ajax({
@@ -188,19 +149,20 @@
 				$table.CourseTable(data) ;			
 		
 				$('#global-modal .close').remove();
-        var $data = $('<div>').addClass('row');
-        $data.append($('<div>').addClass('col-md-2').css('margin-top','5px').html(data.semester_name));
-  
+				if(data.hash_share){
+          var $data = $('<div>').addClass('row');
+          $data.append($('<div>').addClass('col-md-2').css('margin-top','5px').html(data.semester_name));
+        }else
+          var $data = $('<div>').addClass('text-center').html(data.semester_name);
+        
 				showGlobalModal( $data, $table);
             
 				setTimeout(function(){ //wait for the modal show
 				if(data.hash_share){
 				  $data.hide();
           $table.CourseTable("renderImg", "upload") ;
-          group_share(true, $data, {hash_share: data.hash_share}) ;
-          $data.show();
-        }else{ 
-          group_share(false, $data, {semester_id: semester_id, table: $table}) ;    
+          group_share($data, {hash_share: data.hash_share}) ;
+          $data.show();      
         }
 			    return false ;
         }, 500);

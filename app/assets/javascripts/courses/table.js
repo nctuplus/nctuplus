@@ -187,6 +187,8 @@
 			for(var i=0, $cell; $cell=res[i];++i){
 				this._clearCell($cell);
 			}
+			
+			return ;
 		},
 		
 		addCourses: function(args){

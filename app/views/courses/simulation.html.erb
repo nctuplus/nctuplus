@@ -28,11 +28,10 @@
 		<div class="panel panel-primary ">
 			<div class="panel-heading" style="background-color:#4c66a4;">
 				<h4 class="text-center">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
-
-					<div class="btn-group pull-right" style="margin-top: -5px">
-						<button type="button" class="btn btn-circle btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>       
+					<div class="btn-group pull-right header-button pop-over" data-content="匯出" >
+						<button type="button" class="btn btn-circle btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 							 <i class="fa fa-download"></i>
 						</button>
 						<ul class="dropdown-menu" role="menu">
@@ -40,6 +39,14 @@
 							<li><a href="#" onclick="$('#schedule_table').CourseTable('renderImg', 'window');">Image</a></li>
 						</ul>
 					</div>
+					<% if current_user.canShare? %>
+					<button type="button" id="copy-it-simu" 
+					  class="btn btn-circle btn-info pull-left header-button pop-over" 
+					  data-content="複製分享連結" 
+					  data-clipboard-text="<%=root_url %>shares/<%=current_user.get_share_hasid(Semester::LAST.id)%>">
+							 <span class="glyphicon glyphicon-share"></span>
+					</button>
+					<% end %>
 				</h4>		
 			</div>
 			<table class="table table-bordered" id="schedule_table"></table>
@@ -79,26 +86,63 @@
 <script>
 	$(document).ready(function(){
 		toastr["success"]("已更新到104上的課程囉!!!");
+<% if current_user.canShare? %>	
+    new ZeroClipboard( $('#copy-it-simu') );	
+		$('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
+<% end %>			
+		
 		$(".pop-over").popover({
 				trigger :"hover",
 				container :"body",
 				placement : "auto"
 		});
 		showHasSelected();
-		loadCourseTable(<%=Semester::LAST.id%>, true);// course table
+
+		//course table
+		load_course_table(<%=Semester::LAST.id%>, true);
+		//sessionTest();
 		$('#joyRideTipContent').joyride({
-			autoStart : true,
-			cookieMonster: true,           
-			cookieName: 'CourseSimulationTip', 
-			modal:true,
-			expose: true
-		});
-				
+      autoStart : true,
+      cookieMonster: true,           
+      cookieName: 'CourseSimulationTip', 
+      modal:true,
+      expose: true
+    });
+	
 	});
 
-
+	function load_course_table(semester_id, selectable){
+		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
+			//console.log(data);
+			data.config = {
+				deletable: true ,
+				selectable: true,
+				popover: true,
+				semester_id: semester_id,
+				cancelButtonFunc: function(arg){
+					var cd_id = arg.data.cd_id;
+					save_course(cd_id,'delete','load_course_table');
+				}
+			};
+			$('#schedule_table').CourseTable(data);	
+			$('#schedule_table').CourseTable("renderImg","upload");
+		});
+	}
+	
+	function showHasSelected(){
+		$.getJSON("/user/get_courses?type=simulation",function(data){
+			//console.log(data);
+			$(".scrollable").html(tmpl("search_result", data));
+		});
+	}
 
 </script>
 
 <%=render "courses/search/search_js"%>
 <%=render "courses/search/xtmpl_results_mini"%>
+
+<style>
+.header-button{
+  margin-top: -5px ;
+}
+</style>
