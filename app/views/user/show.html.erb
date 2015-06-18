@@ -1,8 +1,6 @@
 ﻿<script>
 	$(document).ready(function(){
-		<% if params[:show_static] %>
-			$("#toggle-c").click();
-		<% end %>
+		
 		$('.user-count').popover({
 			content: "排課人數",
 			placement:"auto",
@@ -18,9 +16,14 @@
 		$(".tab-link").click(function(e){
 			$("#others").load($(this).attr("url"));
 		});
-		$("#toggle-a").click();
+		
 		<% if params[:msg] %>
 			alert("<%=params[:msg]%>");
+		<% end %>
+		<% if params[:show_stat]=="true" %>
+			$("#toggle-c").click();
+		<% else %>
+			$("#toggle-a").click();
 		<% end %>
 	});
 </script>
@@ -40,7 +43,7 @@
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
 		<li><a class="tab-link" id='toggle-a' href="#others" data-toggle="tab" url="/user/this_sem?uid=<%=params[:uid]%>" >本學期</a></li>
 		<li><a class="tab-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
-		<% if @user.normal_scores.count==0 %>
+		<% if !@user.has_imported? %>
 		<li><a class="tab-link" id='toggle-c' href="/user/import_course" onclick="toastr['info']('請先匯入成績!');">畢業學分計算</a></li>
 		<% else %>
 		<li><a class="tab-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics?uid=<%=params[:uid]%>">畢業學分計算</a></li>
