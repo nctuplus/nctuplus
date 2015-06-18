@@ -29,7 +29,9 @@
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
 
-					<div class="btn-group pull-right" style="margin-top: -5px">
+
+          
+					<div class="btn-group pull-right header-button">
 						<button type="button" class="btn btn-circle btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
 							 <i class="fa fa-download"></i>
 						</button>
@@ -38,6 +40,14 @@
 							<li><a href="#" onclick="$('#schedule_table').CourseTable('renderImg', 'window');">Image</a></li>
 						</ul>
 					</div>
+					<% if current_user.canShare? %>
+					<button type="button" id="copy-it-simu" 
+					  class="btn btn-circle btn-warning pull-right header-button" 
+					  style="margin-right: 5px ;"
+					  data-clipboard-text="<%=root_url %>shares/<%=current_user.get_share_hasid(Semester::LAST.id)%>">
+							 <%=fa_icon "clipboard"%>
+					</button>
+					<% end %>
 				</h4>		
 			</div>
 			<table class="table table-bordered" id="schedule_table"></table>
@@ -57,7 +67,17 @@
 		showHasSelected();
 		//course table
 		load_course_table(<%=Semester::LAST.id%>, true);
-		//sessionTest();	
+		//sessionTest();
+<% if current_user.canShare? %>	
+    new ZeroClipboard( $('#copy-it-simu') );	
+		$('#copy-it-simu').popover({
+		  content:"複製分享連結",
+      placement:"bottom",
+      trigger :"hover",
+      container :"body"
+		}).click(function(){toastr["success"]('已複製到剪貼簿');});
+		
+<% end %>		
 	});
 
 	function load_course_table(semester_id, selectable){
@@ -67,12 +87,14 @@
 				deletable: true ,
 				selectable: true,
 				popover: true,
+				semester_id: semester_id,
 				cancelButtonFunc: function(arg){
 					var cd_id = arg.data.cd_id;
 					save_course(cd_id,'delete','load_course_table');
 				}
 			};
 			$('#schedule_table').CourseTable(data);	
+			$('#schedule_table').CourseTable("renderImg","upload");
 		});
 	}
 	
@@ -87,3 +109,9 @@
 
 <%=render "courses/search/search_js"%>
 <%=render "courses/search/xtmpl_results_mini"%>
+
+<style>
+.header-button{
+  margin-top: -5px ;
+}
+</style>
