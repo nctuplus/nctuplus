@@ -70,13 +70,7 @@
 		js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.3&appId=<%=Facebook::APP_ID%>";
 		fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'));
-	function show_tip(){
-		$('#joyRideTipContent').joyride("destroy");
-		$('#joyRideTipContent').joyride({
-			autoStart : true,
-			cookieMonster: false
-		});
-	}
+
 	function load_cm(dept_id,year){		
 		$.getJSON("/course_maps/public",{
 			dept_id: dept_id,
