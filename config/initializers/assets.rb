@@ -9,6 +9,7 @@ Rails.application.config.assets.precompile +=[
 	'courses/html2canvas.js',
 	'courses/table.js',
 	'courses/past_exam.js',
+	'courses/simulation.js',
 	'course_maps/manage.js',
 	'course_maps/public.js',
 	'user_course_stat/checker.js',

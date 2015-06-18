@@ -7,8 +7,8 @@ class UserController < ApplicationController
 
 	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept,
 	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
-  before_filter :checkE3Login, :only=>[:import_course, :add_course]
-	layout false, :only => [:add_course, :statistics_table]#, :all_courses2]
+  before_filter :checkE3Login, :only=>[:import_course]
+	layout false, :only => [:statistics_table]#, :all_courses2]
 
 
 	USER_SHARE_DIR = "public/course_table_shares"

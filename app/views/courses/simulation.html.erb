@@ -1,4 +1,6 @@
 <%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "courses/simulation", "data-turbolinks-track" => true %>
+
 <div class="row" style="">
 	<div class="col-md-5 col-md-offset-1">
 		<div class="panel panel-primary ">
@@ -8,7 +10,7 @@
 						<font color="white"><%=fa_icon "check"%></font>
 					</button>	
 					課程查詢
-					<button id="" class="btn btn-circle btn-info pull-right pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
+					<button id="shopping-cart" class="btn btn-circle btn-info pull-right pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
 						<font color="white"><%=fa_icon "star"%></font>
 					</button>	
 				</h4>
@@ -44,6 +46,7 @@
 					<button type="button" id="copy-it-simu" 
 					  class="btn btn-circle btn-warning pull-right header-button" 
 					  style="margin-right: 5px ;"
+					  data-content="複製分享連結" 
 					  data-clipboard-text="<%=root_url %>shares/<%=current_user.get_share_hasid(Semester::LAST.id)%>">
 							 <%=fa_icon "clipboard"%>
 					</button>
@@ -55,7 +58,35 @@
 	</div>
 	
 </div>
-
+<ol id="joyRideTipContent">
+	<li data-text="Next" class="">
+		<h2>Tips</h2>
+		<p>
+		請使用Enter鍵或滑鼠點擊灰色處觀看	
+		</p>
+	</li>
+	<li data-id="shopping-cart" data-button="Next">
+		<h4>收藏課程</h4>
+		<p>點此察看在「全校課程」中收藏的課程</p>
+	</li>
+	<li data-class="btn-success" data-button="Next">
+		<h4>匯出課表</h4>
+		<p>匯出Excel格式或圖檔</p>
+	</li>
+	<li data-id="sel-time-btn" data-button="Next">
+		<h4>推薦-空堂</h4>
+		<p>
+			先在右方的課表空格中選擇時間<br>
+			按下按鈕搜尋該時段的「通識及外文」課程<br>
+			可以搜尋很多個時段喔!
+		</p>
+	</li>
+	<li data-id="dimension-btn" data-button="Next">
+		<h4>推薦-向度</h4>
+		<p>推薦目前缺少的通識向度(需先匯入成績)</p>
+	</li>
+</ol>
+	
 <script>
 	$(document).ready(function(){
 		toastr["success"]("已更新到104上的課程囉!!!");
@@ -65,18 +96,24 @@
 				placement : "auto"
 		});
 		showHasSelected();
+
 		//course table
 		load_course_table(<%=Semester::LAST.id%>, true);
 		//sessionTest();
+		$('#joyRideTipContent').joyride({
+      autoStart : true,
+      cookieMonster: true,           
+      cookieName: 'CourseSimulationTip', 
+      modal:true,
+      expose: true
+    });
 <% if current_user.canShare? %>	
     new ZeroClipboard( $('#copy-it-simu') );	
 		$('#copy-it-simu').popover({
-		  content:"複製分享連結",
       placement:"bottom",
       trigger :"hover",
       container :"body"
 		}).click(function(){toastr["success"]('已複製到剪貼簿');});
-		
 <% end %>		
 	});
 

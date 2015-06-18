@@ -30,7 +30,7 @@
 		<br>
 		<div class="col-md-12 text-center">
 			<div style="width:108px;display:inline-block;">
-				<%= f.select :semester_id_eq, options_for_select(@sem_sel, @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control"} %>				
+				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : Semester::LAST.id),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
 			</div>
 			<div style="width:120px;display:inline-block;">
 				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
@@ -74,7 +74,8 @@
 					</td>
 					<td class="text-cente" onclick="">
 						<% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
-						<%=button_tag fa_icon(type=="add" ? "plus" :"minus"),class:"btn btn-sm #{type=="add" ? "btn-primary" : "btn-warning"} cart-control", data: type%>
+						<%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
+						
 					</td>
 				</tr>
 		<% end %>
@@ -112,7 +113,15 @@
 			},
 			click:function(){	//add or delete cart
 				add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
-				$(this).off("click");
+				var type=$(this).attr("data");
+				if(type=="add"){
+					$(this).attr("data","delete");
+					$(this).switchClass("fa-square-o","fa-check-square-o");
+				}
+				else{
+					$(this).attr("data","add");
+					$(this).switchClass("fa-check-square-o","fa-square-o");
+				}
 			}
 		});
 		//toastr["success"]("已更新到104上的課程囉!!!");
