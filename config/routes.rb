@@ -132,7 +132,7 @@ Nctuplus::Application.routes.draw do
 	#----------for chrome extension---------------
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
-
+	post "api/import_course"
 	
 	post "sessions/save_lack_course"
   
