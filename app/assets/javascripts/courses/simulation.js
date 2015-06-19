@@ -1,6 +1,4 @@
-//= require page-tour/jquery.cookie
-//= require page-tour/modernizr.mq
-//= require page-tour/jquery.joyride-2.1
+//= require page-tour-custom
 
 function loadCourseTable(semester_id, selectable){
 	$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
