@@ -41,14 +41,6 @@
 						<%= fa_icon "thumbs-o-up 2x", title:"讚" %>
 					<% end %>
 					<span class="like-count like" id="main_like_<%=discuss.id%>"><%=discuss.likes%></span>
-					<% if can_like %>
-						<%= fa_icon "thumbs-o-down 2x", title:"噓", class:"clickable-hover", onclick:"like(0,'main',#{discuss.id},$(this));"%>
-					<% else %>
-						<%= fa_icon "thumbs-o-down 2x", title:"噓" %>
-					<% end %>			
-					<span class="like-count dislike"id="main_dislike_<%=discuss.id%>" ><%=discuss.dislikes%></span>	
-					
-					
 				</div>
 			</div>
 		</div>

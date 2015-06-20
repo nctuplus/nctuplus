@@ -5,6 +5,10 @@ body{
 	height: 100%;
 }	
 
+.bgColorBlue {
+  background-color:#4c66a4;
+}
+
 .fb-bg-color{
 	background-color:#4c66a4;
 }
@@ -238,6 +242,10 @@ img.bg {
   position: fixed;
   top: 0;
   left: 0;
+}
+
+.bg-white{
+	background-color:white;
 }
 
 .bg-white-transparent{

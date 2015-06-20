@@ -12,7 +12,7 @@
 		<div class="panel-heading row no-margin-left">
 			<% if current_user && current_user.uid %>
 				<div class="col-md-1">
-					<%= image_tag "http://graph.facebook.com/#{current_user.uid}/picture", size: "50x50", style:"display:inline-block" %>
+					<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "50x50", style:"display:inline-block" %>
 				</div>
 				<div class="col-md-11">
 					<br>

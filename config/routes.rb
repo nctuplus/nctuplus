@@ -13,7 +13,7 @@ Nctuplus::Application.routes.draw do
 	
 #--------- events --------------	
 	resources :events
-	
+	get "main/cts_search"
 #--------- old --------------	
  # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
  # match 'auth/failure', to: redirect('/'), via: [:get, :post]
@@ -25,7 +25,7 @@ Nctuplus::Application.routes.draw do
 
 #--------- for many usage --------------
 
-	
+	get "main/book_test"
 	get "main/index"
  	post "main/temp_student_action"
 	#get "main/E3Login"
@@ -134,6 +134,8 @@ Nctuplus::Application.routes.draw do
 			get "edit"
 		end
 	end
+	
+	post "sessions/save_lack_course"
   
     
 

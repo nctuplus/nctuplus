@@ -2,26 +2,18 @@
 	<div class="panel-heading" >
 		<h4 class="text-center">歷年課程</h4>
 	</div>
-	
 	<br>
 	<div id="agree-container" class="container"></div>
-
 	<div id="course-container" class=""></div>
 </div>
-<script>
-$(document).ready(function(){
-	$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
-		
-		$("#agree-container").html(tmpl("agreed", data));
-		$("#course-container").html(tmpl("sem_list", data));
-		/*$("#list_type").change(function(){
-			$("#course-container").html(tmpl($(this).val(), data));
-		});
-		console.log(data);*/
-	});
-	
-});
 
+<script>
+	$(document).ready(function(){
+		$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
+			$("#agree-container").html(tmpl("agreed", data));
+			$("#course-container").html(tmpl("sem_list", data));
+		});
+	});
 </script>
 
 <%=render :partial=>"xtmpl_agreed_check"%>

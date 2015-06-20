@@ -5,12 +5,13 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
 	       :omniauthable, :omniauth_providers => [:facebook, :E3]
 	belongs_to :department
-	delegate :ch_name, :to=> :department, :prefix=>true
-	delegate :degree, :to=> :department
-	
 	has_one :auth_facebook
 	has_one :auth_e3
 	
+	delegate :ch_name, :to=> :department, :prefix=>true
+	delegate :degree, :to=> :department
+	delegate :uid, :to=> :auth_facebook
+
 	has_many :past_exams
 	has_many :discusses
 	has_many :sub_discusses
@@ -32,6 +33,18 @@ class User < ActiveRecord::Base
 	has_many :semesters, :through=> :course_details
 	
 
+
+
+	has_many :user_share_images
+	
+# constants	
+	ENCRYTIONOBJ = Hashids.new("nctuplusisgood", 5) # (salt, length of encode string)
+
+	def encrypt_id
+    ENCRYTIONOBJ.encode(self.id)
+  end
+  
+
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
 	end
@@ -45,6 +58,9 @@ class User < ActiveRecord::Base
 		self.destroy
 	end
 
+	def has_imported?
+		return self.agree
+	end
 	
 	def hasFb?
 		return self.provider=="facebook"
@@ -132,5 +148,6 @@ class User < ActiveRecord::Base
     user.save!
     return user
   end
+
   
 end

@@ -1,7 +1,6 @@
 <script type="text/x-tmpl" id="common_check">
-{% var result=commonCheck(o.pass_score,o.last_sem_id,o.user_courses); %}
+{% var result=commonCheck(o); %}
 
-	
 <table class="table table-bordered "style="border:0px">
 	<tr class="row">
 		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">服務學習</h4></td>
@@ -119,7 +118,7 @@
 			</td>	
 		{% } %}
 	</tr>
-	{% console.log(common_basic_credit); %}
+
 	<tr class="row">
 		<td colspan="6">
 			<div class="progress no-margin-bottom">

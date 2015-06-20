@@ -1,0 +1,76 @@
+<style>
+	.mouse-on{
+		height:auto !importan;
+		border-color: #66afe9;
+		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+		
+	}
+	
+	.supplemental-info{
+		background: #f8f8f8;
+		//margin: 15px 0 0;
+		padding: 10px;
+		border-top: 1px solid #ccc;
+		margin-left: -4px;
+		margin-right: -4px;
+		cursor :default;
+	}
+	
+</style>
+<div class="container">
+  <div id="products" class="row">
+		<%@books.each do |book| %>
+			<div class="col-md-4 col-sm-6">
+				<div href="zzz" class="thumbnail clickable-hover" style="height:300px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'));">					
+					
+					<%=image_tag book.image_link(:zoom=>1),style:"z-index:1000;height:170px;min-height:150px;"%>		
+					<span class="horiz-flag"><strong>SOLD OUT</strong></span>
+					<div style="min-height:64px;margin-top:3px;padding-left:4px;" >
+						<div class="text-center" style="font-size:14px;">
+							<span title="<%=book.title%>">
+								<strong><%=book.title.truncate(24)%></strong>
+							</span>
+						</div>
+						<p style="margin-top:5px;">
+							微積分(一)|李榮耀
+						</p>
+						<span class="pull-right" style="font-size:16px;margin-top:-5px;">
+						<%=fa_icon "eye"%> <strong>300</strong>&nbsp;&nbsp;&nbsp;
+						<%=fa_icon "clock-o"%><%= time_ago_in_words((3.days + 14.minutes + 25.seconds).ago) %>
+						</span>
+					</div>
+					<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
+						<img alt="Picture" src="http://graph.facebook.com/100000103364671/picture" width="25" height="25"><a href="#">簡子陽</a>
+						<strong class="pull-right" style="font-size:20px;">
+							<%=fa_icon "dollar" %> 21.000 
+						</strong>
+					</div>						
+				</div>
+			</div>
+		<% end %>
+</div>
+
+<table class="table">
+	<tr>
+		<td>圖片</td>
+		<td>書名</td>
+		<td>作者</td>
+		<td>isbn</td> 
+		<td>零售價</td> 
+	</tr>
+	<%@books.each do |book| %>
+		<tr>
+			<td><%=image_tag book.image_link%></td>
+			<td><%= link_to book.title,book.preview_link,target: "_blank" %></td>
+			<td><%= book.authors %></td>
+			<td><%= book.isbn %></td>	
+			<td>
+				<%= book.sale_info %>
+				<% price_info=book.sale_info["retailPrice"]%>
+				<% if price_info %>
+					<%=price_info['amount'].to_s+price_info['currencyCode'].to_s %>
+				<% end %>
+			</td>
+		</tr>
+	<% end %>
+</table>

@@ -123,17 +123,13 @@
 
 <script>
 	$(document).ready(function() {
-			//$("#content").attr("class","col-md-12");
-			//$("#global_bgcolor").removeClass("well");
-			$("#global_bgcolor").attr("class","");
-			
-			$(".circle").hover(
-				function(){$(this).find("i").css("color","white");},
-				function(){$(this).find("i").css("color","");}
-			);
-			
-			$(".clickable-hover").click(function() {
-				window.document.location = $(this).attr("href");
-			});			
+		$("#content-contaier").attr("class","container-fluid");			
+		$(".circle").hover(
+			function(){$(this).find("i").css("color","white");},
+			function(){$(this).find("i").css("color","");}
+		);			
+		$(".clickable-hover").click(function() {
+			window.document.location = $(this).attr("href");
+		});
 	});
 </script>

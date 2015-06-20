@@ -7,7 +7,26 @@ class MainController < ApplicationController
 	before_filter :checkTopManager, :only=>[:student_import]
 	include CourseMapsHelper	
 	include ApiHelper
+	
+	def cts_search
+		@q=CourseTeachership.search(params[:q])
+		if request.format=="js"
+			@res=@q.result(distinct: true).includes(:course).page(1).map{|cts|{
+				:id=>cts.id,
+				:course_name=>cts.course_ch_name,
+				:teacher_name=>cts.teacher_name
+			}}
+			
+			#render :layout=>false
+		end
+	end
+	
+	def book_test
+		#@books = GoogleBooks.search('9780470233993') # OS恐龍本
 
+		#@books = GoogleBooks.search('Android', {:count => 20})
+		@books = GoogleBooks.search('網頁', {:count => 20})
+  end
 	
  	def index
 		

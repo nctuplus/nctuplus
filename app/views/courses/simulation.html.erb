@@ -1,24 +1,21 @@
-<div class="row" style="background-color:rgba(221,221,221,0.8)">
-	<div class="tabbable tabs-left col-md-4 col-md-offset-1">
-		<div class="tab-content" style="overflow:hidden;">
-		 <div class="tab-pane active" id="a">
-				<div class="panel panel-primary ">
-					<div class="panel-heading">
-						<h4 class="text-center">
-							<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="show_has_select()" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "check"%></font>
-							</button>	
-							課程查詢
-							<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "search" %></font>
-							</button>
-						
-						</h4>
-					</div>
-					<div class="panel-body">
-						<%= render "suggest_btns" %>
-						<div id="search_div" class="row schedule-search-bar"></div>
-					</div>
+<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<div class="row" style="">
+	<div class="col-md-5 col-md-offset-1">
+		<div class="panel panel-primary ">
+			<div class="panel-heading">
+				<h4 class="text-center">
+					<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="showHasSelected()" style="margin-top: -5px;">
+						<font color="white"><%=fa_icon "check"%></font>
+					</button>	
+					課程查詢
+
+				</h4>
+			</div>
+			<div class="panel-body">
+				<%= render "suggest_btns" %>
+				<div id="search_div" class="row schedule-search-bar">
+					<%= render "/courses/search/mini_form" %>
+					<div class="scrollable"></div>
 				</div>
 			</div>
 		</div>
@@ -29,9 +26,16 @@
 				<h4 class="text-center">
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
-					<a href="/courses/timetable.xlsx?sem_id=<%=Semester::LAST.id%>" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
-						<i class="fa fa-download"></i>
-					</a>
+
+					<div class="btn-group pull-right" style="margin-top: -5px">
+						<button type="button" class="btn btn-circle btn-success dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+							 <i class="fa fa-download"></i>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/courses/export_timetable.xls?sem_id=<%=Semester::LAST.id%>">Excel</a></li>
+							<li><a href="#" onclick="$('#schedule_table').CourseTable('renderImg');">Image</a></li>
+						</ul>
+					</div>
 				</h4>		
 			</div>
 			<table class="table table-bordered" id="schedule_table"></table>
@@ -41,73 +45,27 @@
 </div>
 
 <script>
-function show_search(){
-	$("#search_div").find('form').toggleClass("hidden");
-}
-$(document).ready(function(){
-/*
-	$('#cart-btn').popover({
-		content: "顯示觀察名單",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
+	$(document).ready(function(){
+		toastr["success"]("已更新到104上的課程囉!!!");
+		$('#has-select-btn').popover({
+			content: "已選課程",
+			placement:"auto",
+			trigger : "hover",
+			container :"body"
+		});	
+		$(".btn-default").popover({
+				//content : $(this).attr('tiptext'),
+				trigger :"hover",
+				container :"body",
+				placement : "auto"
+		});
+		showHasSelected();
+	
+		//course table
+		load_course_table(<%=Semester::LAST.id%>, true);
+		//sessionTest();	
 	});
-*/	
-	$('#has-select-btn').popover({
-		content: "已選課程",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});
-	
-	$(".btn-default").popover({
-			//content : $(this).attr('tiptext'),
-			trigger :"hover",
-			container :"body",
-			placement : "auto"
-	});
-	
-	
-	//sidebar search
-	$("#search_div").load("/courses/search_mini?sem_id=<%=Semester::LAST.id%>",function(){
-		show_has_select();
-	});		
-	
-	//course table
-	load_course_table(<%=Semester::LAST.id%>, true);
-	
-	
-	
-	
-});
-	
-	function searchLackCourses(){
-		<% if current_user.is_undergrad? %>
-			$(".scrollable").html("<%=j loadingImg%>");
-			$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
-				var result=get_check_res(data.pass_score,data.last_sem_id,data.user_courses.success);
-				var arr="[";
-				for(var dimension in result['common']){
-					if (result['common'][dimension]==0){ 
-						arr+='"'+dimension+'",';
-					}
-				}
-				if(arr.length==1)
-					toastr["info"]("你已經修完了喔^_^");
-				else{
-					arr=arr.substr(0,arr.length-1);
-					arr+=']';					
-					$("#dimension_search").val(arr);
-					$("form").submit();
-				}
-			});
-		<% else %>
-			toastr["info"]("你不需要修通識喔^_^");
-		<% end %>
-		
-	}
-	
-	
+
 	function load_course_table(semester_id, selectable){
 		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
 			//console.log(data);
@@ -123,7 +81,8 @@ $(document).ready(function(){
 			$('#schedule_table').CourseTable(data);	
 		});
 	}
-	function show_has_select(){
+	
+	function showHasSelected(){
 		$.getJSON("/user/get_courses?type=simulation",function(data){
 			//console.log(data);
 			$(".scrollable").html(tmpl("search_result", data));
@@ -134,21 +93,8 @@ $(document).ready(function(){
 		$("#search_div").load("/course_details/mini?sem_id=<%=@sem_id%>");
 	}
 
-	function get_selected_time_slot(){
-		var selected = $('#schedule_table').CourseTable('getSelectedSlot');
-		if(selected.length>0){
-			var arr_str = '[';
-			for(var i=0, ele;ele=selected[i]; ++i)
-				arr_str+= '"'+ele+'",';
-			arr_str=arr_str.substr(0,arr_str.length-1);
-			arr_str+=']';
-			$('#timeslot_search').val(arr_str);
-			$(".scrollable").html("<%=j loadingImg%>");
-			$("form").submit();
-		}
-		else
-			toastr["warning"]("請先在右方課表選取時間");
-	}
+
 </script>
 
+<%=render "courses/search/search_js"%>
 <%=render "courses/search/xtmpl_results_mini"%>
