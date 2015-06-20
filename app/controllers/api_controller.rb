@@ -1,10 +1,25 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm, :import_course]
-	
+	skip_before_filter :verify_authenticity_token, :only=>[:import_course]
 	def import_course
+		result = AuthE3.from_omniauth(params[:username], params[:password], nil)
+		if result[:auth]
+			user=result[:user]
+			user.normal_scores.joins(:course_detail).where("course_details.semester_id = #{Semester::LAST.id}").readonly(false).destroy_all
+			cds=CourseDetail.select(:id).where(:temp_cos_id=>params[:cos_ids])
+			user.normal_scores.create(
+				cds.map{|cd|{
+					:course_detail_id=>cd.id,
+					:score=>"通過"
+				}}
+			)
+			status=true
+		else
+			status=false
+		end
 		respond_to do |format|
       format.html do
-        render :json => [params[:passwd]]
+        render :json => [status]
       end
     end
 	end

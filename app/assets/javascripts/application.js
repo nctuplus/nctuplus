@@ -54,10 +54,3 @@ function justShowGlobalModal(){
 	$("#global-modal").modal('show');
 }
 
-function showTip(){
-	$('#joyRideTipContent').joyride("destroy");
-	$('#joyRideTipContent').joyride({
-		autoStart : true,
-		cookieMonster: false
-	});
-}
