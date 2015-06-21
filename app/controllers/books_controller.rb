@@ -33,7 +33,7 @@ class BooksController < ApplicationController
 	end
 	
   def google_book
-		self_books=Book.all.map{|book|{
+		self_books=Book.ransack({title_cont: params[:title]}).result.map{|book|{
 			:title=>book.title,
 			:authors=>book.authors,
 			:isbn=>book.isbn,
@@ -41,17 +41,19 @@ class BooksController < ApplicationController
 			:image_link=>book.image_link,
 			:preview_link=>book.preview_link
 		}}
-		
-		google_books = GoogleBooks.search(params[:title],{:count => 20}).map{|book|{
-			:title=>book.title,
-			:authors=>book.authors,
-			:isbn=>book.isbn,
-			:description=>book.description,
-			:image_link=>book.image_link,
-			:preview_link=>book.preview_link
-		}}
-		@res=self_books+google_books
-		
+		@res=self_books
+    for i in 1..5
+      google_books = GoogleBooks.search(params[:title],{:page => i}).map{|book|{
+        :title=>book.title,
+        :authors=>book.authors,
+        :isbn=>book.isbn,
+        :description=>book.description,
+        :image_link=>book.image_link,
+        :preview_link=>book.preview_link
+      }}
+      @res+=google_books
+		end
+    
 		respond_to do |format|
 			format.json{render json: @res}
 		end
