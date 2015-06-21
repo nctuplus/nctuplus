@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  before_filter :checkTopManager
+  #before_filter :checkTopManager
 	before_filter :checkLogin, :only=>[:new, :create]
 	#before_filter :checkE3Login
 
@@ -41,18 +41,24 @@ class BooksController < ApplicationController
 			:image_link=>book.image_link,
 			:preview_link=>book.preview_link
 		}}
-		@res=self_books
-    for i in 1..5
-      google_books = GoogleBooks.search(params[:title],{:page => i}).map{|book|{
-        :title=>book.title,
-        :authors=>book.authors,
-        :isbn=>book.isbn,
-        :description=>book.description,
-        :image_link=>book.image_link,
-        :preview_link=>book.preview_link
-      }}
-      @res+=google_books
-		end
+		#@res=self_books
+		@res=[]
+		
+    #for i in 1..3
+		google_books = GoogleBooks.search(params[:title],{:count=>20})
+		#total=google_books.total_itmes
+		res=google_books.map{|book|{
+			:title=>book.title,
+			:authors=>book.authors,
+			:isbn=>book.isbn,
+			:description=>book.description,
+			:image_link=>book.image_link,
+			:preview_link=>book.preview_link
+		}}
+			#break if google_books.count==0
+			
+    @res+=res
+		#end
     
 		respond_to do |format|
 			format.json{render json: @res}

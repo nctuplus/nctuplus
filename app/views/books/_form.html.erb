@@ -17,13 +17,13 @@
 					</div>	
         </div>
 				<div class="form-group">
-          <label class="col-sm-2 control-label">作者(選填)</label>
+          <label class="col-sm-2 control-label">作者</label>
 					<div class="col-sm-10">
-						<%=text_field_tag "book[authors]",@book.authors, class: "form-control",placeholder:"" %>
+						<%=text_field_tag "book[authors]",@book.authors, class: "form-control",placeholder:"",required:"true" %>
 					</div>	
         </div>
 				<div class="form-group">
-          <label class="col-sm-2 control-label">ISBN(選填)</label>
+          <label class="col-sm-2 control-label">ISBN</label>
 					<div class="col-sm-10">
 						<%=text_field_tag "book[isbn]",@book.isbn, class: "form-control integer-only",placeholder:"不需以'-'隔開,10碼或13碼皆可,例:9789861994192" %>
 					</div>	
@@ -141,8 +141,10 @@
 			查無結果!
 		{% }else{ %}
 			{% for(var i=0,book;book=o[i];i++) { %}
+				{% var desc=book.description ? book.description.replace(/'/g,"\\'") : "";%}
+				{% desc=desc.replace(/"/g,"\\\"");%}
 				<tr class="clickable-hover" onclick="selectBook('{%=book.title%}','{%=book.isbn%}','{%=book.authors%}','{%=book.image_link%}'
-				,'{%=book.description%}','{%=book.preview_link%}');">				
+				,'{%=desc%}','{%=book.preview_link%}');">				
 					<td>{%=book.title%}</td>
 					<td>{%=book.authors%}</td>
 					<td>

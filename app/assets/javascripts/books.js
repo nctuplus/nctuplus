@@ -93,7 +93,9 @@ function showPreviewImg(){
 function fillBookInput(title,isbn,authors,image_link,description,preview_link){
 	$("#book_image_link").val(image_link);
 	$("#book_title").val(title);
+	
 	$("#book_isbn").val(isbn);
+	if(isbn!="")$("#book_isbn").attr("disabled","");
 	$("#book_authors").val(authors);
 	$("#book_description").val(description);
 	$("#book_preview_link").val(preview_link);
@@ -104,6 +106,8 @@ function selectBook(title,isbn,authors,image_link,description,preview_link){
 	$("#image-container").html(img);
 	$("#book_selected").val("true");
 	fillBookInput(title,isbn,authors,image_link,description,preview_link);
+	toastr["success"]("已選擇 "+title+" (From Google Book)")
+	closeGlobalModal();
 }
 
 function searchCourse(){

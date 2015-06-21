@@ -53,4 +53,6 @@ function showGlobalModal(title,content){
 function justShowGlobalModal(){
 	$("#global-modal").modal('show');
 }
-
+function closeGlobalModal(){
+	$("#global-modal").modal('hide');
+}
