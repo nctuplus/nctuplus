@@ -58,17 +58,21 @@ $(function(){
 			price_input.focus();
 			return false;
 		}
+
+		fillCtIdList();
 		if($("#cts_id_list").val()==""&&!confirm("尚未輸入適用課程,仍要送出?")){
 			$("#cts_id_list").focus();
 			return false;
 		}
-		fillCtIdList();
-		if($("#book_selected").val()=="false"){
+		
+		if($("#book_selected").val()=="false"||//not select google book
+			$("#book_isbn").val()!=$("#isbn_selected").val()){ //isbn has been modified by user
 			fillBookInput(
 				$("#book_trade_info_book_name").val(),
-				$("#book_isbn").val(),"","","",""
+				$("#book_isbn").val(),$("#book_authors").val(),"","",""
 			);
 		}
+		
 		return true;
 	});
 
@@ -95,7 +99,8 @@ function fillBookInput(title,isbn,authors,image_link,description,preview_link){
 	$("#book_title").val(title);
 	
 	$("#book_isbn").val(isbn);
-	if(isbn!="")$("#book_isbn").attr("disabled","");
+	$("#isbn_selected").val(isbn);
+	//if(isbn!="")$("#book_isbn").attr("disabled","");
 	$("#book_authors").val(authors);
 	$("#book_description").val(description);
 	$("#book_preview_link").val(preview_link);

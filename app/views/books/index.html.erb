@@ -21,7 +21,7 @@
 	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
 		<div class="row">	
 			<div class="col-md-12 text-center">
-				<%=link_to "我要賣書",new_book_path,class:"",style:"font-size:20px;" %>
+				<%=link_to "我要賣書",new_book_path,class:"btn btn-info",style:"font-size:16px;" %>
 				<div class="input-group" style="width:450px;display:inline-table;">
 					<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
 					<div class="input-group-btn">
@@ -47,7 +47,7 @@
 		</div>
 	<% end %>
   <div id="products" class="row">
-		<%@sale_books.each do |sale_book| %>
+		<%@sale_books.includes(:book, :user, :course_teacherships).each do |sale_book| %>
 			<div class="col-md-4 col-sm-6">
 				<div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
 					<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
@@ -70,12 +70,19 @@
 									作者:<%=sale_book.book.authors%>
 								</strong>
 							</span>
+							
 							<p data-toggle="tooltip" style="margin-top:3px;" title="
+								<% if sale_book.course_teacherships.present?%>
 								<% sale_book.course_teacherships.each do |cts|%>
 									<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
-								<% end %>">
+								<% end %>
+								<% else %>
+									無
+								<% end %>
+								">
 								<%="#{sale_book.course_teacherships.first.try(:course_ch_name)} #{sale_book.course_teacherships.first.try(:teacher_name)}" %><br>
 							</p>
+							
 						</div>
 						
 
@@ -83,7 +90,7 @@
 					<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 						<% user=sale_book.user %>
 						<font color="#696969">
-							<%=user.name%>
+							賣家:<%=user.name%>
 							<%=sale_book.created_at.strftime("%m/%d %H:%M")%>
 						</font>
 						

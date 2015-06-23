@@ -47,7 +47,7 @@ function goToHref(href,new_tab){
 function showGlobalModal(title,content){
 	$("#global-modal .modal-title").html(title);
 	$("#global-modal .modal-body").html(content);
-	$("#global-modal").modal('show');
+	justShowGlobalModal();
 
 }
 function justShowGlobalModal(){

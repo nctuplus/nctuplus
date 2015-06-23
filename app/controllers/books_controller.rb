@@ -88,6 +88,10 @@ class BooksController < ApplicationController
 	
 	def update	
 		@book_trade_info=current_user.book_trade_infos.find(params[:id])
+		@book=@book_trade_info.book
+		@book.update(
+			book_params
+		)
 		@book_trade_info.update(
 			book_trade_info_params#.merge({:book_id=>@book.id})
 		)
@@ -101,7 +105,7 @@ class BooksController < ApplicationController
 		if request.xhr?
 			render :nothing=>true, :status=>200
 		else
-			redirect_to "/books/"
+			redirect_to book_path(@book_trade_info)
 		end
 	end
 	

@@ -7,7 +7,7 @@ class BookTradeInfo < ActiveRecord::Base
 	
 	has_many :book_trade_info_ctsships
 	has_many :course_teacherships, :through=>:book_trade_info_ctsships
-  has_many :courses, :through=>:book_trade_info_ctsships
+  has_many :courses, :through=>:course_teacherships
 	
 	validates_numericality_of :price, :only_integer => true
 	validates_length_of :desc, :maximum => 64
@@ -47,13 +47,12 @@ class BookTradeInfo < ActiveRecord::Base
 	end
 
 	def cover_image(zoom=1)
-		
 		if self.cover_file_name 
 			url=self.cover.url
 		else 
-			return "" if self.book.nil?
+			#return "尚無圖片!" if self.book.image_link.blank?
 			url=self.book.image_link_with_zoom(zoom)
 		end
-		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "/*height:250px;*/max-width:200px;")
+		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "max-width:200px;",alt:"尚無圖片!")
 	end
 end

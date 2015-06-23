@@ -26,6 +26,7 @@
           <label class="col-sm-2 control-label">ISBN</label>
 					<div class="col-sm-10">
 						<%=text_field_tag "book[isbn]",@book.isbn, class: "form-control integer-only",placeholder:"不需以'-'隔開,10碼或13碼皆可,例:9789861994192" %>
+						<%=hidden_field_tag "isbn_selected",@book.isbn  %>
 					</div>	
         </div>	
 				<div class="form-group hidden">
@@ -42,7 +43,7 @@
 						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
 						<div id="image-container" onclick="showPreviewImg();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
 							點選以上傳圖片(需小於2MB)
-							<%=@sale_book.cover_image%>
+							<%=@sale_book.new_record? ? "" : @sale_book.cover_image%>
 						</div>
 					</div>
         </div>
@@ -76,32 +77,41 @@
 					</div>				
         </div>
         <div class="form-group">
-          <label class="col-sm-2 control-label">書況</label>
+          <label class="col-sm-2 control-label">書況及說明</label>
 					<div class="col-sm-10">
-						<%= f.text_area "desc", :class => "form-control",required: "true" %>
+						<%= f.text_area "desc", :class => "form-control",required: "true",rows:"8" %>
 					</div>
         </div>
         <div class="form-group">
           <label class="col-sm-2 control-label">聯絡方式</label>
 					<div class="col-sm-10" style="margin-top:4px;">
-            <%= f.radio_button :contact_way, "0" %>
-						<%= f.label :contact_way_email, "Email" %>
+						<div class="radio">
+							<label>
+								<%= f.radio_button :contact_way, "0" %> Email
+							</label>
+						</div>
 						<% if current_user.hasFb? %>
-							<%= f.radio_button :contact_way, "1" %>
-							<%= f.label :contact_way_email_fb, "Facebook" %>
+							<div class="radio">
+								<label>
+								<%= f.radio_button :contact_way, "1" %> Facebook
+								</label>
+							</div>
 						<% else %>
 							或至<%=link_to "編輯個人資訊","/user/edit"%> 結合facebook以利用fb連絡
             <% end %>
 					</div>
         </div>
-				<% if !@sale_book.new_record? %>
+				<% if false %>
 					<div class="form-group" id="status-edit">
 						<label class="col-sm-2 control-label">售出</label>
 						<div class="col-sm-10" style="margin-top:4px;">
+							<div class="radio">
 							<%= f.radio_button :status, "0" %>
 							<%= f.label :status_not_soldout, "否" %>
+							</div><div class="radio">
 							<%= f.radio_button :status, "1" %>
 							<%= f.label :status_soldout, "是" %>
+							</div class="radio">
 						</div>
 					</div>
 				<% end %>
@@ -126,7 +136,7 @@
 			<th>老師</th>
 		</tr>
 		{% for(var i=0,cts;cts=o[i];i++) { %}
-			<tr class="" id="ct-{%=cts.id%}">
+			<tr class="clickable-hover" id="ct-{%=cts.id%}" onclick="$(this).find('input').click();">
 				<td><input type="checkbox" id="cts-{%=cts.id%}" onchange="addCtid({%=cts.id%},'{%=cts.course_name%}','{%=cts.teacher_name%}');"></td>
 				<td>{%=cts.course_name%}</td>
 				<td>{%=cts.teacher_name%}</td>
@@ -137,7 +147,7 @@
 
 <script type="text/x-tmpl" id="googlebook-res">
 	<table class="table table-hover">
-		{% if(o==null){ %}
+		{% if(o.length==0){ %}
 			查無結果!
 		{% }else{ %}
 			{% for(var i=0,book;book=o[i];i++) { %}
