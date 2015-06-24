@@ -23,7 +23,7 @@
 					</div>	
         </div>
 				<div class="form-group">
-          <label class="col-sm-2 control-label">ISBN</label>
+          <label class="col-sm-2 control-label"><%=link_to ("ISBN<sup>"+fa_icon("question")+"</sup>").html_safe,"javascript:void(0);",onclick:"showIsbnTip();"%></label>
 					<div class="col-sm-10">
 						<%=text_field_tag "book[isbn]",@book.isbn, class: "form-control integer-only",placeholder:"不需以'-'隔開,10碼或13碼皆可,例:9789861994192" %>
 						<%=hidden_field_tag "isbn_selected",@book.isbn  %>

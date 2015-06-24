@@ -53,7 +53,7 @@ $(function(){
 		
 		var price_input=$("#book_trade_info_price");
 		console.log(parseInt(price_input.val()));
-		if(!/^\d+$/.test(price_input.val()) || parseInt(price_input.val())<=0){//check price integer && not 0
+		if(!/^\d+$/.test(price_input.val()) || parseInt(price_input.val())<0){//check price integer && not 0
 			toastr["warning"]("價格需為正整數!");
 			price_input.focus();
 			return false;
@@ -167,4 +167,15 @@ function searchGoogleBook(){
 		}
 	});
 	
+}
+
+function showIsbnTip(){
+	var tips="<h4>每一本書都有一個專屬的ISBN（國際標準書號。International Standard Book Number，簡稱ISBN）<br>";
+	tips+="通常印製在版權頁及書底商品條碼上方，是國際通用的圖書或獨立的*出版物代碼。基本上就是該出版品的身分證字號。";
+	tips+="<br><br>Q1:為什麼要用ISBN?<br>";
+	tips+="透過ISBN，可以提供更加完整有關書籍的資訊，EX:博客來書店評價、書本簡介...";
+	tips+="<br><br>Q2:我該去哪找ISBN呢?<br>";	
+	tips+="在書籍的條碼區就可以找到囉，如圖</h4>";
+	tips+='<img alt="Isbn" height="200" src="/assets/ISBN.jpg" width="300">';
+	showGlobalModal("ISBN",tips);
 }
