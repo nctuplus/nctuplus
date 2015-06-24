@@ -327,7 +327,7 @@ class UserController < ApplicationController
 			if request.xhr?
 				render :nothing=>true, :status=>200
 			else	
-				alertmesg('info','warning', "修改失敗(Email或Name重複)")	
+				alertmesg('info','warning', current_user.errors.messages.map{|k,v| "#{k} #{v[0]}"}.join(" ; ") )
 				redirect_to user_edit_path 
 			end
 		end

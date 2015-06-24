@@ -36,8 +36,8 @@ class User < ActiveRecord::Base
 	has_many :user_collections
 	
 	
-	validates :email, uniqueness: true
-	validates :name, uniqueness: true
+	#validates :email, uniqueness: true
+	validates :name, uniqueness: true,  presence: { message: "name should be uniq" }
 	
 # share course table
 	def get_share_hasid(semester_id)
@@ -135,10 +135,10 @@ class User < ActiveRecord::Base
 		return (taked+agreed).sort_by{|x|x[:cf_id]}.reverse
 	end
 
-  def self.create_from_auth(hash)
-    user = self.new
+  def self.create_from_auth(hash)	
+		user = self.new
     user.name = hash[:name]
-    user.email = hash[:email]
+    user.email = (User.where(:email=>hash[:email]).present?) ? "#{Devise.friendly_token[0,8]}@please.change.me" : hash[:email] 
     user.password = hash[:password] 
     user.save!
     return user

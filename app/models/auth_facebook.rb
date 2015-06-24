@@ -31,7 +31,7 @@ class AuthFacebook < ActiveRecord::Base
         else
           user = User.create_from_auth({
             :name=>auth.info.name,
-            :email=>auth.info.email, # "#{Devise.friendly_token[0,8]}@please.change.me"
+            :email=>auth.info.email, # 
             :password=>Devise.friendly_token[0,20]
           })
           f.user_id = user.id
