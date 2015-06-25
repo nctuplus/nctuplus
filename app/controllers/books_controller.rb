@@ -88,12 +88,14 @@ class BooksController < ApplicationController
 	
 	def update	
 		@book_trade_info=current_user.book_trade_infos.find(params[:id])
-		@book=@book_trade_info.book
-		@book.update(
-			book_params
-		)
+		if params[:book].present?
+			@book=@book_trade_info.book
+			@book.update(
+				book_params
+			)
+		end
 		@book_trade_info.update(
-			book_trade_info_params#.merge({:book_id=>@book.id})
+			book_trade_info_params
 		)
 		if params[:cts_id_list].present?
 			@book_trade_info.book_trade_info_ctsships.destroy_all
