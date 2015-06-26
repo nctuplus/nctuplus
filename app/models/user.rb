@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
 	
 	
 	#validates :email, uniqueness: true
-	validates :name, uniqueness: true,  presence: { message: "name should be uniq" }
+	validates :name, :uniqueness=>true, :length=> { :maximum=> 16 }, :on => :update
 	
 # share course table
 	def get_share_hasid(semester_id)
