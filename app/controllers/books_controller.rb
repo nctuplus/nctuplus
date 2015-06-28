@@ -32,7 +32,7 @@ class BooksController < ApplicationController
 		else
 			@q=BookTradeInfo.search_by_q(params[:q])
 		end
-		@sale_books=@q.result(distinct: true).includes(:book, :user, :course_teacherships).page(params[:page]).per(20).order("created_at DESC,status ASC")
+		@sale_books=@q.result(distinct: true).includes(:book, :user, :course_teacherships).page(params[:page]).per(30).order("created_at DESC,status ASC")
 	end
 	
   def google_book
