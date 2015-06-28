@@ -22,11 +22,8 @@ class BookTradeInfo < ActiveRecord::Base
 		
 	def self.search_by_q(q)
 		search({
-			:book_name_or_book_authors_or_courses_ch_name_cont=>q,
+			:book_name_or_book_authors_or_courses_ch_name_cont=>q			
 		})
-		#search({
-		#	:book_name_or_book_authors_cont=>q,
-		#})
 	end
 	
 	def incViewTimes!

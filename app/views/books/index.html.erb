@@ -22,8 +22,11 @@
 		<div class="row">	
 			<div class="col-md-12 text-center">
 				<%=link_to "我要賣書",new_book_path,class:"btn btn-info",style:"font-size:16px;" %>
+				<% if current_user %>
+				<%=link_to "我賣的書","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
+				<% end %>
 				<div class="input-group" style="width:450px;display:inline-table;">
-					<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
+					<%=text_field_tag :q,params[:q], class: "form-control", placeholder:"書名/作者/課名" %>
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找二手書 <span class="caret"></span></button>
 						<ul class="dropdown-menu" role="menu">
@@ -47,7 +50,7 @@
 		</div>
 	<% end %>
   <div id="products" class="row">
-		<%@sale_books.includes(:book, :user, :course_teacherships).each do |sale_book| %>
+		<%@sale_books.each do |sale_book| %>
 			<div class="col-md-4 col-sm-6">
 				<div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
 					<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
@@ -101,7 +104,9 @@
 				</div>
 			</div>
 		<% end %>
-</div>
+		
+	</div>
+	<%= paginate @sale_books, :window=>2 %>
 <script>
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip({html:true,placement:"bottom"});
