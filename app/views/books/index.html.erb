@@ -23,7 +23,7 @@
 			<div class="col-md-12 text-center">
 				<%=link_to "我要賣書",new_book_path,class:"btn btn-info",style:"font-size:16px;" %>
 				<% if current_user&&current_user.book_trade_infos.count>0 %>
-				<%=link_to "我賣的書","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
+				<%=link_to "我的商品","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
 				<% end %>
 				<div class="input-group" style="width:450px;display:inline-table;">
 					<%=text_field_tag :q,params[:q], class: "form-control", placeholder:"書名/作者/課名" %>
