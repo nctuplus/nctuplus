@@ -22,7 +22,7 @@
 		<div class="row">	
 			<div class="col-md-12 text-center">
 				<%=link_to "我要賣書",new_book_path,class:"btn btn-info",style:"font-size:16px;" %>
-				<% if current_user %>
+				<% if current_user&&current_user.book_trade_infos.count>0 %>
 				<%=link_to "我賣的書","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
 				<% end %>
 				<div class="input-group" style="width:450px;display:inline-table;">
