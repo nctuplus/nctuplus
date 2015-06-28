@@ -81,3 +81,5 @@ gem "googlebooks"
 
 gem "bootstrap-switch-rails"
 gem 'zeroclipboard-rails'
+
+gem 'nokogiri'
