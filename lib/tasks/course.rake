@@ -4,32 +4,28 @@ namespace :course do
 	desc "import course from e3"
 	task :import => :environment do
 		inform_mesg=""
-		
-
-
 		inform_mesg << update_department_list
 		inform_mesg << update_teacher_list
 
-		sem=Semester.last
-		datas=E3Service.get_course(sem) #get course
-		inform_mesg << "[Course Detail] Got : #{datas.length} courses from E3.<br>"
-		if datas.length == 0
-			inform_mesg << "No courses, stop updating.<br>"
-		else
-			stat={"Create"=>0, "Update"=>0}
-			
-			data_cos_ids=datas.map{|data|data['cos_id']}
-			old_cos_ids=CourseDetail.where(:semester_id=>sem.id).map{|data|data.temp_cos_id}
-			diff_cos_ids=old_cos_ids-data_cos_ids
-			CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>diff_cos_ids).destroy_all
-			inform_mesg << "[Course Detail] Deleted : #{diff_cos_ids.length}.<br>"
-			datas.each do |data|
-				stat[do_update_coourse(data,sem)]+=1
+		Semester.where(:id=>[15,16]).each do |sem|			
+			datas=E3Service.get_course(sem) #get course
+			inform_mesg << "[Course Detail] Got : #{datas.length} courses from E3.<br>"
+			if datas.length == 0
+				inform_mesg << "No courses, stop updating.<br>"
+			else
+				stat={"Create"=>0, "Update"=>0}				
+				data_cos_ids=datas.map{|data|data['cos_id']}
+				old_cos_ids=CourseDetail.where(:semester_id=>sem.id).map{|data|data.temp_cos_id}
+				diff_cos_ids=old_cos_ids-data_cos_ids
+				CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>diff_cos_ids).destroy_all
+				inform_mesg << "[Course Detail] Deleted : #{diff_cos_ids.length}.<br>"
+				datas.each do |data|
+					stat[do_update_coourse(data,sem)]+=1
+				end
+				inform_mesg << "[Course Detail] Created : #{stat["Create"]}.<br>"
+				inform_mesg << "[Course Detail] Updated : #{stat["Update"]}.<br>"		
 			end
-			inform_mesg << "[Course Detail] Created : #{stat["Create"]}.<br>"
-			inform_mesg << "[Course Detail] Updated : #{stat["Update"]}.<br>"		
 		end
-
 		InformMailer.course_import(inform_mesg).deliver
 	end
 	
