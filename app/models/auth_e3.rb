@@ -17,7 +17,7 @@ class AuthE3 < ActiveRecord::Base
         e.student_id = student_id       
         if not e.user_id # new e3 user
 					user = User.create_from_auth({
-						:name=>student_id,
+						:name=>"學號:#{student_id}",
 						:password=>Devise.friendly_token[0,20],
 						:email=>"#{Devise.friendly_token[0,8]}@please.change.me"
 					})

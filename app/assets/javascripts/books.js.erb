@@ -53,22 +53,26 @@ $(function(){
 		
 		var price_input=$("#book_trade_info_price");
 		console.log(parseInt(price_input.val()));
-		if(!/^\d+$/.test(price_input.val()) || parseInt(price_input.val())<=0){//check price integer && not 0
+		if(!/^\d+$/.test(price_input.val()) || parseInt(price_input.val())<0){//check price integer && not 0
 			toastr["warning"]("價格需為正整數!");
 			price_input.focus();
 			return false;
 		}
+
+		fillCtIdList();
 		if($("#cts_id_list").val()==""&&!confirm("尚未輸入適用課程,仍要送出?")){
 			$("#cts_id_list").focus();
 			return false;
 		}
-		fillCtIdList();
-		if($("#book_selected").val()=="false"){
+		
+		if($("#book_selected").val()=="false"||//not select google book
+			$("#book_isbn").val()!=$("#isbn_selected").val()){ //isbn has been modified by user
 			fillBookInput(
 				$("#book_trade_info_book_name").val(),
-				$("#book_isbn").val(),"","","",""
+				$("#book_isbn").val(),$("#book_authors").val(),"","",""
 			);
 		}
+		
 		return true;
 	});
 
@@ -93,7 +97,10 @@ function showPreviewImg(){
 function fillBookInput(title,isbn,authors,image_link,description,preview_link){
 	$("#book_image_link").val(image_link);
 	$("#book_title").val(title);
+	
 	$("#book_isbn").val(isbn);
+	$("#isbn_selected").val(isbn);
+	//if(isbn!="")$("#book_isbn").attr("disabled","");
 	$("#book_authors").val(authors);
 	$("#book_description").val(description);
 	$("#book_preview_link").val(preview_link);
@@ -104,6 +111,8 @@ function selectBook(title,isbn,authors,image_link,description,preview_link){
 	$("#image-container").html(img);
 	$("#book_selected").val("true");
 	fillBookInput(title,isbn,authors,image_link,description,preview_link);
+	toastr["success"]("已選擇 "+title+" (From Google Book)")
+	closeGlobalModal();
 }
 
 function searchCourse(){
@@ -158,4 +167,16 @@ function searchGoogleBook(){
 		}
 	});
 	
+}
+
+function showIsbnTip(){
+	var tips="<h4>每一本書都有一個專屬的ISBN（國際標準書號。International Standard Book Number，簡稱ISBN）<br>";
+	tips+="通常印製在版權頁及書底商品條碼上方，是國際通用的圖書或獨立的*出版物代碼。基本上就是該出版品的身分證字號。";
+	tips+="<br><br>Q1:為什麼要用ISBN?<br>";
+	tips+="透過ISBN，可以提供更加完整有關書籍的資訊，EX:博客來書店評價、Google Book書本簡介...";
+	tips+="<br><br>Q2:我該去哪找ISBN呢?<br>";	
+	tips+="在書籍的條碼區就可以找到囉，如圖</h4>";
+	tips+='<%=image_tag asset_path("ISBN.jpg"),size:"300x200"%>';
+	//tips+='<img alt="Isbn" height="200" src="/assets/ISBN.jpg" width="300">';
+	showGlobalModal("ISBN",tips);
 }

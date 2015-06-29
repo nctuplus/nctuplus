@@ -4,14 +4,11 @@
 
 namespace :library do
 
-  desc "get set_no"
-	task :test1 => :environment do 
-	  Library.test("紅樓夢")
+  desc "test"
+	task :test => :environment do 
+	  set_no = Library.test("9780262531962","ISBN")
 	end
 
-  desc "search"
-	task :test2 => :environment do 
-    Library.search("")
-	end
+  
 
 end

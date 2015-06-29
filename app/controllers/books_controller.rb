@@ -1,5 +1,5 @@
 class BooksController < ApplicationController
-  before_filter :checkTopManager
+  #before_filter :checkTopManager
 	before_filter :checkLogin, :only=>[:new, :create]
 	#before_filter :checkE3Login
 
@@ -27,9 +27,12 @@ class BooksController < ApplicationController
 	
 	def index
 		#@books=Book.all
-		
-		@q=BookTradeInfo.search_by_q(params[:custom_search])
-		@sale_books=@q.result(distinct: true).order("created_at DESC,status ASC")
+		if current_user && params[:mine]=="true"
+			@q=BookTradeInfo.search({:user_id_eq=>current_user.id})
+		else
+			@q=BookTradeInfo.search_by_q(params[:q])
+		end
+		@sale_books=@q.result(distinct: true).includes(:book, :user, :course_teacherships).page(params[:page]).per(30).order("created_at DESC,status ASC")
 	end
 	
   def google_book
@@ -41,18 +44,24 @@ class BooksController < ApplicationController
 			:image_link=>book.image_link,
 			:preview_link=>book.preview_link
 		}}
-		@res=self_books
-    for i in 1..5
-      google_books = GoogleBooks.search(params[:title],{:page => i}).map{|book|{
-        :title=>book.title,
-        :authors=>book.authors,
-        :isbn=>book.isbn,
-        :description=>book.description,
-        :image_link=>book.image_link,
-        :preview_link=>book.preview_link
-      }}
-      @res+=google_books
-		end
+		#@res=self_books
+		@res=[]
+		
+    #for i in 1..3
+		google_books = GoogleBooks.search(params[:title],{:count=>20})
+		#total=google_books.total_itmes
+		res=google_books.map{|book|{
+			:title=>book.title,
+			:authors=>book.authors,
+			:isbn=>book.isbn,
+			:description=>book.description,
+			:image_link=>book.image_link,
+			:preview_link=>book.preview_link
+		}}
+			#break if google_books.count==0
+			
+    @res+=res
+		#end
     
 		respond_to do |format|
 			format.json{render json: @res}
@@ -82,8 +91,14 @@ class BooksController < ApplicationController
 	
 	def update	
 		@book_trade_info=current_user.book_trade_infos.find(params[:id])
+		if params[:book].present?
+			@book=@book_trade_info.book
+			@book.update(
+				book_params
+			)
+		end
 		@book_trade_info.update(
-			book_trade_info_params#.merge({:book_id=>@book.id})
+			book_trade_info_params
 		)
 		if params[:cts_id_list].present?
 			@book_trade_info.book_trade_info_ctsships.destroy_all
@@ -95,7 +110,7 @@ class BooksController < ApplicationController
 		if request.xhr?
 			render :nothing=>true, :status=>200
 		else
-			redirect_to "/books/"
+			redirect_to book_path(@book_trade_info)
 		end
 	end
 	

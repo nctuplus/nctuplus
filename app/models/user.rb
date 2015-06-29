@@ -42,8 +42,8 @@ class User < ActiveRecord::Base
 	has_many :user_share_images
 
 	
-	validates :email, uniqueness: true
-	validates :name, uniqueness: true
+	#validates :email, uniqueness: true
+	validates :name, :uniqueness=>true, :length=> { :maximum=> 16 }, :on => :update
 	
 # share course table
 	def get_share_hasid(semester_id)
@@ -71,8 +71,7 @@ class User < ActiveRecord::Base
 
 
 	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
-		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name}
-			-["normal_scores","agree_scores"]
+		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name} - ["normal_scores","agree_scores"]
 		table_to_be_moved.each do |table_name|
 			self.send(table_name).update_all(:user_id=>new_user.id)
 		end
@@ -149,10 +148,10 @@ class User < ActiveRecord::Base
 		return (taked+agreed).sort_by{|x|x[:cf_id]}.reverse
 	end
 
-  def self.create_from_auth(hash)
-    user = self.new
+  def self.create_from_auth(hash)	
+		user = self.new
     user.name = hash[:name]
-    user.email = hash[:email]
+    user.email = (User.where(:email=>hash[:email]).present?) ? "#{Devise.friendly_token[0,8]}@please.change.me" : hash[:email] 
     user.password = hash[:password] 
     user.save!
     return user

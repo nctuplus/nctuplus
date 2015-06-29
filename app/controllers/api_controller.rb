@@ -5,21 +5,26 @@ class ApiController < ApplicationController
 		result = AuthE3.from_omniauth(params[:username], params[:password], nil)
 		if result[:auth]
 			user=result[:user]
-			user.normal_scores.joins(:course_detail).where("course_details.semester_id = #{Semester::LAST.id}").readonly(false).destroy_all
+			user.normal_scores.joins(:course_detail).where("course_details.semester_id = ?",Semester::LAST.id).readonly(false).destroy_all
 			cds=CourseDetail.select(:id).where(:temp_cos_id=>params[:cos_ids])
 			user.normal_scores.create(
 				cds.map{|cd|{
 					:course_detail_id=>cd.id,
-					:score=>"通過"
+					:score=>"修習中"
 				}}
 			)
+			count=user.normal_scores.joins(:course_detail).where("course_details.semester_id = ?",Semester::LAST.id).count
 			status=true
 		else
 			status=false
+			count=0
 		end
 		respond_to do |format|
       format.html do
-        render :json => [status]
+        render :json => {
+					:status=>status,
+					:count=>count
+				}
       end
     end
 	end

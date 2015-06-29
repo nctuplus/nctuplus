@@ -30,7 +30,7 @@
 		<br>
 		<div class="col-md-12 text-center">
 			<div style="width:108px;display:inline-block;">
-				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : Semester::LAST.id),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
+				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : 0),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
 			</div>
 			<div style="width:120px;display:inline-block;">
 				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
@@ -45,23 +45,23 @@
 
 <table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
 	<tr class="row">
-		<!--<th class="col-md text-center" style="width:70px;">學期</th>-->
-		<th class="col-md- text-cente">系所/摘要</th>
-		<th class="col-md- text-cente">課名</th>
-		<th class="col-md- text-cente">老師</th>
-		<th class="col-md- text-cente">學分</th>
-		<th class="col-md- text-cente">時間</th>
-		<th class="col-md- text-cente">年級</th>
-		<th class="col-md- text-cente">收藏</th>
+		<th class="col-md">學期</th>
+		<th class="col-md-">系所/摘要</th>
+		<th class="col-md-">課名</th>
+		<th class="col-md-">老師</th>
+		<th class="col-md-">學分</th>
+		<th class="col-md-">時間</th>
+		<th class="col-md-">年級</th>
+		<th class="col-md-">收藏</th>
 	</tr>
 	<tbody>
 	<% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
 	<% if !@cds.empty? %>
 		<% @cds.each do |cd| %>
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
-					<!--<td class="text-center">
+					<td class="">
 						<%=cd.semester_name%>
-					</td>-->
+					</td>
 					<td class="text-cente">
 						<%="#{cd.department_ch_name} #{cd.brief}"%>
 					</td>
@@ -124,7 +124,7 @@
 				}
 			}
 		});
-		//toastr["success"]("已更新到104上的課程囉!!!");
+		toastr["success"]("已更新暑修課程囉，請利用進階搜尋查詢~");
 		<% if !current_user %>
 
 		//	toastr["info"]("登入並選擇系級,系統即可為您推薦課程!!");

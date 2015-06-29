@@ -21,9 +21,12 @@
 	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
 		<div class="row">	
 			<div class="col-md-12 text-center">
-				<%=link_to "我要賣書",new_book_path,class:"",style:"font-size:20px;" %>
+				<%=link_to "我要賣書",new_book_path,class:"btn btn-info",style:"font-size:16px;" %>
+				<% if current_user&&current_user.book_trade_infos.count>0 %>
+				<%=link_to "我的商品","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
+				<% end %>
 				<div class="input-group" style="width:450px;display:inline-table;">
-					<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
+					<%=text_field_tag :q,params[:q], class: "form-control", placeholder:"書名/作者/課名" %>
 					<div class="input-group-btn">
 						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找二手書 <span class="caret"></span></button>
 						<ul class="dropdown-menu" role="menu">
@@ -66,16 +69,23 @@
 								<strong data-toggle="tooltip" title="<%=sale_book.book_name%>" >
 									<%=sale_book.book_name.truncate(15)%>					
 								</strong><br>
-								<strong>
-									作者:<%=sale_book.book.authors%>
+								<strong data-toggle="tooltip" title="<%=sale_book.book.authors%>">
+									作者:<%=sale_book.book.authors.truncate(15)%>
 								</strong>
 							</span>
+							
 							<p data-toggle="tooltip" style="margin-top:3px;" title="
+								<% if sale_book.course_teacherships.present?%>
 								<% sale_book.course_teacherships.each do |cts|%>
 									<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
-								<% end %>">
-								<%="#{sale_book.course_teacherships.first.try(:course_ch_name)} #{sale_book.course_teacherships.first.try(:teacher_name)}" %><br>
+								<% end %>
+								<% else %>
+									無
+								<% end %>
+								">
+								<%="課程:#{sale_book.course_teacherships.first.try(:course_ch_name)} 老師:#{sale_book.course_teacherships.first.try(:teacher_name)}".truncate(15) %><br>
 							</p>
+							
 						</div>
 						
 
@@ -83,7 +93,7 @@
 					<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 						<% user=sale_book.user %>
 						<font color="#696969">
-							<%=user.name%>
+							賣家:<%=user.name%>
 							<%=sale_book.created_at.strftime("%m/%d %H:%M")%>
 						</font>
 						
@@ -94,7 +104,9 @@
 				</div>
 			</div>
 		<% end %>
-</div>
+		
+	</div>
+	<%= paginate @sale_books, :window=>2 %>
 <script>
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip({html:true,placement:"bottom"});
