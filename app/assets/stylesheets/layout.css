@@ -5,13 +5,6 @@ body{
 	height: 100%;
 }	
 
-.bgColorBlue {
-  background-color:#4c66a4;
-}
-
-.fb-bg-color{
-	background-color:#4c66a4;
-}
 
 .no-padding-left{
 	padding-left:0px;
@@ -39,42 +32,15 @@ body{
 	margin-bottom:0px ;
 }
 
-
-
 textcontent{
 	white-space: pre-line;
 	font-size:16px;
 }
 
-.max-z{
-	z-index:50000;
-}
-.toolTipText {
-	display:none;
-	position:absolute;
-	border:1px solid #333;
-	background-color:#161616;
-	border-radius:5px;
-	padding:10px;
-	color:#fff;
-	//font-size:12px Arial;
-	
-}
 
 p.footer-text{
 	margin-top:10px;
 	margin-bottom:0px;
-}
-
-
-a.back-to-prev{
-	color:white;
-	font-size:20px;
-}
-
-a.back-to-prev:hover{
-	font-weight:bold;
-	text-decoration:none;
 }
 
 
@@ -83,20 +49,15 @@ a:hover{
 }
 
 .course-clean{
-
 	position:absolute;
 	top: -7px;
 	right: -2px;
 }
+
 .pos-relative{
 	position:relative;
 }
 
-.user-reg {
-	width: 280px !important;
-	padding-left :30px;
-	z-index :0 !important;
-}
 
 .ui-autocomplete { position: absolute; cursor: default;z-index:2000 !important;}  
 
@@ -114,10 +75,6 @@ a:hover{
 	overflow-y :scroll;
 }
 
- 
-.global-background-color{  
-	background-color: rgba(255,255,255,0.8); 
-}
 
 
 .ptt-style{
@@ -125,9 +82,6 @@ a:hover{
 	color: #DBA901;
 }
 
-.backgorund-color-grey{
-	background-color: #BDBDBD  ;
-}
 .text-color-white{
 	color: white;
 }
@@ -148,24 +102,6 @@ a:hover{
 }
 .text-color-green{
 	color: green;
-}
-
-
-.number-right-top {
-	width: 20px;
-	height: 20px;
-	border-radius: 10px;
-	text-align: center;
-	font-size: 10px;
-	padding-top:1px;
-	background-color:#5599FF;
-	color:white;
-	display:inline-block;
-	z-index:100;
-	position:relative;
-	left:-13px;
-	top:-20px;
-	font-weight:bold;
 }
 
 
@@ -218,7 +154,7 @@ a:hover{
 	border-left-color: #d9534f;
 }
 
-.schedule-search-bar{
+.schedule-search-bar{	/*to be fixed*/
 	margin-right:0;
 	margin-left:0;
 }
@@ -244,15 +180,7 @@ img.bg {
   left: 0;
 }
 
-.bg-white{
-	background-color:white;
-}
 
-.bg-white-transparent{
-	background-color:white;
-	opacity:0.75;
-	zoom:1;
-}
 
 .vertical-center {
   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */

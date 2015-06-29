@@ -35,7 +35,7 @@
 	Table.prototype = {
 		
 		_generateDownloadButton: function(sem_id){
-		  var $group = $('<div>').addClass('btn-group pull-right');
+		  var $group = $('<div>').addClass('btn-group');
 		  
 		  var $button = $('<button>').addClass('btn btn-circle btn-success dropdown-toggle')
 		                .attr('data-toggle', 'dropdown').attr('aria-expanded', false);
@@ -49,21 +49,78 @@
 			var $temp = this.$element		;
 		  $lists.html($('<li>').html($excel_link))
 		    .append($('<li>').html($image_link).click({"element": $temp}, function(event){ 
-						event.data.element.CourseTable('renderImg');
+						event.data.element.CourseTable('renderImg', "window");
 				}));
 		  
 		  $group.html($button).append($lists) ;
 		  return $group ;
 		},
 		
+		_dataURItoBlob: function(dataURI){
+			var byteString;
+			if (dataURI.split(',')[0].indexOf('base64') >= 0)
+					byteString = atob(dataURI.split(',')[1]);
+			else
+					byteString = unescape(dataURI.split(',')[1]);
+
+			// separate out the mime component
+			var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+
+			// write the bytes of the string to a typed array
+			var ia = new Uint8Array(byteString.length);
+			for (var i = 0; i < byteString.length; i++) {
+					ia[i] = byteString.charCodeAt(i);
+			}
+
+			return new Blob([ia], {type:mimeString});
+  	},
 		
-		renderImg: function(){
+		renderImg: function(flag){
+
+			var _this = this ;	
+      var $global_modal_header = $('#global-modal .modal-header'); 
+			
+			// hide the item we don't want to see in the picture	
+			_this.$element.find('.btn-group').hide() ;	
+			$global_modal_header.hide();
+			
+
 		  html2canvas( this.$element.get(0), {
+        height: 1500 ,
         onrendered: function(canvas) {
-          var img = canvas.toDataURL("image/png");
-          window.open(img);
+          //recover the hidden items
+					_this.$element.find('.btn-group').show();
+					$global_modal_header.show();
+					
+          var dataUrl = canvas.toDataURL("image/png");
+					if (flag=="window"){
+						window.open(dataUrl);
+						_this.$element.find('.btn-group').show() ;
+						return ;
+					}else if(flag=="url"){
+					  return dataUrl ;
+
+					}else if(flag=="upload"){  
+						var blob = _this._dataURItoBlob(dataUrl);
+						//console.log("filesize: "+blob.size);
+						var fd = new FormData();
+						fd.append("image", blob);
+						fd.append("semester_id", _this.config.semester_id);	
+						fd.append("type", "upload_share_image");			
+						$.ajax({
+							type: "post",
+              url: "/user/update",
+              data: fd,
+							cache:false,
+							contentType: false,
+							processData: false,
+							success: function(){/*console.log("good");*/},
+							error: function(){console.log("upload fails");}
+						});
+					}        
         }
       });
+			
       return;
 		},
 		
@@ -130,6 +187,8 @@
 			for(var i=0, $cell; $cell=res[i];++i){
 				this._clearCell($cell);
 			}
+			
+			return ;
 		},
 		
 		addCourses: function(args){
@@ -178,6 +237,14 @@
 										container :"body"
 									});
 							}	
+							if(this.config.click_redirect) // This will conflict with cell selectable
+							{
+							  $cell.addClass("clickable-hover");
+							  $cell.click({cd_id: course.cd_id}, function(args){
+							    window.open("http://"+window.location.host+"/courses/"+args.data.cd_id);
+							    return true ;
+							  });
+							}
 						}
 					}
 				}	
@@ -233,8 +300,8 @@
 					.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
-						selectable: this.config.selectable, 
-						deletable: this.config.deletable || Table.defaults.deletable,
+						selectable: this.config.selectable || false, 
+						deletable: this.config.deletable || false,
 						selected: false 
 					}));
 				}
@@ -278,7 +345,8 @@
 			}else{
 				$cell.selected = false ;
 				$cell.removeClass(Table.defaults.selected_class);
-				$cell.unbind('click');
+				if(!this.config.click_redirect)// avoid conflict
+				  $cell.unbind('click');
 			}	
 		},
 		
@@ -319,7 +387,7 @@
 		}
 		else
 		{					
-			return this.each(function() { // 'this' is the target table. It'll return itself.
+			return this.each(function() { // 'this' is the target table. It returns itself.
 				var self = $.data(this, 'plugin_' + pluginName);
 				if (typeof options === 'string') {
 					//block undefine method

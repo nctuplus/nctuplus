@@ -1,5 +1,5 @@
 Nctuplus::Application.routes.draw do
-	
+
 	root :to => "main#index"
 	
 #--------- [devise] user account concerned --------------	
@@ -12,69 +12,82 @@ Nctuplus::Application.routes.draw do
 
 	
 #--------- events --------------	
-	resources :events
-	get "main/cts_search"
-#--------- old --------------	
- # match 'auth/:provider/callback', to: 'sessions#create', via: [:get, :post]
- # match 'auth/failure', to: redirect('/'), via: [:get, :post]
- # match 'signout', to: 'sessions#destroy', via: [:get, :post]
- # match 'signin', to: 'sessions#sign_in', via: [:get, :post]	
-# get "sessions/get_courses"
+	#resources :events
 	
+#--------- for share course table page -----
+	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
+	# update user share and return json hash id 
+	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
+	# update share course table image
+	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
+	# add to user collection
+	post "user/update", to: "user#user_collection_action", :constraints => lambda{ |req| req.params[:type].include? "collection"}
+	# show user collections lists
+	get "user/collections"
 	
+#--------- for other usage --------------
 
-#--------- for many usage --------------
-
-	get "main/book_test"
 	get "main/index"
- 	post "main/temp_student_action"
-	#get "main/E3Login"
-	#post "main/E3Login_Check"
-	get "main/student_import"
-	post "main/student_import"
-  get "main/test"
-	post "main/send_report"
 	get "main/policy_page"
-  
+	get "main/member_intro"	
+	post "/main/get_specified_classroom_schedule" # for ems curl
+	
+
+
 #---------- admin page -----------
 	
+  get "admin/user_statistics"
 	get "admin/ee104"
 	get "admin/users"
 	post "admin/change_role"
 	get "admin/course_maps" #, to: "course_maps#admin_index"
+	
 #---------- user ----------------
+	get "user", to: "user#show"	#user personal page
+	get "user/this_sem"
+	get "user/statistics"
+	get "user/statistics_table"
 	
 	get "user/add_course"
 	get "user/delete_course"
 	get "user/get_courses"
-	get "user/this_sem"
+	get "user/all_courses"
+
 	post "user/import_course"
 	get "user/import_course"
 	get "user/import_course_2"
+	
+	get "user/edit"
+	patch "user/update"	
 	get "user/select_cs_cf"
 	get "user/select_cm"
 	post "user/select_cm"
-	get "user/select_cf"
 	
-	get "user/statistics_table"
-
-  get "user", to: "user#show"
-	get "user/all_courses"
-	get "user/statistics"
-	post "user/select_dept"
-
-	
-#--------- user end -------------
+#--------- course_content -------------
 	post "course_content/raider"
 	get "course_content/raider"	
 	get "course_content/raider_list_like"
 	get "course_content/rate_cts"
 	get "course_content/get_compare"	
-	###
 	get "course_content/get_course_info"
-	#get "course_content/show" # testing
 	post "course_content/course_action"
+	
+#----------for discusses---------------	
+	get "discusses/show"
+	get "discusses/like"
+	post "discusses/new"
+	post "discusses/update"
+	post "discusses/delete"	
+	
+#----------for past_exams---------------
+  resources :past_exams, :except=>[:update] do
+		collection do
+			get "list_by_ct"
+			get "edit"
+		end
+	end
 
+	
 	resources :courses, :only => [:index, :show] do
 		collection do
 			get "index_new"
@@ -82,58 +95,44 @@ Nctuplus::Application.routes.draw do
 			get "search_mini_cm"
 			get "simulation"
 			get "export_timetable"
-	#		get "add_to_cart"
-	#		get "show_cart"
+			get "add_to_cart"
+			get "show_cart"
 		end
 	end
 	
 	resources :course_maps, :except=>[:edit] do
 	  collection do
-	    	get "get_course_tree"
-	      get "get_group_tree"
-	      get "show_course_list" 
-	      get "show_course_group_list"
-	      get "get_credit_list"
-	      post "credit_action"
-	      post "course_action"
-        post "action_new"
-        post "action_update"
-        post "action_delete"	
-        post "action_fchange"
-        post "course_group_action"
-        get "content"
-        post "update_cm_head"
-        get "public"
-        post "cm_public_comment_action"
+			get "public"
+			get "content"	
+			get "get_course_tree"
+			get "get_group_tree"
+			get "show_course_list" 
+			get "show_course_group_list"
+			get "get_credit_list"
+			post "credit_action"
+			post "course_action"
+			post "action_new"
+			post "action_update"
+			post "action_delete"	
+			post "action_fchange"
+			post "course_group_action"
+			post "update_cm_head"
+			post "cm_public_comment_action"
 	  end
 	end
-
+	
+#---------- book page ----------- 
+  post "books/set_cts"
+  get "books/cts_search"
+	post "books/google_book"
+  resources :books
+	
 	resources :departments, :except=>[:show, :destroy]
-	
-	
-	get "discusses/show"
-	get "discusses/like"
-	post "discusses/new"
-	post "discusses/update"
-	post "discusses/delete"
- 
 
-	
-	# for ems curl
-	post "/main/get_specified_classroom_schedule"
-	
 	#----------for chrome extension---------------
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
-	get "api/testttt"
-	
-  #----------for files---------------
-  resources :past_exams, :except=>[:update] do
-		collection do
-			get "list_by_ct"
-			get "edit"
-		end
-	end
+	post "api/import_course"
 	
 	post "sessions/save_lack_course"
   

@@ -1,8 +1,6 @@
 ﻿<script>
 	$(document).ready(function(){
-		<% if params[:show_static] %>
-			$("#toggle-c").click();
-		<% end %>
+		
 		$('.user-count').popover({
 			content: "排課人數",
 			placement:"auto",
@@ -18,9 +16,14 @@
 		$(".tab-link").click(function(e){
 			$("#others").load($(this).attr("url"));
 		});
-		$("#toggle-a").click();
+		
 		<% if params[:msg] %>
 			alert("<%=params[:msg]%>");
+		<% end %>
+		<% if params[:show_stat]=="true" %>
+			$("#toggle-c").click();
+		<% else %>
+			$("#toggle-a").click();
 		<% end %>
 	});
 </script>
@@ -30,10 +33,9 @@
   <h2>開始使用...</h2>
   <h3>
 		
-		&nbsp;&nbsp;&nbsp;1.<%=link_to'輸入系級',"javascript:void(0);",onclick:"$('#degree_select').focus();"%> <br> 
-		&nbsp;&nbsp;&nbsp;2.<%=link_to @user.department.present? ? "/user/import_course":"javascript:void(0);" , class:"", onclick:"no_dept_alert();" do %>匯入歷年課程
-		<% end %><br>
-		&nbsp;&nbsp;&nbsp;3.<%=link_to'新增本學期課程',"/courses/simulation"%>追蹤最新消息
+		&nbsp;&nbsp;&nbsp;1.<%=link_to '輸入系級',"/user/edit"%> <br> 
+		&nbsp;&nbsp;&nbsp;2.<%=link_to "匯入歷年課程算學分", "/user/import_course"%><br>
+		&nbsp;&nbsp;&nbsp;3.<%=link_to'使用模擬排課',"/courses/simulation"%>
 	</h3>
 </div>
 <% end %>
@@ -41,7 +43,7 @@
 	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
 		<li><a class="tab-link" id='toggle-a' href="#others" data-toggle="tab" url="/user/this_sem?uid=<%=params[:uid]%>" >本學期</a></li>
 		<li><a class="tab-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
-		<% if @user.normal_scores.count==0 %>
+		<% if !@user.has_imported? %>
 		<li><a class="tab-link" id='toggle-c' href="/user/import_course" onclick="toastr['info']('請先匯入成績!');">畢業學分計算</a></li>
 		<% else %>
 		<li><a class="tab-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics?uid=<%=params[:uid]%>">畢業學分計算</a></li>

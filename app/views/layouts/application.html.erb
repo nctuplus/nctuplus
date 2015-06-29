@@ -12,9 +12,19 @@
 
 	<% if params[:controller]!="main"%>
 		<meta name="robots" content="noindex">
+		
 	<% end %>
-	<meta name="description" content="NCTU+ 交大智慧選課系統">
+	
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
+	<% if @fb_share_meta %>
+	  <meta property="og:title" content="NCTU+分享課表" ></meta>
+    <meta property="og:description" content="<%=@user.name%> <%=@user.department.ch_name%> <%=@semester.name%>" ></meta>
+    <meta property="og:url" content="<%=root_url%>shares/<%=params[:id]%>" ></meta>
+    <meta property="og:image" content="<%=root_url%>course_table_shares/<%=@file_name%>"/>
+  <% else %>
+    <meta name="description" content="NCTU+ 交大智慧選課系統">  
+	<% end %>
+	
 </head>
 
 <body style="background-color:#e9eaed;">

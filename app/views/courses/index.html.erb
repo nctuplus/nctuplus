@@ -1,3 +1,4 @@
+
 <%=render 'courses/search/search_js' %>
 <br>
 <div id="results" class="container">
@@ -5,7 +6,7 @@
 	<div class="row">	
 		<div class="col-md-12 text-center">
 			<div class="input-group" style="width:450px;display:inline-table;">
-				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", style:"/*width:250px;*/", placeholder:"課名/老師/時間/向度" %>
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>
 				<div class="input-group-btn">
 					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找課程 <span class="caret"></span></button>
 					<ul class="dropdown-menu" role="menu">
@@ -14,7 +15,6 @@
 					</ul>
 				</div><!-- /btn-group -->			
 				<div class="input-group-btn">
-					
 					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
 				</div><!-- /btn-group -->
 			</div><!-- /input-group -->
@@ -24,14 +24,13 @@
 					進階搜尋
 				</label>
 			</div>
-			<!--<button class="btn btn-default" onclick="return false;"></a>-->
 		</div>
 	</div>
 	<div class="hidden row" id="adv-search">
 		<br>
 		<div class="col-md-12 text-center">
 			<div style="width:108px;display:inline-block;">
-				<%= f.select :semester_id_eq, options_for_select(@sem_sel, @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control"} %>				
+				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : Semester::LAST.id),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
 			</div>
 			<div style="width:120px;display:inline-block;">
 				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
@@ -53,8 +52,10 @@
 		<th class="col-md- text-cente">學分</th>
 		<th class="col-md- text-cente">時間</th>
 		<th class="col-md- text-cente">年級</th>
+		<th class="col-md- text-cente">收藏</th>
 	</tr>
 	<tbody>
+	<% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
 	<% if !@cds.empty? %>
 		<% @cds.each do |cd| %>
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
@@ -69,8 +70,12 @@
 					<td class="text-cente"><%= cd.course_credit %></td>
 					<td class="text-cente"><%= cd.time %></td>
 					<td class="text-cente">
-							<%=cd.grade%>
-
+						<%=cd.grade%>
+					</td>
+					<td class="text-cente" onclick="">
+						<% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
+						<%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
+						
 					</td>
 				</tr>
 		<% end %>
@@ -90,14 +95,36 @@
 
 <script>
 	$(function(){
-		//console.log("<%=j session.to_json.html_safe%>");
 		if($("#adv_toggle").prop("checked"))
 			$("#adv-search").removeClass("hidden");
 		$(".clickable-row").click(function() {
-
-				goToHref($(this).attr("href"));
+			goToHref($(this).attr("href"),false);
 		});
-		toastr["success"]("已更新到104上的課程囉!!!");
+		
+		//bind cart button 
+		$(".cart-control").bind({
+			mouseover:function(){// avoid go to course page
+				$(this).parent().parent().off("click");
+			},
+			mouseleave:function(){// resume go to course page
+				$(this).parent().parent().click(function(){
+					goToHref($(this).attr("href"),false);
+				});
+			},
+			click:function(){	//add or delete cart
+				add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
+				var type=$(this).attr("data");
+				if(type=="add"){
+					$(this).attr("data","delete");
+					$(this).switchClass("fa-square-o","fa-check-square-o");
+				}
+				else{
+					$(this).attr("data","add");
+					$(this).switchClass("fa-check-square-o","fa-square-o");
+				}
+			}
+		});
+		//toastr["success"]("已更新到104上的課程囉!!!");
 		<% if !current_user %>
 
 		//	toastr["info"]("登入並選擇系級,系統即可為您推薦課程!!");
@@ -105,4 +132,5 @@
 		//	toastr["success"]("<%=j link_to "匯入成績","/user/import_course",style:"color:blue;"%>後系統即可為您推薦課程!!");
 		<% end %>
 	});
+
 </script>

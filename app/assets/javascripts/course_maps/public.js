@@ -8,9 +8,7 @@
 
 //= require jquery.scrollTo.min
 //= require highcharts-custom
-//= require page-tour/jquery.cookie
-//= require page-tour/modernizr.mq
-//= require page-tour/jquery.joyride-2.1
+//= require page-tour-custom
 
 
 function toggle_cf_table(type){

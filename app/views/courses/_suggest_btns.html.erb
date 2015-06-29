@@ -1,45 +1,45 @@
 <table class="tabl col-md-offset-3" style="border:1px solid #ccc;">
 <tr class="" style="">
 	<td> 
-		<button data-content="空堂" class="btn btn-default" onclick="searchTimeSlot();">
+		<button id="sel-time-btn" data-content="空堂" class="btn btn-default pop-over" onclick="searchTimeSlot();">
 			<%=fa_icon "calendar 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="向度" class="btn btn-default" onclick="searchLackDimension();" style="padding:6px 7px;">
+		<button id="dimension-btn" data-content="向度" class="btn btn-default pop-over" onclick="searchLackDimension();" style="padding:6px 7px;">
 			<%=fa_icon "graduation-cap 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "heart-o 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "users 2x"%>
 		</button>
 	</td>
 </tr>
 <tr class="">
 	<td>
-		<button data-content="尚未開放" class="btn btn-default" style="padding:6px 11px;">
+		<button data-content="尚未開放" class="btn btn-default pop-over" style="padding:6px 11px;">
 			<%=fa_icon "signal 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "trophy 2x"%>
 		</button>	
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default" style="padding:6px 11px;">
+		<button data-content="尚未開放" class="btn btn-default pop-over" style="padding:6px 11px;">
 			<%=fa_icon "desktop 2x"%>
 		</button>
 		
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "cogs 2x"%>
 		</button>
 	</td>
@@ -49,7 +49,9 @@
 
 <script>
 	function searchLackDimension(){
-		<% if current_user.is_undergrad? %>
+		<% if !current_user.has_imported? %>
+			$(".scrollable").html("<h4 class='text-center'>請先匯入成績!</h4>");
+		<% elsif current_user.is_undergrad? %>
 			$(".scrollable").html("<%=j loadingImg%>");
 			$.getJSON("/user/statistics", function (data) {
 				var pass_courses=getPassCourses(checkPassTaking,data.pass_score,data.user_courses);
@@ -71,7 +73,7 @@
 				}
 			});
 		<% else %>
-			$(".scrollable .text-center").text("你不需要修通識喔^_^");
+			$(".scrollable").html("<h4 class='text-center'>你不需要修通識喔^_^</h4>");
 		<% end %>
 	}
 	

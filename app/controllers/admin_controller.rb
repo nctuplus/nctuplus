@@ -5,7 +5,7 @@ class AdminController < ApplicationController
 	
 	def course_maps
 		@course_maps=CourseMap.all.order('name asc')
-  end
+    end
 	
 	def users
 		@role_sel=[[ "一般使用者",1 ], ["學校系辦單位",2 ], ["系統管理員", 0]]
@@ -14,9 +14,9 @@ class AdminController < ApplicationController
 		unless request.xhr?
 			@data = User.all.joins(:department).group(:ch_name).count
 		end	
-  end
+    end
   
-  def change_role
+    def change_role
 		user = User.find(params[:uid])
 		user.role = params[:role].to_i
 		user.save!
@@ -49,5 +49,10 @@ class AdminController < ApplicationController
 		end
 
 	end
+    
+  def user_statistics
+    @sta=User.select("created_at").group("DATE_FORMAT((created_at),'%M')").order("date(created_at)").count
+    
+  end
 	
 end

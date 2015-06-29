@@ -38,7 +38,7 @@ class CoursesController < ApplicationController
 		end
 		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@result={
-			:view_type=>"schedule",
+			:view_type=>"simulation",
 			:use_type=>"add",
 			:courses=>cds.map{|cd|
 				cd.to_search_result
@@ -118,17 +118,17 @@ class CoursesController < ApplicationController
   end
 	
 	def add_to_cart
-		
+		cd_id=params[:cd_id].to_i
+		cookies.signed[:cd]=JSON.generate([]) if cookies.signed[:cd].nil?
+		cd_ids=JSON.parse(cookies.signed[:cd])
 		if params[:type]=="add"
-			cd_id=params[:cd_id].to_i
-			session[:cd]=[] if session[:cd].nil?
 			if CourseDetail.where(:id=>cd_id).empty?
 				alt_class="warning"
 				mesg="查無此門課!"
 			else
-				if !session[:cd].include?(cd_id)
-					session[:cd].append(cd_id)
-					session[:cd]=CourseDetail.select(:id).where(:id=>session[:cd]).order(:time).pluck(:id)
+				if !cd_ids.include?(cd_id)
+					cd_ids.append(cd_id)
+					cd_ids=CourseDetail.select(:id).where(:id=>cd_ids).order(:time).pluck(:id)
 					alt_class="success"
 					mesg="新增成功!"
 				else
@@ -137,16 +137,19 @@ class CoursesController < ApplicationController
 				end
 			end
 		else
-			cd_id=params[:cd_id].to_i
-			if session[:cd].include?(cd_id)
-				session[:cd].delete(cd_id) 
+			if cd_ids.include?(cd_id)
+				cd_ids.delete(cd_id) 
 				alt_class="success"
 				mesg="刪除成功!"
 			else
 				alt_class="warning"
 				mesg="你未加入此課程!"
 			end
-		end	
+		end
+		cookies.signed[:cd]={
+			:value=> JSON.generate(cd_ids),
+			:expires=> 6.months.from_now
+		}
 		respond_to do |format|
 			format.json {
 				render :json => {:class=>alt_class, :text=>mesg}
@@ -157,10 +160,11 @@ class CoursesController < ApplicationController
 
 	
 	def show_cart
+		cookies.signed[:cd]=JSON.generate([]) if cookies.signed[:cd].nil?
 		@result={
-			:view_type=>"session",
-			:use_type=>"delete",
-			:courses=>CourseDetail.where(:id=>session[:cd]).map{|cd|
+			:view_type=>params[:view_type],
+			:use_type=>params[:use_type],#"delete",
+			:courses=>CourseDetail.where(:id=>JSON.parse(cookies.signed[:cd])).map{|cd|
 				cd.to_search_result
 			}
 		}

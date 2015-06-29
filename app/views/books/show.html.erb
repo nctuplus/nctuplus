@@ -1,0 +1,90 @@
+<div class="row bg-white">
+	<div class="col-md-offset-2 col-md-8 col-xs-12 col-sm-12 text-cente">
+		<table class="table">
+		<tr class="row">
+			<td rowspan="9" class="col-md-3 col-xs-12 col-sm-12">
+				<%=@sale_book.cover_image(2)%>
+				<!--
+				<% if @sale_book.status==1%>
+					<%=image_tag asset_path("soldout.png"),style:"position:absolute;z-index:10;top: 74px;left: -43px;width:300px;"%>
+				<% end %>
+				-->
+			</td>
+			<td class="col-md-8 col-md-offset-1">
+				<table class="table">
+					<tr class="row">
+						<td colspan="2">
+							<h4><strong><%=@sale_book.book_name%></strong></h4>
+							<% if @book.authors.present? %>
+							by <%=@book.authors%>
+							<% end %>
+						</td>
+					</tr>					
+					<tr class="row">
+						<td class="col-md-2">價格</td>
+						<td>
+							<span style="color:red;font-size:18px;">
+								<strong><%=@sale_book.price%><%= @sale_book.status==1 ? "(已售出)" : "" %></strong>
+							</span>
+						</td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2">賣家</td>
+						<td><%=@sale_book.user.name%></td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2">連絡方式</td>
+						<td><%=@sale_book.contact_way==0 ? @sale_book.user.email : "Facebook" %></td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2">
+							書況							
+						</td>
+						<td>
+							<%=@sale_book.desc%>
+						</td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2">最後更新</td>
+						<td><%=@sale_book.updated_at %></td>
+					</tr>
+					<tr class="row">
+						<td class="col-md-2">觀看次數</td>
+						<td><%=@sale_book.view_times %></td>
+					</tr>
+					<% if @book.isbn.present? %>
+					<tr class="row">
+						<td>ISBN</td>
+						<td><%=@book.isbn%></td>
+					</tr>					
+					<% end %>
+					<tr class="row">
+						<td>適用課程</td>
+						<td>
+							<% @sale_book.course_teacherships.includes(:course,:course_details).each do |cts|%>
+								<%=link_to "#{cts.course_ch_name} #{cts.teacher_name}","/courses/#{cts.course_details.last.id}", target:"_blank" %><br>
+							<% end %>
+						</td>
+					</tr>
+				</table>
+			</td>
+		</tr>
+		</table>
+		<div class="row" style="margin-top:-65px;">
+			<hr>
+			<div class="col-md-12">
+			<% if @book.preview_link.present? %>
+			<h4>
+				<%=link_to "搶先看 ",@book.preview_link,target:"_blank"%><br>
+			</h4>
+			<% end %>	
+			<h4><strong>簡介</strong><small>(by GoogleBook)</small></h4>
+			<% if @book.description.present? %>
+				<p>
+					<%=@book.description%>
+				</p>
+			<% end %>
+			</div>
+		</div>
+	</div>
+</div>
