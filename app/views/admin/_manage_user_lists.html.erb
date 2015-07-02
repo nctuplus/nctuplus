@@ -7,6 +7,15 @@
 			<%=user.student_id||"error"	%>
 		<% end%>	
 	</td>
+	<td>
+	  <% if user.uid and user.student_id %>
+	  E3+FB
+	  <% elsif user.uid %>
+	  FB
+	  <% else %>
+	  E3
+	  <% end %>
+	</td>
 	<% if !user.department.nil? %>
 	<td>
 		<%=user.department_ch_name%>

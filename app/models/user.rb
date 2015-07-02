@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 	
 	delegate :ch_name, :to=> :department, :prefix=>true
 	delegate :degree, :to=> :department
-	delegate :uid, :to=> :auth_facebook
+	#delegate :uid, :to=> :auth_facebook
 	
 	has_many :book_trade_infos
 	has_many :past_exams
@@ -39,7 +39,7 @@ class User < ActiveRecord::Base
 
 
 
-	has_many :user_share_images
+#	has_many :user_share_images
 
 	
 	#validates :email, uniqueness: true
@@ -67,6 +67,10 @@ class User < ActiveRecord::Base
 
 	def student_id
 	  self.try(:auth_e3).try(:student_id)
+	end
+	
+	def uid
+	  self.try(:auth_facebook).try(:uid)
 	end
 
 

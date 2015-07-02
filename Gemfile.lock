@@ -144,14 +144,11 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
-    mini_portile (0.6.0)
     minitest (4.7.5)
     multi_json (1.10.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     mysql2 (0.3.15)
-    nokogiri (1.6.3.1)
-      mini_portile (= 0.6.0)
     oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -299,7 +296,6 @@ DEPENDENCIES
   kaminari
   koala (~> 1.10.0rc)
   mysql2
-  nokogiri
   omniauth
   omniauth-facebook
   paperclip

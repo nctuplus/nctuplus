@@ -13,29 +13,37 @@ def self.test(search_string, search_type)
   data = {"op"=>"find","base"=>"TOP01","request"=>"#{srch_type}=#{search_string}" }
 
   query_res = Curl.get(LIB_URL, data).body_str
-	p query_res
-	xml_doc = Nokogiri::XML(query_res)
-  set_no = xml_doc.xpath("//set_number")[0].try(:content)
-
-# query by set_no	
-	self.search(set_no) if set_no
-	
+	data = Hash.from_xml query_res
+  set_no = data["find"]["set_number"]
+  return {:status=>false, :message=>"No record"} unless set_no
+	doc_number = self.get_doc_number(set_no) 
+	return {:status=>false, :message=>"No record"} unless doc_number
+	return self.search(doc_number)
+	 
 end
 
 
 private
 
-def self.search(set_no)
-
+def self.get_doc_number(set_no)
   data = {"op"=>"present", 
           "set_no"=>set_no, 
           "set_entry"=>"000000001-000000001", # 取第一筆
           "format"=>"marc"}
   query_res = Curl.get(LIB_URL, data).body_str.to_s	
-	p query_res
-  xml_doc = Nokogiri::XML(query_res)
-  
+	data = Hash.from_xml query_res
+  return data["present"]["record"]["doc_number"]
+end
+
+def self.search(doc_number) 
+	data = {"op"=>"circ-status", 
+          "library"=>"TOP01", 
+          "sys_no"=>doc_number} # 取第一筆
+  query_res = Curl.get(LIB_URL, data).body_str.to_s	
+	data = Hash.from_xml query_res
+  return data["circ_status"]["item_data"]
+
 end
 
 
-end
+end# class
