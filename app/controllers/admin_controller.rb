@@ -51,8 +51,18 @@ class AdminController < ApplicationController
 	end
     
   def user_statistics
-    @sta=User.select("created_at").group("DATE_FORMAT((created_at),'%M')").order("date(created_at)").count
+    @user_stat=User.select("created_at").group("DATE_FORMAT((created_at),'%M')").order("date(created_at)").count
     
+    @user_type = [0,0,0] # E3 , FB , E3+FB
+    User.all.each do |user|
+      if user.uid and user.student_id
+        @user_type[2] +=1
+      elsif user.uid
+        @user_type[1] +=1
+      else
+        @user_type[0] +=1
+      end 
+    end
   end
 	
 end
