@@ -47,11 +47,15 @@ class BookTradeInfo < ActiveRecord::Base
 	end
 
 	def cover_image(zoom=1)
-		if self.cover_file_name 
+		if self.cover_file_name
+			
 			url=self.cover.url
 		else 
-			#return "尚無圖片!" if self.book.image_link.blank?
-			url=self.book.image_link_with_zoom(zoom)
+			if self.book.image_link.blank?
+				url=ActionController::Base.helpers.asset_path("book_default.png")
+			else
+				url=self.book.image_link_with_zoom(zoom)
+			end
 		end
 		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "max-width:200px;",alt:"尚無圖片!")
 	end

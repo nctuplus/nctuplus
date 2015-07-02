@@ -85,11 +85,6 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">聯絡方式</label>
 					<div class="col-sm-10" style="margin-top:4px;">
-						<div class="radio">
-							<label>
-								<%= f.radio_button :contact_way, "0" %> Email
-							</label>
-						</div>
 						<% if current_user.hasFb? %>
 							<div class="radio">
 								<label>
@@ -97,8 +92,14 @@
 								</label>
 							</div>
 						<% else %>
-							或至<%=link_to "編輯個人資訊","/user/edit"%> 結合facebook以利用fb連絡
+							至<%=link_to "編輯個人資訊","/user/edit"%> 結合facebook以利用fb連絡
             <% end %>
+						<div class="radio">
+							<label>
+								<%= f.radio_button :contact_way, "0" %> Email
+							</label>
+						</div>
+						
 					</div>
         </div>
 				<% if false %>

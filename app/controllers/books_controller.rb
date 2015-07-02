@@ -71,6 +71,7 @@ class BooksController < ApplicationController
   def show
     @sale_book=BookTradeInfo.find(params[:id])
 		@sale_book.incViewTimes!
+
 		@book=@sale_book.book
   end
   
