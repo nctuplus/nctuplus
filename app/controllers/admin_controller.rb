@@ -63,6 +63,11 @@ class AdminController < ApplicationController
         @user_type[0] +=1
       end 
     end
+    
+    discuss_cnt = Discuss.all.count
+    comment_cnt = Comment.all.count
+    @discuss_stat = [comment_cnt, discuss_cnt]
+    
   end
 	
 end
