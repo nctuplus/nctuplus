@@ -51,8 +51,9 @@ class AdminController < ApplicationController
 	end
     
   def user_statistics
-    @user_stat=User.select("created_at").group("DATE_FORMAT((created_at),'%M')").order("date(created_at)").count
-    
+    @user_stat=User.select("created_at").group("DATE_FORMAT((created_at),'%y年%m月')").order("date(created_at)").count
+    test = NormalScore.uniq.pluck(:user_id) + AgreedScore.uniq.pluck(:user_id)
+    @import_cnt = test.uniq.count
     @user_type = [0,0,0] # E3 , FB , E3+FB
     User.all.each do |user|
       if user.uid and user.student_id
