@@ -10,7 +10,7 @@ class BookTradeInfo < ActiveRecord::Base
   has_many :courses, :through=>:course_teacherships
 	
 	validates_numericality_of :price, :only_integer => true
-	validates_length_of :desc, :maximum => 64
+	#validates_length_of :desc, :maximum => 64
 	
 	has_attached_file :cover,
 		:url=>"/file_upload/book_covers/:id_partition/:filename",

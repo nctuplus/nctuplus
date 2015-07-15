@@ -18,7 +18,7 @@
   		<% end %>
   	</td>
   	<td><%= cm.year.to_s%></td>
-  	<td><%= cm.user.name%></td>
+  	<td><%= cm.try(:user).try(:name)%></td>
   	<td>
     <%= link_to '刪除', course_map_path(cm), method: :delete, data: { confirm: 'Are you sure?' }  %>            
   	</td>

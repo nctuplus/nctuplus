@@ -30,7 +30,7 @@
 					</div>	
         </div>	
 				<div class="form-group hidden">
-					<%=hidden_field_tag "book[selected]","false" %>
+					<%=hidden_field_tag "book[selected]",@book.new_record? ? "false" : "true" %>
           <%=hidden_field_tag "book[title]",@book.title %>         
           <%=hidden_field_tag "book[description]",@book.description %>
 					<%=hidden_field_tag "book[image_link]",@book.image_link%>

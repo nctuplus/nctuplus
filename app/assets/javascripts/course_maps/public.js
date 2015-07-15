@@ -10,6 +10,122 @@
 //= require highcharts-custom
 //= require page-tour-custom
 
+function loadCm(dept_id,year){	//Load from server & initial
+	$.getJSON("/course_maps/public",{
+		dept_id: dept_id,
+		year: year
+		},
+		function(data){
+			$("#cm-desc").html(tmpl("cm_public", data));//tmpl 插件
+			$("#year-"+year).addClass("disabled");				
+			$("#sem-btn").click();
+			neededCourseBarChart("#chart-content", data.course_map);
+			$('#joyRideTipContent').joyride({
+				autoStart : true,
+				cookieMonster: true,           
+				cookieName: 'CourseMapPublicTip', 
+				modal:true,
+				expose: true
+			});
+			initCourseHoverTip();
+		}
+	);
+}
+
+function initCourseHoverTip(){
+	$( ".btn-course" ).mouseover(function(event){
+		var course=JSON.parse($(this).attr('data'));
+		var offset = $( this ).offset();
+		var id1 = $(this).attr('id');			
+		var color4 = $(this).css('background-color');			
+		var str="#"+id1;
+		var content = "永久課號 : "+course.real_id;
+		var sty=("2px "+ $(str).css("background")+" solid");				
+		$( ".tooltip-course" ).css({
+			"left": (event.pageX-320),
+			"top": (event.pageY-35),
+			"display": "block"
+		});		
+		var group = "";
+		var content2;
+		var i = 0;				
+		content2 = "學分數 : " + course.credit + "<br>" + "選課別 : " + course.cf.cf_name + "<br>";
+		if(course.cg_courses){
+			content2 = content2 + "互抵課程 : "+"<br>"
+			while(course.cg_courses[i])
+			{
+				group = course.cg_courses[i].name;
+				group_course_id = course.cg_courses[i].real_id;
+				content2 = content2 + "<b>" + group + "(課號 : " +
+									group_course_id  + ")" + "</b>" + "<br>";
+				i++;
+			}
+		}				
+		$( ".course-name" ).html(course.name+"<br>"+content).css("background",color4);
+		$( ".course-content" ).html(content2);
+		$( ".tooltip-course" ).css("border-color",color4);
+	}).mousemove(function(event){
+		var color4 = $(this).css('background-color');			
+		var id1 = $(this).attr('id');
+		var color1="#FF0080";
+		var str="#"+id1;
+		var sty=("2px "+$(str).css("background")+" solid");
+		var w = $( window ).width();			
+		if(w < 1266)w = 0;
+		else w = (w - 1266)*1266/w;			
+		$( ".tooltip-course" ).css({
+			"left": (event.pageX-306-w),
+			"top": (event.pageY-70),
+			"display": "block",
+			"border-color":(color4)
+		});
+		$( ".course-name" ).css({
+			"background-color":$(str).css("background-color")});
+		$( ".tooltip-course" ).css("border-color",color4);			
+	}).mouseout(function(event){				
+		var id1 = $(this).attr('id');
+		var color1="#FF0080";			
+		$( ".tooltip-course" ).css({
+			"display": "none",
+			});
+	});
+	$( ".tooltip-course" ).mouseover(function(){
+		$( this ).css({"display": "block"});
+	}).mousemove(function(event){
+		$( this ).css({"display": "block"});
+	}).mouseout(function(event){
+		$( this).css({"display": "none"});
+	});
+}
+
+function toggleGroup(obj,cf_id,id){
+	var $target=$(".cf-"+cf_id+"-"+id);
+	$target.toggle(600,function(){
+		if($target.is(":visible")){
+			obj.find(".fa-plus").toggleClass("fa-minus fa-plus");
+		}
+		else{
+			obj.find(".fa-minus").toggleClass("fa-minus fa-plus");
+		}
+	});
+}
+
+function toggleBtn(obj){
+	var x=obj.attr('type');
+	if(x=="show"){
+		obj.text("收回互抵課程");
+		$("[class*=cf-]").show();
+		obj.attr('type','hide');
+		$(".fa-plus").attr("class","fa fa-minus");
+	}
+	else{
+		obj.text("展開互抵課程");
+		$("[class*=cf-]").hide();
+		obj.attr('type','show');
+		$(".fa-minus").attr("class","fa fa-plus");
+	}
+}
+	
 
 function toggle_cf_table(type){
 	var _class={true:'cf',false:'sem'};
@@ -23,7 +139,7 @@ function toggle_cf_table(type){
 	$('body').scrollspy('refresh');
 
 }
-function get_piechart_data(target,raw_data){ // input is json format
+function neededCourseBarChart(target,raw_data){ // input is json format
 	if(!raw_data || $(target).length==0)return;
 	var grade = [0,0,0,0,0,0,0,0,0] ;
 				
@@ -92,10 +208,9 @@ function get_piechart_data(target,raw_data){ // input is json format
 	
 
 
-function grade_sort(coursesbyGrade){
+function gradeSort(coursesbyGrade){
 	coursesbyGrade.sort(function(a,b) {
-		//console.log(b[0].grade);
-		return /*b[0].grade=="*" ? -1 :*/(a[0].grade+a[0].half).localeCompare((b[0].grade+b[0].half));
+		return (a[0].grade+a[0].half).localeCompare((b[0].grade+b[0].half));
 	}); 
 	
 }

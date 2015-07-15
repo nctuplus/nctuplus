@@ -3,7 +3,7 @@
 //= require page-tour/jquery.joyride-2.1
 
 
-//If you want to use joyRide, please define it's id as joyRideTipContent
+//If you want to use joyRide, please define it's id to joyRideTipContent
 function showTip(){
 	$('#joyRideTipContent').joyride("destroy");
 	$('#joyRideTipContent').joyride({

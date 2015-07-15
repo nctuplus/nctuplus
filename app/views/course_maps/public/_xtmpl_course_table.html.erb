@@ -1,101 +1,76 @@
 <script type="text/x-tmpl" id="cm_public">
-
+	<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
+		<%=fa_icon "bookmark-o"%>必修科目表
+	</a>
+	<button class="btn btn-info" onclick="showTip();">使用導覽</button>
+	{% var cm=o.course_map; %}
 	<h3 id="title" style="line-height:160%">		
-		<b>{%= o.dept_name %} 入學年度:</b><!--tmpl 插件 0 保留字-->
+		<b>{%= o.dept_name %} 入學年度:</b>
 		<div id="year-selector" class="btn-group" style="margin-top:-2px;">
 			<a id="year-100" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=100">100</a>
 			<a id="year-101" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=101">101</a>
 			<a id="year-102" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=102">102</a>
 			<a id="year-103" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=103">103</a>
 		</div>
-		
-	<h4 style="color:#555;">{% var cm=o.course_map; %}畢業學分:<strong>{%=cm.total_credit%}</strong></h4>
-		
-	{% if(!cm){ %}
-		<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
-			<%=fa_icon "bookmark-o"%>必修科目表
-		</a>
-	</h3>
-	<hr>
-	<h4>尚無資料!</h4>
-	{% } else{ %}
-		&nbsp;&nbsp;
-		<div class="right" style="text-align:left; display:inline-block;float:left;">
-		<button class="btn btn-info" onclick="show_tip();">使用導覽</button>
-		<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
-			<%=fa_icon "bookmark-o"%>必修科目表
-		</a></div>
-		<br>
-	</h3>
-	<hr>
-		<section id="rules">
-		<h3><strong>修課規定</strong></h3>
-
-		{% for(var i=0,cf;cf=cm.cfs[i];i++){ %}		
-			{% print(parseCf(cf),true); %}		
+		{% if(cm){ %}
+		畢業學分:<strong>{%=cm.total_credit%}</strong>
 		{% } %}
+	</h3>
+	<hr>	
+	{% if(!cm){ %}
+		<h4>尚無資料!</h4>
+	{% } else{ %}
+		<section id="rules">
+			<h3><strong>修課規定</strong></h3>
+			{% for(var i=0,cf;cf=cm.cfs[i];i++){ %}		
+				{% print(parseCf(cf),true); %}		
+			{% } %}
 		</section>
 		<hr>
-		<!--<section id="chart-content"></section>-->
+		
 		<div id="course-table" style="width:93%;">
 			<h3>
 				<strong>課程列表</strong>
-
 				<div class="btn-group" style="margin-top:-2px;">
-					<!--
 					<button id="sem-btn" class="btn btn-success" onclick="toggle_cf_table(false);">
 						修課學期
 					</button>
-
 					<button id="cf-btn" class="btn btn-success" onclick="toggle_cf_table(true);">
 						學程
-					</button>
-				
+					</button>				
 				</div>
-				<button class="btn btn-default" type="show" onclick="toggleBtn($(this));/*$('.toggle-group').click();*/">展開課程群組</button>
-				-->
-				</h3>
-			<hr>
-			
-			
-			
-			<section id ="list_by_cf" style="z-index:-1;">
-				
-			</section>
-			<!--
+			</h3>
+
 			<section id="list_by_cf">
-			<table class="table table-striped" >
-				{% var allCourses=[]; %}
-				{% for(var i=0,cf;cf=cm.cfs[i];i++){ %}
-					{% var res=parseCfToCourse(cf); %}	
-					{% allCourses=allCourses.concat(res["courses"]); %}//口>口>口>口.....
-					{% print(res["html"],true); %}				
-				{% } %}
+				<button class="btn btn-default" type="show" onclick="toggleBtn($(this));">展開互抵課程</button>
+				<table class="table table-striped" >
+				{% 
+					var allCourses=[];
+					for(var i=0,cf;cf=cm.cfs[i];i++){
+						var res=parseCfToCourse(cf);
+						allCourses=allCourses.concat(res["courses"]);
+						print(res["html"],true);
+					}
+				%}
 				</table>
 			</section>
-			-->
+			
 		{% var coursesbyGrade=groupBy(allCourses,function(item){return item.suggest_sem;});%}
-		{% grade_sort(coursesbyGrade);%}
-			{% console.log(coursesbyGrade); %}
-			{%  var colors=["#0080FF","#F00078","#F75000","#00AEAE","#5A5AAD","#FF9224","	#64A600","#804040"];
+		{% var coursesbyGrade=groupBy2(allCourses,function(item){return item.suggest_sem;});%}
+		{% gradeSort(coursesbyGrade);console.log(coursesbyGrade);%}
+			{%  var colors=["#0080FF","#F00078","#F75000","#00AEAE","#5A5AAD","#FF9224","	#64A600","#804040","#9900FF","#CD5C5C","#BBBB00","#000000"];
+					var color=0;
 					var category = [];
-					var count1 = 0;
-					var exist = 0;
-					for(var i=0,courses;courses=coursesbyGrade[i];i++)
-						for(var j=0,course;course=courses[j];j++)
-						{
-							for(var k=0; k < category.length;k++)
-							{
-								if(course.cf.cf_name == category[k] )
-								{
-									exist = 1;
-									break;
-								}
+					for(var i=0,cf;cf=cm.cfs[i];i++){
+						if(cf.cf_type==3){
+							for(var j=0,sub_cf;sub_cf=cf.child_cf[j];j++){
+								category.push(sub_cf.cf_name);
 							}
-							if(exist==0)category.push(course.cf.cf_name);
-							else exist = 0;
-						}	
-				 //alert(category[2]); 
+						}
+						else{
+							category.push(cf.cf_name);
+						}
+					}
 			%}
 				
 			<div class="tooltip-course">
@@ -105,55 +80,77 @@
 				<dic class="course-content">
 				</div>
 			</div>
-			<div class="widget_all">
-				{% for(var i=0; i< category.length/3; i++){ %}
-					<div class ="widget-course">
-					{% for(var k=0; k<3 ;k++){ %}
-						<div class="widget-line">
-							<div class ="square-course" style="background:{%=colors[3*i+k]%}"></div> {%=category[3*i+k] %}
-						</div>
-					{% } %}
-					</div>
-				{% } %}
-			</div>
 			
 			<section id="list_by_sem" style="display:block;" >
-			
-				<table class="table"  data="{%=JSON.stringify(coursesbyGrade)%}">
+				<div class ="row">			
+				{% for(var i=0; i< category.length; i++){ %}
+					<div class="col-md-4">
+						<div class ="square-course" style="background:{%=colors[i]%}"></div> {%=category[i] %}
+					</div>
+				{% } %}
+				</div>
+				<table class="table">
+					{% if(coursesbyGrade.length>1){ %}
 					<tr class="text-center grade1" >
 						<th class="text-center" colspan="2">一年級</th>
 						<th class="text-center grade2" colspan="2">二年級</th>
 						<th class="text-center grade2" colspan="2">三年級</th>
 						<th class="text-center grade2" colspan="2">四年級</th>
-					</tr>
-					
-						{% if(coursesbyGrade.length==9){
-								console.log("HI")
-								%}
-								<tr id="table-not-limit">
-								<th colspan="8" class="text-center"> 不限年級課程 </th>
-								</tr>
-								<tr>
-								{%
-									var courses = coursesbyGrade[8]
-									var len_not_limit = courses.length;
-									var row = parseInt(len_not_limit/8);
-									if( len_not_limit % 8 > 0 )row++;
-									var row_left = row%8;
-								%}
-									<td style="width:12%;"  {% if(i!=0 && i%2==0){ %} {% } %} >
+					</tr>				
+					<tr class="text-center semester1" >
+						{% for(var i=0;i<4;i++){ %}
+							{% if(i==0){ %}
+								<th class="text-center semester1">上學期</th>
+								<th class="text-center semester2" >下學期</th>
+							{% }else{ %}
+								<th class="text-center semester2" style="border-left:5px #fff solid">上學期</th>
+								<th class="text-center semester2" >下學期</th>
+							{% } %}
+						{% } %}	
+						</tr>	
+						<tr>				
+						{% 
+							for(var i=0,courses;courses=coursesbyGrade[i];i++){ 
+							if(i==8) continue;
+						%}
+							<td style="width:12%;"  {% if(i!=0 && i%2==0){ %}id="table-gray-line" {% } %} >
+								{% for(var j=0,course;course=courses[j];j++){ %}
 									{%
+										for(var k=0; k< category.length; k++){
+											if(course.cf.cf_name==category[k]||(course.parent_cf!=null&&course.parent_cf.cf_name==category[k]))
+												color=colors[k];
+										}										
+									%}
+									<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
+								{% } %}
+							</td>
+						{% } %}
+						</tr>
+					{% } %}
+					{% if(coursesbyGrade.length==9||coursesbyGrade.length==1){ %}
+							<tr id="table-not-limit">
+								<th colspan="8" class="text-center">不限年級</th>
+							</tr>
+							<tr>
+							{%
+								var courses = coursesbyGrade[coursesbyGrade.length-1];
+								var len_not_limit = courses.length;
+								var row = parseInt(len_not_limit/8);
+								if( len_not_limit % 8 > 0 )row++;
+								var row_left = row % 8;
+							%}
+								<td style="width:12%;">
+								{%
 									for(var j=0,course;course=courses[j];j++){
-										for(var k=0; k< category.length; k++)
-										{
-											if(course.cf.cf_name==category[k])
+										//console.log(course);
+										for(var k=0; k< category.length; k++){
+											if(course.cf.cf_name==category[k]||(course.parent_cf!=null&&course.parent_cf.cf_name==category[k] ))
 											color=colors[k];
 										}
-										if(j%row==0 && j>0)
-										{
+										if( j%row==0 && j>0){
 											%}
 											</td>
-											<td style="width:12%;"  {% if(i!=0 && i%2==0){ %} {% } %} >
+											<td style="width:12%;">
 											<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
 											</div>
 											{%
@@ -162,42 +159,10 @@
 										<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
 									</div>
 									
-								{% }} %}
-						</td></tr>
-						{% }	%}
-						
-						<tr class="text-center semester1" >
-							{% for(var i=0;i<4;i++){ %}
-								{% if(i==0){ %}
-									<th class="text-center semester1">上學期</th>
-									<th class="text-center semester2" >下學期</th>
-								{% }else{ %}
-									<th class="text-center semester2" style="border-left:5px #fff solid">上學期</th>
-									<th class="text-center semester2" >下學期</th>
-								{% } %}
-							{% } %}	
-						</tr>	
-						<tr >				
-							{% 
-							for(var i=0,courses;courses=coursesbyGrade[i];i++){ 
-							if(i==8){continue;}
-							%}
-							<td style="width:12%;"  {% if(i!=0 && i%2==0){ %}id="table-gray-line" {% } %} >
-								{% for(var j=0,course;course=courses[j];j++){ %}
-									{%
-										for(var k=0; k< category.length; k++)
-										{
-											if(course.cf.cf_name==category[k])
-											color=colors[k];
-										}
-										
-									%}
-									<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
-								{% } %}
-							</td>
+									{% }} %}
+								</td>
+							</tr>
 						{% } %}
-						</tr>	
-					
 														
 				</table>
 			</section>

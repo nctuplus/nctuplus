@@ -2,13 +2,13 @@
 
 
 <div class="row" style="min-height:1000px;height:100%;">
-	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;/*min-height:100%;*/">
+	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;">
 		<%=render "course_maps/public/dept_sidebar"%>
 	</div>
 	</div>
 	<div id="tip-test"></div>
 	
-	<div id="central-view" class="col-md-10" style="margin-left:300px;">
+	<div id="central-view" class="col-md-10 col-sm-9" style="margin-left:300px;">
 		<div class="panel panel-default">
 			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">
 				<% if params[:dept_id].blank? %>
@@ -64,10 +64,7 @@
 			<h2>修課規定</h2>
 			<p>至少需修0學分通常為該領域的其他選修即可滿足該領域的條件，若非上述情形則請回報</p>			
 		</li>
-		<li data-id="course-table" data-button="Next" data-options="tipLocation:right">
-			<h2>課程列表</h2>
-			<p>藍底色的列為可互相抵免的課程列表，可按左邊的+展開</p>
-		</li>
+
 		<li data-text="Next" class="">
 			<h2>We need help!</h2>
 			<p>
@@ -81,241 +78,24 @@
 	
 </div>
 <script>
-	
-	
-	function show_tip(){
-		
-		$('#joyRideTipContent').joyride("destroy");
-		$('#joyRideTipContent').joyride({
-			autoStart : true,
-			cookieMonster: false
-		});
-	}
-	function load_cm(dept_id,year){		
-		$.getJSON("/course_maps/public",{
-			dept_id: dept_id,
-			year: year
-			},
-			function(data){
-				console.log(data);
-				$("#cm-desc").html(tmpl("cm_public", data));//tmpl 插件
-				$("#year-"+year).addClass("disabled");
-				
-				//$("#sem-btn").click();
-				
-				get_piechart_data("#chart-content", data.course_map);
-				if(!isMobile){
-					/*$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
-						$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });						
-					});
-					$('body').scrollspy('refresh');
-					$('.main-menu li a').click(function(event) {
-							event.preventDefault();
-							$('body').scrollTo($(this).attr('href'),700,{offset:-60});
-					});*/
-				}
-				
-				$('#joyRideTipContent').joyride({
-					autoStart : true,
-					cookieMonster: true,           
-					cookieName: 'CourseMapPublicTip', 
-					postStepCallback : function (index, tip) {
-						if (index == 2) {
-							$(".toggle-group:visible")[0].click();
-						}						
-					},
-					modal:true,
-					expose: true
-					
-				});
-				/* QandA
-				$('#QandA').show();
-				$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
-				*/
-				show_course();
-				//count_course();
-			}
-		);
-	}
+
+
 	$(document).ready(function(){
-		//show_course();
 		var dept_id=<%=params[:dept_id]||0%>;
 		var year=<%=params[:year]||0%>;
 		if(dept_id!=0){
 			$("#dept-"+dept_id).parent().parent().prev().click();		
 			$("#dept-"+dept_id).addClass("selected");
 			if(year!=0){
-				load_cm(dept_id,year);	
+				loadCm(dept_id,year);	
 			}
 		}
 	
 	});
 
-	function load_qa(dept_id,sem_id){
-		var qa_div = $('#QandA').children().first() ;
-		$('#QandA').show();
-		
-	}
-	function show_course(){
-		var colors=["#0066CC","#F00078","#F75000","#5A5AAD","#804040",
-								"#408080","	#64A600","#336666"];
-		
-		console.log($(".btn-course")[0]);
-		$( ".btn-course" ).mouseover(function(event)
-		{
-			var course=JSON.parse($(this).attr('data'));
-			var offset = $( this ).offset();
-			var id1 = $(this).attr('id');
-			
-			var color4 = $(this).css('background-color');
-			
-			var str="#"+id1;
-			var content = "永久課號 : "+course.real_id;
-			var sty=("2px "+ $(str).css("background")+" solid");
-				
-				$( ".tooltip-course" ).css({
-					"left": (event.pageX-320),
-					"top": (event.pageY-35),
-					"display": "block"});
-					
-				
-				var group = "";
-				var content2;
-				var i = 0;
-				
-				content2 = "學分數 : " + course.credit + "<br>" + "選課別 : " + 
-										course.cf.cf_name + "<br>";
-				if(course.cg_courses)
-				{
-					content2 = content2 + "互抵課程 : "+"<br>"
-					while(course.cg_courses[i])
-					{
-						group = course.cg_courses[i].name;
-						group_course_id = course.cg_courses[i].real_id;
-						content2 = content2 + "<b>" + group + "(課號 : " +
-											group_course_id  + ")" + "</b>" + "<br>";
-						i++;
-					}
-				}
-				
-					$( ".course-name" ).html(course.name+"<br>"+content).css("background",color4);
-					$( ".course-content" ).html(content2);
-					$( ".tooltip-course" ).css("border-color",color4);
-			})
-				.mousemove(function(event){
-					var color4 = $(this).css('background-color');
-					
-					var id1 = $(this).attr('id');
-					var color1="#FF0080";
-					var str="#"+id1;
-					var sty=("2px "+$(str).css("background")+" solid");
-					var w = $( window ).width();
-					
-					if(w < 1266)w = 0;
-					else w = (w - 1266)*1266/w;
-					
-					$( ".tooltip-course" ).css({
-						"left": (event.pageX-306-w),
-						"top": (event.pageY-70),
-						"display": "block",
-						"border-color":(color4)
-					});
-					$( ".course-name" ).css({
-						"background-color":$(str).css("background-color")});
-					$( ".tooltip-course" ).css("border-color",color4);
-					
-				})
-				.mouseout(function(event){
-					
-					var id1 = $(this).attr('id');
-					var color1="#FF0080";
-						
-					$( ".tooltip-course" ).css({
-						"display": "none",
-						});
-				});
-			$( ".tooltip-course" ).mouseover(function(){
-				$( this ).css({"display": "block"});})
-			.mousemove(function(event){
-					$( this ).css({"display": "block"});
-			})
-			.mouseout(function(event){
-				$( this).css({"display": "none"});
-			});
-	}
-	
-	function count_course()
-	{
-		var courses_grade = JSON.parse($("table").attr('data'));
-		var category = [];
-		var count1 = 0;
-		var exist = 0;
-		for(var i=0,courses;courses=courses_grade[i];i++)
-			for(var j=0,course;course=courses[j];j++)
-			{
-				for(var k=0; k < category.length;k++)
-				{
-					if(course.cf.cf_name == category[k] )
-					{
-						exist = 1;
-						break;
-					}
-				}
-				if(exist==0)category.push(course.cf.cf_name);
-				else exist = 0;
-			}	
-			alert(category[2]);
-	}
-	
-	function genCfTree(cf){
-		
-		str='<li class="cf-li"><a href="#'+cf.id+'">'+cf.cf_name+'</a></li>';
-		if(cf.cf_type==3){
-			str+='<ul class="nav sub-sub-menu">';
-			for(var i=0,child_cf;child_cf=cf.child_cf[i];i++){
-				str+=genCfTree(child_cf);
-			}
-			str+='</ul>'
-		}
-		return str;
-	}
-	
-	function toggleGroup(obj,cf_id,id){
-		var target=$(".cf-"+cf_id+"-"+id);
-		target.toggle(600,function(){
-			if(target.is(":visible")){
-				obj.find(".fa-plus").toggleClass("fa-minus fa-plus");
-			}
-			else{
-				obj.find(".fa-minus").toggleClass("fa-minus fa-plus");
-			}
-		});
-		
-	}
-	function toggleBtn(obj){
-		var x=obj.attr('type');
-		if(x=="show"){
-			obj.text("收回課程群組");
-			$("[class*=cf-]").show();
-			obj.attr('type','hide');
-			$(".fa-plus").attr("class","fa fa-minus");
-		}
-		else{
-			obj.text("展開課程群組");
-			$("[class*=cf-]").hide();
-			obj.attr('type','show');
-			$(".fa-minus").attr("class","fa fa-plus");
-		}
-	}
-	
-	
-	
 </script>
 
-<!--<%= render "/course_maps/public/xtmpl_scrollbar" %>-->
 <%= render "/course_maps/public/xtmpl_course_table" %>
-<%= render "/course_maps/public/xtmpl_qa" %>
-
 <style>
 	.tooltip-course
 	{
@@ -390,7 +170,7 @@
 	}
 	.grade2
 	{
-		border-left: 5px solid #ddd;
+		border-left: 5px solid #fff;
 	}
 	.semester1
 	{
@@ -438,13 +218,7 @@
 		height:0px;
 		background:#ccc;
 	}
-	/*html, body{height:100%;}*/
 
-</style>
-		text-align:center;
-		height:42px;
-		background:#0080FF;
-	}
 	.btn-course:hover
 	{
 		opacity:0.8;

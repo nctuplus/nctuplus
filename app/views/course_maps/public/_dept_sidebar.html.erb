@@ -8,7 +8,7 @@
 		</button>
 		<span class="visible-xs navbar-brand">Sidebar menu</span>
 	</div>
-<div class="navbar-collapse collapse sidebar-navbar-collapse">
+<div class="navbar-collapse collapse sidebar-navbar-collapse" style="margin-top:20px;">
 	<ul class="nav navbar-nav sidebar-ul" id="sidenav01">
 		<% College.includes(:departments).where("id NOT IN (8,10)").each do |college| %>
 			<li class="sidebar-li" >
