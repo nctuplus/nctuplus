@@ -1,8 +1,11 @@
 <%= javascript_include_tag "courses/content", "data-turbolinks-track" => true %>
 </br></br>
+<h3 class="text-center">註冊人數：<%=@user_type.reduce(:+)%> 匯入課程人數：<%=@import_cnt.to_s%> 總文章數：<%=@discuss_stat[1]%></h3>
 <div id="user-type" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
 <hr>
 <div id="user-stat" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
+<hr>
+<div id="discuss-stat" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
 <hr>
 
 <script>
@@ -42,8 +45,47 @@ $(function () {
       }
     },
     series: [{
-      name: '月份',
+      name: '人數',
       data: <%=raw @user_stat.values.to_json%>
+    }]
+  });
+  
+  $('#discuss-stat').highcharts({
+    chart: {
+      type: 'column'
+    },
+    title: {
+      text: '文章數統計'
+    },
+    subtitle: {
+      text: ''
+    },
+    xAxis: {
+      categories: ["短評","討論" ]       
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: '數量'
+      }
+    },
+    tooltip: {
+      headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+      pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+        '<td style="padding:0"><b>{point.y} 人</b></td></tr>',
+      footerFormat: '</table>',
+      shared: true,
+      useHTML: true
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0
+      }
+    },
+    series: [{
+      name: '數量',
+      data: <%=@discuss_stat.to_json%>
     }]
   });
   
@@ -81,7 +123,7 @@ $(function () {
       }
     },
     series: [{
-      name: '集合',
+      name: '人數',
       data: <%=@user_type.to_json%>
     }]
   });
