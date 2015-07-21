@@ -1,24 +1,22 @@
-<%= javascript_include_tag "courses/content", "data-turbolinks-track" => true %>
-
-<div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
-<hr>
+<%= javascript_include_tag "courses/content", "data-turbolinks-track" => false %>
+<br>
+<div id="dept-stat-chart" class="container hidden" style="min-width:1024px;" ></div>
+<button class="btn btn-success" onclick="showDeptChart();">顯示系級統計</button>
 <table class="table" id="dataTables-paginate">
-
-<thead>
-	<tr class="row">
-		<th class="col-md-2">Name</th>
-		<th class="col-md-3">系所</th>
-		<th class="col-md-1">學分數</th>
-		<th class="col-md-2">課程地圖</th>
-		<th>年級</th>
-		<th>身份</th>
-	</tr>
-</thead>
-
-<tbody id="body">
-	<%= render :partial=>"manage_user_lists", :collection => @users, :as => :user%>
-</tbody>
-
+	<thead>
+		<tr class="row">
+			<th class="col-md-2">Name</th>
+			<th class="col-md-2">帳號類型</th>
+			<th class="col-md-3">系所</th>		
+			<th class="col-md-1">學分數</th>
+			<th class="col-md-2">課程地圖</th>
+			<th>年級</th>
+			<th>身份</th>
+		</tr>
+	</thead>
+	<tbody id="body">
+		<%= render :partial=>"manage_user_lists", :collection => @users, :as => :user%>
+	</tbody>
 </table>
 <div id="paginator">
 	<%= paginate @users, :window=>2, :remote => true, :method=>"POST" %>
@@ -26,63 +24,7 @@
 
 <script>
 
-	$('.admin-user-role').change(function(){
-		var uid = $(this).attr('user_id');
-		var role = $(this).val();
-		$.ajax({
-			url: "/admin/change_role",
-			type: "POST",
-			data :{uid: uid, role: role},
-			success: function(){
-				toastr["success"]("update success.");
-			},
-			error: function(){
-				alert('Internal server error.');
-			}
-		});
-		return false ;
-	});
-
-$(function () {
-    $('#container').highcharts({
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: '使用者系所統計'
-        },
-        subtitle: {
-            text: ''
-        },
-        xAxis: {
-            categories: <%=raw @data.keys.to_json%>
-        },
-        yAxis: {
-            min: 0,
-            title: {
-                text: '人數'
-            }
-        },
-        tooltip: {
-            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                '<td style="padding:0"><b>{point.y} 人</b></td></tr>',
-            footerFormat: '</table>',
-            shared: true,
-            useHTML: true
-        },
-        plotOptions: {
-            column: {
-                pointPadding: 0.2,
-                borderWidth: 0
-            }
-        },
-        series: [{
-            name: '人數',
-            data: <%=raw @data.values.to_json%>
-
-        }]
-    });
+	$(function () {
 		$(".course_map").change(function(){
 			var cm_id=$(this).val();
 			$.ajax({
@@ -93,6 +35,66 @@ $(function () {
 			/*if(cm_id)
 				alert(cm_id);*/
 		});
-});
+		initDeptChart();
+	});
+	function updateRole($obj){
+		var uid = $obj.attr('user_id');
+		var role = $obj.val();
+		$.ajax({
+			url: "/admin/change_role",
+			type: "POST",
+			data :{uid: uid, role: role},
+			success: function(){
+				toastr["success"]("更新成功!");
+			},
+			error: function(){
+				toastr["error"]('更新失敗!');
+			}
+		});
+		return false ;
+	}
+	function initDeptChart(){
+		$('#dept-stat-chart').highcharts({
+			chart: {
+				type: 'column'
+			},
+			title: {
+				text: '使用者系所統計'
+			},
+			subtitle: {
+				text: ''
+			},
+			xAxis: {
+				categories: <%=raw @data.keys.to_json%>
+			},
+			yAxis: {
+				min: 0,
+				title: {
+						text: '人數'
+				}
+			},
+			tooltip: {
+				headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+				pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+						'<td style="padding:0"><b>{point.y} 人</b></td></tr>',
+				footerFormat: '</table>',
+				shared: true,
+				useHTML: true
+			},
+			plotOptions: {
+				column: {
+					pointPadding: 0.2,
+					borderWidth: 0
+				}
+			},
+			series: [{
+				name: '人數',
+				data: <%=raw @data.values.to_json%>
+			}]
+		});
+	}
+	function showDeptChart(){
+		$('#dept-stat-chart').toggleClass("hidden");
+	}
 
 </script>

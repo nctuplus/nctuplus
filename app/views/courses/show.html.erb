@@ -2,24 +2,20 @@
 <%= javascript_include_tag "courses/chart", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/past_exam", "data-turbolinks-track" => true %>
 <div class="row">
-	<div class="col-md-9 scroll-content col-md-offset-1">
+	<div class="col-md-2">
+		<%= render "/course_content/scroll_sidebar"%>
+	</div>
+	
+	<div class="col-md-10 scroll-content ">
 		<div class="row" id="tc" >
-			<div class="col-md-7">
+			<div class="col-md-10">
 				<h1 class="scroll-title" data-offset="100">	
 					<%= @data[:course_name] %>－<%=@data[:course_teachers]%>
 				</h1>
 			</div>
-			<div class="col-md-5" id="teacher-name">
+			<div class="col-md-2" id="teacher-name">
+				<br>
 				<span class="pull-right">
-					<br>
-					<% if @data[:open_on_latest] %>
-<!--					
-					<button class="btn btn-md masterTooltip btn-primary" onclick="add_to_cart(<%=j @data[:course_detail_id] %>,'add');" title="加至觀察名單" style="height:33px;margin-top:-1px">
-					<%= fa_icon "shopping-cart 1x"%><sup><%= fa_icon "plus 1x"%></sup>
-					</button>
--->					
-					&nbsp;
-					<% end %>
 					<span style="display:inline-block">
 						<div class="share-course"></div>
 					</span>
@@ -27,22 +23,32 @@
 			</div>
 		</div>
 
-		<div class="row">
-			<div class="well">
-				<h2 style="border-bottom:solid 1px;">課程資訊</h2>
-					<div class="panel-heading course-info">
-						<%=render "/course_content/course_info" %>
-					</div>
- 				<div class="panel-heading" id="statistics">
-					<h2 class="panel-title">
-						<p id="statistics-header">
-							<%=fa_icon "align-left"%> 歷年統計：
-						</p>	
-					</h2>	
-				</div>
-				<div id="container-reg-num" style="height:80%; width:80%;"></div></br>
-				<div id="container-score" style="height:80%; width:80%;"></div>
-			
+		<div class="row bg-white">			
+			<h4 style="padding-left:15px;">
+				<i class="fa fa-gamepad"></i> 課程資訊：
+					永久課號 <strong><%=@data[:course_real_id]%></strong>
+					學分 <strong><%=@data[:course_credit]%></strong>
+					<%=link_to "課程綱要","https://course.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{@data[:year]}&Sem=#{@data[:half]}&CrsNo=#{@data[:temp_cos_id]}",target: "_blank"%>
+					<% if not @data[:open_on_latest]%>
+						(本學期無開課)
+					<% end %>
+					查看更多 
+					<%=link_to("javascript:void(0);", :class=>"see-more-course") do%>	
+						<%=fa_icon "search-plus"%>
+					<% end %>					
+			</h4>
+			<div class="panel-heading course-info">
+				<%=render "/course_content/course_info" %>
+			</div>
+			<div class="panel-heading" id="statistics">
+				<h2 class="panel-title">
+					<p id="statistics-header">
+						<%=fa_icon "align-left"%> 歷年統計：
+					</p>	
+				</h2>	
+			</div>
+			<div id="container-reg-num" style="height:80%; width:80%;"></div></br>
+			<div id="container-score" style="height:80%; width:80%;"></div>		
 			<div id="course-tips" class="panel-heading">
 				<h2 class="panel-title">
 					<p><%=fa_icon "gamepad"%> 課程攻略：</p>
@@ -76,7 +82,7 @@
 					</p>
 				</h2>	
 			</div>
-			<div class="well backgorund-color-grey " id="comments"></div>
+			<div class="well bg-grey " id="comments"></div>
 		<% if current_user %>	
 			<div class="row comment-form" >
 				<div class="col-sm-1"></div>
@@ -91,22 +97,18 @@
 				</div>
 			</div>
 		<% end %>	
-			</div>
 		</div>	
 		
 		<div class="row">
-			<div id="compare" class="well bs-callout" style="">
+			<div id="compare" class="bg-white container">
 			</div>
-			<div id="discuss" class="well bs-callout row" style="background-color:white;">
+			<div id="discuss" class="bg-white container">
 			</div>
-			<div id="files" class="well bs-callout" style="background-color:white;">
-			</div>
-			
+			<div id="files" class="bg-white container">
+			</div>		
 		</div>
 	</div>
-	<div class="col-md-2 col-md-offset-">
-	<%= render "/course_content/scroll_sidebar"%>
-	</div>
+	
 </div>
 
 
@@ -200,5 +202,5 @@
 		});
 
 	});
-
+	
 </script>

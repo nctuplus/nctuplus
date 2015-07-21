@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+gem 'therubyracer'
+
 gem 'google-api-client'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -17,9 +19,6 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .js.coffee assets and views
 gem 'coffee-rails', '~> 4.0.0'
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
-
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 
@@ -29,28 +28,34 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+gem 'curb'
+
+#for user auth
 gem 'devise'
 gem 'omniauth'
-gem 'omniauth-facebook' #, '1.4.0'
+gem 'omniauth-facebook'
+
 gem "paperclip"
-#gem "paperclip-dropbox", ">= 1.1.7"
-#gem 'ckeditor'
+
 gem "jquery-fileupload-rails"
-gem 'curb'
+
 gem 'jquery-raty-rails', github: 'bmc/jquery-raty-rails'
 gem 'font-awesome-rails'
 #gem "google_visualr", ">= 2.1"
-#, github: 'bokmann/font-awesome-rails'
-#gem 'rename'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
 
-#for search
+# search
 gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4'
+# paginate
 gem 'kaminari'
+
+#for update course from E3
 gem 'whenever' , :require => false
+
 #for chrome extension cross domain support
 gem 'rack-jsonp-middleware',
   :require => 'rack/jsonp'
@@ -63,24 +68,16 @@ gem 'em-resolv-replace', :require => false
 gem "tinymce-rails"
 gem "tinymce-rails-langs"
 
+#for course table share (id obfuscation)
+gem "hashids"
+
 group :development do
   gem 'brakeman', :require => false
   gem 'rails_best_practices', :require => false
   gem "rails-erd"
 end
 
-#gem 'google-analytics-rails'
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.1.2'
+gem "googlebooks"
 
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano', group: :development
-
-# Use debugger
-# gem 'debugger', group: [:development, :test]
-#
-#
-# TEST PULL OR NOT ZZZZZZZZZZZZZZZZZZZZZZ
+gem "bootstrap-switch-rails"
+gem 'zeroclipboard-rails'

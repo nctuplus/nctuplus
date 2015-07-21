@@ -1,46 +1,34 @@
 class CoursesController < ApplicationController
-  #before_filter :find_department, :only=>[ :index, :new, :edit]
-  
-	#include CourseHelper
 
-	before_filter :checkE3Login, :only=>[:simulation, :add_simulated_course, :del_simu_course]
-	
-	def index_new
-		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
-		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
-		@dept_sel=Department.searchable.pluck(:ch_name, :id)
-		if !params[:custom_search].blank?	#if user key in something
-			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
-		else
-			@q = CourseDetail.search(params[:q])		
-		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
-		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
-	end
+
+	before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 	
 	def index
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
 		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
-		@dept_sel=Department.searchable.pluck(:ch_name, :id)
-		if !params[:custom_search].blank?	#if user key in something
-			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
-		else
-			@q = CourseDetail.search(params[:q])		
+		if !params[:custom_search].blank?	#if user key in something			
+			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
+		elsif session[:lack_course]
+			@q = CourseDetail.search({
+				:brief_cont_any=>session[:lack_course]["dimension"]
+			})
+		else	
+			@q = CourseDetail.search(params[:q])
 		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
 	end
 	
 	def search_mini	#for course simulation search & result
-		
 		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
 		@dept_sel=Department.searchable.pluck(:ch_name, :id)
+		
 		if !params[:dimension_search].blank?	#search by 向度 (推薦系統)
 			@q= CourseDetail.search({:semester_id_eq=>Semester::LAST.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
 		elsif !params[:timeslot_search].blank? #search by time (推薦系統)
 			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>Semester::LAST.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
 		elsif !params[:custom_search].blank? #search by text
-			@q = CourseDetail.searchByText(params[:custom_search],Semester::LAST.id)
+			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
 		else
 			if params[:q].blank?
 				@q=CourseDetail.search({:id_in=>[0]})
@@ -50,7 +38,7 @@ class CoursesController < ApplicationController
 		end
 		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@result={
-			:view_type=>"schedule",
+			:view_type=>"simulation",
 			:use_type=>"add",
 			:courses=>cds.map{|cd|
 				cd.to_search_result
@@ -98,7 +86,7 @@ class CoursesController < ApplicationController
 	
 	
   def show
-		cd=CourseDetail.find(params[:id])	
+		cd=CourseDetail.includes(:course_teachership, :course, :semester, :department).find(params[:id])	
 		current_time = Time.new
 		c_id=cd.course.id.to_s
 		if session[c_id] != current_time.min
@@ -113,6 +101,9 @@ class CoursesController < ApplicationController
 			:course_name=>cd.course_ch_name,
 			:course_teachers=>cd.teacher_name,
 			:course_real_id=>cd.course.real_id.to_s,
+			:temp_cos_id=>cd.temp_cos_id,
+			:year=>cd.semester_year,
+			:half=>cd.semester_half,
 			:course_credit=>cd.course.credit,
 			:open_on_latest=>(cd.course_teachership.course_details.last.semester_id==Semester::LAST.id) ? true : false ,
 			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
@@ -121,22 +112,23 @@ class CoursesController < ApplicationController
   end
 	
   def simulation  
-		#@user_sem_ids=current_user.course_simulations.map{|cs|cs.semester_id}
-		#@user_sem_ids.append(Semester::LAST.id)	
+		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
+		@dept_sel=Department.searchable.pluck(:ch_name, :id)
+		@q=CourseDetail.search({:id_in=>[0]})
   end
 	
 	def add_to_cart
-		
+		cd_id=params[:cd_id].to_i
+		cookies.signed[:cd]=JSON.generate([]) if cookies.signed[:cd].nil?
+		cd_ids=JSON.parse(cookies.signed[:cd])
 		if params[:type]=="add"
-			cd_id=params[:cd_id].to_i
-			session[:cd]=[] if session[:cd].nil?
 			if CourseDetail.where(:id=>cd_id).empty?
 				alt_class="warning"
 				mesg="查無此門課!"
 			else
-				if !session[:cd].include?(cd_id)
-					session[:cd].append(cd_id)
-					session[:cd]=CourseDetail.select(:id).where(:id=>session[:cd]).order(:time).pluck(:id)
+				if !cd_ids.include?(cd_id)
+					cd_ids.append(cd_id)
+					cd_ids=CourseDetail.select(:id).where(:id=>cd_ids).order(:time).pluck(:id)
 					alt_class="success"
 					mesg="新增成功!"
 				else
@@ -145,16 +137,19 @@ class CoursesController < ApplicationController
 				end
 			end
 		else
-			cd_id=params[:cd_id].to_i
-			if session[:cd].include?(cd_id)
-				session[:cd].delete(cd_id) 
+			if cd_ids.include?(cd_id)
+				cd_ids.delete(cd_id) 
 				alt_class="success"
 				mesg="刪除成功!"
 			else
 				alt_class="warning"
 				mesg="你未加入此課程!"
 			end
-		end	
+		end
+		cookies.signed[:cd]={
+			:value=> JSON.generate(cd_ids),
+			:expires=> 6.months.from_now
+		}
 		respond_to do |format|
 			format.json {
 				render :json => {:class=>alt_class, :text=>mesg}
@@ -165,10 +160,11 @@ class CoursesController < ApplicationController
 
 	
 	def show_cart
+		cookies.signed[:cd]=JSON.generate([]) if cookies.signed[:cd].nil?
 		@result={
-			:view_type=>"session",
-			:use_type=>"delete",
-			:courses=>CourseDetail.where(:id=>session[:cd]).map{|cd|
+			:view_type=>params[:view_type],
+			:use_type=>params[:use_type],#"delete",
+			:courses=>CourseDetail.where(:id=>JSON.parse(cookies.signed[:cd])).map{|cd|
 				cd.to_search_result
 			}
 		}

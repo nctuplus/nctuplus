@@ -5,18 +5,16 @@
 	}
 	function change_degree(obj){
 		var dept_sel=[];
-		dept_sel['3']='<%=j options_from_collection_for_select(Department.where(:degree=>'3').searchable,'id','ch_name')%>'
-		dept_sel['2']='<%=j options_from_collection_for_select(Department.where(:degree=>'2').searchable,'id','ch_name')%>'
-		dept_sel['0']='<%=j options_from_collection_for_select(Department.where(:degree=>['0','5']).searchable,'id','ch_name')%>'
+		dept_sel['3']='<%=j render "courses/search/undergrad_options" %>'
+		dept_sel['2']='<%=j render "courses/search/graduate_options" %>'
+		dept_sel['0']='<%=j render "courses/search/common_options" %>'
 		
 		$("#q_department_id_eq").html(dept_sel[obj.val()]);
 	}
 	function search_by_text(){
 		clean_input($("#dept_div"));
-		//clean_input($("#sem_div"));
-		
+		//clean_input($("#sem_div"));	
 		//$('#course_detail_search').submit();
-		
 	}
 	function search_by_select(obj){
 		//alert(obj.attr("id"));
@@ -29,5 +27,6 @@
 	$(document).ready(function(){
 		change_degree($("#degree"));
 		$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
+		
 	});
 </script>

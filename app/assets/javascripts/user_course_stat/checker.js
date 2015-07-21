@@ -9,22 +9,23 @@
  * Modified at 2015/3/24
  */
  
-function commonCheck(pass_score,last_sem_id,user_courses){
-	var result={}; 
-	result['art_after102']=0; 
-	result['phe_1']=0; 
-	result['phe_optional']=0; 
-	result['foreign_basic']=0; 
-	result['foreign_advance']=0; 
-	result['common']={}; 
-	result['common']['通識']=0; 
-	result['common']['公民']=0; 
-	result['common']['群已']=0; 
-	result['common']['歷史']=0; 
-	result['common']['文化']=0; 
-	result['common']['自然']=0; 
+function commonCheck(pass_courses){
+	var result={
+		art_after102: 0, 
+		phe_1: 0, 
+		phe_optional: 0, 
+		foreign_basic: 0, 
+		foreign_advance: 0, 
+		common: { 
+			'通識': 0, 
+			'公民': 0, 
+			'群已': 0, 
+			'歷史': 0, 
+			'文化': 0, 
+			'自然': 0
+		}
+	}; 
 
-	var pass_courses=get_pass_courses(pass_score,last_sem_id,user_courses); 
 	for(var i = 0,course;course=pass_courses[i];i++){ 
 
 		if(course.name.search("服務學習")!=-1){ 
@@ -76,7 +77,7 @@ function get_cf_list(cfs,course){
 	
 	var res=[];
 	for(var i = 0,cf;cf=cfs[i];i++){
-		_get_course_cf(res,null,cf,course);
+		_getCourseCf(res,null,cf,course);
 		//console.log(cf);
 	}
 
@@ -94,7 +95,7 @@ function get_cf_list(cfs,course){
 	return res;
 }
 
-function join_cf_courses(cf,courses){//將課程與領域做對應
+function joinCfCourses(cf,courses){//將課程與領域做對應
 	var res=[];
 	for(var i = 0,course;course=courses[i];i++){
 		if(course.cf_id==cf.id)
@@ -103,23 +104,23 @@ function join_cf_courses(cf,courses){//將課程與領域做對應
 	return res;
 }
 
-function check_course_match(uc,cf){
+function isCourseInCf(uc,cf){
 	for(var i = 0,course;course=cf.courses[i];i++){
-		if(uc.course_id==course.id)
+		if(uc.cos_id==course.id)
 			return true;
 	}
 	for(var i = 0,cg;cg=cf.course_groups[i];i++){
 		for(var j = 0,course;course=cg.courses[j];j++){
-		if(uc.course_id==course.id)
+		if(uc.cos_id==course.id)
 			return true;
 		}
 	}
 	
 	return false;
 }
-function _get_course_cf(res,parent_cf,cf,course){
+function _getCourseCf(res,parent_cf,cf,course){
 	if(cf.cf_type<3){
-		if(check_course_match(course,cf)){
+		if(isCourseInCf(course,cf)){
 			var name=parent_cf ? parent_cf.cf_name+" - "+cf.cf_name : cf.cf_name;
 			res.push({
 				id:cf.id,
@@ -132,30 +133,30 @@ function _get_course_cf(res,parent_cf,cf,course){
 	else{
 		//var res=[];
 		for(var i = 0,_cf;_cf=cf.child_cf[i];i++){
-			 _get_course_cf(res,cf,_cf,course);
+			 _getCourseCf(res,cf,_cf,course);
 		}
 		//return res;
 	}
 }
 
-function _check_user_course(user_courses, course){
+function _isUserCourseMatch(user_courses, course){
 
 	for(var j=0, user_course;user_course=user_courses[j];j++){
-		if(course.id==user_course.course_id)   // TODO : score judge
+		if(course.id==user_course.cos_id)
 			return true;
 	}
 	return false;
 }
 
 // for bottom node, check match
-function _cf_course_match(user_courses, cf){
+function _doCheck(user_courses, cf){
 	var match_credit = 0, c_match=true ;
 	
 	
-	var joined_courses=join_cf_courses(cf,user_courses);
+	var joined_courses=joinCfCourses(cf,user_courses);
 	for(var i = 0,cf_course;cf_course=cf.courses[i];i++){ // for each cf course
 		
-		if(_check_user_course(joined_courses, cf_course)){
+		if(_isUserCourseMatch(joined_courses, cf_course)){
 			match_credit += cf_course.credit ;
 		}else{
 			c_match = false ;
@@ -167,7 +168,7 @@ function _cf_course_match(user_courses, cf){
 		for(var i = 0,course_group;course_group=cf.course_groups[i];i++){ // for each cg
 			var local_match = false ;
 			for(var j=0, cg_course; cg_course=course_group.courses[j];j++){
-				if(_check_user_course(joined_courses, cg_course)){
+				if(_isUserCourseMatch(joined_courses, cg_course)){
 					match_credit += cg_course.credit ;
 					local_match = true ;
 					break ;
@@ -181,16 +182,16 @@ function _cf_course_match(user_courses, cf){
 	return {match_credit: match_credit, all_match: (c_match && cg_match)} ;
 }
 
-function check_cf(user_courses,cf){	//最上層的check
+function checkCf(user_courses,cf){	//最上層的check
 
 	switch(cf.cf_type){
 		case 1:	//必修
-			var res=_cf_course_match(user_courses, cf) ;
+			var res=_doCheck(user_courses, cf) ;
 			cf.match_credit=res.match_credit;
 			return {match_credit: res.match_credit, result: res.all_match};		
 			break;
 		case 2:	//X選Y
-			var res = _cf_course_match(user_courses, cf) ;
+			var res = _doCheck(user_courses, cf) ;
 			var match = (res.match_credit >= cf.credit_need) ? true : false;
 			var match_arr=[];
 			for(var j = 0, credit; credit=cf.credit_list[j]; j++){
@@ -202,7 +203,7 @@ function check_cf(user_courses,cf){	//最上層的check
 		case 3:	//領域群組
 			var match_credit = 0, match_field = 0,sub_res=[] ;
 			for(var i = 0, sub_cf;sub_cf=cf.child_cf[i];i++){
-				var res = check_cf(user_courses, sub_cf) ;
+				var res = checkCf(user_courses, sub_cf) ;
 				match_credit += res.match_credit ;
 				if(res.result)
 					match_field++;
@@ -226,7 +227,7 @@ function check_cf(user_courses,cf){	//最上層的check
 			for(var i = 0, sub_cf; sub_cf=cf.child_cf[i]; i++){
 				if(sub_cf.credit_need==0)	//if 必修,看無QQ
 					sub_cf.credit_need = cf.credit_need - credit_all ;
-				var res = check_cf(user_courses, sub_cf) ;
+				var res = checkCf(user_courses, sub_cf) ;
 				match_credit += res.match_credit ;
 				if(sub_cf.cf_type==2){
 					if(final_res.length==0)
@@ -276,5 +277,37 @@ function check_cf(user_courses,cf){	//最上層的check
 }
 
 
+
+function sessionTest(){
+	var res={};
+	$.getJSON("/user/statistics", function (data) {
+		console.log(data);
+		var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
+		if (data.need_common_check){
+			var result=commonCheck(pass_courses);
+			var dimesions=[];
+			for(var dimension in result['common']){
+				if (result['common'][dimension]==0){ 
+					dimesions.push(dimension);
+				}
+			}
+			res["dimension"]=dimesions
+		}
+		if(data["course_map"]){			
+			getMatchCfCourseList(data.course_map.cfs,pass_courses);
+		}
+		/*$("#course_list").html(tmpl("list_by_cosmap",data));*/	
+	});
+	$.ajax({
+		url :"/sessions/save_lack_course",
+		type : "POST",
+		data : res,
+		success: function(data){console.log(data);}
+	});
+}
+
+function getMatchCfCourseList(cfs,user_courses){
+	
+}
 
 

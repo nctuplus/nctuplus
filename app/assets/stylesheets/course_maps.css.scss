@@ -18,6 +18,15 @@
  border-color: #00BFFF; 
 }
 
+input
+{
+	border-radius:10px;
+	border:#00BBFF 2px solid;
+	padding-top:3px;
+	padding-bottom:3px;
+}
+
+
 .btn-selected {
 border-color: #FFFF00;
 border-width: 2px;
@@ -40,3 +49,8 @@ border: 1px solid #ddd;
 border-bottom-color: transparent;
 }
 */
+
+table
+{
+	line-height:120%;
+}

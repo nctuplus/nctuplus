@@ -1,17 +1,27 @@
 class Department < ActiveRecord::Base
-  has_many :courses
+	has_many :course_details
+  has_many :courses, :through=> :course_details
 	has_many :users
 	belongs_to :college
 	scope :searchable,->{where has_courses: true}
 	scope :majorable,->{where majorable: true}
 	scope :undergraduate,->{where degree: 3}
 	scope :graduate,->{where degree: 2}
+	
+	def is_graduate?
+		return self.degree==2
+	end
+	
+	def is_undergraduate?
+		return self.degree==3
+	end
+	
 	def pass_score
 		return self.degree==2 ? 70 : 60
 	end
 	def self.create_from_e3(data)
 		Department.find_or_create_by(:dep_id=>data["dep_id"],:degree=>data["degree"].to_i ) do |dept|
-			dept.data_type=data["dataype"]
+			dept.dept_type=data["depType"]
 			dept.ch_name=data["dep_cname"]
 			dept.eng_name=data["dep_ename"]
 		end

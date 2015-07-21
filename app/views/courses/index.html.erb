@@ -1,84 +1,87 @@
+
 <%=render 'courses/search/search_js' %>
-
-<div id="results">
+<br>
+<div id="results" class="container">
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
-
-<div class="row">
-	
-	<div class="col-sm-1 col-md-offset-3 no-padding-left">
-		<div id="sem_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.select :semester_id_eq, options_for_select(@sem_sel, @q.semester_id_eq),{:prompt=> "學期"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
+	<div class="row">	
+		<div class="col-md-12 text-center">
+			<div class="input-group" style="width:450px;display:inline-table;">
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>
+				<div class="input-group-btn">
+					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找課程 <span class="caret"></span></button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="javascript:void(0);">找課程</a></li>
+						<!--<li><a href="javascript:void(0);">找心得</a></li>-->
+					</ul>
+				</div><!-- /btn-group -->			
+				<div class="input-group-btn">
+					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+				</div><!-- /btn-group -->
+			</div><!-- /input-group -->
+			<div class="checkbox">
+				<label style="font-size:16px;">
+					<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
+					進階搜尋
+				</label>
+			</div>
+		</div>
 	</div>
-	<div class="col-sm-1 no-padding-left">
-		<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>
-	</div>	
-	<div class="col-sm-2 no-padding-left ">
-		<div id="dept_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%= f.select :department_id_eq, options_for_select(@dept_sel, @q.department_id_eq),{:prompt=> "系所"},{ :class=> "form-control",:onchange=>"search_by_select($(this));"} %>
+	<div class="hidden row" id="adv-search">
+		<br>
+		<div class="col-md-12 text-center">
+			<div style="width:108px;display:inline-block;">
+				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : 0),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
+			</div>
+			<div style="width:120px;display:inline-block;">
+				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
+			</div>	
+			<div style="width:300px;display:inline-block;">				
+				<%= f.select :department_id_eq,"",{:prompt=> "系所"},{ :class=> "form-control"} %>
+			</div>
+		</div>	
 	</div>
-	
-	<div class="col-sm-2">
-		<div id="text_div" class="cleaninput" onclick='clean_input($(this))'><%=fa_icon "times"%></div>
-		<%=text_field_tag :custom_search,params[:custom_search], class: "form-control",placeholder:"課名/老師/時間/向度" %>
-
-	</div>
-	<button class="btn btn-success" id="search" onclick="search_by_text();">
-		<%= fa_icon "search" %>
-	</button>
-	
-	
 <% end %>
-</div>
 <br>
 
-<table class="table table-hover table-bordered bg-white-transparent" id="course_table" >
+<table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
 	<tr class="row">
-		<th class="col-md text-center" style="width:70px;">學期</th>
-		<th class="col-md-2 text-center">
-			<%= sort_link @q,:department_id, "系所" %> /
-			<%= sort_link @q,:brief, "摘要" %>
-		</th>
-		<th class="col-md-2 text-center"><%= sort_link @q,:course_ch_name, "課名" %></th>
-		<th class="col-md-2 text-center"><%= sort_link @q,:teacher_name, "老師" %></th>
-		<!--<th class="col-md-4">備註</th>-->
-		<th class="col-md- text-center"><%= sort_link @q,:grade, "年級" %>/<%= sort_link @q,:time, "時間" %></th>
-		<th class="col-md- text-center"><%= sort_link @q,:credit, "學分" %></th>
-		<th class="col-md- text-center"><%= sort_link @q,:credit, "修課人數/上限" %></th>
-		<th class="col-md- text-center">文章/檔案數</th>
-		<th class="col-md- text-center">人氣</th>
-		<!--<th class="col-md-1"></th>-->
+		<th class="col-md">學期</th>
+		<th class="col-md-">系所/摘要</th>
+		<th class="col-md-">課名</th>
+		<th class="col-md-">老師</th>
+		<th class="col-md-">學分</th>
+		<th class="col-md-">時間</th>
+		<th class="col-md-">年級</th>
+		<th class="col-md-">收藏</th>
 	</tr>
 	<tbody>
+	<% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
 	<% if !@cds.empty? %>
 		<% @cds.each do |cd| %>
-			
 				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
-					<td class="text-center">
+					<td class="">
 						<%=cd.semester_name%>
 					</td>
-					<td class="text-center">
-						<%=cd.department_ch_name%>
-						<% if cd.brief&&cd.brief!="" %>
-						/<%= cd.brief %>
-						<% end %>
+					<td class="text-cente">
+						<%="#{cd.department_ch_name} #{cd.brief}"%>
 					</td>
-					<!--<td><%= cd.brief %></td>-->
-
-					<td class="text-center"><%= cd.course_ch_name %></td>
-					<td class="text-center"><%= cd.teacher_name %></td>
-					<!--<td><%= cd.memo %></td>-->
-					<td class="text-center"><%= cd.grade %>/<%= cd.time %></td>
-					<td class="text-center"><%= cd.course_credit %></td>
-					<td class="text-center">
-					<%= cd.reg_num %>/<%=cd.students_limit.to_i==9999 ? "不限" : cd.students_limit%>
+					<td class="text-cente"><%= cd.course_ch_name %></td>
+					<td class="text-cente"><%= cd.teacher_name %></td>
+					<td class="text-cente"><%= cd.course_credit %></td>
+					<td class="text-cente"><%= cd.time %></td>
+					<td class="text-cente">
+						<%=cd.grade%>
 					</td>
-					<td class="text-center"><%= "#{cd.discusses.count}/#{cd.past_exams.count}" %></td>
-					<td class="text-center"><%= cd.view_times %></td>
+					<td class="text-cente" onclick="">
+						<% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
+						<%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
+						
+					</td>
 				</tr>
 		<% end %>
 	<% else %>
 		<tr class="row">
-			<td colspan="7" class="col-md-6 col-md-offset-5">
+			<td colspan="6" class="text-center">
 				<h3>查無結果!</h3>
 			</td>
 		</tr>		
@@ -91,10 +94,43 @@
 </div>
 
 <script>
-$(function(){
-	$(".clickable-row").click(function() {
-			window.document.location = $(this).attr("href");
+	$(function(){
+		if($("#adv_toggle").prop("checked"))
+			$("#adv-search").removeClass("hidden");
+		$(".clickable-row").click(function() {
+			goToHref($(this).attr("href"),false);
+		});
+		
+		//bind cart button 
+		$(".cart-control").bind({
+			mouseover:function(){// avoid go to course page
+				$(this).parent().parent().off("click");
+			},
+			mouseleave:function(){// resume go to course page
+				$(this).parent().parent().click(function(){
+					goToHref($(this).attr("href"),false);
+				});
+			},
+			click:function(){	//add or delete cart
+				add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
+				var type=$(this).attr("data");
+				if(type=="add"){
+					$(this).attr("data","delete");
+					$(this).switchClass("fa-square-o","fa-check-square-o");
+				}
+				else{
+					$(this).attr("data","add");
+					$(this).switchClass("fa-check-square-o","fa-square-o");
+				}
+			}
+		});
+		toastr["success"]("已更新暑修課程囉，請利用進階搜尋查詢~");
+		<% if !current_user %>
 
+		//	toastr["info"]("登入並選擇系級,系統即可為您推薦課程!!");
+		<% elsif !current_user.has_imported? %>
+		//	toastr["success"]("<%=j link_to "匯入成績","/user/import_course",style:"color:blue;"%>後系統即可為您推薦課程!!");
+		<% end %>
 	});
-});
+
 </script>

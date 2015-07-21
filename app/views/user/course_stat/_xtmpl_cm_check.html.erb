@@ -31,7 +31,7 @@
 	<tr class="row" >
 		<td class="col-md-12" colspan="{%=cm.max_colspan+1%}">
 			<h4 class="text-center">
-				<a href="/course_maps?dept_id={%=cm.dept_id%}&year={%=cm.year%}">
+				<a href="/course_maps?dept_id={%=cm.dept_id%}&year={%=cm.year%}" data-no-turbolink>
 				{%=cm.name %} 
 				</a>
 				<% if @show_report %>
@@ -45,8 +45,8 @@
 			</h4>
 		</td>
 	</tr>
-	{% var pass_courses=get_pass_courses(o.pass_score,o.last_sem_id,user_courses); %}
-	{% print(parse_cf_tree(cm.cfs,pass_courses,cm.max_colspan),true); %}
+	{% var pass_courses=getPassCourses(checkPass,o.pass_score,user_courses); %}
+	{% print(genCosMapCheckGrids(cm.cfs,pass_courses,cm.max_colspan),true); %}
 	
 </table>
 <p>

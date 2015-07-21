@@ -8,7 +8,9 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-      <a class="navbar-brand " href="/main/index" style="font-family:arial;">NCTU<sup>+</sup></a>
+      <a class="navbar-brand " href="/main/index" style="font-family:arial;">			
+				NCTU<sup>+</sup>
+			</a>
 
 		</div>
 
@@ -20,49 +22,61 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu">
 						<% if current_user.isAdmin? %>
-							<li><a href="/admin/users" rel="nofollow">使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
+							<li><a href="/admin/users" rel="nofollow" data-no-turbolink>使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
 						<% end %>
 							<li><a href="/departments" rel="nofollow">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
 							<li><a href="/admin/course_maps/" rel="nofollow">課程地圖</a></li>
-							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
-							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>								
+							<li><a href="/admin/user_statistics" rel="nofollow" data-no-turbolink>統計資料</a></li>
+							<!--<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
+							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>-->							
 						</ul>	
 					</li>
 				<% end %>
-
+				<li><a href="/books/" rel="nofollow">二手書<sup>BETA</sup></a></li>
 				<li><a href="/courses/" rel="nofollow">全校課程</a></li>
-				<li><a href="/courses/simulation" rel="nofollow">模擬排課</a></li>
-				<!--<li><a href="/course_maps" rel="nofollow">課程地圖</a></li>-->
-				<!--<li><a href="/events/" rel="nofollow">talk</a></li>-->
+				<li><a href="/courses/simulation" rel="nofollow" data-no-turbolink>模擬排課</a></li>
+				<li><a href="/user/?show_stat=true" rel="nofollow">算學分</a></li>				
+				
+				<!--<li><a href="/course_maps" rel="nofollow">課程地圖</a></li>
+				<li><a href="/events/" rel="nofollow">talk</a></li>
+				-->
 			
       </ul>
 			
 			<ul class="nav navbar-nav navbar-right">
+
+				<li>
+					<a onClick="showCart();" href="javascript:void(0);" class="no-padding-bottom"><%= fa_icon("shopping-cart 2x", :id=>"cart_but", :title=>"課程收藏") %></a>
+				</li>
+	
 			<% if current_user %>	
-		
 				<li>
 					<a href="#" class="toolTip dropdown-toggle toolTip" data-toggle="dropdown" title="課表"><%= fa_icon("calendar 2x", :id=>"sm_schd_button")%></a>
 						<ul class="dropdown-menu">
-							<% sems = current_user.semesters.uniq %>
+							<% sems = user_semester(current_user) %>
 							<% if sems.count==0 %>
 							<li class="text-center">無資料</li>
 							<% end %>
 							<% sems.each do |sem| %>
-							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.id.to_s %>"><%=sem .name %></a></li>						
+							<li><a href="javascript:void(0)" rel="nofollow" class="view-timetable" sem="<%=sem.id.to_s %>"><%=sem.name %></a></li>						
 							<% end %>
 					</ul>	
 				</li>
 			
 				<li class="dropdown">		
 					<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown" do %>
-						<% if session[:auth_facebook].presence %>
-							<%= image_tag "http://graph.facebook.com/"<<current_user.auth_facebook.uid<<"/picture", size: "25x25" %>
-						<% else %>
-							學號 
+						<% if current_user.hasFb? %>
+							<%= image_tag "http://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
 						<% end %>
 						<%=current_user.name%>
 					<% end %>
-					<ul class="dropdown-menu">
+					<ul class="dropdown-menu">					
+            <li>
+              <a href="/user/collections">課表收藏</a>
+            </li>				
+						<li>
+								<a href="/user/edit/">編輯個人資料</a>
+						</li>	
 						<li>
 							<%= link_to  "登出", destroy_user_session_path, :method => :delete %>
 						</li>					
@@ -80,63 +94,83 @@
 </ul>
 
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
-<script>
-	$(document).ready(function(){	
 
+<script>	
+	<% if current_user %>	
+	$(document).ready(function(){	
 		//歷年課表
 		$(".view-timetable").click(function(){
 			show_timetable_on_modal($(this).attr("sem"), true);
 		});
-	
 	});
-	
+
+  function group_share($header_data, data){
+    var share_link = function(share_url){
+      var $share_div = $('<div>').addClass('col-md-offset-2 col-md-8 input-group');
+      $share_div.append($('<input>').attr('type','text').addClass('form-control')
+        .attr('onclick','this.setSelectionRange(0, this.value.length);'));
+      $share_div.append($('<span>').addClass('input-group-btn')
+        .html($('<button>').addClass('btn btn-info').attr('id','copy-it')
+        .attr("data-clipboard-text", share_url)
+        .html('<%=fa_icon "clipboard"%>')))
+        .children('input').first().val(share_url);   
+      $header_data.append($share_div);   
+      new ZeroClipboard( $('#copy-it') ); //bind copy to clipboard
+      $('#copy-it').click(function(){ toastr["success"]('已複製到剪貼簿');});
+      $('#copy-it').popover({
+        content:"Copy to clipboard",
+        placement:"bottom",
+        trigger :"hover",
+        container :"body"
+      });
+    };     
+    share_link("<%=j root_url %>shares/"+data.hash_share);
+    
+  }//group_share
+  
 	function show_timetable_on_modal(semester_id, showNow){
 		var result=0 ;
-		$("#global_modal .modal-content").html('loading..');
 		$.ajax({
-			//async: true, // This will make call synchronous
-			url: "/user/get_courses?type=course_table&sem_id="+semester_id,
+			url: "/user/get_courses",
+			data:{
+				type: "course_table",
+				sem_id: semester_id
+			},
 			dataType: "json",
 			success: function(data){
-			//	console.log(data);
 				var result = $.extend(true, [], data);
-				$("#global_modal .modal-content").html('').append('<div class="modal-body"></div>');
 				var $table = $('<table>').addClass('table table-bordered');
         data.config = {
           deletable: false ,
           selectable: false,
           popover: true,
-		  downloadable: true,
-		  semester_id: semester_id
-        };
-								
-				$("#global_modal .modal-body").html($table.CourseTable(data));
-
-				if(showNow)	
-					$("#global_modal").modal('show');	
-				
+					downloadable: true,
+		      semester_id: semester_id
+        };     
+				$table.CourseTable(data) ;			
+		
+				$('#global-modal .close').remove();
+				if(data.hash_share){
+          var $data = $('<div>').addClass('row');
+          $data.append($('<div>').addClass('col-md-2').css('margin-top','5px').html(data.semester_name));
+        }else
+          var $data = $('<div>').addClass('text-center').html(data.semester_name);
+        
+				showGlobalModal( $data, $table);
+            
+				setTimeout(function(){ //wait for the modal show
+				if(data.hash_share){
+				  $data.hide();
+          $table.CourseTable("renderImg", "upload") ;
+          group_share($data, {hash_share: data.hash_share}) ;
+          $data.show();      
+        }
+			    return false ;
+        }, 500);
       }
 		});
-		return result ;
+		return ;
 	}
-
-	function add_to_cart(id,type){
-		$.ajax({
-			type: "GET",
-			url : "/courses/add_to_cart",
-			data : {
-				cd_id:id,
-				type:type
-			},
-			dataType : "json",
-			success : function(data){
-				toastr[data["class"]](data["text"]);
-				if(type=="delete"){
-					$("#global_modal .modal-body").load("/courses/show_cart");
-				}			
-			}
-		
-		});
-	}
-
+	<% end %>	
 </script>
+

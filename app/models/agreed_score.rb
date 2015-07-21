@@ -16,7 +16,7 @@ class AgreedScore < ActiveRecord::Base
 	def to_stat_json
 		{
 			:id=>self.id,
-			:course_id=>self.course_id,
+			:cos_id=>self.course_id,
 			:cf_id=>self.course_field_id,
 			:sem_name=>"抵免",						
 			:score=>self.score,

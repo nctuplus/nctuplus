@@ -1,20 +1,45 @@
 <%= javascript_include_tag "course_maps/public", "data-turbolinks-track" => true %>
 
+
 <div class="row" style="min-height:1000px;height:100%;">
-	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;/*min-height:100%;*/">
+	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;">
 		<%=render "course_maps/public/dept_sidebar"%>
 	</div>
 	</div>
 	<div id="tip-test"></div>
-	<div id="central-view" class="col-md-7" style="margin-left:300px;">
+	
+	<div id="central-view" class="col-md-10 col-sm-9" style="margin-left:300px;">
 		<div class="panel panel-default">
-			<div class="panel-body" id="cm-desc">
+			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">
 				<% if params[:dept_id].blank? %>
-				<h4>請先至左方選擇系!</h4>
+				<h4><b>請先至左方選擇系或由搜尋欄查詢</b><br></h4><br>
+				<div class="search" style="width:30%">
+				<form action="#" class="search" method="get" id="searchform" >
+				　科系： <select name="Department">
+				　<option value="id1" >資工系 網多組</option>
+				　<option value="id2">資工系 資電組</option>
+				　<option value="id3">資工系 資工組</option>
+				　<option value="id4">資科工所</option>
+				  </select><br>
+				　年級： <select name="Grade">
+				　<option value="UnderGraduate1">一年級</option>
+				　<option value="UnderGraduate2">二年級</option>
+				　<option value="UnderGraduate3">三年級</option>
+				　<option value="UnderGraduate4">四年級</option>
+				  <option value="Graduate1">碩一</option>
+				　<option value="Graduate2">碩二</option>
+				  </select><button class="btn btn-primary" type="submit" form="searchform" value="Submit"
+				style="margin-left:100%;"
+				>送出</button>
+				</form>
+				
+				
+				</div>
 				<% end %>
 			</div>
-			<h3><strong>Q&A</strong></h3>
-			<hr>
+			<div class="panel-body" id="cm-desc">
+			
+			</div>
 			<div id="QandA" style="display: none;">
 			</div>
 		</div>
@@ -39,10 +64,7 @@
 			<h2>修課規定</h2>
 			<p>至少需修0學分通常為該領域的其他選修即可滿足該領域的條件，若非上述情形則請回報</p>			
 		</li>
-		<li data-id="course-table" data-button="Next" data-options="tipLocation:right">
-			<h2>課程列表</h2>
-			<p>藍底色的列為可互相抵免的課程列表，可按左邊的+展開</p>
-		</li>
+
 		<li data-text="Next" class="">
 			<h2>We need help!</h2>
 			<p>
@@ -56,130 +78,172 @@
 	
 </div>
 <script>
-	function show_tip(){
-		$('#joyRideTipContent').joyride("destroy");
-		$('#joyRideTipContent').joyride({
-			autoStart : true,
-			cookieMonster: false
-		});
-	}
-	function load_cm(dept_id,year){		
-		$.getJSON("/course_maps/public",{
-			dept_id: dept_id,
-			year: year
-			},
-			function(data){
-				//console.log(data);
-				$("#cm-desc").html(tmpl("cm_public", data));
-				$("#year-"+year).addClass("disabled");
-				//$("#cf-btn").click();
-				$("#sem-btn").click();
-				get_piechart_data("#chart-content", data.course_map);
-				if(!isMobile){
-					$(".scroll-sidebar").html(tmpl("cf_scrolllist", data),function(){
-						$('body').scrollspy({ target: '.scroll-sidebar',offset:-60 });						
-					});
-					$('body').scrollspy('refresh');
-					$('.main-menu li a').click(function(event) {
-							event.preventDefault();
-							$('body').scrollTo($(this).attr('href'),700,{offset:-60});
-					});
-				}
-				
-				$('#joyRideTipContent').joyride({
-					autoStart : true,
-					cookieMonster: true,           
-					cookieName: 'CourseMapPublicTip', 
-					postStepCallback : function (index, tip) {
-						if (index == 2) {
-							$(".toggle-group:visible")[0].click();
-						}						
-					},
-					modal:true,
-					expose: true
-				});
-				/* QandA
-				$('#QandA').show();
-				$("#QandA").html(tmpl("cm_public_comments", {"comments": data.course_map.comments, "cm_id": data.course_map.id}));
-				*/
-			}
-		);
-	}
+
+
 	$(document).ready(function(){
-		
 		var dept_id=<%=params[:dept_id]||0%>;
 		var year=<%=params[:year]||0%>;
 		if(dept_id!=0){
 			$("#dept-"+dept_id).parent().parent().prev().click();		
 			$("#dept-"+dept_id).addClass("selected");
 			if(year!=0){
-				load_cm(dept_id,year);	
+				loadCm(dept_id,year);	
 			}
 		}
 	
 	});
 
-	function load_qa(dept_id,sem_id){
-		var qa_div = $('#QandA').children().first() ;
-		$('#QandA').show();
-		
-	}
-	
-	function genCfTree(cf){
-		
-		str='<li class="cf-li"><a href="#'+cf.id+'">'+cf.cf_name+'</a></li>';
-		if(cf.cf_type==3){
-			str+='<ul class="nav sub-sub-menu">';
-			for(var i=0,child_cf;child_cf=cf.child_cf[i];i++){
-				str+=genCfTree(child_cf);
-			}
-			str+='</ul>'
-		}
-		return str;
-	}
-	
-	function toggleGroup(obj,cf_id,id){
-		var target=$(".cf-"+cf_id+"-"+id);
-		target.toggle(600,function(){
-			if(target.is(":visible")){
-				obj.find(".fa-plus").toggleClass("fa-minus fa-plus");
-			}
-			else{
-				obj.find(".fa-minus").toggleClass("fa-minus fa-plus");
-			}
-		});
-		
-	}
-	function toggleBtn(obj){
-		var x=obj.attr('type');
-		if(x=="show"){
-			obj.text("收回課程群組");
-			$("[class*=cf-]").show();
-			obj.attr('type','hide');
-			$(".fa-plus").attr("class","fa fa-minus");
-		}
-		else{
-			obj.text("展開課程群組");
-			$("[class*=cf-]").hide();
-			obj.attr('type','show');
-			$(".fa-minus").attr("class","fa fa-plus");
-		}
-	}
-	
-	
-	
 </script>
 
-<%= render "/course_maps/public/xtmpl_scrollbar" %>
-
-
 <%= render "/course_maps/public/xtmpl_course_table" %>
-
-<%= render "/course_maps/public/xtmpl_qa" %>
-
 <style>
+	.tooltip-course
+	{
+		background:#fff;
+		border:1px #ccc solid;
+		border-radius:6px;
+		position:absolute;
+		left:300px;
+		top:300px;
+		width:auto;
+		height:auto;
+		padding-bottom:5px;
+		display:none;
+		z-index:1000;
+		
+		-webkit-box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
+		-moz-box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
+		box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
+	}
+	.course-name
+	{
+		overflow:hidden;
+		background:#aaa;
+		
+		color:white;
+		padding:5px 5px;
+	}
+	.course-content
+	{
+		
+		color:#555;
+		padding:5px 5px;
+		overflow:hidden;
+		display:block;
+		
+	}
+	.widget-course
+	{
+		height:80px;
+		width:160px;
+		margin-bottom:20px;
+		
+		float:right;
+		display:block;
+	}
+	
+	.square-course
+	{
+		width:12px;
+		height:12px;
+		background:#666;
+		display:inline-block;
+		margin-left:15px;
+		margin-top:10px;
+		line-height:20px;
+	}
+	.widget-line
+	{
+		line-height:20px;
+	}
 	.lead_course {
-		background-color:#BBFFEE;
+		border-bottom: 3px solid #ddd;
+		-moz-box-shadow:    inset 0 0 10px #000000;
+	  -webkit-box-shadow: inset 0 0 10px #000000;
+	  box-shadow:         inset 0 0 10px #000000;
+	}
+	.grade1
+	{
+		background:#333;
+		color:white;
+		
+	}
+	.grade2
+	{
+		border-left: 5px solid #fff;
+	}
+	.semester1
+	{
+		background:#ccc
+	}
+	.semester2
+	{
+		background:#ccc;
+		border-left: 2px solid #fff;
+	}
+	.btn-course
+	{
+		padding:4px 8px;
+		margin:10px 0px;
+		color:#fff;
+		border-radius:4px;
+		font-size:12px;
+		text-align:center;
+		height:42px;
+		background:#0080FF;
+	}
+	.btn-course:hover
+	{
+		opacity:0.8;
+	}
+	#btn-course-required
+	{
+		background:#0080FF;
+	}
+	#btn-course-minor
+	{
+		background:#FF8040;
+	}
+	#btn-course-main
+	{
+		background:#FF0080;
+	}
+	
+	#table-gray-line
+	{
+		border-left:1px #aaa solid;
+	}
+	#table-not-limit
+	{
+		height:0px;
+		background:#ccc;
+	}
+
+	.btn-course:hover
+	{
+		opacity:0.8;
+	}
+	#btn-course-required
+	{
+		background:#0080FF;
+	}
+	#btn-course-minor
+	{
+		background:#FF8040;
+	}
+	#btn-course-main
+	{
+		background:#FF0080;
+	}
+	
+	#table-gray-line
+	{
+		border-left:1px #aaa solid;
+	}
+	#table-not-limit
+	{
+		height:0px;
+		background:#ccc;
 	}
 	/*html, body{height:100%;}*/
 

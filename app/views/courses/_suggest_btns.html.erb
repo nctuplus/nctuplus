@@ -1,49 +1,96 @@
 <table class="tabl col-md-offset-3" style="border:1px solid #ccc;">
 <tr class="" style="">
 	<td> 
-		<button data-content="空堂" class="btn btn-default" onclick="get_selected_time_slot();">
+		<button id="sel-time-btn" data-content="空堂" class="btn btn-default pop-over" onclick="searchTimeSlot();">
 			<%=fa_icon "calendar 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="向度" class="btn btn-default" onclick="searchLackCourses();" style="padding:6px 7px;">
+		<button id="dimension-btn" data-content="向度" class="btn btn-default pop-over" onclick="searchLackDimension();" style="padding:6px 7px;">
 			<%=fa_icon "graduation-cap 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "heart-o 2x"%>
 		</button>
-		
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "users 2x"%>
 		</button>
 	</td>
 </tr>
 <tr class="">
 	<td>
-		<button data-content="尚未開放" class="btn btn-default" style="padding:6px 11px;">
+		<button data-content="尚未開放" class="btn btn-default pop-over" style="padding:6px 11px;">
 			<%=fa_icon "signal 2x"%>
 		</button>
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "trophy 2x"%>
 		</button>	
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default" style="padding:6px 11px;">
+		<button data-content="尚未開放" class="btn btn-default pop-over" style="padding:6px 11px;">
 			<%=fa_icon "desktop 2x"%>
 		</button>
 		
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default">
+		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "cogs 2x"%>
 		</button>
 	</td>
 </tr>
 </table>
 <br>
+
+<script>
+	function searchLackDimension(){
+		<% if !current_user.has_imported? %>
+			$(".scrollable").html("<h4 class='text-center'>請先匯入成績!</h4>");
+		<% elsif current_user.is_undergrad? %>
+			$(".scrollable").html("<%=j loadingImg%>");
+			$.getJSON("/user/statistics", function (data) {
+				var pass_courses=getPassCourses(checkPassTaking,data.pass_score,data.user_courses);
+				var result=commonCheck(pass_courses);
+				var arr="[";
+				for(var dimension in result['common']){
+					if (result['common'][dimension]==0){ 
+						arr+='"'+dimension+'",';
+					}
+				}
+				if(arr.length==1){
+					$(".scrollable .text-center").text("你已經(順利的話)修完了喔^_^");
+				}
+				else{
+					arr=arr.substr(0,arr.length-1);
+					arr+=']';					
+					$("#dimension_search").val(arr);
+					$("form").submit();
+				}
+			});
+		<% else %>
+			$(".scrollable").html("<h4 class='text-center'>你不需要修通識喔^_^</h4>");
+		<% end %>
+	}
+	
+	function searchTimeSlot(){
+		var selected = $('#schedule_table').CourseTable('getSelectedSlot');
+		if(selected.length>0){
+			var arr_str = '[';
+			for(var i=0, ele;ele=selected[i]; ++i)
+				arr_str+= '"'+ele+'",';
+			arr_str=arr_str.substr(0,arr_str.length-1);
+			arr_str+=']';
+			$('#timeslot_search').val(arr_str);
+			$(".scrollable").html("<%=j loadingImg%>");
+			$("form").submit();
+			$(".schd-grid-selected").removeClass("schd-grid-selected");
+		}
+		else
+			toastr["warning"]("請先在右方課表選取時間");
+	}
+</script>

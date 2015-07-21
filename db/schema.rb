@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150515092905) do
+ActiveRecord::Schema.define(version: 20150623084127) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -42,6 +42,51 @@ ActiveRecord::Schema.define(version: 20150515092905) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "book_trade_info_ctsships", force: true do |t|
+    t.integer  "book_trade_info_id"
+    t.integer  "course_teachership_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "book_trade_info_ctsships", ["book_trade_info_id"], name: "index_book_trade_info_ctsships_on_book_trade_id", using: :btree
+  add_index "book_trade_info_ctsships", ["course_teachership_id"], name: "index_book_trade_info_ctsships_on_course_teachership_id", using: :btree
+
+  create_table "book_trade_infos", force: true do |t|
+    t.integer  "book_id",            default: 0,  null: false
+    t.integer  "user_id",            default: 0,  null: false
+    t.integer  "contact_way"
+    t.string   "book_name",          default: "", null: false
+    t.integer  "price",              default: 0,  null: false
+    t.integer  "status",             default: 0,  null: false
+    t.integer  "view_times",         default: 0,  null: false
+    t.text     "desc",                            null: false
+    t.string   "cover_file_name"
+    t.string   "cover_content_type"
+    t.integer  "cover_file_size"
+    t.datetime "cover_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "book_trade_infos", ["book_id"], name: "index_book_trade_infos_on_book_id", using: :btree
+  add_index "book_trade_infos", ["user_id"], name: "index_book_trade_infos_on_user_id", using: :btree
+
+  create_table "books", force: true do |t|
+    t.boolean  "from_google",  default: false, null: false
+    t.string   "title",        default: "",    null: false
+    t.string   "isbn"
+    t.string   "authors"
+    t.text     "description"
+    t.text     "image_link"
+    t.text     "preview_link"
+    t.integer  "user_id",      default: 0,     null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -209,30 +254,6 @@ ActiveRecord::Schema.define(version: 20150515092905) do
   add_index "course_groups", ["course_map_id"], name: "index_course_groups_on_course_map_id", using: :btree
   add_index "course_groups", ["user_id"], name: "index_course_groups_on_user_id", using: :btree
 
-  create_table "course_map_public_comments", force: true do |t|
-    t.integer  "user_id"
-    t.string   "comments"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "course_map_id"
-    t.integer  "checked",       default: 0
-  end
-
-  add_index "course_map_public_comments", ["course_map_id"], name: "index_course_map_public_comments_on_course_map_id", using: :btree
-  add_index "course_map_public_comments", ["user_id"], name: "index_course_map_public_comments_on_user_id", using: :btree
-
-  create_table "course_map_public_sub_comments", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "comment_id"
-    t.integer  "course_map_id"
-    t.string   "comments"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "course_map_public_sub_comments", ["comment_id"], name: "index_course_map_public_sub_comments_on_comment_id", using: :btree
-  add_index "course_map_public_sub_comments", ["course_map_id"], name: "index_course_map_public_sub_comments_on_course_map_id", using: :btree
-
   create_table "course_maps", force: true do |t|
     t.integer  "department_id"
     t.string   "name"
@@ -291,13 +312,10 @@ ActiveRecord::Schema.define(version: 20150515092905) do
     t.string   "ch_name"
     t.string   "eng_name"
     t.integer  "credit"
-    t.integer  "department_id"
-    t.boolean  "is_virtual",    default: false, null: false
+    t.boolean  "is_virtual", default: false, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
-  add_index "courses", ["department_id"], name: "index_courses_on_department_id", using: :btree
 
   create_table "departments", force: true do |t|
     t.integer  "degree"
@@ -419,6 +437,15 @@ ActiveRecord::Schema.define(version: 20150515092905) do
   add_index "temp_course_simulations", ["course_field_id"], name: "index_temp_course_simulations_on_course_field_id", using: :btree
   add_index "temp_course_simulations", ["semester_id"], name: "index_temp_course_simulations_on_semester_id", using: :btree
 
+  create_table "user_collections", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "target_id"
+    t.integer  "semester_id"
+    t.string   "name",        default: ""
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"
     t.integer  "user_id"
@@ -429,21 +456,6 @@ ActiveRecord::Schema.define(version: 20150515092905) do
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
-  create_table "user_scores", force: true do |t|
-    t.integer  "user_id",                                 null: false
-    t.integer  "target_id",                               null: false
-    t.integer  "course_field_id",             default: 0
-    t.boolean  "is_agreed"
-    t.text     "score",           limit: 255
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "user_scores", ["course_field_id"], name: "index_user_scores_on_course_field_id", using: :btree
-  add_index "user_scores", ["target_id"], name: "index_user_scores_on_target_id", using: :btree
-  add_index "user_scores", ["user_id"], name: "index_user_scores_on_user_id", using: :btree
-
   create_table "users", force: true do |t|
     t.string   "name"
     t.integer  "year",                   default: 0
@@ -451,6 +463,7 @@ ActiveRecord::Schema.define(version: 20150515092905) do
     t.datetime "updated_at"
     t.integer  "department_id"
     t.boolean  "agree",                  default: false
+    t.boolean  "agree_share",            default: false
     t.integer  "role",                   default: 1
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false

@@ -1,14 +1,12 @@
 <script>
-
-
-	function addCourseSimulation(this_but, cd_id, time, addordel,from){
+	function addCourseSimulation($this_but, cd_id, time, addordel,from){
 		if(addordel=="add"){
 			//console.log(time);
 			var res = $('#schedule_table').CourseTable('checkConflictByTime',{time: time}) ;
 			if(res)
 				return ;
 		}else if(addordel=="delete"){
-			this_but.parent().parent().remove();
+			$this_but.parent().parent().remove();
 		}	
 		save_course(cd_id,addordel,from);		
 	}
@@ -32,6 +30,9 @@
 				}		
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");
+			<% if current_user.try(:canShare?) %>		
+				$('#schedule_table').CourseTable('renderImg', 'upload') ;	
+			<% end %>	
 			}	
 		});
 	}
@@ -55,7 +56,7 @@
 						</a>
 						{%= cd.dept_name %}
 						{%= cd.teacher_name %}
-						{% if(o.view_type=="schedule"){ %}
+						{% if(o.view_type=="simulation"){ %}
 							{% if(o.use_type=="add"){ %}
 								<button class="btn btn-success btn-circle pull-right" onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
 									<span class="glyphicon glyphicon-plus"></span>
@@ -67,7 +68,7 @@
 							{% } %}
 						{% }else if(o.view_type=="session"){ %}
 							{% if(o.use_type=="add"){ %}
-								<button class="btn btn-success btn-circle pull-right" onclick="add_class({%=cd.id%},'add','search')">
+								<button class="btn btn-success btn-circle pull-right" onclick="add_to_cart({%=cd.id%},'add')">
 									<span class="glyphicon glyphicon-plus"></span>
 								</button>
 							{% }else if(o.use_type=="delete"){ %}

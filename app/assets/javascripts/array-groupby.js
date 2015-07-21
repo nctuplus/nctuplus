@@ -19,3 +19,13 @@ function groupBy( array , f ){
     return groups[group]; 
   })
 }
+
+function groupBy2( array , f ){
+  var groups = {};
+  array.forEach( function( o ){
+    var group = JSON.stringify( f(o) );
+    groups[group] = groups[group] || [];
+    groups[group].push( o );  
+  });
+  return groups;
+}

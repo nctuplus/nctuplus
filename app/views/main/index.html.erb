@@ -45,6 +45,9 @@
 
 
 	<div class="col-md-12 hidden-sm hidden-md hidden-lg vertical-center">
+		<div href="/books/" class="sm-func-container clickable-hover" >
+			<p class="text-center index-func-desc" style=""><%=fa_icon "book" %>二手書</p>
+		</div>
 		<div href="/courses/" class="sm-func-container clickable-hover" >
 			<p class="text-center index-func-desc" style=""><%=fa_icon "search" %>找課程</p>
 		</div>
@@ -59,8 +62,16 @@
 	<div class="col-md-12 hidden-xs" style="/*position:absolute;margin-top:30%;margin-bottom:3%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000;*/ ">
 		
 		<div class="row " style="margin-top:15%;">
-		
 			<div class="container icon-container col-md-offset-3 col-sm-offset-2" >
+				<div class="row row-margin" >
+					<div class="circle clickable-hover" href="/books/">
+						<%=fa_icon "book 5x" %>
+					</div>
+				</div>
+					<p class="text-center function-desc" style="">二手書</p>
+			</div>
+			
+			<div class="container icon-container" >
 				<div class="row row-margin" >
 					<div class="circle clickable-hover" href="/courses/">
 						<%=fa_icon "search 5x" %>
@@ -123,17 +134,13 @@
 
 <script>
 	$(document).ready(function() {
-			//$("#content").attr("class","col-md-12");
-			//$("#global_bgcolor").removeClass("well");
-			$("#global_bgcolor").attr("class","");
-			
-			$(".circle").hover(
-				function(){$(this).find("i").css("color","white");},
-				function(){$(this).find("i").css("color","");}
-			);
-			
-			$(".clickable-hover").click(function() {
-				window.document.location = $(this).attr("href");
-			});			
+		$("#content-contaier").attr("class","container-fluid");			
+		$(".circle").hover(
+			function(){$(this).find("i").css("color","white");},
+			function(){$(this).find("i").css("color","");}
+		);			
+		$(".clickable-hover").click(function() {
+			window.document.location = $(this).attr("href");
+		});
 	});
 </script>

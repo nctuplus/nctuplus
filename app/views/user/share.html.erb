@@ -1,0 +1,41 @@
+<% canAddCollection = can_add_to_collection?(current_user, @user, @semester)%>
+<div class="well" style="background-color:white;">  
+  <h4 class="text-center">
+    <%=@user.department.ch_name%>
+    <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
+		<% if canAddCollection %>		
+		  <%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
+		<% end %>	
+  </h4> 
+  <table class="table table-bordered" id="myCourseTable"></table>
+</div>
+<script>
+  var $table = $('#myCourseTable') ;
+  $.getJSON("/shares/<%=params[:id]%>",function(data){
+    //  console.log(data);
+			data.config = { popover: true, click_redirect: true };	
+			$table.CourseTable(data);	
+	});
+<% if canAddCollection %>	
+	function record_collection($link){
+		var item = '<%=j params[:id]%>' ;
+		$.ajax({
+			method: "post",
+			url:"/user/update",
+			data: {type: "add_collection", item: item},
+			success: function(){
+				toastr["success"]("已加入課表收藏");
+				$link.remove();
+			}
+		});
+	}
+<% end %>	
+</script>
+<style>
+  #myCourseTable{
+    height: 800px; 
+    width: 600px; 
+    margin-left: auto; 
+    margin-right: auto; 
+  }
+</style>

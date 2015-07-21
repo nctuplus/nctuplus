@@ -1,24 +1,32 @@
-<div class="row" style="background-color:rgba(221,221,221,0.8)">
-	<div class="tabbable tabs-left col-md-4 col-md-offset-1">
-		<div class="tab-content" style="overflow:hidden;">
-		 <div class="tab-pane active" id="a">
-				<div class="panel panel-primary ">
-					<div class="panel-heading">
-						<h4 class="text-center">
-							<button id="has-select-btn" class="btn btn-circle btn-info pull-left" onclick="show_has_select()" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "check"%></font>
-							</button>	
-							課程查詢
-							<button id="suggest-btn" class="btn btn-circle btn-success pull-righ" onclick="show_search();" style="margin-top: -5px;">
-								<font color="white"><%=fa_icon "search" %></font>
-							</button>
-						
-						</h4>
-					</div>
-					<div class="panel-body">
-						<%= render "suggest_btns" %>
-						<div id="search_div" class="row schedule-search-bar"></div>
-					</div>
+<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "courses/simulation", "data-turbolinks-track" => true %>
+
+<div class="row" style="">
+	<div class="col-md-5 col-md-offset-1">
+		<div class="panel" >
+			<div class="panel-heading bg-fb">
+				<h4 class="text-center">
+					<span class="pull-left">
+						<button id="has-select-btn" class="btn btn-circle btn-info pop-over" data-content="已選課程" onclick="showHasSelected()" style="margin-top: -5px;">
+							<%=fa_icon "check"%>
+						</button>
+						<button id="shopping-cart" class="btn btn-circle btn-info pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
+							<%=fa_icon "star"%>
+						</button>
+					</span>
+					課程查詢
+					<span class="pull-right">
+						<button id="show-tips" class="btn btn-circle btn-info pop-over" data-content="使用提示" onclick="showTip();" style="margin-top: -5px;">
+							<%=fa_icon "question"%>
+						</button>
+					</span>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<%= render "suggest_btns" %>
+				<div id="search_div" class="row schedule-search-bar">
+					<%= render "/courses/search/mini_form" %>
+					<div class="scrollable"></div>
 				</div>
 			</div>
 		</div>
@@ -27,11 +35,25 @@
 		<div class="panel panel-primary ">
 			<div class="panel-heading" style="background-color:#4c66a4;">
 				<h4 class="text-center">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>
-					<a href="/courses/timetable.xlsx?sem_id=<%=Semester::LAST.id%>" id="download-link" class="btn btn-success btn-circle pull-right" style="margin-top: -5px;">
-						<i class="fa fa-download"></i>
-					</a>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<%= Semester::LAST.year.to_s + ((Semester::LAST.half==1) ? "上" : "下") %>       
+					<div class="btn-group pull-right header-button pop-over" data-content="匯出" >
+						<button type="button" class="btn btn-circle btn-info dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="export-table">
+							 <i class="fa fa-download"></i>
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="/courses/export_timetable.xls?sem_id=<%=Semester::LAST.id%>">Excel</a></li>
+							<li><a href="#" onclick="$('#schedule_table').CourseTable('renderImg', 'window');">Image</a></li>
+						</ul>
+					</div>
+					<% if current_user.canShare? %>
+					<button type="button" id="copy-it-simu" 
+					  class="btn btn-circle btn-info pull-left header-button pop-over" 
+					  data-content="複製分享連結" 
+					  data-clipboard-text="<%=root_url %>shares/<%=current_user.get_share_hasid(Semester::LAST.id)%>">
+							 <span class="glyphicon glyphicon-share"></span>
+					</button>
+					<% end %>
 				</h4>		
 			</div>
 			<table class="table table-bordered" id="schedule_table"></table>
@@ -39,75 +61,72 @@
 	</div>
 	
 </div>
-
+<ol id="joyRideTipContent">
+	<li data-text="Next" class="">
+		<h2>Tips</h2>
+		<p>
+		請使用Enter鍵或滑鼠點擊灰色處觀看	
+		</p>
+	</li>
+	<li data-id="has-select-btn" data-button="Next">
+		<h4>已選課表</h4>
+		<p>點此察看目前的課程</p>
+	</li>
+	<li data-id="shopping-cart" data-button="Next">
+		<h4>收藏課程</h4>
+		<p>點此察看在「全校課程」中收藏的課程</p>
+	</li>
+	<li data-id="copy-it-simu" data-button="Next">
+		<h4>分享課表</h4>
+		<p>複製您的課表連結給同學們<br>若貼在FB還帶有縮圖喔!!</p>
+	</li>
+	<li data-id="export-table" data-button="Next">
+		<h4>匯出課表</h4>
+		<p>匯出Excel格式或圖檔</p>
+	</li>
+	
+	<li data-id="sel-time-btn" data-button="Next">
+		<h4>推薦-空堂</h4>
+		<p>
+			先在右方的課表空格中選擇時間<br>
+			按下按鈕搜尋該時段的「通識及外文」課程<br>
+			可以搜尋很多個時段喔!
+		</p>
+	</li>
+	<li data-id="dimension-btn" data-button="Next">
+		<h4>推薦-向度</h4>
+		<p>推薦目前缺少的通識向度(需先匯入成績)</p>
+	</li>
+</ol>
+	
 <script>
-function show_search(){
-	$("#search_div").find('form').toggleClass("hidden");
-}
-$(document).ready(function(){
-/*
-	$('#cart-btn').popover({
-		content: "顯示觀察名單",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});
-*/	
-	$('#has-select-btn').popover({
-		content: "已選課程",
-		placement:"auto",
-		trigger : "hover",
-		container :"body"
-	});
-	
-	$(".btn-default").popover({
-			//content : $(this).attr('tiptext'),
-			trigger :"hover",
-			container :"body",
-			placement : "auto"
-	});
-	
-	
-	//sidebar search
-	$("#search_div").load("/courses/search_mini?sem_id=<%=Semester::LAST.id%>",function(){
-		show_has_select();
-	});		
-	
-	//course table
-	load_course_table(<%=Semester::LAST.id%>, true);
-	
-	
-	
-	
-});
-	
-	function searchLackCourses(){
-		<% if current_user.is_undergrad? %>
-			$(".scrollable").html("<%=j loadingImg%>");
-			$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
-				var result=get_check_res(data.pass_score,data.last_sem_id,data.user_courses.success);
-				var arr="[";
-				for(var dimension in result['common']){
-					if (result['common'][dimension]==0){ 
-						arr+='"'+dimension+'",';
-					}
-				}
-				if(arr.length==1)
-					toastr["info"]("你已經修完了喔^_^");
-				else{
-					arr=arr.substr(0,arr.length-1);
-					arr+=']';					
-					$("#dimension_search").val(arr);
-					$("form").submit();
-				}
-			});
-		<% else %>
-			toastr["info"]("你不需要修通識喔^_^");
-		<% end %>
+	$(document).ready(function(){
+		toastr["success"]("已更新到104上的課程囉!!!");
+<% if current_user.canShare? %>	
+    new ZeroClipboard( $('#copy-it-simu') );	
+		$('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
+<% end %>			
 		
-	}
+		$(".pop-over").popover({
+				trigger :"hover",
+				container :"body",
+				placement : "auto"
+		});
+		showHasSelected();
+
+		//course table
+		load_course_table(<%=Semester::LAST.id%>, true);
+		//sessionTest();
+		$('#joyRideTipContent').joyride({
+      autoStart : true,
+      cookieMonster: true,           
+      cookieName: '_CourseSimulationTip', 
+      modal:true,
+      expose: true
+    });
 	
-	
+	});
+
 	function load_course_table(semester_id, selectable){
 		$.getJSON("/user/get_courses?type=course_table&sem_id="+semester_id,function(data){
 			//console.log(data);
@@ -115,40 +134,31 @@ $(document).ready(function(){
 				deletable: true ,
 				selectable: true,
 				popover: true,
+				semester_id: semester_id,
 				cancelButtonFunc: function(arg){
 					var cd_id = arg.data.cd_id;
 					save_course(cd_id,'delete','load_course_table');
 				}
 			};
 			$('#schedule_table').CourseTable(data);	
+			$('#schedule_table').CourseTable("renderImg","upload");
 		});
 	}
-	function show_has_select(){
+	
+	function showHasSelected(){
 		$.getJSON("/user/get_courses?type=simulation",function(data){
 			//console.log(data);
 			$(".scrollable").html(tmpl("search_result", data));
 		});
 	}
 
-	function show_cart(){
-		$("#search_div").load("/course_details/mini?sem_id=<%=@sem_id%>");
-	}
-
-	function get_selected_time_slot(){
-		var selected = $('#schedule_table').CourseTable('getSelectedSlot');
-		if(selected.length>0){
-			var arr_str = '[';
-			for(var i=0, ele;ele=selected[i]; ++i)
-				arr_str+= '"'+ele+'",';
-			arr_str=arr_str.substr(0,arr_str.length-1);
-			arr_str+=']';
-			$('#timeslot_search').val(arr_str);
-			$(".scrollable").html("<%=j loadingImg%>");
-			$("form").submit();
-		}
-		else
-			toastr["warning"]("請先在右方課表選取時間");
-	}
 </script>
 
+<%=render "courses/search/search_js"%>
 <%=render "courses/search/xtmpl_results_mini"%>
+
+<style>
+.header-button{
+  margin-top: -5px ;
+}
+</style>

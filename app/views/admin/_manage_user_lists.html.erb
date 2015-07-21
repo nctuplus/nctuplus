@@ -7,6 +7,15 @@
 			<%=user.student_id||"error"	%>
 		<% end%>	
 	</td>
+	<td>
+	  <% if user.uid and user.student_id %>
+	  E3+FB
+	  <% elsif user.uid %>
+	  FB
+	  <% else %>
+	  E3
+	  <% end %>
+	</td>
 	<% if !user.department.nil? %>
 	<td>
 		<%=user.department_ch_name%>
@@ -23,7 +32,7 @@
 	</td>
 	<td><%= user.year==0 ? user.year : '尚未填寫' %></td>
 	<td>
-		<%=select_tag :role, options_for_select(@role_sel, user.role), :class=>'form-control admin-user-role', :user_id=>user.id%>
+		<%=select_tag :role, options_for_select(@role_sel, user.role), :class=>'form-control admin-user-role', :user_id=>user.id, :onchange=>"updateRole($(this));"%>
 	</td>
 
 </tr>

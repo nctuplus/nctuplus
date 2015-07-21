@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
+	
+	
 <!--<link rel="shortcut icon" href="/favicon.ico" />-->
   <title>NCTU+</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
@@ -10,37 +12,43 @@
 
 	<% if params[:controller]!="main"%>
 		<meta name="robots" content="noindex">
+		
 	<% end %>
-	<meta name="description" content="NCTU+ 交大智慧選課系統">
+	
+	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
+	<% if @fb_share_meta %>
+	  <meta property="og:title" content="NCTU+分享課表" ></meta>
+    <meta property="og:description" content="<%=@user.name%> <%=@user.department.ch_name%> <%=@semester.name%>" ></meta>
+    <meta property="og:url" content="<%=root_url%>shares/<%=params[:id]%>" ></meta>
+    <meta property="og:image" content="<%=root_url%>course_table_shares/<%=@file_name%>"/>
+  <% else %>
+    <meta name="description" content="NCTU+ 交大智慧選課系統">  
+	<% end %>
+	
 </head>
 
-<body>
+<body style="background-color:#e9eaed;">
 
-<%= image_tag(asset_path("head_1.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
+<% image_tag(asset_path("head_1.jpg"), :id=>'bg1', :class=>"bg", :alt=>"NCTU+")%>
 
-
-	
-<div class="modal fade" id="global_modal" tabindex="-1" role="dialog" aria-hidden="true" >
+<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" >
-		<div class="modal-content" ></div>
+		<div class="modal-content" >
+			<div class="modal-header" >
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title"></h4>
+			</div>
+			<div class="modal-body" ></div>
+		</div>
 	</div>
 </div>
-
 
 <!-- layouts/header start -->
 	<%= render 'layouts/header' %>
 <!-- layouts/header end -->
 
-
-
-<div id="content-contaier" class="container-fluid" style="margin-top:50px;" >
-	<div class="row">
-		<div id="content" class="col-md-12" style="padding-right:0px;">
-			<div id="global_bgcolor" class="well global-background-color" style="margin-bottom:0px;" >
-				<%= yield %>
-			</div>
-		</div>
-	</div>
+<div id="content-contaier" class="container" style="margin-top:60px;margin-bottom:30px;" >
+	<%= yield %>	
 </div>
 
 <%= render 'layouts/footer' %>
