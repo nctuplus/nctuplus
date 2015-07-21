@@ -109,8 +109,10 @@ Nctuplus::Application.routes.draw do
 	end
 
 	resources :departments, :except=>[:show, :destroy]
-	
-	
+	###########5/29
+	get "discusses" => "discusses#index"
+    ###########5/29
+    
 	get "discusses/show"
 	get "discusses/like"
 	post "discusses/new"
@@ -134,7 +136,14 @@ Nctuplus::Application.routes.draw do
 			get "edit"
 		end
 	end
-  
+    
+  ###########5/29  
+  get "welcome/say_hello" => "welcome#say"
+  get "welcome" => "welcome#index"
+  # ...
+  match ':controller(/:action(/:id(.:format)))', :via => :all
+  ###########5/29
+
     
 
 end

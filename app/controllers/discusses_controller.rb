@@ -4,6 +4,22 @@ class DiscussesController < ApplicationController
 	before_filter :checkLogin, :only=>[:new, :update, :like]
 	before_filter :checkOwner, :only=>[:update, :delete]
 	
+##########5/29
+    def index
+
+        @discusses = Discuss.includes(:user).page(params[:page]).per(20)
+
+        
+		if !params[:custom_search].blank?	#if user key in something
+			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
+		end
+		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
+		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
+        
+        
+    end
+##########5/29
+    
 	def like
 		@like=current_user.discuss_likes.create(:like=>params[:like])
 		
@@ -36,7 +52,8 @@ class DiscussesController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'	
 		
 	end
-	
+    
+    
 	def show
 		#@ct_id=
 		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
