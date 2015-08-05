@@ -1,6 +1,10 @@
 <div class="container bg-white" >
-	<br>
 	<%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
+		<div class="form-group">
+			<div class="col-md-offset-1 col-md-10">
+			<h2>更改個人資訊</h2>
+			</div>
+		</div>
 		<% if current_user.hasE3?%>
 		<div class="form-group">
 			<h4><%=label_tag '結合',"結合",class:"col-sm-2 control-label"%></h4>
@@ -20,11 +24,6 @@
 			<h4><%=label_tag '分享課表',"分享課表",class:"col-sm-2 control-label"%></h4>
 			<div class="col-md-9">
 				<%=f.check_box :agree_share%> 
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-md-offset-1 col-md-10">
-			<h2>更改個人資訊</h2>
 			</div>
 		</div>
 		<div class="form-group">
@@ -68,9 +67,7 @@
 			<%=submit_tag "送出", class: "btn btn-success pull-right" %>
 			</div>
 		</div>
-	
 	<% end %>
-	
 
 </div>
 

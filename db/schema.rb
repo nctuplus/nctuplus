@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150623084127) do
+ActiveRecord::Schema.define(version: 20150723072543) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -50,13 +50,13 @@ ActiveRecord::Schema.define(version: 20150623084127) do
     t.datetime "updated_at"
   end
 
-  add_index "book_trade_info_ctsships", ["book_trade_info_id"], name: "index_book_trade_info_ctsships_on_book_trade_id", using: :btree
+  add_index "book_trade_info_ctsships", ["book_trade_info_id"], name: "index_book_trade_info_ctsships_on_book_trade_info_id", using: :btree
   add_index "book_trade_info_ctsships", ["course_teachership_id"], name: "index_book_trade_info_ctsships_on_course_teachership_id", using: :btree
 
   create_table "book_trade_infos", force: true do |t|
     t.integer  "book_id",            default: 0,  null: false
     t.integer  "user_id",            default: 0,  null: false
-    t.integer  "contact_way"
+    t.integer  "contact_way",        default: 0,  null: false
     t.string   "book_name",          default: "", null: false
     t.integer  "price",              default: 0,  null: false
     t.integer  "status",             default: 0,  null: false
@@ -345,6 +345,17 @@ ActiveRecord::Schema.define(version: 20150623084127) do
   add_index "discuss_likes", ["sub_discuss_id"], name: "index_discuss_likes_on_sub_discuss_id", using: :btree
   add_index "discuss_likes", ["user_id"], name: "index_discuss_likes_on_user_id", using: :btree
 
+  create_table "discuss_verifies", force: true do |t|
+    t.integer  "discuss_id"
+    t.integer  "user_id"
+    t.boolean  "pass"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "discuss_verifies", ["discuss_id"], name: "index_discuss_verifies_on_discuss_id", using: :btree
+  add_index "discuss_verifies", ["user_id"], name: "index_discuss_verifies_on_user_id", using: :btree
+
   create_table "discusses", force: true do |t|
     t.integer  "user_id"
     t.integer  "course_teachership_id"
@@ -463,7 +474,7 @@ ActiveRecord::Schema.define(version: 20150623084127) do
     t.datetime "updated_at"
     t.integer  "department_id"
     t.boolean  "agree",                  default: false
-    t.boolean  "agree_share",            default: false
+    t.boolean  "agree_share",            default: true
     t.integer  "role",                   default: 1
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false

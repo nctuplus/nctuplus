@@ -12,7 +12,7 @@ Nctuplus::Application.routes.draw do
 
 	
 #--------- events --------------	
-	#resources :events
+	resources :events
 	
 #--------- for share course table page -----
 	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
@@ -35,6 +35,11 @@ Nctuplus::Application.routes.draw do
 
 
 #---------- admin page -----------
+
+	#for 徵文活動
+	get "admin/discusses"	
+	get "admin/discuss_verify"
+	##################################
 	
   get "admin/user_statistics"
 	get "admin/ee104"

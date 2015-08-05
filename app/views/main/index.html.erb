@@ -1,146 +1,219 @@
-
-<div id="head_bg" class="carousel slide" data-ride="carousel" style="width:100%;margin-top:-45px;">
-  <!-- Indicators -->
-  <ol class="carousel-indicators hidden" style="//visibility:hidden">
-    <li data-target="#head_bg" data-slide-to="0" class="active"></li>
-    <li data-target="#head_bg" data-slide-to="1"></li>
-    <li data-target="#head_bg" data-slide-to="2"></li>
-		<li data-target="#head_bg" data-slide-to="3"></li>
-  </ol>
-
-  <!-- Wrapper for slides -->
-  <div class="carousel-inner" >
-    <div class="item active">
-      <%= image_tag(asset_path("head_1.jpg"), :class=>"header", :alt=>"NCTU+")%>
-    </div>
-    <div class="item">
-      <%= image_tag(asset_path("head_2.jpg"), :class=>"header", :alt=>"NCTU+")%>
-    </div>
-		<div class="item">
-      <%= image_tag(asset_path("head_3.jpg"), :class=>"header", :alt=>"NCTU+")%>
-    </div>
-		<div class="item">
-      <%= image_tag(asset_path("head_4.jpg"), :class=>"header", :alt=>"NCTU+")%>
-    </div>
-  </div>
-
-  <!-- Controls -->
-	<!--
-  <a style="margin-top:400px;z-index:5000;" class="left carousel-control hidden-xs" href="#head_bg" role="button" data-slide="prev">
-		<%= fa_icon("chevron-left 4x")%>
-  </a>
-  <a style="margin-top:400px;z-index:5000;" class="right carousel-control hidden-xs" href="#head_bg" role="button" data-slide="next">
-    <%= fa_icon("chevron-right 4x")%>
-  </a>
-	-->
-</div>
-<div class="container">
-
-	<div class="col-md-12" style="margin-top:4%;">
-		<p style="color:white; font-size:82px; font-weight:bold;font-family:Arial; /*display:inline-block;*/">NCTU<sup>+</sup></p>
-		<p class="hidden-xs " style="color:white; font-size:46px; font-weight:bold;display:inline-block;">交大智慧校園系統</p>
-	</div>
-
-
-
-
-	<div class="col-md-12 hidden-sm hidden-md hidden-lg vertical-center">
-		<div href="/books/" class="sm-func-container clickable-hover" >
-			<p class="text-center index-func-desc" style=""><%=fa_icon "book" %>二手書</p>
-		</div>
-		<div href="/courses/" class="sm-func-container clickable-hover" >
-			<p class="text-center index-func-desc" style=""><%=fa_icon "search" %>找課程</p>
-		</div>
-		<div href="/courses/" class="sm-func-container clickable-hover" >
-			<p class="text-center index-func-desc" style=""><%=fa_icon "file-text-o" %>找心得</p>
-		</div>
-		<div href="/user/" class="sm-func-container clickable-hover" >
-			<p class="text-center index-func-desc" style=""><%=fa_icon "graduation-cap" %>算學分</p>
-		</div>
-	</div>
-	
-	<div class="col-md-12 hidden-xs" style="/*position:absolute;margin-top:30%;margin-bottom:3%;height:200px; background-color: rgba(255,255,255, 0); z-index:1000;*/ ">
-		
-		<div class="row " style="margin-top:15%;">
-			<div class="container icon-container col-md-offset-3 col-sm-offset-2" >
-				<div class="row row-margin" >
-					<div class="circle clickable-hover" href="/books/">
-						<%=fa_icon "book 5x" %>
-					</div>
-				</div>
-					<p class="text-center function-desc" style="">二手書</p>
-			</div>
-			
-			<div class="container icon-container" >
-				<div class="row row-margin" >
-					<div class="circle clickable-hover" href="/courses/">
-						<%=fa_icon "search 5x" %>
-					</div>
-				</div>
-					<p class="text-center function-desc" style="">找課程</p>
-			</div>
-			
-			<div class="container icon-container" >
-				<div class="row row-margin">
-					<div class="circle clickable-hover" href="/courses/">	
-						<%=fa_icon "file-text-o 5x" %>					
-					</div>
-					<p class="text-center function-desc" >找心得</p>
-				</div>
-			</div>
-			
-			<div class="container icon-container" style="">
-				<div class="row row-margin">
-				<div class="circle clickable-hover" href="/user/">
-					<%=fa_icon "graduation-cap 5x" %>
-					
-					<!--<span class="glyphicon glyphicon-list-alt"style="font-size:70px;"></span>-->
-				</div>
-					<p class="text-center function-desc" >算學分</p>
-				</div>
-			</div>
-			
-		</div>
-	</div>
-</div>
-
-	
+<%= javascript_include_tag "new-index", "data-turbolinks-track" => false %>
+<%= stylesheet_link_tag "new-index", "data-turbolinks-track" => false %>
 <style>
-	.sm-func-container{
-		//padding: 10px 40px; 
-		//border:1px solid;
-		min-width:100%;
-		border-radius:8px;
-		background-color: rgba(255,255,255, 0.5);
+	#about{
+		-webkit-box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);
+		-moz-box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);
+		box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);background:#222 100%
 	}
-	.sm-func-container:hover{
-		/*padding: 10px 40px; 
-		border:1px solid;
-		min-width:100%;
-		border-radius:100%;*/
-		background-color: rgba(0,0,0, 0.5);
-	}
-	.index-func-desc:hover {
-		color:rgb(255,255,255);
-		background-color: rgba(0, 0, 0, 0.5);
-		/* width and height can be anything, as long as they're equal */
-	}
-	.index-func-desc{
-		font-size: 24px;
-		font-weight: bold;
-		
+	#intro{
+		background-color:#ffffff;
 	}
 </style>
+<div class="bg2"></div>
+<div class="bg1"></div>
+<div class="bg3"></div>
+<header>
+	<div class="header-content text-left ">
+		<div class="container">
+		<div class="header-content-inner ">
+			<div class="header-left ">
+				<h1>NCTU+</h1>
+				<h3 style="position:relative;padding-top:-20px">交大智慧校園系統</h3>
+				<h4 class="parallelogram2">Brilliant College Life</h4>		
+				<div class="tabs-block hidden">
+					<div class="hr-left"></div>
+					<ul class="tabs">
+						<li>
+							<input type="radio" name="tabs" id="tab1" checked />
+							<label for="tab1"><h5>News</h5></label>
+							<div id="tab-content1" class="tab-content">
+								建議以Chrome 或 Firefox瀏覽<br>
+								∎　6/8 二手書系統上線
+								<br>∎　6/10 模擬排課系統上線
+								<br>∎　6/12 新增課表分享功能，分享學習歷程給大家
+							</div>
+						</li>
+						<li>
+							<input type="radio" name="tabs" id="tab2" />
+							<label for="tab2"><h5>Updates</h5></label>
+							<div id="tab-content1" class="tab-content">
+								∎　電子系課程心得更新
+								<br>∎　人社系課程心得更新
+								<br>∎　通識課程心得更新
+							</div>
+						</li>
+					</ul>
+				</div>
+				<!--RWD-->
+				<div class="warning"></div>
+				<div class="btn-inner"></div>								
+			</div>
+			
+			<div class="header-right ">
+				<h2 id="brief-intro">
+				</h2>
+				<br><br>
+				<a href="/login" class="btn btn-primary btn-xl page-scroll" style="font-size:20px;font-weight:300;margin-right:20px;">登入</a>
+			</div>							
+    </div>
+		</div>
+  </div>
+	<div class="text-center circle-bar"></div>
+</header>
+    
+<section id="intro" >
+	<div class="container">
+		<div class="row">
+				<div class="col-lg-12 text-center">
+					<h2 class="section-heading">為什麼使用NCTU+ ?<br><br></h2>					
+				</div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-3 col-md-6 text-center gray-hover">
+				<div class="service-box">					
+						<%=image_tag "1.png",class:"width-200"%>
+						<h3>全校課程心得</h3>
+						<p class="text-muted" style="width:80%;margin:auto;">
+						選課前的好幫手，包羅歷年交大所有課程心得，舊文新文一次找齊，也包含課堂評價與歷屆成績，也歡迎同學一起討論。
+						</p>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6 text-center gray-hover">
+				<div class="service-box">
+					<%=image_tag "2.png",class:"width-200"%>
+					<h3>二手書拍賣</h3>
+					<h5 class="highlight-new-function">NCTU+ 新功能!</h5>
+					<p class="text-muted" style="width:80%;margin:auto;">
+					原文書太貴買不下手？二手書難找又麻煩？NCTU+提供二手書交易平台，歡迎加入二手書買賣的行列
+					</p>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6 text-center gray-hover">
+				<div class="service-box">
+					<%=image_tag "3.png",class:"width-200"%>
+					<h3>畢業學分計算</h3>
+					
+					<p class="text-muted">今年可以畢業嗎？令人苦惱的畢業學分計算一次完成，把握大學最後的時間！</p>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-6 text-center gray-hover">
+				<div class="service-box">
+					<%=image_tag "4.png",class:"width-200"%>
+					<h3>課表分享功能</h3>
+					<h5 class="highlight-new-function">NCTU+ 新功能!</h5>
+					<p class="text-muted">想看看別人修了什麼課嗎？立即使用分享課表功能，讓學習加分</p>
+				</div>
+			</div>
+		</div>
+		<div class="col-lg-8 col-lg-offset-2 text-center" style="padding-top:5%"></div>
+	</div>
+ </section>    
+
+    
+<section class="bg-primary" id="about" style="color:white;margin-bottom:0px;">
+	<div class="container">
+		<div class="row">
+			<div class="col-lg-12 col-sm-12 text-center" >
+				<h2>About NCTU+ </h2>
+				<%=image_tag "logo22.png",class: "col-lg-4 col-sm-4",style: "text-align:center;width:320px;margin-bottom:20px;" %>											
+				<p class="col-lg-8 col-sm-3" style="text-align:left;"> 
+				NCTU+是一個交大非官方的資訊組織，有鑑於目前校園系統仍有許多改善空間，我們從改寫校園系統開始，擴展出許多更便利、更友善且更美觀的服務。<br>
+				我們一方面向校方請求開放Data及API，另一方面聆聽同學們的需求並不斷發想新的點子，我們不僅純粹的coding，我們希望結合行銷、設計、工程等不同領域的人才，不斷地進步使平台變的更好。
+				</p>
+			</div>
+		</div>
+	</div>
+</section>
 
 <script>
-	$(document).ready(function() {
-		$("#content-contaier").attr("class","container-fluid");			
-		$(".circle").hover(
-			function(){$(this).find("i").css("color","white");},
-			function(){$(this).find("i").css("color","");}
-		);			
-		$(".clickable-hover").click(function() {
-			window.document.location = $(this).attr("href");
-		});
+
+$(document).ready(function(){
+	$('.navbar-collapse ul li a').click(function() {
+		$('.navbar-toggle:visible').click();
 	});
+	// Offset for Main Navigation
+	$('#mainNav').affix({
+		offset: {
+			top: 100
+		}
+	});
+	// Initialize WOW.js Scrolling Animations
+	new WOW().init();
+	re_win();
+	$(window).bind("load resize",function() {
+		re_win();
+	});
+	// Fit Text Plugin for Main Header
+    $("h1").fitText(
+        1.2, {
+            minFontSize: '35px',
+            maxFontSize: '65px'
+        }
+    );
+		var brief_intro =["即將畢業，給自己一個安心，<br>快登入使用算學分功能！","機會是留給有準備的人，<br>快登入使用模擬排課!","手邊有用不到的教科書嗎?<br>快登入使用二手書平台!"];
+		$("#brief-intro").html(brief_intro[Math.floor(Math.random()*3)]);
+		var aa = ['url(<%=asset_path "bg6.jpg"%>)','url(<%=asset_path "bg5.jpg"%>)','url(<%=asset_path "bg3.jpg"%>)'];
+		var t1=0;
+		setInterval(function() {
+		$('.bg1').fadeOut(5000, function() 
+		{
+				
+				$('.bg1').css('background-image', aa[t1]).fadeIn(5000);
+				t1++;
+				if(t1 == 3) t1 = 0;
+			});
+		},5000)
+
+});
+
+
+function re_win(){	//need fix
+
+	if(window.innerWidth<=768)
+	{
+		$(".header-right").css("display","none");
+		//$(".header-left").css("width","170%");
+		$(".header-left h3").css("margin-left","20%");
+		$(".header-left h1").css({"margin-left":"19%","font-size":"4.5em"});
+		$(".header-left").css("margin","none");		
+		$(".header-left").css({'overflow':'hidden'});	
+		$(".parallelogram2").css({'width':'200px','margin-left':'20%'});
+		$(".hr-left").css("display","none");
+	$(".tabs-block").css({"width":"195%","margin-left":'10.4%','height':'190px','display':'none'})
+		
+		//RWD
+		$(".warning").html("<h5>建議以Chrome 或 Firefox瀏覽</h5>")
+		$(".warning").css({'margin-left':'21.4%','margin-top':'5%','color':'#aaa'})
+		$(".btn-inner").html("<div class='btn-remove'><a href='#' class='btn btn-primary btn-xl page-scroll' style='font-size:16px;font-weight:300;margin-right:20px;margin-left:30%;margin-top:20%;'>登入</a></div>")
+		
+		
+		$(".header-content-inner").css("margin-top","12%")
+
+		
+	}
+	else
+	{
+
+		
+
+		$(".header-content-inner").css("margin-top","1%")
+		$(".tabs-block").css({'display':'block'})
+		$(".header-right").css("display","block");
+		$(".header-left").css("margin-left","0");	
+		$(".header-left").css("width","100%");	
+		$(".header-left h3").css({"display":"block",'margin-left':'0%'});
+		$(".tabs-block").css("width","100%")		
+		$(".btn-remove").remove();
+		$(".warning h5").remove();
+		$(".hr-left").css("display","block");
+		$(".parallelogram2").css({'width':'200px','margin-left':'0%'});
+		$(".header-left h1").css("margin-left","0%");
+		$(".tabs-block").css({"width":"100%","margin-left":'0%'})
+	}
+	
+};
+
 </script>

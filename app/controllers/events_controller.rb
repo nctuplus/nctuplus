@@ -3,7 +3,7 @@ class EventsController < ApplicationController
 	before_filter :checkLogin, :only=>[:new, :create, :edit, :update, :destroy]
 	before_filter :checkOwner, :only=>[:update, :edit, :destroy]
 	def index
-		@events=Event.all
+		#@events=Event.all
 	end
 	
 	def new
