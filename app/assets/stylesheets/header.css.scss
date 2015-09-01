@@ -142,7 +142,7 @@
     }
 }
 
-.footer1
+.footer
 {
 	height:50px;
 	background:#000;
@@ -151,4 +151,13 @@
 	color:white;
 	text-align:center;
 	z-index:10;
+	position:relative;
+	margin-top: -50px;
+}
+.footer-force-bot{
+	//bottom:0px;
+	//position:absolute;
+}
+.footer>a:hover{
+	color: #00BBFF !important;
 }

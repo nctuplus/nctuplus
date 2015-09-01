@@ -16,7 +16,7 @@
 		$(".tab-link").click(function(e){
 			$("#others").load($(this).attr("url"));
 		});
-		
+		$(".footer").addClass("footer-force-bot");
 		<% if params[:msg] %>
 			alert("<%=params[:msg]%>");
 		<% end %>
