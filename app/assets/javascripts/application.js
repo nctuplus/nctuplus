@@ -25,7 +25,7 @@
 //= require share.min
 //= require bootstrap-switch
 //= require zeroclipboard
-
+//= require global-timetable
 
 
 var isMobile = false; //initiate as false
@@ -47,7 +47,10 @@ function goToHref(href,new_tab){
 }
 
 function showGlobalModal(title,content){
-	$("#global-modal .modal-title").html(title);
+	if(title!=null)
+		$("#global-modal .modal-title").html(title);
+	else
+		$("#global-modal .modal-header").hide();
 	$("#global-modal .modal-body").html(content);
 	justShowGlobalModal();
 
