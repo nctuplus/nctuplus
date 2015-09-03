@@ -55,6 +55,12 @@ function showGlobalModal(title,content){
 	justShowGlobalModal();
 
 }
+function clearGlobalModalWithLoading(){
+	var loading = '<i class="fa fa-spinner fa-spin text-center"></i>' ;
+	$("#global-modal .modal-title").html(loading);
+	$("#global-modal .modal-body").html(loading);
+}
+
 function justShowGlobalModal(){
 	$("#global-modal").modal('show');
 }

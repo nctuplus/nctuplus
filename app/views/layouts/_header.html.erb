@@ -52,7 +52,7 @@
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="javascript:void(0);" onclick="" style="color:white;">歷年課表</a>
+								<a href="javascript:void(0);" onclick="show_timetable_on_modal(<%=Semester::CURRENT.id%>, true);" style="color:white;">歷年課表</a>
 							</li>
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
 								<a href="/user/edit/" style="color:white;">編輯個人資料</a>
@@ -79,16 +79,10 @@
 
 <script>	
 	<% if current_user %>	
-	$(document).ready(function(){	
-		//歷年課表
-		$(".view-timetable").click(function(){
-			show_timetable_on_modal($(this).attr("sem"), true);
-		});
-	});
 
   function group_share($header_data, data){
     var share_link = function(share_url){
-      var $share_div = $('<div>').addClass('col-md-offset-2 col-md-8 input-group');
+      var $share_div = $('<div>').addClass('col-md-offset-1 col-md-8 input-group');
       $share_div.append($('<input>').attr('type','text').addClass('form-control')
         .attr('onclick','this.setSelectionRange(0, this.value.length);'));
       $share_div.append($('<span>').addClass('input-group-btn')
