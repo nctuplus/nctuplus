@@ -50,12 +50,16 @@
 				<div class="btn-inner"></div>								
 			</div>
 			
+			
 			<div class="header-right ">
 				<h2 id="brief-intro">
 				</h2>
 				<br><br>
-				<a href="/login" class="btn btn-primary btn-xl page-scroll" style="font-size:20px;font-weight:300;margin-right:20px;">登入</a>
-			</div>							
+				<% if !current_user %>
+					<a href="/login" class="btn btn-primary btn-xl page-scroll" style="font-size:20px;font-weight:300;margin-right:20px;">登入</a>
+				<% end %>
+			</div>
+			
     </div>
 		</div>
   </div>
@@ -185,12 +189,13 @@ function re_win(){	//need fix
 	$(".tabs-block").css({"width":"195%","margin-left":'10.4%','height':'190px','display':'none'})
 		
 		//RWD
-		$(".warning").html("<h5>建議以Chrome 或 Firefox瀏覽</h5>")
-		$(".warning").css({'margin-left':'21.4%','margin-top':'5%','color':'#aaa'})
-		$(".btn-inner").html("<div class='btn-remove'><a href='#' class='btn btn-primary btn-xl page-scroll' style='font-size:16px;font-weight:300;margin-right:20px;margin-left:30%;margin-top:20%;'>登入</a></div>")
+		$(".warning").html("<h5>建議以Chrome 或 Firefox瀏覽</h5>");
+		$(".warning").css({'margin-left':'21.4%','margin-top':'5%','color':'#aaa'});
+		<% if !current_user %>
+		$(".btn-inner").html("<div class='btn-remove'><a href='#' class='btn btn-index btn-primary btn-xl page-scroll' style='font-size:16px;font-weight:300;margin-right:20px;margin-left:30%;margin-top:20%;'>登入</a></div>")
+		<% end %>
 		
-		
-		$(".header-content-inner").css("margin-top","12%")
+		$(".header-content-inner").css("margin-top","12%");
 
 		
 	}
