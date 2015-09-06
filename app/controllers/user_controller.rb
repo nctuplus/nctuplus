@@ -328,8 +328,13 @@ class UserController < ApplicationController
 			if request.xhr?
 				render :nothing=>true, :status=>200
 			else	
-				alertmesg('info','warning', current_user.errors.messages.map{|k,v| "#{k} #{v[0]}"}.join(" ; ") )
-				redirect_to user_edit_path 
+				msg = current_user.errors.messages.map{|k,v| "#{k} #{v[0]}"}.join(" ; ")
+				alertmesg('info','warning', msg )
+				if check_error_is_email?(current_user.errors.messages)
+					redirect_to user_edit_path(:error=>"email") 
+				else
+					redirect_to user_edit_path
+				end	
 			end
 		end
 	
@@ -406,6 +411,13 @@ class UserController < ApplicationController
 	end
 	
   private
+
+	def check_error_is_email?(errors)
+		errors.each do |e|
+			return true if e[0] == :email
+		end
+		return false
+	end
 
   def user_params
     ret=params.require(:user).permit(:name, :agree_share, :year, :department_id, :email)
