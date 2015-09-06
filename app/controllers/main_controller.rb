@@ -2,6 +2,7 @@ class MainController < ApplicationController
 
  	def index
 		if current_user && (current_user.year==0 || current_user.department.nil?)
+			alertmesg('info','warning', "請填寫系級" )
 			redirect_to "/user/edit"
 		end
   end
