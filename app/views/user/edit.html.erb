@@ -5,20 +5,15 @@
 			<h2>更改個人資訊</h2>
 			</div>
 		</div>
-		<% if current_user.hasE3?%>
+		<% if current_user.hasE3? and not current_user.hasFb?%>
 		<div class="form-group">
-			<h4><%=label_tag '結合',"結合",class:"col-sm-2 control-label"%></h4>
+			<h4><%=label_tag '結合',"結合", :class=>"col-sm-2 control-label"%></h4>
 			<div class="col-md-2">
-				<%=link_to "/auth/facebook",class:"btn  btn-primary",disabled: current_user.hasFb? do%>
+				<%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn  btn-primary" do%>
 					<%=fa_icon("facebook")%>acebook
 				<% end %>
 			</div>
-			<div class="col-md-7 text-color-green">
-				<% if params[:error]=="email" and not current_user.hasFb? %>
-				Email may be the same as your FB account. Try to combine them!
-				<% end %>
-			</div>
-		</div>
+		</div>			
 		<div class="form-group ">
 			<div class="col-md-9 col-md-offset-2">
 				<p class="">結合後可利用fb登入，另外在賣二手書時可以選擇直接連絡您的fb帳號</p>
@@ -80,6 +75,11 @@
 <script>
   $(document).ready(function(){
     
+    <% if params[:error]=="email" and not current_user.hasFb? %>
+    if(confirm("您的Email與Facebook的Email可能重複囉! 是否將此帳號與facebook做連結呢?")){
+    	document.location.href= "<%=user_omniauth_authorize_path('facebook')%>";
+    }
+    <% end %>
     <% if current_user.try(:department).try(:degree) %>
       change_degree(<%=current_user.degree%>);
     <% else %>
