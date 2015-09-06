@@ -29,7 +29,11 @@
 					<a class="page-scroll" href="/user/" data-no-turbolink>算學分</a>
 				</li>
 			</ul>
-			<ul class="nav navbar-nav navbar-right">				
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<%=link_to "課程收藏", "javascript:void(0);",class:"page-scroll", onClick:"showCart();" %>
+				</li>
+				<!--
 				<li class="dropdown hidden" >					
 					<a class= "dropdown-toggle disabled" data-toggle="dropdown">
 						<i class="fa fa-1x fa-caret-down text-light" style="line-height:0px;"></i>
@@ -41,7 +45,7 @@
 						</li>
 					</ul>
 				</li>
-				
+				-->
 				<% if current_user %>
 					<li class="dropdown" >		
 						<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown",'data-no-turbolink'=>"true" do %>

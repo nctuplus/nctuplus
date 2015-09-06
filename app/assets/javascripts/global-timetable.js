@@ -35,9 +35,9 @@ function show_timetable_on_modal(semester_id, showNow){
 			
 			var $data = $('<div>').addClass('row');
 			if(data.hash_share && data.courses.length>0 ){		
-				$data.append($('<div>').addClass('col-md-3').html($select));		
+				$data.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));		
 			}else
-				$data.append($('<div>').addClass('col-md-3').html($select));
+				$data.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
 			
 			showGlobalModal( $data, $table);
 					
