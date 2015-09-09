@@ -1,10 +1,11 @@
 <% canAddCollection = can_add_to_collection?(current_user, @user, @semester)%>
 <div class="well" style="background-color:white;">  
   <h4 class="text-center">
+		<%=@user.name %>
     <%=@user.department.ch_name%>
     <%=grade_on_user(@user, @semester)%>（<%=@semester.year%>）
 		<% if canAddCollection %>		
-		  <%=link_to "加到我的收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
+		  <%=link_to "加到課表收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
 		<% end %>	
   </h4> 
   <table class="table table-bordered" id="myCourseTable"></table>

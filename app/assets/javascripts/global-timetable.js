@@ -9,7 +9,7 @@ function show_timetable_on_modal(semester_id, showNow){
 		},
 		dataType: "json",
 		success: function(data){
-			console.log(data);
+		//	console.log(data);
 			var result = $.extend(true, [], data);
 			var $table = $('<table>').addClass('table table-bordered');
 			data.config = {
@@ -29,7 +29,7 @@ function show_timetable_on_modal(semester_id, showNow){
 				$select.append($option);
 			}
 			$select.change(function(){
-				console.log($(this).val());
+			//	console.log($(this).val());
 				show_timetable_on_modal($(this).val(), true);
 			});
 			

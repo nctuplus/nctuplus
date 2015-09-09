@@ -1,12 +1,12 @@
-<h3 class="text-center">課表收藏</h3>
+<h3 class="text-center">課表收藏 <%=button_tag "使用說明", :class=>"btn btn-info", :onclick=>"$('#info-collection').modal('show');"%></h3>
 
 <table class="table table-hover text-center bg-white">
   <thead>
-    <tr class="row ">
+    <tr class="row">
       <td>名稱</td>
       <td>系所</td>
-      <td>年級</td>
-      <td>動作</td>
+      <td>課表年級</td>
+      <td></td>
     </tr>
   </thead>
   <tbody>
@@ -14,14 +14,13 @@
     <% hashid = generate_share_hashid(c.target_id, c.semester_id) %>
     <% no_share_color = (!c.user.canShare?) ? "warning" : "" %>
     <tr class="row ct-data <%=no_share_color%>" id="<%=hashid%>">
-      <td><%=c.name%></td>
+      <td><%=c.user.name%></td>
       <td><%=c.user.department.ch_name %></td>
       <td><%=grade_on_user(c.user, c.semester)%>(<%=c.semester.year%>)</td>
       <td>
         <% if !c.user.canShare? %>
         (使用者已關閉分享)
         <% end %>
-        <%=link_to "自訂名稱", "#", :class=>"edit-collection", "data-toggle"=>"modal", "data-target"=>".edit-collection-name"%>
         <%=link_to "刪除", "javascript:void(0);", :class=>"delete-collection"%>       
       </td>
     </tr>
@@ -29,22 +28,30 @@
   </tbody>
 </table>
 
-<div class="modal fade edit-collection-name" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"> 
-  <div class="modal-dialog modal-sm">
+<div class="modal fade" id="info-collection" tabindex="-1" role="dialog" aria-labelledby="share-tutorial">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
-      </br>
-      <%=form_tag "/user/update", :method=>"POST", :class=>"form-inline text-center" do %>    
-        <div class="form-group">
-          <h3>編輯名稱</h3>
-          <%=text_field_tag :name, "", :class=>"form-control"%>
-          </br></br>
-          <%=submit_tag "送出", :class=>"btn btn-primary"%>  
-        </div>
-        </br>       
-        <%=hidden_field_tag :type, "edit_collection" %>
-        <%=hidden_field_tag :item, "" %>
-      <% end %>
-      </br>
+      <div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="share-tutorial">課表收藏說明</h4>
+      </div>
+      <div class="modal-body">       
+				<h4>1. 利用歷年課表功能觀看課表</h4>			
+				<div class="row">
+					<%=image_tag asset_path("share_tutorial_1.PNG"), :style=>"max-width:100%; max-height:100%;" %>
+				</div>					
+				<h4>2. 複製課表連結分享到社交網站或給予需要的朋友</h4>			
+				<div class="row">
+					<%=image_tag asset_path("share_tutorial_2.PNG"), :style=>"max-width:100%; max-height:100%;" %>
+				</div>			
+				<h4>3. 藉由聯結觀看朋友的課表或進一步收藏</h4>
+				<div class="row">
+					<%=image_tag asset_path("share_tutorial_3.PNG"), :style=>"max-width:100%; max-height:100%;" %>
+				</div>
+				</br>
+				<h5>* 使用者可在個人資料設定分享政策</h5>
+      </div>
+      
     </div>
   </div>
 </div>
@@ -78,13 +85,7 @@
         }
       });
     });
-  
-    $('.edit-collection').click(function(){
-      var $target = $(this).parent().siblings().first();
-      $('.modal-content #name').val($target.html());
-      $('.modal-content #item').val($(this).parent().parent().attr('id'));
-    });
-
+		//
   });//ready
    
 </script>
