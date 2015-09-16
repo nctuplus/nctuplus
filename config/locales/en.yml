@@ -18,6 +18,41 @@
 #
 # To learn more, please read the Rails Internationalization guide
 # available at http://guides.rubyonrails.org/i18n.html.
-
 en:
-  hello: "Hello world"
+  activerecord:
+    errors:
+      models:
+        user:
+          attributes:
+            email:
+              blank: "請填寫email"
+              taken: "Email已被使用"
+              invalid: "Email格式不正確"
+            password:
+              blank: "Please Specify a Password"
+              confirmation: "Password does not match"
+            password_confirmation:
+              blank: "Please Specify a Password Confirmation"
+            first_name:
+              blank: "Please Specify First Name"
+            last_name:
+              blank: "Please Specify Last Name"
+        pdf:
+          attributes:
+            name:
+              blank: "Please Specify name to PDF"
+              taken: "Please use different name for PDF"
+            attachment:
+              blank: "Please Upload a PDF Attachment"
+        data_element:
+          attributes:
+            name:
+              blank: "Please give Element a desired name"
+              taken: "Already Created Element with given name"
+            color:
+              blank: "Please assign a color to Element"
+        template:
+          attributes:
+            name:
+              blank: "Please Specify a Name"
+              taken: "Please use a different name"

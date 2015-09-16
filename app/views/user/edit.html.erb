@@ -51,13 +51,13 @@
 				<%=f.hidden_field :department_id %>
 			</div>
 			<div class="col-md-5 no-padding-left">
-				<%=select_tag 'dept_under_grad', options_for_select(@dept_undergrad,current_user.department_id), class:'form-control',onChange:"$('#user_department_id').val($(this).val());"%>
-				<%=select_tag 'dept_grad', options_for_select(@dept_grad,current_user.department_id), class:'form-control',onChange:"$('#user_department_id').val($(this).val());"%>
+				<%=select_tag 'dept_under_grad', options_from_collection_for_select(@dept_undergrad, :id, :ch_name, current_user.department_id), prompt: "請選擇", class:'form-control', onChange: "$('#user_department_id').val($(this).val());" %>
+				<%=select_tag 'dept_grad', options_from_collection_for_select(@dept_grad, :id, :ch_name, current_user.department_id), prompt: "請選擇", class:'form-control', onChange: "$('#user_department_id').val($(this).val());" %>
 			</div>
 			<div class="col-md-5 no-padding-left">
 				<div class="col-md-4"><h4 style="margin-top:8px;">入學年度</h4></div>
 				<div class="col-md-6">
-					<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{}, class:'form-control'%>
+					<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{:include_blank => '請選擇'}, class:'form-control'%>
 				</div>
 			</div>
 			</div>

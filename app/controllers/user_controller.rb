@@ -299,8 +299,8 @@ class UserController < ApplicationController
 	end
 
 	def edit
-		@dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]}
-    @dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]}
+		@dept_undergrad=Department.where(:majorable=>true).undergraduate.select(:ch_name, :id)#.map{|d| [d.ch_name,d.id]}
+    @dept_grad=Department.where(:majorable=>true).graduate.select(:ch_name, :id)#.map{|d| [d.ch_name,d.id]}
 	end
 
 
@@ -309,6 +309,7 @@ class UserController < ApplicationController
 		#current_user.update_attributes(:email=>params[:user][:email].blank? ? current_user.email : params[:user][:email])
 		last_dept_id=current_user.department_id
 		last_year=current_user.year
+		
 		if current_user.update(user_params)
 			if user_params[:department_id]!=last_dept_id || user_params[:year]!=last_year	
 				UserCoursemapship.where(:user_id=>current_user.id).destroy_all
@@ -328,8 +329,10 @@ class UserController < ApplicationController
 			if request.xhr?
 				render :nothing=>true, :status=>200
 			else	
-				msg = current_user.errors.messages.map{|k,v| "#{k} #{v[0]}"}.join(" ; ")
-				alertmesg('info','warning', msg )
+				msg = current_user.errors.messages.map{|k,v| "#{v[0]}"}.join("</br>")
+				alertmesg('info','warning', msg.html_safe )
+				
+				# special notify: email conflict (caused by fb email the same)
 				if check_error_is_email?(current_user.errors.messages)
 					redirect_to user_edit_path(:error=>"email") 
 				else
