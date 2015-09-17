@@ -16,6 +16,7 @@ function loadCm(dept_id,year){	//Load from server & initial
 		year: year
 		},
 		function(data){
+			console.log(data);
 			$("#cm-desc").html(tmpl("cm_public", data));//tmpl 插件
 			$("#year-"+year).addClass("disabled");				
 			$("#sem-btn").click();
@@ -139,6 +140,7 @@ function toggle_cf_table(type){
 	$('body').scrollspy('refresh');
 
 }
+
 function neededCourseBarChart(target,raw_data){ // input is json format
 	if(!raw_data || $(target).length==0)return;
 	var grade = [0,0,0,0,0,0,0,0,0] ;
@@ -428,5 +430,9 @@ function parseCfToCourse(cf){
 	res["courses"]=courses;
 	return res;
 	
+}
+function initFbComment(id){
+	$('#fb-root').html('<div class="fb-comments" data-href="" data-numposts="5" width="100%" data-colorscheme="light"></div>');
+	$('.fb-comments').attr('data-href',"http://plus.nctu.edu.tw/course_maps/"+id);
 }
 	

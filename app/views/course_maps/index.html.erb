@@ -1,233 +1,48 @@
 <%= javascript_include_tag "course_maps/public", "data-turbolinks-track" => true %>
 
-	<div id="central-view" class="containe">
-		<%=form_tag "/course_maps",method:"GET" do %>
-			<div class="row" id="">
-				<div class="col-md-12 text-center">
-					<!--
-					<div style="width:108px;display:inline-block;">	
-						<%=select_tag "college", options_for_select(@college_sel),prompt: "學院",class:"form-control" %>
-					</div>
-					-->
-					<div style="width:200px;display:inline-block;">	
-						<%=select_tag "dept_id", options_for_select(@dept_sel,params[:dept_id]),prompt: "系所",class:"form-control",required:"true" %>
-					</div>
-					<div style="width:120px;display:inline-block;">
-						<%=select_tag "year", options_for_select(@year_sel,params[:year]),prompt: "入學年度",class:"form-control",required:"true" %>
-					</div>	
-					<%=submit_tag "送出",class:"btn btn-success"%>
+<div id="central-view" class="containe">
+	<%=form_tag "/course_maps",method:"GET" do %>
+		<div class="row" id="">
+			<div class="col-md-12 text-center">
+				<!--
+				<div style="width:108px;display:inline-block;">	
+					<%=select_tag "college", options_for_select(@college_sel),prompt: "學院",class:"form-control" %>
+				</div>
+				-->
+				<div style="width:200px;display:inline-block;">	
+					<%=select_tag "dept_id", options_for_select(@dept_sel,params[:dept_id]),prompt: "系所",class:"form-control",required:"true" %>
+				</div>
+				<div style="width:120px;display:inline-block;">
+					<%=select_tag "year", options_for_select(@year_sel,params[:year]),prompt: "入學年度",class:"form-control",required:"true" %>
 				</div>	
-			</div>
-		<% end %>
-		
-		
-		<div class="col-md-10 col-md-offset-1 panel panel-default">
-			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">			
-			</div>
-			<div id="QandA" style="display: none;">
-			</div>
+				<%=submit_tag "送出",class:"btn btn-success"%>
+			</div>	
 		</div>
-	</div>
-		<div class="tooltip-course">
-				<div class="course-name">
-				Course Name
-				</div>
-				<dic class="course-content">
-				</div>
+	<% end %>
+		
+	<div class="col-md-10 col-md-offset-1 panel panel-default">
+		<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">			
+			<h4 class="text-center"><%=params[:not_found] ? "尚無資訊!!尋找同學幫忙中:( 請在下方留言!!" : "請選擇系所及入學年度"%></h4>
+		</div>
+		<div id="QandA" style="">
+				<h3><strong>問題回報區</strong></h3>
+				<hr>
+				<div id="fb-root"></div>
 			</div>
-
-	<ol id="joyRideTipContent">
-		<li data-text="Next" class="">
-			<h2>Tips</h2>
-			<p>
-			請使用Enter鍵或滑鼠點擊灰色處觀看	
-			</p>
-		</li>
-		
-		<li data-id="rules" data-button="Next" data-options="tipLocation:right">
-			<h2>修課規定</h2>
-			<p>至少需修0學分通常為該領域的其他選修即可滿足該領域的條件，若非上述情形則請回報</p>			
-		</li>
-
-		<li data-text="Next" class="">
-			<h2>We need help!</h2>
-			<p>
-			此頁面是由團隊成員將學校的<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3">必修科目表</a>手動輸入至系統，若有錯誤請至下方Q&A區回報，我們將會儘快處理<br>
-			我們正與一些系洽談中，之後希望由系助理來協助輸入，若同學願意擔任該系管理員請至粉專私訊 :)<br>
-			目前可以幫同學計算列表上的必修/必選修等課程，但<strong>系外選修</strong>、<strong>任選理工科目</strong>、<strong>英文授課</strong>等較特殊的規則目前無法計算<br>			
-			</p>
-		</li>
-		
-  </ol>
-
+	</div>
+</div>
+	
 <script>
-
+	(function(d, s, id) {
+		var js, fjs = d.getElementsByTagName(s)[0];
+		if (d.getElementById(id)) return;
+		js = d.createElement(s); js.id = id;
+		js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.3&appId=<%=Facebook::APP_ID%>";
+		fjs.parentNode.insertBefore(js, fjs);
+	}(document, 'script', 'facebook-jssdk'));
 
 	$(document).ready(function(){
-		var dept_id=<%=params[:dept_id]||0%>;
-		var year=<%=params[:year]||0%>;
-		if(dept_id!=0){
-			$("#dept-"+dept_id).parent().parent().prev().click();		
-			$("#dept-"+dept_id).addClass("selected");
-			if(year!=0){
-				loadCm(dept_id,year);	
-			}
-		}
-	
+		initFbComment("");
 	});
 
 </script>
-
-<%= render "/course_maps/public/xtmpl_course_table" %>
-<style>
-	.tooltip-course
-	{
-		background:#fff;
-		border:1px #ccc solid;
-		border-radius:6px;
-		position:absolute;
-		//left:300px;
-		//top:300px;
-		width:auto;
-		height:auto;
-		padding-bottom:5px;
-		display:none;
-		z-index:1000;
-		
-		-webkit-box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
-		-moz-box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
-		box-shadow: 3px 3px 20px -3px rgba(0,0,0,0.75);
-	}
-	.course-name
-	{
-		overflow:hidden;
-		background:#aaa;
-		
-		color:white;
-		padding:5px 5px;
-	}
-	.course-content
-	{
-		
-		color:#555;
-		padding:5px 5px;
-		overflow:hidden;
-		display:block;
-		
-	}
-	.widget-course
-	{
-		height:80px;
-		width:160px;
-		margin-bottom:20px;
-		
-		float:right;
-		display:block;
-	}
-	
-	.square-course
-	{
-		width:12px;
-		height:12px;
-		background:#666;
-		display:inline-block;
-		margin-left:15px;
-		margin-top:10px;
-		line-height:20px;
-	}
-	.widget-line
-	{
-		line-height:20px;
-	}
-	.lead_course {
-		border-bottom: 3px solid #ddd;
-		-moz-box-shadow:    inset 0 0 10px #000000;
-	  -webkit-box-shadow: inset 0 0 10px #000000;
-	  box-shadow:         inset 0 0 10px #000000;
-	}
-	.grade1
-	{
-		background:#333;
-		color:white;
-		
-	}
-	.grade2
-	{
-		border-left: 5px solid #fff;
-	}
-	.semester1
-	{
-		background:#ccc
-	}
-	.semester2
-	{
-		background:#ccc;
-		border-left: 2px solid #fff;
-	}
-	.btn-course
-	{
-		padding:4px 8px;
-		margin:10px 0px;
-		color:#fff;
-		border-radius:4px;
-		font-size:12px;
-		text-align:center;
-		min-height:42px;
-		background:#0080FF;
-	}
-	.btn-course:hover
-	{
-		opacity:0.8;
-	}
-	#btn-course-required
-	{
-		background:#0080FF;
-	}
-	#btn-course-minor
-	{
-		background:#FF8040;
-	}
-	#btn-course-main
-	{
-		background:#FF0080;
-	}
-	
-	#table-gray-line
-	{
-		border-left:1px #aaa solid;
-	}
-	#table-not-limit
-	{
-		height:0px;
-		background:#ccc;
-	}
-
-	.btn-course:hover
-	{
-		opacity:0.8;
-	}
-	#btn-course-required
-	{
-		background:#0080FF;
-	}
-	#btn-course-minor
-	{
-		background:#FF8040;
-	}
-	#btn-course-main
-	{
-		background:#FF0080;
-	}
-	
-	#table-gray-line
-	{
-		border-left:1px #aaa solid;
-	}
-	#table-not-limit
-	{
-		height:0px;
-		background:#ccc;
-	}
-	/*html, body{height:100%;}*/
-
-</style>

@@ -1,7 +1,7 @@
 class CourseMapsController < ApplicationController
 	#include CourseMapsHelper
 
-	before_filter :checkCourseMapPermission, :except=>[:index, :public, :cm_public_comment_action, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action] #:checkTopManager
+	before_filter :checkCourseMapPermission, :only=>[:edit, :destroy, :update, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action] #:checkTopManager
 	before_filter :checkLogin, :only=>[:cm_public_comment_action]
 ##### resource controller
 
@@ -23,55 +23,41 @@ class CourseMapsController < ApplicationController
 		end
 		
 	end
-	
-	# handle Q&A post (ajax)
-	def cm_public_comment_action
-		res = []
-		if request.post?
-			if params[:type]=="reply"
-				if params[:parent_id].to_i==0
-					res = CourseMapPublicComment.create(
-						:course_map_id => params[:cm_id],
-						:user_id => current_user.id,
-						:comments => params[:comment]
-					)
-				else
-					res = CourseMapPublicSubComment.create(
-						:course_map_id => params[:cm_id],
-						:user_id => current_user.id,
-						:comments => params[:comment],
-						:comment_id=> params[:parent_id]
-					)
-				end
-			elsif params[:type]=="check"
-				res = CourseMapPublicComment.find(params[:qa_id])
-				res.checked = true
-				res.save!
-			end	
-		end
-		
-		render :text=>res.to_hash.to_json, :layout=>false 
-	end
+
 	
 	def index
 	
-		if !params[:dept_id].blank?
-			@dept=Department.where(:id=>params[:dept_id]).take
-			if !@dept.try( :majorable? )
-				redirect_to "/course_maps/"
-				return
+		
+		if params[:dept_id].present?
+			course_map=CourseMap.where(:department_id=>params[:dept_id], :year=>params[:year]).take
+			if course_map.nil?
+				redirect_to "/course_maps?not_found=true"
+			else
+				redirect_to "/course_maps/#{course_map.id}"
 			end
+			#return
+		else
+			@college_sel=College.includes(:departments).where("id NOT IN (8,10)").map{|college|college.name}
+			@dept_sel=CourseMap.all.includes(:department).group(:department_id).map{|cm|[cm.department_ch_name,cm.department_id]}
+			@year_sel=Semester::YEARS#.map{|sem|[sem.year,sem.year]}
+			@depts=CourseMap.all.group(:department_id).map{|cm|cm.department}
 		end
+		
+	end
+	
+	
+	def show
+		@course_map=CourseMap.find(params[:id])
+		@dept_id=@course_map.department_id
+		@year=@course_map.year
 		@college_sel=College.includes(:departments).where("id NOT IN (8,10)").map{|college|college.name}
 		@dept_sel=CourseMap.all.includes(:department).group(:department_id).map{|cm|[cm.department_ch_name,cm.department_id]}
 		@year_sel=Semester::YEARS#.map{|sem|[sem.year,sem.year]}
 		@depts=CourseMap.all.group(:department_id).map{|cm|cm.department}
-		respond_to do |format|
-			format.html{}
-		end		
+		
 	end
 	
-	def show
+	def edit
 		@course_map=CourseMap.find(params[:id])
 	end
 

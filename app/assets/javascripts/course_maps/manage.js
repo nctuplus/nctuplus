@@ -1,7 +1,7 @@
 //= require bootstrap-treeview
 
 function load_treeview(target_id, map_id){
-	$.getJSON( "get_course_tree.json?map_id="+map_id, function(res){
+	$.getJSON( "/course_maps/get_course_tree.json?map_id="+map_id, function(res){
 		console.log('load course tree success');
 		$('#course_tree').treeview({data: res, map_id: map_id});
 		if (target_id!=0){
@@ -12,7 +12,7 @@ function load_treeview(target_id, map_id){
 }
 
 function load_group_treeview(target_id, map_id){
-	$.getJSON( "get_group_tree.json?map_id="+map_id, function(res){
+	$.getJSON( "/course_maps/get_group_tree.json?map_id="+map_id, function(res){
 		console.log('load group tree success');
 		$('#group_tree').treeview({data: res, map_id: map_id});
 		if (target_id!=0)

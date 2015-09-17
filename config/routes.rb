@@ -105,7 +105,7 @@ Nctuplus::Application.routes.draw do
 		end
 	end
 	
-	resources :course_maps, :except=>[:edit] do
+	resources :course_maps do
 	  collection do
 			get "public"
 			get "content"	

@@ -9,7 +9,7 @@
 	</tr>
 <% @course_maps.each do |cm| %>
   <tr> 
-  	<td><%= link_to cm.name, course_map_path(cm) %></td>
+  	<td><%= link_to cm.name, edit_course_map_path(cm) %></td>
   	<td>
   		<% if cm.department_id != 0%>
   		<%=cm.department.ch_name%>	
