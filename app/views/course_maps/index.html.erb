@@ -1,53 +1,41 @@
 <%= javascript_include_tag "course_maps/public", "data-turbolinks-track" => true %>
 
-
-<div class="row" style="min-height:1000px;height:100%;">
-	<div class="col-sm-3 col-md-2 affix-sidebar sidebar-nav" style="margin-top:-30px;margin-left:-5px;width:250px;height:100%;">
-		<%=render "course_maps/public/dept_sidebar"%>
-	</div>
-	</div>
-	<div id="tip-test"></div>
-	
-	<div id="central-view" class="col-md-10 col-sm-9" style="margin-left:300px;">
-		<div class="panel panel-default">
-			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">
-				<% if params[:dept_id].blank? %>
-				<h4><b>請先至左方選擇系或由搜尋欄查詢</b><br></h4><br>
-				<div class="search" style="width:30%">
-				<form action="#" class="search" method="get" id="searchform" >
-				　科系： <select name="Department">
-				　<option value="id1" >資工系 網多組</option>
-				　<option value="id2">資工系 資電組</option>
-				　<option value="id3">資工系 資工組</option>
-				　<option value="id4">資科工所</option>
-				  </select><br>
-				　年級： <select name="Grade">
-				　<option value="UnderGraduate1">一年級</option>
-				　<option value="UnderGraduate2">二年級</option>
-				　<option value="UnderGraduate3">三年級</option>
-				　<option value="UnderGraduate4">四年級</option>
-				  <option value="Graduate1">碩一</option>
-				　<option value="Graduate2">碩二</option>
-				  </select><button class="btn btn-primary" type="submit" form="searchform" value="Submit"
-				style="margin-left:100%;"
-				>送出</button>
-				</form>
-				
-				
-				</div>
-				<% end %>
+	<div id="central-view" class="containe">
+		<%=form_tag "/course_maps",method:"GET" do %>
+			<div class="row" id="">
+				<div class="col-md-12 text-center">
+					<!--
+					<div style="width:108px;display:inline-block;">	
+						<%=select_tag "college", options_for_select(@college_sel),prompt: "學院",class:"form-control" %>
+					</div>
+					-->
+					<div style="width:200px;display:inline-block;">	
+						<%=select_tag "dept_id", options_for_select(@dept_sel,params[:dept_id]),prompt: "系所",class:"form-control",required:"true" %>
+					</div>
+					<div style="width:120px;display:inline-block;">
+						<%=select_tag "year", options_for_select(@year_sel,params[:year]),prompt: "入學年度",class:"form-control",required:"true" %>
+					</div>	
+					<%=submit_tag "送出",class:"btn btn-success"%>
+				</div>	
 			</div>
-			<div class="panel-body" id="cm-desc">
-			
+		<% end %>
+		
+		
+		<div class="col-md-10 col-md-offset-1 panel panel-default">
+			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">			
 			</div>
 			<div id="QandA" style="display: none;">
 			</div>
 		</div>
 	</div>
-	
-	<div class="col-md-2">
-		<div class="scroll-sidebar hidden-xs hidden-sm" style="font-size:16px;position:fixed;margin-top:40px;"></div>
-	</div>
+		<div class="tooltip-course">
+				<div class="course-name">
+				Course Name
+				</div>
+				<dic class="course-content">
+				</div>
+			</div>
+
 	<ol id="joyRideTipContent">
 		<li data-text="Next" class="">
 			<h2>Tips</h2>
@@ -56,10 +44,6 @@
 			</p>
 		</li>
 		
-		<li data-id="year-selector" data-button="Next">
-			<h4>選取入學年度</h4>
-			<p></p>
-		</li>
 		<li data-id="rules" data-button="Next" data-options="tipLocation:right">
 			<h2>修課規定</h2>
 			<p>至少需修0學分通常為該領域的其他選修即可滿足該領域的條件，若非上述情形則請回報</p>			
@@ -75,8 +59,7 @@
 		</li>
 		
   </ol>
-	
-</div>
+
 <script>
 
 
@@ -103,8 +86,8 @@
 		border:1px #ccc solid;
 		border-radius:6px;
 		position:absolute;
-		left:300px;
-		top:300px;
+		//left:300px;
+		//top:300px;
 		width:auto;
 		height:auto;
 		padding-bottom:5px;
@@ -189,7 +172,7 @@
 		border-radius:4px;
 		font-size:12px;
 		text-align:center;
-		height:42px;
+		min-height:42px;
 		background:#0080FF;
 	}
 	.btn-course:hover

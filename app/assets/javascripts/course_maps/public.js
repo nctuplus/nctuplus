@@ -42,8 +42,8 @@ function initCourseHoverTip(){
 		var content = "永久課號 : "+course.real_id;
 		var sty=("2px "+ $(str).css("background")+" solid");				
 		$( ".tooltip-course" ).css({
-			"left": (event.pageX-320),
-			"top": (event.pageY-35),
+			"left": (event.pageX+1000),
+			"top": (event.pageY+1000),
 			"display": "block"
 		});		
 		var group = "";
@@ -74,8 +74,8 @@ function initCourseHoverTip(){
 		if(w < 1266)w = 0;
 		else w = (w - 1266)*1266/w;			
 		$( ".tooltip-course" ).css({
-			"left": (event.pageX-306-w),
-			"top": (event.pageY-70),
+			"left": (event.pageX/*-w-50*/),
+			"top": (event.pageY/*-95*/),
 			"display": "block",
 			"border-color":(color4)
 		});

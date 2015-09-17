@@ -62,7 +62,9 @@ class CourseMapsController < ApplicationController
 				return
 			end
 		end
-
+		@college_sel=College.includes(:departments).where("id NOT IN (8,10)").map{|college|college.name}
+		@dept_sel=CourseMap.all.includes(:department).group(:department_id).map{|cm|[cm.department_ch_name,cm.department_id]}
+		@year_sel=Semester::YEARS#.map{|sem|[sem.year,sem.year]}
 		@depts=CourseMap.all.group(:department_id).map{|cm|cm.department}
 		respond_to do |format|
 			format.html{}
