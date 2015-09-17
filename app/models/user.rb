@@ -158,7 +158,7 @@ class User < ActiveRecord::Base
     user.name = hash[:name]
     user.email = (User.where(:email=>hash[:email]).present?) ? "#{Devise.friendly_token[0,8]}@please.change.me" : hash[:email] 
     user.password = hash[:password] 
-    user.save!
+    user.save(:validate => false)
     return user
   end
 
