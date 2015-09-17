@@ -1,7 +1,8 @@
 class CallbacksController < Devise::OmniauthCallbacksController
 
     def facebook
-			if current_user and session[:auth_facebook] # block hasFB and auth fb
+    	# block user that has fb info and want to auth fb again
+			if current_user and session[:auth_facebook] 
 			  alertmesg("info",'warning', "您已登入") 
 				redirect_to :root
 				return
@@ -10,7 +11,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
       result = AuthFacebook.from_omniauth(env["omniauth.auth"], current_user)
       if not result[:auth]
         alertmesg('info','warning',result[:message])
-			  redirect_to :new_user_session
+			  redirect_to :root
         return 
       end
 		

@@ -1,58 +1,15 @@
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
+# Temporarily take EN as TW error message yml 
+# This is current used in user update validation 
+# updated: 2015 9/18
 en:
   activerecord:
     errors:
       models:
         user:
           attributes:
+            name:
+              taken: "Name已被使用"
             email:
               blank: "請填寫email"
               taken: "Email已被使用"
               invalid: "Email格式不正確"
-            password:
-              blank: "Please Specify a Password"
-              confirmation: "Password does not match"
-            password_confirmation:
-              blank: "Please Specify a Password Confirmation"
-            first_name:
-              blank: "Please Specify First Name"
-            last_name:
-              blank: "Please Specify Last Name"
-        pdf:
-          attributes:
-            name:
-              blank: "Please Specify name to PDF"
-              taken: "Please use different name for PDF"
-            attachment:
-              blank: "Please Upload a PDF Attachment"
-        data_element:
-          attributes:
-            name:
-              blank: "Please give Element a desired name"
-              taken: "Already Created Element with given name"
-            color:
-              blank: "Please assign a color to Element"
-        template:
-          attributes:
-            name:
-              blank: "Please Specify a Name"
-              taken: "Please use a different name"

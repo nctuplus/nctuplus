@@ -23,7 +23,7 @@ class AuthE3 < ActiveRecord::Base
 					})
 					e.user_id = user.id        
         end 
-        e.save(:validate => false)
+        e.save!#(:validate => false)
       end
       return {:auth=>true, :user=>auth_e3.user}     
     else

@@ -329,7 +329,7 @@ class UserController < ApplicationController
 			if request.xhr?
 				render :nothing=>true, :status=>200
 			else	
-				msg = current_user.errors.messages.map{|k,v| "#{v[0]}"}.join("</br>")
+				msg = current_user.errors.messages.map{|k,v| "#{v[0]}" }.join("</br>")
 				alertmesg('info','warning', msg.html_safe )
 				
 				# special notify: email conflict (caused by fb email the same)
