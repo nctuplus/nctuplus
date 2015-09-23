@@ -32,7 +32,9 @@ function loadCm(dept_id,year){	//Load from server & initial
 		}
 	);
 }
-
+function toggleCourseGrids(className){
+	$("div[data-cf-name='"+className+"']").toggle();
+}
 function initCourseHoverTip(){
 	$( ".btn-course" ).mouseover(function(event){
 		var course=JSON.parse($(this).attr('data'));
@@ -304,7 +306,7 @@ function parseCf(cf){//修課規定 文字
 	if(cf.cf_type==3){
 		str+='且需滿足 <strong>'+cf.field_need+'</strong> 個領域';
 	}
-	str+='</li>';		
+		
 	if(cf.cf_type<3){
 		str+='</ul>';
 	}
@@ -312,6 +314,7 @@ function parseCf(cf){//修課規定 文字
 		for(var i=0,child_cf;child_cf=cf.child_cf[i];i++){
 			str+=parseCf(child_cf);
 		}
+		str+='</li>';	
 		str+='</ul>';
 	}		
 	return str;

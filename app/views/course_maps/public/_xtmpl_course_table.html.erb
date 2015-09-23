@@ -64,10 +64,10 @@
 					}
 			%}
 			<section id="list_by_sem" style="display:block;" >
-				<div class ="row">			
+				<div class="row" id="cf-title">			
 				{% for(var i=0; i< category.length; i++){ %}
 					<div class="col-md-4">
-						<div class ="square-course" style="background:{%=colors[i]%}"></div> {%=category[i] %}
+						<div class ="square-course clickable-hover" onclick="toggleCourseGrids('{%=category[i] %}');" style="background:{%=colors[i]%}"></div> <span class="clickable-hover" onclick="toggleCourseGrids('{%=category[i] %}');">{%=category[i] %}</span>
 					</div>
 				{% } %}
 				</div>
@@ -103,7 +103,7 @@
 												color=colors[k];
 										}										
 									%}
-									<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
+									<div class="btn-course " style="background:{%=color%}" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
 								{% } %}
 							</td>
 						{% } %}
@@ -133,12 +133,12 @@
 											%}
 											</td>
 											<td style="width:12%;">
-											<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
+											<div class="btn-course" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
 											</div>
 											{%
 										}
 										else{	%}
-										<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
+										<div class="btn-course" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
 									</div>
 									
 									{% }} %}
