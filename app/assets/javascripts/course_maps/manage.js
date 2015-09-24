@@ -58,7 +58,7 @@ function credit_list_action(id,memo,credit_need,type){
 	$.ajax({
 		type: "POST",
 		dataType:"json",
-		url: "credit_action" ,
+		url: "/course_maps/credit_action" ,
 		data:{
 			memo : memo,
 			credit_need : credit_need,
@@ -127,7 +127,7 @@ function bind_header_button(header_node){
 			return false ;
 		$.ajax({
 			type: "POST",
-  			url: "action_delete" ,
+  			url: "/course_maps/action_delete" ,
   			data:{
   				target_id : header_node.cf_id,
   			},	
@@ -161,7 +161,7 @@ function bind_header_button(header_node){
 
 			$.ajax({
 				type: "POST",
-	  			url: "action_update" ,
+	  			url: "/course_maps/action_update" ,
 	  			data:{
 	  				name : name,
 	  				credit_need : credit_need,
@@ -204,7 +204,7 @@ function bind_header_button(header_node){
 			return false ;
 		$.ajax({
 			type: "POST",
-  			url: "action_fchange" ,
+  			url: "/course_maps/action_fchange" ,
   			data:{
   				target_id : target_id,
   			},	
@@ -317,7 +317,7 @@ function bind_course_list_button(){
 		//console.log(list_id);
 		$.ajax({
 			type: "POST",
-			url: "course_action" ,
+			url: "/course_maps/course_action" ,
 			data:{
 				cf_id: cf_show_id,
 				target_id : list_id,
@@ -383,7 +383,7 @@ function bind_course_list_button(){
 		//return false ;
 		$.ajax({
 			type: "POST",
-  		url: "course_action" ,
+  		url: "/course_maps/course_action" ,
   		data:{
   				target_id : target_tr.attr('list_id'),
 					type : 'update',
@@ -409,7 +409,7 @@ function load_header_content(data){
 	$("#header_content_div").html(tmpl("header-content-format", data));
 	
 	if(data.head_node.type>=1){
-		$.getJSON("get_credit_list?id="+data.head_node.cf_id, function (data) {		
+		$.getJSON("/course_maps/get_credit_list?id="+data.head_node.cf_id, function (data) {		
 			
 			genCreditList(data);
 		});
@@ -420,7 +420,7 @@ function load_header_content(data){
 function load_course_list(target_id){
 	if(!target_id)
 		return false;
-	$.getJSON("show_course_list.json?target_id="+target_id, function (data) {
+	$.getJSON("/course_maps/show_course_list.json?target_id="+target_id, function (data) {
 	//	console.log(data);
 		$("#course_content").html(tmpl("table-format", data));	
 		bind_course_list_button();

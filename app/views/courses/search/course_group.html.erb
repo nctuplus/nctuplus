@@ -23,7 +23,7 @@ function add_class(c_ids){ //action="add"
   			},	
   			success: function(data){ 
   				var res = $.parseJSON(data);
-  				console.log(res.success);			
+  				//console.log(res.success);			
   				if(res.fail > 0 ){
   					if(res.success>0)
   						alert("共加入了 "+res.success+" 門課程，另外有 "+res.fail+" 門課程重複。");
