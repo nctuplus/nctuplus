@@ -59,7 +59,7 @@ class CourseDetail < ActiveRecord::Base
 			:name=>self.course_ch_name		
 		}
 	end
-	
+
 	def self.save_from_e3(data,ct_id,sem_id)
 		cd=CourseDetail.where(:temp_cos_id=>data["cos_id"], :semester_id=>sem_id).take
 		if cd.nil?
@@ -73,13 +73,15 @@ class CourseDetail < ActiveRecord::Base
 		cd.semester_id=sem_id
 		cd.grade=data["grade"]
 		costime=data['cos_time'].split(',')
-		cd.time=""
-		cd.room=""
+		time=""
+		room=""
 		costime.each do |t|
 			_time=t.partition('-')
-			cd.time<<_time[0]
-			cd.room<<_time[2]
+			time<<_time[0]
+			room<<_time[2]
 		end
+		cd.time=time
+		cd.room=room
 		cd.cos_type=data["cos_type"]
 		cd.temp_cos_id=data["cos_id"]
 		cd.memo=data["memo"]
