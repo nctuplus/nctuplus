@@ -6,6 +6,11 @@ class PastExamsController < ApplicationController
   before_filter :checkE3Login, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
   before_filter :checkOwner, :only=>[:edit, :destroy]
 	
+	def index2	#get by ct_id
+		@q = PastExam.search_by_text(params[:custom_search])
+		@exams=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("id DESC")	
+  end
+	
 	def index	#get by ct_id
 		if !params[:ct_id].blank?
 			@files = PastExam.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")

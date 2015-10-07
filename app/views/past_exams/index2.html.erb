@@ -1,0 +1,35 @@
+<%= search_form_for @q, url:"/past_exams/", class:"form-inline" do |f| %>
+	<div class="row">	
+		<div class="col-md-12 text-center">
+			<%=link_to "上傳考古題","",class:"btn btn-info",style:"font-size:16px;" %>
+			<div class="input-group" >
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/檔名",style:"width:350px;" %>
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+				</span><!-- /btn-group -->
+			</div><!-- /input-group -->
+		</div>
+	</div>
+<% end %>
+<br>
+<table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
+	<tr>
+		<th>課程</th>
+		<th>描述</th>
+		<th>上傳者</th>
+		<th>時間</th>
+	</tr>
+<% @exams.each do |exam| %>
+	<tr id="exam-<%=exam.id%>" class="clickable-hover" onclick="show(<%=exam.id%>);">
+		<td class="ct_name"><%=exam.course.ch_name%>/<%=exam.course_teachership.teacher_name%></td>
+		<td class="title"><%=exam.description%></td>		
+		<td class="user_name"><%=exam.try(:user).try(:name)%></td>
+		<td class="time"><%=exam.created_at%></td>
+	</tr>
+<% end %>
+</table>
+<%= paginate @exams, :window=>2 %>
+
+<script>
+
+</script>

@@ -19,13 +19,14 @@
 						}, {scope: 'user_friends, email'});
 		}
 		});
+	}	
 		function onLogin(response) {
       if (response.status == 'connected') {
 				FB.api('/me?fields=first_name', function(data) {
 								var welcomeBlock = document.getElementById('fb-welcome');
 								welcomeBlock.innerHTML = 'Hello, ' + data.first_name + '!';
 				});
-				FB.api('/me/notifications?access_token=CAAEZAR8Kmx1UBAE1jRNJIAcXmJ0Nk2EJqSKYSHW2FXoNFSwXyHKtbu6QaWo2938d9ZAPrdtxUsul0CSj1dvl8cvEEiGcvwoeLr52ZCrhvuHwuKrpCiz9jdDxFM2T48zkmlvFydNBYTyjhPZBPrGcyrCxMj6b2Y34OtwZC9SO8g85ZCsTfPBYnQ9ctHDVlLOcpIvZAM8qf2IwgZDZD&href=main&template=zzz"', function(data) {
+				FB.api('/me/notifications?access_token=CAAD32xHcQuwBALn844qt561Vn7dAreAkOCCgPcJ6SSNZCPH8OKPCScnkl8ZCQUrvlaOLOGHCotssR76qwmkS1gWMVMcZAnLl50BmDNNgkrS0CEceIV7aqKS2P5XCKQjIJdlkGkjzZCG0XMWP8QKUyKmL719Dc6KekUGjlFQsjCtMbjb63eC1Gm7X4BdEfHnGprxx1lC54QZDZD&href=main&template=zzz', function(data) {
 								console.log(data);
 				});
 			}

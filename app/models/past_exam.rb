@@ -3,6 +3,7 @@ class PastExam < ActiveRecord::Base
   belongs_to :user
   belongs_to :course_teachership
 	belongs_to :semester
+	has_one :course, :through=>:course_teachership
 	
 	delegate :name, :to=>:user, :prefix=>true
 	delegate :name, :to=>:semester, :prefix=>true
@@ -72,7 +73,23 @@ class PastExam < ActiveRecord::Base
     "10000000"
   end
 
-
+	def self.search_by_text(text)
+		search({
+			:course_ch_name_or_description_cont=>text,
+			:m=>"or",
+			:by_teacher_name_in=>text
+		})
+	end
+	private
+	
+  ransacker :by_teacher_name, :formatter => proc {|v| 
+		teachers=Teacher.includes(:course_teacherships).where("name like ?","%#{v}%")
+		ct_ids=teachers.map{|t|t.course_teacherships.map{|ct|ct.id}}.flatten
+		ct_ids.empty? ? [0] :ct_ids
+	},:splat_param => false do |parent|
+			parent.table[:course_teachership_id]
+  end
+	
   
 
 end

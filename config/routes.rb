@@ -95,6 +95,7 @@ Nctuplus::Application.routes.draw do
 #----------for past_exams---------------
   resources :past_exams, :except=>[:update] do
 		collection do
+			get "index2"
 			get "list_by_ct"
 			get "edit"
 		end
