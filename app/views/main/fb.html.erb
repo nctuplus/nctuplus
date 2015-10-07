@@ -1,0 +1,41 @@
+<h1 id="fb-welcome"></h1>
+<div id="gg77"></div>
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '309270975792981',
+      xfbml      : true,
+      version    : 'v2.4'
+    });
+		FB.getLoginStatus(function(response) {
+		// Check login status on load, and if the user is
+		// already logged in, go directly to the welcome message.
+		if (response.status == 'connected') {
+						onLogin(response);
+		} else {
+						// Otherwise, show Login dialog first.
+						FB.login(function(response) {
+										onLogin(response);
+						}, {scope: 'user_friends, email'});
+		}
+		});
+		function onLogin(response) {
+      if (response.status == 'connected') {
+				FB.api('/me?fields=first_name', function(data) {
+								var welcomeBlock = document.getElementById('fb-welcome');
+								welcomeBlock.innerHTML = 'Hello, ' + data.first_name + '!';
+				});
+				FB.api('/me/notifications?access_token=CAAEZAR8Kmx1UBAE1jRNJIAcXmJ0Nk2EJqSKYSHW2FXoNFSwXyHKtbu6QaWo2938d9ZAPrdtxUsul0CSj1dvl8cvEEiGcvwoeLr52ZCrhvuHwuKrpCiz9jdDxFM2T48zkmlvFydNBYTyjhPZBPrGcyrCxMj6b2Y34OtwZC9SO8g85ZCsTfPBYnQ9ctHDVlLOcpIvZAM8qf2IwgZDZD&href=main&template=zzz"', function(data) {
+								console.log(data);
+				});
+			}
+		}
+
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/sdk.js";
+     fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+</script>

@@ -4,19 +4,12 @@
 <div id="results" class="container">
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
 	<div class="row">	
-		<div class="col-md-12 text-center">
-			<div class="input-group" style="width:450px;display:inline-table;">
-				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>
-				<div class="input-group-btn">
-					<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找課程 <span class="caret"></span></button>
-					<ul class="dropdown-menu" role="menu">
-						<li><a href="javascript:void(0);">找課程</a></li>
-						<!--<li><a href="javascript:void(0);">找心得</a></li>-->
-					</ul>
-				</div><!-- /btn-group -->			
-				<div class="input-group-btn">
+		<div class="col-md-offset-3 col-md-8">
+			<div class="input-group" >
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度",style:"width:350px;" %>
+				<span class="input-group-btn">
 					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-				</div><!-- /btn-group -->
+				</span><!-- /btn-group -->
 			</div><!-- /input-group -->
 			<div class="checkbox">
 				<label style="font-size:16px;">
@@ -25,18 +18,19 @@
 				</label>
 			</div>
 		</div>
+
 	</div>
 	<div class="hidden row" id="adv-search">
 		<br>
-		<div class="col-md-12 text-center">
+		<div class="col-md-offset-3 col-md-8">
 			<div style="width:108px;display:inline-block;">
 				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : 0),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
 			</div>
 			<div style="width:120px;display:inline-block;">
 				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
 			</div>	
-			<div style="width:300px;display:inline-block;">				
-				<%= f.select :department_id_eq,"",{:prompt=> "系所"},{ :class=> "form-control"} %>
+			<div style="width:260px;display:inline-block;">				
+				<%= f.select :department_id_eq,render("courses/search/undergrad_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
 			</div>
 		</div>	
 	</div>

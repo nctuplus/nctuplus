@@ -1,4 +1,6 @@
+<div class="panel-heading">
 <h2>教授比一比</h2>
+</div>
 <div id="copare_container"></div>
 <script>
 	$(document).ready(function(){
@@ -31,13 +33,13 @@
 	}
 
 	function printScore(text,id,r_type,obj){
-		var res='<div class="row"><div class="col-sm-3 col-sm-offset-1 row-condensed">';
+		var res='<div class="row "><div class="col-sm-3 col-sm-offset-1 row-condensed">';
 			res+='<label>'+text+'</label>';
 			res+='</div><div class="col-sm-5 row-condensed">';
 			res+='<div id="rating_'+r_type+'_'+id+'"></div>';
 			res+='</div>';
-			res+='<div class="col-sm-1" id="rating_'+r_type+'_'+id+'_counts">';
-			res+='<label>'+obj.avg_score+'('+obj.rate_count+')<label>';
+			res+='<div class="col-sm-1 row-condensed" id="rating_'+r_type+'_'+id+'_counts">';
+			res+='<label>'+obj.avg_score+'('+obj.rate_count+')</label>';
 			res+="</div></div>";
 		return res;
 	}
@@ -78,7 +80,7 @@
 	{% var i=0,ct; %}
 	{% for(;ct=o[i];){ %}
 		{% if(i%3==0){ %}
-		<div class="row">
+		<div class="row no-margin-left no-margin-right">
 		{% } %}
 			<div class="col-sm-4 ">
 				<div class="well">

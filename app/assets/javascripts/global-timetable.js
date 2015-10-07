@@ -20,8 +20,7 @@ function show_timetable_on_modal(semester_id, showNow){
 				semester_id: semester_id
 			};     
 			$table.CourseTable(data) ;			
-	
-			$('#global-modal .close').remove();
+
 			$select = $('<select>').addClass("form-control") ;
 			for(var i=0, sem; sem=data.semesters[i]; ++i){
 				$option = $('<option>').attr('value', sem.id).html(sem.name);
@@ -39,7 +38,7 @@ function show_timetable_on_modal(semester_id, showNow){
 			}else
 				$data.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
 			
-			showGlobalModal( $data, $table);
+			showGlobalModal(1,$data,$table);
 					
 			if(data.courses.length>0){		
 				setTimeout(function(){ //wait for the modal show

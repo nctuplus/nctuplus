@@ -1,4 +1,7 @@
+<div class="panel-heading">
 <h2>考古題區</h2>
+</div>
+<div class="col-md-12">
 <%= form_for PastExam.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
 	<!-- The table listing the files available for upload/download -->
 	<table class="table well" >
@@ -58,7 +61,7 @@
 <%= render :partial=>"xtmpl_upload" %>
 <%= render :partial=>"xtmpl_download" %>
 
-
+</div>
 <script type="text/javascript" charset="utf-8">
 	
 	function change_to_edit(file_id,sem_id,desc){

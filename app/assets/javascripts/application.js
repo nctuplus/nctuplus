@@ -12,9 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap-sprockets
 //= require turbolinks
 //= require jquery-ui
-//= require bootstrap.min
+
 //= require toastr.min
 //= require tmpl.min
 
@@ -26,7 +27,7 @@
 //= require bootstrap-switch
 //= require zeroclipboard
 //= require global-timetable
-
+//= require global-modal
 
 var isMobile = false; //initiate as false
 // device detection
@@ -46,27 +47,6 @@ function goToHref(href,new_tab){
 	
 }
 
-function showGlobalModal(title,content){
-	if(title!=null)
-		$("#global-modal .modal-title").html(title);
-	else
-		$("#global-modal .modal-header").hide();
-	$("#global-modal .modal-body").html(content);
-	justShowGlobalModal();
-
-}
-function clearGlobalModalWithLoading(){
-	var loading = '<i class="fa fa-spinner fa-spin text-center"></i>' ;
-	$("#global-modal .modal-title").html(loading);
-	$("#global-modal .modal-body").html(loading);
-}
-
-function justShowGlobalModal(){
-	$("#global-modal").modal('show');
-}
-function closeGlobalModal(){
-	$("#global-modal").modal('hide');
-}
 
 function initHeader(){
 

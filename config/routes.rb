@@ -31,7 +31,8 @@ Nctuplus::Application.routes.draw do
 	get "main/policy_page"
 	get "main/member_intro"	
 	post "/main/get_specified_classroom_schedule" # for ems curl
-	
+	get "main/fb"
+	post "main/fb"
 
 
 #---------- admin page -----------
@@ -77,12 +78,19 @@ Nctuplus::Application.routes.draw do
 	get "course_content/get_course_info"
 	post "course_content/course_action"
 	
-#----------for discusses---------------	
-	get "discusses/show"
-	get "discusses/like"
+#----------for discusses---------------
+	resources :discusses do
+		collection do
+			get "show"
+			get "like"
+		end
+	end
+	
+=begin	
 	post "discusses/new"
 	post "discusses/update"
 	post "discusses/delete"	
+=end
 	
 #----------for past_exams---------------
   resources :past_exams, :except=>[:update] do

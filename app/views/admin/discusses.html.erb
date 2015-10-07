@@ -41,10 +41,10 @@
 				}else{
 					$status.append(""+pass+" / <%=current_user.name%>");
 				}
-				closeGlobalModal();
+				$("#global-modal").modal("hide");
 			},
 			error:function(){
-				closeGlobalModal();
+				$("#global-modal").modal("hide");
 				toastr["warning"]("你已審查過此文章!");
 			}
 		});
@@ -54,6 +54,6 @@
 		var fail_button="    <button class='btn btn-danger' onclick='verifyDiscuss("+id+",false);'>不合格</button>";
 		var titleAndButs=title+pass_button+fail_button;
 		var contentAndArea='<textcontent>'+content+'</textcontent>';
-		showGlobalModal(titleAndButs,contentAndArea);
+		showGlobalModal(1,titleAndButs,contentAndArea);
 	}
 </script>

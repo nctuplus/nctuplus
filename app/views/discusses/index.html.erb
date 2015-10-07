@@ -1,0 +1,42 @@
+<%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
+	<div class="row">	
+		<div class="col-md-12 text-center">
+			<%=link_to "新增心得",new_discuss_path,class:"btn btn-info",style:"font-size:16px;" %>
+			<div class="input-group" >
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"width:350px;" %>
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+				</span><!-- /btn-group -->
+			</div><!-- /input-group -->
+		</div>
+	</div>
+<% end %>
+<br>
+<table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
+	<tr>
+		<th>課程</th>
+		<th>標題</th>
+		<th>作者</th>
+		<th>時間</th>
+	</tr>
+<% @discusses.each do |discuss| %>
+	<tr id="<%=discuss.id%>" class="clickable-hover" onclick="show(<%=discuss.id%>,'<%=j discuss.title%>','<%=j discuss.content%>')">
+		<td><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
+		<td><%=discuss.title%></td>		
+		<td><%=discuss.user_name%></td>
+		<td><%=discuss.created_at%></td>
+	</tr>
+<% end %>
+</table>
+<%= paginate @discusses, :window=>2 %>
+
+<script>
+
+	function show(id,title,content){
+		//var pass_button="    <button class='btn btn-success' onclick='verifyDiscuss("+id+",true);'>合格</button>";
+		//var fail_button="    <button class='btn btn-danger' onclick='verifyDiscuss("+id+",false);'>不合格</button>";
+		var titleAndButs=title;//+pass_button+fail_button;
+		var contentAndArea='<textcontent>'+content+'</textcontent>';
+		showGlobalModal(titleAndButs,contentAndArea);
+	}
+</script>

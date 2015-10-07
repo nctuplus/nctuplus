@@ -3,7 +3,10 @@ class DiscussesController < ApplicationController
 	#layout false, :only =>[:list_by_course]
 	before_filter :checkLogin, :only=>[:new, :update, :like]
 	before_filter :checkOwner, :only=>[:update, :delete]
-	
+	def index
+		@q = Discuss.search_by_text(params[:custom_search])
+		@discusses=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("id DESC")	
+	end
 	def like
 		@like=current_user.discuss_likes.create(:like=>params[:like])
 		
