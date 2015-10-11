@@ -77,7 +77,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 text-center gray-hover">
-				<div class="service-box">					
+				<div class="service-box clickable-hover function-box" href="/discusses">					
 						<%=image_tag "1.png",class:"width-200"%>
 						<h3>全校課程心得</h3>
 						<p class="text-muted" style="width:80%;margin:auto;">
@@ -86,7 +86,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 text-center gray-hover">
-				<div class="service-box">
+				<div class="service-box clickable-hover function-box" href="/books">
 					<%=image_tag "2.png",class:"width-200"%>
 					<h3>二手書拍賣</h3>
 					<h5 class="highlight-new-function">NCTU+ 新功能!</h5>
@@ -96,7 +96,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 text-center gray-hover">
-				<div class="service-box">
+				<div class="service-box clickable-hover function-box" href="/user">
 					<%=image_tag "3.png",class:"width-200"%>
 					<h3>畢業學分計算</h3>
 					
@@ -104,7 +104,7 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12 text-center gray-hover">
-				<div class="service-box">
+				<div class="service-box clickable-hover function-box" href="/user/collections/">
 					<%=image_tag "4.png",class:"width-200"%>
 					<h3>課表分享功能</h3>
 					<h5 class="highlight-new-function">NCTU+ 新功能!</h5>
@@ -144,6 +144,11 @@ $(document).ready(function(){
 			top: 100
 		}
 	});
+	
+	$('.function-box').click(function(){
+		window.open($(this).attr('href'),'_blank');
+	});
+	
 	// Initialize WOW.js Scrolling Animations
 	new WOW().init();
 	re_win();
