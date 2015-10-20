@@ -19,7 +19,7 @@
 				{% local_credit+=parseInt(course.credit); %}
 			{% } %}
 			<tr class="row {%=pass_class%}">
-				<td class="col-md-6">
+				<td >
 					<h4 class="text-center">
 						{% if(!checkPassTaking(o.pass_score,course.score)) { %}
 							{% if(course.score=="") %}
@@ -34,12 +34,7 @@
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit%}</strong>
 					</h4>
 				</td>
-				<td class="col-md-6">
-					<div class="container" style="display:inline-block;">		
-						<a target="blank" href="/courses/{%=course.cd_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
-						<a target="blank" href="/courses/{%=course.cd_id%}&first_show=discuss" class="btn btn-sm btn-default">討論區</a>
-					</div>
-				</td>
+				
 			</tr>
 		{% } %}
 		{% if(credits[courses[0].cos_type]){ %}
