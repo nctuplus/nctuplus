@@ -28,26 +28,34 @@
 	  <div class="panel-body ">
 			<h4>請尊重智慧財產權!</h4>
 			<p>
-				本區只開放上傳考古題，若上傳非相關檔案或未授權檔案後果請自行負責!<br>
+				本區只開放上傳考古題及作業，若上傳非相關檔案或未授權檔案後果請自行負責!<br>
 				目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip/rar<br>
-				每個檔案的大小限制為10mb
-			</p>     
+				每個檔案的大小限制為10MB
+			</p>
+			<h4>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="is_anonymous_sel" onchange="change_check($(this));" value="false"> 匿名上傳
+					</label>
+				</div>
+			</h4>
 			<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
 			<% if current_user %>
 				<div class="fileupload-buttonbar">
+					
 					<!-- The fileinput-button span is used to style the file input field as button -->
 					<span class="btn btn-success fileinput-button ">		  
 						<span class="glyphicon glyphicon-plus "></span>
-						<span>Add files...</span>
+						<span>新增檔案</span>
 						<%= f.file_field :upload, :multiple=>""%>
 					</span>
 					<button type="submit" class="btn btn-primary start ">
 						<span class="glyphicon glyphicon-arrow-up"></span>
-						<span>Start upload</span>
+						<span>開始上傳</span>
 					</button>
 					<button type="reset" class="btn btn-warning cancel ">
 						<span class="glyphicon glyphicon-remove"></span>
-						<span>Cancel upload</span>
+						<span>取消上傳</span>
 					</button>
 				</div>
 			<% else %>
@@ -59,7 +67,14 @@
 <%= render :partial=>"xtmpl_upload" %>
 <%= render :partial=>"xtmpl_download" %>
 <script type="text/javascript" charset="utf-8">
-	
+	function change_check($obj){
+		if($obj.val()=="false"){
+			$obj.val("true");
+		}
+		else{
+			$obj.val("false");
+		}
+	}
 	function change_to_edit(file_id,sem_id,desc){
 		var semester_select="<%=j select_tag("past_exam[semester_id]", options_from_collection_for_select(@sems, "id", "name"), class:"form-control")%>";
 		var $row=$("#download_"+file_id);

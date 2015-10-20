@@ -5,6 +5,7 @@
 			{% if (file.error) {toastr["warning"](file.error);continue;} %}
 			
 			<input type="hidden" class="upload_ct_id" name="past_exam[course_teachership_id]" value="">
+			<input type="hidden" class="is_anonymous" name="past_exam[is_anonymous]" value="">
 			<td class="text-center">0</td>
 			<td class="filename text-center">
 				{%=file.name%}

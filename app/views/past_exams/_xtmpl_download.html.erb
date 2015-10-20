@@ -18,15 +18,16 @@
 		{% } else { %}
 	
 			<td class="download_times text-center">{%= file.download_times %}</td>
+			<td class="name text-center">
+				<a href="{%=file.url%}" title="{%=file.name%}">{%=file.name%}</a>
+			</td>
 			<td class="text-center" id="js-sem">
 				<span>{%= file.semester_name %}</span>
 			</td>
 			<td class="text-center" id="js-desc">
 				{%= file.description %}
 			</td>
-			<td class="name text-center">
-				<a href="{%=file.url%}" title="{%=file.name%}">{%=file.name%}</a>
-			</td>
+			
 			<td class="size text-center">
 				<span>{%=o.formatFileSize(file.size)%}</span>
 			</td>

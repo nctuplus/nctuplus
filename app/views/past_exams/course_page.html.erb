@@ -17,6 +17,7 @@
 	  $('#fileupload').bind('fileuploadsubmit', function (e, data) {
 			var inputs = data.context.find(':input');
 			$('.upload_ct_id').val("<%=params[:ct_id]%>");
+			$(".is_anonymous").val($("#is_anonymous_sel").val());
 			data.formData = inputs.serializeArray();
 	  });
 		$('#fileupload').bind('fileuploadadd', function (e, data) {

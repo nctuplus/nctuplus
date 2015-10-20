@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150723072543) do
+ActiveRecord::Schema.define(version: 20151020144907) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -387,6 +387,7 @@ ActiveRecord::Schema.define(version: 20150723072543) do
     t.integer  "user_id"
     t.integer  "course_teachership_id"
     t.integer  "semester_id"
+    t.boolean  "is_anonymous",          default: false
     t.string   "description"
     t.integer  "download_times"
     t.string   "upload_file_name"

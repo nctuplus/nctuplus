@@ -103,7 +103,7 @@ class PastExamsController < ApplicationController
 	
   private
   def data_params
-    params.require(:past_exam).permit(:upload, :course_teachership_id, :semester_id, :description)
+    params.require(:past_exam).permit(:upload, :course_teachership_id, :semester_id, :description, :is_anonymous)
   end
   
 end

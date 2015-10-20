@@ -33,7 +33,7 @@ class PastExam < ActiveRecord::Base
 			"semester_name" => self.semester_name,
 			"semester_id" => self.semester_id,
 			"description" =>self.description,
-			"owner_name" =>self.user_name,
+			"owner_name" => self.is_anonymous ? "匿名" : self.user_name,
 			"owner_id" =>self.user_id,
 			"create_time"=>self.upload_updated_at.strftime("%F"),
 			"editable"=> user.try(:id)==self.user_id 
@@ -41,30 +41,6 @@ class PastExam < ActiveRecord::Base
   end
 	
 
-=begin	
-  def to_jq_upload(user)
-		if user
-			_uid=user.id
-		else 
-			_uid=0
-		end
-    {
-      "name" => read_attribute(:upload_file_name),
-      "size" => read_attribute(:upload_file_size),
-      "url" => upload.url(:original),
-			"download_times" => read_attribute(:download_times).to_s,
-      "delete_type" => "DELETE",
-			"id" => read_attribute(:id),
-			"semester_name" => Semester.find(read_attribute(:semester_id)).name,
-			"semester_id" => read_attribute(:semester_id),
-			"description" =>read_attribute(:description),
-			"owner_name" =>User.find(read_attribute(:user_id)).name,
-			"owner_id" =>read_attribute(:user_id),
-			"create_time"=>read_attribute(:upload_updated_at).strftime("%F"),
-			"editable"=> _uid==read_attribute(:user_id)
-    }
-  end
-=end
   
   def self.support_types
     "(jpe?g|png|pdf|docx?|pptx?|zip|rar)"
