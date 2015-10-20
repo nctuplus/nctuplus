@@ -3,15 +3,17 @@
 	<div class="row">
 		<div class="col-md-12 col-xs-12 col-sm-12 text-cente">
 			<br>
-			<%= search_form_for @q, url:"/books/cts_search", class:"text-center form-inline", remote:"true" do |f| %>
+			<h4>Step1.選擇適用課程 - <span class="text-center" id="ct-id" data=""></span></h4>
+			
+			<%= search_form_for @q, url:"/books/cts_search", class:"form-inline", remote:"true" do |f| %>
 				<div class="form-group">
 					<label>適用課程</label>
-					<%=f.search_field :course_ch_name_cont, class:"form-control",placeholder:"課名/教授"%>
+					<%=f.search_field :course_ch_name_cont, class:"form-control",placeholder:"課名",required:"true"%>
 				</div>
 				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-success"%>
 			<% end %>
-			<h4 class="text-center" id="ct-id" data=""></h4>
-			<br>
+			<hr>
+			<h4>Step2.上傳檔案及填寫說明</h4>
 			<%=render "form" %>
 		</div>
 	</div>
@@ -48,19 +50,38 @@
 		$('#ct-id').text(name);
 		$("#book-modal").modal("hide");
 		$(".fileupload-buttonbar").find(".disabled").removeClass("disabled");
+		
+		$('#fileupload').bind('fileuploadsubmit', function (e, data) {
+			var inputs = data.context.find(':input');
+			$('.upload_ct_id').val(id);
+			data.formData = inputs.serializeArray();
+	  });
+		
+		$.getJSON("/past_exams/list_by_ct?ct_id="+id, function (files) {
+			$(".files").html("");
+			var fu = $('#fileupload').data('blueimpFileupload'), 
+				template;
+			fu._adjustMaxNumberOfFiles(-files.length);
+			template = fu._renderDownload(files)
+				.appendTo($('#fileupload .files'));
+			fu._reflow = fu._transition && template.length && template[0].offsetWidth;
+			template.addClass('in');
+			$('#loading').remove();
+			for (var i=0, file; file=files[i]; i++) {
+				$("td.semester_"+file.id+" select").val(file.semester_id);
+			}
+		});
+		
 	}
 	$(function(){
+		$(".fileupload-buttonbar").find(".btn").addClass("disabled");
 		$('#past_exam_upload').attr('name','past_exam[upload]');
 	  $('#fileupload').fileupload();
     $('#fileupload').fileupload('option',{
 		  acceptFileTypes : /(\.|\/)<%=PastExam.support_types%>$/i,
 		  maxFileSize: <%=PastExam.max_upload_size%>
 	  });
-	  $('#fileupload').bind('fileuploadsubmit', function (e, data) {
-			var inputs = data.context.find(':input');
-			$('.upload_ct_id').val("<%=params[:ct_id]%>");
-			data.formData = inputs.serializeArray();
-	  });
+	  
 		$('#fileupload').bind('fileuploadadd', function (e, data) {
 				$(".no-files-yet").hide();
         var allFiles = $('#fileupload').find('.filename');
@@ -75,18 +96,7 @@
 						
         });
     });
-		$.getJSON("/past_exams/list_by_ct?ct_id=-1", function (files) {
-			var fu = $('#fileupload').data('blueimpFileupload'), 
-				template;
-			fu._adjustMaxNumberOfFiles(-files.length);
-			template = fu._renderDownload(files)
-				.appendTo($('#fileupload .files'));
-			fu._reflow = fu._transition && template.length && template[0].offsetWidth;
-			template.addClass('in');
-			$('#loading').remove();
-			for (var i=0, file; file=files[i]; i++) {
-				$("td.semester_"+file.id+" select").val(file.semester_id);
-			}
-		});
+		$('#loading').remove();
+
 	});
 </script>	

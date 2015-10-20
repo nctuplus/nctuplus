@@ -2,7 +2,8 @@ class PastExamsController < ApplicationController
   # GET /files
   # GET /files.json
   layout false, :only =>[:course_page]
-  
+	
+  before_filter :checkLogin, :only=>[:upload]
   before_filter :checkE3Login, :only=>[:show, :new, :update, :create, :destroy, :one_user]
   before_filter :checkOwner, :only=>[:update, :destroy]
 	
@@ -38,7 +39,7 @@ class PastExamsController < ApplicationController
 	def upload
 		@q=CourseTeachership.search(params[:q])
 		@ct_id=1
-		@sems=CourseTeachership.find(@ct_id).semesters
+		@sems=Semester.all
 	end
   def new
     @file = PastExam.new

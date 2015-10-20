@@ -1,7 +1,7 @@
 
 <%= search_form_for @q, url:"/past_exams/", class:"form-inline" do |f| %>
 	<div class="col-md-12 text-center">	
-		<%=link_to "上傳考古題","/past_exams/upload", class:"btn btn-info", style:"font-size:16px;" %>
+		<%=link_to "上傳考古題","/past_exams/upload", class:"btn btn-sm btn-info", style:"font-size:16px;","data-no-turbolink"=>"true" %>
 		<div class="input-group" >
 			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/檔名",style:"width:350px;" %>
 			<span class="input-group-btn">
@@ -10,11 +10,12 @@
 		</div><!-- /input-group -->
 	</div>
 <% end %>	
-
+<br>
 <br>
 <table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
 	<tr class="row">
 		<th>課程/教授</th>
+		<th>學期</th>
 		<th>描述</th>
 		<th>上傳者</th>
 		<th>下載次數</th>
@@ -28,6 +29,7 @@
 	<% @exams.each do |exam| %>
 		<tr id="exam-<%=exam.id%>" class="row clickable-row clickable-hover" href="/past_exams/<%=exam.id%>">
 			<td class="ct_name"><%=exam.course.ch_name%>/<%=exam.course_teachership.teacher_name%></td>
+			<td class=""><%=exam.semester_name%></td>
 			<td class="title"><%=exam.description%></td>		
 			<td class="user_name"><%=exam.try(:user).try(:name)%></td>
 			<td><%=exam.download_times%></td>
@@ -37,9 +39,6 @@
 <% end %>
 </table>
 <%= paginate @exams, :window=>2 %>
-
-
-
 <script>
 	$(function(){
 		$(".clickable-row").click(function() {
