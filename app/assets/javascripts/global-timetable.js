@@ -49,7 +49,7 @@ function show_timetable_on_modal(semester_id, showNow){
 					$data.show();      
 				}
 					return false ;
-				}, 500);
+				}, 600);
 			}
 		}
 	});

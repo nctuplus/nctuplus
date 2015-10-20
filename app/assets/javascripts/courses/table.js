@@ -114,7 +114,7 @@
 							cache:false,
 							contentType: false,
 							processData: false,
-							success: function(){/*console.log("good");*/},
+							success: function(){console.log("good");},
 							error: function(){console.log("upload fails");}
 						});
 					}        
