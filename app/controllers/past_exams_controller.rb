@@ -1,17 +1,18 @@
 class PastExamsController < ApplicationController
   # GET /files
   # GET /files.json
-  layout false, :only =>[:list_by_ct, :index]
+  layout false, :only =>[:course_page]
   
-  before_filter :checkE3Login, :only=>[:show, :new, :edit, :update, :create, :destroy, :one_user]
-  before_filter :checkOwner, :only=>[:edit, :destroy]
-	
-	def index2	#get by ct_id
-		@q = PastExam.search_by_text(params[:custom_search])
-		@exams=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("id DESC")	
-  end
+  before_filter :checkE3Login, :only=>[:show, :new, :update, :create, :destroy, :one_user]
+  before_filter :checkOwner, :only=>[:update, :destroy]
 	
 	def index	#get by ct_id
+		@q = PastExam.search_by_text(params[:custom_search])
+		@exams=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("download_times DESC")
+		
+  end
+	
+	def list_by_ct	
 		if !params[:ct_id].blank?
 			@files = PastExam.where(:course_teachership_id=>params[:ct_id]).order("download_times DESC")
 		end
@@ -20,12 +21,9 @@ class PastExamsController < ApplicationController
 		end
   end
   
-	def list_by_ct
+	def course_page
 		@ct_id=params[:ct_id]
 		@sems=CourseTeachership.find(@ct_id).semesters
-		#sem_ids=CourseDetail.select(:semester_id).where(:course_teachership_id=>@ct_id).pluck(:semester_id)
-		#@sems=Semester.where(:id=>sem_ids).order("id DESC")
-		
 	end
   
 
@@ -37,6 +35,11 @@ class PastExamsController < ApplicationController
 		
   end
 
+	def upload
+		@q=CourseTeachership.search(params[:q])
+		@ct_id=1
+		@sems=CourseTeachership.find(@ct_id).semesters
+	end
   def new
     @file = PastExam.new
     respond_to do |format|
@@ -68,7 +71,7 @@ class PastExamsController < ApplicationController
   end
 
 	
-  def edit
+  def update
     @file=PastExam.find(params[:id])
 		#if @file.owner_id==current_user.id
 		@file.description=params[:description]

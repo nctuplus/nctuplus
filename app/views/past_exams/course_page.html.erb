@@ -86,12 +86,11 @@
 		var description=$row.find("input").val();
 		var semester_id=$row.find("select").val();
 		$.ajax({
-			type: "GET",
-			url: "/past_exams/edit",
+			type: "PATCH",
+			url: "/past_exams/"+id,
 			data: {
 				description: description,
 				semester_id: semester_id,
-				id: id,
 			},
 			success: function(data) {
 				var file=JSON.parse(data)[0];
@@ -138,7 +137,7 @@
     });
 		
     // Load existing files:
-		$.getJSON("/past_exams/?ct_id=<%=params[:ct_id] %>", function (files) {
+		$.getJSON("/past_exams/list_by_ct?ct_id=<%=params[:ct_id] %>", function (files) {
 			var fu = $('#fileupload').data('blueimpFileupload'), 
 				template;
 			fu._adjustMaxNumberOfFiles(-files.length);

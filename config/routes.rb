@@ -93,11 +93,11 @@ Nctuplus::Application.routes.draw do
 =end
 	
 #----------for past_exams---------------
-  resources :past_exams, :except=>[:update] do
+  resources :past_exams, :except=>[:edit] do
 		collection do
-			get "index2"
+			get "course_page"
 			get "list_by_ct"
-			get "edit"
+			get "upload"
 		end
 	end
 

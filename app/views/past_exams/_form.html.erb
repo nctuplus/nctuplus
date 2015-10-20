@@ -1,0 +1,57 @@
+<%= form_for PastExam.new, :html => { :multipart => true, :id => "fileupload"  } do |f| %>
+	<!-- The table listing the files available for upload/download -->
+	<table class="table well" >
+		<tbody class="files" data-toggle="modal-gallery" data-target="#modal-gallery">
+			<tr>
+				<th class="col-md-1 text-center">下載次數</th>
+				<th class="col-md-1 text-center">年度</th>
+				<th class="col-md-2 text-center">檔案說明</th>
+				<th class="col-md-2 text-center">檔名</th>
+				<th class="col-md-1 text-center">大小</th>
+				<th class="col-md-1 text-center">提供者</th>
+				<th class="col-md-1 text-center">上傳時間</th>
+				<th class="col-md-1 text-center">動作</th>
+			</tr>
+			<tr id="loading"><td colspan="8" ><p class="text-center"><%=loading_img%></p></td></tr>
+		</tbody>
+	</table>
+	<hr>
+	<div class="panel panel-default">
+	  <div class="panel-heading">
+			<h2 class="panel-title">
+				上傳檔案
+			</h2>
+	  </div>
+	  <div class="panel-body ">
+			<h4>請尊重智慧財產權!</h4>
+			<p>
+				本區只開放上傳考古題，若上傳非相關檔案或未授權檔案後果請自行負責!<br>
+				目前支援的格式有: doc(x)/ppt(x)/pdf/jp(e)g/png/zip/rar<br>
+				每個檔案的大小限制為10mb
+			</p>     
+			<!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
+			<% if current_user %>
+				<div class="fileupload-buttonbar">
+					<!-- The fileinput-button span is used to style the file input field as button -->
+					<span class="btn btn-success fileinput-button disabled">		  
+						<span class="glyphicon glyphicon-plus "></span>
+						<span>Add files...</span>
+						<%= f.file_field :upload, :multiple=>""%>
+					</span>
+					<button type="submit" class="btn btn-primary start disabled">
+						<span class="glyphicon glyphicon-arrow-up"></span>
+						<span>Start upload</span>
+					</button>
+					<button type="reset" class="btn btn-warning cancel disabled">
+						<span class="glyphicon glyphicon-remove"></span>
+						<span>Cancel upload</span>
+					</button>
+				</div>
+			<% else %>
+				請先使用E3登入後才能上傳、下載檔案!
+			<%end%>
+		</div>
+	</div>
+<% end %>
+<%= render :partial=>"xtmpl_upload" %>
+<%= render :partial=>"xtmpl_download" %>

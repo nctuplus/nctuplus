@@ -155,7 +155,7 @@
 			$('body').scrollspy('refresh');
 			$("#discuss").load("/discusses/show?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
 				$('body').scrollspy('refresh');
-				$("#files").load("/past_exams/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>", function() {
+				$("#files").load("/past_exams/course_page?ct_id=<%=@data[:course_teachership_id]%>", function() {
 					$('body').scrollspy('refresh');
 					$('body').scrollTo("#course-name",10,{offset:-80});
 					<% if params[:first_show]=="discussion" %>
