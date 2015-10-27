@@ -129,7 +129,7 @@ class CourseMapsController < ApplicationController
 	end
 	
 	def destroy
-		@map = current_user.find(params[:id])
+		@map = current_user.admin_cms.find(params[:id])
 		@map.course_fields.destroy_all
 		@map.destroy
 		redirect_to "/admin/course_maps"
