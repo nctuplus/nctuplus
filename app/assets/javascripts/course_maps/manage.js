@@ -30,7 +30,7 @@ function load_new_form(data){
 		}
 		$.ajax({
 			type: "POST",
-  			url: "action_new" ,
+  			url: "/course_maps/action_new" ,
   			data: $(this).serialize(),
   			success: function(data){
 				load_treeview(data, map_id);

@@ -21,7 +21,7 @@
 						<h4 class="text-right">標題</h4>
 					</div>
 					<div class="col-md-5">
-						<%= text_field_tag :name , '', :class=>"form-control" %>
+						<%= f.text_field :name , :class=>"form-control" %>
 					</div>
 				</div>			
 				<div class="row">
@@ -38,7 +38,7 @@
 						<h4 class="text-right">適用年度</h4>
 					</div>
 					<div class="col-md-5">
-					<%=select_tag :year, options_for_select(Semester::YEARS.map{ |y| [y, y] }), :class=>'form-control', :prompt=>'不指定' %>
+					<%=f.select :year, options_for_select(Semester::YEARS.map{ |y| [y, y] }),{:prompt=>'不指定'},{ :class=>'form-control'} %>
 					</div>
 				</div>
 				<div class="row">
@@ -54,7 +54,7 @@
 						<h4 class="text-right">簡介</h4>
 					</div>
 					<div class="col-md-5">
-						<%= text_area_tag :desc,'', :class=>"form-control", :style=>"height: 100px;"%>
+						<%= f.text_area :desc, :class=>"form-control", :style=>"height: 100px;"%>
 					</div>
 				</div>	
 				

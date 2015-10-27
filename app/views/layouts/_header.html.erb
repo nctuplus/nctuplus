@@ -22,10 +22,10 @@
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
 						<% if current_user.isAdmin? %>
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/users" rel="nofollow" style="color:white;" data-no-turbolink>使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
-						<% end %>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/departments" rel="nofollow" style="color:white;">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/course_maps/" rel="nofollow" style="color:white;">課程地圖</a></li>
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/user_statistics" rel="nofollow" data-no-turbolink style="color:white;">統計資料</a></li>
+							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/departments" rel="nofollow" style="color:white;">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+						<% end %>							
+							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/course_maps/" rel="nofollow" style="color:white;">課程地圖</a></li>							
 							<!--
 							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
 							<li><a href="/admin/ee104" rel="nofollow">電機104級畢業學分預審</a></li>

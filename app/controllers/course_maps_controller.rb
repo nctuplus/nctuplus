@@ -73,19 +73,16 @@ class CourseMapsController < ApplicationController
 	end
 
 	def create	
-		@course_map = CourseMap.create(
-			:year=> params[:year] || 0	,
-			:name=> params[:name],
-			:department_id=> params[:course_map][:department_id],
-			:desc=> params[:course_map][:desc],
-			:user_id=> current_user.id
-		)
-
+		@course_map = CourseMap.new(course_map_params)
+		@course_map.user_id=current_user.id
+		@course_map.save
 # handle copy 		
 		if params[:copy].to_i != 0
 			copy_from = CourseMap.find(params[:copy])
 			@course_map.update_attributes(:total_credit=>copy_from.total_credit)
-			
+			if @course_map.desc.empty?
+				@course_map.update_attributes(:desc=>copy_from.desc)
+			end
 			#Rails.logger.debug "[debug] in1 "+copy_from.course_fields.count.to_s
 			copy_from.course_fields.each do |cf|
 				#Rails.logger.debug "[debug] cfcfcf"
@@ -132,7 +129,8 @@ class CourseMapsController < ApplicationController
 	end
 	
 	def destroy
-		@map = CourseMap.find(params[:id])
+		@map = current_user.find(params[:id])
+		@map.course_fields.destroy_all
 		@map.destroy
 		redirect_to "/admin/course_maps"
 	end
@@ -535,6 +533,9 @@ class CourseMapsController < ApplicationController
 	end
 	
 private
+	def course_map_params
+    params.require(:course_map).permit(:title, :department_id, :name, :desc, :year)
+  end
 	
 	def _get_credit_list(cf_id)
 		@cf=CourseField.find(cf_id)

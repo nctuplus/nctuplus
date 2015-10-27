@@ -12,7 +12,7 @@ class CourseField < ActiveRecord::Base
 	has_one :cf_field_need
 	
 	has_many :child_course_fieldships, :dependent => :destroy, foreign_key: "parent_id", :class_name=>"CourseFieldSelfship"
-	has_many :child_cfs, :through=> :child_course_fieldships
+	has_many :child_cfs, :through=> :child_course_fieldships, :dependent => :destroy
 	
 	has_one :parent_course_fieldship, :dependent => :destroy, foreign_key: "child_id", :class_name=>"CourseFieldSelfship"
 	has_one :parent_cf, :through =>:parent_course_fieldship
