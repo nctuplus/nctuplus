@@ -3,19 +3,23 @@
 <h3>課程地圖 - <%=@course_map.name%></h3>  
 
 <div class="well">
-<h3>課程介紹 <small><%=link_to '編輯', 'javascript:void(0);', :class=>'cm-edit-head'%></small></h3>
+<h3>課程介紹
+	<small>
+		<%=link_to '編輯', 'javascript:void(0);', :class=>'cm-edit-head'%>
+	</small>
+</h3>
 <table class="table table-bordered">
 	<tr>
 		<td>適用系所：</td>
-		<td class='cm-head-dep'><%=(@course_map.department_id==0)? "不指定" : @course_map.department_ch_name%></td>
+		<td id='cm-head-dep'><%=(@course_map.department_id==0)? "不指定" : @course_map.department_ch_name%></td>
 		<td>適用學期：</td>
-		<td class='cm-head-year'><%=(@course_map.year==0)? "不指定" : @course_map.year%></td>
+		<td id='cm-head-year'><%=(@course_map.year==0)? "不指定" : @course_map.year%></td>
 		<td>應修學分：</td>
-		<td class='cm-head-grade'><%=@course_map.total_credit%></td>
+		<td id='cm-head-grade'><%=@course_map.total_credit%></td>
 	<tr>
 	<tr>
 		<td colspan="6"><p>說明：</p>
-			<p class='cm-head-desc'><%=@course_map.desc%></p>
+			<p id='cm-head-desc'><%=@course_map.desc%></p>
 		</td>
 	</tr>	
 </table>
@@ -26,24 +30,33 @@
 </div>
 
 <script>
-var map_id = <%=j @course_map.id.to_s %> ;
-var cm_head_info = { dep: $('.cm-head-dep').text(), year: $('.cm-head-year').text(), desc:$('.cm-head-desc').text() };
 
 $(document).ready(function(){
+	var map_id = <%=@course_map.id %> ;
 	$('#course-map-content').load('/course_maps/content?map_id='+map_id);
 	
 	$('.cm-edit-head').click(function(){
+		var $cm_dep = $('#cm-head-dep') ;
+		var $cm_year = $('#cm-head-year') ;
+		var $cm_grade = $('#cm-head-grade') ;
+		var $cm_desc = $('#cm-head-desc') ;
+		var cm_head_info = { 
+			dep: $cm_dep.text(), 
+			year: $cm_year.text(), 
+			desc: $cm_desc.text() 
+		};
+
 		if($(this).html()=='編輯'){
-			$('.cm-head-dep').html('<%=j select_tag :dep, options_from_collection_for_select(Department.majorable.order("degree DESC"),"id","ch_name"), :prompt=>"不指定"  %>');
-			$('.cm-head-year').html('<%=j select_tag :year, options_for_select(Semester::YEARS.map{ |y| [y, y] }), :prompt=>"不指定" %>');
-			$('.cm-head-grade').html('<%=j text_field_tag :grade, @course_map.total_credit%>');
+			$cm_dep.html('<%=j select_tag :dep, options_from_collection_for_select(Department.majorable.order("degree DESC"),"id","ch_name"), :prompt=>"不指定"  %>');
+			$cm_year.html('<%=j select_tag :year, options_for_select(Semester::YEARS.map{ |y| [y, y] }), :prompt=>"不指定" %>');
+			$cm_grade.html('<%=j text_field_tag :grade, @course_map.total_credit%>');
 			$("#dep option").each(function() {
   				if($(this).text() == cm_head_info['dep']) {
     				$(this).attr('selected', 'selected');            
   				}                        
 			});
 			$("#year option:contains(" + cm_head_info['year'] + ")").attr('selected', 'selected');
-			$('.cm-head-desc').html('<%=j text_area_tag "desc", '', {class:"form-control"}%>');
+			$cm_desc.html('<%=j text_area_tag "desc", '', {class: "form-control", rows: 10 }  %>');
 			$('#desc').html(cm_head_info['desc']);
 			$(this).html('<%=fa_icon "check",:class=>"btn btn-circle btn-success" %>');
 		}else{//post 
@@ -54,7 +67,6 @@ $(document).ready(function(){
 			cm_head_info['year'] = $('#year option:selected').text() ;
 			cm_head_info['desc'] = $('#desc').val() ;
 			$.ajax({
-				//async: false ,
 				type: "POST",
 				url: "/course_maps/update_cm_head" ,
 				data:{
@@ -65,13 +77,13 @@ $(document).ready(function(){
 					desc: $('#desc').val()
 				},	
 				success: function(data){			
-					$('.cm-head-dep').html(cm_head_info['dep']);
-					$('.cm-head-year').html(cm_head_info['year']);
-					$('.cm-head-grade').html(grade);
-					$('.cm-head-desc').html(cm_head_info['desc'] );			
+					$cm_dep.html(cm_head_info['dep']);
+					$cm_year.html(cm_head_info['year']);
+					$cm_grade.html(grade);
+					$cm_desc.html(cm_head_info['desc'] );			
 				},	
 				error: function(){
-					alert('internal server error.. please reload');
+					alert('internal server error.');
 				}
 			});
 			$(this).html('編輯');

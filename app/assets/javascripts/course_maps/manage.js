@@ -350,7 +350,7 @@ function bind_course_list_button(){
 		var change_table2 = ['text-color-green', 'text-color-red'] ;
 		$.ajax({
 			type: "POST",
-  			url: "course_action" ,
+  			url: "/course_maps/course_action" ,
   			data:{
   				target_id : target_tr.attr('list_id'),
   				rtype : rtype,
