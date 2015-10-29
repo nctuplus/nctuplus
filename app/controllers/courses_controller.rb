@@ -50,12 +50,12 @@ class CoursesController < ApplicationController
 	def search_mini_cm
 	
 		if !params[:q].blank?
-			@q = Course.search(params[:q])
+			@q = CourseDetail.search(params[:q])
 		else
-			@q = Course.search({:id_eq=>0})	
+			@q = CourseDetail.search({:id_eq=>0})	
 		end
 		
-		@courses=@q.result(distinct: true).includes(:course_details).reject{|c|c.course_details.empty?}.sort_by{|c|c.course_details.first.cos_type}
+		@courses=@q.result(distinct: true).includes(:course).map{|cd|cd.course}#.includes(:course_details).reject{|c|c.course_details.empty?}.sort_by{|c|c.course_details.first.cos_type}
 		
 		if params[:map_id].presence
 			course_group = CourseGroup.where("gtype=0 AND course_map_id=? ",params[:map_id]).map{|cg| cg.id}

@@ -1,18 +1,22 @@
 <script>
 	function change_check(obj){
-		if(obj.val()=="yes")
+		if(obj.val()=="yes"){
 			obj.val("no");
-		else
+			$("#avatar").attr("src","<%="http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture"%>");
+		}
+		else{
 			obj.val("yes");
+			$("#avatar").attr("src","<%=asset_path("anonymous.jpg")%>");
+		}
 	}
 </script>
 <%= form_tag '/discusses/new', :role=>"form", :remote=>"true" do %>
 	<div class="panel panel-default bs-callout-success" style="border-left-width:5px;">
 
-		<div class="panel-heading row no-margin-left">
+		<div class="panel-heading row no-margin-left no-margin-right">
 			<% if current_user && current_user.uid %>
 				<div class="col-md-1">
-					<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "50x50", style:"display:inline-block" %>
+					<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture",id:"avatar", size: "50x50", style:"display:inline-block" %>
 				</div>
 				<div class="col-md-11">
 					<br>
@@ -30,13 +34,13 @@
 				<textarea class="form-control " name="content" id="main_discuss_content" rows="5" placeholder="內容..." required></textarea>
 			</div>
 		</div>
-		<div class="panel-footer row no-margin-left">
+		<div class="panel-footer row no-margin-left no-margin-right">
 			<div class="col-md-12">
 			<% if current_user && current_user.uid %>
 				<p class="pull-right">
-				同步分享至FB
+				<!--同步分享至FB
 				<input type="checkbox" name="share" id="sync-share" onchange="change_check($(this))" class="" value="no" >
-				&nbsp;&nbsp;
+				&nbsp;&nbsp;-->
 				匿名
 				<input type="checkbox" name="anonymous" id="anonymous" onchange="change_check($(this))" class="" value="no" >
 				&nbsp;&nbsp;

@@ -1,3 +1,4 @@
+<!--
 <div><h4>DISCUSS</h4></div>
 <br>
 
@@ -29,6 +30,107 @@ $(function(){
             showGlobalModal(currentId, currentContent);
 	});
 });
+</script>
+
+-->
+
+<%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
+	<div class="row">	
+		<div class="col-md-12 text-center">
+			<%=link_to "新增心得", class:"btn btn-info", style:"font-size:16px;" , :controller => 'discusses', :action => 'new'%>
+			<div class="input-group" >
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"width:350px;" %>
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+				</span><!-- /btn-group -->
+			</div><!-- /input-group -->
+		</div>
+	</div>
+<% end %>
+<br>
+<table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
+	<tr>
+		<th>課程</th>
+		<th>標題</th>
+		<th>作者</th>
+		<th>時間</th>
+	</tr>
+<% @discusses.each do |discuss| %>
+	<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show(<%=discuss.id%>);">
+		<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
+		<td class="title"><%=discuss.title%></td>		
+		<td class="user_name"><%=discuss.user_name%></td>
+		<td class="user_id hidden"><%=discuss.user.uid%></td>
+		<td class="time"><%=discuss.created_at%></td>
+		<td class="content hidden"><%=discuss.content%></td>
+	</tr>
+<% end %>
+</table>
+<%= paginate @discusses, :window=>2 %>
+
+<script>
+
+	function show(id){
+		var $obj=$("#discuss-"+id);
+		var title=$obj.find(".title").text();
+		var content=$obj.find(".content").text();
+		var user_name=$obj.find(".user_name").text();
+		var user_id=$obj.find(".user_id").text();
+		var time=$obj.find(".time").text();
+		var test='<div class="panel-heading row no-margin-left no-margin-right">';
+			test+='<div class="col-md-1">';
+			test+='<a href="https://www.facebook.com/'+user_id+'" target="_blank" title="'+user_name+'">';
+			test+='<img alt="Picture" class="" height="50" src="http://graph.facebook.com/'+user_id+'/picture" style="margin-top:10px;" width="50">';
+			test+='</a></div>';
+			test+='<div class="col-md-6" id="main_title_184">';
+			test+='<h4 id="title_184">'+title+'</h4>';
+			test+='<p>'+time+'</p></div>';
+			test+='<div class="col-md-5">';
+			test+='<div class="row pull-right"><br>';
+			test+='<div style="display:inline-block;margin-right:5px;">';
+			test+='<div class="share-button_'+id+'"></div>';				
+			test+='</div>';
+			test+='<i class="fa fa-thumbs-o-up fa-2x clickable-hover" onclick="like(1,\'main\',184,$(this));" title="讚"></i>';
+			test+='<span class="like-count like" id="main_like_184">0</span>';
+			test+='</div></div></div>';
+		var titleAndButs=test;//title;
+		var contentAndArea='<textcontent>'+content+'</textcontent>';
+		showGlobalModal(2,titleAndButs,contentAndArea);
+		<% share_url="#{root_url}discusses" %>
+		$("[class^=share-button]").each(function(){
+			var share_url='<%=j share_url.html_safe%>'+$(this).attr('id');
+			var description=$("#content_"+$(this).attr('id')).text();
+			new Share('.'+$(this).attr('class'), {
+				ui: {
+					button_text :"分享",
+					button_font : false,
+				},
+				networks: {
+					facebook: {
+						app_id: "<%=Facebook::APP_ID%>",
+						title : $("#title_"+$(this).attr('id')).text(),
+						description: description,
+						url : share_url,
+						caption: "5566"
+					},
+					google_plus:{
+						url :share_url
+					},
+					twitter:{
+						url :share_url,
+						description :description.substr(0,50)
+					},
+					pinterest:{
+						enabled:false
+					},
+					email:{
+						enabled:false
+					}
+				}
+			});
+		});
+		
+	}
 </script>
 
 

@@ -12,9 +12,10 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require bootstrap-sprockets
 //= require turbolinks
 //= require jquery-ui
-//= require bootstrap.min
+
 //= require toastr.min
 //= require tmpl.min
 
@@ -25,6 +26,8 @@
 //= require share.min
 //= require bootstrap-switch
 //= require zeroclipboard
+//= require global-timetable
+//= require global-modal
 
 var isMobile = false; //initiate as false
 // device detection
@@ -44,15 +47,42 @@ function goToHref(href,new_tab){
 	
 }
 
-function showGlobalModal(title,content){
-	$("#global-modal .modal-title").html(title);
-	$("#global-modal .modal-body").html(content);
-	justShowGlobalModal();
 
-}
-function justShowGlobalModal(){
-	$("#global-modal").modal('show');
-}
-function closeGlobalModal(){
-	$("#global-modal").modal('hide');
-}
+function initHeader(){
+
+	if(window.innerWidth<=768)
+	{
+
+		$(".dropdown").hover(function(){	
+			$(".item").hide()
+			} , function(){
+		});
+		
+		$(".nav-sub-menu").find(".item").hide();
+		//$(".func2").css({'display':'block', 'background':'#0073b1'});
+		$(".footer1").css("margin-bottom","0")
+		
+	}
+	else
+	{
+		//$(".func2").css('display','none');
+		
+		$(".dropdown").hover(function(){
+			$(this).find(".item").fadeIn();
+			//$(".chart").fadeIn();
+				
+			var _this = $(this),
+			_subnav = _this.children('ul');
+ 
+		// 變更目前母選項的背景顏色
+		// 同時淡入子選單(如果有的話)
+		//_this.css('backgroundColor', '#06c');
+			_subnav.stop(true, true).fadeIn(400);
+		} , function(){
+		
+			$(this).css('backgroundColor', '').children('ul').stop(true, true).fadeOut(400);
+		});
+		
+	}
+	
+};

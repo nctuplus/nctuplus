@@ -8,6 +8,8 @@ function check_field_selected(){
 }
 function add_class(c_ids){ //action="add"
 <% if params[:hide_group]=="true"%>
+
+
 	// In course tree
 	if(!check_field_selected())
 		return false ;	
@@ -23,7 +25,7 @@ function add_class(c_ids){ //action="add"
   			},	
   			success: function(data){ 
   				var res = $.parseJSON(data);
-  				console.log(res.success);			
+  				//console.log(res.success);			
   				if(res.fail > 0 ){
   					if(res.success>0)
   						alert("共加入了 "+res.success+" 門課程，另外有 "+res.fail+" 門課程重複。");
@@ -60,7 +62,7 @@ function add_class(c_ids){ //action="add"
   				if(res.fail > 0 )
   					alert("有 "+res.fail+" 課程重複了");
   				console.log(cg_show_id);	
-  				load_group_treeview(cg_show_id);
+  				load_group_treeview(cg_show_id, map_id);
   				$('#alert-msg').html('新增成功').show().fadeOut(3000);
   			},
   			error: function(){

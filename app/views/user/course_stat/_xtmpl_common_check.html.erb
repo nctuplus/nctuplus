@@ -2,12 +2,12 @@
 {% var result=commonCheck(o); %}
 
 <table class="table table-bordered "style="border:0px">
-	<tr class="row">
+	<tr class="">
 		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">服務學習</h4></td>
 		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">一</p></td>
 		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">二</p></td>
 	</tr>
-	<tr class="row">
+	<tr class="">
 		<td class="col-md-" colspan="3">
 			{% if(result['service_1']){ %}
 			<p class="text-center no-margin-bottom">
@@ -23,12 +23,12 @@
 			{% } %}
 		</td>
 	</tr>
-	<tr class="row">
+	<tr class="">
 		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">藝文賞析</h4></td>
 		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">上</p></td>
 		<td class="col-md-" colspan="3"><p class="text-center no-margin-bottom">下</p></td>
 	</tr>
-	<tr class="row">
+	<tr class="">
 		<td class="col-md-" colspan="3">
 			{% if(result['art_1']||result['art_after102']>=1){ %}
 				<p class="text-center no-margin-bottom">
@@ -44,7 +44,7 @@
 			{% } %}
 		</td>
 	</tr>
-	<tr class="row">
+	<tr class="">
 		<td rowspan="2" class="col-md-2" style="vertical-align:middle"><h4 class="text-center">體育</h4></td>
 		<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
 		<td class="col-md-"><p class="text-center no-margin-bottom">大一</p></td>
@@ -53,7 +53,7 @@
 		<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
 		<td class="col-md-"><p class="text-center no-margin-bottom">選修</p></td>
 	</tr>
-	<tr class="row">
+	<tr class="">
 	{% for (var i = 1 ; i <= 2 ; i++){ %}
 		<td class="col-md-">
 			{% if(i<=result['phe_1']){ %}
@@ -75,7 +75,7 @@
 		</td>
 	{% } %}
 	</tr>
-	<tr class="row">
+	<tr class="">
 		<td class="col-md-2" >
 			<h4 class="text-center ">外文</h4>
 		</td>
@@ -90,7 +90,7 @@
 			</div>
 		</td>
 	</tr>
-	<tr class="row">
+	<tr class="">
 		<td rowspan="3" style="vertical-align:middle">
 			<h4 class="text-center no-margin-bottom" style="line-">通識</h4>
 		</td>
@@ -107,7 +107,7 @@
 				</p>
 		{% } %}
 	</tr>
-	<tr class="row">
+	<tr class="">
 		{% for(var dimension in result['common']){ %}
 			<td class="col-md-" style="min-height:16px;">
 				<p class="text-center no-margin-bottom" >
@@ -119,7 +119,7 @@
 		{% } %}
 	</tr>
 
-	<tr class="row">
+	<tr class="">
 		<td colspan="6">
 			<div class="progress no-margin-bottom">
 				<div class="progress-bar dimension-world" style="width: 20%;">		

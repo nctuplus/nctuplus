@@ -13,7 +13,7 @@
 
 <% @discusses.each do |discuss| %>
 	<div class="panel panel-default bs-callout-success" id="discuss_<%=discuss.id%>" style="border-left-width:5px;">
-		<div class="panel-heading row no-margin-left" >
+		<div class="panel-heading row no-margin-left no-margin-right" >
 			<div class="col-md-1">
 			<% if discuss.is_anonymous %>
 				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:"匿名" %>

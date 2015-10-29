@@ -8,7 +8,7 @@ Bundler.require(:default, Rails.env)
 
 module Nctuplus
   class Application < Rails::Application
-		config.assets.paths << "#{Rails}/vendor/assets/fonts"
+		#config.assets.paths << "#{Rails}/vendor/assets/fonts"
 		
    # config.i18n.default_locale = "zh-TW"
  #   I18n.enforce_available_locales = false

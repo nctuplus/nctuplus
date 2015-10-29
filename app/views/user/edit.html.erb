@@ -1,15 +1,19 @@
 <div class="container bg-white" >
-	<br>
 	<%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
-		<% if current_user.hasE3?%>
 		<div class="form-group">
-			<h4><%=label_tag '結合',"結合",class:"col-sm-2 control-label"%></h4>
-			<div class="col-md-9">
-				<%=link_to "/auth/facebook",class:"btn  btn-primary",disabled:current_user.hasFb? do%>
+			<div class="col-md-offset-1 col-md-10">
+			<h2>更改個人資訊</h2>
+			</div>
+		</div>
+		<% if current_user.hasE3? and not current_user.hasFb?%>
+		<div class="form-group">
+			<h4><%=label_tag '結合',"結合", :class=>"col-sm-2 control-label"%></h4>
+			<div class="col-md-2">
+				<%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn  btn-primary" do%>
 					<%=fa_icon("facebook")%>acebook
 				<% end %>
 			</div>
-		</div>
+		</div>			
 		<div class="form-group ">
 			<div class="col-md-9 col-md-offset-2">
 				<p class="">結合後可利用fb登入，另外在賣二手書時可以選擇直接連絡您的fb帳號</p>
@@ -20,11 +24,6 @@
 			<h4><%=label_tag '分享課表',"分享課表",class:"col-sm-2 control-label"%></h4>
 			<div class="col-md-9">
 				<%=f.check_box :agree_share%> 
-			</div>
-		</div>
-		<div class="form-group">
-			<div class="col-md-offset-1 col-md-10">
-			<h2>更改個人資訊</h2>
 			</div>
 		</div>
 		<div class="form-group">
@@ -52,13 +51,13 @@
 				<%=f.hidden_field :department_id %>
 			</div>
 			<div class="col-md-5 no-padding-left">
-				<%=select_tag 'dept_under_grad', options_for_select(@dept_undergrad,current_user.department_id), class:'form-control',onChange:"$('#user_department_id').val($(this).val());"%>
-				<%=select_tag 'dept_grad', options_for_select(@dept_grad,current_user.department_id), class:'form-control',onChange:"$('#user_department_id').val($(this).val());"%>
+				<%=select_tag 'dept_under_grad', options_from_collection_for_select(@dept_undergrad, :id, :ch_name, current_user.department_id), prompt: "請選擇", class:'form-control', onChange: "$('#user_department_id').val($(this).val());" %>
+				<%=select_tag 'dept_grad', options_from_collection_for_select(@dept_grad, :id, :ch_name, current_user.department_id), prompt: "請選擇", class:'form-control', onChange: "$('#user_department_id').val($(this).val());" %>
 			</div>
 			<div class="col-md-5 no-padding-left">
 				<div class="col-md-4"><h4 style="margin-top:8px;">入學年度</h4></div>
 				<div class="col-md-6">
-					<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{}, class:'form-control'%>
+					<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{:include_blank => '請選擇'}, class:'form-control'%>
 				</div>
 			</div>
 			</div>
@@ -68,9 +67,7 @@
 			<%=submit_tag "送出", class: "btn btn-success pull-right" %>
 			</div>
 		</div>
-	
 	<% end %>
-	
 
 </div>
 
@@ -78,6 +75,11 @@
 <script>
   $(document).ready(function(){
     
+    <% if params[:error]=="email" and not current_user.hasFb? %>
+    if(confirm("您的Email與Facebook的Email可能重複囉! 是否將此帳號與facebook做連結呢?")){
+    	document.location.href= "<%=user_omniauth_authorize_path('facebook')%>";
+    }
+    <% end %>
     <% if current_user.try(:department).try(:degree) %>
       change_degree(<%=current_user.degree%>);
     <% else %>
@@ -100,7 +102,7 @@
 				});
 			}
 		});
-    
+    $(".footer").addClass("footer-force-bot");
     
   });
   

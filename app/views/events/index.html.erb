@@ -1,19 +1,79 @@
-<%=link_to "新增",new_event_path,class:"btn btn-success",'data-no-turbolink'=>"true"%>
-<table class="table">
-	<tr class="row">
-		<th>標題</th>
-		<th>時間</th>
-		<th>功能</th>
-<% @events.each do |event| %>
-	<tr class="row">
-		<td><%=link_to event.title,event_path(event)%></td>
-		<td>
-			<%=event.begin_time%>~<%=event.end_time%>
-		</td>
-		<td>
-			<%=link_to "編輯",edit_event_path(event),'data-no-turbolink'=>"true"%>
-			<%=link_to "刪除",event_path(event),method: "delete",data:{confirm:"Sure?"}%>
-		</td>
-	</tr>
-<% end %>
-</table>
+<%= stylesheet_link_tag "fullcalendar/fullcalendar.min", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "fullcalendar/moment.min", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "fullcalendar/fullcalendar.min", "data-turbolinks-track" => true %>
+
+<script>
+
+	$(document).ready(function() {
+
+		$('#calendar').fullCalendar({
+			defaultDate: '2015-02-12',
+			//eventLimit: true, // allow "more" link when too many events
+			events: [
+				{
+					title: 'All Day Event',
+					start: '2015-02-01'
+				},
+				{
+					title: 'Long Event',
+					start: '2015-02-07',
+					end: '2015-02-10'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2015-02-09T16:00:00'
+				},
+				{
+					id: 999,
+					title: 'Repeating Event',
+					start: '2015-02-16T16:00:00'
+				},
+				{
+					title: 'Conference',
+					start: '2015-02-11',
+					end: '2015-02-13'
+				},
+				{
+					title: 'Meeting',
+					start: '2015-02-12T10:30:00',
+					end: '2015-02-12T12:30:00'
+				},
+				{
+					title: 'Lunch',
+					start: '2015-02-12T12:00:00'
+				},
+				{
+					title: 'Meeting',
+					start: '2015-02-12T14:30:00'
+				},
+				{
+					title: 'Happy Hour',
+					start: '2015-02-12T17:30:00'
+				},
+				{
+					title: 'Dinner',
+					start: '2015-02-12T20:00:00'
+				},
+				{
+					title: 'Birthday Party',
+					start: '2015-02-13T07:00:00'
+				},
+				{
+					title: 'Click for Google',
+					url: 'http://google.com/',
+					start: '2015-02-28'
+				}
+			]
+		});
+		
+	});
+
+</script>
+<style>
+	#calendar {
+		max-width: 900px;
+		margin: 0 auto;
+	}
+</style>
+<div id='calendar' class="bg-white"></div>

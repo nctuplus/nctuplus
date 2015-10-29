@@ -6,6 +6,8 @@
  * Updated at 2015/4/28
  */
  
+//= require jquery-fileupload
+ 
 var fileUploadErrors = {
   maxFileSize: 'File is too big',
   minFileSize: 'File is too small',

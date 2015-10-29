@@ -1,7 +1,7 @@
 <script type="text/x-tmpl" id="sem_list">
 
 {% var credits={}; %}
-<table class="table" id="by_cos_type">
+<table class="table table-bordered" id="by_cos_type">
 	{% var grouped=groupBy(o.taked,function(item){return item.sem_name;}); %}
 	
 	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
@@ -23,7 +23,7 @@
 				{% } %}
 			{% } %}
 			<tr class="row">
-				<td class="col-md-6">
+				<td class="col-md-12">
 					<h4 class="text-center">
 						{% if(!checkPassTaking(o.pass_score,course.score)) { %}
 							{% if(course.score=="") %}
@@ -37,12 +37,6 @@
 						{%=course.t_name%} | 
 						<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit%}</strong>
 					</h4>
-				</td>
-				<td class="col-md-6">
-					<div class="container" style="display:inline-block;">		
-						<a target="blank" href="/courses/{%=course.cd_id%}&first_show=files" class="btn btn-sm btn-default">考古題</a>
-						<a target="blank" href="/courses/{%=course.cd_id%}&first_show=discuss" class="btn btn-sm btn-default">討論區</a>
-					</div>
 				</td>
 			</tr>
 			

@@ -55,7 +55,7 @@
 							<td class="">適用課程</td>
 							<td class="">
 								<% @sale_book.course_teacherships.includes(:course,:course_details).each do |cts|%>
-									<%=link_to "#{cts.course_ch_name} #{cts.teacher_name}","/courses/#{cts.course_details.last.id}", target:"_blank" %><br>
+									<%=link_to "#{cts.course_ch_name} #{cts.teacher_name}","/courses/#{cts.course_details.last.try(:id)}", target:"_blank" %><br>
 								<% end %>
 							</td>
 						</tr>

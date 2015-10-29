@@ -85,11 +85,11 @@
 			<div class="well bg-grey " id="comments"></div>
 		<% if current_user %>	
 			<div class="row comment-form" >
-				<div class="col-sm-1"></div>
-				<div class="col-sm-1">
+				
+				<div class="col-sm-2 col-sm-offset-1">
 					<%=select_tag "comment_type",options_for_select([["推",1],["→",2],["噓",3]],"推"), :class=>"form-control"%>
 				</div>
-				<div class="col-sm-8">
+				<div class="col-sm-6">
 					<%=text_field_tag "comment_content", "", :class=>"form-control", :maxlength=>"32" %>
 				</div>
 				<div class="col-sm-1">
@@ -97,16 +97,17 @@
 				</div>
 			</div>
 		<% end %>	
-		</div>	
 		
-		<div class="row">
-			<div id="compare" class="bg-white container">
+		
+			<div class="row">
+				<div id="compare" class="panel-body">
+				</div>
+				<div id="discuss" class="panel-body">
+				</div>
+				<div id="files" class="panel-body">
+				</div>		
 			</div>
-			<div id="discuss" class="bg-white container">
-			</div>
-			<div id="files" class="bg-white container">
-			</div>		
-		</div>
+		</div>	
 	</div>
 	
 </div>
@@ -154,7 +155,7 @@
 			$('body').scrollspy('refresh');
 			$("#discuss").load("/discusses/show?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
 				$('body').scrollspy('refresh');
-				$("#files").load("/past_exams/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>", function() {
+				$("#files").load("/past_exams/course_page?ct_id=<%=@data[:course_teachership_id]%>", function() {
 					$('body').scrollspy('refresh');
 					$('body').scrollTo("#course-name",10,{offset:-80});
 					<% if params[:first_show]=="discussion" %>

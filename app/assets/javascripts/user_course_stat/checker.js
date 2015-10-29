@@ -257,11 +257,14 @@ function checkCf(user_courses,cf){	//最上層的check
 			}
 			var i = 0;
 			if(match){	//if 必修 match才判斷選修
-				var any_match=false;			
-				for(; i<res.new_result.length;i++){				
-					if(final_res[i]){
-						any_match=true;
-						break;
+				var any_match=false;
+				console.log(res);
+				if(res.new_result){
+					for(; i<res.new_result.length;i++){				
+						if(final_res[i]){
+							any_match=true;
+							break;
+						}
 					}
 				}
 				match=match&&any_match;//match 必修 and one of 選修's credit list

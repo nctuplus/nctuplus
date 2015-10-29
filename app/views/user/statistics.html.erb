@@ -2,15 +2,14 @@
 <%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
 <div class="panel panel-primary" >
 	<div class="panel-heading" >
-		<h4 class="text-center">
-			畢業學分計算			
-		</h4>
+		<h4 class="text-center">畢業學分計算</h4>
 	</div>
 	</br>
-	
-	<div id="common_check_div" class="container"></div>
-	<div id="cosmap_check_div" class="container"></div>
-	<div id="course_list" class=""><div class="text-center"><%=fa_icon "refresh spin 2x"%></div></div>
+	<div class="panel-body" >
+		<div id="common_check_div" class="col-md-12"></div>
+		<div id="cosmap_check_div" class="col-md-12"></div>
+		<div id="course_list" class="col-md-12"><div class="text-center"><%=fa_icon "refresh spin 2x"%></div></div>
+	</div>
 </div>
 
 <div class="modal fade" id="courselist_modal" tabindex="-1" role="dialog" aria-hidden="true" >

@@ -25,18 +25,11 @@
 				<% if current_user&&current_user.book_trade_infos.count>0 %>
 				<%=link_to "我的商品","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
 				<% end %>
-				<div class="input-group" style="width:450px;display:inline-table;">
-					<%=text_field_tag :q,params[:q], class: "form-control", placeholder:"書名/作者/課名" %>
-					<div class="input-group-btn">
-						<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false">找二手書 <span class="caret"></span></button>
-						<ul class="dropdown-menu" role="menu">
-							<li><a href="javascript:void(0);">找二手書</a></li>
-							<!--<li><a href="javascript:void(0);">找課程</a></li>-->
-						</ul>
-					</div><!-- /btn-group -->			
-					<div class="input-group-btn">			
+				<div class="input-group" >
+					<%=text_field_tag :q,params[:q], class: "form-control", placeholder:"書名/作者/課名",style:"width:350px;" %>
+					<span class="input-group-btn">			
 						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-					</div><!-- /btn-group -->
+					</span><!-- /btn-group -->
 				</div><!-- /input-group -->
 				<!--
 				<div class="checkbox">
@@ -107,6 +100,7 @@
 		
 	</div>
 	<%= paginate @sale_books, :window=>2 %>
+</div>
 <script>
 	$(function () {
 		$('[data-toggle="tooltip"]').tooltip({html:true,placement:"bottom"});

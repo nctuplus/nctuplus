@@ -96,7 +96,7 @@ $(document).ready(function(){
 		if(node.type==-1){ // new group
 			$.ajax({
 				type: "POST",
-				url: "course_group_action" ,
+				url: "/course_maps/course_group_action" ,
 				data:{
 					type: "new",
 					map_id : map_id
@@ -110,7 +110,7 @@ $(document).ready(function(){
 			});
 		}else{ // group content
 			cg_show_id = node.cg_id ;
-			$.getJSON("show_course_group_list.json?target_id="+node.cg_id, function (data) {
+			$.getJSON("/course_maps/show_course_group_list.json?target_id="+node.cg_id, function (data) {
 				//console.log(data);
 				data.push({name: node.text, gtype: node.gtype, cg_id: node.cg_id}); // store header info
 				$("#course_content").html(tmpl("group-table-format", data));	

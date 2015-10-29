@@ -1,0 +1,59 @@
+<h4 class="text-center">有效文章開始日: <%=@begin_time%></h4>
+<table class="table ">
+	<tr>
+		<th>課程</th>
+		<th>標題</th>
+		<th>作者</th>
+		<th>時間</th>
+		<th>狀態</th>
+	</tr>
+<% @discusses.each do |discuss| %>
+	<tr id="<%=discuss.id%>" class="clickable-hover" onclick="show(<%=discuss.id%>,'<%=j discuss.title%>','<%=j discuss.content%>')">
+		<td><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
+		<td><%=discuss.title%></td>		
+		<td><%=discuss.user_name%></td>
+		<td><%=discuss.created_at%></td>
+		<td class="status">
+			<% if discuss.discuss_verifies.empty? %>
+				尚未審查
+			<% else %>
+				<% discuss.discuss_verifies.each do |v|%>
+					<%=v.pass%> / <%=v.user_name%><br>
+				<% end %>
+			<% end %>
+		</td>
+	</tr>
+<% end %>
+
+</table>
+<script>
+	function verifyDiscuss(id,pass){
+		$.ajax({
+			url:"/admin/discuss_verify",
+			data:{
+				id:id,
+				pass:pass
+			},
+			success:function(){			
+				var $status=$("#"+id).find(".status");			
+				if($status.text().match("尚未審查")){
+					$status.text(""+pass+" / <%=current_user.name%>");
+				}else{
+					$status.append(""+pass+" / <%=current_user.name%>");
+				}
+				$("#global-modal").modal("hide");
+			},
+			error:function(){
+				$("#global-modal").modal("hide");
+				toastr["warning"]("你已審查過此文章!");
+			}
+		});
+	}
+	function show(id,title,content){
+		var pass_button="    <button class='btn btn-success' onclick='verifyDiscuss("+id+",true);'>合格</button>";
+		var fail_button="    <button class='btn btn-danger' onclick='verifyDiscuss("+id+",false);'>不合格</button>";
+		var titleAndButs=title+pass_button+fail_button;
+		var contentAndArea='<textcontent>'+content+'</textcontent>';
+		showGlobalModal(1,titleAndButs,contentAndArea);
+	}
+</script>

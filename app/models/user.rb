@@ -43,8 +43,9 @@ class User < ActiveRecord::Base
 
 	
 	#validates :email, uniqueness: true
-	validates :name, :uniqueness=>true, :length=> { :maximum=> 16 }, :on => :update
-	
+	validates :name, :uniqueness=>true, :length=> { :maximum=> 16, :message=>"姓名過長(max:16)" }, :on => :update
+	validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update
+	validates :year, :numericality=> { :greater_than=>0, :message=>"請填寫入學年度"}, :on => :update
 # share course table
 	def get_share_hasid(semester_id)
 	  return Hashid.user_share_encode([self.id, semester_id])
@@ -157,7 +158,7 @@ class User < ActiveRecord::Base
     user.name = hash[:name]
     user.email = (User.where(:email=>hash[:email]).present?) ? "#{Devise.friendly_token[0,8]}@please.change.me" : hash[:email] 
     user.password = hash[:password] 
-    user.save!
+    user.save!#(:validate => false)
     return user
   end
 

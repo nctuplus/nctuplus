@@ -1,7 +1,12 @@
 class MainController < ApplicationController
+ after_action :allow_iframe, only: :fb
+
+  def fb
+  end
 
  	def index
 		if current_user && (current_user.year==0 || current_user.department.nil?)
+			alertmesg('info','warning', "請填寫系級" )
 			redirect_to "/user/edit"
 		end
   end
@@ -19,4 +24,10 @@ class MainController < ApplicationController
 		
 	end
   
+  private
+
+  def allow_iframe
+    response.headers.except! 'X-Frame-Options'
+  end
+
 end

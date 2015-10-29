@@ -10,7 +10,7 @@
 
 //= require jquery.scrollTo.min
 //= require highcharts-custom
-//= require jquery-fileupload
+
 
 function head_binding(allow, cd_id){
 	$('.edit-head').click(function(){

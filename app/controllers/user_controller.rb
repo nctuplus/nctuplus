@@ -54,6 +54,7 @@ class UserController < ApplicationController
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
 						},
+						:semesters=> (@user.year==0) ? [] : Semester.where("year >= ? AND half != 3", @user.year).map{|s| {:id=>s.id, :name=>s.name}},
 						:semester_name => semester.name, # for 歷年課表 modal header 
 						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
 					}	
@@ -298,8 +299,8 @@ class UserController < ApplicationController
 	end
 
 	def edit
-		@dept_undergrad=Department.where(:majorable=>true).undergraduate.map{|d| [d.ch_name,d.id]}
-    @dept_grad=Department.where(:majorable=>true).graduate.map{|d| [d.ch_name,d.id]}
+		@dept_undergrad=Department.where(:majorable=>true).undergraduate.select(:ch_name, :id)#.map{|d| [d.ch_name,d.id]}
+    @dept_grad=Department.where(:majorable=>true).graduate.select(:ch_name, :id)#.map{|d| [d.ch_name,d.id]}
 	end
 
 
@@ -308,6 +309,7 @@ class UserController < ApplicationController
 		#current_user.update_attributes(:email=>params[:user][:email].blank? ? current_user.email : params[:user][:email])
 		last_dept_id=current_user.department_id
 		last_year=current_user.year
+		
 		if current_user.update(user_params)
 			if user_params[:department_id]!=last_dept_id || user_params[:year]!=last_year	
 				UserCoursemapship.where(:user_id=>current_user.id).destroy_all
@@ -327,8 +329,15 @@ class UserController < ApplicationController
 			if request.xhr?
 				render :nothing=>true, :status=>200
 			else	
-				alertmesg('info','warning', current_user.errors.messages.map{|k,v| "#{k} #{v[0]}"}.join(" ; ") )
-				redirect_to user_edit_path 
+				msg = current_user.errors.messages.map{|k,v| "#{v[0]}" }.join("</br>")
+				alertmesg('info','warning', msg.html_safe )
+				
+				# special notify: email conflict (caused by fb email the same)
+				if check_error_is_email?(current_user.errors.messages)
+					redirect_to user_edit_path(:error=>"email") 
+				else
+					redirect_to user_edit_path
+				end	
 			end
 		end
 	
@@ -405,6 +414,13 @@ class UserController < ApplicationController
 	end
 	
   private
+
+	def check_error_is_email?(errors)
+		errors.each do |e|
+			return true if e[0] == :email
+		end
+		return false
+	end
 
   def user_params
     ret=params.require(:user).permit(:name, :agree_share, :year, :department_id, :email)

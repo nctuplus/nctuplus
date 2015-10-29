@@ -3,6 +3,7 @@ class DiscussesController < ApplicationController
 	#layout false, :only =>[:list_by_course]
 	before_filter :checkLogin, :only=>[:new, :update, :like]
 	before_filter :checkOwner, :only=>[:update, :delete]
+
 	
 ##########5/29
     def index
@@ -20,6 +21,12 @@ class DiscussesController < ApplicationController
     end
 ##########5/29
     
+
+	def index
+		@q = Discuss.search_by_text(params[:custom_search])
+		@discusses=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("id DESC")	
+	end
+
 	def like
 		@like=current_user.discuss_likes.create(:like=>params[:like])
 		
@@ -61,29 +68,7 @@ class DiscussesController < ApplicationController
 		render :layout=>false
 	end
 	
-	def new
-		if params[:type]=="main"
-			@discuss=Discuss.create(
-				:course_teachership_id=>params[:ct_id],
-				:user_id=>current_user.id,
-				:likes=>0,
-				:dislikes=>0,
-				:title=>params[:title],
-				:content=>params[:content],
-				:is_anonymous=>params[:anonymous]=="yes"
-			)
-		elsif params[:type]=="sub"
-			@discuss=SubDiscuss.create(
-				:discuss_id=>params[:reply_discuss_id],
-				:user_id=>current_user.id,
-				:likes=>0,
-				:dislikes=>0,
-				:content=>params[:content]
-			)
-		end
-		
-		#render "new_discuss_ok"
-	end
+	
 	
 
 	
@@ -110,6 +95,27 @@ class DiscussesController < ApplicationController
 		@discuss.destroy!
 		redirect_to :action=> :show, :ct_id=>params[:ct_id]
 	end
+    
+    
+    #########10/27
+    
+    
+    def new
+        @discuss = Discuss.new
+        @q=CourseTeachership.search(params[:q])
+    end
+    
+    def create        
+        #@discuss=Discuss.create(event_params.merge({:user_id=>current_user.id, :course_teachership_id=>123, :likes=>0, :dislikes=>0}))
+        @discuss=Discuss.create(event_params.merge({:user_id=>current_user.id, :likes=>0, :dislikes=>0}))
 
-	
+        redirect_to :action => :index
+    end
+
+    private
+
+    def event_params
+        params.require(:discuss).permit(:title, :content, :is_anonymous, :course_teachership_id)
+    end
+	###############
 end

@@ -1,32 +1,23 @@
 <script type="text/x-tmpl" id="cm_public">
-	<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="btn btn-primary" target="_blank">
-		<%=fa_icon "bookmark-o"%>必修科目表
-	</a>
-	<button class="btn btn-info" onclick="showTip();">使用導覽</button>
+	
 	{% var cm=o.course_map; %}
 	<h3 id="title" style="line-height:160%">		
-		<b>{%= o.dept_name %} 入學年度:</b>
-		<div id="year-selector" class="btn-group" style="margin-top:-2px;">
-			<a id="year-100" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=100">100</a>
-			<a id="year-101" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=101">101</a>
-			<a id="year-102" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=102">102</a>
-			<a id="year-103" class="btn btn-info" href="?dept_id={%=o.dept_id%}&year=103">103</a>
-		</div>
+		<b>{%= o.dept_name %} 入學年度:
+			<%=params[:year]%>
+		</b>
 		{% if(cm){ %}
-		畢業學分:<strong>{%=cm.total_credit%}</strong>
+			<b>畢業學分:{%=cm.total_credit%}</b>
+			<button class="btn btn-info pull-right" onclick="showTip();">使用導覽</button>
 		{% } %}
+		<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="pull-right btn btn-primary" target="_blank">
+			<%=fa_icon "bookmark-o"%>必修科目表
+		</a>
 	</h3>
 	<hr>	
 	{% if(!cm){ %}
-		<h4>尚無資料!</h4>
+		<h4>目前尚無資訊，希望有心人士可以幫忙!!</h4>
 	{% } else{ %}
-		<section id="rules">
-			<h3><strong>修課規定</strong></h3>
-			{% for(var i=0,cf;cf=cm.cfs[i];i++){ %}		
-				{% print(parseCf(cf),true); %}		
-			{% } %}
-		</section>
-		<hr>
+		
 		
 		<div id="course-table" style="width:93%;">
 			<h3>
@@ -56,8 +47,7 @@
 			</section>
 			
 		{% var coursesbyGrade=groupBy(allCourses,function(item){return item.suggest_sem;});%}
-		{% var coursesbyGrade=groupBy2(allCourses,function(item){return item.suggest_sem;});%}
-		{% gradeSort(coursesbyGrade);console.log(coursesbyGrade);%}
+
 			{%  var colors=["#0080FF","#F00078","#F75000","#00AEAE","#5A5AAD","#FF9224","	#64A600","#804040","#9900FF","#CD5C5C","#BBBB00","#000000"];
 					var color=0;
 					var category = [];
@@ -65,6 +55,7 @@
 						if(cf.cf_type==3){
 							for(var j=0,sub_cf;sub_cf=cf.child_cf[j];j++){
 								category.push(sub_cf.cf_name);
+								//console.log(sub_cf);
 							}
 						}
 						else{
@@ -72,20 +63,11 @@
 						}
 					}
 			%}
-				
-			<div class="tooltip-course">
-				<div class="course-name">
-				Course Name
-				</div>
-				<dic class="course-content">
-				</div>
-			</div>
-			
 			<section id="list_by_sem" style="display:block;" >
-				<div class ="row">			
+				<div class="row" id="cf-title">			
 				{% for(var i=0; i< category.length; i++){ %}
 					<div class="col-md-4">
-						<div class ="square-course" style="background:{%=colors[i]%}"></div> {%=category[i] %}
+						<div class ="square-course clickable-hover" onclick="toggleCourseGrids('{%=category[i] %}');" style="background:{%=colors[i]%}"></div> <span class="clickable-hover" onclick="toggleCourseGrids('{%=category[i] %}');">{%=category[i] %}</span>
 					</div>
 				{% } %}
 				</div>
@@ -121,7 +103,7 @@
 												color=colors[k];
 										}										
 									%}
-									<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
+									<div class="btn-course " style="background:{%=color%}" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
 								{% } %}
 							</td>
 						{% } %}
@@ -151,12 +133,12 @@
 											%}
 											</td>
 											<td style="width:12%;">
-											<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
+											<div class="btn-course" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
 											</div>
 											{%
 										}
 										else{	%}
-										<div class="btn-course" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
+										<div class="btn-course" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
 									</div>
 									
 									{% }} %}
@@ -166,7 +148,14 @@
 														
 				</table>
 			</section>
-			
+			<hr>
+			<section id="rules">
+				<h3><strong>修課規定</strong></h3>
+				{% for(var i=0,cf;cf=cm.cfs[i];i++){ %}		
+					{% print(parseCf(cf),true); %}		
+				{% } %}
+			</section>
+		
 			<hr>
 			<section id="chart-content"></section>
 			<section id="memo">	

@@ -16,6 +16,7 @@ function loadCm(dept_id,year){	//Load from server & initial
 		year: year
 		},
 		function(data){
+			console.log(data);
 			$("#cm-desc").html(tmpl("cm_public", data));//tmpl 插件
 			$("#year-"+year).addClass("disabled");				
 			$("#sem-btn").click();
@@ -31,7 +32,9 @@ function loadCm(dept_id,year){	//Load from server & initial
 		}
 	);
 }
-
+function toggleCourseGrids(className){
+	$("div[data-cf-name='"+className+"']").toggle();
+}
 function initCourseHoverTip(){
 	$( ".btn-course" ).mouseover(function(event){
 		var course=JSON.parse($(this).attr('data'));
@@ -42,8 +45,8 @@ function initCourseHoverTip(){
 		var content = "永久課號 : "+course.real_id;
 		var sty=("2px "+ $(str).css("background")+" solid");				
 		$( ".tooltip-course" ).css({
-			"left": (event.pageX-320),
-			"top": (event.pageY-35),
+			"left": (event.pageX+1000),
+			"top": (event.pageY+1000),
 			"display": "block"
 		});		
 		var group = "";
@@ -74,8 +77,8 @@ function initCourseHoverTip(){
 		if(w < 1266)w = 0;
 		else w = (w - 1266)*1266/w;			
 		$( ".tooltip-course" ).css({
-			"left": (event.pageX-306-w),
-			"top": (event.pageY-70),
+			"left": (event.pageX/*-w-50*/),
+			"top": (event.pageY/*-95*/),
 			"display": "block",
 			"border-color":(color4)
 		});
@@ -139,6 +142,7 @@ function toggle_cf_table(type){
 	$('body').scrollspy('refresh');
 
 }
+
 function neededCourseBarChart(target,raw_data){ // input is json format
 	if(!raw_data || $(target).length==0)return;
 	var grade = [0,0,0,0,0,0,0,0,0] ;
@@ -302,7 +306,7 @@ function parseCf(cf){//修課規定 文字
 	if(cf.cf_type==3){
 		str+='且需滿足 <strong>'+cf.field_need+'</strong> 個領域';
 	}
-	str+='</li>';		
+		
 	if(cf.cf_type<3){
 		str+='</ul>';
 	}
@@ -310,6 +314,7 @@ function parseCf(cf){//修課規定 文字
 		for(var i=0,child_cf;child_cf=cf.child_cf[i];i++){
 			str+=parseCf(child_cf);
 		}
+		str+='</li>';	
 		str+='</ul>';
 	}		
 	return str;
@@ -428,5 +433,9 @@ function parseCfToCourse(cf){
 	res["courses"]=courses;
 	return res;
 	
+}
+function initFbComment(id){
+	$('#fb-root').html('<div class="fb-comments" data-href="" data-numposts="5" width="100%" data-colorscheme="light"></div>');
+	$('.fb-comments').attr('data-href',"http://plus.nctu.edu.tw/course_maps/"+id);
 }
 	

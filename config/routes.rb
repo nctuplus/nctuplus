@@ -12,7 +12,7 @@ Nctuplus::Application.routes.draw do
 
 	
 #--------- events --------------	
-	#resources :events
+	resources :events
 	
 #--------- for share course table page -----
 	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
@@ -31,10 +31,16 @@ Nctuplus::Application.routes.draw do
 	get "main/policy_page"
 	get "main/member_intro"	
 	post "/main/get_specified_classroom_schedule" # for ems curl
-	
+	get "main/fb"
+	post "main/fb"
 
 
 #---------- admin page -----------
+
+	#for 徵文活動
+	get "admin/discusses"	
+	get "admin/discuss_verify"
+	##################################
 	
   get "admin/user_statistics"
 	get "admin/ee104"
@@ -72,18 +78,26 @@ Nctuplus::Application.routes.draw do
 	get "course_content/get_course_info"
 	post "course_content/course_action"
 	
-#----------for discusses---------------	
-	get "discusses/show"
-	get "discusses/like"
+#----------for discusses---------------
+	resources :discusses do
+		collection do
+			get "show"
+			get "like"
+		end
+	end
+	
+=begin	
 	post "discusses/new"
 	post "discusses/update"
 	post "discusses/delete"	
+=end
 	
 #----------for past_exams---------------
-  resources :past_exams, :except=>[:update] do
+  resources :past_exams, :except=>[:edit] do
 		collection do
+			get "course_page"
 			get "list_by_ct"
-			get "edit"
+			get "upload"
 		end
 	end
 
@@ -100,7 +114,7 @@ Nctuplus::Application.routes.draw do
 		end
 	end
 	
-	resources :course_maps, :except=>[:edit] do
+	resources :course_maps do
 	  collection do
 			get "public"
 			get "content"	
@@ -120,7 +134,7 @@ Nctuplus::Application.routes.draw do
 			post "cm_public_comment_action"
 	  end
 	end
-<<<<<<< HEAD
+
 
 	resources :departments, :except=>[:show, :destroy]
 	###########5/29
@@ -133,7 +147,7 @@ Nctuplus::Application.routes.draw do
 	post "discusses/update"
 	post "discusses/delete"
  
-=======
+
 	
 #---------- book page ----------- 
   post "books/set_cts"
@@ -142,14 +156,14 @@ Nctuplus::Application.routes.draw do
   resources :books
 	
 	resources :departments, :except=>[:show, :destroy]
->>>>>>> 8622a2ccb813f20c06eb316622829bdfd95ba128
+
 
 	#----------for chrome extension---------------
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
 	post "api/import_course"
 	
-<<<<<<< HEAD
+
   #----------for files---------------
   resources :past_exams, :except=>[:update] do
 		collection do
@@ -165,10 +179,9 @@ Nctuplus::Application.routes.draw do
   match ':controller(/:action(/:id(.:format)))', :via => :all
   ###########5/29
 
-=======
 	post "sessions/save_lack_course"
   
->>>>>>> 8622a2ccb813f20c06eb316622829bdfd95ba128
+
     
 
 end
