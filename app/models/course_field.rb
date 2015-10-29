@@ -1,24 +1,25 @@
 class CourseField < ActiveRecord::Base
 	belongs_to :course_field_selfship
 	belongs_to :user
-	has_one :cm_cfship, :dependent => :destroy#, foreign_key: "child_id"
+	
+	has_one :cm_cfship, :dependent => :destroy
 	has_one :course_map, :through=> :cm_cfship
 	has_many :course_field_lists, :dependent => :destroy
 	has_many :courses, :through=> :course_field_lists
 	
 	
-	has_many :course_groups, :through =>:course_field_lists
-	has_one :cm_cfship
-	has_one :cf_field_need
-	
-	has_many :child_course_fieldships, :dependent => :destroy, foreign_key: "parent_id", :class_name=>"CourseFieldSelfship"
-	has_many :child_cfs, :through=> :child_course_fieldships, :dependent => :destroy
-	
-	has_one :parent_course_fieldship, :dependent => :destroy, foreign_key: "child_id", :class_name=>"CourseFieldSelfship"
-	has_one :parent_cf, :through =>:parent_course_fieldship
 
+	has_many :child_cfs, :through=> :child_course_fieldships
+	has_many :child_course_fieldships, :dependent => :destroy, foreign_key: "parent_id", :class_name=>"CourseFieldSelfship"
+	
+	has_one :parent_cf, :through =>:parent_course_fieldship
+	has_one :parent_course_fieldship, foreign_key: "child_id", :class_name=>"CourseFieldSelfship"
+	
+	has_one :cf_field_need, :dependent=> :destroy
 	has_many :cf_credits, :dependent => :destroy
 	
+	has_many :course_groups, :through =>:course_field_lists
+
 	def cfl_to_json
 		
 		ret={
@@ -57,54 +58,7 @@ class CourseField < ActiveRecord::Base
 		return ret
 		
 	end
-	
-=begin	
-	def courses_to_json
-		
-		ret=[]
-		#course=[]
-		#cg=[]
-		self.course_field_lists.order(:grade).order(:half).each do |cfl|
-			next if cfl.course.nil?
-			temp=cfl.course.to_json_for_stat
-			temp[:grade]=cfl.grade
-			temp[:half]=cfl.half
-			temp[:suggest_sem]=cfl.suggest_sem
-			ret.push(temp)
-		end
-		return ret
-		
-	end
-	
-	def course_groups_to_json
-		ret=[]
-		self.course_field_lists.each do |cfl|
-			cg=cfl.course_group
-			next if cg.nil? || cg.gtype!=0
-			
-			temp={
-				:id=>cg.id,
-				:credit=> cg.lead_course.credit,
-				#:lead_course_name=>cg.lead_course.ch_name,
-				#:lead_course_id=>cg.lead_course.id,
-				:lead_course=>cg.lead_course.to_json_for_stat.merge({
-					:grade=>cfl.grade,
-					:half=>cfl.half,
-					:suggest_sem=>cfl.suggest_sem
-				}),#_get_course_struct(cg.lead_course),
-				:grade=>cfl.grade,
-				:half=>cfl.half,
-				:courses=>cg.courses_to_json#_get_courses_struct(cg.courses)
-			}
-			#temp=cfl.course.to_json_for_stat
-			#temp[:grade]=cfl.grade
-			#temp[:half]=cfl.half
-			ret.push(temp)
-		end
-		return ret
-		
-	end
-=end	
+
 	def field_need
 		if self.cf_field_need
 			return cf_field_need.field_need
