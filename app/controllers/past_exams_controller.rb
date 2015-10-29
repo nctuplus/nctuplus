@@ -5,7 +5,7 @@ class PastExamsController < ApplicationController
 	
   before_filter :checkLogin, :only=>[:upload]
   before_filter :checkE3Login, :only=>[:show, :new, :update, :create, :destroy, :one_user]
-  before_filter :checkOwner, :only=>[:update, :destroy]
+  #before_filter :checkOwner, :only=>[:update, :destroy]
 	
 	def index	#get by ct_id
 		@q = PastExam.search_by_text(params[:custom_search])
@@ -73,7 +73,7 @@ class PastExamsController < ApplicationController
 
 	
   def update
-    @file=PastExam.find(params[:id])
+    @file=current_user.past_exams.find(params[:id])
 		#if @file.owner_id==current_user.id
 		@file.description=params[:description]
 		@file.semester_id=params[:semester_id]
@@ -92,7 +92,7 @@ class PastExamsController < ApplicationController
   # DELETE /files/1
   # DELETE /files/1.json
   def destroy
-    @file = PastExam.find(params[:id])
+    @file = current_user.past_exams.find(params[:id])
 		@file.destroy
     respond_to do |format|
       format.html { redirect_to file_infos_url }

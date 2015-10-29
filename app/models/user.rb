@@ -26,7 +26,7 @@ class User < ActiveRecord::Base
 	
 	has_many :user_coursemapships, :dependent=> :destroy
 	has_many :course_maps, :through=> :user_coursemapships
-	
+	has_many :admin_cms, :class_name=> "CourseMap"
 	has_many :agreed_scores, :dependent=> :destroy
 	
 	has_many :normal_scores, :dependent=> :destroy

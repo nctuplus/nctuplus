@@ -16,6 +16,7 @@
 	<tr class="row">
 		<th>課程/教授</th>
 		<th>學期</th>
+		<th>檔名</th>
 		<th>描述</th>
 		<th>上傳者</th>
 		<th>下載次數</th>
@@ -30,8 +31,9 @@
 		<tr id="exam-<%=exam.id%>" class="row clickable-row clickable-hover" href="/past_exams/<%=exam.id%>">
 			<td class="ct_name"><%=exam.course.ch_name%>/<%=exam.course_teachership.teacher_name%></td>
 			<td class=""><%=exam.semester_name%></td>
+			<td><%=exam.upload_file_name%></td>
 			<td class="title"><%=exam.description%></td>		
-			<td class="user_name"><%=exam.try(:user).try(:name)%></td>
+			<td class="user_name"><%=exam.is_anonymous ? "匿名" : exam.try(:user).try(:name)%></td>
 			<td><%=exam.download_times%></td>
 			<td class="time"><%=exam.created_at%></td>
 		</tr>

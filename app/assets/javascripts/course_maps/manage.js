@@ -30,7 +30,7 @@ function load_new_form(data){
 		}
 		$.ajax({
 			type: "POST",
-  			url: "action_new" ,
+  			url: "/course_maps/action_new" ,
   			data: $(this).serialize(),
   			success: function(data){
 				load_treeview(data, map_id);
@@ -350,7 +350,7 @@ function bind_course_list_button(){
 		var change_table2 = ['text-color-green', 'text-color-red'] ;
 		$.ajax({
 			type: "POST",
-  			url: "course_action" ,
+  			url: "/course_maps/course_action" ,
   			data:{
   				target_id : target_tr.attr('list_id'),
   				rtype : rtype,
