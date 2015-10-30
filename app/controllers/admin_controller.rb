@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
 	#include CourseMapsHelper
-	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role, :discusses,:discuss_verify]
+	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role, :discusses,:discuss_verify, :user_statistics]
 	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
 	
 	def discuss_verify
@@ -75,8 +75,8 @@ class AdminController < ApplicationController
       end 
     end
     
-    discuss_cnt = Discuss.all.count
-    comment_cnt = Comment.all.count
+    discuss_cnt = Discuss.count
+    comment_cnt = Comment.count
     @discuss_stat = [comment_cnt, discuss_cnt]
     
   end

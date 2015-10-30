@@ -134,6 +134,20 @@ Nctuplus::Application.routes.draw do
 			post "cm_public_comment_action"
 	  end
 	end
+
+
+	resources :departments, :except=>[:show, :destroy]
+	###########5/29
+	get "discusses" => "discusses#index"
+    ###########5/29
+    
+	get "discusses/show"
+	get "discusses/like"
+	post "discusses/new"
+	post "discusses/update"
+	post "discusses/delete"
+ 
+
 	
 #---------- book page ----------- 
   post "books/set_cts"
@@ -143,13 +157,31 @@ Nctuplus::Application.routes.draw do
 	
 	resources :departments, :except=>[:show, :destroy]
 
+
 	#----------for chrome extension---------------
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
 	post "api/import_course"
 	
+
+  #----------for files---------------
+  resources :past_exams, :except=>[:update] do
+		collection do
+			get "list_by_ct"
+			get "edit"
+		end
+	end
+    
+  ###########5/29  
+  get "welcome/say_hello" => "welcome#say"
+  get "welcome" => "welcome#index"
+  # ...
+  match ':controller(/:action(/:id(.:format)))', :via => :all
+  ###########5/29
+
 	post "sessions/save_lack_course"
   
+
     
 
 end

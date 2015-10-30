@@ -1,7 +1,43 @@
+<!--
+<div><h4>DISCUSS</h4></div>
+<br>
+
+<table class="table table-hover bg-white-transparent" id="discuss_table">
+	<tr  class="row">
+		<th class="col-md- text-center"  style="width:30%;">User Name</th>
+		<th class="col-md- text-center"  style="width:40%;">Title</th>
+		<th class="col-md- text-center"  style="width:30%;">Updated time</th>
+	</tr>
+    <tbody>
+        <% @discusses.each do |discuss| %>
+            <tr id="<%=discuss.id%>" class="row clickable-row clickable-hover" data="<%=discuss.content%>" title="<%=discuss.title%>">
+                <td  class="text-center"><%= discuss.user.name %></td>
+                <td  class="text-center"><%= discuss.title %></td>
+                <td  class="text-center"><%= discuss.updated_at %></td>
+            </tr>
+        <% end %>
+    </tbody>    
+</table>    
+
+
+<%= paginate @discusses , :window=>2%>
+<script>
+$(function(){
+	$(".clickable-row").click(function() {
+			//window.document.location = $(this).attr("href");
+            var currentId = $(this).attr('data');
+            var currentContent = $(this).attr('title');
+            showGlobalModal(currentId, currentContent);
+	});
+});
+</script>
+
+-->
+
 <%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
 	<div class="row">	
 		<div class="col-md-12 text-center">
-			<%=link_to "新增心得",new_discuss_path,class:"btn btn-info",style:"font-size:16px;" %>
+			<%=link_to "新增心得", class:"btn btn-info", style:"font-size:16px;" , :controller => 'discusses', :action => 'new'%>
 			<div class="input-group" >
 				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"width:350px;" %>
 				<span class="input-group-btn">
@@ -96,3 +132,5 @@
 		
 	}
 </script>
+
+

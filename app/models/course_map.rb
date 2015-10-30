@@ -1,8 +1,9 @@
 class CourseMap < ActiveRecord::Base
 	#has_many :course_field_groups, :dependent => :destroy
-	has_many :cm_cfships, :dependent => :destroy
-	has_many :course_fields, :through => :cm_cfships, :dependent => :destroy
+	
+	has_many :course_fields, :through => :cm_cfships
 	has_many :course_groups, :dependent => :destroy
+	has_many :cm_cfships, :dependent => :destroy
 	has_many :user_coursemapships, :dependent => :destroy
 	
 	belongs_to :department

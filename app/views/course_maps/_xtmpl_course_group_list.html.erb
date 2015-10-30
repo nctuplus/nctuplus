@@ -2,7 +2,7 @@
 
 {% var cg_info = o[o.length-1] ;%}
 <div class="row list-header" cg_id="{%=cg_info.cg_id%}">
-	<div class="col-md-2 col-md-offset-1">代表:</div>
+	<div class="col-md-2 col-md-offset-1">代表課程:</div>
 	<div class="col-md-3 ">{%=cg_info.name%}</div>
 	<div class="col-md-2">類型:</div>
 	<div class="col-md-2">		
@@ -35,8 +35,11 @@
 	<tbody>
 		{% if (o.length > 1){ %}
 			{% for(var i=0 ; i<o.length-1 ; i++){ %}
-				{% var list = o[i] ;%}
-				<tr class="row" list_id="{%= list.id%}">
+				{% 
+					var list = o[i] ; 
+					var color = (list.leader) ? "success" : "" ;
+				%}
+				<tr class="row {%= color%}" list_id="{%= list.id%}">
 					<td class="col-md-3">{%=list.course_name %}</td>
 					<td class="col-md-2">{%=list.dep %}</td>
 					<td class="col-md-2">{%=list.real_id %}</td>
@@ -44,8 +47,9 @@
 					<td class="col-md-3">
 					{% if(!list.leader){ %}
 						<%=link_to "當代表課", "javascript:void(0);", :class=>"update-leader"%>
+						<%=link_to "刪除", "javascript:void(0);", :class=>"course-delete"%>						
 					{% } %}	
-						<%=link_to "刪除", "javascript:void(0);", :class=>"course-delete"%>					
+										
 					</td>
 				</tr>
 			{% } %}	
