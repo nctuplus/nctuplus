@@ -81,17 +81,11 @@ Nctuplus::Application.routes.draw do
 #----------for discusses---------------
 	resources :discusses do
 		collection do
-			get "show"
+			#get "show"
 			get "like"
 		end
 	end
-	
-=begin	
-	post "discusses/new"
-	post "discusses/update"
-	post "discusses/delete"	
-=end
-	
+
 #----------for past_exams---------------
   resources :past_exams, :except=>[:edit] do
 		collection do
@@ -123,6 +117,7 @@ Nctuplus::Application.routes.draw do
 			get "show_course_list" 
 			get "show_course_group_list"
 			get "get_credit_list"
+			get "search_course"
 			post "credit_action"
 			post "course_action"
 			post "action_new"
@@ -137,15 +132,7 @@ Nctuplus::Application.routes.draw do
 
 
 	resources :departments, :except=>[:show, :destroy]
-	###########5/29
-	get "discusses" => "discusses#index"
-    ###########5/29
-    
-	get "discusses/show"
-	get "discusses/like"
-	post "discusses/new"
-	post "discusses/update"
-	post "discusses/delete"
+
  
 
 	
@@ -172,12 +159,7 @@ Nctuplus::Application.routes.draw do
 		end
 	end
     
-  ###########5/29  
-  get "welcome/say_hello" => "welcome#say"
-  get "welcome" => "welcome#index"
-  # ...
-  match ':controller(/:action(/:id(.:format)))', :via => :all
-  ###########5/29
+
 
 	post "sessions/save_lack_course"
   

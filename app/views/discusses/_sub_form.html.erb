@@ -1,20 +1,20 @@
 
-<%= form_tag '/discusses/new', :class=>"sub-discussion col-md-offset-1 col-md-11", :role=>"form", :remote=>"true" do %>
+<%= form_for SubDiscuss.new, url:{action:'create'}, :class=>"sub-discussion col-md-offset-1 col-md-10", :role=>"form", :remote=>"true" do |f| %>
 	
 	<div class="col-md-1">
 		<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
 		<br>
 	</div>
-	<div class="col-md-8">
-		<textarea class="form-control " name="content" id="sub_discuss_content" rows="5" placeholder="內容..." required></textarea>
-		<input type="hidden" value="sub" name="type" id="type">
-		<input type="hidden" value="" name="reply_discuss_id" id="reply_discuss_id">
-		<input type="hidden" value="<%=@ct.id%>" name="ct_id" id="ct_id">
+	<div class="col-md-9">
+		<%= f.text_area "content", class:"form-control", rows:"5", placeholder:"內容...", required:"true" %>
+		<%=hidden_field_tag "type","sub"%>
+		<%=f.hidden_field "discuss_id"%>
+		<%=hidden_field_tag "course_teachership_id",@ct.id%>
 	</div>
-	<div class="col-md-3" style="">
+	<div class="col-md-2" style="">
 		<p>
 		<br><br><br><br>
-		<%= submit_tag "送出", :class=>"btn btn-primary " %>
+		<%= f.submit "送出", :class=>"btn btn-primary " %>
 		</p>
 	</div>
 <% end %>

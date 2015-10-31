@@ -38,17 +38,17 @@ var map_id = <%=@course_map.id%> ;
 $(document).ready(function(){
 
 	// init in home-tab
-	$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;		
+	$('#search_div').load("/course_maps/search_course?hide_group=true&map_id="+map_id) ;		
 	load_treeview(0, map_id);
 	load_group_treeview(0, map_id);
 	
 	// change tab, change search cond
 	$('#group-tab').click(function(){
-		$('#search_div').load("/courses/search_mini_cm?hide_group=false") ;
+		$('#search_div').load("/course_maps/search_course?hide_group=false") ;
 		reset_data();
 	});
 	$('#home-tab').click(function(){
-		$('#search_div').load("/courses/search_mini_cm?hide_group=true&map_id="+map_id) ;
+		$('#search_div').load("/course_maps/search_course?hide_group=true&map_id="+map_id) ;
 		reset_data();
 	});
 	

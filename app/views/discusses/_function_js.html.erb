@@ -3,10 +3,10 @@
 		<% if current_user and current_user.uid %>
 			$(".sub-form").html("");
 			$("#sub_form_"+id).html('<%=j render "sub_form" %>');
-			$("#reply_discuss_id").val(id);
+			$("#sub_discuss_discuss_id").val(id);
 			$("#sub_content").focus();
 		<% else %>
-			alert("請先登入!");
+			toastr["warning"]("請先登入!");
 		<% end %>
 	}
 
@@ -100,7 +100,8 @@ function send_edit(id,type){
 		return;
 	}
 	
-	$("#discuss").load("/discusses/update",{
+	$("#discuss").load("/discusses/",{
+		method:"PATCH",
 		ct_id : <%=@ct.id%>,
 		type :type,
 		id: id,

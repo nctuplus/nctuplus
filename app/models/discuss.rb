@@ -15,6 +15,22 @@ class Discuss < ActiveRecord::Base
 			:by_teacher_name_in=>text
 		})
 	end
+	def to_json_obj
+		if self.is_anonymous
+			src=ActionController::Base.helpers.asset_path("anonymous.jpg")
+		else
+			src="http://graph.facebook.com/#{self.user.uid}/picture"
+		end
+		return {
+			:id=>self.id,
+			:uid=>self.user.uid,
+			:title=>self.title,
+			:content=>self.content,
+			:time=>self.created_at.strftime("%Y/%m/%d %H:%M"),
+			:sub_discusses=>self.sub_discusses,
+			:imgsrc=> src
+		}
+	end
 	private
 	
   ransacker :by_teacher_name, :formatter => proc {|v| 

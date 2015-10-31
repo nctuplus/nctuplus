@@ -1,6 +1,6 @@
 class Course < ActiveRecord::Base
 	belongs_to :grade
-	belongs_to :department#, :class_name=>"NewDepartment"
+	#belongs_to :department#, :class_name=>"NewDepartment"
 	belongs_to :user
 
 	has_many :course_field_lists

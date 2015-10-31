@@ -5,7 +5,6 @@ class CoursesController < ApplicationController
 	
 	def index
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
-		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
 		if !params[:custom_search].blank?	#if user key in something			
 			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
 		elsif session[:lack_course]
@@ -20,9 +19,6 @@ class CoursesController < ApplicationController
 	end
 	
 	def search_mini	#for course simulation search & result
-		@degree_sel=[['大學部','3'],['研究所','2'],['大學部共同','0']]
-		@dept_sel=Department.searchable.pluck(:ch_name, :id)
-		
 		if !params[:dimension_search].blank?	#search by 向度 (推薦系統)
 			@q= CourseDetail.search({:semester_id_eq=>Semester::LAST.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
 		elsif !params[:timeslot_search].blank? #search by time (推薦系統)
@@ -47,23 +43,7 @@ class CoursesController < ApplicationController
 		render "courses/search/mini", :layout=>false
 	end
 	
-	def search_mini_cm
-	
-		if !params[:q].blank?
-			@q = CourseDetail.search(params[:q])
-		else
-			@q = CourseDetail.search({:id_eq=>0})	
-		end
-		
-		@courses=@q.result(distinct: true).includes(:course).map{|cd|cd.course}#.includes(:course_details).reject{|c|c.course_details.empty?}.sort_by{|c|c.course_details.first.cos_type}
-		
-		if params[:map_id].presence
-			course_group = CourseGroup.where("gtype=0 AND course_map_id=? ",params[:map_id]).map{|cg| cg.id}
-			course_group_courses = CourseGroupList.where(:course_group_id=>course_group, :lead=>0).includes(:course).map{|c| c.course}
-			@courses = @courses.reject{|course| course_group_courses.include? course }
-		end
-		render "courses/search/course_map", :layout=>false
-	end
+
 	
 
 	def export_timetable

@@ -147,6 +147,33 @@ class CourseMapsController < ApplicationController
 		render :layout=>false		
 	end
 	
+	def search_course
+		@degree_sel=Department.degreeSel
+		if !params[:q].blank?
+			#@q = CourseDetail.search(params[:q])
+			@q = Course.search(params[:q])
+		else
+			@q = Course.search({:id_eq=>0})	
+		end
+		
+		@courses=@q.result(distinct: true).includes(:course_details, :departments)#.map{|cd|cd.course}
+		
+		if params[:map_id].presence
+			course_group = CourseGroup.where("gtype=0 AND course_map_id=? ",params[:map_id]).map{|cg| cg.id}
+			course_group_courses = CourseGroupList.where(:course_group_id=>course_group, :lead=>0).includes(:course).map{|c| c.course}
+			@courses = @courses.reject{|course| course_group_courses.include? course }
+		end
+		@result=@courses.map{|c|{
+			:id=>c.id,
+			:name=>c.ch_name,
+			:cd_id=>c.course_details.last.id,
+			:credit=>c.credit,
+			:dept_name=>c.dept_name,
+			:cos_type=>c.course_details.last.cos_type
+		}}
+		render "course_maps/manage/search_course", :layout=>false
+	end
+	
 	def get_course_tree
 		if request.xhr? # if ajax
 			list = []

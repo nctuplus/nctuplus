@@ -7,7 +7,9 @@ class Department < ActiveRecord::Base
 	scope :majorable,->{where majorable: true}
 	scope :undergraduate,->{where degree: 3}
 	scope :graduate,->{where degree: 2}
-	
+	def self.degreeSel
+		return [['分類','0'],['大學部','1'],['大學部共同','2'],['研究所','3']]
+	end
 	def is_graduate?
 		return self.degree==2
 	end

@@ -27,7 +27,7 @@
 				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : 0),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
 			</div>
 			<div style="width:120px;display:inline-block;">
-				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
+				<%= select_tag "degree" ,options_for_select(Department.degreeSel,params[:degree]), class: "form-control",:onchange=>"change_degree($(this))" %>		
 			</div>	
 			<div style="width:260px;display:inline-block;">				
 				<%= f.select :department_id_eq,render("courses/search/undergrad_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
@@ -89,6 +89,9 @@
 
 <script>
 	$(function(){
+		change_degree($("#degree"));
+		$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
+	
 		if($("#adv_toggle").prop("checked"))
 			$("#adv-search").removeClass("hidden");
 		$(".clickable-row").click(function() {

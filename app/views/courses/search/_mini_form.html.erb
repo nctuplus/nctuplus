@@ -22,10 +22,10 @@
 	<br>
 		<div class="col-md-12 text-center">
 			<div style="width:120px;display:inline-block;">
-				<%= select_tag "degree" ,options_for_select(@degree_sel,params[:degree]), prompt: "分類", class: "form-control",:onchange=>"change_degree($(this))" %>		
+				<%= select_tag "degree" ,options_for_select(Department.degreeSel,params[:degree]), class: "form-control",:onchange=>"change_degree($(this))" %>		
 			</div>	
 			<div style="width:280px;display:inline-block;">				
-				<%= f.select :department_id_eq,"",{:prompt=> "系所"},{ :class=> "form-control"} %>
+				<%= f.select :department_id_eq,render("courses/search/undergrad_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
 			</div>
 		</div>	
 	</div>

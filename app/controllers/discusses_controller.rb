@@ -1,30 +1,14 @@
 class DiscussesController < ApplicationController
 	# 
 	#layout false, :only =>[:list_by_course]
-	before_filter :checkLogin, :only=>[:new, :update, :like]
-	before_filter :checkOwner, :only=>[:update, :delete]
+	before_filter :checkLogin, :only=>[:new, :update, :like, :create, :update, :delete]
+	#before_filter :checkOwner, :only=>[:update, :delete]
 
-	
-##########5/29
-    def index
-
-        @discusses = Discuss.includes(:user).page(params[:page]).per(20)
-
-        
-		if !params[:custom_search].blank?	#if user key in something
-			@q = CourseDetail.searchByText(params[:custom_search],params[:q] ? params[:q][:semester_id_eq] : "")
-		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department, :past_exams, :discusses)
-		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
-        
-        
-    end
-##########5/29
-    
 
 	def index
 		@q = Discuss.search_by_text(params[:custom_search])
 		@discusses=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("id DESC")	
+		@ct=CourseTeachership.find(1)
 	end
 
 	def like
@@ -96,26 +80,52 @@ class DiscussesController < ApplicationController
 		redirect_to :action=> :show, :ct_id=>params[:ct_id]
 	end
     
-    
-    #########10/27
-    
-    
-    def new
-        @discuss = Discuss.new
-        @q=CourseTeachership.search(params[:q])
-    end
-    
-    def create        
-        #@discuss=Discuss.create(event_params.merge({:user_id=>current_user.id, :course_teachership_id=>123, :likes=>0, :dislikes=>0}))
-        @discuss=Discuss.create(event_params.merge({:user_id=>current_user.id, :likes=>0, :dislikes=>0}))
 
-        redirect_to :action => :index
-    end
+	def new
+		@discuss = Discuss.new
+		@q=CourseTeachership.search(params[:q])
+	end
+    
+	def create        
+		#@discuss=Discuss.create(event_params.merge({:user_id=>current_user.id, :course_teachership_id=>123, :likes=>0, :dislikes=>0}))
+		#@discuss=Discuss.create(discuss_params.merge({:user_id=>current_user.id, :likes=>0, :dislikes=>0}))
+	
+		if params[:type].blank?
+			@discuss=current_user.discusses.create(main_discuss_params.merge({:likes=>0,:dislikes=>0}))
+=begin
+			@discuss=current_user.discusses.create(
+				:course_teachership_id=>params[:ct_id],
+				:user_id=>current_user.id,
+				:likes=>0,
+				:dislikes=>0,
+				:title=>params[:title],
+				:content=>params[:content],
+				:is_anonymous=>params[:anonymous]=="yes"
+			)
+=end
+		elsif params[:type]=="sub"
+			@discuss=current_user.sub_discusses.create(sub_discuss_params.merge({:likes=>0,:dislikes=>0}))
+=begin			
+			@discuss=SubDiscuss.create(
+				:discuss_id=>params[:reply_discuss_id],
+				:user_id=>current_user.id,
+				:likes=>0,
+				:dislikes=>0,
+				:content=>params[:content]
+			)
+=end
+		end
+		if !request.xhr?
+			redirect_to :action => :index
+		end	
+	end
 
-    private
+	private
 
-    def event_params
-        params.require(:discuss).permit(:title, :content, :is_anonymous, :course_teachership_id)
-    end
-	###############
+	def main_discuss_params
+		params.require(:discuss).permit(:title, :content, :is_anonymous, :course_teachership_id)
+	end
+	def sub_discuss_params
+		params.require(:sub_discuss).permit(:content, :discuss_id)
+	end
 end
