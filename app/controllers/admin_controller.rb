@@ -61,24 +61,10 @@ class AdminController < ApplicationController
 	end
     
   def user_statistics
-    @user_stat=User.select("created_at").group("DATE_FORMAT((created_at),'%y年%m月')").order("date(created_at)").count
-    test = NormalScore.uniq.pluck(:user_id) + AgreedScore.uniq.pluck(:user_id)
-    @import_cnt = test.uniq.count
-    @user_type = [0,0,0] # E3 , FB , E3+FB
-    User.all.each do |user|
-      if user.uid and user.student_id
-        @user_type[2] +=1
-      elsif user.uid
-        @user_type[1] +=1
-      else
-        @user_type[0] +=1
-      end 
-    end
-    
-    discuss_cnt = Discuss.count
-    comment_cnt = Comment.count
-    @discuss_stat = [comment_cnt, discuss_cnt]
-    
+    @user_stat = DataStatistics.user_signup
+    @import_cnt = DataStatistics.import_course_count
+    @user_type = DataStatistics.user_signin_protocol # [E3, FB, E3&FB]
+    @discuss_stat = [Comment.maximum(:id), Discuss.maximum(:id)]   
   end
 	
 end
