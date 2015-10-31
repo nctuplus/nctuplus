@@ -356,7 +356,7 @@ class CourseMapsController < ApplicationController
 #Rails.logger.debug "[debug hit] " + course_group_leads.to_s	
 				c_ids.each do |c_id|
 =begin
-					if all_courses.include? c_id.to_i #check same
+					if all_courses.include? c_id.to_i #check the same
 						fail_cnt +=1
 						next
 					end
@@ -403,6 +403,7 @@ class CourseMapsController < ApplicationController
 					cgl.user_id= current_user.id
 					cgl.lead = (has_lead) ? 0 : 1
 					cgl.save!
+					has_lead = true 
 					success_cnt += 1
 				end
 
