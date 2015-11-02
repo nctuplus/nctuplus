@@ -1,7 +1,11 @@
+<%= javascript_include_tag "discuss", "data-turbolinks-track" => true %>
 <%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
 	<div class="row">	
 		<div class="col-md-12 text-center">
-			<%=link_to "新增心得",new_discuss_path, class:"btn btn-info", style:"font-size:16px;"%>
+			<%=link_to "新增文章",new_discuss_path, class:"btn btn-info", style:"font-size:16px;"%>
+			<% if current_user&&current_user.discusses.count>0 %>
+				<%=link_to "我的文章","/discusses/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
+			<% end %>
 			<div class="input-group" >
 				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"width:350px;" %>
 				<span class="input-group-btn">
@@ -20,7 +24,7 @@
 		<th>時間</th>
 	</tr>
 <% @discusses.each do |discuss| %>
-	<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.to_json_obj.to_json%>');">
+	<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.to_json_obj(current_user.try(:id)).to_json%>');">
 		<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
 		<td class="title"><%=discuss.title%></td>		
 		<td class="user_name"><%=discuss.is_anonymous ? "匿名" : discuss.user_name%></td>
@@ -34,51 +38,19 @@
 </table>
 <%= paginate @discusses, :window=>2 %>
 
-<script type="text/x-tmpl" id="discuss-modal-title">
-	<div class="panel-heading row no-margin-left no-margin-right">
-		<div class="col-md-1">
-			<a href="https://www.facebook.com/{%=o.uid%}" target="_blank" title="{%=o.user_name%}">
-				<img alt="Picture" class="" height="50" src="{%=o.imgsrc%}" style="margin-top:10px;" width="50">
-			</a>
-		</div>
-		<div class="col-md-6" >
-			<h4>{%=o.title%}</h4>
-			<p>{%=o.time%}</p>
-		</div>
-		<div class="col-md-5">
-			<div class="row pull-right">
-				<br>
-				<div style="display:inline-block;margin-right:5px;">
-					<div class="share-button_{%=o.id%}"></div>
-				</div>
-				<i class="fa fa-thumbs-o-up fa-2x clickable-hover" onclick="like(1,'main',{%=o.id%},$(this));" title="讚"></i>
-				<span class="like-count like" id="main_like_{%=o.id%}">0</span>
-			</div>
-		</div>
-	</div>
-</script>
-<script type="text/x-tmpl" id="discuss-modal-content">
-	<textcontent>{%=o.content%}</textcontent>
-	{% for(var i=0,sub_d;sub_d=o.sub_discusses[i];i++){ %}
-		<hr>
-		<div class="col-md-offset-1">
-		<a href="https://www.facebook.com/{%=o.uid%}" target="_blank" title="{%=o.user_name%}">
-			<img alt="Picture" class="" height="40" width="40" src="{%=o.imgsrc%}" style="margin-top:10px;" >
-		</a>
-		<textcontent>{%=sub_d.content%}</textcontent>
-		</div>
-	{% } %}
-</script>
+<%=render "modal_content" %>
 
 <script>
 	function show2(data_str){		
 		var data=JSON.parse(data_str);
-		//console.log(data);
-		showGlobalModal(2,tmpl("discuss-modal-title",data ),tmpl("discuss-modal-content",data));
+		
+		showGlobalModal(2,tmpl("discuss-modal-title",data ),tmpl("discuss-modal-content",data),function(){window.history.back();});
 		$("#sub_discuss_discuss_id").val(data.id);
-		<% share_url="#{root_url}discusses" %>
+		
+		window.history.pushState(null,null,"/discusses/"+data.id);
+		<% share_url="#{root_url}discusses/" %>
 		$("[class^=share-button]").each(function(){
-			var share_url='<%=j share_url.html_safe%>'+$(this).attr('id');
+			var share_url='<%=j share_url.html_safe%>'+data.id;
 			
 			new Share('.'+$(this).attr('class'), {
 				ui: {
@@ -91,7 +63,7 @@
 						title : data.title,
 						description: data.content,
 						url : share_url,
-						caption: "5566"
+						caption: ""
 					},
 					google_plus:{
 						url :share_url
@@ -110,75 +82,7 @@
 			});
 		});
 	}
-	function show(id){
-		var $obj=$("#discuss-"+id);
-		var title=$obj.find(".title").text();
-		var content=$obj.find(".content").text();
-		var user_name=$obj.find(".user_name").text();
-		var user_id=$obj.find(".user_id").text();
-		var time=$obj.find(".time").text();
-		var subDiscuss="";
-		$obj.find(".sub_content").each(function(){
-			subDiscuss+="<hr>"+$(this).text();
-			
-		});
-		var test='<div class="panel-heading row no-margin-left no-margin-right">';
-			test+='<div class="col-md-1">';
-			test+='<a href="https://www.facebook.com/'+user_id+'" target="_blank" title="'+user_name+'">';
-			test+='<img alt="Picture" class="" height="50" src="http://graph.facebook.com/'+user_id+'/picture" style="margin-top:10px;" width="50">';
-			test+='</a></div>';
-			test+='<div class="col-md-6" >';
-			test+='<h4>'+title+'</h4>';
-			test+='<p>'+time+'</p></div>';
-			test+='<div class="col-md-5">';
-			test+='<div class="row pull-right"><br>';
-			test+='<div style="display:inline-block;margin-right:5px;">';
-			test+='<div class="share-button_'+id+'"></div>';				
-			test+='</div>';
-			test+='<i class="fa fa-thumbs-o-up fa-2x clickable-hover" onclick="like(1,\'main\',184,$(this));" title="讚"></i>';
-			test+='<span class="like-count like" id="main_like_'+id+'">0</span>';
-			test+='</div></div></div>';
-		var titleAndButs=test;//title;
-		var contentAndArea='<textcontent>'+content+'</textcontent>';
-		//var sub="";
-		var replyForm="<hr><h4>回覆</h4><div class='row'><%=j render "sub_form" %></div>";
-		showGlobalModal(2,titleAndButs,contentAndArea+subDiscuss+replyForm);
-		$("#sub_discuss_discuss_id").val(id);
-		<% share_url="#{root_url}discusses" %>
-		$("[class^=share-button]").each(function(){
-			var share_url='<%=j share_url.html_safe%>'+$(this).attr('id');
-			var description=$("#content_"+$(this).attr('id')).text();
-			new Share('.'+$(this).attr('class'), {
-				ui: {
-					button_text :"分享",
-					button_font : false,
-				},
-				networks: {
-					facebook: {
-						app_id: "<%=Facebook::APP_ID%>",
-						title : $("#title_"+$(this).attr('id')).text(),
-						description: description,
-						url : share_url,
-						caption: "5566"
-					},
-					google_plus:{
-						url :share_url
-					},
-					twitter:{
-						url :share_url,
-						description :description.substr(0,50)
-					},
-					pinterest:{
-						enabled:false
-					},
-					email:{
-						enabled:false
-					}
-				}
-			});
-		});
-		
-	}
+	
 </script>
 
 

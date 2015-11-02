@@ -27,7 +27,7 @@ function showCart(){
 			use_type:"delete"
 		},
 		function(data){
-			showGlobalModal(1,"收藏課程",data);
+			showGlobalModal(1,"收藏課程",data,function(){});
 		}
 	);
 }

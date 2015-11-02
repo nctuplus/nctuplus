@@ -3,11 +3,11 @@
     <div class="col-md-9 col-md-offset-1">
 			<h1>新增心得</h1>
 			<br>
-			<h4>Step1.選擇適用課程 - <span class="text-center" id="ct-id" data=""></span></h4>
+			<h4>Step1.選擇適用課程 - <span class="text-center" id="ct-id" data="<%=@ct.try(:id)%>"><%=@ct.try(:course_ch_name)%>/<%=@ct.try(:teacher_name)%></span></h4>
 			<%= search_form_for @q, url:"/books/cts_search", class:"form-inline", remote:"true" do |f| %>
 				<div class="form-group">
 					<label>適用課程</label>
-					<%=f.search_field :course_ch_name_cont, class:"form-control",placeholder:"課名",required:"true"%>
+					<%=f.search_field :course_ch_name_cont,value:@ct.try(:course_ch_name), class:"form-control",placeholder:"課名",required:"true"%>
 				</div>
 				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-success"%>
 			<% end %>
@@ -15,18 +15,18 @@
 			<h4>Step2.輸入標題以及內容</h4>
 			<%=form_for @discuss, :url => {:action => @discuss.new_record? ? 'create' : "update" }, :html=>{class: "form-horizontal"} do |f| %>
 				<div class="form-group">
-          <label class="col-sm-1 control-label">標題</label>
+					<label class="col-sm-1 control-label">標題</label>
 					<div class="col-sm-10">
 						<%= f.text_field "title", :class => "form-control",required:"true",placeholder:"" %>
 					</div>	
-        </div>
+				</div>
 				<div class="form-group">
-          <label class="col-sm-1 control-label">內容</label>
+					<label class="col-sm-1 control-label">內容</label>
 					<div class="col-sm-10">
 						<%= f.text_area "content", :class => "form-control",required:"true",placeholder:"",rows:"10" %>
 					</div>
-					<%=f.hidden_field "course_teachership_id" %>
-        </div>
+					<%=f.hidden_field "course_teachership_id",value:"#{@ct.try(:id)}" %>
+				</div>
 
 				<div class="col-md-11 text-right">
 					<div class="checkbox" style="display:inline-block;">
@@ -36,9 +36,15 @@
 					</div>
 					&nbsp;&nbsp;
 					<button onclick="preview();return false;" class="btn btn-lg btn-success">預覽</button>
-          <%= f.submit "送出",onclick:"return checkCts();", class: "btn btn-lg btn-primary " %>
-        </div>
+					<%= f.submit "送出",onclick:"return checkCts();", class: "btn btn-lg btn-primary " %>
+					<% if !@discuss.new_record? %>
+						<%= link_to '刪除', discuss_path(@discuss), :method => :delete, :data => { :confirm => "確認刪除?" },class:"btn btn-lg btn-danger" %>
+					<% end %>
+					<br><br>
+				</div>
+				
 			<% end %>
+			
 		</div>
 	</div>
 </div>
@@ -66,6 +72,8 @@
 		{% } %}
 	</table>
 </script>
+<%=render "modal_content" %>
+
 <script>
 	function checkCts(){
 		var x=$("#discuss_course_teachership_id").val();
@@ -76,25 +84,20 @@
 		return true;
 	}
 	function preview(){
-
-		var title=$("#discuss_title").val();
-		var content=$("#discuss_content").val();
-		var user_name="zzzz";
-		var time="<%=Time.now%>"
-		var test='<div class="panel-heading row no-margin-left no-margin-right">';
-		var user_id="<%=current_user.uid%>";
-		test+='<div class="col-md-1">';
-		test+='<a href="https://www.facebook.com/'+user_id+'" target="_blank" title="'+user_name+'">';
-		test+='<img alt="Picture" class="" height="50" src="http://graph.facebook.com/'+user_id+'/picture" style="margin-top:10px;" width="50">';
-		test+='</a></div>';
-		test+='<div class="col-md-6" id="main_title_184">';
-		test+='<h4 id="title_184">'+title+'</h4>';
-		test+='<p>'+time+'</p></div>';	
-		test+='</div></div>';
-		var titleAndButs=test;
-		var contentAndArea='<textcontent>'+content+'</textcontent>';
-		showGlobalModal(2,titleAndButs,contentAndArea);
-		
+		var data={
+			isPreview:true,
+			is_anonymous:$("#discuss_is_anonymous").prop("checked"),
+			uid:<%=current_user.try(:uid)||0%>,
+			ct_name:$("#ct-id").text(),
+			hasFb:<%=current_user.hasFb?%>,
+			user_name:$("#discuss_is_anonymous").prop("checked") ? "匿名" : "<%=current_user.name%>",
+			imgsrc:"<%=@imgsrc %>",
+			title:$("#discuss_title").val(),
+			content:$("#discuss_content").val(),
+			id:0,
+			sub_discusses:[]
+		};
+		showGlobalModal(2,tmpl("discuss-modal-title",data ),tmpl("discuss-modal-content",data),function(){});		
 	}
 	function change_check($obj){
 		if($obj.val()=="false"){

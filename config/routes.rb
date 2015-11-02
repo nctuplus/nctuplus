@@ -81,7 +81,7 @@ Nctuplus::Application.routes.draw do
 #----------for discusses---------------
 	resources :discusses do
 		collection do
-			#get "show"
+			get "list_by_ct"
 			get "like"
 		end
 	end

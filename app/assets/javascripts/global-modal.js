@@ -1,4 +1,4 @@
-function showModal(target,size,title,content){
+function showModal(target,size,title,content,callBack){
 	var $obj=$("#"+target);
 	switch(size){
 		case 0:
@@ -19,11 +19,14 @@ function showModal(target,size,title,content){
 		
 	$obj.find(".modal-body").html(content);
 	$obj.modal('show');
-
+	$obj.off('hide.bs.modal');
+	$obj.on('hide.bs.modal', function (event) {
+		callBack();
+	});
 }
 
-function showGlobalModal(size,title,content){
-	showModal("global-modal",size,title,content);
+function showGlobalModal(size,title,content,callBack){
+	showModal("global-modal",size,title,content,callBack);
 }
 function clearGlobalModalWithLoading(){
 	var loading = '<i class="fa fa-spinner fa-spin text-center"></i>' ;

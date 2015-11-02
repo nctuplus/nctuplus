@@ -68,9 +68,9 @@ class CoursesController < ApplicationController
   def show
 		cd=CourseDetail.includes(:course_teachership, :course, :semester, :department).find(params[:id])	
 		current_time = Time.new
-		c_id=cd.course.id.to_s
-		if session[c_id] != current_time.min
-			session[c_id] = current_time.min
+		c_id=cd.id.to_s
+		if session[c_id] != current_time.day
+			session[c_id] = current_time.day
 			cd.incViewTimes!
 		end
 		@list_type=[["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]]

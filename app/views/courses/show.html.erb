@@ -153,7 +153,7 @@
 		//teacher compare & rank
 		$("#compare").load("/course_content/get_compare?c_id=<%=j @data[:course_id]%>", function() {
 			$('body').scrollspy('refresh');
-			$("#discuss").load("/discusses/show?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
+			$("#discuss").load("/discusses/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
 				$('body').scrollspy('refresh');
 				$("#files").load("/past_exams/course_page?ct_id=<%=@data[:course_teachership_id]%>", function() {
 					$('body').scrollspy('refresh');

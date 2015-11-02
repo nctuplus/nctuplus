@@ -163,7 +163,7 @@ function searchGoogleBook(){
 		success : function(data) {
 			console.log(data);
 			var content=tmpl("googlebook-res",data);
-			showModal("book-modal",1,title, content);
+			showModal("book-modal",1,title, content,function(){});
 			
 		}
 	});
@@ -179,5 +179,5 @@ function showIsbnTip(){
 	tips+="在書籍的條碼區就可以找到囉，如圖</h4>";
 	tips+='<%=image_tag asset_path("ISBN.jpg"),size:"300x200"%>';
 	//tips+='<img alt="Isbn" height="200" src="/assets/ISBN.jpg" width="300">';
-	showGlobalModal(1,"ISBN",tips);
+	showGlobalModal(1,"ISBN",tips,function(){});
 }

@@ -1,20 +1,28 @@
-
-<%= form_for SubDiscuss.new, url:{action:'create'}, :class=>"sub-discussion col-md-offset-1 col-md-10", :role=>"form", :remote=>"true" do |f| %>
-	
-	<div class="col-md-1">
-		<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
+<%= form_for SubDiscuss.new, url:{action: "create"}, :class=>"sub-discussion ", :remote=>"true" do |f| %>
+	<div class="col-md-1" style="padding-left:30px;">
+		<% if current_user.hasFb? %>
+			<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
+		<% else %>
+			<%= image_tag asset_path("anonymous.jpg"), size: "45x45", class:"", style:"margin-top:10px;"%>
+		<% end %>
 		<br>
 	</div>
-	<div class="col-md-9">
+	<div class="col-md-10">
 		<%= f.text_area "content", class:"form-control", rows:"5", placeholder:"內容...", required:"true" %>
 		<%=hidden_field_tag "type","sub"%>
-		<%=f.hidden_field "discuss_id"%>
-		<%=hidden_field_tag "course_teachership_id",@ct.id%>
+		<% if action=="create"%>
+			<%=f.hidden_field "discuss_id"%>
+			<%=hidden_field_tag "course_teachership_id",@ct.try(:id)%>
+		<% end %>
 	</div>
-	<div class="col-md-2" style="">
-		<p>
-		<br><br><br><br>
+	<div id="function-bar" class="col-md-1 no-padding-left" style="">
+		<br>
+		<% if action=="create"%>
+			<br>
+		<% else %>
+			<%= link_to '刪除', "", :method => :delete, :data => { :confirm => "確認刪除?" },class:"btn  btn-danger",id:"delte_sub_but",remote:"true" %>
+		<% end %>
+		<br><br>
 		<%= f.submit "送出", :class=>"btn btn-primary " %>
-		</p>
 	</div>
 <% end %>

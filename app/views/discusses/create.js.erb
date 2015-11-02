@@ -1,1 +1,5 @@
-$("#discuss").load("/discusses/show?ct_id=<%=params[:course_teachership_id]%>");
+<% if params[:course_teachership_id].blank? %>
+	window.location.href = "/discusses/<%=@discuss.discuss_id%>";
+<% else %>
+	$("#discuss").load("/discusses/list_by_ct?ct_id=<%=params[:course_teachership_id]%>");
+<% end %>

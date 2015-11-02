@@ -1,12 +1,10 @@
 class PastExamsController < ApplicationController
   # GET /files
   # GET /files.json
-  layout false, :only =>[:course_page]
-	
-  before_filter :checkLogin, :only=>[:upload]
-  before_filter :checkE3Login, :only=>[:show, :new, :update, :create, :destroy, :one_user]
-  #before_filter :checkOwner, :only=>[:update, :destroy]
-	
+  
+  before_filter :checkLogin, :only=>[:upload, :new, :update, :create, :destroy]
+  before_filter :checkE3Login, :only=>[:show]
+
 	def index	#get by ct_id
 		@q = PastExam.search_by_text(params[:custom_search])
 		@exams=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("download_times DESC")
@@ -25,6 +23,7 @@ class PastExamsController < ApplicationController
 	def course_page
 		@ct_id=params[:ct_id]
 		@sems=CourseTeachership.find(@ct_id).semesters
+		render :layout=>false
 	end
   
 

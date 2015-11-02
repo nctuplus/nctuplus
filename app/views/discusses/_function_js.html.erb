@@ -1,8 +1,8 @@
 <script>
 	function show_sub_form(id){
-		<% if current_user and current_user.uid %>
+		<% if current_user  %>
 			$(".sub-form").html("");
-			$("#sub_form_"+id).html('<%=j render "sub_form" %>');
+			$("#sub_form_"+id).html('<%=j render "sub_form"  %>');
 			$("#sub_discuss_discuss_id").val(id);
 			$("#sub_content").focus();
 		<% else %>
@@ -10,7 +10,7 @@
 		<% end %>
 	}
 
-<% if current_user and current_user.uid%>
+<% if current_user %>
 	function like(_like,type,id,obj){
 
 	$.ajax({

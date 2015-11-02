@@ -1,0 +1,87 @@
+<script type="text/x-tmpl" id="discuss-modal-title">
+	<div class="panel-heading row no-margin-left no-margin-right" style="padding-bottom:0px;">
+		<div class="col-md-1">
+			{% if(o.is_anonymous||!o.uid){ %}
+				<%=image_tag asset_path("anonymous.jpg"),size:"50x50",style:"margin-top:10px;" %>
+			{% } else { %}
+				<a href="https://www.facebook.com/{%=o.uid%}" target="_blank">
+					<img alt="Picture" class="" height="50" src="{%=o.imgsrc%}" style="margin-top:10px;" width="50">
+				</a>
+			{% } %}
+		</div>
+		<div class="col-md-7" >
+			<h4>{%=o.title%} </h4>
+			<p style="font-size:14px;">
+				{%=o.user_name%} {%=o.time%}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/courses/{%=o.cd_id%}" target="_blank">{%=o.ct_name%}</a>
+			</p>
+			
+		</div>
+		<div class="col-md-4">
+			{% if(!o.isPreview){ %}
+			<div class="row pull-right">
+				<br>
+				{% if(o.editable){ %}
+					<a href="/discusses/{%=o.id%}/edit" class="btn btn-info" style="padding:5px 12px;margin-top: -2px;"><%=fa_icon "pencil"%>修改</a>
+				{% } %}
+				<button class="btn btn-success" style="padding:5px 12px;margin-top: -2px;" onclick="$('#subform-container').removeClass('hidden');$('#sub_discuss_content').focus();"><%=fa_icon "reply"%>回覆</button>
+				<div style="display:inline-block;margin-right:5px;">
+					<div class="share-button_{%=o.id%}"></div>
+				</div>
+				<!--
+				<i class="fa fa-thumbs-o-up fa-2x clickable-hover" onclick="like(1,'main',{%=o.id%},$(this));" title="讚"></i>
+				<span class="like-count like" id="main_like_{%=o.id%}">{%=o.likes%}</span>
+				-->
+			</div>
+			{% } %}
+		</div>
+	</div>
+</script>
+<script type="text/x-tmpl" id="discuss-modal-content">
+	<div style="padding-left:25px;">
+		<textcontent>{%=o.content%}</textcontent>
+	</div>
+	<% if current_user %>
+		<div id="subform-container" class="row hidden">
+			<hr>
+			<%= render :partial=>"sub_form",:locals=>{action:"create"}%>
+		</div>
+	<% end %>
+	<hr>
+	{% for(var i=0,sub_d;sub_d=o.sub_discusses[i];i++){ %}
+		<div class="row" id="sub_d_{%=sub_d.id%}" >
+			{% include('sub_d-content',sub_d); %}
+		</div>
+		<hr>
+	{% } %}
+</script>
+<script type="text/x-tmpl" id="sub_d-content">
+	<div class="col-md-1" style="padding-left:30px;">
+		{%if(o.uid){ %}
+			<a href="https://www.facebook.com/{%=o.uid%}" target="_blank">
+				<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
+			</a>
+		{% }else{ %}
+			<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
+		{% } %}
+	</div>
+	<div class="col-md-10">
+		{%=o.user_name%} {%=o.time%}<br>
+		<textcontent>{%=o.content%}</textcontent>
+	</div>
+	<div class="col-md-1 no-padding-left">
+		{% if(o.editable){ %}
+			<button class="btn btn-info" onclick="edit($(this),{%=o.id%});">修改</button>
+		{% } %}
+	</div>
+</script>
+<script>
+	function edit($obj,id){
+		var text=$obj.parent().prev().find("textcontent").text();
+		var $container=$obj.parent().parent();
+		$container.html("<%=j render :partial=>"sub_form",:locals=>{action:"update"} %>");
+		$container.find("form").attr("action","/discusses/"+id);
+		$container.find("form").attr("method","patch");
+		$container.find("#sub_discuss_content").text(text);
+		$("#delte_sub_but").attr("href","/discusses/"+id+"?type=sub");
+	}
+</script>

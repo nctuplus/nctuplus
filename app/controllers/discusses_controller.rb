@@ -6,11 +6,87 @@ class DiscussesController < ApplicationController
 
 
 	def index
-		@q = Discuss.search_by_text(params[:custom_search])
-		@discusses=@q.result(distinct: true).includes(:course_teachership).page(params[:page]).order("id DESC")	
-		@ct=CourseTeachership.find(1)
+		if current_user && params[:mine]=="true"
+			@q=Discuss.search({:user_id_eq=>current_user.id})
+		else
+			@q = Discuss.search_by_text(params[:custom_search])
+		end
+		@discusses=@q.result(distinct: true).includes(:course_teachership, :sub_discusses, :user).page(params[:page]).order("id DESC")	
+		#@ct=CourseTeachership.find(1)
+	end
+	
+	def show
+		@discuss=Discuss.includes(:sub_discusses, :course_teachership, :course_details).find(params[:id])
+		discuss_id=@discuss.id.to_s
+		@result=@discuss.to_json_obj(current_user.try(:id))
 	end
 
+  def new
+		@discuss = Discuss.new
+		@q=CourseTeachership.search(params[:q])
+		if params[:ct_id].present?
+			@ct=CourseTeachership.find(params[:ct_id])
+		end
+		@imgsrc=current_user.hasFb? ? "http://graph.facebook.com/#{current_user.uid}/picture" : ActionController::Base.helpers.asset_path("anonymous.jpg")
+		render "main_form"
+	end
+	
+	def edit	#only for main discuss
+		@discuss=current_user.discusses.find(params[:id])
+		@q=CourseTeachership.search(params[:q])
+		@ct=@discuss.course_teachership
+		@imgsrc=current_user.hasFb? ? "http://graph.facebook.com/#{current_user.uid}/picture" : ActionController::Base.helpers.asset_path("anonymous.jpg")
+		render "main_form"
+	end
+	
+	def create        
+		if params[:type].blank?
+			@discuss=current_user.discusses.create(main_discuss_params.merge({:likes=>0,:dislikes=>0}))
+		elsif params[:type]=="sub"
+			@discuss=current_user.sub_discusses.create(sub_discuss_params.merge({:likes=>0,:dislikes=>0}))
+		end
+		if !request.xhr?
+			redirect_to :action => :index
+		end	
+	end
+	
+	def update	
+		if params[:type].blank?
+			@discuss=current_user.discusses.find(params[:id])
+			@discuss.update(main_discuss_params)
+			redirect_to :action=> :show, :id=>params[:id]
+		elsif params[:type]=="sub"
+			@sub_d=current_user.sub_discusses.find(params[:id])
+			#@discuss.content=params[:content]
+			@sub_d.update(sub_discuss_params)
+			#@discuss.save!
+			#redirect_to :action=> :show, :id=>@discuss.discuss_id
+		end
+		
+	end
+	
+	def destroy
+		if params[:type].blank?
+			@discuss=current_user.discusses.find(params[:id])
+			@discuss.destroy!
+			redirect_to :action=> :index
+		elsif params[:type]=="sub"
+			@sub_d=current_user.sub_discusses.find(params[:id])
+			#@sub_d_id=@discuss.discuss_id
+			@sub_d.destroy!
+			#redirect_to :action=> :show, :id=>@discuss_id
+		end
+		
+		
+	end
+  
+	def list_by_ct
+		#@ct_id=
+		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
+		@discusses=@ct.discusses.includes(:sub_discusses, :user, :discuss_likes).order("updated_at DESC")
+		render :layout=>false
+	end
+	
 	def like
 		@like=current_user.discuss_likes.create(:like=>params[:like])
 		
@@ -43,83 +119,7 @@ class DiscussesController < ApplicationController
 		render :nothing => true, :status => 200, :content_type => 'text/html'	
 		
 	end
-    
-    
-	def show
-		#@ct_id=
-		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
-		@discusses=@ct.discusses.includes(:sub_discusses, :user, :discuss_likes).order("updated_at DESC")
-		render :layout=>false
-	end
 	
-	
-	
-
-	
-	def update	
-		if params[:type]=="main"
-			@discuss=Discuss.find(params[:id])
-			@discuss.content=params[:content]
-			@discuss.title=params[:title]			
-			@discuss.save!
-		elsif params[:type]=="sub"
-			@discuss=SubDiscuss.find(params[:id])
-			@discuss.content=params[:content]
-			@discuss.save!
-		end
-		redirect_to :action=> :show, :ct_id=>params[:ct_id]
-	end
-	
-	def delete
-		if params[:type]=="main"
-			@discuss=Discuss.find(params[:id])
-		elsif params[:type]=="sub"
-			@discuss=SubDiscuss.find(params[:id])
-		end
-		@discuss.destroy!
-		redirect_to :action=> :show, :ct_id=>params[:ct_id]
-	end
-    
-
-	def new
-		@discuss = Discuss.new
-		@q=CourseTeachership.search(params[:q])
-	end
-    
-	def create        
-		#@discuss=Discuss.create(event_params.merge({:user_id=>current_user.id, :course_teachership_id=>123, :likes=>0, :dislikes=>0}))
-		#@discuss=Discuss.create(discuss_params.merge({:user_id=>current_user.id, :likes=>0, :dislikes=>0}))
-	
-		if params[:type].blank?
-			@discuss=current_user.discusses.create(main_discuss_params.merge({:likes=>0,:dislikes=>0}))
-=begin
-			@discuss=current_user.discusses.create(
-				:course_teachership_id=>params[:ct_id],
-				:user_id=>current_user.id,
-				:likes=>0,
-				:dislikes=>0,
-				:title=>params[:title],
-				:content=>params[:content],
-				:is_anonymous=>params[:anonymous]=="yes"
-			)
-=end
-		elsif params[:type]=="sub"
-			@discuss=current_user.sub_discusses.create(sub_discuss_params.merge({:likes=>0,:dislikes=>0}))
-=begin			
-			@discuss=SubDiscuss.create(
-				:discuss_id=>params[:reply_discuss_id],
-				:user_id=>current_user.id,
-				:likes=>0,
-				:dislikes=>0,
-				:content=>params[:content]
-			)
-=end
-		end
-		if !request.xhr?
-			redirect_to :action => :index
-		end	
-	end
-
 	private
 
 	def main_discuss_params
