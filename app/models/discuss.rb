@@ -22,7 +22,7 @@ class Discuss < ActiveRecord::Base
 		if self.is_anonymous || !self.user.hasFb?
 			src=ActionController::Base.helpers.asset_path("anonymous.jpg")
 		else
-			src="http://graph.facebook.com/#{self.user.uid}/picture"
+			src="https://graph.facebook.com/#{self.user.uid}/picture"
 		end
 		return {
 			:id=>self.id,
