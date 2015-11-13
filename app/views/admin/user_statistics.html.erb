@@ -1,5 +1,3 @@
-<%= javascript_include_tag "courses/content", "data-turbolinks-track" => true %>
-</br></br>
 <h3 class="text-center">
 	註冊人數：<%=@user_type.reduce(:+)%> 
 	匯入課程人數：<%=@import_cnt.to_s%> 
@@ -11,7 +9,7 @@
 <hr>
 <div id="discuss-stat" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
 <hr>
-
+<%=javascript_include_tag "admin_statistics/index", "data-turbolinks-track" => true %>
 <script>
 
 $(function () {
