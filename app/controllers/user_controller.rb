@@ -44,6 +44,7 @@ class UserController < ApplicationController
 					result={
 						:use_type=>"delete", #for delete button of your current courses
 						:view_type=>"simulation",
+						:add_to_cart=>params[:add_to_cart]=='1',
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(Semester::LAST.id).map{|cs|
 							cs.course_detail.to_search_result
 						}

@@ -36,6 +36,7 @@ class CoursesController < ApplicationController
 		@result={
 			:view_type=>"simulation",
 			:use_type=>"add",
+			:add_to_cart=>true,
 			:courses=>cds.map{|cd|
 				cd.to_search_result
 			}
@@ -144,6 +145,7 @@ class CoursesController < ApplicationController
 		@result={
 			:view_type=>params[:view_type],
 			:use_type=>params[:use_type],#"delete",
+			:add_to_cart=>params[:add_to_cart]=='1',
 			:courses=>CourseDetail.where(:id=>JSON.parse(cookies.signed[:cd])).map{|cd|
 				cd.to_search_result
 			}

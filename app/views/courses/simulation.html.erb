@@ -10,7 +10,7 @@
 						<button id="has-select-btn" class="btn btn-circle btn-info pop-over" data-content="已選課程" onclick="showHasSelected()" style="margin-top: -5px;">
 							<%=fa_icon "check"%>
 						</button>
-						<button id="shopping-cart" class="btn btn-circle btn-info pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add');" style="margin-top: -5px;">
+						<button id="shopping-cart" class="btn btn-circle btn-info pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add&add_to_cart=0');" style="margin-top: -5px;">
 							<%=fa_icon "star"%>
 						</button>
 					</span>
@@ -146,7 +146,7 @@
 	}
 	
 	function showHasSelected(){
-		$.getJSON("/user/get_courses?type=simulation",function(data){
+		$.getJSON("/user/get_courses?type=simulation&add_to_cart=1",function(data){
 			//console.log(data);
 			$(".scrollable").html(tmpl("search_result", data));
 		});

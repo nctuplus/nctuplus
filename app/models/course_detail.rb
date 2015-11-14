@@ -39,6 +39,7 @@ class CourseDetail < ActiveRecord::Base
 			:grade=>self.grade=="*" ? "all" : self.grade ,
 			:cos_type=>self.cos_type,
 			:time=>self.time,
+			:room=>self.room,
 			:course_name=>self.course_ch_name,
 			:credit=>self.course_credit,
 			:dept_name=>self.department_ch_name,

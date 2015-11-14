@@ -56,28 +56,34 @@
 						</a>
 						{%= cd.dept_name %}
 						{%= cd.teacher_name %}
-						{% if(o.view_type=="simulation"){ %}
-							{% if(o.use_type=="add"){ %}
-								<button class="btn btn-success btn-circle pull-right" onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
+						<span class="pull-right">
+						{% if(o.add_to_cart){ %}
+								<button title="新增至課程收藏" data-toggle="tooltip" class="btn btn-info btn-circle" onclick="add_to_cart({%=cd.id%},'add')">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+						{% } %}
+						{% if(o.view_type=="simulation"){ %}											
+							{% if(o.use_type=="add"){ %}							
+								<button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
 									<span class="glyphicon glyphicon-plus"></span>
 								</button>
 							{% }else if(o.use_type=="delete"){ %}
-								<button class="btn btn-warning btn-circle pull-right" onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}','delete','search')">
+								<button title="退選" class="btn btn-warning btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}','delete','search')">
 									<span class="glyphicon glyphicon-minus"></span>
 								</button>
 							{% } %}
 						{% }else if(o.view_type=="session"){ %}
 							{% if(o.use_type=="add"){ %}
-								<button class="btn btn-success btn-circle pull-right" onclick="add_to_cart({%=cd.id%},'add')">
+								<button title="新增" class="btn btn-success btn-circle" onclick="add_to_cart({%=cd.id%},'add')">
 									<span class="glyphicon glyphicon-plus"></span>
 								</button>
 							{% }else if(o.use_type=="delete"){ %}
-								<button class="btn btn-warning btn-circle pull-right" onclick="add_to_cart({%=cd.id%},'delete')">
+								<button title="刪除" class="btn btn-warning btn-circle" onclick="add_to_cart({%=cd.id%},'delete')">
 									<span class="glyphicon glyphicon-minus"></span>
 								</button>
 							{% } %}
 						{% } %}
-						
+						</span>
 					</p>
 					<p class="text-right">
 						{% if(cd.cos_type=="通識"||cd.cos_type=="外語"){ %}
@@ -86,7 +92,7 @@
 							{%=cd.cos_type%} | 
 						{% } %}
 						年級: {%=cd.grade%} | 
-						<strong class="course_time">{%= cd.time %}</strong>
+						<strong class="course_time">{%= cd.time %}/{%=cd.room%}</strong>
 						| <%=fa_icon "user" %> <strong>{%= cd.reg_num %}</strong>/<strong>{%= cd.reg_limit %}</strong>
 						| <%=fa_icon "graduation-cap" %> <strong>{%= cd.credit %}</strong>
 					</p>
