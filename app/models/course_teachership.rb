@@ -25,20 +25,20 @@ class CourseTeachership < ActiveRecord::Base
 		attr_accessor :rate_count, :avg_score, :arr
 		def initialize(obj)
 			self.arr=obj
-			score_arr=obj.map{|rate|rate.score}
+			score_arr=obj.map{|rate|rate[:score]}
 			self.rate_count=score_arr.length
-			self.avg_score=rate_count==0 ? 0 : score_arr.reduce(:+)/rate_count
+			self.avg_score=rate_count==0 ? 0.to_s : (score_arr.reduce(:+)/rate_count.to_f).to_s
 		end
 	end
 
 	def cold_ratings
-		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>1).all)
+		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>1).map{|ctr|ctr.to_json_obj})
 	end
 	def sweety_ratings
-		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>2).all)
+		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>2).map{|ctr|ctr.to_json_obj})
 	end
 	def hardness_ratings
-		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>3).all)
+		return ScoreObj.new(self.course_teacher_ratings.where(:rating_type=>3).map{|ctr|ctr.to_json_obj})
 	end
 	
 	def _teachers

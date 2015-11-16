@@ -16,7 +16,11 @@ class CourseMap < ActiveRecord::Base
 			#:name => course_map.department.ch_name+"入學年度:"+course_map.semester.year.to_s,
 			:total_credit=>self.total_credit,
 			:desc => self.desc,
-			:cfs=>self.to_tree_json
+			:cfs=>self.to_tree_json,
+			:user=>{
+				:name=>self.user.try(:name),
+				:uid=>self.user.try(:uid)
+			}
 		}
 	end
 	

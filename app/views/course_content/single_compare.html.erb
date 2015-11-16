@@ -1,0 +1,116 @@
+<style>
+
+.background {
+    fill: #FFFFFF;
+    fill-opacity: 0.01;
+}
+
+.component {
+    fill: #e1e1e1;
+}
+
+.component .label {
+    //font-family: Myriad, "Helvetic Neue", Helvetica, Arial;
+    text-anchor: middle;
+    fill: #0000FF;
+}
+
+.arc {
+    stroke-weight:0.1;
+    fill: #4e8fff;
+}
+
+
+.arc2 {
+    stroke-weight:0.1;
+    fill: #3660b0;
+}
+
+
+.label {
+	//font-family:  Myriad, "Helvetic Neue", Helvetica, Arial;
+	text-anchor: middle;
+	font-size:16px;
+}
+
+.radial-svg {
+	//display: block;
+	margin: 0 auto;
+}
+</style>
+
+
+<div class="row no-padding-right no-margin-right">
+	<div class="col-md-7 no-padding-right">
+		<span id="cold" style="margin-left:40px;"></span>
+		<span id="sweety"></span>
+		<span id="hardness"></span>
+	</div>
+	<div class="col-md-offset- col-md-4 bg-white no-padding-right" style="float:right;border-radius: 4px;">
+		<div class="row" >
+			<div class="col-sm-12 col-md-12">
+				<h4>我的評分
+				<% if current_user.nil? %>
+					<small>使用此功能請先<a href="/login">登入</a></small>
+				<% end %>
+				</h4>
+			</div>
+		</div>
+		<div class="row" style="margin-top: 10px;">
+			<div class="col-sm-3 text-right"><label>涼度</label></div>
+			<div class="col-sm-9">
+				<select id="single-rating-cold">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>		
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3 text-right"><label>甜度</label></div>
+			<div class="col-sm-9">
+				<select id="single-rating-sweety">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>		
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-3 text-right"><label>深度</label></div>
+			<div class="col-sm-9">
+				<select id="single-rating-hardness">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="5">5</option>
+				</select>		
+			</div>
+		</div>
+		<br>
+	</div>
+</div>
+<script>
+	$(document).ready(function(){
+		var ctCopare=<%=@ct_compare_json.to_json.html_safe%>;
+		var userCtRated=<%=@user_rated_json.to_json.html_safe%>;
+		var ct_id=<%=@ct.id%>;
+		var logined=<%=current_user.present?%>;
+		radialProgress(document.getElementById('cold')).label("涼度 (<%=@ct_compare_json[:cold].arr.length%>人)").diameter(150).value(<%=@ct_compare_json[:cold].avg_score.to_f * 20%>).render();
+		radialProgress(document.getElementById('sweety')).label("甜度 (<%=@ct_compare_json[:sweety].arr.length%>人)").diameter(150).value(<%=@ct_compare_json[:sweety].avg_score.to_f * 20%>).render();
+		radialProgress(document.getElementById('hardness')).label("深度 (<%=@ct_compare_json[:hardness].arr.length%>人)").diameter(150).value(<%=@ct_compare_json[:hardness].avg_score.to_f * 20%>).render();
+		
+		gen_raty("single-rating-cold",ct_id,"cold",userCtRated.cold,!(logined||userCtRated.cold)); 
+		gen_raty("single-rating-sweety",ct_id,"sweety",userCtRated.sweety,(!logined)&&userCtRated.sweety); 
+		gen_raty("single-rating-hardness",ct_id,"hardness",userCtRated.hardness,(logined)&&userCtRated.hardness); 
+		
+	});	
+</script>
+
+
+

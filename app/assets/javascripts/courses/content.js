@@ -5,12 +5,44 @@
  * For courses/show/:id , page function control
  * Updated at 2015/5/11
  */
- 
-//= require jquery.raty.min
 
+//= require jquery-bar-rating
 //= require jquery.scrollTo.min
 //= require highcharts-custom
+//= require d3
+//= require radialProgress
 
+function gen_raty(id,ct_id,r_type,show_score,rated){
+	$("#"+id).barrating('show', {
+		theme: 'bars-movie',
+		initialRating: show_score,
+		showValues: false,
+		showSelectedRating: false,
+		onSelect:function(value, text, event){
+			if(!rated)
+				rate_course(ct_id,r_type,value);
+		}
+	});
+	$("#"+id).barrating('readonly', rated);
+}
+
+function rate_course(ct_id,r_type,score){
+	$.ajax({
+		type: "GET",
+		url: "/course_content/rate_cts",
+		dataType :"json",
+		data: {
+			ct_id: ct_id,
+			r_type: r_type,
+			score: score,   
+		},
+		success: function(d){
+			var new_count="<label>"+d.avg_score+"("+d.rate_count+")</label>";
+			$("#rating_"+r_type+'_'+ct_id+"_counts").html(new_count);
+			gen_raty(ct_id,r_type,d.avg_score,true);
+		},
+	});
+}
 
 function head_binding(allow, cd_id){
 	$('.edit-head').click(function(){

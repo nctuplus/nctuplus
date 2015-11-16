@@ -86,6 +86,8 @@ GEM
     coffee-script-source (1.7.0)
     colored (1.2)
     curb (0.8.5)
+    d3-rails (3.5.6)
+      railties (>= 3.1)
     devise (3.4.1)
       bcrypt (~> 3.0)
       orm_adapter (~> 0.1)
@@ -290,6 +292,7 @@ DEPENDENCIES
   brakeman
   coffee-rails (~> 4.0.0)
   curb
+  d3-rails
   devise
   em-resolv-replace
   eventmachine

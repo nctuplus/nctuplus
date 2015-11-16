@@ -88,3 +88,5 @@ gem "googlebooks"
 
 gem "bootstrap-switch-rails"
 gem 'zeroclipboard-rails'
+
+gem "d3-rails"

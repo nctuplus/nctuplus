@@ -7,6 +7,7 @@
 		</b>
 		{% if(cm){ %}
 			<b>畢業學分:{%=cm.total_credit%}</b>
+			<small>管理者: <a href="https://www.facebook.com/{%=cm.user.uid%}" target="_blank">{%=cm.user.name%}</a></small>
 			<button class="btn btn-info pull-right" onclick="showTip();">使用導覽</button>
 		{% } %}
 		<a href="http://aadm.nctu.edu.tw/chcourse/class03.aspx?ftype=3" class="pull-right btn btn-primary" target="_blank">

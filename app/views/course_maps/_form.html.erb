@@ -4,17 +4,15 @@
     <div class="panel-heading">
       <h4 class="panel-title">
         <a data-toggle="collapse" data-parent="#accordion" id="start1_title">
-        建立一個學程地圖
+        建立課程地圖
         </a>
       </h4>
     </div>
     <div id="start1" class="panel-collapse collapse in">
       <div class="panel-body">
       	<div class="col-md-offset-2">
-      		<h2>新增學程地圖</h2>
-			<% test=Department.new%>
-			<% test.id=0%>
-			<% test.ch_name="其他"%>
+      		<h2>新增課程地圖</h2>
+			
 			<%= form_for :course_map, url: course_maps_path, html:{:class=>"form-horizontal new-form"} do |f|%>
 				<div class="row">
 					<div class="col-md-2">
@@ -30,7 +28,7 @@
 					</div>
 					<div class="col-md-5">
 
-						<%= f.select :department_id, options_from_collection_for_select(Department.majorable.order("degree DESC").prepend(test),"id","ch_name"),{} ,{:class=>"form-control"}  %>
+						<%= f.select :department_id, options_from_collection_for_select(Department.majorable.order("degree DESC"),"id","ch_name"),{} ,{:class=>"form-control"}  %>
 					</div>
 				</div>
 				<div class="row">

@@ -75,6 +75,7 @@ Nctuplus::Application.routes.draw do
 	get "course_content/raider_list_like"
 	get "course_content/rate_cts"
 	get "course_content/get_compare"	
+	get "course_content/single_compare"	
 	get "course_content/get_course_info"
 	post "course_content/course_action"
 	

@@ -22,7 +22,9 @@
 				</span>
 			</div>
 		</div>
-
+		<div class="row" id="single-compare" >
+		</div>
+		
 		<div class="row bg-white">			
 			<h4 style="padding-left:15px;">
 				<i class="fa fa-gamepad"></i> 課程資訊：
@@ -151,6 +153,22 @@
 		});
 	
 		//teacher compare & rank
+		$("#single-compare").load("/course_content/single_compare?ct_id=<%=j @data[:course_teachership_id]%>", function() {
+			$('body').scrollspy('refresh');
+			$("#discuss").load("/discusses/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
+				$('body').scrollspy('refresh');
+				$("#files").load("/past_exams/course_page?ct_id=<%=@data[:course_teachership_id]%>", function() {
+					$('body').scrollspy('refresh');
+					$('body').scrollTo("#course-name",10,{offset:-80});
+					<% if params[:first_show]=="discussion" %>
+						$('body').scrollTo("#discuss",700,{offset:-60});
+					<% elsif params[:first_show]=="files" %>
+						$('body').scrollTo("#files",700,{offset:-60});
+					<% end %>
+				});
+			});
+		});
+		/*
 		$("#compare").load("/course_content/get_compare?c_id=<%=j @data[:course_id]%>", function() {
 			$('body').scrollspy('refresh');
 			$("#discuss").load("/discusses/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
@@ -166,7 +184,7 @@
 				});
 			});
 		});
-	
+		*/
 		// FB share	
 		<% share_url="#{root_url}courses/#{@data[:course_detail_id]}" %>
 		var share_url='<%=j share_url.html_safe %>';

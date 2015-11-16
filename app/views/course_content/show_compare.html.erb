@@ -1,79 +1,29 @@
 <div class="panel-heading">
-<h2>教授比一比</h2>
+	<h2>教授比一比</h2>
 </div>
 <div id="copare_container"></div>
+
 <script>
 	$(document).ready(function(){
 		var ctCopare=<%=@ct_compare_json.to_json.html_safe%>;
 		var userCtRated=<%=@user_rated_json.to_json.html_safe%>;
 		$("#copare_container").html(tmpl("compare_tmpl",ctCopare));
-
 		for(var i=0,ct,userRated;ct=ctCopare[i],userRated=userCtRated[i];i++){
-
-			gen_raty(ct.id,"cold",ct.cold.avg_score,userRated.cold); 
-			gen_raty(ct.id,"sweety",ct.sweety.avg_score,userRated.sweety); 
-			gen_raty(ct.id,"hardness",ct.hardness.avg_score,userRated.hardness); 
+			gen_raty("rating_cold"+'_'+ct.id,ct.id,"cold",ct.cold.avg_score,userRated.cold); 
+			gen_raty("rating_sweety"+'_'+ct.id,ct.id,"sweety",ct.sweety.avg_score,userRated.sweety); 
+			gen_raty("rating_hardness"+'_'+ct.id,ct.id,"hardness",ct.hardness.avg_score,userRated.hardness); 
 		}
 	});
-	function gen_raty(ct_id,r_type,show_score,rated){
-		$("#rating_"+r_type+'_'+ct_id).raty({
-			score:show_score,
-			readOnly :<%=current_user.nil? %>,
-			cancel :rated,
-			cancelOff : 'cancel-custom-off.png',
-			cancelOn  : 'cancel-custom-on.png',
-			noRatedMsg : "請先登入!",
-			cancelHint : '取消評分',
-			click: function(score, evt) {
-				//alert($(this).raty('cancel'));
-				if((rated&&score==null)||!rated)
-					rate_course(ct_id,r_type,score);
-			}
-		});
-	}
-
-	function printScore(text,id,r_type,obj){
-		var res='<div class="row "><div class="col-sm-3 col-sm-offset-1 row-condensed">';
-			res+='<label>'+text+'</label>';
-			res+='</div><div class="col-sm-5 row-condensed">';
-			res+='<div id="rating_'+r_type+'_'+id+'"></div>';
-			res+='</div>';
-			res+='<div class="col-sm-1 row-condensed" id="rating_'+r_type+'_'+id+'_counts">';
-			res+='<label>'+obj.avg_score+'('+obj.rate_count+')</label>';
-			res+="</div></div>";
-		return res;
-	}
 	
-	function rate_course(ct_id,r_type,score){
-		
-		$.ajax({
-			type: "GET",
-			url: "/course_content/rate_cts",
-			dataType :"json",
-			data: {
-				ct_id: ct_id,
-				r_type: r_type,
-				score: score,   
-			},
-			success: function(data){
-				var d=data;//JSON.parse(data);
-				
-				var new_count="<label>"+d.avg_score+"("+d.rate_count+")</label>";
-				$("#rating_"+r_type+'_'+ct_id+"_counts").html(new_count);
-				$("#rating_"+r_type+'_'+ct_id).raty('set',{
-					cancel: d.avg_score!=0,
-					score:d.avg_score,
-					click: function(score, evt) {
-						//alert($(this).raty('cancel'));
-						if((d.avg_score!=0&&score==null)||(d.avg_score==0&&score))
-							rate_course(ct_id,r_type,score);
-					}
-				});
-				
-			},
-		});
+	function printScore(_text,_id,_r_type,_rate){
+		var data={
+			text:_text,
+			id:_id,
+			r_type:_r_type,
+			rate:_rate
+		};
+		return tmpl("point-tmpl",data);
 	}
-	
 </script>
 
 <script type="text/x-tmpl" id="compare_tmpl">
@@ -109,10 +59,27 @@
 	</div>
 {% } %}
 
-
 </script>
 
-
+<script type="text/x-tmpl" id="point-tmpl">
+	<div class="row">
+		<div class="col-sm-2 col-sm-offset-1 row-condensed">
+			<label>{%=o.text%}</label>
+		</div>
+		<div class="col-sm-7 row-condensed">
+			<select id="rating_{%=o.r_type%}_{%=o.id%}">
+				<option value="1">1</option>
+				<option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+			</select>		
+		</div>
+		<div class="col-sm-1 row-condensed" id="rating_{%=o.r_type%}_{%=o.id%}_counts">
+			<label>{%=o.rate.avg_score%}({%=o.rate.rate_count.toString()%})</label>
+			</div>
+		</div>
+</script>
 
 
 

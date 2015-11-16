@@ -39,7 +39,7 @@ class CourseContentController < ApplicationController
 		
 		#render :nothing => true, :status => 200, :content_type => 'text/html'
 
-		result={:avg_score=>target.avg_score, :rate_count=>target.rate_count, :score=>score}
+		result={:avg_score=>target.avg_score.to_s, :rate_count=>target.rate_count.to_s, :score=>score.to_s}
 		respond_to do |format|
 			format.html{render :layout=>false,:nothing =>true }
 			format.json{render json:result}
@@ -168,9 +168,9 @@ class CourseContentController < ApplicationController
 			}
 			
 			user_ratings={
-				:cold=>current_user && !cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
-				:sweety=>current_user && !sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty? ,
-				:hardness=>current_user && !hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr.user_id==current_user.id}.empty?
+				:cold=>current_user && !cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty? ,
+				:sweety=>current_user && !sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty? ,
+				:hardness=>current_user && !hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty?
 			}
 			@ct_compare_json.push(res)
 			@user_rated_json.push(user_ratings)
@@ -178,4 +178,25 @@ class CourseContentController < ApplicationController
 		render "show_compare", :layout=>false
 	end
 	
+	def single_compare
+		@ct=CourseTeachership.includes(:course_teacher_ratings, :course_details).find(params[:ct_id])
+		@course = @ct.course			
+		cold_ratings=@ct.cold_ratings
+		sweety_ratings=@ct.sweety_ratings
+		hardness_ratings=@ct.hardness_ratings		
+		@ct_compare_json={
+			:id=>@ct.id,
+			:cd_id=>@ct.course_details.last.id,
+			:name=>@ct.teacher_name,
+			:cold=>cold_ratings,
+			:sweety=>sweety_ratings,
+			:hardness=>hardness_ratings,
+		}
+		@user_rated_json={
+			:cold=>current_user && !cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty? ,
+			:sweety=>current_user && !sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty? ,
+			:hardness=>current_user && !hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty?
+		}
+		render "single_compare", :layout=>false
+	end
 end
