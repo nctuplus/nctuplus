@@ -37,9 +37,10 @@ function rate_course(ct_id,r_type,score){
 			score: score,   
 		},
 		success: function(d){
-			var new_count="<label>"+d.avg_score+"("+d.rate_count+")</label>";
+			$("#single-compare").load("/course_content/single_compare?ct_id="+ct_id);
+			/*var new_count="<label>"+d.avg_score+"("+d.rate_count+")</label>";
 			$("#rating_"+r_type+'_'+ct_id+"_counts").html(new_count);
-			gen_raty(ct_id,r_type,d.avg_score,true);
+			gen_raty(ct_id,r_type,d.avg_score,true);*/
 		},
 	});
 }

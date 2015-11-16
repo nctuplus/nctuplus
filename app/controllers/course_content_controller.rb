@@ -193,9 +193,9 @@ class CourseContentController < ApplicationController
 			:hardness=>hardness_ratings,
 		}
 		@user_rated_json={
-			:cold=>current_user && !cold_ratings.nil? && !cold_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty? ,
-			:sweety=>current_user && !sweety_ratings.nil? && !sweety_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty? ,
-			:hardness=>current_user && !hardness_ratings.nil? && !hardness_ratings.arr.select{|cr|cr[:user_id]==current_user.id}.empty?
+			:cold=>current_user && cold_ratings &&  cold_ratings.arr.select{|cr|cr[:user_id]==current_user.id}[0].try(:[], :score) ,
+			:sweety=>current_user && sweety_ratings && sweety_ratings.arr.select{|cr|cr[:user_id]==current_user.id}[0].try(:[], :score) ,
+			:hardness=>current_user && hardness_ratings && hardness_ratings.arr.select{|cr|cr[:user_id]==current_user.id}[0].try(:[], :score)
 		}
 		render "single_compare", :layout=>false
 	end

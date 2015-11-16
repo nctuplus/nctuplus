@@ -60,6 +60,7 @@
 			<div class="col-sm-3 text-right"><label>涼度</label></div>
 			<div class="col-sm-9">
 				<select id="single-rating-cold">
+					<option value=""></option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -72,6 +73,7 @@
 			<div class="col-sm-3 text-right"><label>甜度</label></div>
 			<div class="col-sm-9">
 				<select id="single-rating-sweety">
+					<option value=""></option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -84,6 +86,7 @@
 			<div class="col-sm-3 text-right"><label>深度</label></div>
 			<div class="col-sm-9">
 				<select id="single-rating-hardness">
+					<option value=""></option>
 					<option value="1">1</option>
 					<option value="2">2</option>
 					<option value="3">3</option>
@@ -105,9 +108,9 @@
 		radialProgress(document.getElementById('sweety')).label("甜度 (<%=@ct_compare_json[:sweety].arr.length%>人)").diameter(150).value(<%=@ct_compare_json[:sweety].avg_score.to_f * 20%>).render();
 		radialProgress(document.getElementById('hardness')).label("深度 (<%=@ct_compare_json[:hardness].arr.length%>人)").diameter(150).value(<%=@ct_compare_json[:hardness].avg_score.to_f * 20%>).render();
 		
-		gen_raty("single-rating-cold",ct_id,"cold",userCtRated.cold,!(logined||userCtRated.cold)); 
-		gen_raty("single-rating-sweety",ct_id,"sweety",userCtRated.sweety,(!logined)&&userCtRated.sweety); 
-		gen_raty("single-rating-hardness",ct_id,"hardness",userCtRated.hardness,(logined)&&userCtRated.hardness); 
+		gen_raty("single-rating-cold",ct_id,"cold",userCtRated.cold,!logined||userCtRated.cold!=null); 
+		gen_raty("single-rating-sweety",ct_id,"sweety",userCtRated.sweety,!logined||userCtRated.sweety!=null); 
+		gen_raty("single-rating-hardness",ct_id,"hardness",userCtRated.hardness,!logined||userCtRated.hardness!=null); 
 		
 	});	
 </script>
