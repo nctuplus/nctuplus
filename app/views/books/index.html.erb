@@ -9,6 +9,7 @@
 		background: #f8f8f8;
 		//margin: 15px 0 0;
 		padding: 10px;
+		margin-top: 12px;
 		border-top: 1px solid #ccc;
 		margin-left: -4px;
 		margin-right: -4px;
@@ -64,10 +65,9 @@
 								</strong><br>
 								<strong data-toggle="tooltip" title="<%=sale_book.book.authors%>">
 									作者:<%=sale_book.book.authors.truncate(15)%>
-								</strong>
+								</strong><br>
 							</span>
-							
-							<p data-toggle="tooltip" style="margin-top:3px;" title="
+							<span data-toggle="tooltip" style="margin-top:3px;/*margin-bottom: 13px;*/" title="
 								<% if sale_book.course_teacherships.present?%>
 								<% sale_book.course_teacherships.each do |cts|%>
 									<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
@@ -77,8 +77,8 @@
 								<% end %>
 								">
 								<%="課程:#{sale_book.course_teacherships.first.try(:course_ch_name)} 老師:#{sale_book.course_teacherships.first.try(:teacher_name)}".truncate(15) %><br>
-							</p>
-							
+							</span>
+
 						</div>
 						
 
@@ -103,7 +103,12 @@
 </div>
 <script>
 	$(function () {
-		$('[data-toggle="tooltip"]').tooltip({html: true,placement: "bottom"});
+		$("[data-toggle='tooltip']").tooltip({
+				content: function () {
+						return $(this).prop('title');
+				},
+				position: { my: "left-20 top+20"}
+		});
 	});
 	function setBookSaled(id){
 		if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))

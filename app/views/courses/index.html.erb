@@ -1,4 +1,4 @@
-
+<p data-toggle="tooltip" title="GGGGGG <br>" data-html="true">zzzzzz</p>
 <%=render 'courses/search/search_js' %>
 <br>
 <div id="results" class="container">
@@ -89,6 +89,12 @@
 
 <script>
 	$(function(){
+		//$("p").tooltip({html:true});
+		$("p").tooltip({
+          content: function () {
+              return $(this).prop('title');
+          }
+      });
 		change_degree($("#degree"));
 		$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
 	
