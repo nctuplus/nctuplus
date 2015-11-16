@@ -3,7 +3,7 @@
 <%= javascript_include_tag "fullcalendar/fullcalendar.min", "data-turbolinks-track" => true %>
 
 <script>
-
+/*
 	$(document).ready(function() {
 
 		$('#calendar').fullCalendar({
@@ -68,7 +68,7 @@
 		});
 		
 	});
-
+*/
 </script>
 <style>
 	#calendar {
@@ -76,4 +76,6 @@
 		margin: 0 auto;
 	}
 </style>
+
+<%=link_to "新增活動", new_event_path %>
 <div id='calendar' class="bg-white"></div>

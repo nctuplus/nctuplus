@@ -24,10 +24,10 @@ class EventsController < ApplicationController
 		@event.user_id=current_user.id
 		#@event.content=
 		@event.save!
-		@img = EventImage.new#(img_params)
-		@img.event_id=@event.id
-		@img.img=params[:img]
-		@img.save
+		#@img = EventImage.new
+		#@img.event_id=@event.id
+		#@img.img=params[:img]
+		#@img.save
 		redirect_to event_url(@event)#:, :id=>@event.id
 	end
 	def destroy
@@ -45,7 +45,7 @@ class EventsController < ApplicationController
 	private
 
   def event_params
-    params.require(:event).permit(:title, :content, :begin_time, :end_time, :url, :organization)
+    params.require(:event).permit(:event_type, :title, :content, :begin_time, :end_time, :organization)
   end
 	def img_params
     params.require(:event_image).permit(:img)

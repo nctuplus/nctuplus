@@ -16,43 +16,57 @@
 
 
 
-<div class="container col-md-offset-1">
-<%=form_for @event, :html => { :multipart => true } do |f| %>
-	<div id="imageContainer" style="min-width:880px;min-height:440px;width:880px;background-color:white;"></div>
-	<%= file_field_tag "img" %>
-	<!--<input type="file" id="file-input">-->
-	<div class="row">		
-		<div class="col-md-10">
-			<%=f.text_field :title,:class=>"form-control", :placeholder=>"活動/事件名稱", :required=>"true"%>
-		</div>
-	</div>
-	<div class="row">		
-		<div class="col-md-2">
-			主辦單位<br>
-			<%=f.text_field :organization, :class=>"form-control", :placeholder=>"主辦單位(選填)"%>
-		</div>		
-		<div class="col-md-2">
-			活動網址<br>
-			<%=f.text_field :url, :class=>"form-control", :placeholder=>"網址(選填)"%>
-		</div>		
-	</div>
-	<div class="row">		
-		<div class="col-md-2">
-			開始時間<br>
-			<%=f.text_field :begin_time, :class=>"form-control datepicker", :placeholder=>"開始時間", :data_behaviour=>'datepicker'%>
-		</div>		
-		<div class="col-md-2">
-			結束時間<br>
-			<%=f.text_field :end_time, :class=>"form-control datepicker", :placeholder=>"結束時間", :data_behaviour=>'datepicker'%>
-		</div>		
-	</div>
+<div class="container bg-white">
 	<div class="row">
-		<div class="col-md-10">
-			<%=f.text_area :content,{:maxlength=>5, :size=>10, :class=>"tinymce", :placeholder=>"內容"}%>
+    <div class="col-md-9 col-md-offset-1">
+			<%=form_for @event, :html => { :multipart => true, :class=>"form-horizontal" } do |f| %>
+				<!--<div id="imageContainer" style="min-width:880px;min-height:440px;width:880px;background-color:white;"></div>
+				<%= file_field_tag "img" %>
+				-->
+				<!--<input type="file" id="file-input">-->
+				<div class="form-group">
+					<label class="col-sm-2 control-label">活動類型</label>
+					<div class="col-sm-3">
+						<%=f.text_field :event_type,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
+					</div>
+					<label class="col-sm-2 control-label">活動名稱</label>
+					<div class="col-sm-5">
+						<%=f.text_field :title,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
+					</div>	
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">主辦單位</label>
+					<div class="col-sm-4">
+						<%=f.text_field :organization,:class=>"form-control", :placeholder=>"選填"%>
+					</div>
+					<label class="col-sm-2 control-label">地點</label>
+					<div class="col-sm-4">
+						<%=f.text_field :location,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">開始時間</label>
+					<div class="col-sm-4">
+						<%=f.text_field :begin_time,:class=>"form-control datepicker", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker'%>
+					</div>
+					<label class="col-sm-2 control-label">結束時間</label>
+					<div class="col-sm-4">
+						<%=f.text_field :end_time,:class=>"form-control", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker'%>
+					</div>
+				</div>
+				<div class="row">
+					<label class="col-sm-2 control-label">內容</label>
+					<div class="col-md-10">
+						<%=f.text_area :content,{:maxlength=>35, :size=>30, :class=>"tinymce", :placeholder=>"內容",:style=>"height:200px;"}%>
+					</div>
+				</div>
+				<br>
+				<div class="col-md-12 text-right">
+					<%=f.submit "送出",class:"btn btn-lg btn-success"%>
+				</div>
+			<% end %>
 		</div>
 	</div>
-	<%=f.submit "送出",class:"btn btn-success"%>
-<% end %>
 </div>
 
 

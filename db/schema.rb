@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020144907) do
+ActiveRecord::Schema.define(version: 20151114000005) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -370,6 +370,23 @@ ActiveRecord::Schema.define(version: 20151020144907) do
 
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
+
+  create_table "events", force: true do |t|
+    t.string   "event_type"
+    t.string   "title"
+    t.string   "organization"
+    t.string   "location"
+    t.string   "lat_long"
+    t.text     "content",      limit: 2147483647
+    t.datetime "begin_time"
+    t.datetime "end_time"
+    t.integer  "user_id"
+    t.integer  "view_times"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
