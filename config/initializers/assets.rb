@@ -15,6 +15,7 @@ Rails.application.config.assets.precompile +=[
 	'user_course_stat/checker.js',
 	'user_course_stat/cm_check-helper.js',
 	'user_course_stat/report-table.js',
+	'admin_statistics/index.js',
 	'books.js',
 	'new-index.js',
 	'new-index.css',
