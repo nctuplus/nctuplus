@@ -9,7 +9,7 @@
 	function addCourse(c_ids){ //action="add"
 	<% if params[:hide_group]=="true"%>
 		// In course tree
-		if(!check_field_selected())
+		if(!checkFieldSelected())
 			return false ;	
 		$('#alert-msg').removeClass().html('<%=j fa_icon "spinner spin"%>');	
 		$.ajax({

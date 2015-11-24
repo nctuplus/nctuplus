@@ -5,7 +5,7 @@
 	var pluginName = 'StatisticsTable';
 	
 	var _default = {
-	  degrees : ["一", "二" ,"三" , "四"],
+	  degrees : ["一", "二" ,"三" , "四", "五"],
 	  gra_name : "大",
 	  commons: ["必修", "外語", "通識"]
 	} ;
@@ -17,7 +17,8 @@
 		this.course_map = $.extend(true, [], options.course_map);
 		this.user_courses = $.extend(true, [], options.user_courses);
 		this.user_info = $.extend(true, [], options.user_info);
-//		logDebug(this.user_info);
+	//	logDebug(this.user_info);
+	//	logDebug(this.user_courses);
 //		delete options ;
 		
 		this.data = null ;

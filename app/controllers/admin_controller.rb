@@ -38,7 +38,7 @@ class AdminController < ApplicationController
 		user.role = params[:role].to_i
 		user.save!
 		
-		render :layout=>false, :nothing=> true, :status=>200, :content_type => 'text/html'
+		render :nothing=> true, :status=>200
 	end
 	
 	def ee104
