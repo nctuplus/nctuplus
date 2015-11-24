@@ -23,8 +23,9 @@
 		
 		this.data = null ;
 		
-		// if have 大一上, 大一下, then length = 2
-		_default.semester_length = (this.user_info.year_now - this.user_info.year + 1) * 2 - (this.user_info.half_now - 2) ;
+		// The number of th cells for the user
+		_default.semester_length = (this.user_info.year_now - this.user_info.year) * 2 + this.user_info.half_now  ;
+		// The prefix of th html ex. "研"一上, ("大")一上 
 		_default.gra_name = (this.user_info.degree==2) ? "研" : "" ;
 		
 		this._addHeader('ㄧ. 本系所專業科目', '#A9F5BC');
@@ -156,11 +157,11 @@
 		    function(e){ 
 		      return (e.cf_id==0 && $.inArray(e.cos_type, _default.commons)!=-1); 
 		    }) ;
-		  
+	//	  logDebug(matchs);
 		  if(matchs.length>0)
 		  {
 		    this._addHeader('三. 校訂共同科目', '#F4FA58');
-		    matchs = groupBy(matchs, function(item){ return [item.course_id] ;});
+		    matchs = groupBy(matchs, function(item){ return [item.cd_id] ;});
 		    matchs = matchs.sort(function(a, b){ return (a[0].name > b[0].name);});
 	//	    logDebug(matchs);  
 		    for(var i=0, courses; courses = matchs[i]; ++i)
@@ -177,14 +178,17 @@
 		    function(e){ 
 		      return (e.cf_id==0 && e.cos_type=="選修"); 
 		    }) ;
-		  logDebug(matchs);  
+		  
 		  if(matchs.length>0)
 		  {
 		    this._addHeader('二. 其他選修科目(外系所選修)', '#FAAC58');
-		    matchs = groupBy(matchs, function(item){ return [item.course_id] ;});
-		    matchs = matchs.sort(function(a, b){ return (a[0].name > b[0].name);});
-		    for(var i=0, courses; courses = matchs[i]; ++i)
+		    matchs = groupBy(matchs, function(item){ return item.cd_id ;});
+		    logDebug(matchs);
+				matchs = matchs.sort(function(a, b){ return (a[0].name > b[0].name);});
+		    //logDebug(matchs);  
+				for(var i=0, courses; courses = matchs[i]; ++i)
 		    {
+					//logDebug(courses);
 		      var $row = this._createOneRow(courses[0], courses);
 		      $row.find('td:first').before($('<td>').attr('colspan', 2));
 		      this.$element.append($row);
