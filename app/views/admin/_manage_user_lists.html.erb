@@ -1,8 +1,8 @@
 <tr class="row">
 	<td>
 		<% if user.auth_facebook%>
-			<%= image_tag "http://graph.facebook.com/"<<user.auth_facebook.uid<<"/picture", size: "25x25" %>
-			<%= link_to user.name, "http://www.facebook.com/"<<user.auth_facebook.uid, target:"_blank" %>
+			<%= image_tag "https://graph.facebook.com/"<<user.auth_facebook.uid<<"/picture", size: "25x25" %>
+			<%= link_to user.name, "https://www.facebook.com/"<<user.auth_facebook.uid, target:"_blank" %>
 		<% else %>
 			<%=user.student_id||"error"	%>
 		<% end%>	

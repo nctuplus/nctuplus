@@ -1,5 +1,5 @@
 # Remember to update this file when you add or delete custom js files in app/assets/javascripts
-# Modified at 2015/6/20
+# Modified at 2015/11/17
 
 Rails.application.config.assets.precompile +=[
 	'tmpl.min.js',

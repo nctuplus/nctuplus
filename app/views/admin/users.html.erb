@@ -1,7 +1,19 @@
 <%= javascript_include_tag "courses/content", "data-turbolinks-track" => false %>
 <br>
 <div id="dept-stat-chart" class="container hidden" style="min-width:1024px;" ></div>
-<button class="btn btn-success" onclick="showDeptChart();">顯示系級統計</button>
+</br>
+<div class="row">
+	<div class="col-md-offset-2 col-md-4">
+		<%=text_field_tag :search, params[:search], :class=>"form-control", :placeholder=>"搜尋使用者"%>
+	</div>
+	<div class="col-md-2">
+		<button class="btn btn-info" id="submit-search" >Search</button>
+	</div>
+	<div class="col-md-2">
+		<button class="btn btn-success" onclick="showDeptChart();">顯示系級統計</button>
+	</div>
+</div>
+<hr>
 <table class="table" id="dataTables-paginate">
 	<thead>
 		<tr class="row">
@@ -25,6 +37,13 @@
 <script>
 
 	$(function () {
+		$("#submit-search").click(function(){
+			var val = $("#search").val();
+			if(val.length==0) return false ;
+			var cur_loc = document.location ;
+			document.location.href = cur_loc["origin"]+cur_loc["pathname"]+"?search="+val;
+		});
+		
 		$(".course_map").change(function(){
 			var cm_id=$(this).val();
 			$.ajax({
