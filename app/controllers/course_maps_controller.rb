@@ -301,13 +301,13 @@ class CourseMapsController < ApplicationController
 		cf = CourseField.find(params[:target_id])
 		data = []
 		
-		cf.course_field_lists.includes(:course).each do |list|
+		cf.course_field_lists.order("updated_at DESC").includes(:course).each do |list|
 			course = 0
 			if list.course_group_id  # it is a group header
 				cg = list.course_group
 			#	leader = cg.lead_group_list
 				groups = []
-				cg.course_group_lists.includes(:course).each do |cgl|				
+				cg.course_group_lists.order("updated_at DESC").includes(:course).each do |cgl|				
 					if cgl.lead == 1
 						course = cgl.course
 					else
@@ -352,7 +352,7 @@ class CourseMapsController < ApplicationController
 	
 	def show_course_group_list
 		cg = CourseGroup.find(params[:target_id])
-		data=cg.course_group_lists.includes(:course).map{|l|{
+		data=cg.course_group_lists.order("updated_at DESC").includes(:course).map{|l|{
 			:id=>l.id,
 			:course_id=>l.course_id,
 			:course_name=>l.course.ch_name,

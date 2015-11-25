@@ -182,10 +182,10 @@
 		  if(matchs.length>0)
 		  {
 		    this._addHeader('二. 其他選修科目(外系所選修)', '#FAAC58');
-		    matchs = groupBy(matchs, function(item){ return item.cd_id ;});
-		    logDebug(matchs);
+		    matchs = groupBy(matchs, function(item){ return [item.cd_id] ;});
+		    //logDebug(matchs);
 				matchs = matchs.sort(function(a, b){ return (a[0].name > b[0].name);});
-		    //logDebug(matchs);  
+		    logDebug(matchs);  
 				for(var i=0, courses; courses = matchs[i]; ++i)
 		    {
 					//logDebug(courses);
