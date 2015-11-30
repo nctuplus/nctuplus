@@ -3,79 +3,70 @@
 <%= javascript_include_tag "fullcalendar/fullcalendar.min", "data-turbolinks-track" => true %>
 
 <script>
-/*
-	$(document).ready(function() {
 
+	$(document).ready(function() {
+		var events=<%=@event_data.html_safe%>;
 		$('#calendar').fullCalendar({
-			defaultDate: '2015-02-12',
-			//eventLimit: true, // allow "more" link when too many events
-			events: [
-				{
-					title: 'All Day Event',
-					start: '2015-02-01'
-				},
-				{
-					title: 'Long Event',
-					start: '2015-02-07',
-					end: '2015-02-10'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2015-02-09T16:00:00'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2015-02-16T16:00:00'
-				},
-				{
-					title: 'Conference',
-					start: '2015-02-11',
-					end: '2015-02-13'
-				},
-				{
-					title: 'Meeting',
-					start: '2015-02-12T10:30:00',
-					end: '2015-02-12T12:30:00'
-				},
-				{
-					title: 'Lunch',
-					start: '2015-02-12T12:00:00'
-				},
-				{
-					title: 'Meeting',
-					start: '2015-02-12T14:30:00'
-				},
-				{
-					title: 'Happy Hour',
-					start: '2015-02-12T17:30:00'
-				},
-				{
-					title: 'Dinner',
-					start: '2015-02-12T20:00:00'
-				},
-				{
-					title: 'Birthday Party',
-					start: '2015-02-13T07:00:00'
-				},
-				{
-					title: 'Click for Google',
-					url: 'http://google.com/',
-					start: '2015-02-28'
+			header:{
+				left: "prev,next",
+				center: "title",
+				right: "month,agendaWeek,agendaDay"
+			},
+			selectable: true,
+			selectHelper: true,
+			select: function(start,end){
+				if(confirm("是否在此時間開新活動?")){
+					window.location="/events/new?start="+start+"&end="+end;
 				}
-			]
+			},
+			events: events,
+			eventClick: function(calEvent, jsEvent, view) {
+				window.location="/events/"+calEvent.id;
+				/*
+        console.log('Event: ' + calEvent.id);
+        console.log('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+        console.log('View: ' + view.name);
+
+        // change the border color just for fun
+        $(this).css('border-color', 'red');
+				*/
+			},
+			
 		});
-		
 	});
-*/
+
 </script>
 <style>
 	#calendar {
 		max-width: 900px;
 		margin: 0 auto;
 	}
+	.fc-event{
+    cursor: pointer;
+	}
+	.講座{
+		background-color: #33135B;
+		border-color: #33135B;
+	}
+	.表演{
+		background-color: #3a87ad;
+		border-color: #3a87ad;
+	}
+	.比賽{
+		background-color: #6C9C2A;
+		border-color: #6C9C2A;
+	}
+	.擺攤{
+		background-color: #B16919;
+		border-color: #B16919;
+	}
+	.其他{
+		background-color: #922D1B;
+		border-color: #922D1B;
+	}
 </style>
-
-<%=link_to "新增活動", new_event_path %>
+<div class="col-md-offset-2">
+	<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
+</div>
+<br>
 <div id='calendar' class="bg-white"></div>

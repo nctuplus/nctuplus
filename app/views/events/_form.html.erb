@@ -1,40 +1,74 @@
 <%= javascript_include_tag "event_create", "data-turbolinks-track" => true %>
 <%= tinymce_assets %>
 <style>
-.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
-.ui-timepicker-div dl { text-align: left; }
-.ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
-.ui-timepicker-div dl dd { margin: 0 10px 10px 45%; }
-.ui-timepicker-div td { font-size: 90%; }
-.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
+	.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
+	.ui-timepicker-div dl { text-align: left; }
+	.ui-timepicker-div dl dt { float: left; clear:left; padding: 0 0 0 5px; }
+	.ui-timepicker-div dl dd { margin: 0 10px 10px 45%; }
+	.ui-timepicker-div td { font-size: 90%; }
+	.ui-tpicker-grid-label { background: none; border: none; margin: 0; padding: 0; }
 
-.ui-timepicker-rtl{ direction: rtl; }
-.ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
-.ui-timepicker-rtl dl dt{ float: right; clear: right; }
-.ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
+	.ui-timepicker-rtl{ direction: rtl; }
+	.ui-timepicker-rtl dl { text-align: right; padding: 0 5px 0 0; }
+	.ui-timepicker-rtl dl dt{ float: right; clear: right; }
+	.ui-timepicker-rtl dl dd { margin: 0 45% 10px 10px; }
+	.input-group-btn select {
+		border-color: #ccc;
+		margin-top: 0px;
+		margin-bottom: 0px;
+		padding-top: 5.5px;
+		//padding-top: 4px;
+		padding-bottom: 5.5px;
+	}
 </style>
 
 
 
 <div class="container bg-white">
+	<br>
 	<div class="row">
     <div class="col-md-9 col-md-offset-1">
 			<%=form_for @event, :html => { :multipart => true, :class=>"form-horizontal" } do |f| %>
-				<!--<div id="imageContainer" style="min-width:880px;min-height:440px;width:880px;background-color:white;"></div>
-				<%= file_field_tag "img" %>
-				-->
+				<div class="form-group vertical-center" style="min-height:0vh;">
+          <label class="col-sm-2 control-label" >圖片</label>
+					<div class="col-sm-10 col-xs-10">
+						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
+						<div id="image-container" onclick="$('#event_cover').click();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
+							點選以上傳,建議800x400以達最佳效果(需小於2MB)
+							<%=@event.new_record? ? "" : @event.cover_image%>
+						</div>
+					</div>
+        </div>
 				<!--<input type="file" id="file-input">-->
 				<div class="form-group">
-					<label class="col-sm-2 control-label">活動類型</label>
-					<div class="col-sm-3">
-						<%=f.text_field :event_type,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
+					<label class="col-sm-2 control-label">類型/名稱</label>
+					<div class="col-sm-10">
+						<div class="input-group">
+							<div class="input-group-btn">
+								<%=f.select :event_type,@event_type_sel,{:prompt=>"類型"},{:class=>"btn", :required=>"true"}%>
+							</div>
+							<%=f.text_field :title,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
+						</div>
 					</div>
-					<label class="col-sm-2 control-label">活動名稱</label>
-					<div class="col-sm-5">
+					<!--
+					<div class="col-sm-10">
 						<%=f.text_field :title,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
-					</div>	
+					</div>
+					-->
 				</div>
 				<div class="form-group">
+					<!--
+					<label class="col-sm-2 control-label">類型</label>
+					<div class="col-sm-4">					
+						<%=f.select :event_type,@event_type_sel,{:prompt=>"必填"},{:class=>"form-control", :required=>"true"}%>
+					</div>
+					-->
+					<label class="col-sm-2 control-label">網址</label>
+					<div class="col-sm-10">
+						<%=f.text_field :url,:class=>"form-control", :placeholder=>"選填", :required=>"true"%>
+					</div>
+				</div>
+				<div class="form-group">					
 					<label class="col-sm-2 control-label">主辦單位</label>
 					<div class="col-sm-4">
 						<%=f.text_field :organization,:class=>"form-control", :placeholder=>"選填"%>
@@ -47,14 +81,14 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">開始時間</label>
 					<div class="col-sm-4">
-						<%=f.text_field :begin_time,:class=>"form-control datepicker", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker'%>
+						<%=f.text_field :begin_time,:class=>"form-control datepicker", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker', :readonly=>"true", :style=>"background-color: white;"%>
 					</div>
 					<label class="col-sm-2 control-label">結束時間</label>
 					<div class="col-sm-4">
-						<%=f.text_field :end_time,:class=>"form-control", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker'%>
+						<%=f.text_field :end_time,:class=>"form-control", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker', :readonly=>"true", :style=>"background-color: white;"%>
 					</div>
 				</div>
-				<div class="row">
+				<div class="form-group">
 					<label class="col-sm-2 control-label">內容</label>
 					<div class="col-md-10">
 						<%=f.text_area :content,{:maxlength=>35, :size=>30, :class=>"tinymce", :placeholder=>"內容",:style=>"height:200px;"}%>
@@ -62,40 +96,29 @@
 				</div>
 				<br>
 				<div class="col-md-12 text-right">
+					<button onclick="preview();return false;" class="btn btn-lg btn-primary">預覽</button>
 					<%=f.submit "送出",class:"btn btn-lg btn-success"%>
 				</div>
 			<% end %>
 		</div>
 	</div>
+	<br>
 </div>
 
 
 <script>
 
 $(document).ready(function(){
-	$('#img').change(function (e) {
-		loadImage(
-			e.target.files[0],
-			function (img) {
-				$("#imageContainer").html(img);
-			},
-			{maxWidth: 880,maxHeight:440} // Options
-		);
-	});
-/*
-	$('.datepicker').datetimepicker({
-		dateFormat: "yy-mm-dd",
-		timeFormat: 'HH:mm',
-		//startDate: "2013/11/17",
-		language: "zh-TW"
-	});
-*/
+
+	initUpload();
+
 	var startDateTextBox = $('#event_begin_time');
 	var endDateTextBox = $('#event_end_time');
+	
 	startDateTextBox.datetimepicker({ 
 		dateFormat: "yy-mm-dd",
 		timeFormat: 'HH:mm',
-		
+
 		onClose: function(dateText, inst) {
 			if (endDateTextBox.val() != '') {
 				var testStartDate = startDateTextBox.datetimepicker('getDate');
@@ -129,6 +152,18 @@ $(document).ready(function(){
 			startDateTextBox.datetimepicker('option', 'maxDate', endDateTextBox.datetimepicker('getDate') );
 		}
 	});
+	//set the initial time if form calendar
+	<% if params[:start].present? %>
+		var start_time=new Date(<%=params[:start]%>);	
+		startDateTextBox.val(start_time.toJSON());
+	<% end %>
+	
+	
+	<% if params[:end].present? %>
+		var end_time=new Date(<%=params[:end]%>);
+		endDateTextBox.val(end_time.toJSON());
+	<% end %>
+	
 });
 </script>
 

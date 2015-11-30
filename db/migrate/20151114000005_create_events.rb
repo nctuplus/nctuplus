@@ -2,20 +2,19 @@ class CreateEvents < ActiveRecord::Migration
   def change
     create_table :events do |t|
 			t.string :event_type
-			t.string :title
+			t.string :title, :null=>false
 			t.string :organization
-			t.string :location
-			t.string :lat_long		
-			#t.text :url, :limit=>2083
-			t.text :content, :limit => 4294967295
-			t.datetime :begin_time
-			t.datetime :end_time
-			t.integer :user_id
-			#t.integer :likes
-			t.integer :view_times
+			t.string :location, :null=>false
+			t.string :lat_long
+			t.string :url, :limit=>2083
+			t.text :content, :limit => 4294967295, :null=>false
+			t.datetime :begin_time, :null=>false
+			t.datetime :end_time, :null=>false
+			t.integer :user_id, :null=>false
+			t.integer :view_times, :null=>false, :default=>0
+			t.attachment :cover
       t.timestamps
     end
 		add_index :events, :user_id
-		#add_index :events, :location_id
   end
 end

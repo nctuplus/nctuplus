@@ -1,19 +1,12 @@
-<!--
-<div class="" style="width:880px;height:440px;display:inline-block;overflow:hidden;">
-
-<% #if @event.event_image %>
-<%# image_tag @event.event_image.img.url,style:"width:100%;height:100%;"  %>
-
-<% #end %>
-
-</div>
--->
-	
 
 <div class="row col-md-offset-2">
+	<%=image_tag @event.cover.url, size:"800x400"%>
 	<h4>
-		<%=@event.title%>
+		[<%=@event.event_type%>]<%=@event.title%>
 	</h4>
+	<h4><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></h4>
+	<h4><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></h4>
+	<h4><%=fa_icon "location-arrow"%> 地點: <%=@event.location%></h4>
 	<section id="content">
 		<%=@event.content.html_safe%>
 	</section>

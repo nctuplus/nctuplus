@@ -52,7 +52,7 @@ $(function(){
 	$("#book_trade_info-form").submit(function(){
 		
 		var price_input=$("#book_trade_info_price");
-		console.log(parseInt(price_input.val()));
+		//console.log(parseInt(price_input.val()));
 		if(!/^\d+$/.test(price_input.val()) || parseInt(price_input.val())<0){//check price integer && not 0
 			toastr["warning"]("價格需為正整數!");
 			price_input.focus();

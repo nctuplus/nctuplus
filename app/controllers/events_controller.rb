@@ -3,11 +3,12 @@ class EventsController < ApplicationController
 	before_filter :checkLogin, :only=>[:new, :create, :edit, :update, :destroy]
 	before_filter :checkOwner, :only=>[:update, :edit, :destroy]
 	def index
-		#@events=Event.all
+		@event_data=Event.all.map{|event|event.to_json_obj}.to_json
 	end
 	
 	def new
 		@event=Event.new
+		@event_type_sel=["講座","表演","擺攤","比賽","其他"]
 		#@img = EventImage.new
 	end
 	def update
@@ -19,15 +20,9 @@ class EventsController < ApplicationController
 		
 	end
 	def create
-		
 		@event=Event.new(event_params)
 		@event.user_id=current_user.id
-		#@event.content=
 		@event.save!
-		#@img = EventImage.new
-		#@img.event_id=@event.id
-		#@img.img=params[:img]
-		#@img.save
 		redirect_to event_url(@event)#:, :id=>@event.id
 	end
 	def destroy
@@ -45,9 +40,7 @@ class EventsController < ApplicationController
 	private
 
   def event_params
-    params.require(:event).permit(:event_type, :title, :content, :begin_time, :end_time, :organization)
+    params.require(:event).permit(:event_type, :title, :organization, :location, :lat_long, :url, :content, :begin_time, :end_time, :cover)
   end
-	def img_params
-    params.require(:event_image).permit(:img)
-  end
+
 end
