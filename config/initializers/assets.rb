@@ -1,5 +1,5 @@
 # Remember to update this file when you add or delete custom js files in app/assets/javascripts
-# Modified at 2015/6/20
+# Modified at 2015/11/17
 
 Rails.application.config.assets.precompile +=[
 	'tmpl.min.js',
@@ -15,6 +15,7 @@ Rails.application.config.assets.precompile +=[
 	'user_course_stat/checker.js',
 	'user_course_stat/cm_check-helper.js',
 	'user_course_stat/report-table.js',
+	'admin_statistics/index.js',
 	'books.js',
 	'new-index.js',
 	'new-index.css',

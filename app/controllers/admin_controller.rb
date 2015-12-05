@@ -19,19 +19,26 @@ class AdminController < ApplicationController
 	
 	def users
 		@role_sel=[[ "一般使用者",1 ], ["學校系辦單位",2 ], ["系統管理員", 0]]
-		@users=User.includes(:department, :course_maps).page(params[:page]).per(20)#limit(50)
+		if params[:search].nil?
+			@users= User.all
+		else
+			@users = User.ransack(name_cont: params[:search]).result
+		end
+		@users = @users.includes(:department, :course_maps).page(params[:page]).per(20)
 		@course_map = CourseMap.all
+		
+		# for chart
 		unless request.xhr?
 			@data = User.all.joins(:department).group(:ch_name).count
 		end	
-    end
+  end
   
-    def change_role
+  def change_role
 		user = User.find(params[:uid])
 		user.role = params[:role].to_i
 		user.save!
 		
-		render :layout=>false, :nothing=> true, :status=>200, :content_type => 'text/html'
+		render :nothing=> true, :status=>200
 	end
 	
 	def ee105
