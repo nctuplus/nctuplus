@@ -1,5 +1,5 @@
 <%= javascript_include_tag "course_maps/public", "data-turbolinks-track" => true %>
-
+	<%=@user_courses%>
 	<div id="central-view" class="containe">
 		<%=form_tag "/course_maps",method:"GET" do %>
 			<div class="row" id="">
@@ -22,9 +22,7 @@
 		
 		
 		<div class="col-md-10 col-md-offset-1 panel panel-default">
-			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;">			
-				
-			</div>
+			<div class="panel-body" id="cm-desc" style="margin-left:5.4%;margin-right:2.4%;"></div>
 			<div id="QandA" style="">
 				<h3><strong>問題回報區</strong></h3>
 				<hr>
@@ -75,8 +73,7 @@
 	
 	$(document).ready(function(){
 		initFbComment(<%=params[:id]%>);
-		//$('#fb-root').html('<div class="fb-comments" data-href="" data-numposts="5" width="100%" data-colorscheme="light"></div>');
-		//$('.fb-comments').attr('data-href',"http://plus.nctu.edu.tw:4000/course_maps/5");
+
 		var dept_id=<%=@dept_id%>;
 		var year=<%=@year%>;
 		if(dept_id!=0){
@@ -235,7 +232,7 @@
 		background:#FF0080;
 	}
 	
-	#table-gray-line
+	.border-gray-line
 	{
 		border-left:1px #aaa solid;
 	}

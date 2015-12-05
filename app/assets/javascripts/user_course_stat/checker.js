@@ -1,5 +1,4 @@
 /*
- * app/assets/javascript/coursemap-checker.js
  *
  * Copyright (C) 2014 NCTU+
  *
@@ -78,7 +77,7 @@ function get_cf_list(cfs,course){
 	var res=[];
 	for(var i = 0,cf;cf=cfs[i];i++){
 		_getCourseCf(res,null,cf,course);
-		//console.log(cf);
+
 	}
 
 	var selected=0;
@@ -91,7 +90,7 @@ function get_cf_list(cfs,course){
 	var tmp=res[0];
 	res[0]=res[selected];
 	res[selected]=tmp;
-	//console.log(res);
+
 	return res;
 }
 
@@ -139,8 +138,8 @@ function _getCourseCf(res,parent_cf,cf,course){
 	}
 }
 
-function _isUserCourseMatch(user_courses, course){
-
+function isUserCourseMatch(user_courses, course){
+	
 	for(var j=0, user_course;user_course=user_courses[j];j++){
 		if(course.id==user_course.cos_id)
 			return true;
@@ -156,7 +155,7 @@ function _doCheck(user_courses, cf){
 	var joined_courses=joinCfCourses(cf,user_courses);
 	for(var i = 0,cf_course;cf_course=cf.courses[i];i++){ // for each cf course
 		
-		if(_isUserCourseMatch(joined_courses, cf_course)){
+		if(isUserCourseMatch(joined_courses, cf_course)){
 			match_credit += cf_course.credit ;
 		}else{
 			c_match = false ;
@@ -168,7 +167,7 @@ function _doCheck(user_courses, cf){
 		for(var i = 0,course_group;course_group=cf.course_groups[i];i++){ // for each cg
 			var local_match = false ;
 			for(var j=0, cg_course; cg_course=course_group.courses[j];j++){
-				if(_isUserCourseMatch(joined_courses, cg_course)){
+				if(isUserCourseMatch(joined_courses, cg_course)){
 					match_credit += cg_course.credit ;
 					local_match = true ;
 					break ;
@@ -258,7 +257,7 @@ function checkCf(user_courses,cf){	//最上層的check
 			var i = 0;
 			if(match){	//if 必修 match才判斷選修
 				var any_match=false;
-				console.log(res);
+				
 				if(res.new_result){
 					for(; i<res.new_result.length;i++){				
 						if(final_res[i]){
@@ -284,7 +283,7 @@ function checkCf(user_courses,cf){	//最上層的check
 function sessionTest(){
 	var res={};
 	$.getJSON("/user/statistics", function (data) {
-		console.log(data);
+		
 		var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
 		if (data.need_common_check){
 			var result=commonCheck(pass_courses);
@@ -305,7 +304,7 @@ function sessionTest(){
 		url :"/sessions/save_lack_course",
 		type : "POST",
 		data : res,
-		success: function(data){console.log(data);}
+		success: function(data){}
 	});
 }
 

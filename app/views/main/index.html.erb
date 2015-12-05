@@ -167,10 +167,10 @@ $(document).ready(function(){
 		var aa = ['url(<%=asset_path "bg6.jpg"%>)','url(<%=asset_path "bg5.jpg"%>)','url(<%=asset_path "bg3.jpg"%>)'];
 		var t1=0;
 		setInterval(function() {
-		$('.bg1').fadeOut(5000, function() 
+		$('.bg1').fadeOut(10000, function() 
 		{
 				
-				$('.bg1').css('background-image', aa[t1]).fadeIn(5000);
+				$('.bg1').css('background-image', aa[t1]).fadeIn(3000);
 				t1++;
 				if(t1 == 3) t1 = 0;
 			});

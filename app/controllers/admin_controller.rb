@@ -34,21 +34,21 @@ class AdminController < ApplicationController
 		render :layout=>false, :nothing=> true, :status=>200, :content_type => 'text/html'
 	end
 	
-	def ee104
+	def ee105
 		if request.format=="json"
-			all_id=TempCourseSimulation.uniq.order("student_id").pluck(:student_id)
-			@users=User.includes(:course_simulations, :course_maps).where(:student_id=>all_id)
+			year=101
+			department_id=272
+			@users=User.includes(:auth_e3,:agreed_scores,:normal_scores).where(:year=>year,:department_id=>department_id).reject{|user|user.auth_e3.nil?}
 			user_res=@users.map{|user|{
-				:student_id=>user.student_id,
+				:student_id=>user.auth_e3.student_id,
 				:courses=>{
 					:success=>user.courses_json,
-					:fail=>user.course_simulations.where('course_detail_id = 0').map{|cs| cs.memo2}
 				}
 			}}
-			@cm=CourseMap.find(10)
+			@cm=CourseMap.where(:year=>year,:department_id=>department_id).take
 			res={
 				:users=>user_res,
-				:course_map=>get_cm_res(@cm),
+				:course_map=>@cm.to_public_json,#get_cm_res(@cm),
 				:last_sem_id=>Semester::LAST.id,
 				:pass_score=>60
 			}

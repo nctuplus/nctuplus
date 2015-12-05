@@ -13,3 +13,9 @@ module E3
   URL = E3_CONFIG["prefix_url"]
   
 end
+
+APP_CONFIG = YAML.load_file(Rails.root.join("config/app.yml"))
+
+module AndroidApp
+	KEY = APP_CONFIG["key"]
+end

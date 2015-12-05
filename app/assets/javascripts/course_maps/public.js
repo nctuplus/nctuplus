@@ -9,7 +9,47 @@
 //= require jquery.scrollTo.min
 //= require highcharts-custom
 //= require page-tour-custom
-
+//= require user_course_stat/checker
+/*
+function labelTakedCourses(user_courses,cf){
+	if(cf.cf_type<=2){
+		for(var i=0,course;course=cf.courses[i];i++){
+			if(isUserCourseMatch(user_courses,course)){
+				
+			}
+		}
+	}
+	else{
+		for(var i=0,child_cf;child_cf=cf.child_cf[i];i++)
+			labelTakedCourses(child_cf);
+	}
+}*/
+var takedColor="#AAAAAA";
+function genCourseGrid(user_courses,category,course){
+	if(user_courses&&isUserCourseMatch(user_courses,course)){												
+		var color=takedColor;
+		var taked=true;
+	}
+	else{
+		for(var i=0; i< category.length; i++){
+			if(course.cf.cf_name==category[i].cf_name||(course.parent_cf!=null&&course.parent_cf.cf_name==category[i].cf_name)){
+				var color=category[i].color;
+				break;
+			}
+		}
+		var taked=false;
+	}
+	
+	var res='<div class="btn-course " style="background:';
+	res+=color+';';
+	res+=taked ? "color:black;/*border:2px #FFFF00 solid;*/" : "";
+	res+=+'" data-cf-name="';
+	res+= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name;
+	res+='" data-taked="'+taked;
+	res+='" data='+JSON.stringify(course)+' >';
+	res+=course.name+'</div>';
+	return res;
+}
 function loadCm(dept_id,year){	//Load from server & initial
 	$.getJSON("/course_maps/public",{
 		dept_id: dept_id,
@@ -18,6 +58,11 @@ function loadCm(dept_id,year){	//Load from server & initial
 		function(data){
 			console.log(data);
 			$("#cm-desc").html(tmpl("cm_public", data));//tmpl 插件
+			/*if(user_courses){
+				for(var i=0,cf;cf=data.course_map.cfs[i];i++){
+					
+				}
+			}*/
 			$("#year-"+year).addClass("disabled");				
 			$("#sem-btn").click();
 			neededCourseBarChart("#chart-content", data.course_map);
@@ -34,6 +79,9 @@ function loadCm(dept_id,year){	//Load from server & initial
 }
 function toggleCourseGrids(className){
 	$("div[data-cf-name='"+className+"']").toggle();
+}
+function toggleTakedCourseGrids(){
+	$("div[data-taked='true']").toggle();
 }
 function initCourseHoverTip(){
 	$( ".btn-course" ).mouseover(function(event){

@@ -36,7 +36,7 @@
 
 <script>
 	$(document).ready(function(){
-		$.getJSON("/user/get_courses?uid=<%=@user.id%>&type=stat&sem_id=<%=Semester::CURRENT.id%>", function (data) {
+		$.getJSON("/user/get_courses?uid=<%=@user.id%>&type=list&sem_id=<%=Semester::CURRENT.id%>", function (data) {
 			$("#course-container").html(tmpl("cos_type_list", data));
 		});
 	});

@@ -4,7 +4,6 @@
  * For user/statistics
  * 此檔案是產生課程地圖打勾的HTML所需
  *
- * Modified at 2015/5/11
  */
 
 function genCosMapCheckGrids(cfs,user_courses,maxColSpan){//產生check的table html

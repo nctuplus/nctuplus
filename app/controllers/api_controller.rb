@@ -1,6 +1,26 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm, :import_course]
 	skip_before_filter :verify_authenticity_token, :only=>[:import_course]
+	def login
+		config=AndroidApp::KEY
+		if params[:key]!=config
+			data={
+				:auth=>false
+			}
+		else
+			data = AuthE3.from_omniauth(params[:username], params[:password], nil)
+			if data[:user].hasFb?
+				data[:uid]=data[:user].uid
+			end
+		end
+		
+		respond_to do |format|
+      format.html do
+        render :json => data
+      end
+    end
+		#render "/main/gg88"
+	end
 	def import_course
 		result = AuthE3.from_omniauth(params[:username], params[:password], nil)
 		if result[:auth]

@@ -43,7 +43,7 @@ Nctuplus::Application.routes.draw do
 	##################################
 	
   get "admin/user_statistics"
-	get "admin/ee104"
+	get "admin/ee105"
 	get "admin/users"
 	post "admin/change_role"
 	get "admin/course_maps" #, to: "course_maps#admin_index"
@@ -150,7 +150,7 @@ Nctuplus::Application.routes.draw do
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
 	post "api/import_course"
-	
+	post "api/login"
 
   #----------for files---------------
   resources :past_exams, :except=>[:update] do

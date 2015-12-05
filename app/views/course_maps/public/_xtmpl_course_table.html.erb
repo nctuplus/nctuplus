@@ -52,28 +52,37 @@
 			{%  var colors=["#0080FF","#F00078","#F75000","#00AEAE","#5A5AAD","#FF9224","	#64A600","#804040","#9900FF","#CD5C5C","#BBBB00","#000000"];
 					var color=0;
 					var category = [];
-					for(var i=0,cf;cf=cm.cfs[i];i++){
+					for(var i=0,index=0,cf;cf=cm.cfs[i];i++){
 						if(cf.cf_type==3){
 							for(var j=0,sub_cf;sub_cf=cf.child_cf[j];j++){
-								category.push(sub_cf.cf_name);
-								//console.log(sub_cf);
+								category.push({cf_name:sub_cf.cf_name,color:colors[index++]});
 							}
 						}
 						else{
-							category.push(cf.cf_name);
+							category.push({cf_name:cf.cf_name,color:colors[index++]});
 						}
 					}
+				console.log(category);
 			%}
 			<section id="list_by_sem" style="display:block;" >
 				<div class="row" id="cf-title">			
 				{% for(var i=0; i< category.length; i++){ %}
 					<div class="col-md-4">
-						<div class ="square-course clickable-hover" onclick="toggleCourseGrids('{%=category[i] %}');" style="background:{%=colors[i]%}"></div> <span class="clickable-hover" onclick="toggleCourseGrids('{%=category[i] %}');">{%=category[i] %}</span>
+						<span class="clickable-hover" onclick="toggleCourseGrids('{%=category[i].cf_name %}');">
+						<div class ="square-course"  style="background:{%=category[i].color%}"></div> {%=category[i].cf_name %}
+						</span>
+					</div>
+				{% } %}
+				{% if(o.user_courses){ %}
+					<div class="col-md-4">
+						<span class="clickable-hover" onclick="toggleTakedCourseGrids();">
+							<div class ="square-course" style="background:{%=takedColor%};"></div> 已修課程
+						</span>
 					</div>
 				{% } %}
 				</div>
 				<table class="table">
-					{% if(coursesbyGrade.length>1){ %}
+				{% if(coursesbyGrade.length>1){ %}
 					<tr class="text-center grade1" >
 						<th class="text-center" colspan="2">一年級</th>
 						<th class="text-center grade2" colspan="2">二年級</th>
@@ -90,63 +99,41 @@
 								<th class="text-center semester2" >下學期</th>
 							{% } %}
 						{% } %}	
-						</tr>	
-						<tr>				
+					</tr>	
+					<tr style="border-right:1px #aaa solid;">				
 						{% 
 							for(var i=0,courses;courses=coursesbyGrade[i];i++){ 
-							if(i==8) continue;
+								if(i==8) continue; 
 						%}
-							<td style="width:12%;"  {% if(i!=0 && i%2==0){ %}id="table-gray-line" {% } %} >
-								{% for(var j=0,course;course=courses[j];j++){ %}
-									{%
-										for(var k=0; k< category.length; k++){
-											if(course.cf.cf_name==category[k]||(course.parent_cf!=null&&course.parent_cf.cf_name==category[k]))
-												color=colors[k];
-										}										
-									%}
-									<div class="btn-course " style="background:{%=color%}" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" data="{%=JSON.stringify(course)%}" >{%=course.name%}</div>
-								{% } %}
-							</td>
-						{% } %}
-						</tr>
-					{% } %}
-					{% if(coursesbyGrade.length==9||coursesbyGrade.length==1){ %}
-							<tr id="table-not-limit">
-								<th colspan="8" class="text-center">不限年級</th>
-							</tr>
-							<tr>
-							{%
-								var courses = coursesbyGrade[coursesbyGrade.length-1];
-								var len_not_limit = courses.length;
-								var row = parseInt(len_not_limit/8);
-								if( len_not_limit % 8 > 0 )row++;
-								var row_left = row % 8;
-							%}
-								<td style="width:12%;">
-								{%
-									for(var j=0,course;course=courses[j];j++){
-										//console.log(course);
-										for(var k=0; k< category.length; k++){
-											if(course.cf.cf_name==category[k]||(course.parent_cf!=null&&course.parent_cf.cf_name==category[k] ))
-											color=colors[k];
-										}
-										if( j%row==0 && j>0){
-											%}
-											</td>
-											<td style="width:12%;">
-											<div class="btn-course" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
-											</div>
-											{%
-										}
-										else{	%}
-										<div class="btn-course" data-cf-name="{%= course.parent_cf==null ? course.cf.cf_name : course.parent_cf.cf_name %}" style="background:{%=color%}" data="{%=JSON.stringify(course)%}" >{%=course.name%}
-									</div>
-									
-									{% }} %}
+								<td style="width:12%;"  {% if(i%2==0){ %} class="border-gray-line" {% } %} >
+								{% for(var j=0,course;course=courses[j];j++){								
+									print(genCourseGrid(o.user_courses,category,course),true);
+								} %}<!--end for -->			
 								</td>
-							</tr>
 						{% } %}
-														
+					</tr>
+				{% } %}
+				{% if(coursesbyGrade.length==9||coursesbyGrade.length==1){ %}
+					<tr id="table-not-limit">
+						<th colspan="8" class="text-center">不限年級</th>
+					</tr>
+					<tr style="border-left:1px #aaa solid;border-right:1px #aaa solid;border-bottom:1px #aaa solid;">
+					{%
+						var courses = coursesbyGrade[coursesbyGrade.length-1];
+						var len_not_limit = courses.length;
+						var row = parseInt(len_not_limit/8);
+						if( len_not_limit % 8 > 0 )row++;
+						var row_left = row % 8;
+					%}
+						<td style="width:12%;">
+						{% for(var j=0,course;course=courses[j];j++){ %}
+							{% if( j%row==0 && j>0) %}
+								</td><td style="width:12%;">
+							{% print(genCourseGrid(o.user_courses,category,course),true); %}
+						{% } %}
+						</td>
+					</tr>
+				{% } %}														
 				</table>
 			</section>
 			<hr>

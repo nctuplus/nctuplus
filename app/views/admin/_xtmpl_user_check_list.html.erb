@@ -6,17 +6,20 @@
 		}
 		return sum;
 	}
+
 	function get_row_res(user,pass_score,last_sem_id,course_map){
 		var user_courses=user.courses.success;
-		var result=get_check_res(pass_score,last_sem_id,user_courses);
-		var pass_courses=get_pass_courses(pass_score,last_sem_id,user_courses);
+		
+		var pass_courses=getPassCourses(checkPass,pass_score,user_courses);
+		var result=commonCheck(pass_courses);
 		var res='<tr class="row">';
 		res+='<td class="text-center">'+user.student_id+'</td>';
 		res+='<td class="text-center">'+calCreditSum(pass_courses)+' ';
-		
+		/*
 		res+='<a href="javascript:void(0);" class="check_modal_but">進度表</a>';
 		res+='<a href="javascript:void(0);" class="coslist_modal_but">歷年修課</a>'+'</td>';
 		res+='<td class="text-center">'+user.courses.fail.length+'</td>';
+		*/
 		res+='<td class="text-center">';
 		if(!result['service_1']){ 
 			res+='一';
@@ -96,7 +99,7 @@
 		for(var i = 0,cf;cf=course_map.cfs[i];i++){
 			res+='<td class="text-center">';
 			if(cf.cf_type<=2){
-				var check=check_cf(pass_courses,cf);
+				var check=checkCf(pass_courses,cf);
 				if(check["result"])
 					res+=green_check();
 				else 
@@ -104,7 +107,7 @@
 			}
 			else if(cf.cf_type==3){
 				for(var j = 0, sub_cf;sub_cf=cf.child_cf[j];j++){
-					var check = check_cf(pass_courses, sub_cf) ;
+					var check = checkCf(pass_courses, sub_cf) ;
 					if(check.match_credit!=0){
 						res+=sub_cf.cf_name+':';
 						res+=check["match_credit"]+"/"+sub_cf.credit_need;
@@ -127,7 +130,7 @@
 	<tr class="row">
 		<td class="text-center">學號</td>
 		<td class="text-center">已修學分(全採計請注意)</td>
-		<td class="text-center">匯入失敗數</td>
+		<!--<td class="text-center">匯入失敗數</td>-->
 		<td class="text-center">服務學習</td>
 		<td class="text-center">藝文賞析</td>
 		<td class="text-center">體育</td>

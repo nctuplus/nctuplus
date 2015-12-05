@@ -1,9 +1,8 @@
 /*
  * Copyright (C) 2014 NCTU+
  *
- * For check score (need in many place)
+ * For check score (need in many places so include globally)
  *
- * Modified at 2015/5/11
  */
 function getPassCourses(func,pass_score,courses){
 	var res=[];

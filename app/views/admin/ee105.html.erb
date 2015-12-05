@@ -1,21 +1,25 @@
-<div id="list" class="panel"></div>
-<div class="modal fade" id="courselist_modal" tabindex="-1" role="dialog" aria-hidden="true" >
-	<div class="modal-dialog panel"></div>
+<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
+<div id="list" class="panel">
+	<h4 class="text-center"><%=fa_icon "refresh spin 2x"%></h4>
 </div>
+
 <script>
 	$(document).ready(function(){
 		$.getJSON("/admin/ee104", function (data) {
+			//console.log(data);
 			$("#list").html(tmpl("user_check_list",data));
-			console.log(data);
+			/*
 			$(".check_modal_but").each(function(index,value){
 				//console.log(index);
 				$(this).click(function(){
 					var _data={
 						user_courses:data.users[index].courses,
 						course_map:data.course_map,
-						last_sem_id:data.last_sem_id,
+						//last_sem_id:data.last_sem_id,
 						pass_score:data.pass_score
 					};
+					
 					show_check_modal(_data);
 				});
 			});
@@ -24,25 +28,26 @@
 					var _data={
 						user_courses:data.users[index].courses,
 						course_map:data.course_map,
-						last_sem_id:data.last_sem_id,
+						//last_sem_id:data.last_sem_id,
 						pass_score:data.pass_score
 					};
 					$("#courselist_modal").find(".modal-dialog").html(tmpl("list_by_cosmap",_data));
 					$("#courselist_modal").modal("show");
 				});
 			});
-			
+			*/
 		});
 	});
-	function show_check_modal(data){
-		$("#courselist_modal").find(".modal-dialog").html(tmpl("common_check",data));
-		$("#courselist_modal").find(".modal-dialog").append(tmpl("cosmap_check",data));
-		$("#courselist_modal").modal("show");
+	
+	function show_check_modal(data){	//bug don't deal with it yet
+		var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);	
+		showGlobalModal(2,"",tmpl("common_check",pass_courses)+tmpl("cosmap_check",data),function(){});
+
 	}
 </script>
 
 <%=render :partial=>"xtmpl_user_check_list" %>
 
-<%=render :partial=>"/user/xtmpl_common_check"%>
-<%=render :partial=>"/user/xtmpl_cm_check"%>
+<%=render :partial=>"/user/course_stat/xtmpl_common_check"%>
+<%=render :partial=>"/user/course_stat/xtmpl_cm_check"%>
 <%=render :partial=>"/user/xtmpl_list_by_cosmap"%>

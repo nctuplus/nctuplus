@@ -11,7 +11,7 @@
 
 <script>
 	$(document).ready(function(){
-		$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=stat", function (data) {
+		$.getJSON("/user/get_courses?uid=<%=params[:uid]%>&type=list", function (data) {
 			$("#agree-container").html(tmpl("agreed", data));
 			$("#course-container").html(tmpl("sem_list", data));
 		});
