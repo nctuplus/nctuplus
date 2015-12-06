@@ -17,6 +17,7 @@ function show_timetable_on_modal(semester_id, showNow){
 				selectable: false,
 				popover: true,
 				downloadable: true,
+				hideEmpty: true,
 				semester_id: semester_id
 			};     
 			$table.CourseTable(data) ;			
@@ -32,21 +33,21 @@ function show_timetable_on_modal(semester_id, showNow){
 				show_timetable_on_modal($(this).val(), true);
 			});
 			
-			var $data = $('<div>').addClass('row');
+			var $title = $('<div>').addClass('row');
 			if(data.hash_share && data.courses.length>0 ){		
-				$data.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));		
+				$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));		
 			}else
-				$data.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
+				$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
 			
-			showGlobalModal(1,$data,$table,function(){});
+			showGlobalModal(1,$title,$table,function(){});
 					
 			if(data.courses.length>0){		
 				setTimeout(function(){ //wait for the modal show
 				if(data.hash_share){
-					$data.hide();
+				//	$title.hide();
 					$table.CourseTable("renderImg", "upload") ;
-					group_share($data, {hash_share: data.hash_share}) ;
-					$data.show();      
+					group_share($title, {hash_share: data.hash_share}) ;
+				//	$title.show();      
 				}
 					return false ;
 				}, 600);

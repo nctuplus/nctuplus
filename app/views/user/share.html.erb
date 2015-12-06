@@ -8,13 +8,17 @@
 		  <%=link_to "加到課表收藏", "javascript:void(0);", :onclick=>'return record_collection($(this));'%> 
 		<% end %>	
   </h4> 
-  <table class="table table-bordered" id="myCourseTable"></table>
+	<div class="row">
+		<div class="col-md-offset-3 col-md-6">
+			<table class="table table-bordered " id="myCourseTable"></table>
+		</div>
+	</div>
 </div>
 <script>
   var $table = $('#myCourseTable') ;
   $.getJSON("/shares/<%=params[:id]%>",function(data){
     //  console.log(data);
-			data.config = { popover: true, click_redirect: true };	
+			data.config = { popover: true, click_redirect: true, hideEmpty: true };	
 			$table.CourseTable(data);	
 	});
 <% if canAddCollection %>	
@@ -32,9 +36,10 @@
 	}
 <% end %>	
 </script>
+
 <style>
   #myCourseTable{
-    height: 800px; 
+  //  height: 800px; 
     width: 600px; 
     margin-left: auto; 
     margin-right: auto; 

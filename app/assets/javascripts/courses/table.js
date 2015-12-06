@@ -1,10 +1,38 @@
+/*
+ * app/assets/javascript/courses/table.js
+ *
+ * Copyright (C) 2015 NCTU+
+ * 
+ * Course timetable template for course simulation, course share, personal table. 
+ *  
+ * Updated at 2015/12/6
+ */
+
+/* Library options:
+ * 	deletable(T/F): enable the delete icon for the cell that has course
+ *	selectable(T/F): enable the empty cell to be selected
+ *	downloadable(T/F): enable download link on left top td cell
+ *	semester_id(integer): for uploading the image of the timetable. If font end do upload the image, you should provide it.
+ *	popover(T/F): enable popover
+ *	hideEmpty(T/F): hide the row that do not have course (only hide MNIJKL)
+ *	collapsible: enable a expand icon on left top cell that is used for show/hide the hidden row (hideEmpty's row)
+ *	
+ *
+ * UI issues:
+ * 1. The td cell is not fix after add/deleting course to the table. The reason is the style position relaitve.
+ *		But the position relative is required for the cross icon(position absolute) of deleting course. 
+ * 
+ */
+	
+	
 //= require courses/html2canvas
 ;(function($, window, document, undefined) {
 	
 	'use strict';
 	var pluginName = 'CourseTable';
-	
+
 	var Table = function(element, options){
+
 		this.$element = $(element);
 		this.cells = [] ;
 		this.courses = [] ;
@@ -13,7 +41,9 @@
     if(this.config.cancelButtonFunc)
       Table.defaults.cancelButtonFunc =  this.config.cancelButtonFunc;
       			
-		this._init(options.courses);	
+		this._init(options.courses);			
+		this.collape_toggle = (typeof(this.config.hideEmpty)=="undefined") ? false : this.config.hideEmpty ;
+		this.adjust_row();
 	};
 	
 	Table.specReturnMethod = ["checkConflictByTime", "getSelectedSlot", "getAllCourses"] ;
@@ -56,6 +86,17 @@
 		  return $group ;
 		},
 		
+		_generateCollapseButton: function(){
+		  var $icon = $("<i>").addClass("fa fa-bars clickable-hover").css("margin-left", "2px")
+				.attr("title","縮放課表").click(function(){
+					this.collape_toggle = ~this.collape_toggle ;
+					this.adjust_row(this.collape_toggle);
+					
+				}.bind(this));
+		                
+		  return $icon ;
+		},
+		
 		_dataURItoBlob: function(dataURI){
 			var byteString;
 			if (dataURI.split(',')[0].indexOf('base64') >= 0)
@@ -76,30 +117,25 @@
   	},
 		
 		renderImg: function(flag){
-
+			
 			var _this = this ;	
-      var $global_modal_header = $('#global-modal .modal-header'); 
+     // var $global_modal_header = $('#global-modal .modal-header'); 
 			
-			// hide the item we don't want to see in the picture	
+			// hide the item that we don't want to see in the picture	
 			_this.$element.find('.btn-group').hide() ;	
-			$global_modal_header.hide();
-			
-
+		
 		  html2canvas( this.$element.get(0), {
         height: 1500 ,
         onrendered: function(canvas) {
           //recover the hidden items
 					_this.$element.find('.btn-group').show();
-					$global_modal_header.show();
-					
+
           var dataUrl = canvas.toDataURL("image/png");
 					if (flag=="window"){
 						window.open(dataUrl);
-						_this.$element.find('.btn-group').show() ;
 						return ;
 					}else if(flag=="url"){
 					  return dataUrl ;
-
 					}else if(flag=="upload"){  
 						var blob = _this._dataURItoBlob(dataUrl);
 						//console.log("filesize: "+blob.size);
@@ -187,7 +223,7 @@
 			for(var i=0, $cell; $cell=res[i];++i){
 				this._clearCell($cell);
 			}
-			
+			this.adjust_row(this.collape_toggle);
 			return ;
 		},
 		
@@ -249,10 +285,35 @@
 					}
 				}	
 			}
-			
+			this.adjust_row(this.collape_toggle);
 			return ;
 		},
 
+		adjust_row: function(){
+			const fix_row = [0,3,4,5,6,7,8,9,10,11]; // header, A, B, C, D, X, E, F, G, H
+			$("#"+this.$element.attr("id")+" tr").show();
+			if(!this.collape_toggle)		
+				return ;	
+			this.$element.find("tr").each(function(tr_idx){   
+				var $tr = $(this);
+				//console.log($.inArray(tr_idx, fix_row));
+				if($.inArray(tr_idx, fix_row)<0) //skip weekend header & default class time
+				{
+					var flag = true ;
+					$(this).children("td").each(function(td_idx){
+						var $td = $(this);
+						if(td_idx>0) // skip class time slot 
+						{
+							if(!$td.is(':empty')) {
+								flag = false ;											
+							}
+						}
+					});
+					if(flag) $(this).hide();
+				}
+			});
+		},
+		
 		_init: function(courses){
 			this.$element.empty();
 		  for(var i=0; i< Table.defaults.days.length;++i)
@@ -268,9 +329,14 @@
 			var days = Table.defaults.days ;
 			
 			var $leftupth = $('<th>') ;
-		// downloadable 
+	/* the left top cell icon */		
+		// downloadable(first prioiry)
 			if(this.config.downloadable)
 					$leftupth.html(this._generateDownloadButton(this.config.semester_id));
+		// collapsible 
+			if(this.config.collapsible)
+					$leftupth.html(this._generateCollapseButton());
+				
 			var $row = $('<tr>').append($leftupth);
 			for(var i = 0, t; t=days[i]; i++){
 				$row.find('th:last').after($('<th>').addClass('col-md-2')
@@ -306,6 +372,7 @@
 					}));
 				}
 				
+			
 
 			}
 			return ;
@@ -359,6 +426,8 @@
 			this._setCellSelectFunc($cell);
 			return ;
 		}
+			
+			
 			
 	}  
 	var logError = function(message) {
