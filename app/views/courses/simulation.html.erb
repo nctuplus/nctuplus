@@ -134,6 +134,8 @@
 				deletable: true ,
 				selectable: true,
 				popover: true,
+				hideEmpty: false,
+				collapsible: true ,
 				semester_id: semester_id,
 				cancelButtonFunc: function(arg){
 					var cd_id = arg.data.cd_id;
@@ -141,7 +143,7 @@
 				}
 			};
 			$('#schedule_table').CourseTable(data);	
-			$('#schedule_table').CourseTable("renderImg","upload");
+		//	$('#schedule_table').CourseTable("renderImg","upload");
 		});
 	}
 	
