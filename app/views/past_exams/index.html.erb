@@ -141,7 +141,7 @@
 		<div class="list-group">
 		<% @recent.each do |recent|%>
 			<a href="<%=recent[:url]%>" class="list-group-item list-group-item" target="blank">
-				<%=distance_of_time_in_words(Time.now,recent[:time])%>前 <%=recent[:user_name]%>上傳了 <%=recent[:ct_name]%>的考古題
+				<%=distance_of_time_in_words(Time.now,recent[:time])%> <%=recent[:user_name]%>上傳了 <%=recent[:ct_name]%>的考古題
 			</a>			
 		<% end %>
 		<!--
