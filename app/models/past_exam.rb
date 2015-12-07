@@ -4,8 +4,10 @@ class PastExam < ActiveRecord::Base
   belongs_to :course_teachership
 	belongs_to :semester
 	has_one :course, :through=>:course_teachership
-	
-	delegate :name, :to=>:user, :prefix=>true
+	has_many :course_details, :through=>:course_teachership
+	has_many :departments, :through=>:course_details
+	has_many :colleges, :through=>:departments
+	#delegate :name, :to=>:user, :prefix=>true
 	delegate :name, :to=>:semester, :prefix=>true
 	
   #validates_presence_of :semester_id, :course_teachership_id
@@ -18,9 +20,20 @@ class PastExam < ActiveRecord::Base
 	do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
 	
+	def self.search_by_q_and_text(q,text)
+		search(q).result(distinct: true).search({
+			:course_ch_name_or_description_cont=>text,
+			:m=>"or",
+			:by_teacher_name_in=>text
+		})
+	end
 
 	def download_url
 		upload.path(:original)
+	end
+	
+	def owner_name
+		return self.is_anonymous ? "匿名" : self.try(:user).try(:name)#user_name
 	end
 	
 	def to_jq_upload(user)
@@ -33,7 +46,7 @@ class PastExam < ActiveRecord::Base
 			"semester_name" => self.semester_name,
 			"semester_id" => self.semester_id,
 			"description" =>self.description,
-			"owner_name" => self.is_anonymous ? "匿名" : self.user_name,
+			"owner_name" => self.owner_name,
 			"owner_id" =>self.user_id,
 			"create_time"=>self.upload_updated_at.strftime("%F"),
 			"editable"=> user.try(:id)==self.user_id 

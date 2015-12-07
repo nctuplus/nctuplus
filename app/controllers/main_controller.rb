@@ -4,6 +4,10 @@ class MainController < ApplicationController
   def fb
   end
 
+	def test
+		#@courses=BookTradeInfo.search({:colleges_id_eq=>0}).result(:distinct=>true)
+		@courses=PastExam.search({:colleges_id_eq=>2}).result(:distinct=>true)
+	end
  	def index
 		if current_user && (current_user.year==0 || current_user.department.nil?)
 			alertmesg('info','warning', "請填寫系級" )

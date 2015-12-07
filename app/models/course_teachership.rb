@@ -7,6 +7,9 @@ class CourseTeachership < ActiveRecord::Base
 	
   has_many :course_details, :dependent=> :destroy
 	has_many :semesters, :through=> :course_details
+	has_many :departments, :through=> :course_details
+	has_many :colleges, :through=> :departments
+	
 	has_many :course_teacher_ratings, :dependent=> :destroy
 	validates_associated :course_teacher_ratings
 	

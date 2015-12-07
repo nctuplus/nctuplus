@@ -33,7 +33,7 @@ Nctuplus::Application.routes.draw do
 	post "/main/get_specified_classroom_schedule" # for ems curl
 	get "main/fb"
 	post "main/fb"
-
+	get "main/test"
 
 #---------- admin page -----------
 

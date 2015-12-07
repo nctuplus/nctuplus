@@ -7,8 +7,8 @@ class BookTradeInfo < ActiveRecord::Base
 	
 	has_many :book_trade_info_ctsships
 	has_many :course_teacherships, :through=>:book_trade_info_ctsships
-    has_many :courses, :through=>:course_teacherships
-	
+  has_many :courses, :through=>:course_teacherships
+	has_many :colleges, :through=> :course_teacherships
 	validates_numericality_of :price, :only_integer => true
 	#validates_length_of :desc, :maximum => 64
 	
