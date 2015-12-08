@@ -1,0 +1,46 @@
+<div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
+	<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
+		<% if sale_book.user==current_user && sale_book.status==0%>
+			<%=link_to fa_icon("pencil"), edit_book_path(sale_book),class:"btn btn-sm btn-info" %>
+			<%=button_tag fa_icon("check"), class:"btn btn-sm btn-info",onclick:"setBookSaled(#{sale_book.id});" %>
+		<% end %>
+	</div>
+	<%=sale_book.cover_image%>
+	<% if sale_book.status!=0 %>
+		<%=image_tag asset_path("soldout.png"), :class=>"img-soldout" %>
+	<% end %>
+	<div style="min-height:50px;margin-top:3px;padding-left:4px;" >
+		<div class="text-center" >
+			<span style="font-size:14px;">
+				<strong data-toggle="tooltip" title="<%=sale_book.book_name%>" >
+					<%=sale_book.book_name.truncate(15)%>					
+				</strong><br>
+				<strong data-toggle="tooltip" title="<%=sale_book.book.authors%>">
+					作者:<%=sale_book.book.authors.truncate(15)%>
+				</strong><br>
+			</span>
+			<span data-toggle="tooltip" style="margin-top:3px;/*margin-bottom: 13px;*/" title="
+				<% if sale_book.course_teacherships.present?%>
+				<% sale_book.course_teacherships.each do |cts|%>
+					<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>
+				<% end %>
+				<% else %>
+					無
+				<% end %>
+				">
+				<%="課程:#{sale_book.course_teacherships.first.try(:course_ch_name)} 老師:#{sale_book.course_teacherships.first.try(:teacher_name)}".truncate(15) %><br>
+			</span>
+		</div>					
+	</div>
+	
+	<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
+		<% user=sale_book.user %>
+		<font color="#696969">
+			賣家: <%=user.name%></br>						
+			<%=sale_book.created_at.strftime("%m/%d %H:%M")%>
+		</font>	
+		<strong class="pull-right">	
+			<%=fa_icon "dollar" %> <%=sale_book.price%>
+		</strong>
+	</div>						
+</div>

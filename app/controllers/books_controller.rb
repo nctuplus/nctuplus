@@ -26,13 +26,20 @@ class BooksController < ApplicationController
 	end
 	
 	def index
-		#@books=Book.all
+
 		if current_user && params[:mine]=="true"
 			@q=BookTradeInfo.search({:user_id_eq=>current_user.id})
 		else
-			@q=BookTradeInfo.search_by_q(params[:q])
+			@q=BookTradeInfo.search_by_q_and_text(params[:q], params[:custom_search])
 		end
-		@sale_books=@q.result(distinct: true).includes(:book, :user, :course_teacherships).page(params[:page]).per(30).order("created_at DESC,status ASC")
+		@sale_books=@q.result(distinct: true)
+				.includes(:book, :user, :course_teacherships)
+				.page(params[:page]).per(9)
+				.order("created_at DESC,status ASC")
+				
+		@recent = BookTradeInfo.where(:status=>1)
+				.order("updated_at DESC").includes(:book)
+				.limit(5)		
 	end
 	
   def google_book

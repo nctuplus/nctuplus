@@ -9,6 +9,10 @@ class BookTradeInfo < ActiveRecord::Base
 	has_many :course_teacherships, :through=>:book_trade_info_ctsships
   has_many :courses, :through=>:course_teacherships
 	has_many :colleges, :through=> :course_teacherships
+	
+	has_many :course_details, :through=>:course_teacherships
+	has_many :departments, :through=>:course_details
+	
 	validates_numericality_of :price, :only_integer => true
 	#validates_length_of :desc, :maximum => 64
 	
@@ -19,10 +23,11 @@ class BookTradeInfo < ActiveRecord::Base
   validates_attachment :cover, 
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
-		
-	def self.search_by_q(q)
-		search({
-			:book_name_or_book_authors_or_courses_ch_name_cont=>q			
+
+	def self.search_by_q_and_text(q,text)
+		search(q).result(distinct: true).search({
+			:book_name_or_book_authors_or_courses_ch_name_cont=>text,
+			:m=>"or"
 		})
 	end
 	

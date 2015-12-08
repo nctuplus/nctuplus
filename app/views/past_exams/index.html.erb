@@ -3,69 +3,17 @@
 		border-left: 1px #ccc solid;
 		padding: 4px;
 	}
-	/*#link-group  > tbody >tr > td {
-		border-left: 1px #ccc solid;
-		//border-bottom: 1px #ccc solid;
-		padding: 4px;
-	}
-	#link-group {
-		border-left: 2px #f5f5f5 solid;
 
-	}*/
 	#college-table .active{
 		background-color: #337ab7;
 	}
 	#college-table .active > a{
 		color: #fff;
 	}
-	/*#blue-menu{
-		background: #222d3f;
-	}*/
+
 </style>
-<!--
-	<%= search_form_for @q, url:"/past_exams/", class:"form-inline" do |f| %>
-		<div class="col-md-12 text-center">					
-			<div class="input-group" >
-				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/檔名",style:"width:350px;" %>
-				<span class="input-group-btn">
-					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-				</span>
-			</div>
-			<% if params[:q].present? %>
-				<% params[:q].each do |key,value| %>
-					<%=hidden_field_tag "q[#{key}]",value %>
-				<% end %>
-			<% end %>
-		</div>
-	<% end %>
-<div class="col-md-12 text-center" style="margin-bottom:-10px;">
-	<table id="college-selector" class="table table-bordere bg-white">
-		<tr>
-			<td><%=link_to "共同課程","?q[departments_college_id_eq]=0"%></td>
-			<td><%=link_to "資訊學院","?q[colleges_id_eq]=3"%></td>
-			<td><%=link_to "電機學院","?q[colleges_id_eq]=5"%></td>
-			<td><%=link_to "工學院","?q[colleges_id_eq]=4"%></td>
-			<td><%=link_to "理學院","?q[colleges_id_eq]=9"%></td>
-			<td><%=link_to "光電學院","?q[colleges_id_eq]=8"%></td>
-			<td><%=link_to "生科學院","?q[colleges_id_eq]=2"%></td>
-			<td><%=link_to "管理學院","?q[colleges_id_eq]=7"%></td>
-			<td><%=link_to "人社學院","?q[colleges_id_eq]=1"%></td>			
-			<td><%=link_to "客家文化學院","?q[colleges_id_eq]=6"%></td>
-		</tr>
-	</table>
-</div>
--->
+
 <div class="col-md-3 well" id="blue-menu">
-	<!--<table id="link-group" class="table text-center" style="margin-top:-19px;margin-left:-19px;min-width:115%;" >
-		<tr>
-			<td>
-				<%=link_to "上傳考古題","/past_exams/upload", class:"btn btn-sm btn-info", style:"font-size:16px;","data-no-turbolink"=>"true" %>
-			</td>
-			<td >
-				<%=link_to "我的考古題","/past_exams/?mine=true", class:"btn btn-sm btn-primary", style:"font-size:16px;","data-no-turbolink"=>"true" %>
-			</td>
-		</tr>
-	</table>-->
 	
 	<%= search_form_for @q, url:"/past_exams/", class:"form-inline" do |f| %>
 							
@@ -120,35 +68,15 @@
 			</tr>
 		</table>
 	</div>
-	<!--
-	<div class="row">
-		<div class="list-group text-center">		
-			<%=link_to "共同課程","?q[departments_college_id_eq]=0",id:"departments_college_id_eq_0",class:"list-group-item"%>
-			<%=link_to "資訊學院","?q[colleges_id_eq]=3",id:"colleges_id_eq_3",class:"list-group-item"%>
-			<%=link_to "電機學院","?q[colleges_id_eq]=5",id:"colleges_id_eq_5",class:"list-group-item"%>
-			<%=link_to "工學院","?q[colleges_id_eq]=4",id:"colleges_id_eq_4",class:"list-group-item"%>
-			<%=link_to "理學院","?q[colleges_id_eq]=9",id:"colleges_id_eq_9",class:"list-group-item"%>
-			<%=link_to "光電學院","?q[colleges_id_eq]=8",id:"colleges_id_eq_8",class:"list-group-item"%>
-			<%=link_to "生科學院","?q[colleges_id_eq]=2",id:"colleges_id_eq_2",class:"list-group-item"%>
-			<%=link_to "管理學院","?q[colleges_id_eq]=7",id:"colleges_id_eq_7",class:"list-group-item"%>
-			<%=link_to "人社學院","?q[colleges_id_eq]=1",id:"colleges_id_eq_1",class:"list-group-item"%>			
-			<%=link_to "客家文化學院","?q[colleges_id_eq]=6",id:"colleges_id_eq_6",class:"list-group-item"%>
-		</div>
-	</div>
-	-->
+
 	<h4 class="text-center" style="margin-top:-5px">最新動態</h4>
 	<div class="row">
 		<div class="list-group">
-		<% @recent.each do |recent|%>
-			<a href="<%=recent[:url]%>" class="list-group-item list-group-item" target="blank">
-				<%=distance_of_time_in_words(Time.now,recent[:time])%> <%=recent[:user_name]%>上傳了 <%=recent[:ct_name]%>的考古題
-			</a>			
-		<% end %>
-		<!--
-			<li class="list-group-item list-group-item-danger">
-				2015/11/05 13:40 正規語言 正在競標中
-			</li>
-		-->
+			<% @recent.each do |recent|%>
+				<a href="<%=recent[:url]%>" class="list-group-item list-group-item" target="blank">
+					<%=distance_of_time_in_words(Time.now,recent[:time])%> <%=recent[:user_name]%>上傳了 <%=recent[:ct_name]%>的考古題
+				</a>			
+			<% end %>
 		</div>
 	</div>
 </div>
@@ -160,8 +88,6 @@
 		<th class="col-md-2">檔名</th>
 		<th>描述</th>
 		<th>上傳者</th>
-		<!--<th class="col-md-1">下載次數</th>-->
-		<!--<th>時間</th>-->
 	</tr>
 <% if @exams.empty? %>
 	<tr class="row">
@@ -175,8 +101,6 @@
 			<td class="col-md-2"><%=exam.upload_file_name%></td>
 			<td class="title"><%=exam.description%></td>		
 			<td class="user_name"><%=exam.owner_name%></td>
-			<!--<td class="col-md-1"><%=exam.download_times%></td>-->
-			<!--<td class="time"><%=exam.created_at%></td>-->
 		</tr>
 	<% end %>
 <% end %>
