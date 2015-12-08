@@ -57,10 +57,10 @@
 		<table id="link-group" class="table table-bordered text-center" style="" >
 			<tr>
 				<td>
-					<%=link_to "新增商品",new_book_path,class:"btn btn-success",style:"font-size:14px;" %>					
+					<%=link_to "新增商品", new_book_path, class:"btn btn-success", style:"font-size:14px;" %>					
 				</td>
 				<td>
-					<%=link_to "我的商品","/books/?mine=true",class:"btn btn-info",style:"font-size:14px;" %>
+					<%=link_to "我的商品", "/books/?mine=true", class:"btn btn-info", style:"font-size:14px;" %>
 				</td>
 			</tr>
 		</table>
@@ -96,7 +96,7 @@
 			</tr>
 			<tr class="list-grou text-center">
 				<td class="col-md-2 clickable-hover" id="colleges_id_eq_6"><%=link_to "客家文化學院","?q[colleges_id_eq]=6",class:"list-group-ite"%></td>						
-				<td class="col-md-2 clickable-hover" id="book_trade_info_sh_null_1"><%=link_to "無分類","?q[cts_exists_false]=1",class:"list-group-ite"%></td>					
+				<td class="col-md-2 clickable-hover" id="cts_exists_false_1"><%=link_to "無分類","?q[cts_exists_false]=1",class:"list-group-ite"%></td>					
 			</tr>
 		</table>
 	</div>
@@ -104,9 +104,19 @@
 	<div class="row">
 		<ul class="list-group">
 			<% @recent.each do |stat| %>
-				<li class="list-group-item">							
-					<%=elapse_time(stat.updated_at)%>						
-					<%=stat.book.title%>  售出
+				<li class="list-group-item 
+					list-group-item-<%=(stat[:status]=="sold") ? "success" : "" %>
+					<% if stat[:status]=="new" %>
+						clickable-hover clickable-row
+					<% end %>
+					"
+					<% if stat[:status]=="new" %>
+						href="<%="/books/"+stat[:id].to_s%>"
+					<% end %>
+					>							
+					<%=distance_of_time_in_words(Time.now, stat[:time])%>	
+					<%=(stat[:status]=="sold") ? "售出了" : "新增了"%>
+					<%=stat[:name]%>  
 				</li>
 			<% end %>
 		</ul>
@@ -115,7 +125,7 @@
 <div class="col-md-8 ">
 	<div class="row">
 		<% if @sale_books.count==0 %> 
-			<div class="text-center">尚無二手書</div>
+			<h3 class="text-center">尚無二手書 :目</h3>
 		<% end %>
 		<% @sale_books.each do |book| %>
 			<div class="col-md-4 col-sm-6">
@@ -147,6 +157,10 @@
 			$(this).addClass("active");
 		});
 		
+		$(".clickable-row").click(function() {
+			goToHref($(this).attr("href"),true);
+		});
+	
 	});
 	function setBookSaled(id){
 		if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))

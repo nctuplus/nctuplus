@@ -20,8 +20,9 @@ class PastExam < ActiveRecord::Base
 	do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
 	
-	def self.search_by_q_and_text(q,text)
-		search(q).result(distinct: true).search({
+	def self.search_by_text(text)
+		#search(q).result(distinct: true).
+		search({
 			:course_ch_name_or_description_cont=>text,
 			:m=>"or",
 			:by_teacher_name_in=>text
