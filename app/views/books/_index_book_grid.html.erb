@@ -1,4 +1,4 @@
-<div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; margin-top:30px;" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
+<div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; " onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
 	<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 		<% if sale_book.user==current_user && sale_book.status==0%>
 			<%=link_to fa_icon("pencil"), edit_book_path(sale_book),class:"btn btn-sm btn-info" %>
@@ -35,11 +35,10 @@
 	
 	<div class="supplemental-info" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 		<% user=sale_book.user %>
-		<font color="#696969">
-			賣家: <%=user.name%></br>						
-			<%=sale_book.created_at.strftime("%m/%d %H:%M")%>
+		<font color="#696969">						
+			<%=sale_book.created_at.strftime("%Y/%m/%d %H:%M")%>
 		</font>	
-		<strong class="pull-right">	
+		<strong class="pull-right" style="font-size: large;">	
 			<%=fa_icon "dollar" %> <%=sale_book.price%>
 		</strong>
 	</div>						

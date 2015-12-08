@@ -39,7 +39,7 @@ class BooksController < ApplicationController
 				
 		@recent = BookTradeInfo.where(:status=>1)
 				.order("updated_at DESC").includes(:book)
-				.limit(5)		
+				.limit(10)		
 	end
 	
   def google_book
