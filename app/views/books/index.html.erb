@@ -30,109 +30,111 @@
 	}
 </style>
 
-<div class="container-fluid">
-  <div id="products" class="row">
-		</br></br>
-		<div class="col-md-3 well">
-			<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
-				<div class="row">	
-					<div class="col-md-12 text-center">				
-						<div class="input-group" style="width: 260px;">
-							<%=text_field_tag :custom_search, params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
-							<span class="input-group-btn">			
-								<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-							</span><!-- /btn-group -->
-							<% if params[:q].present? %>
-								<% params[:q].each do |key,value| %>
-									<%=hidden_field_tag "q[#{key}]",value %>
-									<script>
-										$("#<%=key%>_<%=value||""%>").addClass("active");
-									</script>
-								<% end %>
-							<% end %>	
-						</div><!-- /input-group -->
-					</div>
-				</div>			
-			<% end %>
-			</br>			
-			<table id="link-group" class="table table-bordered text-center" style="" >
-				<tr>
-					<td>
-						<%=link_to "我的商品","/books/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
-					</td>
-					<td >
-						<%=link_to "新增商品",new_book_path,class:"btn btn-info",style:"font-size:16px;" %>			
-					</td>
-				</tr>
-			</table>		
-			<hr>
-			<h4 class="text-center">分類</h4>
-			<div class="row">
-				<table id="college-table" class="table table-bordered bg-white">
-					<tr class="list-grou text-center">		
-						<td class="col-md-2 clickable-hover" id="departments_id_eq_8"><%=link_to "通識","?q[departments_id_eq]=8",class:"list-group-ite"%></td>
-						<td class="col-md-2 clickable-hover" id="departments_id_eq_9"><%=link_to "外文","?q[departments_id_eq]=9",class:"list-group-ite"%></td>
-						
-					</tr>
-					<tr class="list-grou text-center">
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_3"><%=link_to "資訊學院","?q[colleges_id_eq]=3",class:"list-group-ite"%></td>
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_5"><%=link_to "電機學院","?q[colleges_id_eq]=5",class:"list-group-ite"%></td>
-
-					</tr>
-					<tr class="list-grou text-center">
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_4"><%=link_to "工學院","?q[colleges_id_eq]=4",class:"list-group-ite"%></td>						
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_9"><%=link_to "理學院","?q[colleges_id_eq]=9",class:"list-group-ite"%></td>
-
-					</tr>
-					<tr class="list-grou text-center">
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_8"><%=link_to "光電學院","?q[colleges_id_eq]=8",class:"list-group-ite"%></td>					
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_2"><%=link_to "生科學院","?q[colleges_id_eq]=2",class:"list-group-ite"%></td>
-
-					</tr>
-					<tr class="list-grou text-center">
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_7"><%=link_to "管理學院","?q[colleges_id_eq]=7",class:"list-group-ite"%></td>					
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_1"><%=link_to "人社學院","?q[colleges_id_eq]=1",class:"list-group-ite"%></td>
-
-					</tr>
-					<tr class="list-grou text-center">
-						<td class="col-md-2 clickable-hover" id="colleges_id_eq_6"><%=link_to "客家文化學院","?q[colleges_id_eq]=6",class:"list-group-ite"%></td>						
-						<td class="col-md-2 clickable-hover" id="book_trade_info_sh_null_1"><%=link_to "無分類","?q[book_trade_info_sh_null]=1",class:"list-group-ite"%></td>					
-					</tr>
-				</table>
+		
+<div class="col-md-3 well">
+	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
+		<div class="row">	
+			<div class="col-md-12 text-center">				
+				<div class="input-group" style="/*width: 260px;*/">
+					<%=text_field_tag :custom_search, params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
+					<span class="input-group-btn">			
+						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+					</span><!-- /btn-group -->
+					<% if params[:q].present? %>
+						<% params[:q].each do |key,value| %>
+							<%=hidden_field_tag "q[#{key}]",value %>
+							<script>
+								$("#<%=key%>_<%=value||""%>").addClass("active");
+							</script>
+						<% end %>
+					<% end %>	
+				</div><!-- /input-group -->
 			</div>
-			<hr>
-			<h4 class="text-center">最新動態</h4>
-			<div class="row">
-				<ul class="list-group">
-					<% @recent.each do |stat| %>
-						<li class="list-group-item">							
-							<%=elapse_time(stat.updated_at)%>						
-							<%=stat.book.title%>  售出
-						</li>
-					<% end %>
-				</ul>
-			</div>
-		</div>
-		<div class="col-md-8 ">
-			<div class="row">
-				<% if @sale_books.count==0 %> 
-					<div class="text-center">尚無二手書</div>
-				<% end %>
-				<% @sale_books.each do |book| %>
-					<div class="col-md-4 col-sm-6">
-						<%=render "index_book_grid", :sale_book=>book %>
-					</div>
-				<% end %>		
-			</div>
-			<div class="row">
-				<%= paginate @sale_books, :window=>2 %>
-			</div>
-		</div>
+		</div>			
+	<% end %>
+	</br>
+	<div class="row">
+		<table id="link-group" class="table table-bordered text-center" style="" >
+			<tr>
+				<td>
+					<%=link_to "新增商品",new_book_path,class:"btn btn-success",style:"font-size:14px;" %>					
+				</td>
+				<td>
+					<%=link_to "我的商品","/books/?mine=true",class:"btn btn-info",style:"font-size:14px;" %>
+				</td>
+			</tr>
+		</table>
 	</div>
-	
+			
+	<h4 class="text-center" style="margin-top:-5px">分類</h4>
+	<div class="row">
+		<table id="college-table" class="table table-bordered bg-white">
+			<tr class="list-grou text-center">		
+				<td class="col-md-2 clickable-hover" id="departments_id_eq_8"><%=link_to "通識","?q[departments_id_eq]=8",class:"list-group-ite"%></td>
+				<td class="col-md-2 clickable-hover" id="departments_id_eq_9"><%=link_to "外文","?q[departments_id_eq]=9",class:"list-group-ite"%></td>
+				
+			</tr>
+			<tr class="list-grou text-center">
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_3"><%=link_to "資訊學院","?q[colleges_id_eq]=3",class:"list-group-ite"%></td>
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_5"><%=link_to "電機學院","?q[colleges_id_eq]=5",class:"list-group-ite"%></td>
+
+			</tr>
+			<tr class="list-grou text-center">
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_4"><%=link_to "工學院","?q[colleges_id_eq]=4",class:"list-group-ite"%></td>						
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_9"><%=link_to "理學院","?q[colleges_id_eq]=9",class:"list-group-ite"%></td>
+
+			</tr>
+			<tr class="list-grou text-center">
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_8"><%=link_to "光電學院","?q[colleges_id_eq]=8",class:"list-group-ite"%></td>					
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_2"><%=link_to "生科學院","?q[colleges_id_eq]=2",class:"list-group-ite"%></td>
+
+			</tr>
+			<tr class="list-grou text-center">
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_7"><%=link_to "管理學院","?q[colleges_id_eq]=7",class:"list-group-ite"%></td>					
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_1"><%=link_to "人社學院","?q[colleges_id_eq]=1",class:"list-group-ite"%></td>
+
+			</tr>
+			<tr class="list-grou text-center">
+				<td class="col-md-2 clickable-hover" id="colleges_id_eq_6"><%=link_to "客家文化學院","?q[colleges_id_eq]=6",class:"list-group-ite"%></td>						
+				<td class="col-md-2 clickable-hover" id="book_trade_info_sh_null_1"><%=link_to "無分類","?q[cts_exists_false]=1",class:"list-group-ite"%></td>					
+			</tr>
+		</table>
+	</div>
+	<h4 class="text-center" style="margin-top:-5px">最新動態</h4>
+	<div class="row">
+		<ul class="list-group">
+			<% @recent.each do |stat| %>
+				<li class="list-group-item">							
+					<%=elapse_time(stat.updated_at)%>						
+					<%=stat.book.title%>  售出
+				</li>
+			<% end %>
+		</ul>
+	</div>
 </div>
+<div class="col-md-8 ">
+	<div class="row">
+		<% if @sale_books.count==0 %> 
+			<div class="text-center">尚無二手書</div>
+		<% end %>
+		<% @sale_books.each do |book| %>
+			<div class="col-md-4 col-sm-6">
+				<%=render "index_book_grid", :sale_book=>book %>
+			</div>
+		<% end %>		
+	</div>
+	<div class="row">
+		<%= paginate @sale_books, :window=>2 %>
+	</div>
+</div>
+
 <script>
 	$(function () {
+		$("#college-table").find("td").click(function(){
+			$(this).find("a")[0].click();
+			//console.log($(this).find("a"));
+		});
+		
 		$("[data-toggle='tooltip']").tooltip({
 				content: function () {
 						return $(this).prop('title');

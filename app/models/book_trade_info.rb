@@ -25,10 +25,10 @@ class BookTradeInfo < ActiveRecord::Base
 		:size => { :less_than => 2.megabytes }
 
 	def self.search_by_q_and_text(q,text)
-		search(q).result(distinct: true).search({
-			:book_name_or_book_authors_or_courses_ch_name_cont=>text,
-			:m=>"or"
-		})
+		search(q)#.result(distinct: true).search({
+		#	:book_name_or_book_authors_or_courses_ch_name_cont=>text,
+		#	:m=>"or"
+		#})
 	end
 	
 	def incViewTimes!
@@ -63,5 +63,11 @@ class BookTradeInfo < ActiveRecord::Base
 			end
 		end
 		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "max-width:200px;",alt:"尚無圖片!")
+	end
+private
+	ransacker :cts_exists do |parent|
+		# SQL syntax for PostgreSQL -- others may differ
+		# This returns boolean true or false
+		Arel.sql("(select exists (select 1 from book_trade_info_ctsships where book_trade_info_ctsships.book_trade_info_id = book_trade_infos.id))")
 	end
 end

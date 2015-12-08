@@ -35,11 +35,10 @@ class BooksController < ApplicationController
 		@sale_books=@q.result(distinct: true)
 				.includes(:book, :user, :course_teacherships)
 				.page(params[:page]).per(9)
-				.order("created_at DESC,status ASC")
-				
+				.order("book_trade_infos.created_at DESC,book_trade_infos.status ASC")
 		@recent = BookTradeInfo.where(:status=>1)
 				.order("updated_at DESC").includes(:book)
-				.limit(10)		
+				.limit(10)
 	end
 	
   def google_book
