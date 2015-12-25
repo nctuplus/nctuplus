@@ -24,11 +24,20 @@ class BookTradeInfo < ActiveRecord::Base
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
 
-	def self.search_by_q_and_text(q,text)
-		search(q)#.result(distinct: true).search({
-		#	:book_name_or_book_authors_or_courses_ch_name_cont=>text,
-		#	:m=>"or"
-		#})
+	def self.recents
+		recent_sold = where(:status=>1).order("updated_at DESC")
+				.includes(:book).limit(5)
+				.map{|b| {:status=>"sold", :name=>b.book_name, :time=>b.updated_at} }
+		recent_books = order("created_at DESC").includes(:book).limit(5)	
+				.map{|b| {:id=>b.id, :status=>"new", :name=>b.book_name, :time=>b.created_at} }
+		return (recent_sold+recent_books).sort_by{|e| e[:time]}.reverse 
+	end
+		
+	def self.search_by_text(text)
+		search({
+			:book_name_or_book_authors_or_courses_ch_name_cont=>text,
+			:m=>"or"
+		})
 	end
 	
 	def incViewTimes!

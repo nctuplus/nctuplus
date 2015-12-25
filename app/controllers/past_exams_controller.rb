@@ -9,7 +9,11 @@ class PastExamsController < ApplicationController
 		if current_user && params[:mine]=="true"
 			@q=PastExam.search({:user_id_eq=>current_user.id})
 		else
-			@q = PastExam.search_by_q_and_text(params[:q],params[:custom_search])
+			if params[:custom_search]
+				@q = PastExam.search_by_text(params[:custom_search])
+			else
+				@q = PastExam.search(params[:q])
+			end
 		end
 		@recent=PastExam.includes(:user,:course_teachership, :course).order("created_at DESC").take(10).map{|exam|{
 			:url=>exam.upload.url(:original),
