@@ -24,9 +24,11 @@
 					</td>
 			</tr>
 		{% }else{ %}
-		{% var cfs=get_cf_list(cm.cfs,course); %}
+		{% var cfs=get_cf_list(cm.cfs,course);%}
 		
-		{% var tmp=cfs[0]; %}
+		{% var tmp=cfs[0];%}
+		{% if(tmp==null) continue; %}
+		
 		{% if(cfname.indexOf(tmp.name)==-1) { %}
 			{% cfname.push(tmp.name); %}
 			<tr class="row success" >

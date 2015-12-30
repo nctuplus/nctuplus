@@ -54,15 +54,15 @@ function commonCheck(pass_courses){
 				++result['phe_optional']; 
 			} 
 		} 
-		else if(course.cos_type=="外語"){ 
-			if(course.brief=="基礎"){ 
+		else if(course.cos_type.search("外語")!=-1){ 
+			if(course.brief.search("基礎")!=-1){ 
 				result['foreign_basic']+=parseInt(course.credit); 
 			}
-			else if(course.brief=="進階"||course.brief=="其它"){ 
+			else if(course.brief.search("進階")!=-1||course.brief.search("其它")!=-1){ 
 				result['foreign_advance']+=parseInt(course.credit); 
 			} 
 		} 
-		else if(course.cos_type=="通識"){
+		else if(course.cos_type.search("通識")!=-1){
 			var dimension=course.brief.substr(0,2);
 			if(dimension.length==2)
 			result['common'][dimension]+=parseInt(course.credit); 
