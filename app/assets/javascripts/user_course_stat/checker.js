@@ -36,15 +36,18 @@ function commonCheck(pass_courses){
 			} 
 		} 
 		else if(course.brief.search("藝文賞析")!=-1){ 
-			if(course.sem_id>=7){ 
+			/*if(course.sem_id>=7){ 
 				++result['art_after102']; 
-			} 
+			} */
 			if(course.name.search("一")!=-1){ 
 				result['art_1']=true; 
 			}
 			else if(course.name.search("二")!=-1){ 
 				result['art_2']=true; 
-			} 
+			}
+			else{//因為在102學年度後的藝文賞析沒有一或二
+				++result['art_after102']; 
+			}
 		} 
 		else if(course.brief.search("體育")!=-1){ 
 			if(course.name=="大一體育"){ 

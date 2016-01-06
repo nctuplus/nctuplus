@@ -30,7 +30,14 @@ end
 
 def self.get_department_list
 	http=Curl.post("#{E3::URL}/DepartmentList",{})
-	return JSON.parse(http.body_str.force_encoding("UTF-8"))
+	
+	begin 
+		x=JSON.parse(http.body_str.force_encoding("UTF-8"))
+	rescue JSON::ParserError => e
+		x=nil
+		InformMailer.course_import("Error occured on E3!").deliver
+	end
+	return x
 end	
 	
 end 

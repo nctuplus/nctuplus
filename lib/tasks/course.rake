@@ -4,7 +4,11 @@ namespace :course do
 	desc "import course from e3"
 	task :import => :environment do
 		inform_mesg=""
-		inform_mesg << update_department_list
+		test=update_department_list
+		if test.nil?
+			next
+		end
+		inform_mesg << test
 		inform_mesg << update_teacher_list
 
 		Semester.where(:id=>[16,17]).each do |sem|			
