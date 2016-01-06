@@ -290,7 +290,7 @@
 		},
 
 		adjust_row: function(){
-			const fix_row = [0,3,4,5,6,7,8,9,10,11]; // header, A, B, C, D, X, E, F, G, H
+			var fix_row = [0,3,4,5,6,7,8,9,10,11]; // header, A, B, C, D, X, E, F, G, H
 			$("#"+this.$element.attr("id")+" tr").show();
 			if(!this.collape_toggle)		
 				return ;	
