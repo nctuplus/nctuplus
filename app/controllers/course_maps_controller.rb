@@ -169,10 +169,10 @@ class CourseMapsController < ApplicationController
 		@result=@courses.map{|c|{
 			:id=>c.id,
 			:name=>c.ch_name,
-			:cd_id=>c.course_details.last.id,
+			:cd_id=>c.is_virtual ? 0 : c.course_details.last.id,
 			:credit=>c.credit,
-			:dept_name=>c.dept_name,
-			:cos_type=>c.course_details.last.cos_type
+			:dept_name=>c.is_virtual ? c.real_id : c.dept_name,
+			:cos_type=>c.is_virtual ? "抵免" : c.course_details.last.cos_type
 		}}
 		render "course_maps/manage/search_course", :layout=>false
 	end

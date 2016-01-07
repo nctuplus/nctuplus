@@ -33,7 +33,12 @@ function commonCheck(pass_courses){
 			}
 			else if(course.name.search("二")!=-1){ 
 				result['service_2']=true; 
-			} 
+			}
+			if(course.name.search("圖書館學概論")!=-1){
+				var dimension=course.brief.substr(0,2);
+				if(dimension.length==2)
+				result['common'][dimension]+=parseInt(course.credit);
+			}
 		} 
 		else if(course.brief.search("藝文賞析")!=-1){ 
 			/*if(course.sem_id>=7){ 

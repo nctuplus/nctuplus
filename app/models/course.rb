@@ -30,7 +30,7 @@ class Course < ActiveRecord::Base
 	
 	def to_json_for_stat
 		{
-			:ct_id=>self.course_teacherships.take.id,
+			:ct_id=>self.is_virtual ? "0" :  self.course_teacherships.take.id,
 			:name=>self.ch_name,
 			:id=>self.id,
 			:credit=>self.credit,
