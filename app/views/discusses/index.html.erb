@@ -1,45 +1,133 @@
-<%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
-	<div class="row">	
-		<div class="col-md-12 text-center">
-			<%=link_to "新增文章",new_discuss_path, class:"btn btn-info", style:"font-size:16px;"%>
-			<% if current_user&&current_user.discusses.count>0 %>
-				<%=link_to "我的文章","/discusses/?mine=true",class:"btn btn-success",style:"font-size:16px;" %>
-			<% end %>
-			<div class="input-group" >
-				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"width:350px;" %>
-				<span class="input-group-btn">
-					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-				</span><!-- /btn-group -->
-			</div><!-- /input-group -->
+<style>
+	#college-selector > tbody >tr > td {
+		border-left: 1px #ccc solid;
+		padding: 4px;
+	}
+
+	#college-table .active{
+		background-color: #337ab7;
+	}
+	#college-table .active > a{
+		color: #fff;
+	}
+
+</style>
+
+	<div class="col-md-3 well" id="blue-menu">
+		
+		<%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
+			<div class="row">	
+				<div class="col-md-12 text-center">
+
+					<div class="input-group" >
+						<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"/*width:350px;*/" %>
+						<span class="input-group-btn">
+							<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+						</span><!-- /btn-group -->
+					</div><!-- /input-group -->
+				</div>
+			</div>
+			<% if params[:q].present? %>
+				<% params[:q].each do |key,value| %>
+					<%=hidden_field_tag "q[#{key}]",value %>
+					<script>$("#<%=key%>_<%=value%>").addClass("active");</script>
+				<% end %>
+			<% end %>	
+		<% end %>
+		<br>
+		<div class="row">
+		<table id="link-group" class="table table-bordered text-center" style="" >
+			<tr>
+				<td>
+					<%=link_to "新增文章",new_discuss_path, class:"btn btn-sm btn-info", style:"font-size:14px;"%>
+					<!--<%=link_to "上傳考古題","/past_exams/upload", class:"btn btn-sm btn-info", style:"font-size:14px;","data-no-turbolink"=>"true" %>-->
+				</td>
+				<td >
+					<% if current_user %>
+						<%=link_to "我的文章","/discusses/?mine=true",class:"btn btn-sm btn-primary",style:"font-size:14px;" %>
+					<% else %>
+						<%=link_to "我的文章","javascript:void(0);", class:"btn btn-sm btn-primary", style:"font-size:14px;", disabled:true %>
+					<% end %>
+				</td>
+			</tr>
+		</table>
+		</div>
+		<h4 class="text-center" style="margin-top:-5px">分類</h4>
+		<div class="row">
+			<table id="college-table" class="table table-bordered bg-white">
+				<tr class="list-grou text-center">		
+					<td class="col-md-2 clickable-hover" id="departments_college_id_eq_0"><%=link_to "共同課程","?q[departments_college_id_eq]=0",class:"list-group-ite"%></td>
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_3"><%=link_to "資訊學院","?q[colleges_id_eq]=3",class:"list-group-ite"%></td>
+				</tr>
+				<tr class="list-grou text-center">
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_5"><%=link_to "電機學院","?q[colleges_id_eq]=5",class:"list-group-ite"%></td>
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_4"><%=link_to "工學院","?q[colleges_id_eq]=4",class:"list-group-ite"%></td>
+				</tr>
+				<tr class="list-grou text-center">
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_9"><%=link_to "理學院","?q[colleges_id_eq]=9",class:"list-group-ite"%></td>
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_8"><%=link_to "光電學院","?q[colleges_id_eq]=8",class:"list-group-ite"%></td>
+				</tr>
+				<tr class="list-grou text-center">
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_2"><%=link_to "生科學院","?q[colleges_id_eq]=2",class:"list-group-ite"%></td>
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_7"><%=link_to "管理學院","?q[colleges_id_eq]=7",class:"list-group-ite"%></td>
+				</tr>
+				<tr class="list-grou text-center">
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_1"><%=link_to "人社學院","?q[colleges_id_eq]=1",class:"list-group-ite"%></td>
+					<td class="col-md-2 clickable-hover" id="colleges_id_eq_6"><%=link_to "客家文化學院","?q[colleges_id_eq]=6",class:"list-group-ite"%></td>
+				</tr>
+			</table>
+		</div>
+
+		<h4 class="text-center" style="margin-top:-5px">最新動態</h4>
+		<div class="row">
+			<div class="list-group">
+				<% @recent.each do |recent|%>
+						<% if recent[:type]=="main" %>
+							<a href="/discusses/<%=recent[:id]%>" class="list-group-item list-group-item-success" target="blank">							
+								<%=distance_of_time_in_words(Time.now,recent[:time])%> <%=recent[:user_name]%>新增了 <strong><%=recent[:ct_name]%>的文章</strong>-<%=recent[:title]%>
+							</a>
+						<% else %>
+							<a href="/discusses/<%=recent[:id]%>" class="list-group-item list-group-item" target="blank">
+								<%=distance_of_time_in_words(Time.now,recent[:time])%> <%=recent[:user_name]%>回應了 <%=recent[:title]%>
+							</a>
+						<% end %>
+						
+				<% end %>
+			</div>
 		</div>
 	</div>
-<% end %>
-<br>
-<table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
-	<tr>
-		<th>課程</th>
-		<th>標題</th>
-		<th>作者</th>
-		<th>時間</th>
-	</tr>
-<% @discusses.each do |discuss| %>
-	<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.to_json_obj(current_user.try(:id)).to_json%>');">
-		<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
-		<td class="title"><%=discuss.title%></td>		
-		<td class="user_name"><%=discuss.is_anonymous ? "匿名" : discuss.user_name%></td>
-		<td class="user_id hidden"><%=discuss.user.uid%></td>
-		<td class="time"><%=discuss.created_at%></td>
-		<% discuss.sub_discusses.each do |sub_d| %>
-			<td class="sub_content hidden"><%=sub_d.content%></td>
+	<div class="col-md-9">
+		<table class="table table-hover bg-white-transparen" id="course_table" style="background-color:white;" >
+			<tr>
+				<th>課程</th>
+				<th>標題</th>
+				<th>作者</th>
+				<th>時間</th>
+			</tr>
+		<% @discusses.each do |discuss| %>
+			<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.to_json_obj(current_user.try(:id)).to_json%>');">
+				<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
+				<td class="title"><%=discuss.title%></td>		
+				<td class="user_name"><%=discuss.is_anonymous ? "匿名" : discuss.user_name%></td>
+				<td class="user_id hidden"><%=discuss.user.uid%></td>
+				<td class="time"><%=discuss.created_at%></td>
+				<% discuss.sub_discusses.each do |sub_d| %>
+					<td class="sub_content hidden"><%=sub_d.content%></td>
+				<% end %>
+			</tr>
 		<% end %>
-	</tr>
-<% end %>
-</table>
-<%= paginate @discusses, :window=>2 %>
+		</table>
 
+		<%= paginate @discusses, :window=>2 %>
+	</div>
 <%=render "modal_content" %>
 
 <script>
+	$(function(){
+		$("#college-table").find("td").click(function(){
+			$(this).find("a")[0].click();
+		});
+	});
 	function show2(data_str){		
 		var data=JSON.parse(data_str);
 		

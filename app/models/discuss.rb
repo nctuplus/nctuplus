@@ -3,8 +3,10 @@ class Discuss < ActiveRecord::Base
 	belongs_to :user
 	has_one :course, :through=>:course_teachership
 	has_many :course_details, :through=>:course_teachership
-	has_many :discuss_verifies, :dependent => :destroy
-	has_many :discuss_likes, :dependent => :destroy
+	has_many :departments, :through=>:course_details
+	has_many :colleges, :through=>:departments
+	#has_many :discuss_verifies, :dependent => :destroy
+	#has_many :discuss_likes, :dependent => :destroy
 	has_many :sub_discusses, :dependent => :destroy
 	delegate :name, :uid, :to=>:user, :prefix=>true
 	delegate :ch_name, :to=>:course, :prefix=>true
@@ -18,6 +20,10 @@ class Discuss < ActiveRecord::Base
 		})
 	end
 	
+	def owner_name
+		return self.is_anonymous ? "匿名" : self.try(:user).try(:name)#user_name
+	end
+	
 	def to_json_obj(current_user_id)
 		if self.is_anonymous || !self.user.hasFb?
 			src=ActionController::Base.helpers.asset_path("anonymous.jpg")
@@ -29,10 +35,10 @@ class Discuss < ActiveRecord::Base
 			:is_anonymous=>self.is_anonymous,
 			:editable=>self.user_id==current_user_id,
 			:uid=>self.user.try(:uid),
-			:likes=>self.discuss_likes.count,
+			#:likes=>self.discuss_likes.count,
 			:ct_name=>"#{self.course_ch_name}/#{self.course_teachership.teacher_name}",
 			:cd_id=>self.course_teachership.course_details.last.id,
-			:user_name=>self.is_anonymous ? "匿名" : self.user_name,
+			:user_name=>self.owner_name,#self.is_anonymous ? "匿名" : self.user_name,
 			:title=>self.title,
 			:content=>self.content,
 			:time=>self.updated_at.strftime("%Y/%m/%d %H:%M"),

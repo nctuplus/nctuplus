@@ -56,38 +56,38 @@ zh-TW:
   datetime:
     distance_in_words:
       about_x_hours:
-        one: 大約一小時前
+        one: 1小時前
         other: 大約 %{count} 小時前
       about_x_months:
-        one: 大約一個月前
+        one: 1個月前
         other: 大約 %{count} 個月前
       about_x_years:
-        one: 大約一年前
+        one: 1年前
         other: 大約 %{count} 年前
       almost_x_years:
-        one: 接近一年
+        one: 接近1年前
         other: 接近 %{count} 年
       half_a_minute: 半分鐘前
       less_than_x_minutes:
-        one: 不到一分鐘前
+        one: 不到1分鐘前
         other: 不到 %{count} 分鐘前
       less_than_x_seconds:
-        one: 不到一秒前
+        one: 不到1秒前
         other: 不到 %{count} 秒前
       over_x_years:
-        one: 一年多
+        one: 1年多
         other: "%{count} 年前"
       x_days:
-        one: 一天前
+        one: 1天前
         other: "%{count} 天前"
       x_minutes:
-        one: 一分鐘前
+        one: 1分鐘前
         other: "%{count} 分鐘前"
       x_months:
-        one: 一個月前
+        one: 1個月前
         other: "%{count} 個月前"
       x_seconds:
-        one: 一秒前
+        one: 1秒前
         other: "%{count} 秒前"
     prompts:
       day: 日
