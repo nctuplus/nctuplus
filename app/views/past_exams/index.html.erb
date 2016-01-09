@@ -38,7 +38,11 @@
 				<%=link_to "上傳考古題","/past_exams/upload", class:"btn btn-sm btn-info", style:"font-size:14px;","data-no-turbolink"=>"true" %>
 			</td>
 			<td >
-				<%=link_to "我的考古題","/past_exams/?mine=true", class:"btn btn-sm btn-primary", style:"font-size:14px;","data-no-turbolink"=>"true" %>
+				<% if current_user %>
+					<%=link_to "我的考古題","/past_exams/?mine=true", class:"btn btn-sm btn-primary", style:"font-size:14px;","data-no-turbolink"=>"true" %>
+				<% else %>
+					<%=link_to "我的考古題","javascript:void(0);", class:"btn btn-sm btn-primary", style:"font-size:14px;", disabled:true %>
+				<% end %>
 			</td>
 		</tr>
 	</table>
