@@ -9,8 +9,30 @@ class DiscussesController < ApplicationController
 		if current_user && params[:mine]=="true"
 			@q=Discuss.search({:user_id_eq=>current_user.id})
 		else
-			@q = Discuss.search_by_text(params[:custom_search])
+			if params[:custom_search]
+				@q = Discuss.search_by_text(params[:custom_search])
+			else
+				@q = Discuss.search(params[:q])
+			end
+			#@q = Discuss.search_by_text(params[:custom_search])
 		end
+		main_recent=Discuss.includes(:user,:course_teachership, :course).order("created_at DESC").take(10).map{|discuss|{
+			:type=>"main",
+			:id=>discuss.id,
+			:title=>discuss.title,
+			:ct_name=>"#{discuss.course.ch_name}",#/#{discuss.course_teachership.teacher_name}",
+			:user_name=>discuss.owner_name,
+			:time=>discuss.created_at
+		}}
+		sub_recent=SubDiscuss.includes(:user, :discuss).order("created_at DESC").take(10).map{|sub_d|{
+			:type=>"sub",
+			:id=>sub_d.discuss.id,
+			:title=>sub_d.discuss.title,
+			:user_name=>sub_d.user_name,
+			:time=>sub_d.created_at
+		}}
+		@recent=main_recent+sub_recent
+		@recent=@recent.sort{ |x, y| y[:time] <=> x[:time] }.first(10) #!{|d|d[:time]}
 		@discusses=@q.result(distinct: true).includes(:course_teachership, :sub_discusses, :user).page(params[:page]).order("id DESC")	
 		#@ct=CourseTeachership.find(1)
 	end
@@ -44,6 +66,9 @@ class DiscussesController < ApplicationController
 			@discuss=current_user.discusses.create(main_discuss_params.merge({:likes=>0,:dislikes=>0}))
 		elsif params[:type]=="sub"
 			@discuss=current_user.sub_discusses.create(sub_discuss_params.merge({:likes=>0,:dislikes=>0}))
+			if !@discuss.discuss.is_anonymous && @discuss.discuss.user_id != current_user.id
+				InformMailer.discuss_reply(@discuss).deliver#.discuss.user_id
+			end
 		end
 		if !request.xhr?
 			redirect_to :action => :index

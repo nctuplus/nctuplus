@@ -4,15 +4,11 @@ namespace :course do
 	desc "import course from e3"
 	task :import => :environment do
 		inform_mesg=""
-		test=update_department_list
-		if test.nil?
-			next
-		end
-		inform_mesg << test
-		inform_mesg << update_teacher_list
-
-		Semester.where(:id=>[16,17]).each do |sem|			
-			datas=E3Service.get_course(sem) #get course
+		inform_mesg << updateDepartmentList
+		inform_mesg << updateTeacherList
+		
+		Semester.last(2).each do |sem|			
+			datas=E3Service.getCourse(sem) #get course
 			inform_mesg << "[Course Detail] Got : #{datas.length} courses from E3.<br>"
 			if datas.length == 0
 				inform_mesg << "No courses, stop updating.<br>"
@@ -24,7 +20,7 @@ namespace :course do
 				CourseDetail.where(:semester_id=>sem.id, :temp_cos_id=>diff_cos_ids).destroy_all
 				inform_mesg << "[Course Detail] Deleted : #{diff_cos_ids.length}.<br>"
 				datas.each do |data|
-					stat[do_update_coourse(data,sem)]+=1
+					stat[doUpdateCourse(data,sem)]+=1
 				end
 				inform_mesg << "[Course Detail] Created : #{stat["Create"]}.<br>"
 				inform_mesg << "[Course Detail] Updated : #{stat["Update"]}.<br>"		
@@ -41,10 +37,10 @@ namespace :course do
 	end
 
 	
-	def update_teacher_list
+	def updateTeacherList
 		inform_mesg=""
 		inform_mesg << "Updating Teacher...<br>"
-		teachers=E3Service.get_teacher_list	
+		teachers=E3Service.getTeacherList	
 		inform_mesg << "[Teacher] Get #{teachers.length} from E3.<br>"
 		tids=teachers.map{|t|t["TeacherId"]}
 		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
@@ -63,10 +59,10 @@ namespace :course do
 		return inform_mesg
 	end
 	
-	def update_department_list
+	def updateDepartmentList
 		inform_mesg=""
 		inform_mesg << "Updating Department...<br>"
-		new_depts=E3Service.get_department_list
+		new_depts=E3Service.getDepartmentList
 		inform_mesg << "[Department] Get #{new_depts.length} from E3.<br>"
 		Department.all.each do |dept|
 			if !dept.course_details.empty?
@@ -83,7 +79,7 @@ namespace :course do
 		return inform_mesg
 	end
 	
-	def do_update_coourse(data,sem)
+	def doUpdateCourse(data,sem)
 		course_id=Course.get_from_e3(data).id
 		tids=[]
 		Teacher.where(:real_id=>data['teacher'].split(',')).each do |t|

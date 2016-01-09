@@ -1,7 +1,7 @@
 class CourseMapsController < ApplicationController
 	#include CourseMapsHelper
 
-	before_filter :checkCourseMapPermission, :only=>[:edit, :destroy, :update, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action] #:checkTopManager
+	before_filter :checkCourseMapPermission, :only=>[:edit, :destroy, :update, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action, :notify_user] #:checkTopManager
 	before_filter :checkLogin, :only=>[:cm_public_comment_action]
 ##### resource controller
 
@@ -563,6 +563,13 @@ class CourseMapsController < ApplicationController
 		
 	end
 	
+	def notify_user
+		if request.xhr?
+			cm = CourseMap.find(params[:map_id])
+			UserCoursemapship.where(:course_map_id=>cm.id).update_all(:need_update=>1)
+		end
+		render :nothing => true, :status => 200, :content_type => 'text/html'
+	end
 private
 	def course_map_params
     params.require(:course_map).permit(:title, :department_id, :name, :desc, :year)
@@ -631,5 +638,5 @@ private
 			)
 		end
   end
-
+	
 end

@@ -25,7 +25,10 @@
 </table>
 
 <hr>
-<h3>課程內容</h3>
+<h3>
+課程內容
+<button class="btn btn-sm btn-warning pull-right" id="notify-user">Notify Update</button>
+</h3>
 <div id="course-map-content"></div>
 </div>
 
@@ -91,6 +94,32 @@ $(document).ready(function(){
 		}
 	});
 
+	$("#notify-user").click(function(){
+		if(!confirm("使用此地圖的使用者將會重新計算學分\n"
+				+"請務必做完所有修改後再送出通知。\n\n"
+				+"您確定要送出嗎?")){
+			return false ;
+		}
+		$.ajax({
+				type: "POST",
+				url: "/course_maps/notify_user" ,
+				data:{
+					map_id: map_id,
+				},	
+				success: function(res){					
+					$(this).attr("disabled", true);
+					toastr["success"]("更新成功");
+					setTimeout(function(){
+						$(this).attr("disabled", false);
+					}.bind(this), 5000);
+				}.bind(this),	
+				error: function(){
+					alert("internal server error.");
+				}
+			});
+		return true ;
+	});
+	
 });
 
 </script>

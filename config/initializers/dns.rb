@@ -1,5 +1,5 @@
 class << Resolv
-
+	#speed connect time
   def use_google_dns
     remove_const :DefaultResolver
     const_set :DefaultResolver, self.new(
