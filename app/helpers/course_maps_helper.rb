@@ -3,6 +3,10 @@ module CourseMapsHelper
 	# update cs cf_id, deep to level 2
 	def update_cs_cfids(course_map,user)
 		return if course_map.nil?
+		
+		cmship = UserCoursemapship.where(:user_id=>user.id, :course_map_id=>course_map.id).last
+		cmship.update_attributes!(:need_update=>0)
+		
 		taked=user.normal_scores.includes(:course_detail, :course)
 		agreed=user.agreed_scores.includes(:course)
 		return if agreed.empty? && taked.empty?

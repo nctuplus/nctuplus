@@ -99,14 +99,11 @@ class UserController < ApplicationController
 		
 		@user=getUserByIdForManager(params[:uid])
 		if request.format=="json"
-			course_map=@user.course_maps.first
-			cmship = UserCoursemapship.where(:user_id=>@user.id, :course_map_id=>course_map.id).last
-			if cmship.need_update==1
-				update_cs_cfids(course_map,@user)
-				cmship.need_update=0
-				cmship.save!
-			end
+			course_map=@user.course_maps.first				
 			if course_map
+				cmship = UserCoursemapship.where(:user_id=>@user.id, :course_map_id=>course_map.id).last	
+				update_cs_cfids(course_map,@user) if cmship.need_update==1
+				
 				course_map_res=	{
 					:name=>course_map.department_ch_name+" 入學年度:"+course_map.year.to_s,
 					:id=>course_map.id,
@@ -215,6 +212,7 @@ class UserController < ApplicationController
 			end		
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
 			update_cs_cfids(cm,current_user)
+			
 			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 未通過:#{@no_pass} 修習中:#{@now_taking}"
 			redirect_to :action=>"import_confirm", :msg=>msg
 		end
@@ -236,9 +234,9 @@ class UserController < ApplicationController
 		cm=CourseMap.where(:department_id=>current_user.department_id, :year=>grade).take
 		if cm
 			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
+			update_cs_cfids(cm,current_user)
 		end
-		update_cs_cfids(cm,current_user)
-		
+			
 		redirect_to :controller=> "user", :action=>"show"
 	end
  

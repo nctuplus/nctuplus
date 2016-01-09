@@ -26,8 +26,11 @@
 			<% end %>		
 			if(data["course_map"]){
 				$("#cosmap_check_div").html(tmpl("cosmap_check",data));
+				$("#course_list").html(tmpl("list_by_cosmap",data));
+			}else{ //no mapping course_map
+				$("#course_list").html("喔唷! \n沒有找到對應的課程地圖。\n請確認您的系級是否填寫有誤，或聯絡我們為您服務。");
 			}
-			$("#course_list").html(tmpl("list_by_cosmap",data));
+			
 		});
 	});
 </script>
