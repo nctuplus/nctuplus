@@ -60,7 +60,11 @@
 					<%=link_to "新增商品", new_book_path, class:"btn btn-success", style:"font-size:14px;" %>					
 				</td>
 				<td>
-					<%=link_to "我的商品", "/books/?mine=true", class:"btn btn-info", style:"font-size:14px;" %>
+					<% if current_user %>
+						<%=link_to "我的商品", "/books/?mine=true", class:"btn btn-info", style:"font-size:14px;" %>
+					<% else %>
+						<%=link_to "我的商品", "javascript:void(0);", class:"btn btn-info", style:"font-size:14px;", disabled:true %>
+					<% end %>
 				</td>
 			</tr>
 		</table>

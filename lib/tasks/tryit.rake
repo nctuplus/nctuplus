@@ -7,4 +7,8 @@ namespace :tryit do
 	  p DataStatistics.import_course_count
 	end
 
+	desc "test2"
+	task :test2 => :environment do 
+	  CourseDetail.all.each(&:touch)
+	end
 end

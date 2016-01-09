@@ -61,7 +61,7 @@ Nctuplus::Application.routes.draw do
 
 	post "user/import_course"
 	get "user/import_course"
-	get "user/import_course_2"
+	get "user/import_confirm"
 	
 	get "user/edit"
 	patch "user/update"	
@@ -128,6 +128,7 @@ Nctuplus::Application.routes.draw do
 			post "course_group_action"
 			post "update_cm_head"
 			post "cm_public_comment_action"
+			post "notify_user"
 	  end
 	end
 

@@ -100,7 +100,12 @@ class UserController < ApplicationController
 		@user=getUserByIdForManager(params[:uid])
 		if request.format=="json"
 			course_map=@user.course_maps.first
-			#update_cs_cfids(course_map,@user)
+			cmship = UserCoursemapship.where(:user_id=>@user.id, :course_map_id=>course_map.id).last
+			if cmship.need_update==1
+				update_cs_cfids(course_map,@user)
+				cmship.need_update=0
+				cmship.save!
+			end
 			if course_map
 				course_map_res=	{
 					:name=>course_map.department_ch_name+" 入學年度:"+course_map.year.to_s,
@@ -127,7 +132,7 @@ class UserController < ApplicationController
 		end
 	end
 
-	def import_course_2
+	def import_confirm
 	end
 	
 	def import_course
@@ -156,7 +161,7 @@ class UserController < ApplicationController
 				redirect_to :action =>"show", :msg=>msg
 				return
 			end
-
+			
 			@pass_score=current_user.pass_score
 			has_added=0
 			@success_added=0
@@ -164,15 +169,18 @@ class UserController < ApplicationController
 			fail_course_name=[]
 			@no_pass=0
 			@pass=0
-			if normal.length>0
-				#CourseSimulation.where("user_id = ? AND semester_id != ? ",current_user.id,Semester.last.id).destroy_all
+			
+			if normal.length>0				
 				current_user.normal_scores.destroy_all
 				current_user.agreed_scores.destroy_all
 			else
 				msg="匯入失敗!"
-				redirect_to :action=>"import_course_2", :msg=>msg
+				redirect_to :action=>"import_confirm", :msg=>msg
 				return
 			end	
+			
+			
+			
 			agree.each do |a|
 				#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
 				course=Course.where(:real_id=>a[:real_id]).take
@@ -208,7 +216,7 @@ class UserController < ApplicationController
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
 			update_cs_cfids(cm,current_user)
 			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 未通過:#{@no_pass} 修習中:#{@now_taking}"
-			redirect_to :action=>"import_course_2", :msg=>msg
+			redirect_to :action=>"import_confirm", :msg=>msg
 		end
 	end
 

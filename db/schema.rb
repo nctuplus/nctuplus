@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151020144907) do
+ActiveRecord::Schema.define(version: 20160109075722) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -173,19 +173,21 @@ ActiveRecord::Schema.define(version: 20151020144907) do
   add_index "course_content_lists", ["user_id"], name: "index_course_content_lists_on_user_id", using: :btree
 
   create_table "course_details", force: true do |t|
-    t.integer "course_teachership_id"
-    t.integer "department_id",                     null: false
-    t.integer "semester_id"
-    t.string  "grade"
-    t.string  "time"
-    t.string  "room"
-    t.string  "temp_cos_id"
-    t.string  "cos_type"
-    t.string  "brief"
-    t.text    "memo"
-    t.string  "reg_num"
-    t.string  "students_limit"
-    t.integer "view_times",            default: 0, null: false
+    t.integer  "course_teachership_id"
+    t.integer  "department_id",                     null: false
+    t.integer  "semester_id"
+    t.string   "grade"
+    t.string   "time"
+    t.string   "room"
+    t.string   "temp_cos_id"
+    t.string   "cos_type"
+    t.string   "brief"
+    t.text     "memo"
+    t.string   "reg_num"
+    t.string   "students_limit"
+    t.integer  "view_times",            default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "course_details", ["course_teachership_id"], name: "index_new_course_details_on_course_teachership_id", using: :btree
@@ -387,7 +389,7 @@ ActiveRecord::Schema.define(version: 20151020144907) do
     t.integer  "user_id"
     t.integer  "course_teachership_id"
     t.integer  "semester_id"
-    t.boolean  "is_anonymous",          default: false
+    t.boolean  "is_anonymous",          default: false, null: false
     t.string   "description"
     t.integer  "download_times"
     t.string   "upload_file_name"
@@ -461,6 +463,7 @@ ActiveRecord::Schema.define(version: 20151020144907) do
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"
     t.integer  "user_id"
+    t.integer  "need_update",   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
