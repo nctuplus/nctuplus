@@ -4,6 +4,7 @@
 	$(function(){
 		var data=<%=@result.to_json.html_safe%>;
 		$("#content-page").html(tmpl("discuss-modal-title",data )+tmpl("discuss-modal-content",data));
+		$("#sub_discuss_discuss_id").val("<%=@discuss.id%>");
 		<% share_url=request.original_url %>
 		$("[class^=share-button]").each(function(){
 			var share_url='<%=j share_url.html_safe%>';

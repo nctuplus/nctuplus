@@ -78,16 +78,16 @@ zh-TW:
         one: 一年多
         other: "%{count} 年前"
       x_days:
-        one: 一天
+        one: 一天前
         other: "%{count} 天前"
       x_minutes:
-        one: 一分鐘
+        one: 一分鐘前
         other: "%{count} 分鐘前"
       x_months:
-        one: 一個月
+        one: 一個月前
         other: "%{count} 個月前"
       x_seconds:
-        one: 一秒
+        one: 一秒前
         other: "%{count} 秒前"
     prompts:
       day: 日

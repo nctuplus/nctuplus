@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+		<p>
+			請點以下網址回覆~ <%=link_to "https://plus.nctu.edu.tw/discusses/#{@discuss.id}","https://plus.nctu.edu.tw/discusses/#{@discuss.id}"%><br>
+      內容:
+		</p>
+		<h4><%=simple_format @sub_discuss.content%></h4>
+		<p>
+			<%=link_to "NCTU+","https://plus.nctu.edu.tw/"%> 交大智慧校園系統<br>
+			Brilliant College Life
+		</p>
+	</body>
+</html>

@@ -44,6 +44,9 @@ class DiscussesController < ApplicationController
 			@discuss=current_user.discusses.create(main_discuss_params.merge({:likes=>0,:dislikes=>0}))
 		elsif params[:type]=="sub"
 			@discuss=current_user.sub_discusses.create(sub_discuss_params.merge({:likes=>0,:dislikes=>0}))
+			if !@discuss.discuss.is_anonymous && @discuss.discuss.user_id != current_user.id
+				InformMailer.discuss_reply(@discuss).deliver#.discuss.user_id
+			end
 		end
 		if !request.xhr?
 			redirect_to :action => :index
