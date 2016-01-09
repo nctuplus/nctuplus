@@ -31,20 +31,19 @@
 								<!--建議以Chrome 或 Firefox瀏覽<br>
 								∎　6/8 二手書系統上線-->
 								<br>
-								∎ 01/03 第二階段初選：<strong>2016/01/12~2016/01/14</strong><br>
-								∎ 01/08 開學後加退選：<strong>2016/02/16~2016/02/26</strong><br>
-								
+								■ 01/08　開學後加退選 2016/02/16~2016/02/26<br>
+								■ 01/03　第二階段初選 2016/01/12~2016/01/14<br>
 							</div>
 						</li>
 						<li>
 							<input type="radio" name="tabs" id="tab2" />
 							<label for="tab2"><h5>Updates</h5></label>
 							<div id="tab-content1" class="tab-content">
-								∎ 01/03　新增「最新消息佈告欄」<br>
-								∎ 01/03　新增「問題回報」功能<br>
-								∎ 12/31　修正學分計算錯誤<br>
-								∎ 12/25　課程資料更新至104下<br>
-								∎ 12/08　新增「考古題&二手書」分類搜尋<br>
+								■ 01/03　新增「最新消息佈告欄」<br>
+								■ 01/03　新增「問題回報」功能<br>
+								■ 12/31　修正學分計算錯誤<br>
+								■ 12/25　課程資料更新至104下<br>
+								■ 12/08　新增「考古題&二手書」分類搜尋<br>
 							</div>
 						</li>
 					</ul>
@@ -166,12 +165,12 @@ $(document).ready(function(){
             maxFontSize: '65px'
         }
     );
-		var brief_intro =["即將畢業，給自己一個安心，<br>快登入使用算學分功能！","機會是留給有準備的人，<br>快登入使用模擬排課!","手邊有用不到的教科書嗎?<br>快登入使用二手書平台!"];
+		var brief_intro =["即將畢業，給自己一個安心，<br>快登入使用算學分功能！","機會是留給有準備的人，<br>快登入使用模擬排課！","手邊有用不到的教科書嗎?<br>快登入使用二手書平台!"];
 		$("#brief-intro").html(brief_intro[Math.floor(Math.random()*3)]);
 		var aa = ['url(<%=asset_path "bg6.jpg"%>)','url(<%=asset_path "bg5.jpg"%>)','url(<%=asset_path "bg3.jpg"%>)'];
 		var t1=0;
 		setInterval(function() {
-		$('.bg1').fadeOut(10000, function() 
+		$('.bg1').fadeOut(5000, function() 
 		{
 				
 				$('.bg1').css('background-image', aa[t1]).fadeIn(3000);
