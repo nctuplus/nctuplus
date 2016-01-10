@@ -38,7 +38,7 @@ class BooksController < ApplicationController
 		end
 		@sale_books=@q.result(distinct: true)
 				.includes(:book, :user, :course_teacherships)
-				.page(params[:page]).per(9)
+				.page(params[:page]).per(15)
 				.order("book_trade_infos.created_at DESC,book_trade_infos.status ASC")
 				
 		@recent = BookTradeInfo.recents
