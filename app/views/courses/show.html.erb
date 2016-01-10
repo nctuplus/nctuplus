@@ -11,6 +11,9 @@
 			<div class="col-md-10">
 				<h1 class="scroll-title" data-offset="100">	
 					<%= @data[:course_name] %>－<%=@data[:course_teachers]%>
+					<small style="font-size: 37%" title="E3課程資料同步時間">
+						最後同步時間 <%=@data[:updated_at].strftime("%F %R")%>
+					</small>
 				</h1>
 			</div>
 			<div class="col-md-2" id="teacher-name">
@@ -168,23 +171,7 @@
 				});
 			});
 		});
-		/*
-		$("#compare").load("/course_content/get_compare?c_id=<%=j @data[:course_id]%>", function() {
-			$('body').scrollspy('refresh');
-			$("#discuss").load("/discusses/list_by_ct?ct_id=<%=@data[:course_teachership_id]%>&target=<%=params[:target]%>", function() {
-				$('body').scrollspy('refresh');
-				$("#files").load("/past_exams/course_page?ct_id=<%=@data[:course_teachership_id]%>", function() {
-					$('body').scrollspy('refresh');
-					$('body').scrollTo("#course-name",10,{offset:-80});
-					<% if params[:first_show]=="discussion" %>
-						$('body').scrollTo("#discuss",700,{offset:-60});
-					<% elsif params[:first_show]=="files" %>
-						$('body').scrollTo("#files",700,{offset:-60});
-					<% end %>
-				});
-			});
-		});
-		*/
+
 		// FB share	
 		<% share_url="#{root_url}courses/#{@data[:course_detail_id]}" %>
 		var share_url='<%=j share_url.html_safe %>';

@@ -87,7 +87,8 @@ class CoursesController < ApplicationController
 			:half=>cd.semester_half,
 			:course_credit=>cd.course.credit,
 			:open_on_latest=>(cd.course_teachership.course_details.last.semester_id==Semester::LAST.id) ? true : false ,
-			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC")
+			:related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC"),
+			:updated_at=>cd.updated_at
 		}
 		#render "/course_content/show"
   end

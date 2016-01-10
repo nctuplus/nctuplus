@@ -22,7 +22,8 @@ class AdminController < ApplicationController
 		if params[:search].nil?
 			@users= User.all
 		else
-			@users = User.ransack(name_cont: params[:search]).result
+			@users = User.joins("LEFT JOIN auth_e3s ON users.id = auth_e3s.user_id")
+								.ransack(name_or_studentId_cont: params[:search]).result
 		end
 		@users = @users.includes(:department, :course_maps).page(params[:page]).per(20)
 		@course_map = CourseMap.all

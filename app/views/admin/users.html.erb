@@ -42,6 +42,7 @@
 			if(val.length==0) return false ;
 			var cur_loc = document.location ;
 			document.location.href = cur_loc["origin"]+cur_loc["pathname"]+"?search="+val;
+			$(this).attr("disabled", true).html('<%=fa_icon "spinner spin"%>');
 		});
 		
 		$(".course_map").change(function(){
