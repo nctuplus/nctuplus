@@ -33,7 +33,7 @@
 			<div class="col-md-5">
 				<div class="row pull-right">
 					<br>
-					<% can_like=current_user && discuss.discuss_likes.select{|l|l.user_id==current_user.id}.empty? %>					
+					
 					<div style="display:inline-block;margin-right:5px;">
 						<div class="share-button_<%=discuss.id%>" id="<%=discuss.id%>"></div>				
 					</div>
