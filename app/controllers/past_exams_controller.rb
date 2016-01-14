@@ -17,7 +17,9 @@ class PastExamsController < ApplicationController
 		end
 		@recent=PastExam.includes(:user,:course_teachership, :course).order("created_at DESC").take(10).map{|exam|{
 			:url=>exam.upload.url(:original),
-			:ct_name=>"#{exam.course.ch_name}",#/#{exam.course_teachership.teacher_name}",
+			#:ct_name=>"#{exam.course.ch_name}",#/#{exam.course_teachership.teacher_name}", 
+			#bug fixed 20160114
+			:ct_name=>"#{exam.try(:course).try(:ch_name)}"
 			:user_name=>exam.owner_name,
 			:time=>exam.created_at,
 			:name=>exam.upload_file_name			
