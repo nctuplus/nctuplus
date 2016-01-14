@@ -108,7 +108,7 @@ class DiscussesController < ApplicationController
 	def list_by_ct
 		#@ct_id=
 		@ct=CourseTeachership.includes(:course).find(params[:ct_id].to_i)
-		@discusses=@ct.discusses.includes(:sub_discusses, :user, :discuss_likes).order("updated_at DESC")
+		@discusses=@ct.discusses.includes(:sub_discusses, :user).order("updated_at DESC")
 		render :layout=>false
 	end
 	

@@ -16,17 +16,12 @@
 	<div class="col-md-3 well" id="blue-menu">
 		
 		<%= search_form_for @q, url:"/discusses/", class:"form-inline" do |f| %>
-			<div class="row">	
-				<div class="col-md-12 text-center">
-
-					<div class="input-group" >
-						<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"/*width:350px;*/" %>
-						<span class="input-group-btn">
-							<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-						</span><!-- /btn-group -->
-					</div><!-- /input-group -->
-				</div>
-			</div>
+			<div class="col-md-12 input-group" >
+				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/標題",style:"/*width:350px;*/" %>
+				<span class="input-group-btn">
+					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+				</span><!-- /btn-group -->
+			</div><!-- /input-group -->
 			<% if params[:q].present? %>
 				<% params[:q].each do |key,value| %>
 					<%=hidden_field_tag "q[#{key}]",value %>
@@ -36,21 +31,16 @@
 		<% end %>
 		<br>
 		<div class="row">
-		<table id="link-group" class="table table-bordered text-center" style="" >
-			<tr>
-				<td>
-					<%=link_to "新增文章",new_discuss_path, class:"btn btn-sm btn-info", style:"font-size:14px;"%>
-					<!--<%=link_to "上傳考古題","/past_exams/upload", class:"btn btn-sm btn-info", style:"font-size:14px;","data-no-turbolink"=>"true" %>-->
-				</td>
-				<td >
-					<% if current_user %>
+			<table id="link-group" class="table table-bordered text-center" style="" >
+				<tr>
+					<td>
+						<%=link_to "新增文章",new_discuss_path, class:"btn btn-sm btn-info", style:"font-size:14px;"%>
+					</td>
+					<td >
 						<%=link_to "我的文章","/discusses/?mine=true",class:"btn btn-sm btn-primary",style:"font-size:14px;" %>
-					<% else %>
-						<%=link_to "我的文章","javascript:void(0);", class:"btn btn-sm btn-primary", style:"font-size:14px;", disabled:true %>
-					<% end %>
-				</td>
-			</tr>
-		</table>
+					</td>
+				</tr>
+			</table>
 		</div>
 		<h4 class="text-center" style="margin-top:-5px">分類</h4>
 		<div class="row">

@@ -35,9 +35,10 @@ class User < ActiveRecord::Base
 	
 	has_many :user_collections
 	
-
-
-
+# for admin user search
+	ransacker :studentId do |user|
+		Arel.sql('auth_e3s.student_id')
+	end
 
 #	has_many :user_share_images
 
