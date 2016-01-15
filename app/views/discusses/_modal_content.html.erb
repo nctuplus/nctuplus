@@ -1,6 +1,6 @@
 <script type="text/x-tmpl" id="discuss-modal-title">
 	<div class="panel-heading row no-margin-left no-margin-right" style="padding-bottom:0px;">
-		<div class="col-md-1">
+		<div class="col-md-1 col-xs-2">
 			{% if(o.is_anonymous||!o.uid){ %}
 				<%=image_tag asset_path("anonymous.jpg"),size:"50x50",style:"margin-top:10px;" %>
 			{% } else { %}
@@ -9,14 +9,18 @@
 				</a>
 			{% } %}
 		</div>
-		<div class="col-md-7" >
+		<div class="col-md-7 col-xs-10" >
 			<h4>{%=o.title%} </h4>
-			<p style="font-size:14px;">
+			
+			<p class="hidden-xs" style="font-size:14px;">
 				{%=o.user_name%} {%=o.time%}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="/courses/{%=o.cd_id%}" target="_blank">{%=o.ct_name%}</a>
 			</p>
-			
+			<p class="visible-xs" style="font-size:12px;">
+				{%=o.user_name%} {%=o.time%}<br>
+				<a href="/courses/{%=o.cd_id%}" target="_blank">{%=o.ct_name%}</a>
+			</p>
 		</div>
-		<div class="col-md-4">
+		<div class="col-md-4 col-xs-12">
 			{% if(!o.isPreview){ %}
 			<div class="row pull-right">
 				<br>
@@ -55,7 +59,7 @@
 	{% } %}
 </script>
 <script type="text/x-tmpl" id="sub_d-content">
-	<div class="col-md-1" style="padding-left:30px;">
+	<div class="col-md-1 col-xs-2" style="padding-left:30px;">
 		{%if(o.uid){ %}
 			<a href="https://www.facebook.com/{%=o.uid%}" target="_blank">
 				<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
@@ -64,11 +68,16 @@
 			<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
 		{% } %}
 	</div>
-	<div class="col-md-10">
+	<div class="col-md-10 col-xs-10">
 		{%=o.user_name%} {%=o.time%}<br>
 		<textcontent>{%=o.content%}</textcontent>
 	</div>
-	<div class="col-md-1 no-padding-left">
+	<div class="hidden-xs hidden-sm col-md-1 no-padding-left">
+		{% if(o.editable){ %}
+			<button class="btn btn-info" onclick="edit($(this),{%=o.id%});">修改</button>
+		{% } %}
+	</div>
+	<div class="visible-xs col-xs-12 text-right">
 		{% if(o.editable){ %}
 			<button class="btn btn-info" onclick="edit($(this),{%=o.id%});">修改</button>
 		{% } %}

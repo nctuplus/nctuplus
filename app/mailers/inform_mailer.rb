@@ -7,6 +7,6 @@ class InformMailer < ActionMailer::Base
 	def discuss_reply(sub_discuss)
 		@sub_discuss=sub_discuss
 		@discuss=@sub_discuss.discuss
-		mail(to: @discuss.user.email, subject: "#{@sub_discuss.user.name} 回應了您的文章 #{@discuss.title}")
+		mail(to: @discuss.user.email, subject: "NCTU+文章回應通知:#{@discuss.title}")
 	end
 end

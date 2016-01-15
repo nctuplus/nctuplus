@@ -68,8 +68,8 @@
 			</table>
 		</div>
 
-		<h4 class="text-center" style="margin-top:-5px">最新動態</h4>
-		<div class="row">
+		<h4 class="text-center hidden-xs" style="margin-top:-5px">最新動態</h4>
+		<div class="row hidden-xs">
 			<div class="list-group">
 				<% @recent.each do |recent|%>
 						<% if recent[:type]=="main" %>
@@ -91,16 +91,16 @@
 			<tr>
 				<th>課程</th>
 				<th>標題</th>
-				<th>作者</th>
-				<th>時間</th>
+				<th class="hidden-xs">作者</th>
+				<th class="hidden-xs">時間</th>
 			</tr>
 		<% @discusses.each do |discuss| %>
 			<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.to_json_obj(current_user.try(:id)).to_json%>');">
 				<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
 				<td class="title"><%=discuss.title%></td>		
-				<td class="user_name"><%=discuss.is_anonymous ? "匿名" : discuss.user_name%></td>
+				<td class="hidden-xs user_name"><%=discuss.is_anonymous ? "匿名" : discuss.user_name%></td>
 				<td class="user_id hidden"><%=discuss.user.uid%></td>
-				<td class="time"><%=discuss.created_at%></td>
+				<td class="hidden-xs"><%=discuss.created_at%></td>
 				<% discuss.sub_discusses.each do |sub_d| %>
 					<td class="sub_content hidden"><%=sub_d.content%></td>
 				<% end %>
