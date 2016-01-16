@@ -26,7 +26,9 @@ class CourseDetail < ActiveRecord::Base
 	
 	
 	def incViewTimes!
-		update_attributes(:view_times=>self.view_times+1)
+		self.record_timestamps = false
+			update_attributes(:view_times=>self.view_times+1)
+	  self.record_timestamps = true
 	end
 
 	def self.flit_semester(sem_id)
