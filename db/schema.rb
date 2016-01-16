@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160116070010) do
+ActiveRecord::Schema.define(version: 20160116072259) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -318,8 +318,6 @@ ActiveRecord::Schema.define(version: 20160116070010) do
   create_table "discusses", force: true do |t|
     t.integer  "user_id"
     t.integer  "course_teachership_id"
-    t.integer  "likes"
-    t.integer  "dislikes"
     t.string   "title"
     t.text     "content"
     t.boolean  "is_anonymous",          default: false
@@ -370,9 +368,8 @@ ActiveRecord::Schema.define(version: 20160116070010) do
   create_table "sub_discusses", force: true do |t|
     t.integer  "user_id"
     t.integer  "discuss_id"
-    t.integer  "likes"
-    t.integer  "dislikes"
     t.text     "content"
+    t.boolean  "is_anonymous", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end

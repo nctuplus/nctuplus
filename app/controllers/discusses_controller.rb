@@ -99,38 +99,6 @@ class DiscussesController < ApplicationController
 		render :layout=>false
 	end
 	
-	def like
-		@like=current_user.discuss_likes.create(:like=>params[:like])
-		
-		case params[:type] 
-			when "main"
-				@like.discuss_id=params[:discuss_id]
-				@discuss=Discuss.find(params[:discuss_id])
-				unless @discuss.discuss_likes.select{|l|l.user_id==current_user.id}.empty?
-					render :nothing => true, :status => 400, :content_type => 'text/html'
-					return
-				end
-			when "sub"
-				@like.sub_discuss_id=params[:discuss_id]
-				@discuss=SubDiscuss.find(params[:discuss_id])
-				unless @discuss.discuss_likes.select{|l|l.user_id==current_user.id}.empty?
-					render :nothing => true, :status => 400, :content_type => 'text/html'
-					return
-				end
-			else 
-				return
-		end
-		@like.save!
-		if @like.like
-			@discuss.likes+=1
-			@discuss.save!
-		else
-			@discuss.dislikes+=1
-			@discuss.save!
-		end
-		render :nothing => true, :status => 200, :content_type => 'text/html'	
-		
-	end
 	
 	private
 
