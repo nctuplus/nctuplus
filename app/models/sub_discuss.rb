@@ -27,7 +27,6 @@ class SubDiscuss < ActiveRecord::Base
 			:id=>self.id,
 			:uid=>self.user.try(:uid),
 			:editable=>self.user_id==current_user_id,
-			:likes=>self.discuss_likes.count,
 			:user_name=>self.owner_name,
 			:content=>self.content,
 			:time=>self.updated_at.strftime("%Y/%m/%d %H:%M"),
