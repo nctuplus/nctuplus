@@ -12,37 +12,34 @@ class User < ActiveRecord::Base
 	delegate :degree, :to=> :department
 	#delegate :uid, :to=> :auth_facebook
 	
+	#these are important user data so can't add dependent=> :destroy!!
 	has_many :book_trade_infos
 	has_many :past_exams
 	has_many :discusses
 	has_many :sub_discusses
-	has_many :discuss_likes
 	has_many :course_content_lists
 	has_many :content_list_ranks
 	has_many :comments
 	has_many :course_teacher_ratings
 	
-	#has_many :course_simulations, :dependent=> :destroy
-	
+
 	has_many :user_coursemapships, :dependent=> :destroy
 	has_many :course_maps, :through=> :user_coursemapships
 	has_many :admin_cms, :class_name=> "CourseMap"
+	
+	
 	has_many :agreed_scores, :dependent=> :destroy
-	
 	has_many :normal_scores, :dependent=> :destroy
-	#has_many :course_details, :through=> :normal_scores
-	#has_many :semesters, :through=> :course_details
-	
-	has_many :user_collections
+
+	#timetable collection
+	has_many :user_collections, :dependent=> :destroy
 	
 # for admin user search
 	ransacker :studentId do |user|
 		Arel.sql('auth_e3s.student_id')
 	end
 
-#	has_many :user_share_images
 
-	
 	#validates :email, uniqueness: true
 	validates :name, :uniqueness=>true, :length=> { :maximum=> 16, :message=>"姓名過長(max:16)" }, :on => :update
 	validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update

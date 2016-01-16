@@ -18,10 +18,10 @@
 			<% if discuss.is_anonymous %>
 				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:"匿名" %>
 			<% elsif !discuss.user.hasFb? %>
-				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:discuss.user_name %>
+				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:discuss.owner_name %>
 			<% else %>
-				<a href="https://www.facebook.com/<%=discuss.user_uid%>" target="_blank" class="masterTooltip" title="<%=discuss.user_name%>">
-					<%= image_tag "http://graph.facebook.com/"<<discuss.user_uid<<"/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
+				<a href="https://www.facebook.com/<%=discuss.user_uid%>" target="_blank" class="masterTooltip" title="<%=discuss.owner_name%>">
+					<%= image_tag "http://graph.facebook.com/#{discuss.try(:user).try(:uid)}/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
 				</a>
 			<% end %>
 			
@@ -52,10 +52,10 @@
 					<div class="col-md-1">
 						
 						<% if !sub_d.user.hasFb? %>
-							<%= image_tag asset_path("anonymous.jpg"), size: "45x45", style:"margin-top:10px;", alt:"Anonymous", title:sub_d.user_name %>
+							<%= image_tag asset_path("anonymous.jpg"), size: "45x45", style:"margin-top:10px;", alt:"Anonymous", title:sub_d.owner_name %>
 						<% else %>
-							<a href="https://www.facebook.com/<%=sub_d.user_uid%>" target="_blank" class="masterTooltip" title="<%=sub_d.user_name%>">
-								<%= image_tag "http://graph.facebook.com/"<<sub_d.user_uid<<"/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
+							<a href="https://www.facebook.com/<%=sub_d.try(:user).try(:uid)%>" target="_blank" class="masterTooltip" title="<%=sub_d.owner_name%>">
+								<%= image_tag "http://graph.facebook.com/#{sub_d.try(:user).try(:uid)}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
 							</a>
 						<% end %>
 						<br>

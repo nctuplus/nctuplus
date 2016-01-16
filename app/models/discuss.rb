@@ -8,7 +8,7 @@ class Discuss < ActiveRecord::Base
 	#has_many :discuss_verifies, :dependent => :destroy
 	#has_many :discuss_likes, :dependent => :destroy
 	has_many :sub_discusses, :dependent => :destroy
-	delegate :name, :uid, :to=>:user, :prefix=>true
+	delegate :uid, :to=>:user, :prefix=>true
 	delegate :ch_name, :to=>:course, :prefix=>true
 	validates_presence_of :title, :content, :user_id, :course_teachership_id
 
@@ -23,8 +23,17 @@ class Discuss < ActiveRecord::Base
 	def owner_name
 		return self.is_anonymous ? "匿名" : self.try(:user).try(:name)#user_name
 	end
-	
-	def to_json_obj(current_user_id)
+	def recent_obj
+		return {
+			:type=>"main",
+			:id=>self.id,
+			:title=>self.title,
+			:ct_name=>self.course_ch_name,#/#{self.course_teachership.teacher_name}",
+			:user_name=>self.owner_name,
+			:time=>self.created_at
+		}
+	end
+	def show_obj(current_user_id)
 		if self.is_anonymous || !self.user.hasFb?
 			src=ActionController::Base.helpers.asset_path("anonymous.jpg")
 		else
@@ -34,15 +43,14 @@ class Discuss < ActiveRecord::Base
 			:id=>self.id,
 			:is_anonymous=>self.is_anonymous,
 			:editable=>self.user_id==current_user_id,
-			:uid=>self.user.try(:uid),
-			#:likes=>self.discuss_likes.count,
+			:uid=>self.try(:user).try(:uid),
 			:ct_name=>"#{self.course_ch_name}/#{self.course_teachership.teacher_name}",
 			:cd_id=>self.course_teachership.course_details.last.id,
-			:user_name=>self.owner_name,#self.is_anonymous ? "匿名" : self.user_name,
+			:user_name=>self.owner_name,
 			:title=>self.title,
 			:content=>self.content,
 			:time=>self.updated_at.strftime("%Y/%m/%d %H:%M"),
-			:sub_discusses=>self.sub_discusses.includes(:user).order("updated_at DESC").map{|sub_d|sub_d.to_json_obj(current_user_id)},
+			:sub_discusses=>self.sub_discusses.includes(:user).map{|sub_d|sub_d.show_obj(current_user_id)},
 			:imgsrc=> src,
 			:isPreview=>false
 		}

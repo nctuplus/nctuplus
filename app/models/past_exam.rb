@@ -3,25 +3,25 @@ class PastExam < ActiveRecord::Base
   belongs_to :user
   belongs_to :course_teachership
 	belongs_to :semester
+	
 	has_one :course, :through=>:course_teachership
+	
 	has_many :course_details, :through=>:course_teachership
 	has_many :departments, :through=>:course_details
 	has_many :colleges, :through=>:departments
-	#delegate :name, :to=>:user, :prefix=>true
+
 	delegate :name, :to=>:semester, :prefix=>true
 	
-  #validates_presence_of :semester_id, :course_teachership_id
+  validates_presence_of :user_id, :semester_id, :course_teachership_id
 
 	has_attached_file :upload,  
-
-	:path => ":rails_root/file_upload/:ct_id/:user_id/:filename",
-  :url => "/past_exams/:id"
+		:path => ":rails_root/file_upload/:ct_id/:user_id/:filename",
+		:url => "/past_exams/:id"
 
 	do_not_validate_attachment_file_type :upload
   include Rails.application.routes.url_helpers
 	
 	def self.search_by_text(text)
-		#search(q).result(distinct: true).
 		search({
 			:course_ch_name_or_description_cont=>text,
 			:m=>"or",

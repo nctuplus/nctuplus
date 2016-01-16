@@ -95,10 +95,10 @@
 				<th class="hidden-xs">時間</th>
 			</tr>
 		<% @discusses.each do |discuss| %>
-			<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.to_json_obj(current_user.try(:id)).to_json%>');">
+			<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.show_obj(current_user.try(:id)).to_json%>');">
 				<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
 				<td class="title"><%=discuss.title%></td>		
-				<td class="hidden-xs user_name"><%=discuss.is_anonymous ? "匿名" : discuss.user_name%></td>
+				<td class="hidden-xs user_name"><%=discuss.owner_name%></td>
 				<td class="user_id hidden"><%=discuss.user.uid%></td>
 				<td class="hidden-xs"><%=discuss.created_at%></td>
 				<% discuss.sub_discusses.each do |sub_d| %>
