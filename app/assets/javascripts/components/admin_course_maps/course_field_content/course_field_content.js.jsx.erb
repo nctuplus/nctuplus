@@ -1,0 +1,37 @@
+var CourseFieldContent = React.createClass({
+	
+	render: function(){
+		var click_node = this.props.click_node ;
+		var cf = this.props.course_field ;
+		//console.log(cf);
+		
+		// control header 
+		var center_header1, center_header2 ;
+		if(click_node && click_node > 0 ){
+			center_header1 = <CourseFieldHeader data={cf} /> ;
+			center_header2 = <CourseFieldCreditList data={cf} />;
+		}	
+	
+		// control center content 
+		var center_content;
+		if(click_node){
+			if(click_node > 0){ // show course field(group) list
+				if(cf){
+					if(cf.field_type<=2)// 必修或選修
+						center_content = <CourseFieldList data={cf} /> ;				
+				}
+			}else{ // show new form
+				//TODO
+			} 
+		}else // init: nothing is selected
+			center_content = (<div>請由右方選擇</div>) ;
+		
+		return (
+			<div>
+				{center_header1}
+				{center_header2}
+				{center_content}
+			</div>
+		);
+	}
+});

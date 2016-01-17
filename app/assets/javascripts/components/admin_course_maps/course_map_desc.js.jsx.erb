@@ -1,0 +1,141 @@
+var CourseMapDesc = React.createClass({
+	getInitialState: function() {
+		var data = this.props.data ;
+
+		return { 
+			edit_stage: "show",
+			dep_id: data.dep_id,
+			dep_name: data.dep_name,
+			year: data.year,
+			credit: data.credit,
+			desc: data.desc
+		};
+	},
+	editCourseMap: function(){
+		var this_state = this.state.edit_stage ;
+		if(this_state=="edit"){
+			$.ajax({
+				type: "post",
+				url: "/course_maps/react_update",
+				data: { 
+					id: this.props.data.id,
+					dep: this.state.dep_id,
+					year: this.state.year,
+					credit: this.state.credit,
+					desc: this.state.desc
+				},
+				success: function(){ 
+					this.setState({edit_stage: "show"}); 
+				}.bind(this)
+			});	
+		}else
+			this.setState({edit_stage: "edit"});
+	},
+	
+	depts: <%=Department.majorable.order("degree DESC").map{|d| [d.id, d.ch_name]} %> ,
+	
+	depOnChange: function(event){
+		var dep_id = event.target.value ;
+		var dep_name = "" ;
+		//console.log(dep_id);
+		this.depts.forEach(function(dep){
+			if(dep[0]==dep_id)				
+				dep_name = dep[1];
+			
+		});
+		this.setState({dep_id: dep_id, dep_name: dep_name});
+	},
+	
+	creditOnChange: function(event){
+		this.setState({credit: event.target.value});
+	},
+	descOnChange: function(event){
+		this.setState({desc: event.target.value});
+	},
+	yearOnChange: function(event){
+		this.setState({year: event.target.value});
+	},
+	
+	render: function(){
+		var data = this.props.data ;
+		var state = this.state.edit_stage;
+	//	console.log(data)
+		var edit_course_map;
+		if(state=="edit")
+			edit_course_map = (<a href="javascript:void(0);" onClick={this.editCourseMap}>完成送出</a>);
+		else
+			edit_course_map = (<a href="javascript:void(0);" onClick={this.editCourseMap}>編輯</a>);
+		
+		var dep ;
+		if(state=="edit"){
+			var options=[];
+			this.depts.forEach(function(d, idx){
+				options.push(<option value={d[0]} key={idx}>{d[1]}</option>);
+			});
+			
+			dep = (<Input value={this.state.dep_id} 
+							type="select" 
+							onChange={this.depOnChange} >
+							{options}
+						</Input>);
+		}else
+			dep = (this.state.dep_name || "不指定") ;
+		
+		var year ; 
+		if(state=="edit"){
+			const years = <%=Semester::YEARS.map{ |y| [y,y] }%>;
+			var options=[];
+			years.forEach(function(d, idx){
+				options.push(<option value={d[0]} key={idx}>{d[1]}</option>);
+			});		
+			year = (<Input type="select" value={this.state.year} onChange={this.yearOnChange} >
+							{options}
+						</Input>);
+		}else
+			year = (this.state.year || "不指定") ;
+		
+		var credit ; 
+		if(state=="edit"){
+			credit = <Input type="text" 
+					bsSize="small" 
+					value={this.state.credit} 
+					onChange={this.creditOnChange} /> ;
+		}else
+			credit = this.state.credit ;
+		
+		var desc ;
+		if(state=="edit"){
+			desc = <Input type="textarea" value={this.state.desc}
+				onChange={this.descOnChange} 
+				
+				/> ;
+		}else
+			desc = this.state.desc ;
+		
+		
+		return (
+			<Row>
+				<h3>
+					課程地圖 - {data.name}
+					<small>{edit_course_map}</small>
+				</h3>
+				<table className="table table-bordered text-center">
+					<tr>
+						<td className="col-md-2">適用系所：</td>
+						<td className="col-md-3">{dep}</td>
+						<td className="col-md-2">適用學期：</td>
+						<td className="col-md-1">{year}</td>
+						<td className="col-md-2">應修學分：</td>
+						<td className="col-md-1">{credit}</td>
+					</tr>
+					<tr>
+						<td colSpan="6" className="col-md-12">
+							<p>說明：</p>
+							<p>{desc}</p>
+						</td>
+					</tr>	
+				</table>
+			</Row>	
+		);
+	}
+});

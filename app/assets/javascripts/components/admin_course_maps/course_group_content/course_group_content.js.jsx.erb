@@ -1,0 +1,84 @@
+var CourseGroupContent = React.createClass({
+	getInitialState: function() {
+    return {};
+	},
+	componentWillReceiveProps: function(next_props){	
+		// only get new props when use click treeview
+		if(next_props.click_node && next_props.course_group)
+		this.setState({ 
+					leader_name: next_props.course_group.text,
+					gtype: next_props.course_group.gtype,
+					courses: next_props.course_group.courses 
+				});
+	},
+	
+	setLeaderName: function(leader_id, name){
+		$.ajax({
+			type: "post",
+			url: "/course_groups/setleader",
+			data: {id: this.props.course_group.id, leader_id: leader_id },
+			success: function(){
+				this.setState({leader_name: name});
+			}.bind(this)
+		});
+	},
+	
+	changeGtype: function(){		
+		$.ajax({
+			type: "post",
+			url: "/course_groups/gtype_change",
+			data: {id:this.props.course_group.id},
+			success: function(){
+				this.setState({gtype: this.state.gtype==0 ? 1:0}) ;
+			}.bind(this)
+		});
+	},
+	
+	deleteCourseGroup: function(){
+		this.props.deleteCourseGroup(this.props.course_group.id);
+	},
+	
+	deleteCourse: function(del_node){
+	//	console.log(del_node.id);
+		var remaining = _.reject(this.state.courses, function(node){
+			return node.id == del_node.id ;
+		});
+		var next_state = { courses: remaining } ;
+		if(del_node.leader)
+			next_state["leader_name"] = null ;
+		
+		$.ajax({
+			type: "post",
+			url: "/course_groups/delete_course",
+			data: {id: del_node.id},
+			success: function(){
+				this.setState(next_state);
+			}.bind(this)
+		});
+	},
+	
+	render: function(){
+		var click_node = this.props.click_node ;
+	
+		var header, content ;
+		if(click_node && click_node > 0 ){
+			header = <CourseGroupHeader leader_name={this.state.leader_name} 
+						gtype={this.state.gtype} 
+						changeGtype={this.changeGtype}
+						deleteCourseGroup={this.deleteCourseGroup}
+						/> ;
+			content = <CourseGroupList data={this.state.courses} 
+				setLeaderName={this.setLeaderName} 
+				deleteCourse={this.deleteCourse}
+				/> ;
+		}else
+			content = <div>請由右方選擇</div> ;
+		
+		return (
+			<div>
+				{header}
+				{content}
+			</div>
+		);
+	}
+});

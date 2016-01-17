@@ -18,5 +18,21 @@ class CourseGroup < ActiveRecord::Base
 		
 		
 	end
+
+### new react version	
+
+	# get only the node itself
+	# input boolean value determine with or without course group lists  
+	def get_info_for_cm(include_course = true)
+		data = {
+			:id=>self.id,
+			:text=>self.lead_course.try(:ch_name) || "未選代表課",
+			:gtype=>self.gtype
+		}
+		if include_course
+			data[:courses] = self.course_group_lists.includes(:course).map{|cgl| cgl.to_json_for_course_group_tree}
+		end
+		return data
+	end
 	
 end

@@ -1,0 +1,160 @@
+var CourseMapEdit = React.createClass({
+	getInitialState: function() {
+		//console.log(this.props.ctree);
+		this.addNewNodeNode(this.props.ctree, 4, 0, []);
+		this.addNewNodeNode(this.props.gtree, 4, 0, []);
+    return { 
+			course_tree: this.props.ctree,
+			course_group_tree: this.props.gtree,
+			tab_selection: 1,
+			c_click_node: this.props.default_click_node_id,
+			cg_click_node: null,
+			click_type: null
+		};
+	},
+	
+	//input : array
+	addNewNodeNode: function(ary, type, parent_id, tmp_ary){
+		if(type<=2) return ;
+		ary.forEach(function(node){
+			if(node.nodes){				
+				this.addNewNodeNode(node.nodes, node.cf_type, node.id, tmp_ary);				
+			}	
+		}.bind(this));
+
+		tmp_ary.push(1);
+		ary.push({ 
+			id: -tmp_ary.length ,
+			parent_id: parent_id,
+			text: "新增類別",
+			new_type: type
+		});
+	},
+	
+	// treeview on click call back func: ajax course field(group) list content
+	treeOnClick: function(id){
+		var url, state={} ;
+		if(this.state.tab_selection==1){
+			url = "/course_maps/react_get_course_field_detail" ;
+			state["c_click_node"] =  id ;
+		}else{
+			url = "/course_groups/get_list" 
+			state["cg_click_node"] =  id ;
+		}
+		$.getJSON(url+"?id="+id, function(data){	
+			if(this.state.tab_selection==1){
+				state["course_field_list"] = data ;
+			}else{
+				state["course_group_list"] = data ;
+			}
+			this.setState(state);
+		}.bind(this));	
+	},
+	
+	
+	
+	// treeview on click call back func: show new form by type
+	treeOnClickNewCategory: function(id, parent_id, new_type){
+		var next_state = {click_type: new_type} ;
+		var _this = this ;
+		if(this.state.tab_selection==1){
+			next_state["c_click_node"] = id ;
+			this.setState(next_state);
+		}else{		
+			$.ajax({
+				type: "post",
+				url: "/course_groups/create",
+				data: {cm_id: this.props.course_map_info.id},
+				success: function(cg_id){
+					next_state["cg_click_node"] = cg_id ;
+					$.getJSON("/course_maps/react_get_group_tree", function(data){
+						_this.addNewNodeNode(data, 4, 0, []);
+						next_state["course_group_tree"] = data ;
+						_this.setState(next_state) ;
+					});
+				}
+			});
+		}	
+	},
+	
+	//receive tab change key 
+	TabOnSelect: function(key){
+		if(this.state.tab_selection!=key)
+			this.setState({tab_selection: key });
+	},
+	
+	// delete course_group node on treeview
+	deleteCourseGroup: function(cg_id){
+		var new_group_tree = _.reject(this.state.course_group_tree, function(node){
+			return node.id == cg_id ;
+		});
+		
+		$.ajax({
+			type: "post",
+			url: "/course_groups/destroy",
+			data: {id: cg_id},
+			success: function(){
+				this.setState({course_group_tree: new_group_tree, 
+					cg_click_node: null, 
+					course_group_list: null
+				});
+			}.bind(this)
+		}); 
+	},
+	
+	render: function(){
+		var TabbedArea = ReactBootstrap.TabbedArea;
+		var TabPane = ReactBootstrap.TabPane;
+		//console.log(this.state.course_field_list);
+		
+		// control center content
+		var center ;
+		if(this.state.tab_selection==1){
+			center = (<CourseFieldContent 
+				click_node={this.state.c_click_node} 
+				course_map_id={this.props.course_map_info.id}
+				course_field={this.state.course_field_list}
+			/>);
+		}else{
+			center = (<CourseGroupContent 
+				click_node={this.state.cg_click_node} 
+				course_map_id={this.props.course_map_info.id}
+				course_group={this.state.course_group_list}
+				deleteCourseGroup={this.deleteCourseGroup}
+			/>);
+		}
+		
+		return (
+			<Well>
+				<CourseMapDesc data={this.props.course_map_info} state={this.state.course_map_info_state} />
+				<hr/>
+				<h3>課程內容</h3> 
+				<Row>
+					<Well className="col-md-3" id="search_div" />
+					<Well className="col-md-6" >
+						{center}
+					</Well>
+					<Well className="col-md-3 col-sm-5">
+						<TabbedArea defaultActiveKey={1} onSelect={this.TabOnSelect} activeKey={this.state.tab_selection} >
+							<TabPane eventKey={1} tab="課程總攬">
+								<TreeView data={this.state.course_tree} 
+									defaultSelectedNodeId={this.state.c_click_node} 
+									newCategory={this.treeOnClickNewCategory}
+									renderList={this.treeOnClick} />
+							</TabPane>
+							<TabPane eventKey={2} tab="課程群組">
+								<TreeView data={this.state.course_group_tree} 
+									defaultSelectedNodeId={this.state.cg_click_node} 
+									newCategory={this.treeOnClickNewCategory}
+									renderList={this.treeOnClick} 
+									/>
+							</TabPane>
+						</TabbedArea>
+					</Well>
+				</Row>
+			</Well>
+		);
+	}
+});
+
+

@@ -81,4 +81,34 @@ class AdminController < ApplicationController
     
   end
 	
+	def react_index
+		
+	#	render component: 'AdminCourseMapIndexTable', props: { data: @course_maps }
+		respond_to do |format|
+			format.html{}
+			format.json{render json: CourseMap.all.map{|cm| {
+				:id=> cm.id,
+				:name=> cm.name || "n/a",
+				:year=>cm.year,
+				:creater=>cm.user.try(:name) || "n/a",
+				:dep=>cm.department.try(:ch_name) || "n/a"
+			}}}
+		end
+	end
+	
+	def react_edit
+		
+		cm = CourseMap.find(90)
+	
+		respond_to do |format|
+			format.html{ render component: 'CourseMapEdit', 
+				props: { 
+					ctree: cm.get_course_tree, 
+					gtree: cm.get_course_group_tree, 
+					course_map_info: cm.get_info, # course_map information (without cfs)
+					default_click_node_id: nil # default treeview selection 
+				} 
+			}
+		end
+	end
 end

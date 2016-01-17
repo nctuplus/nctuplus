@@ -1,7 +1,24 @@
 Nctuplus::Application.routes.draw do
 
 	root :to => "main#index"
+#--------- [testung] available in development mode --------------	
+if Rails.env.development?
+	get "admin/react_index"
+	get "admin/react_edit"
+	get "course_maps/react_get_group_tree"
+	get "course_maps/react_get_course_tree"
+	get "course_maps/react_get_course_field_detail"
+	post "course_maps/react_update"
 	
+	
+	# course group
+	get "course_groups/get_list"
+	post "course_groups/gtype_change"
+	post "course_groups/setleader"
+	post "course_groups/delete_course"
+	post "course_groups/destroy"
+	post "course_groups/create"
+end	
 #--------- [devise] user account concerned --------------	
 	devise_for :users, :skip=>[:registrations, :confirmations, :passwords],
              :controllers => { :omniauth_callbacks => "callbacks" },

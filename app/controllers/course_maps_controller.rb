@@ -133,7 +133,10 @@ class CourseMapsController < ApplicationController
 	
 	def destroy
 		@map = CourseMap.find(params[:id])
+		
+		@map.course_fields.destroy_all
 		@map.destroy
+		
 		redirect_to "/admin/course_maps"
 	end
 
@@ -187,6 +190,51 @@ class CourseMapsController < ApplicationController
     	end
 	end
 
+### new react version
+
+		def react_update
+			cm = CourseMap.find(params[:id])
+			if request.xhr?
+			cm.update_attributes(:department_id=>params[:dep],
+				:year=>params[:year], :total_credit=>params[:credit],
+				:desc=>params[:desc])
+			end	
+			head :no_content	
+		end
+
+		def react_get_group_tree
+			cg = nil
+			if request.xhr?
+				cg = CourseMap.find(90).get_course_group_tree			
+			end
+			respond_to do |format|
+   	 		format.json {render :json => cg }
+    	end
+		end
+	
+		def react_get_course_tree 
+			list = nil
+			if request.xhr? # if ajax				
+				list = CourseMap.find(90).get_course_tree
+			end# if			
+			respond_to do |format|
+				format.json {render :json=> list }
+			end		
+		end
+		
+		def react_get_course_field_detail
+			data = {}
+			cf = CourseField.find(params[:id])
+			if request.xhr?	
+				data = cf.get_info_for_cm
+			end
+			respond_to do |format|
+				format.json {render :json=> data }
+			end
+		end
+		
+###		
+		
 # handle course_field new	
 	def action_new
 		level = params[:level].to_i

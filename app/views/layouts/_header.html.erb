@@ -54,7 +54,7 @@
 					<li class="dropdown" >		
 						<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown",'data-no-turbolink'=>"true" do %>
 							<% if current_user.hasFb? %>
-								<%= image_tag "http://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
+								<%= image_tag "https://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
 							<% end %>
 							<%=current_user.name%>
 						<% end %>

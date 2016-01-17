@@ -9,7 +9,7 @@ gem 'rails', '4.0.2'
 
 # Use sqlite3 as the database for Active Record
 #gem 'sqlite3'
-gem 'mysql2'
+gem 'mysql2', '~> 0.3.18' 
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 4.0.0'
 
@@ -81,3 +81,7 @@ gem "googlebooks"
 
 gem "bootstrap-switch-rails"
 gem 'zeroclipboard-rails'
+
+gem 'react-rails', '~> 1.3.0'
+gem 'react-bootstrap-rails'
+gem 'underscore-rails'

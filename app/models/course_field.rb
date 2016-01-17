@@ -170,6 +170,43 @@ class CourseField < ActiveRecord::Base
 		return _treeview_trace(self, :_get_field_content_data, :_get_add_field_node)
 	end
 	
+	
+#### new react version 	
+	
+	# get all children node
+	def get_tree_for_cm		
+		data = {
+			:id=>self.id,
+			:text=>self.name,
+			:cf_type=>self.field_type,
+			:nodes=> []
+		}
+		self.child_cfs.each do |cf|
+			data[:nodes] << cf.get_tree_for_cm
+		end
+		data.delete(:nodes) if data[:nodes].count==0
+		return data 
+	end
+
+	# get only the node itself and related course_field_lists
+	def get_info_for_cm
+		data = {
+			:id=>self.id,
+			:field_type=> self.field_type,
+			:name=> self.name,
+			:credit_need=>self.cf_credits.map{|c| {:memo=> c.memo, :credit=>c.credit_need} },
+			:field_need=>self.try(:cf_field_need).try(:field_need)
+		}
+		if self.field_type < 3
+			data[:courses] = self.course_field_lists.order("id ASC")
+				.includes(:course).map{|l| l.to_json_for_cm }				
+		end
+		
+		return data
+	end
+	
+####
+	
 protected
 	
 	def _get_cf_tree(funcA, funcB)

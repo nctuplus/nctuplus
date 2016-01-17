@@ -1,0 +1,45 @@
+var CourseFieldHeader = React.createClass({
+	getInitialState: function() {
+    return {};
+	},
+	render: function(){
+		//console.log(this.props.data);
+		var data = this.props.data ;
+		var change_ftype ; 
+		if(data.field_type<=2)
+			change_ftype = (
+				<button type="button" className="btn btn-circle btn-sucess">
+					<i className="fa fa-arrows-h"></i>
+				</button>) ;
+		
+		var field_need ;
+		if(data.field_type==3)
+			field_need = (
+				<Row>
+					<div className="col-md-offset-1 col-md-3">至少子領域數</div>
+					<div className="col-md-1">{data.field_need || "NULL"}</div>	
+				</Row>
+			);
+		
+		return (
+			<div>
+				<Row>		
+					<h4 className="col-md-offset-1 col-md-5">{data.name}</h4>
+					<div className="col-md-4">
+						<button type="button" className="btn btn-circle btn-success">
+							<i className="fa fa-plus"></i>
+						</button> &nbsp;
+						<button type="button" className="btn btn-circle btn-info">
+							<i className="fa fa-pencil"></i>
+						</button> &nbsp;
+						<button type="button" className="btn btn-circle btn-danger" >
+							<i className="fa fa-trash-o"></i>
+						</button> &nbsp;	
+						{change_ftype}	
+					</div>
+				</Row>
+				{field_need}
+			</div>			
+		);
+	}
+});
