@@ -418,7 +418,7 @@ class UserController < ApplicationController
 	  @collections = current_user.user_collections
 	end
 	
-  private
+private
 
 	def check_error_is_email?(errors)
 		errors.each do |e|
