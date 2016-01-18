@@ -5,8 +5,7 @@ class SubDiscuss < ActiveRecord::Base
 	#delegate :name,:uid, :to=>:user, :prefix=>true
 	validates_presence_of :content, :user_id, :discuss_id
 	def owner_name
-		#return self.is_anonymous ? "匿名" : 
-		self.try(:user).try(:name)
+		return self.is_anonymous ? "匿名" : self.try(:user).try(:name)
 	end
 	def recent_obj
 		return {
@@ -18,7 +17,7 @@ class SubDiscuss < ActiveRecord::Base
 		}
 	end
 	def show_obj(current_user_id)
-		if !self.user.hasFb?
+		if self.is_anonymous || !self.user.hasFb?
 			src=ActionController::Base.helpers.asset_path("anonymous.jpg")
 		else
 			src="https://graph.facebook.com/#{self.user.uid}/picture"
@@ -26,6 +25,7 @@ class SubDiscuss < ActiveRecord::Base
 		return {
 			:id=>self.id,
 			:uid=>self.user.try(:uid),
+			:is_anonymous=>self.is_anonymous,
 			:editable=>self.user_id==current_user_id,
 			:user_name=>self.owner_name,
 			:content=>self.content,

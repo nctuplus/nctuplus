@@ -45,7 +45,7 @@ class Discuss < ActiveRecord::Base
 			:editable=>self.user_id==current_user_id,
 			:uid=>self.try(:user).try(:uid),
 			:ct_name=>"#{self.course_ch_name}/#{self.course_teachership.teacher_name}",
-			:cd_id=>self.course_teachership.course_details.last.id,
+			:cd_id=>self.course_teachership.try(:course_details).try(:last).try(:id),
 			:user_name=>self.owner_name,
 			:title=>self.title,
 			:content=>self.content,

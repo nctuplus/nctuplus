@@ -1,2 +1,2 @@
-var data=<%=@sub_d.to_json_obj(current_user.id).to_json.html_safe%>;
+var data=<%=@sub_d.show_obj(current_user.id).to_json.html_safe%>;
 $("#sub_d_<%=@sub_d.id%>").html(tmpl("sub_d-content",data));

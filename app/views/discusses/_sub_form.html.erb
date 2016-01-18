@@ -1,10 +1,10 @@
 <%= form_for SubDiscuss.new, url:{action: "create"}, :class=>"sub-discussion ", :remote=>"true" do |f| %>
 	<div class="col-md-1" style="padding-left:30px;">
 		<% if current_user.try(:hasFb?) %>
-			<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
-		<% else %>
-			<%= image_tag asset_path("anonymous.jpg"), size: "45x45", class:"", style:"margin-top:10px;"%>
+			<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", id:"fb-avatar", style:"margin-top:10px;"  %>
 		<% end %>
+			<%= image_tag asset_path("anonymous.jpg"), size: "45x45", id:"anonymous-avatar",class:"hidden", style:"margin-top:10px;"%>
+		
 		<br>
 	</div>
 	<div class="col-md-10">
@@ -16,13 +16,17 @@
 		<% end %>
 	</div>
 	<div id="function-bar" class="col-md-1 no-padding-left" style="">
-		<br>
+
+		<div class="checkbox"  style="display:inline-block;">
+			<label style="font-size:14px">
+				<%=f.check_box "is_anonymous",onchange:"toggleAvatar($(this));"%> 匿名
+			</label>
+		</div>
 		<% if action=="create"%>
 			<br>
 		<% else %>
 			<%= link_to '刪除', "", :method => :delete, :data => { :confirm => "確認刪除?" },class:"btn  btn-danger",id:"delte_sub_but",remote:"true" %>
 		<% end %>
-		<br><br>
 		<%= f.submit "送出", :class=>"btn btn-primary " %>
 	</div>
 <% end %>

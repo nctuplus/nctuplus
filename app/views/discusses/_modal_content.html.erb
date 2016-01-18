@@ -71,6 +71,7 @@
 	<div class="col-md-10 col-xs-10">
 		{%=o.user_name%} {%=o.time%}<br>
 		<textcontent>{%=o.content%}</textcontent>
+		<label class="hidden"  data-anonymous="{%=o.is_anonymous%}"/>
 	</div>
 	<div class="hidden-xs hidden-sm col-md-1 no-padding-left">
 		{% if(o.editable){ %}
@@ -94,11 +95,24 @@
 	}
 	function edit($obj,id){
 		var text=$obj.parent().prev().find("textcontent").text();
+		var anonymous=$obj.parent().prev().find("label").attr("data-anonymous");
+		console.log(anonymous);
 		var $container=$obj.parent().parent();
 		$container.html("<%=j render :partial=>"sub_form",:locals=>{action:"update"} %>");
 		$container.find("form").attr("action","/discusses/"+id);
 		$container.find("form").attr("method","patch");
 		$container.find("#sub_discuss_content").text(text);
+		if(anonymous=="true"){
+			$container.find("label").click();//("checked",anonymous);
+			//alert("!!!");
+		}
+		//$container.find("[name='sub_discuss[is_anonymous]']").val(anonymous);
 		$("#delte_sub_but").attr("href","/discusses/"+id+"?type=sub");
+	}
+	function toggleAvatar($obj){
+		$container=$obj.parent().parent().parent().parent();
+		console.log($container);
+		$container.find('#anonymous-avatar').toggleClass('hidden');
+		$container.find('#fb-avatar').toggleClass('hidden');
 	}
 </script>

@@ -50,10 +50,10 @@ class DiscussesController < ApplicationController
 	
 	def create        
 		if params[:type].blank?
-			@discuss=current_user.discusses.create(main_discuss_params.merge({:likes=>0,:dislikes=>0}))
+			@discuss=current_user.discusses.create(main_discuss_params)
 		elsif params[:type]=="sub"
-			@discuss=current_user.sub_discusses.create(sub_discuss_params.merge({:likes=>0,:dislikes=>0}))
-			if  #@discuss.discuss.user_id != current_user.id
+			@discuss=current_user.sub_discusses.create(sub_discuss_params)
+			if  @discuss.discuss.user_id != current_user.id
 				InformMailer.discuss_reply(@discuss).deliver#.discuss.user_id
 			end
 		end
@@ -106,6 +106,6 @@ class DiscussesController < ApplicationController
 		params.require(:discuss).permit(:title, :content, :is_anonymous, :course_teachership_id)
 	end
 	def sub_discuss_params
-		params.require(:sub_discuss).permit(:content, :discuss_id)
+		params.require(:sub_discuss).permit(:content, :discuss_id, :is_anonymous)
 	end
 end
