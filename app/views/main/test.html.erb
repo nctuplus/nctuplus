@@ -1,0 +1,19 @@
+<h3>TEST</h3>
+
+<script>
+
+/*
+ * Sample for get all courses of a user
+ * Required: Logined
+ */
+	
+	$(document).ready(function(){
+	
+		$.getJSON("/user/get_courses?type=list", function(data){
+			console.log(data);
+			//TODO
+		});
+	
+	});
+	
+</script>
