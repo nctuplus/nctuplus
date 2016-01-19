@@ -6,9 +6,9 @@
 		<% end %>
 	</div>
 	<%=sale_book.cover_image%>
-	<% if sale_book.status!=0 %>
-		<%=image_tag asset_path("soldout.png"), :class=>"img-soldout" %>
-	<% end %>
+	
+		<%=image_tag asset_path("soldout.png"), :class=>"img-soldout #{sale_book.status==0 ? 'hidden' : ''}" %>
+	
 	<div style="min-height:50px;margin-top:3px;padding-left:4px;" >
 		<div class="text-center" >
 			<span style="font-size:14px;">
@@ -16,7 +16,7 @@
 					<%=sale_book.book_name.truncate(15)%>					
 				</strong><br>
 				<strong data-toggle="tooltip" title="<%=sale_book.book.authors%>">
-					作者:<%=sale_book.book.authors.truncate(15)%>
+					作者:<%=sale_book.book.authors.truncate(10)%>
 				</strong><br>
 			</span>
 			<span data-toggle="tooltip" style="margin-top:3px;/*margin-bottom: 13px;*/" title="
