@@ -21,7 +21,7 @@
 		top: 70px;
 		left: 8px;
 	}
-	
+	`
 	#college-table .active{
 		background-color: #337ab7;
 	}
@@ -35,7 +35,7 @@
 	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
 		<div class="row">	
 			<div class="col-md-12 text-center">				
-				<div class="input-group" style="/*width: 260px;*/">
+				<div class="input-group" style="/*width: 500px;*/">
 					<%=text_field_tag :custom_search, params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
 					<span class="input-group-btn">			
 						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
