@@ -21,13 +21,24 @@
 			<% @events.each do |event| %>
 			<div class="event-block">
 				<!--small class="event_type"><%=event.event_type%></small-->
-				<small class="event_type"><%=event.get_time%></small>
+				<!--<div <% if event.is_today; 
+							'class=>"event_date event_today"';
+						elsif event.is_past;
+							'class=>"event_date event_past"';
+						else 
+							'class=>"event_date event_future"'; 
+						end%> >
+						
+						<%=event.get_time%></div>
+				-->
+				<div class="event_date"><%=event.get_time%></div>
 				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block-top" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
 					<%=image_tag(event.cover.url, :class => "img-responsive img-rounded poster", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 				</div>
 				<div class="event-block-bottom">
-					<p class="event_title text-right"><%=event.organization%> <strong><%=event.title%></strong></p>
-					<small class="event_location"><%=event.location%></small>
+					<small class="event_title text-right"><%=event.get_org%></small>
+					<strong><%=event.get_title%></strong>
+					<small class="event_location"><%=event.get_location%></small>
 				</div>
 			</div>
 			<% end %>

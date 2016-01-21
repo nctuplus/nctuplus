@@ -22,14 +22,23 @@
 .event-block-bottom{
 	border: 2px 0 0 0 solid #c1eaff;
 }
-.event_time{
+.event_date{
 	@extend .text-right;
-	width: 100%;
-	height: 100%;
 	position: absolute;
+	//width: 20%;
+	height: 10%;
 	top: 0;
-	left: 0;
-	font-size: 16px
+	left: 70%;
+	font-size: 16px;
+}
+.event_date .event_today{
+	background: #ffcc99;
+}
+.event_date .event_past {
+	background: #d1d1e0;
+}
+.event_date .event_future{
+	background: #ffffcc;
 }
 .event_type{
 	@extend .text-right;
