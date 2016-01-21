@@ -1,3 +1,77 @@
-// Place all the styles related to the events controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+.search-block{
+	height: auto;
+	margin: 30px auto;
+}
+.event-block{
+	@extend .col-md-3;
+	@extend .col-sm-4;
+	background: white;
+	height: 200px;
+	border:3px solid #c1eaff;
+	margin: 20px 20px;
+	padding: 20px 20px;
+	font-size: 16px;
+	overflow: hidden;
+}
+.event-block-top{
+	padding: 3px 3px;
+}
+.event-block-bottom{
+	border: 2px 0 0 0 solid #c1eaff;
+}
+.event_time{
+	@extend .text-right;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 16px
+}
+.event_type{
+	@extend .text-right;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 16px
+}
+.wrapper{
+	vertical-align: middle;
+}
+.poster{
+	height: 120px;
+	width: 250px;
+}
+.event_title{
+	display: inline-block;
+}
+.event_location{
+	//@extend .pull-right;
+	position: absolute;
+	display: overflow;
+	top: 90%;
+	left: 70%;
+}
+.events-container{
+	@extend .container;
+	@extend .center-block;
+	@extend .row;
+}
+.events-theme{
+	@extend .container;
+	@extend .col-md-12;
+}
+#events-theme1{
+	@extend .events-theme;
+	//background: #66ccff;
+	//background: #ffcc99;
+}
+#events-theme2{
+	@extend .events-theme;
+	background: #66ccff;
+}

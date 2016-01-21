@@ -18,4 +18,8 @@ class Event < ActiveRecord::Base
 			:className=>self.event_type
 		}
 	end
+	
+	def get_time
+		return self.begin_time
+	end
 end

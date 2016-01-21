@@ -65,13 +65,13 @@
 					-->
 					<label class="col-sm-2 control-label">網址</label>
 					<div class="col-sm-10">
-						<%=f.text_field :url,:class=>"form-control", :placeholder=>"選填", :required=>"true"%>
+						<%=f.text_field :url,:class=>"form-control", :placeholder=>"選填"%>
 					</div>
 				</div>
 				<div class="form-group">					
 					<label class="col-sm-2 control-label">主辦單位</label>
 					<div class="col-sm-4">
-						<%=f.text_field :organization,:class=>"form-control", :placeholder=>"選填"%>
+						<%=f.text_field :organization,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
 					</div>
 					<label class="col-sm-2 control-label">地點</label>
 					<div class="col-sm-4">
