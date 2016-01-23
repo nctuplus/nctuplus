@@ -22,12 +22,19 @@
 		left: 8px;
 	}
 	
-	#college-table .active{
-		background-color: #337ab7;
+	.filter-group .active{
+		background-color: #337ab7 !important;
+		color: #fff !important;	//for sort link
 	}
-	#college-table .active > a{
-		color: #fff;
+	.filter-group .active > a{
+		color: #fff !important;
 	}
+	
+	.sort_link{
+		color: #337ab7 !important;
+	}
+	
+	
 </style>
 
 		
@@ -36,18 +43,11 @@
 		<div class="row">	
 			<div class="col-md-12 text-center">				
 				<div class="input-group" style="/*width: 260px;*/">
-					<%=text_field_tag :custom_search, params[:custom_search], class: "form-control", placeholder:"書名/作者/課名" %>
+					<%=f.search_field :book_name_or_book_authors_or_courses_ch_name_cont, class: "form-control", placeholder:"書名/作者/課名" %>
 					<span class="input-group-btn">			
 						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
 					</span><!-- /btn-group -->
-					<% if params[:q].present? %>
-						<% params[:q].each do |key,value| %>
-							<%=hidden_field_tag "q[#{key}]",value %>
-							<script>
-								$("#<%=key%>_<%=value||""%>").addClass("active");
-							</script>
-						<% end %>
-					<% end %>	
+					
 				</div><!-- /input-group -->
 			</div>
 		</div>			
@@ -69,10 +69,17 @@
 			</tr>
 		</table>
 	</div>
+	<h4 class="text-center" style="margin-top:-5px">排序</h4>
+	<div class="row text-center">
+		<div id="sort-group" class="btn-group filter-group" role="group" aria-label="">
+			<%= sort_link(@q, :price,"價錢") %>
+			<%= sort_link(@q, :created_at,"日期") %>
+		</div>
+	</div>
 			
-	<h4 class="text-center" style="margin-top:-5px">分類</h4>
+	<h4 class="text-center" style="/*margin-top:-5px*/">分類</h4>
 	<div class="row">
-		<table id="college-table" class="table table-bordered bg-white">
+		<table id="college-table" class="table table-bordered bg-white filter-group">
 			<tr class="list-grou text-center">		
 				<td class="col-md-2 clickable-hover" id="departments_id_eq_8"><%=link_to "通識","?q[departments_id_eq]=8",class:"list-group-ite"%></td>
 				<td class="col-md-2 clickable-hover" id="departments_id_eq_9"><%=link_to "外文","?q[departments_id_eq]=9",class:"list-group-ite"%></td>
@@ -144,6 +151,14 @@
 
 <script>
 	$(function () {
+		<% if params[:q].present? %>
+			<% params[:q].each do |key,value| %>
+				$("#<%="#{key}_#{value}"%>").addClass("active");
+			<% end %>
+		<% end %>	
+		$("#sort-group").find("a").addClass("btn btn-default"); 
+		$("#sort-group").find(".asc").addClass("active");
+		$("#sort-group").find(".desc").addClass("active");
 		$("#college-table").find("td").click(function(){
 			$(this).find("a")[0].click();
 			//console.log($(this).find("a"));

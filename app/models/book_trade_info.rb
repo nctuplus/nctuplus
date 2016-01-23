@@ -32,13 +32,8 @@ class BookTradeInfo < ActiveRecord::Base
 				.map{|b| {:id=>b.id, :status=>"new", :name=>b.book_name, :time=>b.created_at} }
 		return (recent_sold+recent_books).sort_by{|e| e[:time]}.reverse 
 	end
-		
-	def self.search_by_text(text)
-		search({
-			:book_name_or_book_authors_or_courses_ch_name_cont=>text,
-			:m=>"or"
-		})
-	end
+	
+
 	
 	def incViewTimes!
 		update_attributes(:view_times=>self.view_times+1)
@@ -74,7 +69,7 @@ class BookTradeInfo < ActiveRecord::Base
 		return image_tag(url,style: zoom==1 ? "height:170px;min-height:150px;" : "max-width:200px;",alt:"尚無圖片!")
 	end
 private
-	ransacker :cts_exists do |parent|
+	ransacker :cts_exists do |parent|	#for 無分類 
 		# SQL syntax for PostgreSQL -- others may differ
 		# This returns boolean true or false
 		Arel.sql("(select exists (select 1 from book_trade_info_ctsships where book_trade_info_ctsships.book_trade_info_id = book_trade_infos.id))")
