@@ -21,10 +21,16 @@
 		top: 70px;
 		left: 8px;
 	}
+<<<<<<< HEAD
 	
 	.filter-group .active{
 		background-color: #337ab7 !important;
 		color: #fff !important;	//for sort link
+=======
+	`
+	#college-table .active{
+		background-color: #337ab7;
+>>>>>>> 322a71d9f17f6cc79d457145e5e71c59123775e1
 	}
 	.filter-group .active > a{
 		color: #fff !important;
@@ -41,8 +47,8 @@
 <div class="col-md-3 well">
 	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
 		<div class="row">	
-			<div class="col-md-12 text-center">				
-				<div class="input-group" style="/*width: 260px;*/">
+			<div class="col-md-12 text-center">
+				<div class="input-group">
 					<%=f.search_field :book_name_or_book_authors_or_courses_ch_name_cont, class: "form-control", placeholder:"書名/作者/課名" %>
 					<span class="input-group-btn">			
 						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
