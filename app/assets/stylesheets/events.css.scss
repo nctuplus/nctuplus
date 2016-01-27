@@ -15,7 +15,6 @@
 	margin: 20px 20px;
 	padding: 20px 20px;
 	font-size: 16px;
-	overflow: hidden;
 }
 .event-block-top{
 	padding: 3px 3px;
@@ -23,23 +22,37 @@
 .event-block-bottom{
 	border: 2px 0 0 0 solid #c1eaff;
 }
+.flag {  /* origin from css-tricks.com, via Zoe Rooney */
+	width: 60px; 
+	height: 36px; 
+	padding: 3px 5px;
+} 
+
+.flag:after { /* origin from css-tricks.com, via Zoe Rooney */
+	content: ""; 
+	position: absolute; 
+	left: 0; bottom: 0; width: 0; height: 0; 
+	border-bottom: 10px solid white; 
+	border-left: 30px solid transparent; 
+	border-right: 30px solid transparent; 
+}
 .event_date{
 	@extend .text-right;
+	@extend .flag;
 	position: absolute;
-	//width: 20%;
-	height: 10%;
-	top: 0;
-	left: 70%;
+	height: 20%;
+	top: -15px;
+	left: 75%;
 	font-size: 16px;
 }
-.event_date .event_today{
-	background: #ffcc99;
+.event_today{
+	background: #f8d4d4;
 }
-.event_date .event_past {
+.event_past {
 	background: #d1d1e0;
 }
-.event_date .event_future{
-	background: #ffffcc;
+.event_future{
+	background: #ccf1ff; 
 }
 .event_type{
 	@extend .text-right;
@@ -85,3 +98,4 @@
 	@extend .events-theme;
 	background: #66ccff;
 }
+

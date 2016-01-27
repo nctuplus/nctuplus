@@ -61,4 +61,14 @@ class Event < ActiveRecord::Base
 			return self.begin_time.strftime("%m/%d")
 		end
 	end
+	
+	def get_time_css
+		if self.is_today
+			return "event_today"
+		elsif self.is_past
+			return "event_past"
+		else 
+			return "event_future"
+		end
+	end
 end
