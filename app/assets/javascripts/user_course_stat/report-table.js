@@ -10,6 +10,7 @@
 	  commons: ["必修", "外語", "通識"]
 	} ;
 	
+	var errors = {};//error log hash ; FORMAT EX. errors["DEGREE_OVERFLOW"] = true
 	
 	var Table = function(element, options){
 		this.$element = $(element);
@@ -32,6 +33,8 @@
 		this._parseMap();
 		this._parseExtrasolar();
 		this._parseCommon();
+		
+		this._checkErrors();
 	};
 	
 	//Table.specReturnMethod = ["checkConflictByTime", "getSelectedSlot", "getAllCourses"] ;
@@ -96,7 +99,6 @@
 		  var $td_ary = [] ;
 		  var pass = false; 
 		  var note = "" ;
-			
 		  for(var i=0; i< _default.semester_length; ++i)
 		    $td_ary.push($('<td>')) ;
 			
@@ -114,8 +116,12 @@
 		      c.idx = -1 ;
 		    else{
 		      c.idx = this._calSemIdx(sem_info[0], sem_info[1]);		
-		      $td_ary[c.idx].html(c.score);
-		    }  
+					if(c.idx<0){//保護亂選系級
+						errors["MISMATCH_SEMESTER"] = true;
+					}else{
+						$td_ary[c.idx].html(c.score);
+					}
+				}  
 		  }
 			$td_ary.unshift($('<td>').html(cf_course.name));
 		  var $row = $('<tr>');
@@ -272,8 +278,19 @@
         }  
 		  }
 		
+		},
+		
+		_checkErrors: function(){
+			//TODO: error code & error description
+			var hasError = false ;
+			var error_string = "";
+			for(var key in errors){
+				hasError = true ;
+				error_string+= key+"\n";
+			}
+			if(hasError)
+				alert("資料異常，此份報表可能有錯誤(as follow)。\n"+error_string);
 		}
-			
 	}  ;
 	
 	var logError = function(message) {
