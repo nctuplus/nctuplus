@@ -28,14 +28,15 @@
 	});
 </script>
 <% if @user.normal_scores.count==0 %>
-<div class="jumbotron bs-callout bs-callout-info border-info" style="background-color:rgba(0,0,0,0);">
-  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-  <h2>開始使用...</h2>
-  <h3>
-		
-		&nbsp;&nbsp;&nbsp;1.<%=link_to '輸入系級',"/user/edit"%> <br> 
-		&nbsp;&nbsp;&nbsp;2.<%=link_to "匯入歷年課程算學分", "/user/import_course"%><br>
-		&nbsp;&nbsp;&nbsp;3.<%=link_to'使用模擬排課',"/courses/simulation"%>
+<div class="alert bs-callout bs-callout-info border-info" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	<h2>開始使用...</h2>
+  <h3>	
+		&nbsp;&nbsp;&nbsp;1. <%=link_to '輸入系級',"/user/edit"%> <br> 
+		&nbsp;&nbsp;&nbsp;2. <%=link_to "匯入歷年課程算學分", "/user/import_course"%><br>
+		&nbsp;&nbsp;&nbsp;3. <%=link_to'使用模擬排課',"/courses/simulation"%>
 	</h3>
 </div>
 <% end %>
