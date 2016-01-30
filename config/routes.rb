@@ -34,6 +34,9 @@ Nctuplus::Application.routes.draw do
 	get "main/fb"
 	post "main/fb"
 
+#--------- for search -------------------		
+	get "search/cts"
+	
 #--------- for development test -------------------	
 if Rails.env.development?	
 	get "main/test"

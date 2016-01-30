@@ -1,0 +1,90 @@
+<%= search_form_for @q, url:"/search/cts", class:"form-horizontal", remote:"true" do |f| %>
+	<div class="form-group">
+		<label class="col-sm-2 control-label">適用課程</label>
+		<div class="col-md-10">
+			<div class="input-group ">			
+				<%=f.search_field :course_ch_name_cont,value:@ct.try(:course_ch_name), class:"form-control",placeholder:"課名",required:"true"%>
+				<%=hidden_field_tag :last_search%>
+				<div class="input-group-btn">
+				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-success"%>
+				</div>
+				<%=hidden_field_tag :multi, params[:multi]%>
+			</div>
+		</div>
+	</div>
+<% end %>
+<div class="modal fade" id="cts-modal" tabindex="-1" role="dialog" aria-hidden="true" >
+	<div class="modal-dialog" >
+		<div class="modal-content" >
+			<div class="modal-header" >
+				<h4 class="modal-title"></h4>
+			</div>
+			<div class="modal-body" ></div>
+		</div>
+	</div>
+</div>
+
+<script>
+	
+	$("#course_teachership_search").submit(function(event){	
+		$lastSearch=$(this).find("#last_search");
+		$nowSearch=$(this).find("#q_course_ch_name_cont");
+		if($lastSearch.val()==""||$nowSearch.val()!=$lastSearch.val()){
+			$lastSearch.val($nowSearch.val());
+			return true;
+		}
+		else if($nowSearch.val()==$lastSearch.val()){
+			$("#cts-modal").modal("show");
+			return false;
+		}
+	});
+	
+	
+<% if params[:multi]=="true" %>
+	function removeCtId(id){
+		$("li[id="+id+"]").remove();
+		$("tr[id=ct-"+id+"]").click();
+	}
+	function addCtid(id,course_name,teacher_name){
+		if($("#cts-list").find("li").length>10){
+			if($("#show-all-li").hasClass("hidden")){
+				var more="<li class='more' onclick='$(\"#show-all-li\").click();'>";
+				more+="<a href='javascript:void(0);' onclick='$(\"#show-all-li\").click();'>...</a></li>";
+				$("#cts-list").append(more);
+				$("#show-all-li").removeClass("hidden");
+			}
+			if($("#cts-list").find("li[id="+id+']').length==0){	//prevent add twice
+				$("#cts-list").append("<li class='hidden' id='"+id+"'>"+course_name+' '+teacher_name+"<a href='javasript:void(0);' onclick='removeCtId("+id+");'><i class='fa fa-times'></i></a></li>");
+			}
+		}
+		else{
+			$("#cts-list").append("<li id='"+id+"'>"+course_name+' '+teacher_name+"<a href='javasript:void(0);' onclick='removeCtId("+id+");'><i class='fa fa-times'></i></a></li>");
+		}
+	}
+	function toggleCtid(id,course_name,teacher_name){
+		if($("#cts-"+id).prop("checked")){
+			addCtid(id,course_name,teacher_name);
+		}
+		else{
+			$("#cts-list").find("li[id="+id+']').remove();
+			if($("#cts-list").find("li").length<10){
+				$("#show-all-li").addClass("hidden");
+			}
+		}
+	}
+
+	function toggleAll($obj){
+		$("#cts-res-table").find("td").find("input[type='checkbox']").prop("checked",$obj.prop("checked"));
+		$("#cts-res-table").find("td").find("input[type='checkbox']").change();
+	}
+<% else %>
+	function selectCts(name,id){
+		toastr["info"]("您已選擇"+name);
+		$('#ct-id').attr('data',id);
+		$('#ct-id').text(name);
+		$("#cts-modal").modal("hide");
+	}
+<% end %>
+	
+	
+</script>

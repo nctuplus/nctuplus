@@ -1,6 +1,10 @@
 //= require jquery-fileupload
 
 $(function(){
+	$("#cts-search-form").load("/search/cts?multi=true",function(){
+		fillCtListInEdit();	//in search/cts.html.erb
+	});
+
 	if($("#book_trade_info_price").val()=="")
 		$("#book_trade_info_price").attr("disabled","true");
 	$('#book_trade_info_cover').change(function (e) {
@@ -18,20 +22,7 @@ $(function(){
 			{maxHeight:170} // Options
 		);
 	});
-	
-	$("#search-ct").bind({
-		keydown:function(e){
-			var key = e.which || e.keyCode;
-			if (key == 13){
-				e.preventDefault();
-				$("#search-ct-btn").click();
-			}
-		},
-		blur:function(e){
-			$("#search-ct-btn").click();
-		}
-	});
-	
+
 	$('.integer-only').keypress(function(e){//0~9 only
 		var key = e.which || e.keyCode;
 		if (!(key >= 48 && key <= 57) && // Interval of values (0-9)
@@ -52,14 +43,14 @@ $(function(){
 	$("#book_trade_info-form").submit(function(){
 		
 		var price_input=$("#book_trade_info_price");
-		console.log(parseInt(price_input.val()));
+		
 		if(!/^\d+$/.test(price_input.val()) || parseInt(price_input.val())<0){//check price integer && not 0
 			toastr["warning"]("價格需為正整數!");
 			price_input.focus();
 			return false;
 		}
 
-		fillCtIdList();
+		fillCtIdInput();
 		if($("#cts_id_list").val()==""&&!confirm("尚未輸入適用課程,仍要送出?")){
 			$("#cts_id_list").focus();
 			return false;
@@ -78,6 +69,13 @@ $(function(){
 
 });
 
+function fillCtIdInput(){	//for submit add ct_id info
+	var ids=[];
+	$("#cts-list li").each(function(){
+		ids.push($(this).attr("id"));
+	});
+	$("#cts_id_list").val(ids);
+}
 function checkAndEnable(){
 	if($("#book_trade_info_book_name").val()!=""){
 		//console.log("!!!!!!");
@@ -115,42 +113,8 @@ function selectBook(title,isbn,authors,image_link,description,preview_link){
 	$("#book-modal").modal('hide');
 }
 
-function searchCourse(){
-	var last_term=$("#last-ct-search-term").text();
-	if($("#search-ct").val()==""){
-		toastr["warning"]("請輸入課程名稱!");
-		return;
-	}
-	if(last_term!=$("#search-ct").val()){
-		$("#q_course_ch_name_cont").val($("#search-ct").val());
-		$("#course_teachership_search").submit();
-		$("#last-ct-search-term").text($("#search-ct").val());
-	}
-	else{
-		$("#book-modal").modal('show');
-	}
-}
-function fillCtIdList(){
-	var ids=[];
-	$("#cts-list li").each(function(){
-		ids.push($(this).attr("id"));
-	});
-	$("#cts_id_list").val(ids);
-	//$("#cts_id_list").val(JSON.stringify(ids));
-}
-function removeCtId(id){
-	$("li[id="+id+"]").remove();
-}
-function addCtid(id,course_name,teacher_name){
-	if($("#cts-"+id).prop("checked")){
-		if($("#cts-list").find("li[id="+id+']').length==0)
-			$("#cts-list").append("<li id='"+id+"'>"+course_name+' '+teacher_name+"</li>");
-	}
-	else{
-		$("#cts-list").find("li[id="+id+']').remove();
-	}
-}
 function searchGoogleBook(){
+
 	var title=$("#book_trade_info_book_name").val();
 	if(title==""){
 		toastr["warning"]("請先輸入書名!");

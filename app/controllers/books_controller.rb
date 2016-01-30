@@ -105,13 +105,13 @@ class BooksController < ApplicationController
 		@book_trade_info.update(
 			book_trade_info_params
 		)
-		if params[:cts_id_list].present?
-			@book_trade_info.book_trade_info_ctsships.destroy_all
-			params[:cts_id_list].split(",").uniq.each do |ct_id|
-				next if ct_id.blank?
-				@book_trade_info.book_trade_info_ctsships.create(:course_teachership_id=>ct_id)
-			end
+		#if params[:cts_id_list].present?
+		@book_trade_info.book_trade_info_ctsships.destroy_all
+		params[:cts_id_list].split(",").uniq.each do |ct_id|
+			next if ct_id.blank?
+			@book_trade_info.book_trade_info_ctsships.create(:course_teachership_id=>ct_id)
 		end
+		#end
 		if request.xhr?
 			render :nothing=>true, :status=>200
 		else

@@ -1,0 +1,27 @@
+<table class="table table-hover" id="cts-res-table">
+	<tr class="row">
+	<% if params[:multi]=="true" %>
+		<th><input type="checkbox" id="selectAll" onchange="toggleAll($(this));"></th>
+	<% end %>
+		<th>課程</th>
+		<th>老師</th>
+	</tr>
+	<% if @cts.empty? %>
+	<tr class="row">
+		<td class="text-center" colspan="2"><h4>查無課程!</h4></td>
+	</tr>
+	<% end %>
+	<% @cts.each do |ct| %>
+		<% if params[:multi]=="true" %>
+		<tr class="row clickable-hover" id="ct-<%=ct.id%>" onclick="$(this).find('input').click();">
+			<td><input type="checkbox" id="cts-<%=ct.id%>" onchange="toggleCtid(<%=ct.id%>,'<%=ct.course_ch_name%>','<%=ct.teacher_name%>');"></td>
+		<% else %>
+		<tr class="row clickable-hover" id="ct-<%=ct.id%>" onclick="selectCts('<%="#{ct.course_ch_name}/#{ct.teacher_name}"%>','<%=ct.id%>');">
+		<% end %>
+			<td> <%= ct.course_ch_name %> </td>
+			<td> <%= ct.teacher_name %> </td>
+		</tr>
+	<% end %>
+</table>
+
+<%= paginate @cts,:window=>2, :remote => true %>

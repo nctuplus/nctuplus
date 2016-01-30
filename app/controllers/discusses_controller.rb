@@ -31,7 +31,8 @@ class DiscussesController < ApplicationController
 	end
 
 	def new
-		@discuss = Discuss.new
+		@title="新增文章"
+		@discuss = Discuss.new	
 		@q=CourseTeachership.search(params[:q])
 		if params[:ct_id].present?
 			@ct=CourseTeachership.find(params[:ct_id])
@@ -41,6 +42,7 @@ class DiscussesController < ApplicationController
 	end
 	
 	def edit	#only for main discuss
+		@title="修改文章"
 		@discuss=current_user.discusses.find(params[:id])
 		@q=CourseTeachership.search(params[:q])
 		@ct=@discuss.course_teachership
