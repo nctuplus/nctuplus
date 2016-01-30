@@ -1,6 +1,14 @@
-<style>
-</style>
-<%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %>
+<!--%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %-->
+<%= stylesheet_link_tag "events" %>
+
+<script>
+<!--
+	$("#content-contaier").css(
+		{
+			overflow: visable;
+		});
+-->
+</script>
 
 <div id="main-container" class="container center-block" style="" bg-white>
 	<form class="search-block form-horizontal form-group center-block col-md-12" role="form">
@@ -16,13 +24,14 @@
 	</form>
 
 	<div id="events-theme1">
-		<h1>近期活動</h1>
+		<h1 class="event-theme-title">近期活動</h1>
 		<div id="events-container1" class="events-container" style="">
 			<% @events.each do |event| %>
 			<div class="event-block">
 				<!--small class="event_type"><%=event.event_type%></small-->
 				<div class="event_date <%=event.get_time_css%> "><%=event.get_time%></div>
-				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block-top" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block-top" 
+						onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
 					<%=image_tag(event.cover.url, :class => "img-responsive img-rounded poster", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 				</div>
 				<div class="event-block-bottom">
@@ -35,7 +44,7 @@
 		</div>
 	</div>
 	<div id="events-theme2">
-		<h1>主題活動</h1>
+		<h1 class="event-theme-title">主題活動</h1>
 	</div>
 </div>
 

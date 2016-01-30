@@ -70,5 +70,5 @@ class Event < ActiveRecord::Base
 		else 
 			return "event_future"
 		end
-	end
+	end	
 end
