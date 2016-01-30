@@ -147,8 +147,6 @@ end
 
 	
 #---------- book page ----------- 
-  post "books/set_cts"
-  get "books/cts_search"
 	post "books/google_book"
   resources :books
 	

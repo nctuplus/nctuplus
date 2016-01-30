@@ -4,51 +4,26 @@
 		<div class="col-md-12 col-xs-12 col-sm-12 text-cente">
 			<br>
 			<h4>Step1.選擇適用課程 - <span class="text-center" id="ct-id" data=""></span></h4>
-			
-			<%= search_form_for @q, url:"/books/cts_search", class:"form-inline", remote:"true" do |f| %>
-				<div class="form-group">
-					<label>適用課程</label>
-					<%=f.search_field :course_ch_name_cont, class:"form-control",placeholder:"課名",required:"true"%>
-				</div>
-				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-success"%>
-			<% end %>
-			<hr>
-			<h4>Step2.上傳檔案及填寫說明</h4>
-			<%=render "form" %>
-		</div>
-	</div>
-</div>
-<div class="modal fade" id="book-modal" tabindex="-1" role="dialog" aria-hidden="true" >
-	<div class="modal-dialog" >
-		<div class="modal-content" >
-			<div class="modal-header" >
-				<h4 class="modal-title"></h4>
+			<div class="row">
+				<div class="col-md-6" id="cts-search-form"></div>
 			</div>
-			<div class="modal-body" ></div>
+			<hr>
+			<div class="row">
+				<div class="col-md-12">
+					<h4>Step2.上傳檔案及填寫說明</h4>
+					<%=render "form" %>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
-<script type="text/x-tmpl" id="cts-res">
-	<table class="table table-hover" id="cts-res-table">
-		<tr class="row">
-			<th>課程</th>
-			<th>老師</th>
-		</tr>
-		{% for(var i=0,cts;cts=o[i];i++) { %}
-			<tr class="row clickable-hover" id="ct-{%=cts.id%}" onclick="selectCts('{%=cts.course_name+'/'+cts.teacher_name%}','{%=cts.id%}');">
-				<td>{%=cts.course_name%}</td>
-				<td>{%=cts.teacher_name%}</td>
-			</tr>
-		{% } %}
-	</table>
-</script>
+
+
 
 <script>
 	function selectCts(name,id){
-		toastr["info"]("您已選擇"+name);
-		$('#ct-id').attr('data',id);
-		$('#ct-id').text(name);
-		$("#book-modal").modal("hide");
+		_selectCts(name,id);
+		
 		$(".fileupload-buttonbar").find(".disabled").removeClass("disabled");
 		
 		$('#fileupload').bind('fileuploadsubmit', function (e, data) {
@@ -75,6 +50,7 @@
 		
 	}
 	$(function(){
+		$("#cts-search-form").load("/search/cts?multi=false");
 		$(".fileupload-buttonbar").find(".btn").addClass("disabled");
 		$('#past_exam_upload').attr('name','past_exam[upload]');
 	  $('#fileupload').fileupload();

@@ -78,7 +78,7 @@
 		$("#cts-res-table").find("td").find("input[type='checkbox']").change();
 	}
 <% else %>
-	function selectCts(name,id){
+	function _selectCts(name,id){
 		toastr["info"]("您已選擇"+name);
 		$('#ct-id').attr('data',id);
 		$('#ct-id').text(name);
