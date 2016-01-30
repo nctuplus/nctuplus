@@ -308,6 +308,9 @@ class CourseMapsController < ApplicationController
 			course = 0
 			if list.course_group_id  # it is a group header
 				cg = list.course_group
+				if not cg # TODO: should not go here (the cg delete proc should have deleted the related cfl)
+					next 
+				end
 			#	leader = cg.lead_group_list
 				groups = []
 				cg.course_group_lists.order("updated_at DESC").includes(:course).each do |cgl|				
