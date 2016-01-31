@@ -44,11 +44,6 @@ end
 
 
 #---------- admin page -----------
-
-	#for 徵文活動
-	get "admin/discusses"	
-	get "admin/discuss_verify"
-	##################################
 	
   get "admin/user_statistics"
 	get "admin/ee105"
@@ -67,15 +62,19 @@ end
 	get "user/get_courses"
 	get "user/all_courses"
 
-	post "user/import_course"
-	get "user/import_course"
-	get "user/import_confirm"
+	
+
 	
 	get "user/edit"
 	patch "user/update"	
 	get "user/select_cs_cf"
 	get "user/select_cm"
 	post "user/select_cm"
+	
+#---------- scores ----------------	
+	post "scores/import"
+	get "scores/import"
+	get "scores/import_confirm"
 	
 #--------- course_content -------------
 	post "course_content/raider"
