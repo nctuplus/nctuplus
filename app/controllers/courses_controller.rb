@@ -5,12 +5,13 @@ class CoursesController < ApplicationController
 	
 	def index
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
-		if !params[:custom_search].blank?	#if user key in something			
+		if params[:custom_search].present?	#if user key in something			
 			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
-		elsif session[:lack_course]
-			@q = CourseDetail.search({
-				:brief_cont_any=>session[:lack_course]["dimension"]
-			})
+		elsif current_user.try(:department_id)#.present?
+			@q = CourseDetail.search({:department_id_eq=>current_user.department_id})
+			#@q = CourseDetail.search({
+			#	:brief_cont_any=>session[:lack_course]["dimension"]
+			#})
 		else	
 			@q = CourseDetail.search(params[:q])
 		end

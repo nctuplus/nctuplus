@@ -88,12 +88,7 @@
 
 <script>
 	$(function(){
-		//$("p").tooltip({html:true});
-		$("p").tooltip({
-          content: function () {
-              return $(this).prop('title');
-          }
-      });
+		
 		change_degree($("#degree"));
 		$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
 	

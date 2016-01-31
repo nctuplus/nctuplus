@@ -328,6 +328,38 @@ ActiveRecord::Schema.define(version: 20160116072259) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
+  create_table "event1s", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "is_public"
+    t.integer  "capacity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+  end
+
+  create_table "events", force: true do |t|
+    t.string   "event_type"
+    t.string   "title",                                             null: false
+    t.string   "organization"
+    t.string   "location"
+    t.string   "lat_long"
+    t.string   "url",                limit: 2083
+    t.text     "content",            limit: 2147483647
+    t.datetime "begin_time",                                        null: false
+    t.datetime "end_time",                                          null: false
+    t.integer  "user_id",                                           null: false
+    t.integer  "view_times",                            default: 0, null: false
+    t.string   "cover_file_name"
+    t.string   "cover_content_type"
+    t.integer  "cover_file_size"
+    t.datetime "cover_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
+
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
     t.integer "course_detail_id", default: 0,  null: false

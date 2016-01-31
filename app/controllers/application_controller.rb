@@ -18,10 +18,6 @@ class ApplicationController < ActionController::Base
 	def getUserByIdForManager(uid)
 		return ( (uid.present? and checkTopManagerNoReDirect) ? User.find(uid) : current_user )
 	end
-	
-#  def current_user
-#    @current_user ||= User.find(session[:user_id]) if session[:user_id]
-#  end
 
   def checkLogin
     unless user_signed_in?

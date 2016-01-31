@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
 	end
 
 
-	def merge_child_to_newuser(new_user)	#for 綁定功能，將所有user有的東西的user_id改到新的user id
+	def merge_child_to_newuser(new_user)	#for 綁定功能,將所有user有的東西的user_id改到新的user id
 		table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name} - ["normal_scores","agree_scores"]
 		table_to_be_moved.each do |table_name|
 			self.send(table_name).update_all(:user_id=>new_user.id)

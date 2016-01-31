@@ -1,5 +1,21 @@
 # Additional translations at https://github.com/plataformatec/devise/wiki/I18n
 zh-TW:
+  activerecord:
+    errors:
+      messages:
+        record_invalid: '校驗失敗: %{errors}'
+        restrict_dependent_destroy:
+          has_one: 由於 %{record} 需要此記錄，所以無法移除記錄
+          has_many: 由於 %{record} 需要此記錄，所以無法移除記錄
+      models:
+        user:
+          attributes:
+            name:
+              taken: "Name已被使用"
+            email:
+              blank: "請填寫Email"
+              taken: "Email已被使用"
+              invalid: "Email格式不正確"
   date:
     abbr_day_names:
     - 周日

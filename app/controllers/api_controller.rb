@@ -1,9 +1,8 @@
 class ApiController < ApplicationController
 	before_filter :cors_set_access_control_headers, :only=>[:query_from_time_table, :query_from_cos_adm, :import_course]
 	skip_before_filter :verify_authenticity_token, :only=>[:import_course]
-	def login
-		config=AndroidApp::KEY
-		if params[:key]!=config
+	def login	#for android app
+		if params[:key]!=AndroidApp::KEY
 			data={
 				:auth=>false
 			}
@@ -13,15 +12,14 @@ class ApiController < ApplicationController
 				data[:uid]=data[:user].uid
 			end
 		end
-		
 		respond_to do |format|
       format.html do
         render :json => data
       end
     end
-		#render "/main/gg88"
 	end
-	def import_course
+	
+	def import_course	#for chrome plug-in
 		result = AuthE3.from_omniauth(params[:username], params[:password], nil)
 		if result[:auth]
 			user=result[:user]
@@ -48,7 +46,7 @@ class ApiController < ApplicationController
       end
     end
 	end
-	def query_from_time_table
+	def query_from_time_table	#for chrome plug-in
 		@cds=[]
 		params[:cos_id].each_with_index do |cos_id,i|
 			cd=CourseDetail.select(:id).where(:temp_cos_id=>cos_id, :semester_id=>params[:sem_id][i]).take
@@ -58,15 +56,13 @@ class ApiController < ApplicationController
 
 		respond_to do |format|
       format.html do
-        render :json => @cds#, :callback => params[:callback]
+        render :json => @cds
       end
     end
 	end
 	
-	def query_from_cos_adm
-		
+	def query_from_cos_adm	#for chrome plug-in
 		@cds=CourseDetail.select(:id,:temp_cos_id).where(:temp_cos_id=>params[:cos_id],:semester_id=>Semester::LAST.id)
-		
 		respond_to do |format|
       format.html do
         render :json => @cds.map{|cd|{

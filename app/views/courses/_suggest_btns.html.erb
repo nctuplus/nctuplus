@@ -52,7 +52,7 @@
 		<% if !current_user.has_imported? %>
 			$(".scrollable").html("<h4 class='text-center'>請先匯入成績!</h4>");
 		<% elsif current_user.is_undergrad? %>
-			$(".scrollable").html("<%=j loadingImg%>");
+			$(".scrollable").html("<%=j loading_img%>");
 			$.getJSON("/user/statistics", function (data) {
 				var pass_courses=getPassCourses(checkPassTaking,data.pass_score,data.user_courses);
 				var result=commonCheck(pass_courses);
@@ -86,7 +86,7 @@
 			arr_str=arr_str.substr(0,arr_str.length-1);
 			arr_str+=']';
 			$('#timeslot_search').val(arr_str);
-			$(".scrollable").html("<%=j loadingImg%>");
+			$(".scrollable").html("<%=j loading_img%>");
 			$("form").submit();
 			$(".schd-grid-selected").removeClass("schd-grid-selected");
 		}

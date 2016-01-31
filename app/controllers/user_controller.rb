@@ -1,6 +1,6 @@
 class UserController < ApplicationController
 
-	include ApiHelper
+	include UserHelper
 	include CourseHelper
 	include CourseMapsHelper 
 
@@ -138,48 +138,42 @@ class UserController < ApplicationController
 			redirect_to "/user/edit"
 		end
 		if request.post?
+
 			if params[:user_agreement].to_i == 0
-				redirect_to :root_url
+				redirect_to :action =>"show"
 				return
-			else
-				current_user.agree = (params[:user_agreement].to_i==1) ? true : false 
-				current_user.save!
 			end
+
 			score=params[:course][:score]
 			res=parse_scores(score)
 			agree=res[:agreed]
 			normal=res[:taked]
-			student_id=res[:student_id]
-			student_name=res[:student_name]
+
 			dept=res[:dept]
 			
-			if student_id!=current_user.student_id
-				msg="成績驗證錯誤，請匯入自己的成績，謝謝!"
-				redirect_to :action =>"show", :msg=>msg
+			if res[:student_id] != current_user.student_id
+				alertmesg("error",'',"請匯入自己的成績，謝謝!")
+				redirect_to :action =>"import_course"
 				return
 			end
 			
-			@pass_score=current_user.pass_score
 			has_added=0
 			@success_added=0
 			@fail_added=0
-			fail_course_name=[]
+
 			@no_pass=0
 			@pass=0
 			
-			if normal.length>0				
+			if normal.length > 0				
 				current_user.normal_scores.destroy_all
 				current_user.agreed_scores.destroy_all
 			else
-				msg="匯入失敗!"
-				redirect_to :action=>"import_confirm", :msg=>msg
+				alertmesg("error",'',"匯入失敗!")
+				redirect_to :action=>"import_course"
 				return
 			end	
-			
-			
-			
+
 			agree.each do |a|
-				#Rails.logger.debug "[debug] "+Course.where(:real_id=>a).take.ch_name		
 				course=Course.where(:real_id=>a[:real_id]).take
 				if course.nil?
 					course=Course.create(a)
@@ -189,7 +183,7 @@ class UserController < ApplicationController
 			end
 			@now_taking=0
 			normal.each do |n|
-				if n['score']=="通過" || n['score'].to_i>=@pass_score
+				if n['score']=="通過" || n['score'].to_i>=current_user.pass_score
 					@pass+=1
 				elsif n['score']==""
 					@now_taking+=1
