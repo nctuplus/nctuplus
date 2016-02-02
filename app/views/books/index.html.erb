@@ -77,8 +77,8 @@
 		</div>
 	</div>
 			
-	<h4 class="text-center" style="/*margin-top:-5px*/">分類</h4>
-	<div class="row">
+	<h4 class="text-center hidden-xs" style="/*margin-top:-5px*/">分類</h4>
+	<div class="row hidden-xs">
 		<table id="college-table" class="table table-bordered bg-white filter-group">
 			<tr class="list-grou text-center">		
 				<td class="col-md-2 clickable-hover" id="departments_id_eq_8"><%=link_to "通識","?q[departments_id_eq]=8",class:"list-group-ite"%></td>
@@ -111,8 +111,8 @@
 			</tr>
 		</table>
 	</div>
-	<h4 class="text-center" style="margin-top:-5px">最新動態</h4>
-	<div class="row">
+	<h4 class="text-center hidden-xs" style="margin-top:-5px">最新動態</h4>
+	<div class="row hidden-xs">
 		<ul class="list-group">
 			<% @recent.each do |stat| %>
 				<li class="list-group-item 
@@ -133,7 +133,7 @@
 		</ul>
 	</div>
 </div>
-<div class="col-md-8 ">
+<div class="col-md-9 ">
 	<div class="row">
 		<% if @sale_books.count==0 %> 
 			<h3 class="text-center">尚無二手書 :目</h3>
