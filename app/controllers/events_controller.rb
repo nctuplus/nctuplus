@@ -5,7 +5,9 @@ class EventsController < ApplicationController
 	def index
 		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json
 	  @events=Event.all
-  end
+	  @event_banner= Event.where(:banner=>true)
+	  #@event_banner= Event.where(:banner=>true).map{|event|{ url:event.cover.url }}
+	end
 	
 	def new
 		@event=Event.new

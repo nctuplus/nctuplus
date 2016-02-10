@@ -1,18 +1,57 @@
-<!--%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %-->
-<%= stylesheet_link_tag "events" %>
+<%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %>
 
 <script>
-<!--
-	$("#content-contaier").css(
-		{
-			overflow: visable;
+	$(document).ready(function(){
+		$('.carousel').carousel({
+			interval: 5000
 		});
--->
+		
+		$('#banner-0').addClass('active');
+	});
+	
+	$('#myCarousel').hover(function() {
+		$(this).carousel('pause') 
+    });
+	/*var a=<%=@events.to_json.html_safe%>;*/
+	/*console.log(a);*/
 </script>
 
-<div id="main-container" class="container center-block" style="" bg-white>
-	<form class="search-block form-horizontal form-group center-block col-md-12" role="form">
-		<div class="wapper">
+<div class="layout-content" style="" bg-white>
+	<div id="js-banner" class="events-banner">
+		<div id="myCarousel" class="carousel slide">
+			<!-- Indicators -->
+			<ol class="carousel-indicators">
+			<% @event_banner.each_with_index do |banner, index| %>
+				<li data-target="#myCarousel" data-slide-to="<%=index%>"></li>
+			<% end %>
+			</ol>
+			
+			<!-- Carousel items -->
+			<div class="carousel-inner" role="listbox">
+			<% @event_banner.each_with_index do |banner, index| %>
+				<div id="banner-<%=index%>" class="item">
+					<div class="banner__inner">
+						<%=image_tag(banner.cover.url, :class => "banner__image", :alt=> "banner", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>					
+						<div class="banner__caption">
+							<strong><%=banner.get_title%></strong>
+						</div>
+					</div>
+				</div>
+			<% end %>
+			</div>
+			<!-- Carousel nav -->
+			<a class="carousel-control left"  href="#myCarousel" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</a>
+			<a class="carousel-control right" href="#myCarousel" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+			</a>
+		</div>
+	</div>
+	
+	<!--- form group --->
+	<form class="form-horizontal form-group center-block col-md-12" role="form">
+		<div class="form-wapper">
 			<%=link_to "新增活動",new_event_path,class:"btn btn-info col-md-1","data-no-turbolink"=>true%>
 			<div class="col-md-1">
 				<button type="submit" class="btn btn-primary">找活動</button>
@@ -23,28 +62,27 @@
 		</div>
 	</form>
 
-	<div id="events-theme1">
-		<h1 class="event-theme-title">近期活動</h1>
+	<div class="events theme-events--swirl">
+		<h1>近期活動</h1>
 		<div id="events-container1" class="events-container" style="">
 			<% @events.each do |event| %>
 			<div class="event-block">
-				<!--small class="event_type"><%=event.event_type%></small-->
-				<div class="event_date <%=event.get_time_css%> "><%=event.get_time%></div>
-				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block-top" 
+				<!-- small class="event__type"><%=event.event_type%></small -->
+				<div class="event__date <%=event.get_time_css%> "><%=event.get_time%></div>
+				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top" 
 						onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
-					<%=image_tag(event.cover.url, :class => "img-responsive img-rounded poster", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+					<%=image_tag(event.cover.url, :class => "event__image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 				</div>
-				<div class="event-block-bottom">
-					<small class="event_title text-right"><%=event.get_org%></small>
+				<div class="event-block__bottom">
+					<small class="event__title text-right"><%=event.get_org%></small>
 					<strong><%=event.get_title%></strong>
-					<small class="event_location"><%=event.get_location%></small>
+					<small class="event__location"><%=event.get_location%></small>
 				</div>
 			</div>
 			<% end %>
 		</div>
 	</div>
-	<div id="events-theme2">
-		<h1 class="event-theme-title">主題活動</h1>
+	<div class="events theme-events--pinkrice">
+		<h1>主題活動</h1>
 	</div>
 </div>
-

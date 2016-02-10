@@ -64,11 +64,15 @@ class Event < ActiveRecord::Base
 	
 	def get_time_css
 		if self.is_today
-			return "event_today"
+			return "event__date--today"
 		elsif self.is_past
-			return "event_past"
+			return "event__date--past"
 		else 
-			return "event_future"
+			return "event__date--future"
 		end
 	end	
+	
+	def get_banner_url
+		return self.cover.url
+	end
 end
