@@ -1,19 +1,26 @@
 <%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %>
 
-<script>
+<script type="text/javascript">
+
 	$(document).ready(function(){
 		$('.carousel').carousel({
 			interval: 5000
 		});
 		
 		$('#banner-0').addClass('active');
+		
+		$('#myActivities').click( function(){
+			$(this).toggleClass("active");
+			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
+		});
+
 	});
 	
 	$('#myCarousel').hover(function() {
 		$(this).carousel('pause') 
-    });
-	/*var a=<%=@events.to_json.html_safe%>;*/
-	/*console.log(a);*/
+    });	
+	
+
 </script>
 
 <div class="layout-content" style="" bg-white>
@@ -57,7 +64,11 @@
 				<button type="submit" class="btn btn-primary">找活動</button>
 			</div>
 			<div class="col-md-7">
-				<input type="activities" class="form-control" id="activitiesInput" placeholder="輸入活動名稱">
+				<input id="activitiesInput" type="activities" class="form-control" placeholder="輸入活動名稱">
+			</div>
+			<div class="col-md-1">
+				<!-- Class "cbp-spmenu-open" gets applied to menu -->
+				<button id="myActivities" type="button" class="btn btn-success" data-toggle="toggle" aria-pressed="false" >我的活動</button>
 			</div>
 		</div>
 	</form>
@@ -85,4 +96,20 @@
 	<div class="events theme-events--pinkrice">
 		<h1>主題活動</h1>
 	</div>
+	
+	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="menuBottom">
+		<h3>我的活動</h3>
+		<a href="#">活動1</a>
+		<a href="#">活動2</a>
+		<a href="#">活動3</a>
+		<a href="#">Catsear azuki bean</a>
+		<a href="#">Dandelion bunya</a>
+		<a href="#">Rutabaga</a>
+		<a href="#">Celery seakale</a>
+		<a href="#">Dulse daikon</a>
+		<a href="#">Zucchini garlic</a>
+		<a href="#">Catsear azuki bean</a>
+		<a href="#">Dandelion bunya</a>
+		<a href="#">Rutabaga</a>
+	</nav>
 </div>
