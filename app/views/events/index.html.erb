@@ -77,17 +77,17 @@
 		<h1>近期活動</h1>
 		<div id="events-container1" class="events-container" style="">
 			<% @events.each do |event| %>
-			<div class="event-block">
-				<!-- small class="event__type"><%=event.event_type%></small -->
-				<div class="event__date <%=event.get_time_css%> "><%=event.get_time%></div>
+			<div class="event-block <%=event.get_block_theme%>">
+				<!-- small class="event-type"><%=event.event_type%></small -->
+				<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
 				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top" 
 						onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
-					<%=image_tag(event.cover.url, :class => "event__image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+					<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 				</div>
 				<div class="event-block__bottom">
-					<small class="event__title text-right"><%=event.get_org%></small>
+					<small class="event-title text-right"><%=event.get_org%></small>
 					<strong><%=event.get_title%></strong>
-					<small class="event__location"><%=event.get_location%></small>
+					<small class="event-location"><%=event.get_location%></small>
 				</div>
 			</div>
 			<% end %>

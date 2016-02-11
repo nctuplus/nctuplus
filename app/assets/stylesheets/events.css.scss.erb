@@ -88,11 +88,23 @@
 	@extend .col-md-3;
 	background: rgba(255, 255, 255, 0.7);
 	height: 200px;
-	border:3px solid #c1eaff;
 	margin: 20px 20px;
 	padding: 20px 20px;
 	font-size: 16px;
 }
+
+.event-block__theme--today{
+	border:3px solid #f8d4d4;
+}
+
+.event-block__theme--past{
+	border:3px solid #d1d1e0;
+}
+
+.event-block__theme--future{
+	border:3px solid #c1eaff;
+}
+
 .event-block__top{
 	padding: 3px 3px;
 }
@@ -114,7 +126,7 @@
 	border-left: 30px solid transparent; 
 	border-right: 30px solid transparent; 
 }
-.event__date{
+.event-date{
 	@extend .text-right;
 	//@extend .flag;
 	position: absolute;
@@ -122,19 +134,21 @@
 	height: 15%;
 	top: -15px;
 	bottom: auto;
-	left: 75%;
+	right: 5%;
 	font-size: 16px;
 }
-.event__date--today{
+.event-date__theme--today{
+	color: #ff3838;
 	background: #f8d4d4;
 }
-.event__date--past {
+.event-date__theme--past {
+	color: gray;
 	background: #d1d1e0;
 }
-.event__date--future{
+.event-date__theme--future{
 	background: #ccf1ff; 
 }
-.event__type{
+.event-type{
 	//@extend .text-right;
 	width: 100%;
 	height: 100%;
@@ -147,17 +161,17 @@
 	vertical-align: middle;
 }
 
-.event__title{
+.event-title{
 	display: inline-block;
 }
-.event__location{
+.event-location{
 	//@extend .pull-right;
 	position: absolute;
 	display: overflow;
 	bottom: 10px;
 	right: 20px;
 }
-.event__image{
+.event-image{
 	@extend .img-responsive;
 	@extend .img-rounded;
 	height: 120px;

@@ -56,7 +56,7 @@ class Event < ActiveRecord::Base
 		if self.begin_time.to_date < Date.today.to_date
 			return self.begin_time.strftime("%m/%d")
 		elsif self.begin_time.to_date == Date.today.to_date
-			return self.begin_time.strftime("%H:%M")
+			return "今 " + self.begin_time.strftime("%H:%M")
 		else
 			return self.begin_time.strftime("%m/%d")
 		end
@@ -64,15 +64,25 @@ class Event < ActiveRecord::Base
 	
 	def get_time_css
 		if self.is_today
-			return "event__date--today"
+			return "event-date__theme--today"
 		elsif self.is_past
-			return "event__date--past"
+			return "event-date__theme--past"
 		else 
-			return "event__date--future"
+			return "event-date__theme--future"
 		end
 	end	
 	
 	def get_banner_url
 		return self.cover.url
+	end
+	
+	def get_block_theme
+		if self.is_today
+			return "event-block__theme--today"
+		elsif self.is_past
+			return "event-block__theme--past"
+		else 
+			return "event-block__theme--future"
+		end
 	end
 end
