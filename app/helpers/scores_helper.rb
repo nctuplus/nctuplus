@@ -21,14 +21,13 @@ module ScoresHelper
 						:cos_type=>s2[4]||""
 					})
 				elsif s2[1].match(/[[:digit:]]{3}+/) && s2[2].match(/[[:digit:]]{4}/)
-					course={
+					normal.append({
 						'sem'=>s2[1],
 						'cos_id'=>s2[2],
 						'score'=>s2[7].delete(' '), #for Firefox
 						'name'=>s2[4],
 						'cos_type'=>s2[5]||""
-					}
-					normal.append(course)
+					})
 				end	
 			end 
 		end

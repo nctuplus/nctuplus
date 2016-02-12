@@ -17,7 +17,8 @@
 $(document).ready(function(){
 	$.getJSON("/user/statistics", function (data) {
 		<% if current_user.is_undergrad? %>
-		$("#common_check_div").html(tmpl("common_check",data));
+			var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
+			$("#common_check_div").html(tmpl("common_check",pass_courses));
 		<% end %>
 		if(data["course_map"]){
 			$("#cosmap_check_div").html(tmpl("cosmap_check",data));

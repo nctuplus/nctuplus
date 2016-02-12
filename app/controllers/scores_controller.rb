@@ -1,6 +1,6 @@
 class ScoresController < ApplicationController
 	include ScoresHelper
-	
+	include CourseMapsHelper
 	before_filter :checkE3Login, :only=>[:import_confirm, :import]
 	
 	def import
@@ -47,7 +47,13 @@ class ScoresController < ApplicationController
 			agree.each do |a|
 				course=Course.where(:real_id=>a[:real_id]).take
 				if course.nil?
-					course=Course.create(a)
+					course=Course.create(
+						:real_id=>a[:real_id],
+						:ch_name=>a[:ch_name],						
+						:eng_name=>a[:memo],
+						:credit=>a[:credit],
+						:is_virtual=>true
+					)
 				end
 				AgreedScore.create_form_import(current_user.id,course.id,a)
 				@success_added+=1
