@@ -95,7 +95,7 @@
 				<th class="hidden-xs">時間</th>
 			</tr>
 		<% @discusses.each do |discuss| %>
-			<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show2('<%=j discuss.show_obj(current_user.try(:id)).to_json%>');">
+			<tr id="discuss-<%=discuss.id%>" class="clickable-hover" onclick="show('<%=j discuss.show_obj(current_user.try(:id)).to_json%>');">
 				<td class="ct_name"><%=discuss.course.ch_name%>/<%=discuss.course_teachership.teacher_name%></td>
 				<td class="title"><%=discuss.title%></td>		
 				<td class="hidden-xs user_name"><%=discuss.owner_name%></td>
@@ -118,7 +118,7 @@
 			$(this).find("a")[0].click();
 		});
 	});
-	function show2(data_str){		
+	function show(data_str){		
 		var data=JSON.parse(data_str);
 		
 		showGlobalModal(2,tmpl("discuss-modal-title",data ),tmpl("discuss-modal-content",data),function(){window.history.back();});

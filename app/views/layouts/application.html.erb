@@ -17,6 +17,11 @@
 	<% if params[:controller]!="main"%>
 		<meta name="robots" content="noindex">	
 	<% end %>
+	<!-- for touch-icon -->
+	<link rel="apple-touch-icon" href="<%=asset_path("touch-icon/iphone.png")%>" /> 
+	<link rel="apple-touch-icon" sizes="76x76" href="<%=asset_path("touch-icon/ipad.png")%>" /> 
+	<link rel="apple-touch-icon" sizes="120x120" href="<%=asset_path("touch-icon/iphone-retina.png")%>" />
+	<link rel="apple-touch-icon" sizes="152x152" href="<%=asset_path("touch-icon/ipad-retinar.png")%>" />
 	
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
 	<% if @fb_share_meta %>
