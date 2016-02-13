@@ -12,6 +12,7 @@ class CreateEvents < ActiveRecord::Migration
 			t.datetime :end_time, :null=>false
 			t.integer :user_id, :null=>false
 			t.integer :view_times, :null=>false, :default=>0
+			t.boolean :banner, :default=>false
 			t.attachment :cover
       t.timestamps
     end

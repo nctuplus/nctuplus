@@ -40,6 +40,20 @@ class EventsController < ApplicationController
 	def edit
 		@event=Event.find(params[:id])
 	end
+	
+	def attend
+		attends=current_user.attendances.where(:event_id=>params[:event_id])
+		if attends.empty?
+			current_user.attendances.create(:event_id=>params[:event_id])
+		else
+			attends.destroy_all
+		end
+		respond_to do |format|
+			#format.html{render :layout=>false,:nothing =>true }
+			format.json{render json:{:add=>params[:add]}}
+		end
+	end
+	
 	private
 
   def event_params

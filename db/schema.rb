@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151126142320) do
+ActiveRecord::Schema.define(version: 20160213064221) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -24,6 +24,16 @@ ActiveRecord::Schema.define(version: 20151126142320) do
 
   add_index "agreed_scores", ["course_id"], name: "index_agreed_scores_on_course_id", using: :btree
   add_index "agreed_scores", ["user_id"], name: "index_agreed_scores_on_user_id", using: :btree
+
+  create_table "attendances", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "attendances", ["event_id"], name: "index_attendances_on_event_id", using: :btree
+  add_index "attendances", ["user_id"], name: "index_attendances_on_user_id", using: :btree
 
   create_table "auth_e3s", force: true do |t|
     t.integer  "user_id"
@@ -173,19 +183,21 @@ ActiveRecord::Schema.define(version: 20151126142320) do
   add_index "course_content_lists", ["user_id"], name: "index_course_content_lists_on_user_id", using: :btree
 
   create_table "course_details", force: true do |t|
-    t.integer "course_teachership_id"
-    t.integer "department_id",                     null: false
-    t.integer "semester_id"
-    t.string  "grade"
-    t.string  "time"
-    t.string  "room"
-    t.string  "temp_cos_id"
-    t.string  "cos_type"
-    t.string  "brief"
-    t.text    "memo"
-    t.string  "reg_num"
-    t.string  "students_limit"
-    t.integer "view_times",            default: 0, null: false
+    t.integer  "course_teachership_id"
+    t.integer  "department_id",                     null: false
+    t.integer  "semester_id"
+    t.string   "grade"
+    t.string   "time"
+    t.string   "room"
+    t.string   "temp_cos_id"
+    t.string   "cos_type"
+    t.string   "brief"
+    t.text     "memo"
+    t.string   "reg_num"
+    t.string   "students_limit"
+    t.integer  "view_times",            default: 0, null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   add_index "course_details", ["course_teachership_id"], name: "index_new_course_details_on_course_teachership_id", using: :btree
@@ -268,25 +280,6 @@ ActiveRecord::Schema.define(version: 20151126142320) do
   add_index "course_maps", ["department_id"], name: "index_course_maps_on_department_id", using: :btree
   add_index "course_maps", ["user_id"], name: "index_course_maps_on_user_id", using: :btree
 
-  create_table "course_simulations", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "semester_id"
-    t.integer  "course_detail_id"
-    t.integer  "course_field_id"
-    t.string   "score"
-    t.string   "memo"
-    t.string   "memo2"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "import_fail",      default: 0
-    t.string   "cos_type",         default: ""
-  end
-
-  add_index "course_simulations", ["course_detail_id"], name: "index_course_simulations_on_course_detail_id", using: :btree
-  add_index "course_simulations", ["course_field_id"], name: "index_course_simulations_on_course_field_id", using: :btree
-  add_index "course_simulations", ["semester_id"], name: "index_course_simulations_on_semester_id", using: :btree
-  add_index "course_simulations", ["user_id"], name: "index_course_simulations_on_user_id", using: :btree
-
   create_table "course_teacher_ratings", force: true do |t|
     t.integer  "user_id"
     t.integer  "course_teachership_id"
@@ -332,35 +325,9 @@ ActiveRecord::Schema.define(version: 20151126142320) do
 
   add_index "departments", ["college_id"], name: "index_departments_on_college_id", using: :btree
 
-  create_table "discuss_likes", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "discuss_id"
-    t.integer  "sub_discuss_id"
-    t.boolean  "like"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "discuss_likes", ["discuss_id"], name: "index_discuss_likes_on_discuss_id", using: :btree
-  add_index "discuss_likes", ["sub_discuss_id"], name: "index_discuss_likes_on_sub_discuss_id", using: :btree
-  add_index "discuss_likes", ["user_id"], name: "index_discuss_likes_on_user_id", using: :btree
-
-  create_table "discuss_verifies", force: true do |t|
-    t.integer  "discuss_id"
-    t.integer  "user_id"
-    t.boolean  "pass"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "discuss_verifies", ["discuss_id"], name: "index_discuss_verifies_on_discuss_id", using: :btree
-  add_index "discuss_verifies", ["user_id"], name: "index_discuss_verifies_on_user_id", using: :btree
-
   create_table "discusses", force: true do |t|
     t.integer  "user_id"
     t.integer  "course_teachership_id"
-    t.integer  "likes"
-    t.integer  "dislikes"
     t.string   "title"
     t.text     "content"
     t.boolean  "is_anonymous",          default: false
@@ -371,28 +338,19 @@ ActiveRecord::Schema.define(version: 20151126142320) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
-  create_table "event1s", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
-  end
-
   create_table "events", force: true do |t|
     t.string   "event_type"
-    t.string   "title",                                             null: false
+    t.string   "title",                                                 null: false
     t.string   "organization"
-    t.string   "location"
+    t.string   "location",                                              null: false
     t.string   "lat_long"
     t.string   "url",                limit: 2083
-    t.text     "content",            limit: 2147483647
-    t.datetime "begin_time",                                        null: false
-    t.datetime "end_time",                                          null: false
-    t.integer  "user_id",                                           null: false
-    t.integer  "view_times",                            default: 0, null: false
+    t.text     "content",            limit: 2147483647,                 null: false
+    t.datetime "begin_time",                                            null: false
+    t.datetime "end_time",                                              null: false
+    t.integer  "user_id",                                               null: false
+    t.integer  "view_times",                            default: 0,     null: false
+    t.boolean  "banner",                                default: false
     t.string   "cover_file_name"
     t.string   "cover_content_type"
     t.integer  "cover_file_size"
@@ -443,9 +401,8 @@ ActiveRecord::Schema.define(version: 20151126142320) do
   create_table "sub_discusses", force: true do |t|
     t.integer  "user_id"
     t.integer  "discuss_id"
-    t.integer  "likes"
-    t.integer  "dislikes"
     t.text     "content"
+    t.boolean  "is_anonymous", default: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -461,26 +418,6 @@ ActiveRecord::Schema.define(version: 20151126142320) do
     t.datetime "updated_at"
   end
 
-  create_table "temp_course_simulations", force: true do |t|
-    t.string   "student_id"
-    t.string   "name"
-    t.string   "dept"
-    t.integer  "semester_id"
-    t.integer  "course_detail_id"
-    t.integer  "course_field_id"
-    t.string   "score"
-    t.string   "memo"
-    t.string   "memo2"
-    t.boolean  "has_added"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "cos_type",         default: ""
-  end
-
-  add_index "temp_course_simulations", ["course_detail_id"], name: "index_temp_course_simulations_on_course_detail_id", using: :btree
-  add_index "temp_course_simulations", ["course_field_id"], name: "index_temp_course_simulations_on_course_field_id", using: :btree
-  add_index "temp_course_simulations", ["semester_id"], name: "index_temp_course_simulations_on_semester_id", using: :btree
-
   create_table "user_collections", force: true do |t|
     t.integer  "user_id"
     t.integer  "target_id"
@@ -493,6 +430,7 @@ ActiveRecord::Schema.define(version: 20151126142320) do
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"
     t.integer  "user_id"
+    t.integer  "need_update",   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
