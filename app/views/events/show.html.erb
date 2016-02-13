@@ -1,4 +1,4 @@
-
+<button onclick="attend(<%=params[:id]%>);">參加</button>
 <div class="row col-md-offset-2">
 	<%=image_tag @event.cover.url, size:"800x400"%>
 	<h4>
@@ -11,3 +11,18 @@
 		<%=@event.content.html_safe%>
 	</section>
 </div>
+<script>
+	function attend(id){
+		$.ajax({
+			type:"POST",
+			url:"/events/attend",
+			data:{
+				event_id: id
+			},
+			success:function(data){
+				toastr["info"]("成功");
+			}
+		});
+			
+	}
+</script>
