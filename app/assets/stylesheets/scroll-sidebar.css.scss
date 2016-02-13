@@ -15,25 +15,28 @@
 }
 
 .scroll-sidebar .active{
-	color: #11427D !important;
+	
 	text-decoration: none;
-	border-left: 5px solid #11427D;
+	border-left: 5px solid #25b0eb;
+	color:#fff;
+	font-weight: 500;
+	background:#1e2538;
 }
 
-.scroll-sidebar .main-menu a {
+.scroll-sidebar a {
   display: block;
 	font-size: 16px;
 	font-weight: 500;
-	color: #000;
+	color: #8db4c5;
 	padding: 4px 20px;
 	background-color: transparent !important;
 }
 
-.scroll-sidebar .main-menu a:hover {
-	color: #11427D;
+.scroll-sidebar a:hover {
 	text-decoration: none;
+	color: #fff;
 	background-color: transparent;
-	border-left: 5px solid #11427D;
+	/*border-left: 5px solid #11427D;*/
 }
 
 .scroll-sidebar .sub-menu a {
