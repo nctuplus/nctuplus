@@ -100,7 +100,7 @@
 		<h3>我的活動</h3>
 		<% if current_user %>
 			<% current_user.attend_events.each do |myEvent| %>
-				<%=link_to myEvent.get_title, "events/"+myEvent.id.to_s %>
+				<%=link_to myEvent.get_title, "/events/"+myEvent.id.to_s %>
 			<% end %>
 		<% end %>
 	</nav>
