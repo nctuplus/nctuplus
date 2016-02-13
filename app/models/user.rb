@@ -36,7 +36,7 @@ class User < ActiveRecord::Base
 	has_many :user_collections
 	
 	has_many :attendances
-	has_many :attend_events, :through=> :attendances, :class_name=>"Event"
+	has_many :attend_events, :through=> :attendances, :source=> :event
 
 
 
