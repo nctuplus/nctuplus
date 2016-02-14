@@ -34,11 +34,12 @@ function show_timetable_on_modal(semester_id, showNow){
 			});
 			
 			var $title = $('<div>').addClass('row');
+			
 			if(data.hash_share && data.courses.length>0 ){		
 				$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));		
 			}else
 				$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
-			
+			//console.log($title);
 			showGlobalModal(1,$title,$table,function(){});
 					
 			if(data.courses.length>0){		

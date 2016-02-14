@@ -14,8 +14,9 @@ function commonCheck(pass_courses){
 		phe_1: 0, 
 		phe_optional: 0, 
 		foreign_basic: 0, 
-		foreign_advance: 0, 
-		common: { 
+		foreign_advance: 0,
+		common_total:0,
+		common: {		
 			'通識': 0, 
 			'公民': 0, 
 			'群已': 0, 
@@ -73,7 +74,8 @@ function commonCheck(pass_courses){
 		else if(course.cos_type.search("通識")!=-1){
 			var dimension=course.brief.substr(0,2);
 			if(dimension.length==2)
-			result['common'][dimension]+=parseInt(course.credit); 
+			result['common'][dimension]+=parseInt(course.credit);
+			result['common_total']+=parseInt(course.credit);
 		} 
 	}
 	return result;

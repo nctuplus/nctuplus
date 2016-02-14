@@ -81,16 +81,6 @@
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="javascript:void(0);" onclick="show_timetable_on_modal(<%=Semester::CURRENT.id%>, true);" style="color:white;">歷年課表</a>
-							</li>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="/user/collections/" style="color:white;">課表收藏</a>
-							</li>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="/user/edit/" style="color:white;">編輯個人資料</a>
-							</li>
-							
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
 								<%= link_to  "登出", destroy_user_session_path, :method => :delete, :style=>"color:white;" %>
 							</li>					
 						</ul>

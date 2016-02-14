@@ -1,62 +1,248 @@
-﻿<script>
-	$(document).ready(function(){
-		
-		$('.user-count').popover({
-			content: "排課人數",
-			placement:"auto",
-			trigger : "hover",
-			container :"body"
-		});
-		$('.credit-count').popover({
-			content: "學分",
-			placement:"auto",
-			trigger : "hover",
-			container :"body"
-		});
-		$(".tab-link").click(function(e){
-			$("#others").load($(this).attr("url"));
-		});
-		$(".footer").addClass("footer-force-bot");
-		<% if params[:msg] %>
-			alert("<%=params[:msg]%>");
-		<% end %>
-		<% if params[:show_stat]=="true" %>
-			$("#toggle-c").click();
-		<% else %>
-			$("#toggle-a").click();
-		<% end %>
-	});
-</script>
-<% if @user.normal_scores.count==0 %>
-<div class="alert bs-callout bs-callout-info border-info" role="alert">
-	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		<span aria-hidden="true">&times;</span>
-	</button>
-	<h2>開始使用...</h2>
-  <h3>	
-		&nbsp;&nbsp;&nbsp;1. <%=link_to '輸入系級',"/user/edit"%> <br> 
-		&nbsp;&nbsp;&nbsp;2. <%=link_to "匯入歷年課程算學分", "/scores/import"%><br>
-		&nbsp;&nbsp;&nbsp;3. <%=link_to'使用模擬排課',"/courses/simulation"%>
-	</h3>
-</div>
-<% end %>
-<div class="tabbable tabs-top">
-	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
-		<li><a class="tab-link" id='toggle-a' href="#others" data-toggle="tab" url="/user/this_sem?uid=<%=params[:uid]%>" >本學期</a></li>
-		<li><a class="tab-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
-		<% if !@user.has_imported? %>
-		<li><a class="tab-link" id='toggle-c' href="/scores/import" onclick="toastr['info']('請先匯入成績!');">畢業學分計算</a></li>
-		<% else %>
-		<li><a class="tab-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics?uid=<%=params[:uid]%>">畢業學分計算</a></li>
-		<% end %>
-	</ul>
-	<br>
-	<div class="tab-content" style="overflow:hidden;" id="gg">
-		
-		<div class="tab-pane active" id="others">
+﻿<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
+<style>
+	.border-thick-gray{
+		border: 5px solid #cccccc;
+	}
+	.inner-grid{
+		margin-bottom:10px;
+		border-right:1px solid #ddd;
+	}
+	.strong{
+		font-weight:700;
+		font-size:24px;
+	}
+</style>
+<%=render "link_bar" %>
+<br>
+<div class="row">
+	<div class="col-md-6">
+		<div class="row no-margin-right">
+			<div class="col-md-3"><%=@user.avatar(120,120)%></div>
+			<div class="col-md-9 bg-white border-thick-gray" style="display:inline-block;min-height:120px;">
 			
-		</div>
+				學號: <%=@user.student_id%> <br>
+				入學年度:<%=@user.year%> <br>
+				學系: <%=@user.department.ch_name%> <br>
+				信箱: <%=@user.email%> <br>
 
+				<%=link_to fa_icon("pencil")+"編輯資訊", "/user/edit",class:"" %>
+
+			</div>
+		</div>
+		<br>
+		<div id="stat-num-grid" class="row no-margin-right bg-white border-thick-gray" >
+			<div class="col-md-12" style="padding-top:10px;">
+				<div class="text-center col-md-4 inner-grid" >
+					歷年平均
+					<h4 class="strong" id="totalAvg">N/A</h4>
+				</div>
+				<div class="text-center col-md-4 inner-grid">
+					名次
+					<h4 class="strong">Not Yet</h4>
+				</div>
+				<div class="text-center col-md-4 ">
+					
+					<%if @user.is_undergrad? %>
+						<% year_offset=4 %>
+					<% else %>
+						<% year_offset=2 %>
+					<% end %>
+					<% dist=(Time.new(@user.year+1911+year_offset,6,8)-Time.now).to_i%>
+					<% if dist >= 0 %>
+						離畢業還有
+					<% end %>
+					<h4 class="strong" >
+					<% if dist >= 0 %>
+						<%= dist/(3600*24) %>天	
+					<% else %>
+						已畢業
+					<% end %>
+					</h4>			
+				</div>
+			</div>
+			<div class="col-md-12" style="border-top:1px solid #ddd;padding-top:10px;">
+				<div class="text-center col-md-4 inner-grid" style="">
+					本學期學分
+					<h4 class="strong" id="credit-taking">N/A</h4>
+				</div>
+				<div class="text-center col-md-4 inner-grid" style="">
+					已修學分
+					<h4 class="strong" id="credit-all-taked">N/A</h4>
+				</div>
+				<div class="text-center col-md-4" style="">
+					畢業學分
+					<h4 class="strong" id="cm-credit">N/A</h4>
+				</div>
+			</div>
+		</div>
+		<br>
+		<div id="common-check-div"></div>
+
+		<br>
+		<div class="row no-margin-right bg-white border-thick-gray">
+			<div id="common_check_div"></div>
+			<div class="col-md-12" id="cosmap_check_div" style="padding-top:10px;"></div>
+		</div>
+	</div>
+	<div class="col-md-offset- col-md-6 bg-white border-thick-gray">
+
+		<br>
+		<div id="time-table-header"></div>
+		<hr>
+		<div id="time-table-body"></div>
 
 	</div>
+	
 </div>
+<script type="text/x-tmpl" id="common-tmpl">
+	{% var result=commonCheck(o); %}
+	<div class="row no-margin-right bg-white border-thick-gray" >
+		<div class="col-md-12" style="padding-top:10px;">
+			<div class="text-center col-md-4 inner-grid" >
+				服務學習
+				<h4 class="strong" id="">{%=result.service_1+result.service_2%}/2</h4>
+			</div>
+			<div class="text-center col-md-4 inner-grid">
+				藝文賞析
+				<h4 class="strong">1/2</h4>
+			</div>
+			<div class="text-center col-md-4 ">
+				體育
+				<h4 class="strong">{%=result.phe_1+result.phe_optional%}/6</h4>
+			</div>
+		</div>
+		<div class="col-md-12" style="border-top:1px solid #ddd;padding-top:10px;">
+			<div class="text-center col-md-4 inner-grid" style="">
+				外文
+				<h4 class="strong" id="">{%=result.foreign_basic+result.foreign_advance%}/8</h4>
+			</div>
+			<div class="text-center col-md-8" style="">
+				通識
+				<h4 class="strong" id="">{%=result.common_total%}/20</h4>
+			</div>
+		</div>
+	</div>
+</script>
+<script>
+	function genTable(semester_id){
+		$.ajax({
+			url: "/user/get_courses",
+			data:{
+				type: "course_table",
+				sem_id: semester_id
+			},
+			dataType: "json",
+			success: function(data){
+			//	console.log(data);
+				var result = $.extend(true, [], data);
+				var $table = $('<table>').addClass('table table-bordered');
+				data.config = {
+					deletable: false ,
+					selectable: false,
+					popover: true,
+					downloadable: true,
+					hideEmpty: false,
+					semester_id: semester_id
+				};     
+				$table.CourseTable(data) ;			
+
+				$select = $('<select>').addClass("form-control") ;
+				for(var i=0, sem; sem=data.semesters[i]; ++i){
+					$option = $('<option>').attr('value', sem.id).html(sem.name);
+					if(semester_id == sem.id) $option.attr("selected", "selected");
+					$select.append($option);
+				}
+				$select.change(function(){
+					//show_timetable_on_modal($(this).val(), true);
+					genTable($(this).val());
+				});
+				
+				var $title = $('<div>').addClass('row');
+				
+				if(data.hash_share && data.courses.length>0 ){		
+					$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));		
+				}else
+					$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
+
+				$("#time-table-header").html($title);
+				$("#time-table-body").html($table);
+				
+				if(data.courses.length>0){		
+					setTimeout(function(){ //wait for the modal show
+					if(data.hash_share){
+					//	$title.hide();
+						$table.CourseTable("renderImg", "upload") ;
+						group_share($title, {hash_share: data.hash_share}) ;
+					//	$title.show();      
+					}
+						return false ;
+					}, 600);
+				}
+			}
+		});
+	}
+	function calcAvgScore(courses,pass_score,last_sem_name){
+		var score=0;
+		var credit_pass=0;
+		var credit_pass_with_agree=0;
+		var credit_taked=0;
+		var credit_this_sem=0;
+		
+		for(var i=0,course;course=courses[i];i++){
+			var tmp_score=parseInt(course.score);
+			if(course.score!="修習中"&&!isNaN(tmp_score)){
+				
+				score+=tmp_score*course.credit;
+				if(checkPass(pass_score,tmp_score)){
+					
+					credit_pass+=course.credit;
+					console.log(course.name+' '+tmp_score+' '+credit_pass);
+					if(course.sem_name==last_sem_name){
+						credit_this_sem+=course.credit;
+					}
+					//console.log(credit_taked);
+				}
+				credit_taked+=course.credit;	
+			}
+			if(checkPass(pass_score,course.score)){
+				credit_pass_with_agree+=course.credit;
+			}
+			
+		}
+		
+		//console.log(score/credit_taked);
+		$("#credit-all-taked").text(credit_pass_with_agree);
+		$("#credit-taking").text(credit_this_sem);
+		$("#totalAvg").text(Math.round(score/credit_taked));
+		console.log("學分pass:"+credit_pass);
+		console.log("學分taked:"+credit_taked);
+		console.log("學分(含免修):"+credit_pass_with_agree);
+	}
+	$(document).ready(function(){
+		genTable(<%=Semester::CURRENT.id%>);
+		$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
+			console.log(data);
+			calcAvgScore(data.user_courses,data.pass_score,data.last_sem);
+			$("#cm-credit").text(data.course_map.total_credit);
+			<% if @user.is_undergrad? %>
+				var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
+				$("#common-check-div").html(tmpl("common-tmpl",pass_courses));
+				//$("#common_check_div").html(tmpl("common_check",pass_courses));
+			<% end %>		
+			if(data["course_map"]){
+				$("#cosmap_check_div").html(tmpl("cosmap_check",data));
+				//$("#course_list").html(tmpl("list_by_cosmap",data));
+			}else{ //no mapping course_map
+				//$("#course_list").html("喔唷! \n沒有找到對應的課程地圖。\n請確認您的系級是否填寫有誤，或聯絡我們為您服務。");
+			}
+			
+		});
+	});
+</script>
+
+<% @show_report=true %>
+<% if @user.is_undergrad? %>
+	<%=render :partial=>"/user/course_stat/xtmpl_common_check"%>
+<% end %>
+<%=render :partial=>"/user/course_stat/xtmpl_cm_check"%>

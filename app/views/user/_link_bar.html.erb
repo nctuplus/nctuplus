@@ -1,0 +1,33 @@
+<style>
+	#link-bar{
+		font-size:16px;
+		padding-top:8px;
+		padding-bottom:10px;
+		
+	}
+	.link-with-border{
+		padding-right:15px;
+		padding-bottom:6px;
+		padding-left:15px;
+	}
+	#link-bar > a{
+		color:#333333;
+	}
+	#link-bar > .active{
+		border-bottom:4px solid #00A6FF;
+	}
+	
+</style>
+<br>
+<div class="row">
+	<div id="link-bar" class="col-md-12 bg-white " style="">
+		<a class="link-with-border" href="/user/" style="">基本資料</a>
+		<a class="link-with-border" href="/user/courses" style="">歷年課程</a>
+		<a class="link-with-border" href="/user/collections" style="">課表收藏</a>
+	</div>
+</div>
+<script>
+	$(function(){
+		$("#link-bar").find("a[href='"+window.location.pathname+"']").addClass("active");	//add bottom blue border
+	});
+</script>

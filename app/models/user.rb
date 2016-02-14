@@ -44,6 +44,17 @@ class User < ActiveRecord::Base
 	validates :name, :uniqueness=>true, :length=> { :maximum=> 16, :message=>"姓名過長(max:16)" }, :on => :update
 	validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update
 	validates :year, :numericality=> { :greater_than=>0, :message=>"請填寫入學年度"}, :on => :update
+	
+	def avatar(width,height)
+		if self.hasFb?
+			src="https://graph.facebook.com/#{self.uid}/picture"
+			src+="?type=large" if width>=100
+			return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='#{src}'>".html_safe
+		else
+			return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='/assets/anonymous.jpg'>".html_safe
+		end
+	end
+	
 # share course table
 	def get_share_hasid(semester_id)
 	  return Hashid.user_share_encode([self.id, semester_id])
@@ -133,13 +144,13 @@ class User < ActiveRecord::Base
 	end
 	
 	def courses_json
-		taked=self.courses_taked.order("course_field_id DESC").map{|cs|
+		taked=self.courses_taked.map{|cs|#.order("id ASC")
 			cs.to_stat_json
 		}
-		agreed=self.courses_agreed.order("course_field_id DESC").map{|cs|
+		agreed=self.courses_agreed.map{|cs|#.order("course_field_id DESC")
 			cs.to_stat_json
 		}
-		return (taked+agreed).sort_by{|x|x[:cf_id]}.reverse
+		return (taked+agreed)#.sort_by{|x|x[:cf_id]}.reverse
 	end
 	def courses_stat_table_json
 		taked=self.courses_taked.order("course_field_id DESC").map{|cs|

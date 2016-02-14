@@ -15,7 +15,7 @@ function getPassCourses(func,pass_score,courses){
 }
 
 function checkPass(pass_score,score){
-	return score=="通過" || parseInt(score)>=pass_score
+	return score=="通過" || ( (!isNaN(parseInt(score))) && (parseInt(score) >= pass_score) )
 }
 
 function checkPassTaking(pass_score,score){
