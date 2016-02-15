@@ -77,7 +77,7 @@
 	.avg_score
 	{
 		height:130px;
-		width:110px;
+		width:160px;
 		background:#fff;
 		color:#333;
 		border-radius:4px;
@@ -633,7 +633,21 @@
 				</h2>	
 			</div>
 			<div id="container-reg-num" style="height:80%; width:80%;"></div></br>
-			<div id="container-score" style="height:80%; width:80%;"></div>		
+			<div id="container-score" style="height:80%; width:80%;"></div>
+			<div class="row" style="position:relative;">
+				<div class="avg_score" id = "avg_score1">
+						<h1><strong></strong></h1>
+						
+				</div>
+				<div class="avg_score" id = "avg_score2">
+						
+						同課程最高成績
+				</div>
+				<div class="avg_score" id = "teacher_name">
+						<h2><strong>粼粼林</strong></h2>
+						同課程最高分老師
+				</div>
+			</div>
 			<br><br>
 			<div class="separation-line"></div>
 			
@@ -703,7 +717,7 @@
       }
       return teacherScore[1]==0 ? 0 : ((teacherScore[0]*1.0)/teacherScore[1]).toFixed(2) ;
     };
-    
+    //
     var getTopScore = function(data){     
       var avgScores = [] ;
       for(var i=0, tmp; tmp=data[i]; ++i){
@@ -729,10 +743,18 @@
 		  
       // get the top avg score and teacher from related courses 
       console.log(getTopScore(json_data["chart"]["score_data"]));
+			
       
       // get the avg score of current course
       console.log(getSpecifiedAvgScore(json_data["chart"]["score_data"], json_data["teacher_name"]));
-		  
+			
+			var avg1 = getTopScore(json_data["chart"]["score_data"]);
+		  var avg2 = (getSpecifiedAvgScore(json_data["chart"]["score_data"], json_data["teacher_name"]));
+			
+			$("#avg_score1").html("<h1><strong>"+avg2+"</strong></h1>"+"本課程平均成績");
+			$("#avg_score2").html("<h1><strong>"+avg1.avg+"</strong></h1>"+"同類課程最高成績");
+			$("#teacher_name").html("<h1><strong>"+avg1.teacher+"</strong></h1>"+"同類課程最高分老師");
+			 
       var data = json_data.chart ;
 		  show_chart_reg(data);
 			show_chart_score(data);
