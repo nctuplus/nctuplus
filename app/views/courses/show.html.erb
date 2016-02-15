@@ -689,10 +689,48 @@
 			$(this).find('.fa').toggleClass("fa-search-minus");
 		});	
 			
-			
+
+    var _getAverage = function(data){
+      var teacherScore = [0, 0] ;
+      for(var j=0, tmp; tmp=data["data"][j]; ++j){
+        if(tmp["y"]==0)
+          continue;
+        teacherScore[0] += tmp["y"] ;
+        teacherScore[1]++ ;
+      }
+      return teacherScore[1]==0 ? 0 : ((teacherScore[0]*1.0)/teacherScore[1]).toFixed(2) ;
+    };
+    
+    var getTopScore = function(data){     
+      var avgScores = [] ;
+      for(var i=0, tmp; tmp=data[i]; ++i){
+        var teacherScore = _getAverage(tmp);
+        avgScores.push({avg: teacherScore, teacher: tmp["name"]});
+      }
+      if(avgScores.length==0)
+        return 0 ;
+      else  
+        return _.max(avgScores, function(ele){ return ele.avg; });
+    }
+    
+    var getSpecifiedAvgScore = function(data, teacher_name){
+      for(var i=0, tmp1; tmp1=data[i]; ++i){
+        if(tmp1["name"]==teacher_name){         
+           return  _getAverage(tmp1);                    
+        }
+      }
+      return 0 ;
+    };
+    
 		$.getJSON("/course_content/get_course_info.json?cd_id=<%=@data[:course_detail_id]%>", function (json_data) {		
 		  
-		  var data = json_data.chart ;
+      // get the top avg score and teacher from related courses 
+      console.log(getTopScore(json_data["chart"]["score_data"]));
+      
+      // get the avg score of current course
+      console.log(getSpecifiedAvgScore(json_data["chart"]["score_data"], json_data["teacher_name"]));
+		  
+      var data = json_data.chart ;
 		  show_chart_reg(data);
 			show_chart_score(data);
 			if(!(data.show_reg || data.show_score))

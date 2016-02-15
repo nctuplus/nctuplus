@@ -69,8 +69,10 @@ class CourseContentController < ApplicationController
 		      :head=>cd.course_teachership.try(:course_content_head).try(:to_hash)  || {},
 		      :list=>cd.course_teachership.try(:course_content_lists).includes(:user).order('updated_at DESC')
 					   .map{ |list| list.to_content_list(((current_user==list.user)||istop), current_user) } || {},
-					:comment=>cd.course_teachership.comments.order('updated_at ASC').map{|c| c.to_hash}
-		    }
+					:comment=>cd.course_teachership.comments.order('updated_at ASC').map{|c| c.to_hash},
+          :teacher_name=>cd.teacher_name
+          
+       }
 		end 
 		respond_to do |format|
    	 	format.json {render :json=>data.to_json}
