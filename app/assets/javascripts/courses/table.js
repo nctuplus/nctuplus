@@ -1,24 +1,36 @@
 /*
  * app/assets/javascript/courses/table.js
  *
- * Copyright (C) 2015 NCTU+
+ * Copyright (C) 2016 NCTU+
  * 
  * Course timetable template for course simulation, course share, personal table. 
  *  
- * Updated at 2015/12/6
+ * Updated at 2016/2/14
  */
 
 /* Library options:
  * 	deletable(T/F): enable the delete icon for the cell that has course
  *	selectable(T/F): enable the empty cell to be selected
- *	downloadable(T/F): enable download link on left top td cell
- *	semester_id(integer): for uploading the image of the timetable. If font end do upload the image, you should provide it.
- *	popover(T/F): enable popover
- *	hideEmpty(T/F): hide the row that do not have course (only hide MNIJKL)
- *	collapsible: enable a expand icon on left top cell that is used for show/hide the hidden row (hideEmpty's row)
+ *	downloadable(T/F): enable a download icon on left top td cell (This option will conflict with collapsible option. Priority: collapsible > downloadable)
+ *	collapsible(T/F): enable a expand icon on left top td cell that is used for show/hide the hidden row (see hideEmpty option)
+ *  semester_id(integer): for uploading the image of the timetable. If font end do upload the image, you should provide it.
+ *	popover(T/F): enable popover for the cell that has course
+ *	hideEmpty(T/F): hide the row that do not have course (only hide time slots "M N I J K L" )
  *	
+ *  Note that false value (empty hash) will be applied when no config options are assigned at initialization.	
  *
- * UI issues:
+ * Functions:
+ *  getAllCourses(O/hash): output all course data recorded in the library
+ *  getSelectedSlot(O/string array):　output all the selected cells by specified time tag (ex. 1A, 4G)
+ *  checkConflictByTime(I/string O/TF): check if a giving time slot(1A, 3G) already has course.
+ *  deleteCourse(I/integer): delete all the recorded courses that have the same course_detail_id(Input)
+ *  addCourses(I/hash array): add courses to target td cell (need to self-check conflict)
+ *  renderImg(I/string): generate table image and output in different format according to flag
+ *    flag "window": output image with new web tag; flag "url": output with image file url; flag "upload": output to server
+ *  adjust_row:  TODO
+ *  
+ *
+ * Internal issues:
  * 1. The td cell is not fix after add/deleting course to the table. The reason is the style position relaitve.
  *		But the position relative is required for the cross icon(position absolute) of deleting course. 
  * 
@@ -28,22 +40,22 @@
 //= require courses/html2canvas
 ;(function($, window, document, undefined) {
 	
-	'use strict';
+  'use strict';
 	var pluginName = 'CourseTable';
 
 	var Table = function(element, options){
 
-		this.$element = $(element);
-		this.cells = [] ;
-		this.courses = [] ;
-		this.config = options.config || {} ;
-		// self-define cancel buton callback
-    if(this.config.cancelButtonFunc)
-      Table.defaults.cancelButtonFunc =  this.config.cancelButtonFunc;
-      			
-		this._init(options.courses);			
-		this.collape_toggle = (typeof(this.config.hideEmpty)=="undefined") ? false : this.config.hideEmpty ;
-		this.adjust_row();
+  this.$element = $(element);
+  this.cells = [] ;
+  this.courses = [] ;
+  this.config = options.config || {} ;
+  // self-define cancel buton callback
+  if(this.config.cancelButtonFunc)
+    Table.defaults.cancelButtonFunc =  this.config.cancelButtonFunc;
+          
+  this._init(options.courses);			
+  this.collape_toggle = (typeof(this.config.hideEmpty)=="undefined") ? false : this.config.hideEmpty ;
+  this.adjust_row();
 	};
 	
 	Table.specReturnMethod = ["checkConflictByTime", "getSelectedSlot", "getAllCourses"] ;
@@ -153,7 +165,10 @@
 							success: function(){console.log("good");},
 							error: function(){console.log("upload fails");}
 						});
-					}        
+					}else{ // default
+            window.open(dataUrl);
+						return ;
+          }        
         }
       });
 			
