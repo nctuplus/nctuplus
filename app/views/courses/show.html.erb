@@ -568,8 +568,7 @@
 		</div>
 		<br><br>
 		<div class="separation-line"></div>
-		<br><br>
-				
+		<br><br>	
 			<h4 style="padding-left:15px;">
 				<p><h3><i class="fa fa-book"></i><strong> 課程資訊</strong></h3><br></p>
 					<table class="table-invisible" >
@@ -597,16 +596,7 @@
 			<div class="panel-heading course-info">
 				<%=render "/course_content/course_info" %>
 			</div>
-			<div class="panel-heading" id="statistics">
-				<h2 class="panel-title">
-					<p id="statistics-header">
-						<h3><%=fa_icon "align-left"%><strong>  歷年統計</strong></h3>
-					</p>	
-				</h2>	
-			</div>
-			<div id="container-reg-num" style="height:80%; width:80%;"></div></br>
-			<div id="container-score" style="height:80%; width:80%;"></div>		
-			<br><br>
+			
 			<div class="separation-line"></div>
 			<div id="course-tips" class="panel-heading" >
 				<h2 class="panel-title">
@@ -635,6 +625,19 @@
 			</div>
 			<div class="separation-line"></div>
 			
+			<div class="panel-heading" id="statistics">
+				<h2 class="panel-title">
+					<p id="statistics-header">
+						<h3><%=fa_icon "align-left"%><strong>  歷年統計</strong></h3>
+					</p>	
+				</h2>	
+			</div>
+			<div id="container-reg-num" style="height:80%; width:80%;"></div></br>
+			<div id="container-score" style="height:80%; width:80%;"></div>		
+			<br><br>
+			<div class="separation-line"></div>
+			
+			
 			<div id="course-tips" class="panel-heading">
 				<h2 class="panel-title">
 					<p>
@@ -642,7 +645,7 @@
 					</p>
 				</h2>	
 			</div>
-			<div class="separation-line"></div>
+			
 			<div class="well bg-grey " id="comments"></div>
 		<% if current_user %>	
 			<div class="row comment-form" >
@@ -658,7 +661,7 @@
 				</div>
 			</div>
 		<% end %>	
-		
+		<div class="separation-line"></div>
 		
 			<div class="row">
 				<div id="compare" class="panel-body">
