@@ -15,9 +15,21 @@ function getPassCourses(func,pass_score,courses){
 }
 
 function checkPass(pass_score,score){
-	return score=="通過" || ( (!isNaN(parseInt(score))) && (parseInt(score) >= pass_score) )
+	return score=="通過" || ( isInt(score) && (parseInt(score) >= pass_score) );
 }
-
+function isInt(score){
+	return !isNaN(parseInt(score));
+}
+function withdrawal(score){
+	return score=="W";
+}
+function isTaking(score){
+	return score=="修習中";
+}
 function checkPassTaking(pass_score,score){
-	return  score=="修習中" || checkPass(pass_score,score)
+	return  isTaking(score) || checkPass(pass_score,score);
+}
+function roundToDec(number,dec){
+	var n=Math.pow(10,dec);
+	return Math.round(number * n) / n;
 }

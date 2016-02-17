@@ -5,7 +5,7 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept,
+	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :courses, :select_dept,
 	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
   
 	layout false, :only => [:statistics_table]#, :all_courses2]
@@ -65,6 +65,10 @@ class UserController < ApplicationController
 			format.json{render json:result}
 		end
 		
+	end
+	
+	def courses
+		@user=getUserByIdForManager(params[:uid])
 	end
 	
 	def show

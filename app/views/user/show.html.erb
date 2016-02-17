@@ -1,4 +1,4 @@
-﻿<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
 <style>
 	.border-thick-gray{
@@ -14,7 +14,7 @@
 	}
 </style>
 <%=render "link_bar" %>
-<br>
+
 <div class="row">
 	<div class="col-md-6">
 		<div class="row no-margin-right">
@@ -95,6 +95,8 @@
 	</div>
 	
 </div>
+<br>
+
 <script type="text/x-tmpl" id="common-tmpl">
 	{% var result=commonCheck(o); %}
 	<div class="row no-margin-right bg-white border-thick-gray" >
@@ -223,6 +225,7 @@
 		genTable(<%=Semester::CURRENT.id%>);
 		$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
 			console.log(data);
+			//$("#course-list2").html(tmpl("course-list-tmpl",data));
 			calcAvgScore(data.user_courses,data.pass_score,data.last_sem);
 			$("#cm-credit").text(data.course_map.total_credit);
 			<% if @user.is_undergrad? %>
