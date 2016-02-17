@@ -12,13 +12,40 @@
 			$(this).toggleClass("active");
 			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
 		});
+		
+		/* for css */
+		$('#event-block1').width($('page-top').width());
+		//$('#event-block1').css({'margin-left':'-'+$('window').css('left')});
+		//$('#event-block1').css({'padding-left':$('window').css('left')});
+		//$('#event-block1').css({'margin-right':'-'+$('document').css('right')});
+		//$('#event-block1').css({'padding-right':$('document').css('right')});
+		/*
+		
+			margin: 0 -9999rem;
+			padding: 0.25rem 9999rem;
 
+		//$('#event-block2').width( $('window').width() ); 
+		
+		var bg1_height=$('#event-background1').height();
+		var bk1_height=$('#event-block1').height();
+		if(bk1_height > bg1_height)
+		{
+			$('#event-background1').height(bk1_height);
+			$('#event-background1').width( $('#page-top').width() );
+		}
+		*/
 	});
 	
 	$('#myCarousel').hover(function() {
 		$(this).carousel('pause') 
     });	
 
+
+	/*
+	else
+	{
+		document.getElementById('leftdiv').height()=right;
+	}*/
 </script>
 
 	
@@ -56,8 +83,8 @@
 	</div>
 	
 	<!--- form group --->
-	<form class="form-horizontal form-group center-block col-md-12" role="form">
-		<div class="form-wapper">
+	<div class="form-wapper">
+		<form class="form-horizontal form-group center-block" role="form">
 			<%=link_to "新增活動",new_event_path,class:"btn btn-info col-md-1","data-no-turbolink"=>true%>
 			<div class="col-md-1">
 				<button type="submit" class="btn btn-primary">找活動</button>
@@ -69,10 +96,11 @@
 				<!-- Class "cbp-spmenu-open" gets applied to menu -->
 				<button id="myActivities" type="button" class="btn btn-success" data-toggle="toggle" aria-pressed="false" >我的活動</button>
 			</div>
-		</div>
-	</form>
+		</form>
+	</div>
 
-	<div class="events theme-events--swirl">
+	<div id="event-block1" class="events-block">
+		<div id="events-background1" class="theme-events--swirl" style=""></div>
 		<h1>近期活動</h1>
 		<div id="events-container1" class="events-container" style="">
 			<% @events.each do |event| %>
@@ -92,7 +120,9 @@
 			<% end %>
 		</div>
 	</div>
-	<div class="events theme-events--pinkrice">
+	
+	<div id="event-block2" class="events-block">
+		<div id="events-background2" class="events-container theme-events--pinkrice" style=""></div>
 		<h1>主題活動</h1>
 	</div>
 	
