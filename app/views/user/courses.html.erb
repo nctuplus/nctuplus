@@ -13,7 +13,8 @@
 {%console.log(course_lists);%}
 {% 
 	var current="";
-	var credit_sum=0,score_sum=0;
+	var credit_sum=0,credit_taked_sum=0,score_sum=0;
+	
 %}
 {% for(var key in course_lists){ %}
 	
@@ -23,7 +24,9 @@
 
 			{% for(var j=0,course;course=course_lists[key][j];j++){ %}
 				{% if(course.sem_name!=current) {
-					credit_sum=0;score_sum=0;
+					credit_sum=0;
+					credit_taked_sum=0;
+					score_sum=0;
 					current=course.sem_name; %}
 					<tr><td colspan="3">{%=current%}</td></tr>
 				{% } %}
@@ -34,18 +37,20 @@
 					{% if(withdrawal(course.score)||!checkPass(o.pass_score,course.score)){ %}
 						<td style="color:red;">
 					{% } else {
-						if(isInt(course.score))
+						if(isInt(course.score)){
 							score_sum+=parseInt(course.score)*course.credit;
+							credit_taked_sum+=course.credit;
+						}
 						credit_sum+=course.credit; %}
 						<td>
 					{% } %}
-					{%=course.score%}</td>
+					<strong>{%=course.score%}</strong></td>
 				</tr>
 				{% if(j==course_lists[key].length-1 || course_lists[key][j+1].sem_name!=current){ %}
 					<tr class="success">
 						<td>共</td>
 						<td>{%=credit_sum%}</td>
-						<td>{%=roundToDec(score_sum/credit_sum,1)%}</td>
+						<td>{%=roundToDec(score_sum/credit_taked_sum,2)%}</td>
 					</tr>
 				{% } %}
 				<!--

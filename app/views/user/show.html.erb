@@ -216,7 +216,7 @@
 		//console.log(score/credit_taked);
 		$("#credit-all-taked").text(credit_pass_with_agree);
 		$("#credit-taking").text(credit_this_sem);
-		$("#totalAvg").text(Math.round(score/credit_taked));
+		$("#totalAvg").text(roundToDec(score/credit_taked,1));
 		console.log("學分pass:"+credit_pass);
 		console.log("學分taked:"+credit_taked);
 		console.log("學分(含免修):"+credit_pass_with_agree);
