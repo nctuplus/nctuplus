@@ -12,14 +12,14 @@
 	<div style="min-height:50px;margin-top:3px;padding-left:4px;" >
 		<div class="text-center" >
 			<span style="font-size:14px;">
-				<strong data-toggle="tooltip" title="<%=sale_book.book_name%>" >
+				<strong data-toggle="popover" data-content="<%=sale_book.book_name%>" >
 					<%=sale_book.book_name.truncate(15)%>					
 				</strong><br>
-				<strong data-toggle="tooltip" title="<%=sale_book.book.authors%>">
+				<strong data-toggle="popover" data-content="<%=sale_book.book.authors%>">
 					作者:<%=sale_book.book.authors.truncate(10)%>
 				</strong><br>
 			</span>
-			<span data-toggle="tooltip" style="margin-top:3px;/*margin-bottom: 13px;*/" title="
+			<span data-toggle="popover" style="margin-top:3px;/*margin-bottom: 13px;*/" data-content="
 				<% if sale_book.course_teacherships.present?%>
 				<% sale_book.course_teacherships.each do |cts|%>
 					<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>

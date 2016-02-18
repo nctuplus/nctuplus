@@ -20,12 +20,17 @@
 		<div class="row no-margin-right">
 			<div class="col-md-3"><%=@user.avatar(120,120)%></div>
 			<div class="col-md-9 bg-white border-thick-gray" style="display:inline-block;min-height:120px;">
-			
 				學號: <%=@user.student_id%> <br>
-				入學年度:<%=@user.year%> <br>
-				學系: <%=@user.department.ch_name%> <br>
 				信箱: <%=@user.email%> <br>
-
+				學系: <%=@user.department.ch_name%> 入學年度:<%=@user.year%> <br>
+				身份:
+					<% if @user.hasFb? %>
+						<%=@user.hasE3? ? "Facebook&E3" : ""  %>
+					<% else %>
+						<%=@user.hasE3? ? "E3" : ""  %>
+					<% end %>
+				<br>
+				分享課表: <%=@user.canShare? ? "ON" : "OFF" %><br>
 				<%=link_to fa_icon("pencil")+"編輯資訊", "/user/edit",class:"" %>
 				<%=link_to fa_icon("refresh")+"匯入成績", "/scores/import",class:"" %>
 			</div>
