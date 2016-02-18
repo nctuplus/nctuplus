@@ -46,11 +46,11 @@ class Event < ActiveRecord::Base
 		end	
 	end
 	
-	def is_today
+	def is_today?
 		return self.begin_time.to_date == Date.today.to_date
 	end	
 	
-	def is_past
+	def is_past?
 		return self.end_time.to_date < Date.today.to_date
 	end
 	
@@ -65,9 +65,9 @@ class Event < ActiveRecord::Base
 	end
 	
 	def get_time_css
-		if self.is_today
+		if self.is_today?
 			return "event-date__theme--today"
-		elsif self.is_past
+		elsif self.is_past?
 			return "event-date__theme--past"
 		else 
 			return "event-date__theme--future"
@@ -79,12 +79,13 @@ class Event < ActiveRecord::Base
 	end
 	
 	def get_block_theme
-		if self.is_today
+		if self.is_today?
 			return "event-block__theme--today"
-		elsif self.is_past
+		elsif self.is_past?
 			return "event-block__theme--past"
 		else 
 			return "event-block__theme--future"
 		end
 	end
+	
 end

@@ -48,10 +48,16 @@ class EventsController < ApplicationController
 		else
 			attends.destroy_all
 		end
+		
 		respond_to do |format|
 			#format.html{render :layout=>false,:nothing =>true }
-			format.json{render json:{:add=>params[:add]}}
+			if attends.empty?
+				format.json{render json: {:add=>params[:add], :state => "delete"} }
+			else
+				format.json{render json: {:add=>params[:add], :state => "new"} }
+			end
 		end
+		
 	end
 	
 	private
