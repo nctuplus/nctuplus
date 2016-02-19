@@ -21,31 +21,6 @@ class Event < ActiveRecord::Base
 		}
 	end
 	
-
-	def get_title
-		if self.title.length > 10
-			return self.title[0..8] + "..."
-		else
-			return self.title
-		end
-	end
-	
-	def get_org
-		if self.organization.length > 5
-			return self.organization[0..3] + "..."
-		else
-			return self.organization
-		end
-	end
-	
-	def get_location
-		if self.location.length > 7
-			return self.location[0..5] + "..."
-		else
-			return self.location
-		end	
-	end
-	
 	def is_today?
 		return self.begin_time.to_date == Date.today.to_date
 	end	
