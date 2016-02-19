@@ -13,12 +13,12 @@
 			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
 		});
 		
+		$('#nav_cross_button').click( function(){
+			$(this).toggleClass("active");
+			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
+		});
+		
 		/* for css */
-		$('#event-block1').width($('page-top').width());
-		//$('#event-block1').css({'margin-left':'-'+$('window').css('left')});
-		//$('#event-block1').css({'padding-left':$('window').css('left')});
-		//$('#event-block1').css({'margin-right':'-'+$('document').css('right')});
-		//$('#event-block1').css({'padding-right':$('document').css('right')});
 		/*
 		
 			margin: 0 -9999rem;
@@ -83,47 +83,61 @@
 	</div>
 	
 	<!--- form group --->
-	<div class="form-wapper">
-		<form class="form-horizontal form-group center-block" role="form">
-			<%=link_to "新增活動",new_event_path,class:"btn btn-info col-md-1","data-no-turbolink"=>true%>
-			<div class="col-md-1">
-				<button type="submit" class="btn btn-primary">找活動</button>
-			</div>
-			<div class="col-md-7">
-				<input id="activitiesInput" type="activities" class="form-control" placeholder="輸入活動名稱">
-			</div>
-			<div class="col-md-1">
+	<div class="row">
+		<div class="form-wapper">
+			<form class="form-horizontal form-group center-block" role="form">
+				<div class="col-md-1">
+					<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
+				</div>
+				<div class="col-md-1">
+					<button type="submit" class="btn btn-primary">找活動</button>
+				</div>
+				<div class="col-md-8">
+					<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
+				</div>
+				
 				<!-- Class "cbp-spmenu-open" gets applied to menu -->
-				<button id="myActivities" type="button" class="btn btn-success" data-toggle="toggle" aria-pressed="false" >我的活動</button>
-			</div>
-		</form>
-	</div>
-
-	<div id="event-block1" class="events-block">
-		<div id="events-background1" class="theme-events--swirl" style=""></div>
-		<h1>近期活動</h1>
-		<div id="events-container1" class="events-container" style="">
-			<% @events.each do |event| %>
-			<div class="event-block <%=event.get_block_theme%>">
-				<!-- small class="event-type"><%=event.event_type%></small -->
-				<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
-				<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top" 
-						onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
-					<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+				<div class="col-md-2">
+					<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
 				</div>
-				<div class="event-block__bottom">
-					<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
-					<strong><%= truncate(event.title, length: 10) %></strong>
-					<small class="event-location"><%= truncate(event.location, length: 10) %></small>
-				</div>
-			</div>
-			<% end %>
+			</form>
 		</div>
 	</div>
-	
-	<div id="event-block2" class="events-block">
-		<div id="events-background2" class="events-container theme-events--pinkrice" style=""></div>
-		<h1>主題活動</h1>
+
+	<div class="row">
+		<!-- Current Activities -->
+		<div id="event-block1" class="events-block">
+			<h1>近期活動</h1>
+			<div id="events-container1" class="events-container" style="">
+				<!-- list all events -->
+				<% @events.each do |event| %>
+					<div class="event-block-wapper">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
+								<strong><%= truncate(event.title, length: 10) %></strong>
+								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- end of list all events -->
+				
+			</div>
+		</div>
+		<!-- End of Current Activities -->
+
+		<!-- Focus Activities -->
+		<div id="event-block2" class="events-block">
+			<h1>主題活動</h1>
+		</div>
+		<!-- End of Focus Activities -->
 	</div>
 	
 	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="menuBottom">
@@ -133,5 +147,9 @@
 				<%=link_to truncate(myEvent.title, length:10 ), "/events/"+myEvent.id.to_s %>
 			<% end %>
 		<% end %>
+		<button type="button" class="close">
+			<span id="nav_cross_button" aria-hidden="true" style="font-size: 2em;" >&times;</span>
+			<span class="sr-only">Close</span>
+		</button>
 	</nav>
 </div>

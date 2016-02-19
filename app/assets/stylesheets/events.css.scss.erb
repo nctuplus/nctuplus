@@ -7,17 +7,12 @@
 .layout-content{
 	@extend .container;
 	@extend .center-block;
+	background-color: rgba(226, 226, 226, 0.7);
 }
 
 /*************
 	module
 **************/
-.form-wapper{
-	@extend .container;
-	@extend .row;
-	margin: 30px auto;
-	padding: 3px 3px;
-}
 
 /*------------------------
 	banner
@@ -59,32 +54,47 @@
 }
 
 /*------------------------
+	form
+------------------------*/
+
+
+.form-wapper{
+	@extend .container;
+	margin: 40px auto;
+    padding: 30px 3px;
+    height: 100px;
+    width: 100%;
+	background-color: rgba(100, 100, 100, 0.7)
+}
+
+/*------------------------
 	event-block group 
 	attributes
 ------------------------*/
+
 .events-block{
 	@extend .container;
-	@extend .center-block;
-	@extend .row;
-	background-image: url(<%=asset_path("events/bg_swirl.png")%>);
+	margin: 20px 0px; 
+}
+
+#event-block1{
+	background-image: url(<%=asset_path("events/bg_symphony.png")%>);
+}
+
+#event-block2{
+	background-image: url(<%=asset_path("events/bg_waves.png")%>);
 }
 
 .events--container{
 	@extend .container;
-	@extend .center-block;
-	@extend .row;
 }
 .events--theme{
-	//@extend .container;
-	//@extend .col-md-12;
 	position: absolute;
 	left: 0px;
 	width: 100%;
 	//z-index: -1;
 }
 
-.events > h1{
-}
 
 .theme-events--swirl{
 	@extend .events--theme;
@@ -106,25 +116,36 @@
 	event-block 
 	attributes
 ------------------------*/
-.event-block{
+.event-block-wapper{
 	@extend .col-md-3;
+	margin: 10px 0px;
+	padding: 0px;
+}
+
+.event-block{
 	background: rgba(255, 255, 255, 0.7);
 	height: 200px;
-	margin: 20px 20px;
-	padding: 20px 20px;
+	margin: 1px 3px;
+	padding: 20px 10px;
 	font-size: 16px;
 }
 
 .event-block__theme--today{
-	border:2px solid #f8d4d4;
+	//border:2px solid #f8d4d4;
+	background: rgba(255, 255, 255, 0.4);
+	border:0px solid #f8d4d4;
 }
 
 .event-block__theme--past{
-	border:2px solid #d1d1e0;
+	//border:2px solid #d1d1e0;
+	background: rgba(209, 209, 224, 0.4);
+	border:0px solid #d1d1e0;
 }
 
 .event-block__theme--future{
-	border:2px solid #c1eaff;
+	//border:2px solid #c1eaff;
+	background: rgba(193, 234, 255, 0.4);
+	border:0px solid #c1eaff;
 }
 
 .event-block__top{
@@ -154,21 +175,23 @@
 	position: absolute;
 	pagging: 2px 2px;
 	height: 15%;
-	top: -15px;
+	top: 0px;
 	bottom: auto;
 	right: 5%;
 	font-size: 16px;
+	font-weight: bold;
 }
 .event-date__theme--today{
 	color: #ff3838;
-	background: #f8d4d4;
+	//background: #f8d4d4;
 }
 .event-date__theme--past {
 	color: gray;
-	background: #d1d1e0;
+	//background: #d1d1e0;
 }
 .event-date__theme--future{
-	background: #ccf1ff; 
+	color: #5BA1DC;
+	//background: #ccf1ff; 
 }
 .event-type{
 	//@extend .text-right;
