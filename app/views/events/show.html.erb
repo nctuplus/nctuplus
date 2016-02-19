@@ -1,8 +1,11 @@
-<%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %>
 
-<button  onclick="attend(<%=params[:id]%>);">
+<button id="attend_button" class="btn btn-primary" onclick="attend(<%=params[:id]%>);">
 	<% if current_user %>
-		<% if @event.attendances.where(:user_id=>current_user.id).empty?%>參加<%else%>退出<%end%>
+		<% if @event.attendances.where(:user_id=>current_user.id).empty?%>
+			參加
+		<%else%>
+			退出
+		<%end%>
 	<% else %>
 		參加
 	<% end %>
@@ -25,23 +28,30 @@
 	});
 	
 	function attend(id){
-		$.ajax({
-			type:"POST",
-			url:"/events/attend",
-			data:{
-				event_id: id
-			},			
-			success:function(data){
-				if (data.state == "new")
-					toastr["info"]("已加入活動");
-				else
-					toastr["info"]("已退出活動");
-			},
-			error:function(data){
-				toastr["info"]("錯誤, 請檢查登入");
-			}
-			
-		});		
+		<% if current_user %>
+			$.ajax({
+				type:"POST",
+				url:"/events/attend",
+				data:{
+					event_id: id
+				},			
+				success:function(data){
+					if (data.state == "new"){
+						toastr["info"]("已加入活動");
+						$("#attend_button").text("退出");
+					}
+					else{
+						toastr["info"]("已退出活動");
+						$("#attend_button").text("參加");
+					}
+				},
+				error:function(data){
+					toastr["info"]("錯誤!");
+				}
+			});
+		<% else %>
+			toastr["info"]("請先登入, 謝謝");
+		<% end %>
 	}
 	
 </script>

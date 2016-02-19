@@ -1,6 +1,6 @@
 class EventsController < ApplicationController
 	
-	before_filter :checkLogin, :only=>[:new, :create, :edit, :update, :destroy]
+	before_filter :checkLogin, :only=>[:attend, :new, :create, :edit, :update, :destroy]
 	before_filter :checkOwner, :only=>[:update, :edit, :destroy]
 	def index
 		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json
