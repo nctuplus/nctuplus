@@ -19,8 +19,9 @@ class BookTradeInfo < ActiveRecord::Base
 	has_attached_file :cover,
 		:url=>"/file_upload/book_covers/:id_partition/:filename",
 		:default_url => "/images/:style/missing.png",
-		:path => ":rails_root/public/file_upload/book_covers/:id_partition/:filename"
-  validates_attachment :cover, 
+		:path => ":rails_root/public/file_upload/book_covers/:id_partition/:filename"#,
+		#:styles => { default: "300x300#" }
+  validates_attachment :cover,
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
 

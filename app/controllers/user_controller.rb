@@ -5,7 +5,7 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 
-	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :select_dept,
+	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :courses, :select_dept,
 	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
   
 	layout false, :only => [:statistics_table]#, :all_courses2]
@@ -67,6 +67,10 @@ class UserController < ApplicationController
 		
 	end
 	
+	def courses
+		@user=getUserByIdForManager(params[:uid])
+	end
+	
 	def show
 		
 		@user=getUserByIdForManager(params[:uid])
@@ -109,6 +113,7 @@ class UserController < ApplicationController
 					:id=>course_map.id,
 					:dept_id=>course_map.department_id,
 					:year=>course_map.year,
+					:total_credit=>course_map.total_credit,
 					:max_colspan=>course_map.course_fields.where(:field_type=>3).map{|cf|cf.child_cfs.count}.max||2,
 					:cfs=>course_map.to_tree_json		
 				}#get_cm_res(course_map)
@@ -116,7 +121,7 @@ class UserController < ApplicationController
 			res={
 				:user_id=>@user.id,
 				:pass_score=>@user.pass_score,
-				:last_sem_id=>Semester::CURRENT.id,
+				:last_sem=>Semester::CURRENT.name,
 				:user_courses=>@user.courses_json,
 				#:user_courses=>@user.normal_scores.to_stat_json,
 				:course_map=>course_map_res||nil,

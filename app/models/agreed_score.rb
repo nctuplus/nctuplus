@@ -24,8 +24,8 @@ class AgreedScore < ActiveRecord::Base
 			:credit=>self.credit,
 			:cos_type=>self.cos_type,
 			:brief=>"",
-			:memo=>self.memo,
-			:pass_score=>""
+			:memo=>self.memo#,
+			#:pass_score=>""
 		}
 	end
 	

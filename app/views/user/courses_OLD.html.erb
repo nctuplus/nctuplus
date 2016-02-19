@@ -1,0 +1,57 @@
+<style>
+	#course-list {
+		min-height: 100%;
+		height: auto; 
+	}
+	#course-list > .row {
+		overflow-x:scroll;
+		overflow-y:hidden;
+		white-space:nowrap;
+	}    
+	#course-list > .row [class*="col-lg"], #course-list > .row [class*="col-md"], #course-list > .row [class*="col-sm"] {
+		float:none;
+		display:inline-block;
+	}
+</style>
+<%=render "link_bar" %>
+<div class="bg-white" id="course-list">
+	<div class="row no-margin-left no-margin-right" id="course-list2" style="" >
+	</div>
+</div>
+<br>
+<script type="text/x-tmpl" id="course-list-tmpl">
+
+{% var course_lists=groupBy2(o.user_courses,function(item){return item.sem_name;}); %}
+{%console.log(course_lists);%}
+{% for(var key in course_lists){ %}
+	
+	<div class="col-md-3 " style="display:inline-block;white-space:normal;vertical-align:top;//border:0px;">
+		<h4 class="text-center">{%=key.replace(/"/g, "")%}</h4>
+		<table class="table table-bordered border-thick-gray" >
+
+			{% for(var j=0,course;course=course_lists[key][j];j++){ %}
+				<tr>
+					<td>{%=course.name%}</td>
+					<td>{%=course.credit%}</td>
+					<td>{%=course.score%}</td>
+				</tr>
+				<!--
+				<tr>
+					<td>{%=course.name%}|{%=course.credit%}|{%=course.score%}</td>
+				</tr>
+				-->
+			{% } %}
+		</table>
+	</div>
+{% } %}
+
+</script>
+
+<script>
+	$(document).ready(function(){
+		$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
+			console.log(data);
+			$("#course-list2").html(tmpl("course-list-tmpl",data));
+		});
+	});
+</script>

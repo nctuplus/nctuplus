@@ -1,0 +1,62 @@
+﻿<script>
+	$(document).ready(function(){
+		
+		$('.user-count').popover({
+			content: "排課人數",
+			placement:"auto",
+			trigger : "hover",
+			container :"body"
+		});
+		$('.credit-count').popover({
+			content: "學分",
+			placement:"auto",
+			trigger : "hover",
+			container :"body"
+		});
+		$(".tab-link").click(function(e){
+			$("#others").load($(this).attr("url"));
+		});
+		$(".footer").addClass("footer-force-bot");
+		<% if params[:msg] %>
+			alert("<%=params[:msg]%>");
+		<% end %>
+		<% if params[:show_stat]=="true" %>
+			$("#toggle-c").click();
+		<% else %>
+			$("#toggle-a").click();
+		<% end %>
+	});
+</script>
+<% if @user.normal_scores.count==0 %>
+<div class="alert bs-callout bs-callout-info border-info" role="alert">
+	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+		<span aria-hidden="true">&times;</span>
+	</button>
+	<h2>開始使用...</h2>
+  <h3>	
+		&nbsp;&nbsp;&nbsp;1. <%=link_to '輸入系級',"/user/edit"%> <br> 
+		&nbsp;&nbsp;&nbsp;2. <%=link_to "匯入歷年課程算學分", "/scores/import"%><br>
+		&nbsp;&nbsp;&nbsp;3. <%=link_to'使用模擬排課',"/courses/simulation"%>
+	</h3>
+</div>
+<% end %>
+<div class="tabbable tabs-top">
+	<ul class="nav nav-tabs" style="/*margin-top:-15px;*/">
+		<li><a class="tab-link" id='toggle-a' href="#others" data-toggle="tab" url="/user/this_sem?uid=<%=params[:uid]%>" >本學期</a></li>
+		<li><a class="tab-link" id='toggle-b' href="#others" data-toggle="tab" url="/user/all_courses?uid=<%=params[:uid]%>">歷年課程</a></li>
+		<% if !@user.has_imported? %>
+		<li><a class="tab-link" id='toggle-c' href="/scores/import" onclick="toastr['info']('請先匯入成績!');">畢業學分計算</a></li>
+		<% else %>
+		<li><a class="tab-link" id='toggle-c' href="#others" data-toggle="tab" url="/user/statistics?uid=<%=params[:uid]%>">畢業學分計算</a></li>
+		<% end %>
+	</ul>
+	<br>
+	<div class="tab-content" style="overflow:hidden;" id="gg">
+		
+		<div class="tab-pane active" id="others">
+			
+		</div>
+
+
+	</div>
+</div>

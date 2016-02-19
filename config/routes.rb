@@ -24,7 +24,7 @@ Nctuplus::Application.routes.draw do
 	post "user/update", to: "user#user_collection_action", :constraints => lambda{ |req| req.params[:type].include? "collection"}
 	# show user collections lists
 	get "user/collections"
-	
+	get "user/courses"
 #--------- for other usage --------------
 
 	get "main/index"
