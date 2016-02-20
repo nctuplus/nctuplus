@@ -11,7 +11,7 @@ class EventsController < ApplicationController
 	
 	def new
 		@event=Event.new
-		@event_type_sel=["講座","表演","擺攤","比賽","其他"]
+		
 		#@img = EventImage.new
 	end
 	def update
@@ -39,6 +39,7 @@ class EventsController < ApplicationController
 	
 	def edit
 		@event=Event.find(params[:id])
+
 	end
 	
 	def attend

@@ -128,6 +128,9 @@
 								<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
 								<strong><%= truncate(event.title, length: 10) %></strong>
 								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
+								<% if event.user_id==current_user.try(:id)%>
+									<%=link_to "編輯", edit_event_path(event)%>
+								<% end %>
 							</div>
 						</div>
 					</div>

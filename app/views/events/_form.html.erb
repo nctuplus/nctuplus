@@ -1,4 +1,5 @@
 <%= javascript_include_tag "event_create", "data-turbolinks-track" => true %>
+
 <%= tinymce_assets %>
 <style>
 	.ui-timepicker-div .ui-widget-header { margin-bottom: 8px; }
@@ -29,13 +30,25 @@
 	<div class="row">
     <div class="col-md-9 col-md-offset-1">
 			<%=form_for @event, :html => { :multipart => true, :class=>"form-horizontal" } do |f| %>
+				<div class="form-group ">
+					<h3 class="col-md-offset-1">
+						<% if @event.new_record?%>
+							新增活動
+						<% else %>
+							修改活動
+						<% end %>
+					</h3>
+				</div>
 				<div class="form-group vertical-center" style="min-height:0vh;">
           <label class="col-sm-2 control-label" >圖片</label>
 					<div class="col-sm-10 col-xs-10">
 						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
 						<div id="image-container" onclick="$('#event_cover').click();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
-							點選以上傳,建議800x400以達最佳效果(需小於2MB)
-							<%=@event.new_record? ? "" : @event.cover_image%>
+							<% if @event.new_record? %>
+								點選以上傳,建議800x400以達最佳效果(需小於2MB)
+							<% else %>	
+								<%=image_tag(@event.cover.url, :style => "max-height:170px")%>
+							<% end %>
 						</div>
 					</div>
         </div>
@@ -45,7 +58,7 @@
 					<div class="col-sm-10">
 						<div class="input-group">
 							<div class="input-group-btn">
-								<%=f.select :event_type,@event_type_sel,{:prompt=>"類型"},{:class=>"btn", :required=>"true"}%>
+								<%=f.select :event_type,Event.typeSel,{:prompt=>"類型"},{:class=>"btn", :required=>"true"}%>
 							</div>
 							<%=f.text_field :title,:class=>"form-control", :placeholder=>"必填", :required=>"true"%>
 						</div>
@@ -57,12 +70,6 @@
 					-->
 				</div>
 				<div class="form-group">
-					<!--
-					<label class="col-sm-2 control-label">類型</label>
-					<div class="col-sm-4">					
-						<%=f.select :event_type,@event_type_sel,{:prompt=>"必填"},{:class=>"form-control", :required=>"true"}%>
-					</div>
-					-->
 					<label class="col-sm-2 control-label">活動網址</label>
 					<div class="col-sm-10">
 						<%=f.text_field :url,:class=>"form-control", :placeholder=>"選填"%>
