@@ -1,30 +1,51 @@
+<%= stylesheet_link_tag "events_show", media: "all", "data-turbolinks-track" => true %>
 
-<button id="attend_button" class="btn btn-primary" onclick="attend(<%=params[:id]%>);">
-	<% if current_user %>
-		<% if @event.attendances.where(:user_id=>current_user.id).empty?%>
-			參加
-		<%else%>
-			退出
-		<%end%>
-	<% else %>
-		參加
-	<% end %>
-</button>
 
-<div class="row col-md-offset-2">
-	<%=image_tag @event.cover.url, size:"800x400"%>
-	<h4>
-		[<%=@event.event_type%>]<%=@event.title%>
-	</h4>
-	<h4><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></h4>
-	<h4><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></h4>
-	<h4><%=fa_icon "location-arrow"%> 地點: <%=@event.location%></h4>
-	<section id="content">
-		<%=@event.content.html_safe%>
-	</section>
+<div id="content-container" class="layout-content">
+	<div class="row">	
+		<!-- Left Nav Manu -->
+		
+		<div class="nav-manu-wrapper">
+			<div class="nav-manu" data-spy="affix">
+				<button id="edit_button" class="btn btn-info nav-button-wrapper" onclick="edit(<%=params[:id]%>);" style="width: 100%">
+					編輯
+				</button>
+				
+				<button id="attend_button" class="btn btn-primary nav-button-wrapper" onclick="attend(<%=params[:id]%>);" style="width: 100%">
+					<% if current_user %>
+						<% if @event.attendances.where(:user_id=>current_user.id).empty?%>
+							參加
+						<%else%>
+							退出
+						<%end%>
+					<% else %>
+						參加
+					<% end %>
+				</button>
+			</div>
+		</div>
+			
+		
+		<!-- Right Main Contents -->
+		<div class="col-md-9">
+			<%=image_tag @event.cover.url, size:"800x400"%>
+			<h4>
+				[<%=@event.event_type%>]<%=@event.title%>
+			</h4>
+			<h4><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></h4>
+			<h4><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></h4>
+			<h4><%=fa_icon "location-arrow"%> 地點: <%=@event.location%></h4>
+			<section id="content">
+				<%=@event.content.html_safe%>
+			</section>
+		</div>
+	</div>
 </div>
+
+<!-- js functions -->
 <script>
 	$(document).ready(function(){
+		$("#content-container").attr("class","container-fluid");
 	});
 	
 	function attend(id){
@@ -55,3 +76,4 @@
 	}
 	
 </script>
+<!-- js functions end -->

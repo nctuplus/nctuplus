@@ -1,0 +1,22 @@
+@import "application";
+
+.layout-content{
+	@extend .container;
+}
+
+.nav-manu-wrapper{
+	@extend .col-md-3;
+}
+
+.nav-manu{
+	height: 300px;
+	width: 200px;
+	margin: 10px 5px;
+	border: 2px solid #d1d1e0;
+	padding: 20px 10px;
+	background-color: rgba(255, 255, 255, 0.6);
+}
+
+.nav-button-wrapper{
+	margin: 5px auto;
+}
