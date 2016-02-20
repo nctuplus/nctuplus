@@ -28,7 +28,7 @@ class Event < ActiveRecord::Base
 	end	
 	
 	def is_past?
-		return self.end_time.to_date < Date.today.to_date
+		return self.end_time < Time.now
 	end
 	
 	def get_time

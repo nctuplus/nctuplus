@@ -10,9 +10,22 @@
 		參加
 	<% end %>
 </button>
-
-<div class="row col-md-offset-2">
-	<%=image_tag @event.cover.url, size:"800x400"%>
+</br>
+<style>
+  .show-font-wrapper {
+    //TODO: - force the max size(width) 
+    //      - container horizontal center
+  }
+  .show-font-image {
+    height: auto;
+    width: auto ;  
+  }
+</style>
+<div class="row well">
+  <div class="show-font-wrapper">
+    <%=image_tag @event.cover.url, class:"show-font-image" %>
+  </div>
+  <hr>
 	<h4>
 		[<%=@event.event_type%>]<%=@event.title%>
 	</h4>

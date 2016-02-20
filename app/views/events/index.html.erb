@@ -94,7 +94,7 @@
 	<div class="row">
 		<div class="form-wrapper">
 			<div class="container">
-				<form class="form-horizontal form-group center-block" role="form">
+        <%=form_tag "/events", {class:"form-horizontal form-group center-block", role:"form", method:"GET"} do %>
 					<div class="form-button-wrapper">
 						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
 					</div>	
@@ -114,13 +114,13 @@
 					-->
 					<div class="form-text-wrapper">
 						<div class="input-group">
-							<input class="form-control" id="custom_search" name="custom_search" placeholder="輸入活動名稱" style="/*width:350px;*/" type="text">
-							<span class="input-group-btn">
+							<%=text_field_tag :custom_search, params[:custom_search], class:"form-control", placeholder:"輸入活動名稱/地點/組織" %>
+              <span class="input-group-btn">
 								<button type="submit" class="btn btn-primary" id="search"><i class="fa fa-search"></i></button>        
 							</span><!-- /btn-group -->
 						</div>
 					</div>
-				</form>
+        <% end %>  
 			</div>
 		</div>
 	</div>

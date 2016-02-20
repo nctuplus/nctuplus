@@ -3,9 +3,12 @@ class EventsController < ApplicationController
 	before_filter :checkLogin, :only=>[:attend, :new, :create, :edit, :update, :destroy]
 	
 	def index
-		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json
-	  @events=Event.all
+		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json  
 	  @event_banner= Event.where(:banner=>true)
+    
+    @events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search])
+            .result.order("end_time DESC")
+ 
 	  #@event_banner= Event.where(:banner=>true).map{|event|{ url:event.cover.url }}
 	end
 	
