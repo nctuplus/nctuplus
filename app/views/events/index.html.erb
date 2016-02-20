@@ -92,25 +92,27 @@
 	
 	<!--- form group --->
 	<div class="row">
-		<div class="form-wapper">
+		<div class="form-wrapper">
 			<div class="container">
 				<form class="form-horizontal form-group center-block" role="form">
-					<div class="form-button-wapper">
+					<div class="form-button-wrapper">
 						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
 					</div>	
-					<div class="form-button-wapper">	
+					<div class="form-button-wrapper">	
 						<%=link_to "我的活動","/events/?mine=true",class:"btn btn-primary",style:"/*background-color:#11427D;*/"%>
 					</div>
-					<div class="form-nav-button-wapper">
+					<div class="form-nav-button-wrapper">
 						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >已參加活動</button>
 					</div>
-					<!--<div class="form-text-wapper">
+					<!--
+					<div class="form-text-wrapper">
 						<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
-					</div>-->
-					<!--<div class="form-button-wapper">
+					</div>
+					<div class="form-button-wrapper">
 						<button type="submit" class="btn btn-primary">找活動</button>
-					</div>-->
-					<div class="form-text-wapper">
+					</div>
+					-->
+					<div class="form-text-wrapper">
 						<div class="input-group">
 							<input class="form-control" id="custom_search" name="custom_search" placeholder="輸入活動名稱" style="/*width:350px;*/" type="text">
 							<span class="input-group-btn">
@@ -118,8 +120,6 @@
 							</span><!-- /btn-group -->
 						</div>
 					</div>
-					
-					
 				</form>
 			</div>
 		</div>
@@ -132,7 +132,7 @@
 			<div id="events-container1" class="events-container" style="">
 				<!-- list all events -->
 				<% @events.each do |event| %>
-					<div class="event-block-wapper">
+					<div class="event-block-wrapper">
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
 							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
