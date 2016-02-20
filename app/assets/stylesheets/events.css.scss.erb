@@ -5,8 +5,6 @@
 	layout
 *************/
 .layout-content{
-	@extend .container-fluid;
-	@extend .center-block;
 	background-color: rgba(226, 226, 226, 0.7);
 }
 
@@ -17,6 +15,10 @@
 /*------------------------
 	banner
 ------------------------*/
+
+.events-banner{
+	@extend .container;
+}
 
 .banner__inner{
 	@extend .item;
@@ -57,24 +59,36 @@
 	form
 ------------------------*/
 
-
 .form-wapper{
-	@extend .container;
 	margin: 40px auto;
     padding: 30px 3px;
     height: 100px;
-    width: 100%;
-	background-color: rgba(100, 100, 100, 0.7)
+	background-color: rgba(100, 100, 100, 0.7);
 }
 
+.form-button-wapper{
+	@extend .col-md-1, .col-sm-2, .col-xs-6;
+	padding: 3px auto;
+}
+
+.form-text-wapper{
+	@extend .col-md-8, .col-sm-8, .col-xs-12;
+	padding: 3px auto;
+}
+
+.form-nav-button-wapper{
+	@extend .col-md-2, .col-sm-12, .col-xs-12;
+	padding: 3px auto;
+}
 /*------------------------
 	event-block group 
 	attributes
 ------------------------*/
 
 .events-block{
-	@extend .container-fluid;
-	margin: 20px 0px; 
+	@extend .container;
+	@extend .center-block;
+	margin: 20px auto;
 }
 
 #event-block1{
@@ -85,9 +99,6 @@
 	background-image: url(<%=asset_path("events/bg_waves.png")%>);
 }
 
-.events--container{
-	@extend .container-fluid;
-}
 .events--theme{
 	position: absolute;
 	left: 0px;
@@ -117,7 +128,7 @@
 	attributes
 ------------------------*/
 .event-block-wapper{
-	@extend .col-md-3;
+	@extend .col-md-3, .col-sm-6, .col-xs-12;
 	margin: 10px 0px;
 	padding: 0px;
 }

@@ -51,6 +51,8 @@
 
 	
 <div class="layout-content" style="" bg-white>
+	
+	<!-- banner -->
 	<div id="js-banner" class="events-banner">
 		<div id="myCarousel" class="carousel slide">
 			<!-- Indicators -->
@@ -82,26 +84,28 @@
 			</a>
 		</div>
 	</div>
+	<!-- End of banner -->
 	
 	<!--- form group --->
 	<div class="row">
 		<div class="form-wapper">
-			<form class="form-horizontal form-group center-block" role="form">
-				<div class="col-md-1">
-					<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
-				</div>
-				<div class="col-md-1">
-					<button type="submit" class="btn btn-primary">找活動</button>
-				</div>
-				<div class="col-md-8">
-					<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
-				</div>
-				
-				<!-- Class "cbp-spmenu-open" gets applied to menu -->
-				<div class="col-md-2">
-					<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
-				</div>
-			</form>
+			<div class="container">
+				<form class="form-horizontal form-group center-block" role="form">
+					<div class="form-button-wapper">
+						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
+					</div>
+					<div class="form-button-wapper">
+						<button type="submit" class="btn btn-primary">找活動</button>
+					</div>
+					<div class="form-text-wapper">
+						<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
+					</div>
+					
+					<div class="form-nav-button-wapper">
+						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 
