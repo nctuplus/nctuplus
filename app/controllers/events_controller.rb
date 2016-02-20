@@ -1,7 +1,7 @@
 class EventsController < ApplicationController
 	
 	before_filter :checkLogin, :only=>[:attend, :new, :create, :edit, :update, :destroy]
-	before_filter :checkOwner, :only=>[:update, :edit, :destroy]
+	
 	def index
 		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json
 	  @events=Event.all
@@ -15,7 +15,7 @@ class EventsController < ApplicationController
 		#@img = EventImage.new
 	end
 	def update
-		@event=Event.find(params[:id])
+		@event=current_user.events.find(params[:id])
 		@event.update_attributes(event_params)
 		redirect_to event_url(@event)
 	end
@@ -25,6 +25,7 @@ class EventsController < ApplicationController
 	def create
 		@event=Event.new(event_params)
 		@event.user_id=current_user.id
+		@event.banner=true
 		@event.save!
 		redirect_to event_url(@event)#:, :id=>@event.id
 	end
@@ -38,7 +39,7 @@ class EventsController < ApplicationController
 	end
 	
 	def edit
-		@event=Event.find(params[:id])
+		@event=current_user.events.find(params[:id])
 
 	end
 	

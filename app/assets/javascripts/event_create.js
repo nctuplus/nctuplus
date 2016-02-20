@@ -1,6 +1,6 @@
 //= require jquery-ui-timepicker-addon
 //= require jquery-fileupload
-
+//= require page-tour-custom
 function initUpload(){
 	$('#event_cover').change(function (e) {
 		var file=e.target.files[0];

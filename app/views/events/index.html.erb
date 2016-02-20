@@ -10,8 +10,12 @@
 		$('#banner-0').addClass('active');
 		
 		$('#myActivities').click( function(){
+			<% if current_user %>
 			$(this).toggleClass("active");
 			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
+			<% else %>
+				toastr["info"]("請先登入!");
+			<% end %>
 		});
 		
 		$('#nav_cross_button').click( function(){
@@ -93,17 +97,29 @@
 				<form class="form-horizontal form-group center-block" role="form">
 					<div class="form-button-wapper">
 						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
+					</div>	
+					<div class="form-button-wapper">	
+						<%=link_to "我的活動","/events/?mine=true",class:"btn btn-primary",style:"/*background-color:#11427D;*/"%>
 					</div>
-					<div class="form-button-wapper">
-						<button type="submit" class="btn btn-primary">找活動</button>
+					<div class="form-nav-button-wapper">
+						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >已參加活動</button>
 					</div>
-					<div class="form-text-wapper">
+					<!--<div class="form-text-wapper">
 						<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
+					</div>-->
+					<!--<div class="form-button-wapper">
+						<button type="submit" class="btn btn-primary">找活動</button>
+					</div>-->
+					<div class="form-text-wapper">
+						<div class="input-group">
+							<input class="form-control" id="custom_search" name="custom_search" placeholder="輸入活動名稱" style="/*width:350px;*/" type="text">
+							<span class="input-group-btn">
+								<button type="submit" class="btn btn-primary" id="search"><i class="fa fa-search"></i></button>        
+							</span><!-- /btn-group -->
+						</div>
 					</div>
 					
-					<div class="form-nav-button-wapper">
-						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
-					</div>
+					
 				</form>
 			</div>
 		</div>
@@ -120,7 +136,7 @@
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
 							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
-							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top" 
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
 									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
 								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>

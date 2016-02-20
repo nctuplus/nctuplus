@@ -97,13 +97,13 @@
 				</div>
 				<div class="form-group">
 					<label class="col-sm-2 control-label">內容</label>
-					<div class="col-md-10">
+					<div class="col-md-10" id="event-content-div">
 						<%=f.text_area :content,{:maxlength=>35, :size=>30, :class=>"tinymce", :placeholder=>"內容",:style=>"height:200px;"}%>
 					</div>
 				</div>
 				<br>
 				<div class="col-md-12 text-right">
-					<button onclick="preview();return false;" class="btn btn-lg btn-primary">預覽</button>
+					<button id="preview-btn" onclick="preview();return false;" class="btn btn-lg btn-primary">預覽</button>
 					<%=f.submit "送出",class:"btn btn-lg btn-success"%>
 				</div>
 			<% end %>
@@ -112,12 +112,46 @@
 	<br>
 </div>
 
+<ol id="joyRideTipContent">
+	<li data-text="Next" class="">
+		<h2>Tips</h2>
+		<p>
+		請使用Enter鍵或滑鼠點擊灰色處觀看	
+		</p>
+	</li>
+	<li data-id="image-container" data-button="Next">
+		<h4>活動封面</h4>
+		<p>替你的活動上傳封面吸引更多人<br>
+		建議<strong>800x400</strong>以達最佳效果!<br>
+		會顯示在首頁的輪播區喔~</p>
+	</li>
+	<li data-id="event-content-div" data-button="Next">
+		<h4>活動內容</h4>
+		<p>
+			打一篇圖文並茂的宣傳文吧!<br>
+			可以直接複製貼上FB的文章(記得設成公開)，會有圖片顯示喔!
+		</p>
+	</li>
+	<li data-id="preview-btn" data-button="Done">
+		<h4>預覽</h4>
+		<p>
+			送出前可以先看看效果如何!
+		</p>
+	</li>
+</ol>
 
 <script>
 
 $(document).ready(function(){
 
 	initUpload();
+	$('#joyRideTipContent').joyride({
+      autoStart : true,
+      cookieMonster: true,           
+      cookieName: '_EventFormTip', 
+      modal:true,
+      expose: true
+    });
 
 	var startDateTextBox = $('#event_begin_time');
 	var endDateTextBox = $('#event_end_time');
