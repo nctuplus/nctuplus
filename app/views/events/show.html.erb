@@ -2,49 +2,90 @@
 
 <div id="content-container" class="layout-content">
 	<div class="row">	
-		<!-- Left Nav Manu -->
+		<!-- Left Nav Menu -->
+		<div class="nav-menu-wrapper">
 		
-		<div class="nav-manu-wrapper">
-			<div class="nav-manu" data-spy="affix">
-				<button id="edit_button" class="btn btn-info nav-button-wrapper" onclick="edit(<%=params[:id]%>);" style="width: 100%">
-					編輯
-				</button>
-				
-				<button id="attend_button" class="btn btn-primary nav-button-wrapper" onclick="attend(<%=params[:id]%>);" style="width: 100%">
-					<% if current_user %>
-						<% if @event.attendances.where(:user_id=>current_user.id).empty?%>
+			<!-- Nav always on top -->
+			<div data-spy="affix">
+				<% if current_user %>
+				<% if event.user_id==current_user.try(:id)%>
+					<div id="editor-nav" class="nav-menu" style="background-color: rgba(240, 240, 240, 1);" >
+						<b>編輯功能區</b>
+						<button id="edit_button" class="btn btn-info nav-button-wrapper" onclick="edit(<%=params[:id]%>);" style="width: 100%">編輯</button>
+						<button id="edit_button" class="btn btn-danger nav-button-wrapper" onclick="edit(<%=params[:id]%>);" style="width: 100%">刪除</button>
+					</div>
+				<% end %>
+				<% end %>
+				<div id="my-nav" class="nav-menu" >	
+					<button id="attend_button" class="btn btn-primary nav-button-wrapper" onclick="attend(<%=params[:id]%>);" style="width: 100%">
+						<% if current_user %>
+							<% if @event.attendances.where(:user_id=>current_user.id).empty?%>
+								參加
+							<%else%>
+								退出
+							<%end%>
+						<% else %>
 							參加
-						<%else%>
-							退出
-						<%end%>
-					<% else %>
-						參加
+						<% end %>
+					</button>
+					<% if current_user %>
+						<div class="divide-horizontal">
+							<span style="color: black;">已參加的活動</span>
+						</div>
+						<ul>
+							<% current_user.attend_events.each do |myEvent| %>
+								<li><%=link_to truncate(myEvent.title, length:10 ), "/events/"+myEvent.id.to_s %></li>
+							<% end %>
+						</ul>
 					<% end %>
-				</button>
+				</div>
 			</div>
 		</div>
-			
+		<!-- Left Nav Menu End-->
 		
 		<!-- Right Main Contents -->
-		<div class="col-md-9">
-			<%=image_tag @event.cover.url, size:"800x400"%>
-			<h4>
-				[<%=@event.event_type%>]<%=@event.title%>
-			</h4>
-			<h4><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></h4>
-			<h4><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></h4>
-			<h4><%=fa_icon "location-arrow"%> 地點: <%=@event.location%></h4>
-			<section id="content">
-				<%=@event.content.html_safe%>
-			</section>
+		<div class="main-column-wrapper">
+			<div class="main-column">
+			
+				<div class="image-wrapper">
+					<%=image_tag @event.cover.url, width:"100%" %>
+				</div>
+				<span class="event-title">[<%=@event.event_type%>] <%=@event.title%></span>
+				
+				<!-- Contents of Main Column -->
+				<div class="main-column-content">
+					<!-- Info of Address -->
+					<address class="main-column-info row">
+						<div class="col-xs-9 col-md-10">
+							<p><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></p>
+							<p><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></p>
+						</div>
+						<div class="col-xs-3 col-md-2">
+							<p><%=fa_icon "location-arrow"%> 地點: <%=@event.location%></p>
+						</div>
+					</address>
+					<!-- Info of Address End -->
+					
+					<!-- Intro of Contents -->
+					<section id="content">
+						<div class="divide-horizontal">
+							<span>活動介紹</span>
+						</div>
+						<%=@event.content.html_safe%>
+					</section>
+					<!-- Intro of Contents End -->
+				</div>
+				<!-- Contents of Main Column End -->
+			</div>
 		</div>
+		<!-- Right Main Contents End -->
 	</div>
 </div>
 
 <!-- js functions -->
 <script>
 	$(document).ready(function(){
-		$("#content-container").attr("class","container-fluid");
+		
 	});
 	
 	function attend(id){
