@@ -18,7 +18,7 @@
 %}
 {% for(var key in course_lists){ %}
 	
-	<div class="col-md-3 " style="display:inline-block;white-space:normal;vertical-align:top;//border:0px;">
+	<div class="col-md-4 " style="display:inline-block;white-space:normal;vertical-align:top;//border:0px;">
 		<h4 class="text-center">{%=key.replace(/"/g, "")%}</h4>
 		<table class="table table-bordered border-thick-gray" >
 
@@ -28,29 +28,44 @@
 					credit_taked_sum=0;
 					score_sum=0;
 					current=course.sem_name; %}
-					<tr><td colspan="3">{%=current%}</td></tr>
+					
+					<tr>
+						<td class="text-center">{%=current %}</td>
+						<td class="text-center"><%=fa_icon("graduation-cap")%></td>
+						<td class="text-center"><%=fa_icon("flag-checkered")%></td>
+					</tr>
+
+					
 				{% } %}
 				
 				<tr>
-					<td>{%=course.name%}</td>
-					<td>{%=course.credit%}</td>
-					{% if(withdrawal(course.score)||!checkPass(o.pass_score,course.score)){ %}
-						<td style="color:red;">
+					<td>
+						{%=course.name%}
+						{% if(course.brief!=""){ %}
+							| {%=course.brief%}
+						{% } %}
+						{% if(course.cf_name!=null&&course.cf_name!=""){ %}
+							| {%=course.cf_name%}
+						{% } %}
+					</td>
+					<td class="text-center">{%=course.credit%}</td>
+					{% if(withdrawal(course.score)||!checkPassTaking(o.pass_score,course.score)){ %}
+						<td class="text-center" style="color:red;">
 					{% } else {
 						if(isInt(course.score)){
 							score_sum+=parseInt(course.score)*course.credit;
 							credit_taked_sum+=course.credit;
 						}
 						credit_sum+=course.credit; %}
-						<td>
+						<td class="text-center">
 					{% } %}
 					<strong>{%=course.score%}</strong></td>
 				</tr>
 				{% if(j==course_lists[key].length-1 || course_lists[key][j+1].sem_name!=current){ %}
-					<tr class="success">
-						<td>共</td>
-						<td>{%=credit_sum%}</td>
-						<td>{%=roundToDec(score_sum/credit_taked_sum,2)%}</td>
+					<tr class="info">
+						<td class="text-right">共</td>
+						<td class="text-center">{%=credit_sum%}</td>
+						<td class="text-center">{%=score_sum==0 ? "" : roundToDec(score_sum/credit_taked_sum,2)%}</td>
 					</tr>
 				{% } %}
 				<!--

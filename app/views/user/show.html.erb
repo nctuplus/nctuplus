@@ -54,9 +54,7 @@
 						<% year_offset=2 %>
 					<% end %>
 					<% dist=(Time.new(@user.year+1911+year_offset,6,8)-Time.now).to_i%>
-					<% if dist >= 0 %>
-						離畢業還有
-					<% end %>
+					離畢業還有
 					<h4 class="strong" >
 					<% if dist >= 0 %>
 						<%= dist/(3600*24) %>天	
@@ -82,12 +80,11 @@
 			</div>
 		</div>
 		<br>
-		<div id="common-check-div"></div>
+		<!--<div id="common-check-div"></div>-->
 
-		<br>
 		<div class="row no-margin-right bg-white border-thick-gray">
-			<div id="common_check_div"></div>
-			<div class="col-md-12" id="cosmap_check_div" style="padding-top:10px;"></div>
+			<div class="col-md-12" id="common_check_div" style="padding-top:10px;"></div>
+			<div class="col-md-12" id="cosmap_check_div" style="padding-top:5px;"></div>
 		</div>
 	</div>
 	<div class="col-md-offset- col-md-6 bg-white border-thick-gray">
@@ -235,8 +232,8 @@
 			$("#cm-credit").text(data.course_map.total_credit);
 			<% if @user.is_undergrad? %>
 				var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
-				$("#common-check-div").html(tmpl("common-tmpl",pass_courses));
-				//$("#common_check_div").html(tmpl("common_check",pass_courses));
+				//$("#common-check-div").html(tmpl("common-tmpl",pass_courses));
+				$("#common_check_div").html(tmpl("common_check",pass_courses));
 			<% end %>		
 			if(data["course_map"]){
 				$("#cosmap_check_div").html(tmpl("cosmap_check",data));

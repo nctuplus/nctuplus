@@ -22,14 +22,15 @@
 
 <div class="row no-margin-left no-margin-right">
 	<div id="link-bar" class="col-md-12 bg-white " style="">
-		<a class="link-with-border" href="/user/" style="">基本資料</a>
-		<a class="link-with-border" href="/user/courses" style="">歷年課程</a>
-		<a class="link-with-border" href="/user/collections" style="">課表收藏</a>
+		<a class="link-with-border" href="/user<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>" style="">基本資料</a>
+		<a class="link-with-border" href="/user/courses<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>" style="">歷年課程</a>
+		<a class="link-with-border" href="/user/collections<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>" style="">課表收藏</a>
 	</div>
 </div>
 
 <script>
 	$(function(){
-		$("#link-bar").find("a[href='"+window.location.pathname+"']").addClass("active");	//add bottom blue border
+		//console.log(window.location);
+		$("#link-bar").find("a[href='"+window.location.pathname+window.location.search+"']").addClass("active");	//add bottom blue border
 	});
 </script>

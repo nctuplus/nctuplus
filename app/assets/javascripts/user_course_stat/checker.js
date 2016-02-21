@@ -67,7 +67,7 @@ function commonCheck(pass_courses){
 			if(course.brief.search("基礎")!=-1){ 
 				result['foreign_basic']+=parseInt(course.credit); 
 			}
-			else if(course.brief.search("進階")!=-1||course.brief.search("其它")!=-1){ 
+			else if(course.brief.search("進階")!=-1||course.brief.search("其它")!=-1||course.brief.search("其他")!=-1){ 
 				result['foreign_advance']+=parseInt(course.credit); 
 			} 
 		} 
