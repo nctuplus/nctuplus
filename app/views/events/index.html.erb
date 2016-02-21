@@ -126,6 +126,14 @@
 	</div>
 
 	<div class="row">
+
+		<!-- Focus Activities -->
+		<div id="event-block2" class="events-block">
+			<h1>主題活動</h1>
+		</div>
+		<!-- End of Focus Activities -->
+
+
 		<!-- Current Activities -->
 		<div id="event-block1" class="events-block">
 			<h1>近期活動</h1>
@@ -145,7 +153,7 @@
 								<strong><%= truncate(event.title, length: 10) %></strong>
 								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
 								<% if event.user_id==current_user.try(:id)%>
-									<%=link_to "編輯", edit_event_path(event)%>
+									<%=link_to fa_icon("pencil-square lg"), edit_event_path(event)%>
 								<% end %>
 							</div>
 						</div>
@@ -157,11 +165,6 @@
 		</div>
 		<!-- End of Current Activities -->
 
-		<!-- Focus Activities -->
-		<div id="event-block2" class="events-block">
-			<h1>主題活動</h1>
-		</div>
-		<!-- End of Focus Activities -->
 	</div>
 	
 	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="menuBottom">
