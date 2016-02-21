@@ -14,20 +14,83 @@
 	@extend .container;
 }
 
-.nav-manu-wrapper{
+/*------------------------
+	Main Column
+------------------------*/
+
+.nav-menu-wrapper{
 	@extend .col-md-3;
 }
 
-.nav-manu{
-	height: 300px;
+.nav-menu{
 	width: 200px;
 	margin: 10px 5px;
 	border: 2px solid #d1d1e0;
 	padding: 20px 10px;
-	background-color: rgba(255, 255, 255, 0.6);
+	background-color: rgba(255, 255, 255, 1);
 }
 
 .nav-button-wrapper{
 	margin: 5px auto;
 }
 
+#editor-nav > b {
+	text-align: center;
+	font-size: medium;
+	margin: 0 auto;
+}
+
+#my-nav > a {
+	color: black;
+}
+
+#my-nav > ul{
+	font-size: medium;
+	padding-left: 10px;
+    list-style-type: none;
+}
+
+/*------------------------
+	Main Column
+------------------------*/
+
+.main-column-wrapper{
+	//@extend .col-md-offset-3;
+	@extend .col-md-9;
+}
+
+.main-column{
+	background-color: rgba(255, 255, 255, 1);
+}
+
+.main-column-content{
+	padding: 20px 30px;
+}
+
+.main-column-info{
+	font-size: small;
+}
+
+.event-title{
+	position: relative;
+	top: -50px;
+	padding: 10px 30px;
+	background-color: rgba(239, 239, 239, 0.9);
+	
+	font-weight: bold;
+	font-size: large;
+}
+
+.divide-horizontal {
+   width: 100%; 
+   text-align: center; 
+   border-bottom: 1px solid #d2d2d2; 
+   line-height: 0.1em;
+   margin: 10px 0 20px; 
+} 
+
+.divide-horizontal > span { 
+    background:#fff; 
+	color: #d2d2d2;
+    padding:0 10px; 
+}
