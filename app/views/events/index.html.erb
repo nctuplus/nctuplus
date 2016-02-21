@@ -10,8 +10,12 @@
 		$('#banner-0').addClass('active');
 		
 		$('#myActivities').click( function(){
+			<% if current_user %>
 			$(this).toggleClass("active");
 			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
+			<% else %>
+				toastr["info"]("請先登入!");
+			<% end %>
 		});
 		
 		$('#nav_cross_button').click( function(){
@@ -90,21 +94,33 @@
 	<div class="row">
 		<div class="form-wrapper">
 			<div class="container">
-				<form class="form-horizontal form-group center-block" role="form">
+        <%=form_tag "/events", {class:"form-horizontal form-group center-block", role:"form", method:"GET"} do %>
 					<div class="form-button-wrapper">
 						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
+					</div>	
+					<div class="form-button-wrapper">	
+						<%=link_to "我的活動","/events/?mine=true",class:"btn btn-primary",style:"/*background-color:#11427D;*/"%>
+					</div>
+					<div class="form-nav-button-wrapper">
+						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >已參加活動</button>
+					</div>
+					<!--
+					<div class="form-text-wrapper">
+						<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
 					</div>
 					<div class="form-button-wrapper">
 						<button type="submit" class="btn btn-primary">找活動</button>
 					</div>
+					-->
 					<div class="form-text-wrapper">
-						<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
+						<div class="input-group">
+							<%=text_field_tag :custom_search, params[:custom_search], class:"form-control", placeholder:"輸入活動名稱/地點/組織" %>
+              <span class="input-group-btn">
+								<button type="submit" class="btn btn-primary" id="search"><i class="fa fa-search"></i></button>        
+							</span><!-- /btn-group -->
+						</div>
 					</div>
-					
-					<div class="form-nav-button-wrapper">
-						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
-					</div>
-				</form>
+        <% end %>  
 			</div>
 		</div>
 	</div>
@@ -120,7 +136,7 @@
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
 							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
-							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top" 
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
 									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
 								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
@@ -128,6 +144,9 @@
 								<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
 								<strong><%= truncate(event.title, length: 10) %></strong>
 								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
+								<% if event.user_id==current_user.try(:id)%>
+									<%=link_to "編輯", edit_event_path(event)%>
+								<% end %>
 							</div>
 						</div>
 					</div>

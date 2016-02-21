@@ -7,10 +7,12 @@ class Event < ActiveRecord::Base
 		:url=>"/file_upload/event_covers/:id_partition/:filename",
 		:default_url => "/images/:style/missing.png",
 		:path => ":rails_root/public/file_upload/event_covers/:id_partition/:filename"
-  validates_attachment :cover, 
+	validates_attachment :cover, 
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
-		
+	def self.typeSel
+		return ["講座","表演","擺攤","比賽","其他"]
+	end
 	def to_json_obj
 		{
 			:id=>self.id,
@@ -26,7 +28,7 @@ class Event < ActiveRecord::Base
 	end	
 	
 	def is_past?
-		return self.end_time.to_date < Date.today.to_date
+		return self.end_time < Time.now
 	end
 	
 	def get_time
