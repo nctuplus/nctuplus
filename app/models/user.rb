@@ -1,6 +1,7 @@
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
+	include ActionView::Helpers # for avatar
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:facebook, :E3]
@@ -51,7 +52,7 @@ class User < ActiveRecord::Base
       src+="?type=large" if width>=100
       return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='#{src}'>".html_safe
     else
-      return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='/assets/anonymous.jpg'>".html_safe
+      return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='#{ActionController::Base.helpers.asset_path("anonymous.jpg")}'>".html_safe
     end
   end
   

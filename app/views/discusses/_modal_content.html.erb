@@ -59,12 +59,12 @@
 </script>
 <script type="text/x-tmpl" id="sub_d-content">
 	<div class="col-md-1 col-xs-2" style="padding-left:30px;">
-		{%if(o.uid){ %}
+		{%if(o.is_anonymous||!o.uid){ %}
+			<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
+		{% }else{ %}
 			<a href="https://www.facebook.com/{%=o.uid%}" target="_blank">
 				<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
 			</a>
-		{% }else{ %}
-			<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
 		{% } %}
 	</div>
 	<div class="col-md-10 col-xs-10">
