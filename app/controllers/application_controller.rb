@@ -18,7 +18,20 @@ class ApplicationController < ActionController::Base
 	def getUserByIdForManager(uid)
 		return ( (uid.present? and checkTopManagerNoReDirect) ? User.find(uid) : current_user )
 	end
-
+  
+  def checkDepYear
+    if user_signed_in?
+      if current_user.department_id.nil? or current_user.department_id==0
+        alertmesg("info",'Sorry',"請先填寫系級")
+        redirect_to user_edit_path
+      else
+        return true
+      end
+    else
+      return true 
+    end
+  end
+  
   def checkLogin
     unless user_signed_in?
 			alertmesg("info",'Sorry',"請先登入,謝謝!")

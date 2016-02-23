@@ -8,6 +8,7 @@ class UserController < ApplicationController
 	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :courses, :select_dept,
 	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
   
+  before_filter :checkDepYear, :only=>[:show]
 	layout false, :only => [:statistics_table]#, :all_courses2]
 
 

@@ -22,12 +22,20 @@
 			<div class="col-md-9 bg-white border-thick-gray" style="display:inline-block;min-height:120px;">
 				學號: <%=@user.student_id%> <br>
 				信箱: <%=@user.email%> <br>
-				學系: <%=@user.department.ch_name%> 入學年度:<%=@user.year%> <br>
+				學系: <%=@user.try(:department).try(:ch_name)||"未填寫" %>
+        入學年度:
+          <% if @user.year==0 %>
+            未填寫
+          <% else %>
+            <%=@user.year%> 
+          <% end %>
+        <br>
 				身份:
 					<% if @user.hasFb? %>
-						<%=@user.hasE3? ? "Facebook&E3" : ""  %>
-					<% else %>
-						<%=@user.hasE3? ? "E3" : ""  %>
+						Facebook
+					<% end %>
+          <% if @user.hasE3? %>
+						E3
 					<% end %>
 				<br>
 				分享課表: <%=@user.canShare? ? "ON" : "OFF" %><br>
