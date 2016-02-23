@@ -154,10 +154,10 @@
 							</div>
 							<div class="event-block__bottom">
 								<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
-								<strong><%= truncate(event.title, length: 10) %></strong>
+								<strong><%= truncate(event.title, length: 20) %></strong>
 								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
 								<% if event.user_id==current_user.try(:id)%>
-									<%=link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
 							</div>
 						</div>
@@ -175,7 +175,7 @@
 		<h3>我的活動</h3>
 		<% if current_user %>
 			<% current_user.attend_events.each do |myEvent| %>
-				<%=link_to truncate(myEvent.title, length:10 ), "/events/"+myEvent.id.to_s %>
+				<%=link_to truncate(myEvent.title, length:15 ), "/events/"+myEvent.id.to_s %>
 			<% end %>
 		<% end %>
 		<button type="button" class="close">

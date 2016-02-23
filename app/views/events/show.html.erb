@@ -7,7 +7,7 @@
 		<div class="main-column">
 		
 			<div class="image-wrapper">
-				<%=image_tag @event.cover.url, size:"1110x555" %>
+				<%=image_tag @event.cover.url, width:"100%" %>
 			</div>
 			<span class="event-title">[<%=@event.event_type%>] <%=@event.title%></span>
 			
@@ -16,11 +16,11 @@
 				<!-- Info of Address -->
 				<address class="main-column-info row">
 					<!--<div class="col-xs-9 col-md-10">
-						<p><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></p>
+						<p><%=fa_icon "calendar"%> 時間: <strong><%=@event.begin_time%> ~ <%=@event.end_time%></p>
 						<p><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></p>
 					</div>-->
 					<div class="col-xs-12 col-md-12">
-						<p><%=fa_icon "calendar"%> 時間: <%=@event.begin_time%>~<%=@event.end_time%></p>
+						<p><%=fa_icon "calendar"%> 時間: <strong><%=@event.begin_time%> ~ <%=@event.end_time%></strong></p>
 					</div>
 					<div class="col-xs-12 col-md-12">
 						<p><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></p>
@@ -30,7 +30,7 @@
 					</div>
 				<% if @event.url.present? %>
 					<div class="col-xs-12 col-md-12">
-						<h4><%=fa_icon "share-alt"%><%=link_to "活動網址",@event.url,target:"blank"%></h4>
+						<p><%=fa_icon "share-alt"%> 活動網址: <%=link_to "點這裡",@event.url,target:"blank"%></p>
 					</div>
 				<% end %>
 				</address>
