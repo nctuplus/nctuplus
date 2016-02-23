@@ -1,79 +1,186 @@
-<%= stylesheet_link_tag "fullcalendar/fullcalendar.min", "data-turbolinks-track" => true %>
-<%= javascript_include_tag "fullcalendar/moment.min", "data-turbolinks-track" => true %>
-<%= javascript_include_tag "fullcalendar/fullcalendar.min", "data-turbolinks-track" => true %>
+<%= stylesheet_link_tag "events", media: "all", "data-turbolinks-track" => true %>
+<script type="text/javascript">
 
-<script>
-
-	$(document).ready(function() {
-
-		$('#calendar').fullCalendar({
-			defaultDate: '2015-02-12',
-			//eventLimit: true, // allow "more" link when too many events
-			events: [
-				{
-					title: 'All Day Event',
-					start: '2015-02-01'
-				},
-				{
-					title: 'Long Event',
-					start: '2015-02-07',
-					end: '2015-02-10'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2015-02-09T16:00:00'
-				},
-				{
-					id: 999,
-					title: 'Repeating Event',
-					start: '2015-02-16T16:00:00'
-				},
-				{
-					title: 'Conference',
-					start: '2015-02-11',
-					end: '2015-02-13'
-				},
-				{
-					title: 'Meeting',
-					start: '2015-02-12T10:30:00',
-					end: '2015-02-12T12:30:00'
-				},
-				{
-					title: 'Lunch',
-					start: '2015-02-12T12:00:00'
-				},
-				{
-					title: 'Meeting',
-					start: '2015-02-12T14:30:00'
-				},
-				{
-					title: 'Happy Hour',
-					start: '2015-02-12T17:30:00'
-				},
-				{
-					title: 'Dinner',
-					start: '2015-02-12T20:00:00'
-				},
-				{
-					title: 'Birthday Party',
-					start: '2015-02-13T07:00:00'
-				},
-				{
-					title: 'Click for Google',
-					url: 'http://google.com/',
-					start: '2015-02-28'
-				}
-			]
+	$(document).ready(function(){
+		$('.carousel').carousel({
+			interval: 5000
+		});
+		$("#content-container").attr("class","container-fluid");
+		
+		$('#banner-0').addClass('active');
+		
+		$('#myActivities').click( function(){
+			<% if current_user %>
+			$(this).toggleClass("active");
+			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
+			<% else %>
+				toastr["info"]("請先登入!");
+			<% end %>
 		});
 		
-	});
+		$('#nav_cross_button').click( function(){
+			$(this).toggleClass("active");
+			$('#menuBottom').toggleClass( "cbp-spmenu-open" );
+		});
+		
+		/* for css */
+		/*
+		
+			margin: 0 -9999rem;
+			padding: 0.25rem 9999rem;
 
+		//$('#event-block2').width( $('window').width() ); 
+		
+		var bg1_height=$('#event-background1').height();
+		var bk1_height=$('#event-block1').height();
+		if(bk1_height > bg1_height)
+		{
+			$('#event-background1').height(bk1_height);
+			$('#event-background1').width( $('#page-top').width() );
+		}
+		*/
+	});
+	
+	$('#myCarousel').hover(function() {
+		$(this).carousel('pause') 
+    });	
+
+
+	/*
+	else
+	{
+		document.getElementById('leftdiv').height()=right;
+	}*/
 </script>
-<style>
-	#calendar {
-		max-width: 900px;
-		margin: 0 auto;
-	}
-</style>
-<div id='calendar' class="bg-white"></div>
+
+	
+<div class="layout-content" style="" bg-white>
+	
+	<!-- banner -->
+	<div id="js-banner" class="events-banner">
+		<div id="myCarousel" class="carousel slide">
+			<!-- Indicators -->
+			<ol class="carousel-indicators">
+			<% @event_banner.each_with_index do |banner, index| %>
+				<li data-target="#myCarousel" data-slide-to="<%=index%>"></li>
+			<% end %>
+			</ol>
+			
+			<!-- Carousel items -->
+			<div class="carousel-inner" role="listbox">
+			<% @event_banner.each_with_index do |banner, index| %>
+				<div id="banner-<%=index%>" class="item">
+					<div class="banner__inner">
+						<%=image_tag(banner.cover.url, :class => "banner__image", :alt=> "banner", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>					
+						<div class="banner__caption">
+							<strong><%= truncate(banner.title, length: 20) %></strong>
+						</div>
+					</div>
+				</div>
+			<% end %>
+			</div>
+			<!-- Carousel nav -->
+			<a class="carousel-control left"  href="#myCarousel" data-slide="prev">
+				<span class="glyphicon glyphicon-chevron-left"></span>
+			</a>
+			<a class="carousel-control right" href="#myCarousel" data-slide="next">
+				<span class="glyphicon glyphicon-chevron-right"></span>
+			</a>
+		</div>
+	</div>
+	<!-- End of banner -->
+	
+	<!--- form group --->
+	<div class="row">
+		<div class="form-wrapper">
+			<div class="container">
+        <%=form_tag "/events", {class:"form-horizontal form-group center-block", role:"form", method:"GET"} do %>
+					<div class="form-button-wrapper">
+						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
+					</div>
+					<!--
+					<div class="form-button-wrapper">	
+						<%=link_to "我的活動","/events/?mine=true",class:"btn btn-primary",style:"/*background-color:#11427D;*/"%>
+					</div>
+					-->
+					<div class="form-nav-button-wrapper">
+						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >已參加活動</button>
+					</div>
+					<!--
+					<div class="form-text-wrapper">
+						<input id="form_text_input" type="activities" class="form-control" placeholder="輸入活動名稱">
+					</div>
+					<div class="form-button-wrapper">
+						<button type="submit" class="btn btn-primary">找活動</button>
+					</div>
+					-->
+					<div class="form-text-wrapper">
+						<div class="input-group">
+							<%=text_field_tag :custom_search, params[:custom_search], class:"form-control", placeholder:"輸入活動名稱/地點/組織" %>
+              <span class="input-group-btn">
+								<button type="submit" class="btn btn-primary" id="search"><i class="fa fa-search"></i></button>        
+							</span><!-- /btn-group -->
+						</div>
+					</div>
+        <% end %>  
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+
+		<!-- Focus Activities -->
+		<!--
+		<div id="event-block2" class="events-block">
+			<h1>主題活動</h1>
+		</div>
+		-->
+		<!-- End of Focus Activities -->
+
+
+		<!-- Current Activities -->
+		<div id="event-block1" class="events-block">
+			<h1>近期活動</h1>
+			<div id="events-container1" class="events-container" style="">
+				<!-- list all events -->
+				<% @events.each do |event| %>
+					<div class="event-block-wrapper">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
+								<strong><%= truncate(event.title, length: 20) %></strong>
+								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
+								<% if event.user_id==current_user.try(:id)%>
+									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+								<% end %>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- end of list all events -->
+				
+			</div>
+		</div>
+		<!-- End of Current Activities -->
+
+	</div>
+	
+	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="menuBottom">
+		<h3>我的活動</h3>
+		<% if current_user %>
+			<% current_user.attend_events.each do |myEvent| %>
+				<%=link_to truncate(myEvent.title, length:15 ), "/events/"+myEvent.id.to_s %>
+			<% end %>
+		<% end %>
+		<button type="button" class="close">
+			<span id="nav_cross_button" aria-hidden="true" style="font-size: 2em;" >&times;</span>
+			<span class="sr-only">Close</span>
+		</button>
+	</nav>
+</div>

@@ -262,7 +262,7 @@ GEM
     thor (0.19.1)
     thread_safe (0.3.5)
     tilt (1.4.1)
-    tinymce-rails (4.1.6)
+    tinymce-rails (4.2.8)
       railties (>= 3.1.1)
     tinymce-rails-langs (4.20140129)
       tinymce-rails (~> 4.0)

@@ -23,6 +23,10 @@ class User < ActiveRecord::Base
   has_many :comments
   has_many :course_teacher_ratings
   
+	has_many :events
+	has_many :attendances
+	has_many :attend_events, :through=> :attendances, :source=> :event
+
 
   has_many :user_coursemapships, :dependent=> :destroy
   has_many :course_maps, :through=> :user_coursemapships
