@@ -45,7 +45,7 @@
 						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
 						<div id="image-container" onclick="$('#event_cover').click();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
 							<% if @event.new_record? %>
-								點選以上傳,建議800x400以達最佳效果(需小於2MB)
+								點選以上傳,建議1000x400以達最佳效果(需小於2MB)
 							<% else %>	
 								<%=image_tag(@event.cover.url, :style => "max-height:170px")%>
 							<% end %>
@@ -103,7 +103,7 @@
 				</div>
 				<br>
 				<div class="col-md-12 text-right">
-					<button id="preview-btn" onclick="preview();return false;" class="btn btn-lg btn-primary">預覽</button>
+					<!--button id="preview-btn" onclick="preview();return false;" class="btn btn-lg btn-primary">預覽</button-->
 					<%=f.submit "送出",class:"btn btn-lg btn-success"%>
 				</div>
 			<% end %>
@@ -122,7 +122,7 @@
 	<li data-id="image-container" data-button="Next">
 		<h4>活動封面</h4>
 		<p>替你的活動上傳封面吸引更多人<br>
-		建議<strong>800x400</strong>以達最佳效果!<br>
+		建議<strong>1000x400</strong>以達最佳效果!<br>
 		會顯示在首頁的輪播區喔~</p>
 	</li>
 	<li data-id="event-content-div" data-button="Next">
@@ -132,12 +132,12 @@
 			可以直接複製貼上FB的文章(記得設成公開)，會有圖片顯示喔!
 		</p>
 	</li>
-	<li data-id="preview-btn" data-button="Done">
+	<!--li data-id="preview-btn" data-button="Done">
 		<h4>預覽</h4>
 		<p>
 			送出前可以先看看效果如何!
 		</p>
-	</li>
+	</li-->
 </ol>
 
 <script>
