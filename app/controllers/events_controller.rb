@@ -33,7 +33,7 @@ class EventsController < ApplicationController
 		redirect_to event_url(@event)#:, :id=>@event.id
 	end
 	def destroy
-		@event=Event.find(params[:id])
+		@event=current_user.events.find(params[:id])
 		@event.destroy!
 		redirect_to events_url
 	end

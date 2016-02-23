@@ -97,10 +97,12 @@
         <%=form_tag "/events", {class:"form-horizontal form-group center-block", role:"form", method:"GET"} do %>
 					<div class="form-button-wrapper">
 						<%=link_to "新增活動",new_event_path,class:"btn btn-info","data-no-turbolink"=>true%>
-					</div>	
+					</div>
+					<!--
 					<div class="form-button-wrapper">	
 						<%=link_to "我的活動","/events/?mine=true",class:"btn btn-primary",style:"/*background-color:#11427D;*/"%>
 					</div>
+					-->
 					<div class="form-nav-button-wrapper">
 						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >已參加活動</button>
 					</div>
@@ -128,9 +130,11 @@
 	<div class="row">
 
 		<!-- Focus Activities -->
+		<!--
 		<div id="event-block2" class="events-block">
 			<h1>主題活動</h1>
 		</div>
+		-->
 		<!-- End of Focus Activities -->
 
 
@@ -153,7 +157,7 @@
 								<strong><%= truncate(event.title, length: 10) %></strong>
 								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
 								<% if event.user_id==current_user.try(:id)%>
-									<%=link_to fa_icon("pencil-square lg"), edit_event_path(event)%>
+									<%=link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
 							</div>
 						</div>
