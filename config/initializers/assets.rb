@@ -21,5 +21,6 @@ Rails.application.config.assets.precompile +=[
 	'new-index.css',
 	'login.css',
 	'events.css',
-	'events_show.css'
+	'events_show.css',
+	'event_create.js'
 ]
