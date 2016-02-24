@@ -1,5 +1,5 @@
 ﻿<div class="bs-callout bs-callout-info well">
-	<h2><%=fa_icon "upload"%>匯入歷年課程</h2>
+	<h2><%=fa_icon "refresh"%>匯入歷年課程</h2>
 	<h4>
 	0.請注意!匯入前會所有課程先<strong>清空!</strong><br>
 	1.至註冊組 <%=link_to "學籍成績系統","https://regist.nctu.edu.tw/", target:"blank"%> 登入<br>
@@ -13,7 +13,7 @@
 	
 </div>
 
-<%= form_tag '/user/import_course', :role=>"form", :class=>"paste-form" do %>
+<%= form_tag '/scores/import', :role=>"form", :class=>"paste-form" do %>
 <%= text_area "course","score" , class:"form-control"  ,rows:"5",required:"true" %>
 <%= hidden_field_tag "user_agreement", (current_user.agree) ? 0 : 0 %>
 <%= submit_tag "送出", :class=>"btn btn-primary" %>
@@ -28,7 +28,7 @@
         <h4 class="modal-title">服務條款</h4>
       </div>
       <div class="modal-body">
-        <p>1. 本站 NCTU+ 僅會將匯入之成績供個人及各系辦審核成績人員使用，不會以任何方式公開使用者個人各別成績。</p>
+        <p>1. NCTU+ 僅會將匯入之成績供個人及各系辦審核成績人員使用，不會以任何方式公開使用者個人各別成績。</p>
 		<p>2. 由於課程資料繁多且複雜，畢業學分計算統計<b>"僅供參考"</b>不保證其正確性。同學需再次備查 </p>
 		<p>3. 103學年度 NCTU+ 有與交大電機系合作，電機系大四的同學須利用本系統繳交預審畢業學分的表單供電機系辦審核成績人員處理。</p>
 		<p>4. 使用者務必確認匯入成績的正確性，以利於畢業學分的計算和審查。</p>

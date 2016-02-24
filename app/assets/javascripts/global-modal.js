@@ -12,8 +12,11 @@ function showModal(target,size,title,content,callBack){
 			break;
 	}
 	
-	if(title!=null)
-		$obj.find(".modal-title").html(title);
+	if(title!=null){
+		var closeButton='<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
+		
+		$obj.find(".modal-title").html(closeButton+title);
+	}
 	else
 		$obj.find(".modal-header").hide();
 		

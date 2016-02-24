@@ -1,8 +1,8 @@
 <div id="book-<%=sale_book.id%>" href="/books/<%=sale_book.id%>" class="thumbnail clickable-hover" style="height:293px; " onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')" onclick="goToHref($(this).attr('href'),true);">					
 	<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 		<% if sale_book.user==current_user && sale_book.status==0%>
-			<%=link_to fa_icon("pencil"), edit_book_path(sale_book),class:"btn btn-sm btn-info" %>
-			<%=button_tag fa_icon("check"), class:"btn btn-sm btn-info",onclick:"setBookSaled(#{sale_book.id});" %>
+			<%=link_to fa_icon("pencil"), edit_book_path(sale_book),class:"btn btn-sm btn-warning" %>
+			<%=button_tag fa_icon("check"), class:"btn btn-sm btn-success",onclick:"setBookSaled(#{sale_book.id});", title:"設成已賣出" %>
 		<% end %>
 	</div>
 	<%=sale_book.cover_image%>
@@ -12,14 +12,14 @@
 	<div style="min-height:50px;margin-top:3px;padding-left:4px;" >
 		<div class="text-center" >
 			<span style="font-size:14px;">
-				<strong data-toggle="tooltip" title="<%=sale_book.book_name%>" >
+				<strong data-toggle="popover" data-content="<%=sale_book.book_name%>" >
 					<%=sale_book.book_name.truncate(15)%>					
 				</strong><br>
-				<strong data-toggle="tooltip" title="<%=sale_book.book.authors%>">
+				<strong data-toggle="popover" data-content="<%=sale_book.book.authors%>">
 					作者:<%=sale_book.book.authors.truncate(10)%>
 				</strong><br>
 			</span>
-			<span data-toggle="tooltip" style="margin-top:3px;/*margin-bottom: 13px;*/" title="
+			<span data-toggle="popover" style="margin-top:3px;/*margin-bottom: 13px;*/" data-content="
 				<% if sale_book.course_teacherships.present?%>
 				<% sale_book.course_teacherships.each do |cts|%>
 					<%="#{cts.course_ch_name} #{cts.teacher_name}" %><br>

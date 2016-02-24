@@ -19,5 +19,10 @@ Rails.application.config.assets.precompile +=[
 	'books.js',
 	'new-index.js',
 	'new-index.css',
-	'login.css'
+	'login.css',
+	'events.css',
+	'events_show.css',
+	'jquery-ui-timepicker-addon.js',
+	'event_create.js'
+	
 ]

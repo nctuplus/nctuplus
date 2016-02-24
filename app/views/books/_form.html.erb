@@ -53,7 +53,7 @@
           <label class="col-sm-2 control-label" >圖片</label>
 					<div class="col-sm-10 col-xs-10">
 						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
-						<div id="image-container" onclick="showPreviewImg();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
+						<div id="image-container" onclick="showPreviewImg();" class="text-center clickable-hover" style="border:1px #eeeeee solid;min-height:170px;width:100%;">
 							點選以上傳圖片(需小於2MB)
 							<%=@sale_book.new_record? ? "" : @sale_book.cover_image%>
 						</div>
@@ -105,13 +105,16 @@
 						</div>
 					</div>
 				<% end %>
+        
         <div class="col-md-12">
           <%= f.submit "送出", class: "btn btn-lg btn-primary pull-right" %>
-        </div>
+        </div>      
       <% end %>
     </div>
   </div>
+  </br>
 </div>
+</br>
 <div class="modal fade" id="book-modal" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog" >
 		<div class="modal-content" >
@@ -155,17 +158,14 @@
 </script>
 
 <script>
-	<% if @sale_book.new_record? %>
+
 	function fillCtListInEdit(){
-		//dummy function,do not remove
-	}
-	<% else %>
-	function fillCtListInEdit(){
+		<% if !@sale_book.new_record? %>
 		// show cts list in edit page		
-		<% @sale_book.course_teacherships.each do |cts| %>
-			console.log(<%=cts.id%>);
-			addCtid(<%=cts.id%>,"<%=cts.course_ch_name%>","<%=cts.teacher_name%>");
+			<% @sale_book.course_teacherships.each do |cts| %>
+				addCtid(<%=cts.id%>,"<%=cts.course_ch_name%>","<%=cts.teacher_name%>");
+			<% end %>
 		<% end %>
 	}
-	<% end %>
+
 </script>

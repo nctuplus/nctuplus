@@ -1,0 +1,95 @@
+@import "application";
+
+.show-font-wrapper {
+	//TODO: - force the max size(width) 
+	//      - container horizontal center
+}
+
+.show-font-image {
+	height: auto;
+	width: auto ;  
+}
+
+/*------------------------
+	Main Column
+------------------------*/
+
+.nav-menu-wrapper{
+	//bottom: 50px;
+	background-color: rgba(255, 255, 255, 0.7);
+}
+
+.nav-menu{
+	@extend .col-xs-12, .col-sm-6, .col-md-4;
+	//margin: 10px 5px;
+	//border: 2px solid #d1d1e0;
+	//padding: 20px 10px;
+}
+
+.nav-button{
+	margin: 5px auto;
+}
+
+#editor-nav{
+	background-color: rgba(255, 255, 255, 1);
+}
+
+#my-nav{
+	//@extend .col-xs-offset-0, .col-sm-offset-0, .col-md-offset-4;
+}
+
+#my-nav > a {
+	color: black;
+}
+
+#my-nav > ul{
+	font-size: medium;
+	padding-left: 10px;
+    list-style-type: none;
+}
+
+/*------------------------
+	Main Column
+------------------------*/
+
+.main-column-wrapper{
+	//@extend .col-md-offset-3;
+	@extend .col-md-12;
+	//top: 40px;
+}
+
+.main-column{
+	background-color: rgba(255, 255, 255, 1);
+}
+
+.main-column-content{
+	padding: 20px 30px;
+}
+
+.main-column-info{
+	font-size: small;
+}
+
+.event-title{
+	position: relative;
+	top: -50px;
+	padding: 10px 30px;
+	background-color: rgba(239, 239, 239, 0.9);
+	
+	font-weight: bold;
+	font-size: large;
+}
+
+.divide-horizontal {
+   width: 100%; 
+   text-align: center; 
+   border-bottom: 1px solid #d2d2d2; 
+   line-height: 0.1em;
+   margin: 10px 0 20px; 
+} 
+
+.divide-horizontal > span { 
+    background:#fff; 
+	color: #d2d2d2;
+    padding:0 10px; 
+}

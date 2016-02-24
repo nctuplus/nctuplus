@@ -163,14 +163,12 @@
 			$(this).find("a")[0].click();
 			//console.log($(this).find("a"));
 		});
-		
-		$("[data-toggle='tooltip']").tooltip({
-				content: function () {
-						return $(this).prop('title');
-				},
-				position: { my: "left-20 top+20"}
+		$("[data-toggle='popover']").popover({
+			trigger:"hover",
+			placement:"bottom",
+			html:true
 		});
-		
+
 		$(".category-a").click(function(){
 			$(".category-a").removeClass("active");
 			$(this).addClass("active");

@@ -17,6 +17,11 @@
 	<% if params[:controller]!="main"%>
 		<meta name="robots" content="noindex">	
 	<% end %>
+	<!-- for touch-icon -->
+	<link rel="apple-touch-icon" href="<%=asset_path("touch-icon/iphone.png")%>" /> 
+	<link rel="apple-touch-icon" sizes="76x76" href="<%=asset_path("touch-icon/ipad.png")%>" /> 
+	<link rel="apple-touch-icon" sizes="120x120" href="<%=asset_path("touch-icon/iphone-retina.png")%>" />
+	<link rel="apple-touch-icon" sizes="152x152" href="<%=asset_path("touch-icon/ipad-retina.png")%>" />
 	
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
 	<% if @fb_share_meta %>
@@ -66,7 +71,7 @@
 <% if current_page?('/')||current_page?('/main/index')||current_page?('/login')%>
 	<%= yield %>
 <% else %>
-	<div id="content-contaier" class="container" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
+	<div id="content-container" class="container" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
 		<%= yield %>
 	</div>
 <% end %>

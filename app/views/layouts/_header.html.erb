@@ -35,6 +35,9 @@
 					</li>
 				<% end %>
 				<li>
+					<a class="page-scroll" href="/events/" rel="nofollow" data-no-turbolink>活動吧</a>
+				</li>
+				<li>
 					<a class="page-scroll" href="/books/" rel="nofollow">二手書</a>
 				</li>
 				
@@ -60,9 +63,11 @@
 				<li>
 					<a class="page-scroll" href="/courses/simulation" data-no-turbolink>模擬排課</a>
 				</li>
+				<!--
 				<li>
 					<a class="page-scroll" href="/user/" data-no-turbolink>算學分</a>
 				</li>
+				-->
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li>
@@ -80,16 +85,6 @@
 							<%=current_user.name%>
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="javascript:void(0);" onclick="show_timetable_on_modal(<%=Semester::CURRENT.id%>, true);" style="color:white;">歷年課表</a>
-							</li>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="/user/collections/" style="color:white;">課表收藏</a>
-							</li>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="/user/edit/" style="color:white;">編輯個人資料</a>
-							</li>
-							
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
 								<%= link_to  "登出", destroy_user_session_path, :method => :delete, :style=>"color:white;" %>
 							</li>					
