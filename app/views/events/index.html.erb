@@ -153,7 +153,7 @@
 								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-								<small class="event-title text-right"><%= truncate(event.organization, length: 5)%></small>
+								<small class="event-title text-right"><%= truncate(event.organization, length: 7)%></small>
 								<strong><%= truncate(event.title, length: 20) %></strong>
 								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
 								<% if event.user_id==current_user.try(:id)%>
