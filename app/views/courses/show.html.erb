@@ -1,12 +1,548 @@
 <%= javascript_include_tag "courses/content", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/chart", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/past_exam", "data-turbolinks-track" => true %>
+<style>
+		 a
+		{
+			text-decoration:none;
+		}
+		.axis path,
+		.axis line {
+			fill: none;
+			stroke: #4caedb;
+			shape-rendering: crispEdges;
+		}
+
+		.bar {
+			fill: steelblue;
+		}
+		.bar:hover
+		{
+			opacity:0.9;
+		}
+		.x.axis path {
+			stroke: #4caedb;
+		}
+		/* 暫時拿掉  會撞
+		svg
+		{
+			background:#222d3f;
+			border-radius:5px;
+			
+		}
+		*/
+		.d3-tip {
+			line-height: 1;
+			font-weight: bold;
+			padding: 12px;
+			background:#fff;
+			color:#000;
+			border-radius: 2px;
+		}
+
+	/* Creates a small triangle extender for the tooltip */
+	.d3-tip:after {
+		box-sizing: border-box;
+		display: inline;
+		font-size: 10px;
+		width: 100%;
+		line-height: 1;
+		color:#fff;
+		content: "\25BC";
+		position: absolute;
+		text-align: center;
+	}
+
+	/* Style northward tooltips differently */
+	.d3-tip.n:after {
+		margin: -1px 0 0 0;
+		top: 100%;
+		left: 0;
+	}
+	.svg2,.svg3
+	{
+		background:none;
+		height:auto;
+		margin-top:36px;
+	}
+	
+	.grid .tick {
+    stroke: #5ebddc;
+    stroke-opacity:0.3;
+	}
+	.grid path {
+		stroke-width:1px;
+		stroke-opacity:0.3;
+	}
+	.avg_score
+	{
+		height:130px;
+		width:160px;
+		background:#fff;
+		color:#333;
+		border-radius:4px;
+		float:left;
+		display:inline-block;
+		text-align:center;
+		line-height:30px;
+		
+		margin-top:23px;
+		margin-left:20px;
+		position:relative;
+	}
+	#bar-chart-info
+	{
+		float:left;
+		display:inline-block;
+		
+	}
+	.old-exam-upload
+	{
+		border:2px #888 dotted;
+		width:80%;
+		height:120px;
+		border-radius:6px;
+	}
+	
+	.old-exam-btn
+	{
+		background:#fd3b3c;
+		border-radius:4px;
+		line-height:26px;
+		text-align:center;
+		color:#fff;
+		display:inline-block;
+		margin-left:10px;
+		width:60px;
+	}
+	.prof-compare
+	{
+		background:#ccc;
+		border-radius:8px;
+		padding:20px;
+		height:300px;
+		overflow:scroll;
+	}
+	.rate2
+	{
+		border-radius:6px;
+		background:#fff;
+		width:300px;
+		height:200px;
+		margin:20px;
+		float:left;
+	}
+	.rate2-title
+	{
+		background:#28699a;
+		width:100%;
+		height:40px;
+		line-height:40px;
+		color:#fff;
+		text-align:center;
+		overflow:hidden;
+		position:relative;
+	}
+		.gray-bg
+	{
+		background:#e9ecf1;
+		height:100%;
+
+	}
+	.col-md-2
+	{
+		padding:0px;
+	}
+	.blue-menu
+	{
+		background:#222d3f;
+		height:100%;
+		padding-top:50px;
+		margin-bottom:0px;
+			position:fixed;
+		bottom:0px;
+	}
+	.blue-btn
+	{
+		height:45px;
+		border-bottom:1px #3e4d64 solid;
+		text-align:center;
+		color:#90deff;
+		line-height:45px;
+		opacity:1;
+		transition:0.4s linear color,0.4s linear background,0.4s linear border;
+	}
+
+	.blue-btn:hover
+	{
+		border-left:6px #01a6ff solid;
+		font-weight:700;
+		color:#fff;
+		background:#1e2538;
+	}
+	.blue-not-btn
+	{
+		background:#1e2538;
+		color:#94acd3;
+		height:45px;
+		border-bottom:1px #3e4d64 solid;
+		text-align:center;
+		color:#94acd3;
+		line-height:45px;
+	}
+
+	.blue-btn2
+	{
+		height:45px;
+		text-align:center;
+		color:#94acd3;
+		line-height:45px;
+		transition:0.4s linear color,0.4s linear background;
+	}
+	.blue-btn2:after
+	{
+	content:"▶";
+	padding-left:10px;
+	color: #01a6ff;
+	}
+
+	.blue-btn2:hover
+	{
+		font-weight:700;
+		color:#fff;
+		background:#1e2538;
+		text-decoration:none;
+	}
+
+	.block1
+	{
+		margin-top:60px;
+		margin-left:50px;
+	}
+
+	.inside-block
+	{
+		position:relative;
+		float:left;
+		border-bottom:1px #ccc solid;
+		
+		width:100%;
+		padding-bottom:30px;
+	}
+
+	.separation-line
+	{
+		border-top:1px #ccc solid;
+		width:100%;
+		height:0px;
+		margin-bottom:20px;
+		display:block;
+		float:left;
+		position:relative;
+	}
+
+	.btn1
+	{
+		
+		border-radius:5px;
+		height:36px;
+		line-height:36px;
+		padding-left:20px;
+		padding-right:20px;
+		font-size:16px;
+		color:#fff;
+		width:100px;
+		margin:8px;	
+		float:right;
+		display:flex;
+		align-items:center;
+		justify-content:center;
+	}
+	.red
+	{
+		background:#fc3b3c;
+	}
+	.blue
+	{
+		background:#3e3ba2;
+	}
+	.line-red
+	{
+		border:2px #fc3b3c solid;
+		color:#fc3b3c;
+	}
+
+	.line-blue
+	{
+		border-radius:5px;
+		height:40px;
+		line-height:40px;
+		display:inherit;
+		font-size:15px;
+		color:#fff;
+		width:120px;
+		margin:8px;	
+		border:2px #264fab solid;
+		color:#264fab;
+		text-align:center;
+		transition:.2s linear;
+		float:left;
+		
+	}
+	.line-blue:hover
+	{
+		background:#264fab;
+		color:#fff;
+	}
+	.title
+	{
+		height:100px;
+		display:block;
+		align-items:center;
+				justify-content:center;
+	}
+	.title-right
+	{
+	line-height:100px;height:100px;float:right; 
+	display:flex;align-items:center;
+				justify-content:center;
+	}
+	.rate
+	{
+		width:120px;
+		float:left;
+		margin:15px;
+		position:relative;
+		display:block;
+	}
+	.mock-up
+	{
+		border:4px red solid;
+		height:110px;
+		width:110px;
+		text-align:center;
+		color:red;
+		line-height:100px;
+		border-radius:110px;
+		font-size:30px;
+		margin:auto;
+		position:relative;
+	}
+	.mock-up-type
+	{
+		text-align:center;
+		display:block;
+		margin-top:20px;
+		color:#fd3c3d;
+		font-size:15px;
+		position:relative;
+	}
+
+	.mock-up-rate
+	{
+		background:#fff;
+		border:1px #bbb solid;
+		border-radius:5px;
+		width:250px;
+		height:160px;
+		margin-left:10%;
+		float:left;
+		padding:10px;
+		position:relative;
+	}
+
+	.table-invisible
+	{
+		line-height:40px;
+		width:50%;
+	}
+	.table-invisible > td
+	{
+		padding:20px;
+	}
+	.table-title-width
+	{
+		width:100px;
+	}
+	.table2
+	{
+		border-radius:5px;
+		line-height:40px;
+		width:90%;
+		background:#fff;
+		overflow:hidden;
+	}
+	.table2 tr
+	{
+		border:1px #ccc solid;
+	}
+	.table2 td ,th
+	{
+		padding-left:10px;
+	}
+	.table-frequency
+	{
+		border-radius:5px;
+		overflow:hidden;
+		color:#fff;
+	}
+	.table-frequency td
+	{
+		line-height:30px;
+		height:30px;
+		width:90px;
+		text-align:center;
+	}
+
+	.table-frequency2
+	{
+		line-height:30px;
+		height:30px;
+		text-align:center;
+		background:#ccc;
+		
+	}
+	.table-frequency2 td
+	{
+		width:33px;
+		border:2px #e9ecf1 solid; 
+	}
+	.table-frequency2-test 
+	{
+		background:#fc3b3c;
+		color:#FFF;
+	}
+	.strategy-board
+	{
+		background:#fff;
+		border-radius:4px;
+		padding:10px 15px;
+		margin-top:20px;
+		border:1px #ccc solid;
+		height:140px;
+		overflow:scroll;
+		margin-bottom:20px;
+		position:relative;
+		display:block;
+	}
+	.strategy-board table
+	{
+		line-height:40px;
+		
+		
+	}
+	.strategy-board tr
+	{
+		border-bottom:1px #ccc solid;
+	}
+	.strategy-type
+	{
+		border-radius:5px;
+		line-height:26px;
+		text-align:center;
+		color:#fff;
+		display:inline-block;
+		margin-right:20px;
+			width:60px;
+		height:26px;
+	}
+	.strategy-exam
+	{
+		background:#fd3b3c;
+
+		
+	}
+	.strategy-hw
+	{
+		background:#546fb6;
+	}
+	.strategy-other
+	{
+		background:#999;
+	}
+	/* course opinion */
+	.opinion
+	{
+		height:290px;
+		width:260px;
+		background-color:#35a0fe;
+		border:1px #bbb solid;
+		overflow:hidden;
+		margin-right:25px;
+		margin-bottom:15px;
+		box-shadow: 1px 1px 1px #bbb;
+		text-decoration:none;
+		float:left;
+	}
+	.opinion-view
+	{
+		position:relative;
+		width:100%;
+		height:240px;
+		padding:15px;
+		transition:.2s linear;
+		color:rgba(255,255,255,.8);
+	}
+	.opinion-view:hover
+	{
+		background:rgba(0,0,0,0.3);
+		color:rgba(255,255,255,1);
+	}
+
+	.opinion-info
+	{
+		background:#fff;
+		position:relative;
+		width:100%;
+		height:50px;
+		line-height:48px;
+		padding:0px 15px;
+		overflow:hidden;
+	}
+	.img-32px-round
+	{
+		height:32px;
+		width:32px;
+		border-radius:32px;
+		border:1px #aaa solid;
+		margin-right:8px;
+	}
+	.opinion-btn
+	{
+		border:1px #fff solid;
+		color:#fff;
+		text-align:center;
+		height:34px;
+		width:90px;
+		margin:auto;
+		line-height:34px;
+		transition:.2s linear;
+	}
+	.opinion-btn:hover
+	{
+		background:rgba(0,0,0,.3);
+	}
+	body
+	{
+		font-size:15px;
+	}
+
+	#sidebar-menu .nav a
+	{
+		background:none;
+		font-size:15px;
+		padding:none;
+		line-height:25px;
+	}
+
+	</style>
+
 <div class="row">
-	<div class="col-md-2">
+	<div class="blue-menu" style="postion:absolute;left:0px;margin:0px;">
 		<%= render "/course_content/scroll_sidebar"%>
 	</div>
 	
-	<div class="col-md-10 scroll-content ">
+	<div class="col-md-10 scroll-content col-md-offset-2" >
 		<div class="row" id="tc" >
 			<div class="col-md-10">
 				<h1 class="scroll-title" data-offset="100">	
@@ -25,68 +561,105 @@
 				</span>
 			</div>
 		</div>
-		<div class="row" id="single-compare" >
-		</div>
 		
-		<div class="row bg-white">			
+		<div class="separation-line"></div>
+		
+		<div class="row " id="single-compare" >
+		</div>
+		<br><br>
+		<div class="separation-line"></div>
+		<br><br>	
 			<h4 style="padding-left:15px;">
-				<i class="fa fa-gamepad"></i> 課程資訊：
-					永久課號 <strong><%=@data[:course_real_id]%></strong>
-					學分 <strong><%=@data[:course_credit]%></strong>
-					<%=link_to "課程綱要","https://course.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{@data[:year]}&Sem=#{@data[:half]}&CrsNo=#{@data[:temp_cos_id]}",target: "_blank"%>
-					<% if not @data[:open_on_latest]%>
-						(本學期無開課)
-					<% end %>
-					查看更多 
-					<%=link_to("javascript:void(0);", :class=>"see-more-course") do%>	
-						<%=fa_icon "search-plus"%>
-					<% end %>					
+				<p><h3><i class="fa fa-book"></i><strong> 課程資訊</strong></h3><br></p>
+					<table class="table-invisible" >
+						<tr>
+							<td>永久課號 <strong><%=@data[:course_real_id]%></strong></td>
+							<td>學分 <strong><%=@data[:course_credit]%></strong></td>
+						</tr>
+						<tr>
+							<td>
+							<%=link_to "課程綱要","https://course.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{@data[:year]}&Sem=#{@data[:half]}&CrsNo=#{@data[:temp_cos_id]}",target: "_blank"%>
+							
+							<% if not @data[:open_on_latest]%>
+								(本學期無開課)
+							<% end %>
+							</td>
+							<td>
+							查看更多 
+							<%=link_to("javascript:void(0);", :class=>"see-more-course") do%>	
+								<%=fa_icon "search-plus"%>
+							<% end %>
+							</td>
+						</tr>
+					</table>
 			</h4>
 			<div class="panel-heading course-info">
 				<%=render "/course_content/course_info" %>
 			</div>
+			
+			<div class="separation-line"></div>
+			<div id="course-tips" class="panel-heading" >
+				<h2 class="panel-title">
+					<p><h3><strong><%=fa_icon "gamepad"%> 課程攻略</strong></h3></p>
+				</h2>	
+			</div>
+			<div class="panel-body" >
+				<div class="row" >
+					<%=fa_icon "cube"%> 作業/考試：
+					<%=link_to "編輯", "javascript:void(0);", :class=>"edit-head"%>	
+					</br></br>
+					<div id="course_content_head">
+						<%=loading_img%>
+					</div>
+				</div>
+				<hr>
+				<div class="row">
+					<%=fa_icon "cube"%> 其他內容：
+					<%=link_to "編輯", "javascript:void(0);", :class=>"edit-lists"%>	
+					</br></br>
+					<div id="course_content_lists">
+						<%=loading_img%>
+					</div>
+				</div>
+					
+			</div>
+			<div class="separation-line"></div>
+			
 			<div class="panel-heading" id="statistics">
 				<h2 class="panel-title">
 					<p id="statistics-header">
-						<%=fa_icon "align-left"%> 歷年統計：
+						<h3><%=fa_icon "align-left"%><strong>  歷年統計</strong></h3>
 					</p>	
 				</h2>	
 			</div>
 			<div id="container-reg-num" style="height:80%; width:80%;"></div></br>
-			<div id="container-score" style="height:80%; width:80%;"></div>		
-			<div id="course-tips" class="panel-heading">
-				<h2 class="panel-title">
-					<p><%=fa_icon "gamepad"%> 課程攻略：</p>
-				</h2>	
+			<div id="container-score" style="height:80%; width:80%;"></div>
+			<div class="row" style="position:relative;">
+				<div class="avg_score" id = "avg_score1">
+						<h1><strong></strong></h1>
+						
+				</div>
+				<div class="avg_score" id = "avg_score2">
+						
+						同課程最高成績
+				</div>
+				<div class="avg_score" id = "teacher_name">
+						<h2><strong>粼粼林</strong></h2>
+						同課程最高分老師
+				</div>
 			</div>
-			<div class="panel-body">
-				<div class="well">
-					<div class="row" >
-						<%=fa_icon "cube"%> 作業/考試：
-						<%=link_to "編輯", "javascript:void(0);", :class=>"edit-head"%>	
-						</br></br>
-						<div id="course_content_head">
-							<%=loading_img%>
-						</div>
-					</div>
-					<hr>
-					<div class="row">
-						<%=fa_icon "cube"%> 其他內容：
-						<%=link_to "編輯", "javascript:void(0);", :class=>"edit-lists"%>	
-						</br></br>
-						<div id="course_content_lists">
-							<%=loading_img%>
-						</div>
-					</div>
-				</div>	
-			</div>
+			<br><br>
+			<div class="separation-line"></div>
+			
+			
 			<div id="course-tips" class="panel-heading">
 				<h2 class="panel-title">
 					<p>
-					<%=fa_icon "weixin"%> 留言板：
+						<h3><strong><%=fa_icon "weixin"%> 留言板：</strong></h3>
 					</p>
 				</h2>	
 			</div>
+			
 			<div class="well bg-grey " id="comments"></div>
 		<% if current_user %>	
 			<div class="row comment-form" >
@@ -102,7 +675,7 @@
 				</div>
 			</div>
 		<% end %>	
-		
+		<div class="separation-line"></div>
 		
 			<div class="row">
 				<div id="compare" class="panel-body">
@@ -112,7 +685,7 @@
 				<div id="files" class="panel-body">
 				</div>		
 			</div>
-		</div>	
+		
 	</div>
 	
 </div>
@@ -133,10 +706,56 @@
 			$(this).find('.fa').toggleClass("fa-search-minus");
 		});	
 			
-			
+
+    var _getAverage = function(data){
+      var teacherScore = [0, 0] ;
+      for(var j=0, tmp; tmp=data["data"][j]; ++j){
+        if(tmp["y"]==0)
+          continue;
+        teacherScore[0] += tmp["y"] ;
+        teacherScore[1]++ ;
+      }
+      return teacherScore[1]==0 ? 0 : ((teacherScore[0]*1.0)/teacherScore[1]).toFixed(2) ;
+    };
+    //
+    var getTopScore = function(data){     
+      var avgScores = [] ;
+      for(var i=0, tmp; tmp=data[i]; ++i){
+        var teacherScore = _getAverage(tmp);
+        avgScores.push({avg: teacherScore, teacher: tmp["name"]});
+      }
+      if(avgScores.length==0)
+        return 0 ;
+      else  
+        return _.max(avgScores, function(ele){ return ele.avg; });
+    }
+    
+    var getSpecifiedAvgScore = function(data, teacher_name){
+      for(var i=0, tmp1; tmp1=data[i]; ++i){
+        if(tmp1["name"]==teacher_name){         
+           return  _getAverage(tmp1);                    
+        }
+      }
+      return 0 ;
+    };
+    
 		$.getJSON("/course_content/get_course_info.json?cd_id=<%=@data[:course_detail_id]%>", function (json_data) {		
 		  
-		  var data = json_data.chart ;
+      // get the top avg score and teacher from related courses 
+      console.log(getTopScore(json_data["chart"]["score_data"]));
+			
+      
+      // get the avg score of current course
+      console.log(getSpecifiedAvgScore(json_data["chart"]["score_data"], json_data["teacher_name"]));
+			
+			var avg1 = getTopScore(json_data["chart"]["score_data"]);
+		  var avg2 = (getSpecifiedAvgScore(json_data["chart"]["score_data"], json_data["teacher_name"]));
+			
+			$("#avg_score1").html("<h1><strong>"+avg2+"</strong></h1>"+"本課程平均成績");
+			$("#avg_score2").html("<h1><strong>"+avg1.avg+"</strong></h1>"+"同類課程最高成績");
+			$("#teacher_name").html("<h1><strong>"+avg1.teacher+"</strong></h1>"+"同類課程最高分老師");
+			 
+      var data = json_data.chart ;
 		  show_chart_reg(data);
 			show_chart_score(data);
 			if(!(data.show_reg || data.show_score))

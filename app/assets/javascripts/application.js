@@ -15,6 +15,7 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 //= require jquery-ui
+//= require underscore
 
 //= require toastr.min
 //= require tmpl.min
@@ -28,6 +29,7 @@
 //= require zeroclipboard
 //= require global-timetable
 //= require global-modal
+
 
 var isMobile = false; //initiate as false
 // device detection
