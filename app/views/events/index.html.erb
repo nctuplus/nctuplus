@@ -143,7 +143,9 @@
 			<h1>近期活動</h1>
 			<div id="events-container1" class="events-container" style="">
 				<!-- list all events -->
-				<% @events.each do |event| %>
+				
+				<!-- current events -->
+				<% @current_events.each do |event| %>
 					<div class="event-block-wrapper">
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
@@ -163,6 +165,54 @@
 						</div>
 					</div>
 				<% end %>
+				<!-- current events End -->
+
+				<!-- future events -->
+				<% @future_events.each do |event| %>
+					<div class="event-block-wrapper">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<small class="event-title text-right"><%= truncate(event.organization, length: 7)%></small>
+								<strong><%= truncate(event.title, length: 20) %></strong>
+								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
+								<% if event.user_id==current_user.try(:id)%>
+									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+								<% end %>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- future events End -->
+
+				<!-- past events -->
+				<% @past_events.each do |event| %>
+					<div class="event-block-wrapper">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<small class="event-title text-right"><%= truncate(event.organization, length: 7)%></small>
+								<strong><%= truncate(event.title, length: 20) %></strong>
+								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
+								<% if event.user_id==current_user.try(:id)%>
+									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+								<% end %>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- past events End -->
+				
 				<!-- end of list all events -->
 				
 			</div>

@@ -4,10 +4,23 @@ class EventsController < ApplicationController
 	
 	def index
 		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json  
-	  @event_banner= Event.where(:banner=>true)
+		@event_banner= Event.where(:banner=>true)
     
-    @events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search])
+		@events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search])
             .result.order("end_time DESC")
+		
+		@past_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
+					.where('end_time < ?', Time.now)
+					.order('end_time DESC')
+		
+		@future_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
+					.where('begin_time >= ?', (Date.today.to_date + 1.day))
+					.order("begin_time DESC")
+		
+		@current_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
+					.where.not(:id => @past_events.select(:id))
+					.where.not(:id => @future_events.select(:id))
+					.order("begin_time")
  
 	  #@event_banner= Event.where(:banner=>true).map{|event|{ url:event.cover.url }}
 	end
