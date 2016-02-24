@@ -23,31 +23,35 @@ class Event < ActiveRecord::Base
 		}
 	end
 	
-	def is_today?
-		return self.begin_time.to_date == Date.today.to_date
-	end	
-	
 	def is_past?
 		return self.end_time < Time.now
 	end
+
+	def is_future?
+		return self.begin_time.to_date > Date.today.to_date
+	end	
 	
 	def get_time
-		if self.begin_time.to_date < Date.today.to_date
+		if self.is_past?
+			return self.end_time.strftime("%m/%d")
+		elsif self.is_future?
 			return self.begin_time.strftime("%m/%d")
-		elsif self.begin_time.to_date == Date.today.to_date
-			return "今 " + self.begin_time.strftime("%H:%M")
 		else
-			return self.begin_time.strftime("%m/%d")
+			if self.begin_time > Time.now
+				return "今 " + self.begin_time.strftime("%H:%M")
+			else
+				return "進行中"
+			end
 		end
 	end
 	
 	def get_time_css
-		if self.is_today?
-			return "event-date__theme--today"
-		elsif self.is_past?
+		if self.is_past?
 			return "event-date__theme--past"
-		else 
+		elsif self.is_future?
 			return "event-date__theme--future"
+		else
+			return "event-date__theme--today"
 		end
 	end	
 	
@@ -56,12 +60,12 @@ class Event < ActiveRecord::Base
 	end
 	
 	def get_block_theme
-		if self.is_today?
-			return "event-block__theme--today"
-		elsif self.is_past?
+		if self.is_past?
 			return "event-block__theme--past"
-		else 
+		elsif self.is_future?
 			return "event-block__theme--future"
+		else
+			return "event-block__theme--today"
 		end
 	end
 	
