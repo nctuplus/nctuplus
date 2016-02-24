@@ -70,8 +70,8 @@
 			<div class="carousel-inner" role="listbox">
 			<% @event_banner.each_with_index do |banner, index| %>
 				<div id="banner-<%=index%>" class="item">
-					<div class="banner__inner">
-						<%=image_tag(banner.cover.url, :class => "banner__image", :alt=> "banner", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>					
+					<div class="banner__inner clickable-hover" href="/events/<%=banner.id%>" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+						<%=image_tag(banner.cover.url, :class => "banner__image", :alt=> "banner", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 						<div class="banner__caption">
 							<strong><%= truncate(banner.title, length: 20) %></strong>
 						</div>
