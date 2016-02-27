@@ -8,6 +8,8 @@ class ApplicationController < ActionController::Base
 
 	helper_method :current_user
 
+
+	
   def record_not_found
 		alertmesg("info",'Sorry',"無此欄位!")
 		if !request.xhr?

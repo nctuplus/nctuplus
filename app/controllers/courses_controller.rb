@@ -69,12 +69,7 @@ class CoursesController < ApplicationController
 	
   def show
 		cd=CourseDetail.includes(:course_teachership, :course, :semester, :department).find(params[:id])	
-		current_time = Time.new
-		c_id=cd.id.to_s
-		if session[c_id] != current_time.hour
-			session[c_id] = current_time.hour
-			cd.incViewTimes!
-		end
+		incViewTime(cd)
 		@list_type=[["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]]
 		@data = {
 			:course_id=>cd.course.id.to_s,
@@ -158,6 +153,16 @@ class CoursesController < ApplicationController
   
   private
 
+	def incViewTime(cd)
+		current_time = Time.new
+		c_id=cd.id.to_s
+		session[:course]={} if session[:course].nil?
+		if session[:course][c_id] != current_time.day
+			session[:course][c_id] = current_time.day
+			cd.incViewTimes!
+		end
+	end
+	
   def course_param
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)
   end

@@ -55,6 +55,7 @@ class EventsController < ApplicationController
 	end
 	def show
 		@event=Event.find(params[:id])
+		incViewTime(@event)		
 	end
 	
 	def edit
@@ -63,26 +64,43 @@ class EventsController < ApplicationController
 	end
 	
 	def attend
-		attends=current_user.attendances.where(:event_id=>params[:event_id])
-		if attends.empty?
-			current_user.attendances.create(:event_id=>params[:event_id])
-		else
-			attends.destroy_all
+		type=params[:type]
+		if type=="attend"
+			data=current_user.attendances.where(:event_id=>params[:event_id])
+			if data.empty?
+				current_user.attendances.create(:event_id=>params[:event_id])
+			else
+				data.destroy_all
+			end
+		elsif type=="follow"
+			data=current_user.event_follows.where(:event_id=>params[:event_id])
+			if data.empty?
+				current_user.event_follows.create(:event_id=>params[:event_id])
+			else
+				data.destroy_all
+			end
 		end
-		
 		respond_to do |format|
 			#format.html{render :layout=>false,:nothing =>true }
-			if attends.empty?
+			if data.empty?
 				format.json{render json: {:add=>params[:add], :state => "delete"} }
 			else
 				format.json{render json: {:add=>params[:add], :state => "new"} }
 			end
 		end
-		
 	end
 	
 	private
 
+	def incViewTime(event)
+		event_id=event.id.to_s
+		session[:event]={} if session[:event].nil?
+		if session[:event][event_id].nil?
+			session[:event][event_id] = true
+			event.incViewTimes!
+		end
+	end
+	
   def event_params
     params.require(:event).permit(:event_type, :title, :organization, :location, :lat_long, :url, :content, :begin_time, :end_time, :cover)
   end

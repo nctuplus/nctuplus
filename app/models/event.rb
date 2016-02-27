@@ -3,6 +3,8 @@ class Event < ActiveRecord::Base
 	belongs_to :user
 	has_many :attendances
 	has_many :attendees, :through=> :attendances, :class_name=>"User"
+	has_many :event_follows
+	has_many :followers, :through=> :event_follows, :class_name=>"User"
 	has_attached_file :cover,
 		:url=>"/file_upload/event_covers/:id_partition/:filename",
 		:default_url => "/images/:style/missing.png",
@@ -13,6 +15,13 @@ class Event < ActiveRecord::Base
 	def self.typeSel
 		return ["梅竹","講座","表演","擺攤","比賽","其他"]
 	end
+	
+	def incViewTimes!
+		#self.record_timestamps = false
+			update_attributes(:view_times=>self.view_times+1)
+	  #self.record_timestamps = true
+	end
+	
 	def to_json_obj
 		{
 			:id=>self.id,
