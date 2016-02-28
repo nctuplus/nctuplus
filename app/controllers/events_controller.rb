@@ -4,7 +4,7 @@ class EventsController < ApplicationController
 	
 	def index
 		#@event_data=Event.all.map{|event|event.to_json_obj}.to_json  
-		@event_banner= Event.where(:banner=>true)
+		@event_banner= Event.where(:banner=>true).where('end_time >= ?', Time.now)
     
 		@events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search])
             .result.order("end_time DESC")
@@ -15,7 +15,7 @@ class EventsController < ApplicationController
 		
 		@future_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
 					.where('begin_time >= ?', (Date.today.to_date + 1.day))
-					.order("begin_time DESC")
+					.order("begin_time")
 		
 		@current_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
 					.where('end_time >= ?', Time.now)
