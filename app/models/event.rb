@@ -13,7 +13,8 @@ class Event < ActiveRecord::Base
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
 	def self.typeSel
-		return ["梅竹","講座","表演","擺攤","比賽","其他"]
+		return ["校友週","講座","表演","擺攤","比賽","其他"]
+		#return ["梅竹","講座","表演","擺攤","比賽","其他"]
 	end
 	
 	def incViewTimes!
