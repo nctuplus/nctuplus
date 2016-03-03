@@ -7,8 +7,23 @@
 
 .show-font-image {
 	height: auto;
-	width: auto ;  
+	width: auto;  
 }
+
+@media screen and (min-width: 768px){
+	.banner_image{
+		max-height: 400px;
+		min-height: 400px;
+	}
+}
+
+@media screen and (max-width: 768px){ 
+	.banner_image{
+		max-height: 200px;
+		min-height: 200px;
+	}
+}
+
 
 /*------------------------
 	Main Column

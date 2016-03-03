@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160303090109) do
+ActiveRecord::Schema.define(version: 20160227134520) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -105,8 +105,11 @@ ActiveRecord::Schema.define(version: 20160303090109) do
     t.boolean  "article_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+<<<<<<< HEAD
     t.string   "update_user"
     t.boolean  "hidden_type",  default: false, null: false
+=======
+>>>>>>> 863169c68f53652be711b4027a8db7d5682d3f3e
   end
 
   create_table "cf_credits", force: true do |t|

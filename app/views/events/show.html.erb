@@ -7,7 +7,7 @@
 		<div class="main-column">
 		
 			<div class="image-wrapper">
-				<%=image_tag @event.cover.url, width:"100%",height:"400px" %>
+				<%=image_tag @event.cover.url, width:"100%", :class => "banner_image" %>
 			</div>
 			<span class="event-title">[<%=@event.event_type%>] <%=@event.title%></span>
 			
@@ -33,6 +33,15 @@
 						<p><%=fa_icon "share-alt"%> 活動網址: <%=link_to "點這裡",@event.url,target:"blank"%></p>
 					</div>
 				<% end %>
+					<div class="col-xs-12 col-md-12">
+						<p><%=fa_icon "eye"%> 觀看次數: <%=@event.view_times%></p>
+					</div>
+					<div class="col-xs-12 col-md-12">
+						<p><%=fa_icon "sign-in"%> 參加人數: <%=@event.attendances.size%></p>
+					</div>
+					<div class="col-xs-12 col-md-12">
+						<p><%=fa_icon "rss"%> 關注人數: <%=@event.event_follows.size%></p>
+					</div>
 				</address>
 				<!-- Info of Address End -->
 				
@@ -57,7 +66,7 @@
 				<% if current_user&& @event.user_id==current_user.try(:id)%>
 					<div id="editor-nav" class="nav-menu">
 						<b>主辦選單 </b>
-						<%=link_to "編輯",edit_event_path(@event),class:"btn btn-info nav-button",style:"width:30%;","data-no-turbolink"=>true%>	
+						<%=link_to "編輯",edit_event_path(@event),class:"btn btn-primary nav-button",style:"width:30%;","data-no-turbolink"=>true%>	
 						<%=link_to "刪除",@event,class:"btn btn-danger nav-button",style:"width:30%;",method:"delete", data: { confirm: '確定要刪除此活動嗎?' }%>
 					</div>
 				<% end %>
@@ -79,7 +88,18 @@
 					</div><!-- dropdown menu End -->
 				<% end %>
 			
-				<button id="attend_button" class="btn btn-success nav-button" onclick="attend(<%=params[:id]%>);" style="width:40%">
+				<button id="follow_button" class="btn btn-info nav-button" onclick="attendAndFollow('follow',<%=params[:id]%>);" style="width:40%">
+					<% if current_user %>
+						<% if @event.event_follows.where(:user_id=>current_user.id).empty?%>
+							關注
+						<%else%>
+							取消關注
+						<%end%>
+					<% else %>
+						關注
+					<% end %>
+				</button>
+				<button id="attend_button" class="btn btn-success nav-button" onclick="attendAndFollow('attend',<%=params[:id]%>);" style="width:40%">
 					<% if current_user %>
 						<% if @event.attendances.where(:user_id=>current_user.id).empty?%>
 							參加
@@ -103,22 +123,35 @@
 		
 	});
 	
-	function attend(id){
+	function attendAndFollow(type,id){
 		<% if current_user %>
 			$.ajax({
 				type:"POST",
 				url:"/events/attend",
 				data:{
+					type:type,
 					event_id: id
 				},			
 				success:function(data){
-					if (data.state == "new"){
-						toastr["info"]("已加入活動");
-						$("#attend_button").text("退出");
+					if(type=="attend"){
+						if (data.state == "new"){
+							toastr["info"]("加入成功");
+							$("#attend_button").text("退出");
+						}
+						else{
+							toastr["info"]("退出成功");
+							$("#attend_button").text("參加");
+						}
 					}
-					else{
-						toastr["info"]("已退出活動");
-						$("#attend_button").text("參加");
+					else if(type=="follow"){
+						if (data.state == "new"){
+							toastr["info"]("關注成功");
+							$("#follow_button").text("取消關注");
+						}
+						else{
+							toastr["info"]("取消關注成功");
+							$("#follow_button").text("關注");
+						}
 					}
 				},
 				error:function(data){

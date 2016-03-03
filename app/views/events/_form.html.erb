@@ -88,11 +88,11 @@
 				<div class="form-group">
 					<label class="col-sm-2 control-label">開始時間</label>
 					<div class="col-sm-4">
-						<%=f.text_field :begin_time,:class=>"form-control datepicker", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker', :readonly=>"true", :style=>"background-color: white;"%>
+						<%=f.text_field :begin_time,value:@event.begin_time,:class=>"form-control datepicker", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker', :readonly=>"true", :style=>"background-color: white;"%>
 					</div>
 					<label class="col-sm-2 control-label">結束時間</label>
 					<div class="col-sm-4">
-						<%=f.text_field :end_time,:class=>"form-control", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker', :readonly=>"true", :style=>"background-color: white;"%>
+						<%=f.text_field :end_time,value:@event.end_time,:class=>"form-control", :placeholder=>"必填", :required=>"true", :data_behaviour=>'datepicker', :readonly=>"true", :style=>"background-color: white;"%>
 					</div>
 				</div>
 				<div class="form-group">

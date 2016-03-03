@@ -1,4 +1,7 @@
-@import "jquery-ui";
+@import "jquery.ui.core"; // you always want that stylesheet
+@import "jquery.ui.theme";
+@import "jquery.ui.datepicker"; // import all the modules you need
+
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "bg-color";
