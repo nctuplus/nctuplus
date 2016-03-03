@@ -39,6 +39,7 @@ class User < ActiveRecord::Base
   #timetable collection
   has_many :user_collections, :dependent=> :destroy
   
+  has_many :bulletins
 # for admin user search (no use now)
   ransacker :studentId do |user|
   Arel.sql('auth_e3s.student_id')

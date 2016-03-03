@@ -1,0 +1,54 @@
+<style>
+.form-article {
+  max-width: 550px;
+  padding-left:15px; 
+  padding-right:15px; 
+  padding-bottom:20px; 
+  margin: 0 auto;
+}
+
+.sub_btn{
+  text-align: right;
+  margin-top: 10px;
+}
+
+</style>
+
+<!DOCTYPE html>
+  <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <!-- 為什麼會跳出兩次視窗？ <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %> -->
+      <%= stylesheet_link_tag  '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css' %>
+      <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+      <%= javascript_include_tag  '//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js' %>
+      <%= csrf_meta_tags %>
+  </head>
+  
+<body>
+<div class="container">
+  <div class = "form-article">
+        <%= form_for @bulletin, :url => { :controller => 'bulletin', :action => 'create' } do |f| %>
+        <div>
+            <%= f.select :article_type, [['最新消息', true], ['網站改版', false]], {}, {class: "form-control"} %>
+        </div>
+        <div>
+            <%= f.label :title, "標題" %>
+            <%= f.text_area :title, :class => "form-control", :rows => "1" %>
+        </div>
+
+        <!-- <div>
+            <%= f.label :article, "內文" %>
+            <%= f.text_area :article, :class => "form-control", :rows => "8" %>
+        </div>-->
+
+        <div class = "sub_btn">
+            <%= f.submit "確認送出", class: "btn btn-primary" %>
+        </div>
+
+        <% end %>
+    </div>
+    </div>
+</body>
+</html>

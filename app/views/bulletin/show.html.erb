@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+<div class = "container">
+	<div>
+	<h3><%= @salearticle.title %></h3>
+	<h4>$ <%= @salearticle.price %></h4>
+	<p>刊登人：<%= @salearticle.useremail %></p>
+	<p>時間：20<%= @salearticle.created_at.strftime("%y/%m/%d %H:%M") %></p>
+	<p>類型與地點：<%= @salearticle.sale_type %> / <%= @salearticle.place %> </p>
+	<p>類別：<%= @salearticle.category %></p>
+	<p>內容：<%= @salearticle.mainarticle %></p>
+	</div>
+	<hr>
+	<div>
+
+	<%= link_to "編輯", edit_salearticle_path(@salearticle) %>
+    <!-- link_to如果瀏覽器的JavaScript沒開，就會無法送出GET之外的操作。button_to就無此困擾
+	<%= link_to '刪除', salearticle_path(@salearticle), :method => :delete, :data => { :confirm => "確定要刪除此篇文章嗎？" } %>-->
+	<%= link_to '留言', new_salearticle_reply_path(@salearticle) %>
+	<!-- 可能有問題，要返回當前頁面 -->
+	<%= link_to '返回', :back %>
+	</div>
+	<div>
+	</div>
+	
+	<% @replies.each do |t| %>
+	<hr>
+	  <li>
+	    <%= t.mainreply %>  - 20<%= t.updated_at.strftime("%y/%m/%d %H:%M") %>
+	    <%= link_to 'edit', edit_salearticle_reply_path(@salearticle, t) %>
+	    <%= link_to 'destroy', salearticle_reply_path(@salearticle, t), :method => :delete %>
+	  </li>
+	<% end %>
+
+
+    </div>
+</body>
+</html>
+

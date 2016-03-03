@@ -1,15 +1,27 @@
 <%= javascript_include_tag "new-index", "data-turbolinks-track" => false %>
 <%= stylesheet_link_tag "new-index", "data-turbolinks-track" => false %>
 <style>
-	#about{
-		-webkit-box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);
-		-moz-box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);
-		box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);background:#222 100%
-	}
-	#intro{
-		background-color:#ffffff;
-	}
+#about{
+	-webkit-box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);
+	-moz-box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);
+	box-shadow: -3px -2px 79px -2px rgba(0,0,0,0.75);background:#222 100%
+}
+#intro{
+	background-color:#ffffff;
+}
+
+.main tr{ 
+	line-height: 1.6em; 
+}
+td.date{
+
+	text-align: right;
+}
+.glyphicon{
+	font-size: 0.1em;
+}
 </style>
+
 <div class="bg2"></div>
 <div class="bg1"></div>
 <div class="bg3"></div>
@@ -25,28 +37,35 @@
 					<div class="hr-left"></div>
 					<ul class="tabs">
 						<li>
-							<input type="radio" name="tabs" id="tab1" checked />
-							<label for="tab1"><h5>News</h5></label>
+							<input type="radio" name="tabs" id="tab2" />
+							<label for="tab2"><h5>網站改版</h5></label>
 							<div id="tab-content1" class="tab-content">
-								<!--建議以Chrome 或 Firefox瀏覽<br>
-								∎　6/8 二手書系統上線-->
-								<br>
-								■ 02/23　梅竹賽       2016/02/26~2016/02/28<br>
-								■ 01/08　開學後加退選 2016/02/16~2016/02/26<br>
+								<table class="main" style="width:100%;">
+									<tbody>
+										<% @updates.each do |t| %>
+										<tr>
+											<td><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;<%= t.title %></td>
+											<td class="date"><small><font color="gray">20<%= t.created_at.strftime("%y/%m/%d") %></font></small></td>
+										</tr>
+										<% end %>
+									</tbody>
+								</table>
 							</div>
 						</li>
 						<li>
-							<input type="radio" name="tabs" id="tab2" />
-							<label for="tab2"><h5>Updates</h5></label>
+							<input type="radio" name="tabs" id="tab1" checked />
+							<label for="tab1"><h5>最新消息</h5></label>
 							<div id="tab-content1" class="tab-content">
-								■ 02/23　「活動吧」功能上線<br>
-								■ 02/18　更新使用者「個人頁面」<br>
-								■ 01/23　新增二手書「排序功能」<br>
-								■ 01/03　新增「最新消息佈告欄」<br>
-								■ 01/03　新增「問題回報」功能<br>
-								■ 12/31　修正學分計算錯誤<br>
-								■ 12/25　課程資料更新至104下<br>
-								■ 12/08　新增「考古題&二手書」分類搜尋<br>
+								<table class="main" style="width:100%;">
+									<tbody>
+										<% @news.each do |t| %>
+										<tr>
+											<td><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;<%= t.title %></td>
+											<td class="date"><small><font color="gray">20<%= t.created_at.strftime("%y/%m/%d") %></font></small></td>
+										</tr>
+										<% end %>
+									</tbody>
+								</table>
 							</div>
 						</li>
 					</ul>
@@ -139,7 +158,6 @@
 </section>
 
 <script>
-
 $(document).ready(function(){
 	$('.navbar-collapse ul li a').click(function() {
 		$('.navbar-toggle:visible').click();
@@ -186,7 +204,6 @@ $(document).ready(function(){
 
 
 function re_win(){	//need fix
-
 	if(window.innerWidth<=768)
 	{
 		$(".header-right").css("display","none");
@@ -208,13 +225,9 @@ function re_win(){	//need fix
 		
 		$(".header-content-inner").css("margin-top","12%");
 
-		
 	}
 	else
 	{
-
-		
-
 		$(".header-content-inner").css("margin-top","1%")
 		$(".tabs-block").css({'display':'block'})
 		$(".header-right").css("display","block");

@@ -8,11 +8,9 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand page-scroll" href="/" data-no-turbolink>
-				NCTU+
-			</a>
+			<a class="navbar-brand" style = "font-size: 120%"href="/">NCTU+</a>
 		</div>
-
+		
 		<!-- Collect the nav links, s, and other content for toggling -->
 		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="font-family:'微軟正黑體','Microsoft JhengHei';">
 			<ul class="nav navbar-nav navbar-left">
@@ -21,26 +19,20 @@
 						<a href="#" class="dropdown-toggle" data-toggle="dropdown">管理<b class="caret"></b></a>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
 						<% if current_user.isAdmin? %>
+							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/bulletin" rel="nofollow" style="color:white;" data-no-turbolink>公佈欄<span class="badge pull-right"></span></a></li>
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/users" rel="nofollow" style="color:white;" data-no-turbolink>使用者<span class="badge pull-right"><%=User.all.count%></span></a></li>
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/user_statistics" rel="nofollow" data-no-turbolink style="color:white;">統計資料</a></li>
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/departments" rel="nofollow" style="color:white;">系<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/departments" rel="nofollow" style="color:white;">系所管理<span class="badge pull-right"><%=Department.all.count%></span></a></li>
+					
 						<% end %>							
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/course_maps/" rel="nofollow" style="color:white;">課程地圖</a></li>							
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;"><a href="/admin/ee105" rel="nofollow" style="color:white;">電機105級畢業學分預審</a></li>
 							<!--
 							<li><a href="/main/student_import" rel="nofollow">手動匯入</a></li>
-							
 							-->							
 						</ul>	
 					</li>
-				<% end %>
-				<li>
-					<a class="page-scroll" href="/events/" rel="nofollow" data-no-turbolink>活動吧</a>
-				</li>
-				<li>
-					<a class="page-scroll" href="/books/" rel="nofollow">二手書</a>
-				</li>
-				
+				<% end %>		
 				<li class="dropdown">
 					<a class="">全校課程</a>
 					<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
@@ -68,6 +60,12 @@
 					<a class="page-scroll" href="/user/" data-no-turbolink>算學分</a>
 				</li>
 				-->
+				<li>
+					<a class="page-scroll" href="/books/" rel="nofollow">二手書</a>
+				</li>
+				<li>
+					<a class="page-scroll" href="/events/" rel="nofollow" data-no-turbolink>活動吧</a>
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li>
@@ -76,7 +74,9 @@
 				<li>
 					<%=link_to "課程收藏", "javascript:void(0);",class:"page-scroll", onClick:"showCart();" %>
 				</li>
+				
 				<% if current_user %>
+
 					<li class="dropdown" >		
 						<%= link_to  "/user/", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown",'data-no-turbolink'=>"true" do %>
 							<% if current_user.hasFb? %>

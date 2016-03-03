@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160220084054) do
+ActiveRecord::Schema.define(version: 20160303090109) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -97,6 +97,17 @@ ActiveRecord::Schema.define(version: 20160220084054) do
   end
 
   add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
+
+  create_table "bulletins", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "article"
+    t.boolean  "article_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "update_user"
+    t.boolean  "hidden_type",  default: false, null: false
+  end
 
   create_table "cf_credits", force: true do |t|
     t.integer  "course_field_id"
@@ -338,53 +349,47 @@ ActiveRecord::Schema.define(version: 20160220084054) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
-  create_table "events", force: true do |t|
-    t.string   "event_type"
-    t.string   "title",                                                 null: false
-    t.string   "organization"
-    t.string   "location",                                              null: false
-    t.string   "lat_long"
-    t.string   "url",                limit: 2083
-    t.text     "content",            limit: 2147483647,                 null: false
-    t.datetime "begin_time",                                            null: false
-    t.datetime "end_time",                                              null: false
-    t.integer  "user_id",                                               null: false
-    t.integer  "view_times",                            default: 0,     null: false
-    t.boolean  "banner",                                default: false
-    t.string   "cover_file_name"
-    t.string   "cover_content_type"
-    t.integer  "cover_file_size"
-    t.datetime "cover_updated_at"
+  create_table "event_follows", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "event_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
-
-  add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
-
-  create_table "global_variables", force: true do |t|
-    t.string   "data"
-    t.string   "desc"
+  add_index "event_follows", ["event_id"], name: "index_event_follows_on_event_id", using: :btree
+  add_index "event_follows", ["user_id"], name: "index_event_follows_on_user_id", using: :btree
 
   create_table "events", force: true do |t|
     t.string   "event_type"
-    t.string   "title",                                                 null: false
+    t.string   "title",                                                  null: false
     t.string   "organization"
-    t.string   "location"
+    t.string   "location",                                               null: false
     t.string   "lat_long"
-    t.string   "url",                limit: 2083
-    t.text     "content",            limit: 2147483647
-    t.datetime "begin_time",                                            null: false
-    t.datetime "end_time",                                              null: false
-    t.integer  "user_id",                                               null: false
-    t.integer  "view_times",                            default: 0,     null: false
+    t.string   "url",                 limit: 2083
+    t.text     "content",             limit: 2147483647,                 null: false
+    t.datetime "begin_time",                                             null: false
+    t.datetime "end_time",                                               null: false
+    t.integer  "user_id",                                                null: false
+    t.integer  "view_times",                             default: 0,     null: false
+    t.integer  "event_follows_count",                    default: 0
+    t.integer  "attendances_count",                      default: 0
+    t.boolean  "banner",                                 default: false
     t.string   "cover_file_name"
     t.string   "cover_content_type"
     t.integer  "cover_file_size"
     t.datetime "cover_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "banner",                                default: false, null: false
   end
 
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
+
+  create_table "global_variables", force: true do |t|
+    t.string   "data"
+    t.string   "desc"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false

@@ -11,6 +11,7 @@ Nctuplus::Application.routes.draw do
               :sign_out => 'logout' }
 
 	
+	resources :bulletin
 #--------- events --------------	
 	resources :events do
 		collection do
@@ -46,10 +47,9 @@ if Rails.env.development?
 	get "main/test"
 end
 
-
 #---------- admin page -----------
 	
-  get "admin/user_statistics"
+    get "admin/user_statistics"
 	get "admin/ee105"
 	get "admin/users"
 	post "admin/change_role"
@@ -65,9 +65,6 @@ end
 	get "user/delete_course"
 	get "user/get_courses"
 	get "user/all_courses"
-
-	
-
 	
 	get "user/edit"
 	patch "user/update"	
@@ -170,11 +167,7 @@ end
 		end
 	end
     
-
-
 	post "sessions/save_lack_course"
-  
-
     
 
 end

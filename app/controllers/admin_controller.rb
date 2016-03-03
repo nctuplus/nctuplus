@@ -2,7 +2,7 @@ class AdminController < ApplicationController
 	#include CourseMapsHelper
 	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role, :discusses,:discuss_verify, :user_statistics]
 	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
-	
+
 	def discuss_verify
 		status=DiscussVerify.create(:user_id=>current_user.id, :discuss_id=>params[:id], :pass=>params[:pass]).valid?
 		render :layout=>false, :nothing=> true, :status=>status ? 200 : 500, :content_type => 'text/html'

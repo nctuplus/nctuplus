@@ -1,0 +1,42 @@
+<style>
+.form-article {
+  max-width: 550px;
+  padding-left:15px; 
+  padding-right:15px; 
+  padding-bottom:20px; 
+  margin: 0 auto;
+}
+.form-inline{
+    margin-top: 100px;
+}
+</style>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+<body>
+<div class="container">
+<div class ="form-article">
+    <!-- 要加入 , :id => @event 嗎？-->
+        <div class = "form-inline">
+            <%= form_for @bulletin , :url => { :controller => 'bulletin', :action => 'update' } do |f| %>
+        <div class = "form-group">
+            <%= f.select :article_type, [['最新消息', true], ['網站改版', false]], {}, {class: "form-control"} %>
+        </div>
+        <div class = "form-group">
+            <%= f.text_area :title, class: "form-control", :rows => "1", :cols => "25", :placeholder => "超過此欄寬度首頁公告會跳行..." %>
+        </div>
+            <%= link_to '返回', :back, class: "btn btn-primary" %>
+            <%= f.submit "確認修改", class: "btn btn-warning", :data => { :confirm => "確定要修改嗎？" }  %>
+        <% end %>
+        </div>
+        
+    </div>
+</div>
+</body>
+</html>
