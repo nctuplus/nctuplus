@@ -104,33 +104,5 @@
 
 <%= javascript_include_tag "courses/table", "data-turbolinks-track" => true %>
 
-<script>	
-	<% if current_user %>	
 
-  function group_share($header_data, data){
-    var share_link = function(share_url){
-      var $share_div = $('<div>').addClass('col-md-offset-1 col-md-8 input-group');
-      $share_div.append($('<input>').attr('type','text').addClass('form-control')
-        .attr('onclick','this.setSelectionRange(0, this.value.length);'));
-      $share_div.append($('<span>').addClass('input-group-btn')
-        .html($('<button>').addClass('btn btn-info').attr('id','copy-it')
-        .attr("data-clipboard-text", share_url)
-        .html('<%=fa_icon "clipboard"%>')))
-        .children('input').first().val(share_url);   
-      $header_data.append($share_div);   
-      new ZeroClipboard( $('#copy-it') ); //bind copy to clipboard
-      $('#copy-it').click(function(){ toastr["success"]('已複製到剪貼簿');});
-      $('#copy-it').popover({
-        content:"Copy to clipboard",
-        placement:"bottom",
-        trigger :"hover",
-        container :"body"
-      });
-    };     
-    share_link("<%=j root_url %>shares/"+data.hash_share);
-    
-  }//group_share
-
-	<% end %>	
-</script>
 

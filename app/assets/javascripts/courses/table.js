@@ -136,7 +136,7 @@
 			// hide the item that we don't want to see in the picture	
 			_this.$element.find('.btn-group').hide() ;	
 		
-		  html2canvas( this.$element.get(0), {
+		  html2canvas( _this.$element.get(0), {
         height: 1500 ,
         onrendered: function(canvas) {
           //recover the hidden items
@@ -163,7 +163,7 @@
 							contentType: false,
 							processData: false,
 							success: function(){console.log("good");},
-							error: function(){console.log("upload fails");}
+							error: function(){console.log("upload img fails");}
 						});
 					}else{ // default
             window.open(dataUrl);

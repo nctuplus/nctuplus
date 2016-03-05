@@ -12,6 +12,15 @@
 		font-weight:700;
 		font-size:24px;
 	}
+.table-bordered > thead > tr > th,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > tbody > tr > td,
+.table-bordered > tfoot > tr > td {
+  border: 2px solid #dddddd;
+ 
+}
 </style>
 <%=render "link_bar" %>
 
@@ -183,10 +192,8 @@
 				if(data.courses.length>0){		
 					setTimeout(function(){ //wait for the modal show
 					if(data.hash_share){
-					//	$title.hide();
 						$table.CourseTable("renderImg", "upload") ;
-						group_share($title, {hash_share: data.hash_share}) ;
-					//	$title.show();      
+            $title.append(genShareButton(data.hash_share));     
 					}
 						return false ;
 					}, 600);
@@ -194,6 +201,25 @@
 			}
 		});
 	}
+
+  function genShareButton(url){
+    var $but = $("<button>").addClass("btn btn-info")
+               .html('<%=fa_icon "share-square-o"%>') 
+               .attr("title", "分享課表")
+               .attr("data-clipboard-text", "<%=j root_url %>shares/"+url);
+    var client = new ZeroClipboard( $but ); //set up click-copy event  
+    client.on( "ready", function( readyEvent ) {
+      client.on( "aftercopy", function( event ) {
+        // `this` === `client`
+        // `event.target` === the element that was clicked
+        //event.target.style.display = "none";
+        //alert("Copied text to clipboard: " + event.data["text/plain"] );
+        toastr["success"]('已複製連結至剪貼簿');
+      });
+    });  
+    return $but ;           
+  }
+
 	function calcAvgScore(courses,pass_score,last_sem_name){
 		var score=0;
 		var credit_pass=0;
@@ -237,7 +263,8 @@
 			console.log(data);
 			//$("#course-list2").html(tmpl("course-list-tmpl",data));
 			calcAvgScore(data.user_courses,data.pass_score,data.last_sem);
-			$("#cm-credit").text(data.course_map.total_credit);
+      if(data["course_map"])
+        $("#cm-credit").text(data.course_map.total_credit);
 			<% if @user.is_undergrad? %>
 				var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
 				//$("#common-check-div").html(tmpl("common-tmpl",pass_courses));
