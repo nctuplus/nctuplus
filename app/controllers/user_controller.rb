@@ -6,7 +6,7 @@ class UserController < ApplicationController
 
 
 	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :courses, :select_dept,
-	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
+	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections, :get_courses]
   
   before_filter :checkDepYear, :only=>[:show]
 	layout false, :only => [:statistics_table]#, :all_courses2]
@@ -21,7 +21,8 @@ class UserController < ApplicationController
 	end
 	
 	def get_courses
-		@user=getUserByIdForManager(params[:uid])
+		@user= params[:uid].present? ? User.find(params[:uid]) : current_user
+		#@user=getUserByIdForManager(params[:uid])
 		#if request.format=="json"
 			case params[:type]
 				when "list"

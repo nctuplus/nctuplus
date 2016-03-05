@@ -51,6 +51,14 @@ class User < ActiveRecord::Base
   validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update
   validates :year, :numericality=> { :greater_than=>0, :message=>"請填寫入學年度"}, :on => :update
   
+	def selectDept?
+		return self.department.present?
+	end
+	
+	def selectSem?
+		return self.year!=0
+	end
+	
   def avatar(width,height)
     if self.hasFb?
       src="https://graph.facebook.com/#{self.uid}/picture"
@@ -99,7 +107,7 @@ class User < ActiveRecord::Base
   end
 
   def has_imported?
-    return self.agree
+    return self.normal_scores.size>0
   end
   
   def hasFb?

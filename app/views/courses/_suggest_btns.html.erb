@@ -11,13 +11,13 @@
 		</button>
 	</td>
 	<td>
-		<button data-content="尚未開放" class="btn btn-default pop-over">
-			<%=fa_icon "heart-o 2x"%>
+		<button data-content="學長姐" onclick="searchSeniorCourse();" class="btn btn-default pop-over">
+			<%=fa_icon "users 2x"%>
 		</button>
 	</td>
 	<td>
 		<button data-content="尚未開放" class="btn btn-default pop-over">
-			<%=fa_icon "users 2x"%>
+			<%=fa_icon "heart-o 2x"%>
 		</button>
 	</td>
 </tr>
@@ -48,9 +48,27 @@
 <br>
 
 <script>
+	function searchSeniorCourse(){
+		<% if !current_user.selectDept? || !current_user.selectSem? %>
+			toastr["info"]("請先選擇系級!");
+		<% else %>
+		//$('#suggestz-table').html("<%=j loading_img%>");
+		$.ajax({
+			url:"/courses/senior_course_suggest",
+			dataType:"script",
+			type:"GET",
+			success:function(){
+				//alert("!!!");
+			},
+			error:function(data){console.log(data);}
+		});
+		
+		
+		<% end %>
+	}
 	function searchLackDimension(){
 		<% if !current_user.has_imported? %>
-			$(".scrollable").html("<h4 class='text-center'>請先匯入成績!</h4>");
+			toastr["info"]("請先匯入成績!");
 		<% elsif current_user.is_undergrad? %>
 			$(".scrollable").html("<%=j loading_img%>");
 			$.getJSON("/user/statistics", function (data) {

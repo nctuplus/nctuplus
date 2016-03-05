@@ -112,6 +112,7 @@ end
 		collection do
 			get "index_new"
 			get "search_mini"
+			get "senior_course_suggest"
 			get "search_mini_cm"
 			get "simulation"
 			get "export_timetable"

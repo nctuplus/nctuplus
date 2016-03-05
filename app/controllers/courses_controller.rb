@@ -1,7 +1,7 @@
 class CoursesController < ApplicationController
 
 
-	before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course]
+	before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course, :search_mini, :senior_course_suggest]
 	
 	def index
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
@@ -17,6 +17,18 @@ class CoursesController < ApplicationController
 		end
 		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
+	end
+	def senior_course_suggest
+		users=User.search({:department_id_eq=>current_user.department_id, :year_lt=>current_user.year}).result(distinct: true)
+		i=0
+		offset_year=(Semester::LAST.year-current_user.year)
+		while i < 10 do
+			@user=users.sample
+			@sem=Semester.where(:year=>@user.year+offset_year, :half=>Semester::LAST.half).take
+			break if @user.normal_scores.search({:course_detail_semester_id_eq=>@sem.id}).result(distinct: true).exists?
+			#break if @user.has_imported?
+			i+=1
+		end
 	end
 	
 	def search_mini	#for course simulation search & result

@@ -1,0 +1,26 @@
+$.getJSON(
+	"/user/get_courses",
+	{
+		type:"course_table",
+		sem_id:<%=@sem.id%>,
+		uid:"<%=@user.id%>"
+	},
+	function(data){
+		
+		data.config = {
+			deletable: false ,
+			selectable: false,
+			popover: true,
+			hideEmpty: true
+			//collapsible: true ,
+			//semester_id: <%=@sem.id%>,
+			//cancelButtonFunc: function(){}
+		};
+		console.log(data);
+		//
+		var $table = $('<table>').addClass('table table-bordered');
+		$table.CourseTable(data);
+		$('#suggest-table-div').html($table);
+	}
+);
+

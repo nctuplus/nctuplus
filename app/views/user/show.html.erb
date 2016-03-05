@@ -142,6 +142,7 @@
 			url: "/user/get_courses",
 			data:{
 				type: "course_table",
+				uid:"<%=params[:uid]%>",
 				sem_id: semester_id
 			},
 			dataType: "json",

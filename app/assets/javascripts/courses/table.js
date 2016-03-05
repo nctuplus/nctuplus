@@ -44,7 +44,8 @@
 	var pluginName = 'CourseTable';
 
 	var Table = function(element, options){
-
+	console.log("!!!!!!!!!!!");
+	console.log(options.courses);
   this.$element = $(element);
   this.cells = [] ;
   this.courses = [] ;
@@ -52,8 +53,8 @@
   // self-define cancel buton callback
   if(this.config.cancelButtonFunc)
     Table.defaults.cancelButtonFunc =  this.config.cancelButtonFunc;
-          
-  this._init(options.courses);			
+  
+  this._init(options.courses);
   this.collape_toggle = (typeof(this.config.hideEmpty)=="undefined") ? false : this.config.hideEmpty ;
   this.adjust_row();
 	};
