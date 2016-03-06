@@ -12,6 +12,8 @@ Nctuplus::Application.routes.draw do
 
 	
 	resources :bulletin
+
+	get "scores/gpa"
 #--------- events --------------	
 	resources :events do
 		collection do

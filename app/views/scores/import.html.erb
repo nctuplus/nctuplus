@@ -1,46 +1,71 @@
-﻿<div class="bs-callout bs-callout-info well">
-	<h2><%=fa_icon "refresh"%>匯入歷年課程</h2>
-	<h4>
-	0.請注意!匯入前會所有課程先<strong>清空!</strong><br>
-	1.至註冊組 <%=link_to "學籍成績系統","https://regist.nctu.edu.tw/", target:"blank"%> 登入<br>
-	2.點選「歷年成績查詢」按鈕，如<%=link_to "此圖", asset_path("import_course_1.jpg"), target:"blank"%><br>
-	3.全選(ctrl+a)右方成績頁面的內容並複製(cltr+c)，如<%=link_to "此圖", asset_path("import_course_2.jpg"), target:"blank"%><br>
-	4.貼上至下方表單並送出<br></br>
-	PS<sub>1</sub>.必須使用Chrome或FireFox，如用IE會複製到其他字元造成匯入失敗<br>
-	PS<sub>2</sub>.有少部分抵免課程、免修課程、聯合大學開授課程 無法匯入<br>
+<style>
+.sub_btn{
+  text-align: right;
+  margin-top: 10px;
+}
+#agreement{
+	margin-top: 50px;
+}
+</style>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div class="container">
+<div class ="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8">
+	<div class="bs-callout bs-callout-info well">
+	<h2><strong>匯入歷年課程</strong></h2>
+	<p class="lead">
+	1.  登入交大註冊組 <%=link_to "學籍成績系統","https://regist.nctu.edu.tw/", target:"blank"%><br>
+	2.  點選「歷年成績查詢」按鈕 (<%=link_to "範例", asset_path("import_course_1.jpg"), target:"blank"%>)<br>
+	3.  全選 (ctrl+a) 成績內容，並複製貼至下方表單 (<%=link_to "範例", asset_path("import_course_2.jpg"), target:"blank"%>)<br></p>
 
-</h4>
+	<p>
+	註1：匯入前所有課程將清先空，有少部分抵免課程、免修課程、聯合大學開授課程無法匯入。<br>
+	註2：建議使用 Chrome 或 FireFox，如用 IE 會複製到其他字元造成匯入失敗。<br>
+	</p>
 	
+	</div>
+	<div>
+		<%= form_tag '/scores/import', :role=>"form", :class=>"paste-form" do %>
+		<%= text_area "course","score" , class:"form-control", rows:"10", placeholder:"請將複製內容貼於此...", required:"true" %>
+		<%= hidden_field_tag "user_agreement", (current_user.agree) ? 0 : 0 %>
+		<div class = "sub_btn">
+			<%= submit_tag "立即匯入", :class=>"btn btn-primary" %>
+		</div>
+		<% end %>
+	</div>
+
+	<!-- agreement modal -->
+	<div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title"><strong>服務條款</strong></h4>
+	      </div>
+	      <div class="modal-body">
+	        <p><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; NCTU+ 僅將匯入成績供個人及各系辦審核成績使用，不會以任何方式公開使用者成績。</p>
+			<p><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; 由於課程資料繁多且複雜，畢業學分計算<b>僅供參考</b>，不保證其正確性。</p>
+			<p><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; 使用者務必確認匯入成績的正確性，以利畢業學分計算與審查。</p>
+			<p><span class="glyphicon glyphicon-chevron-right"></span>&nbsp; 103 學年度起 NCTU+ 與電機系合作，大四同學須利用本系統供系辦審核。</p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn  btn-primary agree-submit" data-dismiss="modal">同意</button>
+	        <button type="button" class="btn btn-default" onclick="$('#agreement').modal('hide');">不同意</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
+	<div class="col-sm-2"></div>
+	</div>
+	</div>
 </div>
-
-<%= form_tag '/scores/import', :role=>"form", :class=>"paste-form" do %>
-<%= text_area "course","score" , class:"form-control"  ,rows:"5",required:"true" %>
-<%= hidden_field_tag "user_agreement", (current_user.agree) ? 0 : 0 %>
-<%= submit_tag "送出", :class=>"btn btn-primary" %>
-<% end %>
-
-
-<!-- agreement modal -->
-<div class="modal fade" id="agreement" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">服務條款</h4>
-      </div>
-      <div class="modal-body">
-        <p>1. NCTU+ 僅會將匯入之成績供個人及各系辦審核成績人員使用，不會以任何方式公開使用者個人各別成績。</p>
-		<p>2. 由於課程資料繁多且複雜，畢業學分計算統計<b>"僅供參考"</b>不保證其正確性。同學需再次備查 </p>
-		<p>3. 103學年度 NCTU+ 有與交大電機系合作，電機系大四的同學須利用本系統繳交預審畢業學分的表單供電機系辦審核成績人員處理。</p>
-		<p>4. 使用者務必確認匯入成績的正確性，以利於畢業學分的計算和審查。</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn  btn-primary agree-submit" data-dismiss="modal">同意</button>
-        <button type="button" class="btn btn-default" onclick="$('#agreement').modal('hide');">不同意</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+</body>
+</html>
 <script>
 	$('.paste-form').submit(function(){
 		if($('#user_agreement').val()==0){

@@ -1,0 +1,170 @@
+<script src="//cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.3/waypoints.min.js"></script>
+<%= javascript_include_tag "jquery.counterup.js" %>
+<style>
+
+.glyphicon{
+	font-size: 0.75em;
+}
+.header{
+	font-size: 0.5em;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}
+.lead{
+	font-size: 1.4em;
+	margin-bottom: 18px;
+}
+.jumbotron{
+	padding-top:3em !important;
+	padding-bottom:2.2em !important;
+}
+.gpa1{
+	text-align: center;
+	padding-left: 2%;
+}
+.gpa2{
+	text-align: center;
+	padding-right: 2%;
+}
+.note{
+	margin-top: 10px;
+}
+.sub_btn{
+	padding-right: 2%;
+	text-align: right;
+	margin-bottom: 15px;
+}
+ </style>
+
+ <!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+<div class="container">
+  <div class ="row">
+	  <div class="col-sm-2"></div>
+	  <div class="col-sm-8">
+	  	  	<h2 count-up end-val="873.4"></h2>
+	  	  <div class="header"><h1><b>GPA 計算機</b>&nbsp;<span class="glyphicon glyphicon-object-align-left"></span></h1></div>
+		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間計算，試算前您必須確認有將最新的成績匯入，可以到 <a href="http://plus.nctu.edu.tw:3000/scores/import">這裡</a> 匯入。</p>
+		  
+			<% @normal_scores.each do |t| %>
+			<!-- Overall 4.0 4.3 計算 -->
+			<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
+				<% @sum += 4*t.course.credit %><% @credit += t.course.credit %>
+			<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
+				<% @sum += 3*t.course.credit %><% @credit += t.course.credit %>
+			<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
+				<% @sum += 2*t.course.credit %><% @credit += t.course.credit %>
+			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+				<% @sum += t.course.credit %><% @credit += t.course.credit %>
+			<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
+				<% @credit += t.course.credit %>
+			<% end %>
+
+			<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
+				<% @sum2 += 4.3*t.course.credit %>
+			<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
+				<% @sum2 += 4.0*t.course.credit %>
+			<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
+				<% @sum2 += 3.7*t.course.credit %>
+			<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
+				<% @sum2 += 3.3*t.course.credit %>
+			<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
+				<% @sum2 += 3.0*t.course.credit %>
+			<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
+				<% @sum2 += 2.7*t.course.credit %>
+			<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
+				<% @sum2 += 2.3*t.course.credit %>
+			<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
+				<% @sum2 += 2.0*t.course.credit %>
+			<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
+				<% @sum2 += 1.7*t.course.credit %>
+			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+				<% @sum2 += t.course.credit %>
+			<% end %>
+			<% end %>
+			<!-- Last 60 Credits 4.0 4.3 計算 -->
+			<% @normal_scores.reverse! %>
+			<% @normal_scores.each do |t| %>
+			<% if @credit60 <= 60 %>
+			<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
+				<% @sum60 += 4*t.course.credit %><% @credit60 += t.course.credit %>
+			<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
+				<% @sum60 += 3*t.course.credit %><% @credit60 += t.course.credit %>
+			<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
+				<% @sum60 += 2*t.course.credit %><% @credit60 += t.course.credit %>
+			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+				<% @sum60 += t.course.credit %><% @credit60 += t.course.credit %>
+			<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
+				<% @credit += t.course.credit %>
+			<% end %>
+
+			<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
+				<% @sum6043 += 4.3*t.course.credit %>
+			<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
+				<% @sum6043 += 4.0*t.course.credit %>
+			<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
+				<% @sum6043 += 3.7*t.course.credit %>
+			<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
+				<% @sum6043 += 3.3*t.course.credit %>
+			<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
+				<% @sum6043 += 3.0*t.course.credit %>
+			<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
+				<% @sum6043 += 2.7*t.course.credit %>
+			<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
+				<% @sum6043 += 2.3*t.course.credit %>
+			<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
+				<% @sum6043 += 2.0*t.course.credit %>
+			<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
+				<% @sum6043 += 1.7*t.course.credit %>
+			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+				<% @sum6043 += t.course.credit %>
+			<% end %>
+			<% end %>
+			<% end %>
+
+			<div class="row">
+				<div class="gpa1 col-sm-6">
+					<div style="background:#FAFAFA !important" class="jumbotron">
+						<p><strong>Overall 4.0</strong></h3><p>
+						<p><span class="counter" style = "font-size: 1.7em;"><%= (@sum/@credit).round(2) %></span></p>
+					</div>
+					<div style="background:#FAFAFA !important" class="jumbotron">
+					    <p><strong>Last 60 Credits 4.0</strong></h3><p>
+ 						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum60/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
+					</div>
+				</div>
+				<div class="gpa2 col-sm-6">
+					<div style="background:#FAFAFA !important" class="jumbotron">
+					    <p><strong>Overall 4.3</strong></h3><p>
+						<p><span class="counter" style = "font-size: 1.7em;"><%= (@sum2/@credit).round(2) %></span></p>
+					</div>
+					<div style="background:#FAFAFA !important" class="jumbotron">
+					    <p><strong>Last 60 Credits 4.3</strong></h3><p>
+ 						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum6043/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
+					</div>
+				</div>
+				<div class="sub_btn">
+				<button type="button" class="btn btn-warning" onClick="window.location.reload()">重新載入</button>
+				</div>
+			</div>
+			<div class="note">
+			<p>註：此計算參考 <a href="https://www.google.com.tw/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=0ahUKEwjWlvm_xqnLAhXCkpQKHSM7CZQQFggbMAA&url=http%3A%2F%2Faadm.nctu.edu.tw%2Fregistra%2FGetFile.aspx%3Ftype%3D1%26id%3D4f5b5677-4d4a-4787-9806-e5b05de7cbe2&usg=AFQjCNFja7uyy1smdI4z1G3bwVvH2v_hUg&sig2=bAu-L1WjagpFX9ikoHLKLQ">等級制與百分制及GP對照表-交通大學</a> 與 <a href="http://intra.tpml.edu.tw/study/upload/downloads/GPA.htm"> 美國大學四點制的算法</a>，Last 60 Credits 採由後往前計算至大於等於 60 學分為止，也就是可能超過 60 學分 (呈現於括號內)，實際成績以學校成績單為準。</p>
+			</div>
+		</div>
+		</div>
+	    <div class="col-sm-2"></div>
+	</div>
+</body>
+
+<script>
+$('.counter').counterUp({
+                delay: 25,
+                time: 1100
+            });
+
+</script>
+
+</html>
