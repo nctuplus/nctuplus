@@ -24,7 +24,7 @@ Rails.application.config.assets.precompile +=[
 	'events_show.css',
 	'jquery-ui-timepicker-addon.js',
 	'event_create.js',
-	'jquery.counterup.min.js',
+	'jquery.counterup.js',
 	'waypoints.min.js'
 
 ]
