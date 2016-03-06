@@ -15,32 +15,19 @@
 			<div class="main-column-content">
 				<!-- Info of Address -->
 				<address class="main-column-info row">
-					<!--<div class="col-xs-9 col-md-10">
-						<p><%=fa_icon "calendar"%> 時間: <strong><%=@event.begin_time%> ~ <%=@event.end_time%></p>
-						<p><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></p>
-					</div>-->
-					<div class="col-xs-12 col-md-12">
+					<div class="main-column-info__left">
 						<p><%=fa_icon "calendar"%> 時間: <strong><%=@event.begin_time%> ~ <%=@event.end_time%></strong></p>
-					</div>
-					<div class="col-xs-12 col-md-12">
 						<p><%=fa_icon "cubes"%> 主辦單位: <%=@event.organization%></p>
-					</div>
-					<div class="col-xs-12 col-md-12">
 						<p><%=fa_icon "location-arrow"%> 地點: <%=@event.location%></p>
+						<% if @event.url.present? %>
+							<p><%=fa_icon "share-alt"%> 活動網址: <%=link_to "點這裡",@event.url,target:"blank"%></p>
+						<% end %>
 					</div>
-				<% if @event.url.present? %>
-					<div class="col-xs-12 col-md-12">
-						<p><%=fa_icon "share-alt"%> 活動網址: <%=link_to "點這裡",@event.url,target:"blank"%></p>
-					</div>
-				<% end %>
-					<div class="col-xs-12 col-md-12">
-						<p><%=fa_icon "eye"%> 觀看次數: <%=@event.view_times%></p>
-					</div>
-					<div class="col-xs-12 col-md-12">
-						<p><%=fa_icon "sign-in"%> 參加人數: <%=@event.attendances.size%></p>
-					</div>
-					<div class="col-xs-12 col-md-12">
-						<p><%=fa_icon "rss"%> 關注人數: <%=@event.event_follows.size%></p>
+					
+					<div class="main-column-info__right">
+						<p><%=fa_icon "eye"%> 觀看次數: <strong><%=@event.view_times%></strong></p>
+						<p><%=fa_icon "sign-in"%> 參加人數: <strong><%=@event.attendances.size%></strong></p>
+						<p><%=fa_icon "rss"%> 關注人數: <strong><%=@event.event_follows.size%></strong></p>
 					</div>
 				</address>
 				<!-- Info of Address End -->

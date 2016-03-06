@@ -85,6 +85,29 @@
 	font-size: small;
 }
 
+.main-column-info__left{
+	@extend .col-xs-12, .col-sm-6, .col-md-6;
+}
+
+.main-column-info__right{
+	@extend .col-xs-12, .col-sm-6, .col-md-6;
+}
+
+@media screen and (min-width: 768px){
+	.main-column-info__right{
+		text-align: right;
+	}
+	
+	.main-column-info__right > p {
+		display: inline-block;
+		width: 100px;
+		height: 80px;
+		border-radius: 10px;
+		border: 2px solid #d1d1e0;
+		padding: 15px 10px;
+	}
+}
+
 .event-title{
 	position: relative;
 	top: -50px;
