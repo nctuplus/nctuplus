@@ -86,13 +86,16 @@
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
+								<a href="/scores/gpa" rel="nofollow" style="color:white;" data-no-turbolink>GPA 試算<span class="badge pull-right"></span></a>
+							</li>
+							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
 								<%= link_to  "登出", destroy_user_session_path, :method => :delete, :style=>"color:white;" %>
 							</li>					
 						</ul>
 					</li>			
 				<% else %>
 					<li>
-						<%=link_to "登入",new_user_session_path,class:"page-scroll",'data-no-turbolink'=>""%>
+						<%=link_to "登入",new_user_session_path, class:"page-scroll", 'data-no-turbolink'=>""%>
 					</li>	
 				<% end %>
 			</ul>
