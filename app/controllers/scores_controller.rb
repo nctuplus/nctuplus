@@ -1,9 +1,8 @@
 class ScoresController < ApplicationController
 	include ScoresHelper
 	include CourseMapsHelper
-	before_filter :checkE3Login, :only=>[:import_confirm, :import, :count_gpa]
+	before_filter :checkE3Login, :only=>[:import_confirm, :import, :gpa]
 
-	
 	def import
 		if current_user.department.nil?
 			alertmesg("info",'Oops',"請先輸入您的系級，謝謝!")
