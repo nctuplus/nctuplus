@@ -49,100 +49,101 @@
 	  	  <div class="header"><h1><b>GPA 計算機</b>&nbsp;<span class="glyphicon glyphicon-object-align-left"></span></h1></div>
 		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間計算，試算前您必須確認有將最新的成績匯入，可以到 <a href="https://plus.nctu.edu.tw/scores/import">這裡</a> 匯入。</p>
 		  
-			<% @normal_scores.each do |t| %>
 			<!-- Overall 4.0 4.3 計算 -->
-			<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
-				<% @sum += 4*t.course.credit %><% @credit += t.course.credit %>
-			<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
-				<% @sum += 3*t.course.credit %><% @credit += t.course.credit %>
-			<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
-				<% @sum += 2*t.course.credit %><% @credit += t.course.credit %>
-			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-				<% @sum += t.course.credit %><% @credit += t.course.credit %>
-			<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
-				<% @credit += t.course.credit %>
-			<% end %>
+			<% @normal_scores.each do |t| %>
+				<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
+					<% @sum += 4*t.course.credit %><% @credit += t.course.credit %>
+				<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
+					<% @sum += 3*t.course.credit %><% @credit += t.course.credit %>
+				<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
+					<% @sum += 2*t.course.credit %><% @credit += t.course.credit %>
+				<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+					<% @sum += t.course.credit %><% @credit += t.course.credit %>
+				<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
+					<% @credit += t.course.credit %>
+				<% end %>
 
-			<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
-				<% @sum2 += 4.3*t.course.credit %>
-			<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
-				<% @sum2 += 4.0*t.course.credit %>
-			<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
-				<% @sum2 += 3.7*t.course.credit %>
-			<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
-				<% @sum2 += 3.3*t.course.credit %>
-			<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
-				<% @sum2 += 3.0*t.course.credit %>
-			<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
-				<% @sum2 += 2.7*t.course.credit %>
-			<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
-				<% @sum2 += 2.3*t.course.credit %>
-			<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
-				<% @sum2 += 2.0*t.course.credit %>
-			<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
-				<% @sum2 += 1.7*t.course.credit %>
-			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-				<% @sum2 += t.course.credit %>
-			<% end %>
+				<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
+					<% @sum2 += 4.3*t.course.credit %>
+				<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
+					<% @sum2 += 4.0*t.course.credit %>
+				<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
+					<% @sum2 += 3.7*t.course.credit %>
+				<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
+					<% @sum2 += 3.3*t.course.credit %>
+				<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
+					<% @sum2 += 3.0*t.course.credit %>
+				<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
+					<% @sum2 += 2.7*t.course.credit %>
+				<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
+					<% @sum2 += 2.3*t.course.credit %>
+				<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
+					<% @sum2 += 2.0*t.course.credit %>
+				<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
+					<% @sum2 += 1.7*t.course.credit %>
+				<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+					<% @sum2 += t.course.credit %>
+				<% end %>
+				
 			<% end %>
 			<!-- Last 60 Credits 4.0 4.3 計算 -->
 			<% @normal_scores.reverse! %>
 			<% @normal_scores.each do |t| %>
-			<% if @credit60 <= 60 %>
-			<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
-				<% @sum60 += 4*t.course.credit %><% @credit60 += t.course.credit %>
-			<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
-				<% @sum60 += 3*t.course.credit %><% @credit60 += t.course.credit %>
-			<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
-				<% @sum60 += 2*t.course.credit %><% @credit60 += t.course.credit %>
-			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-				<% @sum60 += t.course.credit %><% @credit60 += t.course.credit %>
-			<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
-				<% @credit += t.course.credit %>
-			<% end %>
+				<% if @credit60 <= 60 %>
+					<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
+						<% @sum60 += 4*t.course.credit %><% @credit60 += t.course.credit %>
+					<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
+						<% @sum60 += 3*t.course.credit %><% @credit60 += t.course.credit %>
+					<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
+						<% @sum60 += 2*t.course.credit %><% @credit60 += t.course.credit %>
+					<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+						<% @sum60 += t.course.credit %><% @credit60 += t.course.credit %>
+					<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
+						<% @credit += t.course.credit %>
+					<% end %>
 
-			<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
-				<% @sum6043 += 4.3*t.course.credit %>
-			<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
-				<% @sum6043 += 4.0*t.course.credit %>
-			<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
-				<% @sum6043 += 3.7*t.course.credit %>
-			<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
-				<% @sum6043 += 3.3*t.course.credit %>
-			<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
-				<% @sum6043 += 3.0*t.course.credit %>
-			<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
-				<% @sum6043 += 2.7*t.course.credit %>
-			<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
-				<% @sum6043 += 2.3*t.course.credit %>
-			<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
-				<% @sum6043 += 2.0*t.course.credit %>
-			<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
-				<% @sum6043 += 1.7*t.course.credit %>
-			<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-				<% @sum6043 += t.course.credit %>
-			<% end %>
-			<% end %>
+					<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
+						<% @sum6043 += 4.3*t.course.credit %>
+					<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
+						<% @sum6043 += 4.0*t.course.credit %>
+					<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
+						<% @sum6043 += 3.7*t.course.credit %>
+					<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
+						<% @sum6043 += 3.3*t.course.credit %>
+					<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
+						<% @sum6043 += 3.0*t.course.credit %>
+					<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
+						<% @sum6043 += 2.7*t.course.credit %>
+					<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
+						<% @sum6043 += 2.3*t.course.credit %>
+					<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
+						<% @sum6043 += 2.0*t.course.credit %>
+					<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
+						<% @sum6043 += 1.7*t.course.credit %>
+					<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
+						<% @sum6043 += t.course.credit %>
+					<% end %>
+				<% end %>
 			<% end %>
 
 			<div class="row">
 				<div class="gpa1 col-sm-6">
 					<div style="background:#FAFAFA !important" class="jumbotron">
-						<p><strong>Overall 4.0</strong></h3><p>
+						<p><strong>Overall 4.0</strong><p>
 						<p><span class="counter" style = "font-size: 1.7em;"><%= (@sum/@credit).round(2) %></span></p>
 					</div>
 					<div style="background:#FAFAFA !important" class="jumbotron">
-					    <p><strong>Last 60 Credits 4.0</strong></h3><p>
+					    <p><strong>Last 60 Credits 4.0</strong><p>
  						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum60/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
 					</div>
 				</div>
 				<div class="gpa2 col-sm-6">
 					<div style="background:#FAFAFA !important" class="jumbotron">
-					    <p><strong>Overall 4.3</strong></h3><p>
+					    <p><strong>Overall 4.3</strong><p>
 						<p><span class="counter" style = "font-size: 1.7em;"><%= (@sum2/@credit).round(2) %></span></p>
 					</div>
 					<div style="background:#FAFAFA !important" class="jumbotron">
-					    <p><strong>Last 60 Credits 4.3</strong></h3><p>
+					    <p><strong>Last 60 Credits 4.3</strong><p>
  						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum6043/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
 					</div>
 				</div>
@@ -160,11 +161,12 @@
 </body>
 
 <script>
-$('.counter').counterUp({
-                delay: 25,
-                time: 1100
-            });
-
+$(function(){
+	$('.counter').counterUp({
+		delay: 25,
+		time: 1100
+	});
+});
 </script>
 
 </html>

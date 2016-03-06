@@ -92,7 +92,7 @@ class ScoresController < ApplicationController
 	end
 
 	def gpa
-		@normal_scores = NormalScore.where( 'user_id' => current_user.id)
+		@normal_scores = current_user.normal_scores #NormalScore.where( 'user_id' => current_user.id)
 		@sum = 0.0
 		@sum2 = 0.0
 		@credit = 0
