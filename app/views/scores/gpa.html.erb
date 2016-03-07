@@ -3,7 +3,7 @@
 <style>
 
 .glyphicon{
-	font-size: 0.75em;
+	font-size: 0.77em;
 }
 .header{
 	font-size: 0.5em;
@@ -15,8 +15,8 @@
 	margin-bottom: 18px;
 }
 .jumbotron{
-	padding-top:3em !important;
-	padding-bottom:2.2em !important;
+	padding-top: 3em !important;
+	padding-bottom: 2.2em !important;
 }
 .gpa1{
 	text-align: center;
@@ -30,7 +30,6 @@
 	margin-top: 10px;
 }
 .sub_btn{
-	padding-right: 2%;
 	text-align: right;
 	margin-bottom: 15px;
 }
@@ -40,14 +39,15 @@
 <html>
 <head>
 </head>
+</head>
 <body>
 <div class="container">
   <div class ="row">
 	  <div class="col-sm-2"></div>
 	  <div class="col-sm-8">
-	  	  	<h2 count-up end-val="873.4"></h2>
-	  	  <div class="header"><h1><b>GPA 計算機</b>&nbsp;<span class="glyphicon glyphicon-object-align-left"></span></h1></div>
-		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間計算，試算前您必須確認有將最新的成績匯入，可以到 <a href="https://plus.nctu.edu.tw/scores/import">這裡</a> 匯入。</p>
+	  	  <h2 count-up end-val="873.4"></h2>
+	  	  <div class="header"><h1><span class="glyphicon glyphicon-ok-sign"></span>&nbsp;<b>GPA 計算機</b></h1></div>
+		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間計算，試算前您必須確認有將最新的成績匯入，可以到 <a href="/scores/import">這裡</a> 匯入。</p>
 		  
 			<!-- Overall 4.0 4.3 計算 -->
 			<% @normal_scores.each do |t| %>
@@ -84,11 +84,10 @@
 				<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
 					<% @sum2 += t.course.credit %>
 				<% end %>
-				
 			<% end %>
+
 			<!-- Last 60 Credits 4.0 4.3 計算 -->
-			<% @normal_scores.reverse! %>
-			<% @normal_scores.each do |t| %>
+			<% @normal_scores.reverse.each do |t| %>
 				<% if @credit60 <= 60 %>
 					<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
 						<% @sum60 += 4*t.course.credit %><% @credit60 += t.course.credit %>
@@ -99,7 +98,7 @@
 					<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
 						<% @sum60 += t.course.credit %><% @credit60 += t.course.credit %>
 					<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
-						<% @credit += t.course.credit %>
+						<% @credit60 += t.course.credit %>
 					<% end %>
 
 					<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
@@ -146,13 +145,16 @@
 					    <p><strong>Last 60 Credits 4.3</strong><p>
  						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum6043/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
 					</div>
+					<div class="sub_btn">
+						<%= link_to '讓朋友知道這個功能！', "javascript: open_window('https://www.facebook.com/sharer/sharer.php?u=https://plus.nctu.edu.tw/scores/gpa',650,300);", :class => "btn btn-primary", :style => "margin-right: 4px;" %>
+						<button type="button" class="btn btn-warning" onClick="window.location.reload()">重新載入</button>
+					</div>
 				</div>
-				<div class="sub_btn">
-				<button type="button" class="btn btn-warning" onClick="window.location.reload()">重新載入</button>
-				</div>
+				
+
 			</div>
 			<div class="note">
-			<p>註：此計算參考 <a href="https://www.google.com.tw/url?sa=t&rct=j&q=&esrc=s&source=web&cd=1&ved=0ahUKEwjWlvm_xqnLAhXCkpQKHSM7CZQQFggbMAA&url=http%3A%2F%2Faadm.nctu.edu.tw%2Fregistra%2FGetFile.aspx%3Ftype%3D1%26id%3D4f5b5677-4d4a-4787-9806-e5b05de7cbe2&usg=AFQjCNFja7uyy1smdI4z1G3bwVvH2v_hUg&sig2=bAu-L1WjagpFX9ikoHLKLQ" target="_blank">等級制與百分制及GP對照表-交通大學</a> 與 <a href="http://intra.tpml.edu.tw/study/upload/downloads/GPA.htm" target="_blank"> 美國大學四點制的算法</a>，Last 60 Credits 採由後往前計算至大於等於 60 學分為止，也就是可能超過 60 學分 (呈現於括號內)，實際成績以學校成績單為準。</p>
+			<p>註：此計算參考 <%=link_to "等級制與百分制及GP對照表-交通大學", asset_path("nctu_gpa.jpg"), target:"blank"%> 與 <a href="http://intra.tpml.edu.tw/study/upload/downloads/GPA.htm" target="_blank"> 美國大學四點制的算法</a>，Last 60 Credits 採由後往前計算至大於等於 60 學分為止，也就是可能超過 60 學分 (呈現於括號內)，實際成績以學校成績單為準。</p>
 			</div>
 		</div>
 		</div>
@@ -167,6 +169,19 @@ $(function(){
 		time: 1100
 	});
 });
+
+function open_window(url, width, height) {
+	var my_window;
+
+	// screen.width means Desktop Width
+	// screen.height means Desktop Height
+
+	var center_left = (screen.width / 2) - (width / 2) + 20;
+	var center_top = (screen.height / 2) - (height / 2) - 40;
+
+	my_window = window.open(url, "Title", "scrollbars=1, width="+width+", height="+height+", left="+center_left+", top="+center_top);
+	my_window.focus();
+}
 </script>
 
 </html>
