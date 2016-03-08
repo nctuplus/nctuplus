@@ -1,6 +1,3 @@
-<%= javascript_include_tag "new-index", "data-turbolinks-track" => false %>
-<%= stylesheet_link_tag "new-index", "data-turbolinks-track" => false %>
-
 <%= javascript_include_tag "waypoints.min.js" %>
 <%= javascript_include_tag "jquery.counterup.js" %>
 <style>
@@ -166,6 +163,7 @@
 	</div>
 </body>
 <script>
+var do_on_load = function(){
 	$('.counter').counterUp({
 	    delay: 25,
 	    time: 1100
@@ -178,5 +176,9 @@
 	  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5&appId=1683611315250257";
 	  fjs.parentNode.insertBefore(js, fjs);
 	}(document, 'script', 'facebook-jssdk'))
+}
+
+$(document).ready(do_on_load)
+$(window).bind('page:change', do_on_load)
 </script>
 </html>
