@@ -32,7 +32,6 @@
 	text-align: right;
 	margin-bottom: 15px;
 }
-
 .fb-like{
    overflow: hidden !important;
    margin-right: 7px;
@@ -43,7 +42,7 @@
 <html>
 <head>
 </head>
-<body data-no-turbolink="true">
+<body>
 <div class="container">
   <div class ="row">
 	  <div class="col-sm-2"></div>
@@ -162,18 +161,20 @@
 	    <div class="col-sm-2"></div>
 	</div>
 </body>
-<script>
-	$('.counter').counterUp({
-	    delay: 25,
-	    time: 1100
-	});
 
-	(function(d, s, id) {
-	  var js, fjs = d.getElementsByTagName(s)[0];
-	  if (d.getElementById(id)) return;
-	  js = d.createElement(s); js.id = id;
-	  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5&appId=1683611315250257";
-	  fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'))
+<script>
+$('.counter').counterUp({
+    delay: 25,
+    time: 1100
+});
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5&appId=1683611315250257";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'))
 </script>
+
 </html>
