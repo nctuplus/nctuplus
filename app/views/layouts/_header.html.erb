@@ -74,6 +74,9 @@
 				<li>
 					<%=link_to "課程收藏", "javascript:void(0);",class:"page-scroll", onClick:"showCart();" %>
 				</li>
+				<li>
+					<%=link_to "GPA 計算機", "https://plus.nctu.edu.tw/scores/gpa", class:"page-scroll" %>
+				</li>
 				
 				<% if current_user %>
 
@@ -85,9 +88,6 @@
 							<%=current_user.name%>
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
-							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
-								<a href="/scores/gpa" rel="nofollow" style="color:white;" data-no-turbolink>GPA 計算機 <small><sup>Beta</sup></small><span class="badge pull-right"></span></a>
-							</li>
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
 								<%= link_to  "登出", destroy_user_session_path, :method => :delete, :style=>"color:white;" %>
 							</li>					
