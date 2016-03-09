@@ -62,7 +62,7 @@
 					<% @sum += 2*t.course.credit %><% @credit += t.course.credit %>
 				<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
 					<% @sum += t.course.credit %><% @credit += t.course.credit %>
-				<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
+				<% elsif numeric?(t.score) && t.score.to_f >=0 && t.score.to_f <= 50 %>
 					<% @credit += t.course.credit %>
 				<% end %>
 
@@ -100,7 +100,7 @@
 						<% @sum60 += 2*t.course.credit %><% @credit60 += t.course.credit %>
 					<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
 						<% @sum60 += t.course.credit %><% @credit60 += t.course.credit %>
-					<% elsif t.score.to_f >=0.1 && t.score.to_f <= 50 %>
+					<% elsif numeric?(t.score) && t.score.to_f >=0 && t.score.to_f <= 50 %>
 						<% @credit60 += t.course.credit %>
 					<% end %>
 
@@ -164,18 +164,19 @@
 </body>
 
 <script>
-  $('.counter').counterUp({
-	    delay: 25,
-	    time: 1100
-	});
 
-	(function(d, s, id) {
-	  var js, fjs = d.getElementsByTagName(s)[0];
-	  if (d.getElementById(id)) return;
-	  js = d.createElement(s); js.id = id;
-	  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5&appId=1683611315250257";
-	  fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'));
+$('.counter').counterUp({
+    delay: 25,
+    time: 1100
+});
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5&appId=1683611315250257";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 
 </script>
 

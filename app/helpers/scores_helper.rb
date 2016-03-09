@@ -39,4 +39,5 @@ module ScoresHelper
 			:dept=>dept
 		}
 	end
+
 end
