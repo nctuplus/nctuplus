@@ -14,7 +14,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
 			  redirect_to :root
         return 
       end
-		
+
       _additional_session(result[:user])
       sign_in_and_redirect result[:user], :event => :authentication
 
@@ -40,6 +40,7 @@ private
 			
 			
 	def _additional_session(user)
+		store_location_for(:user, session[:last_url])	#for redirect back to last url
 		session[:auth_e3] = user.try(:auth_e3).try(:to_json)
 		session[:auth_facebook] = user.try(:auth_facebook).try(:to_json)		
 	end

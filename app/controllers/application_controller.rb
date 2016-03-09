@@ -9,6 +9,9 @@ class ApplicationController < ActionController::Base
 	helper_method :current_user
 
 
+	def after_sign_in_path_for(resource)
+    request.env['omniauth.origin'] || stored_location_for(resource) || root_path
+  end
 	
   def record_not_found
 		alertmesg("info",'Sorry',"無此欄位!")
@@ -37,11 +40,7 @@ class ApplicationController < ActionController::Base
   def checkLogin
     unless user_signed_in?
 			alertmesg("info",'Sorry',"請先登入,謝謝!")
-			if request.env["HTTP_REFERER"].nil?
-				redirect_to :root
-			else
-				redirect_to :back
-			end
+			redirect_back
 			return false
 		end
 		return true
@@ -73,7 +72,6 @@ class ApplicationController < ActionController::Base
 		if !flag	
 			alertmesg("info",'Sorry',msg)
 			redirect_back
-			
 		end 
 		return flag
   end
@@ -144,11 +142,11 @@ class ApplicationController < ActionController::Base
 	
 private	
 	def redirect_back
-		if request.env["HTTP_REFERER"].nil?
-				redirect_to :root
-			else
-				redirect_to :back
-			end
+		#if !request.xhr?
+		session[:last_url]=request.original_url
+		#end
+		redirect_to "/login"
+
 	end
 		
 	def redirect_if_old
