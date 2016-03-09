@@ -9,9 +9,7 @@ class ApplicationController < ActionController::Base
 	helper_method :current_user
 
 
-	def after_sign_in_path_for(resource)
-    request.env['omniauth.origin'] || stored_location_for(resource) || root_path
-  end
+
 	
   def record_not_found
 		alertmesg("info",'Sorry',"無此欄位!")
@@ -133,20 +131,17 @@ class ApplicationController < ActionController::Base
 			:message => msg
 		  }
   end
-	
-	def redirect_to_user_index
-		if user_signed_in?
-			redirect_to :action=> "special_list", :controller=> "user"
-		end
-	end
+
+	def after_sign_in_path_for(resource)	#for devise usage, redirect to last page after sign in
+    request.env['omniauth.origin'] || stored_location_for(resource) || root_path
+  end
 	
 private	
 	def redirect_back
 		#if !request.xhr?
-		session[:last_url]=request.original_url
+		session[:last_url]=request.original_url	#save last url before redirect to login page
 		#end
 		redirect_to "/login"
-
 	end
 		
 	def redirect_if_old

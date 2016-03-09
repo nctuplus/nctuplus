@@ -40,7 +40,7 @@ private
 			
 			
 	def _additional_session(user)
-		store_location_for(:user, session[:last_url])	#for redirect back to last url
+		store_location_for(:user, session[:last_url])	#for devise usage, redirect to last page after sign in
 		session[:auth_e3] = user.try(:auth_e3).try(:to_json)
 		session[:auth_facebook] = user.try(:auth_facebook).try(:to_json)		
 	end
