@@ -32,21 +32,21 @@
 				學號: <%=@user.student_id%> <br>
 				信箱: <%=@user.email%> <br>
 				學系: <%=@user.try(:department).try(:ch_name)||"未填寫" %>
-        入學年度:
+        		入學年度:
           <% if @user.year==0 %>
             未填寫
           <% else %>
             <%=@user.year%> 
           <% end %>
-        <br>
-				身份:
-					<% if @user.hasFb? %>
-						Facebook
-					<% end %>
-          <% if @user.hasE3? %>
-						E3
-					<% end %>
-				<br>
+    	<br>
+			身份:
+				<% if @user.hasFb? %>
+					Facebook
+				<% end %>
+    		  	<% if @user.hasE3? %>
+					E3
+				<% end %>
+			<br>
 				分享課表: <%=@user.canShare? ? "ON" : "OFF" %><br>
 				<%=link_to fa_icon("pencil")+"編輯資訊", "/user/edit",class:"" %>
 				<%=link_to fa_icon("refresh")+"匯入成績", "/scores/import",class:"" %>
@@ -57,7 +57,7 @@
 			<div class="col-md-12" style="padding-top:10px;">
 				<div class="text-center col-md-4 inner-grid" >
 					歷年平均
-					<h4 class="strong" id="totalAvg">N/A</h4>
+					<h4 class ="strong" id="totalAvg">N/A</h4>
 				</div>
 				<div class="text-center col-md-4 inner-grid">
 					名次
