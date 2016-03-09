@@ -43,7 +43,7 @@
 <html>
 <head>
 </head>
-<body data-no-turbolink="true">
+<body>
 <div class="container">
   <div class ="row">
 	  <div class="col-sm-2"></div>
@@ -149,7 +149,7 @@
  						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum6043/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
 					</div>
 					<div class="sub_btn">
-						<div class="fb-like" data-href="https://www.facebook.com/nctuplus/" data-layout="button_count" data-action="like" data-show-faces="false" data-share="false"></div>
+						<div class="fb-like" data-href="https://www.facebook.com/nctuplus/" data-layout="button_count" data-action="like"></div>
 						<button type="button" class="btn btn-warning" onClick="window.location.reload()">重新載入</button>
 					</div>
 				</div>
@@ -162,9 +162,9 @@
 	    <div class="col-sm-2"></div>
 	</div>
 </body>
+
 <script>
-var do_on_load = function(){
-	$('.counter').counterUp({
+  $('.counter').counterUp({
 	    delay: 25,
 	    time: 1100
 	});
@@ -175,10 +175,8 @@ var do_on_load = function(){
 	  js = d.createElement(s); js.id = id;
 	  js.src = "//connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.5&appId=1683611315250257";
 	  fjs.parentNode.insertBefore(js, fjs);
-	}(document, 'script', 'facebook-jssdk'))
-}
+	}(document, 'script', 'facebook-jssdk'));
 
-$(document).ready(do_on_load)
-$(window).bind('page:change', do_on_load)
 </script>
+
 </html>
