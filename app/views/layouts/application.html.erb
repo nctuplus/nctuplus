@@ -30,7 +30,11 @@
     <meta property="og:url" content="<%=root_url%>shares/<%=params[:id]%>" ></meta>
     <meta property="og:image" content="<%=root_url%>course_table_shares/<%=@file_name%>"/>
   <% else %>
-    <meta name="description" content="NCTU+ 交大智慧選課系統">  
+		<meta property="og:url"           content="<%=root_url%>" />
+		<meta property="og:type"          content="website" />
+		<meta property="og:title"         content="NCTU+" />
+    <meta property="og:description" content="NCTU+ 交大智慧選課系統">
+		<meta property="og:image"         content="<%=asset_path('logo22.png')%>" />
 	<% end %>
 
 	<script>
