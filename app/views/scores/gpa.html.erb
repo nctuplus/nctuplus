@@ -50,7 +50,7 @@
 	  <div class="col-sm-8">
 	  	  <h2 count-up end-val="873.4"></h2>
 	  	  <div class="header"><h1><span class="glyphicon glyphicon-ok-sign"></span>&nbsp;<b>GPA 計算機</b></h1></div>
-		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間手算，試算前您必須確認將最新的成績匯入，可以到 <a href="/scores/import">這裡</a> 匯入。</p>
+		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間手算，<u><b>試算前您必須確認將最新的成績匯入，可以到 <a href="/scores/import">這裡</a> 匯入。</u></b></p>
 
 			<!-- Overall 4.0 4.3 計算 -->
 			<% @normal_scores.each do |t| %>
@@ -149,6 +149,7 @@
  						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum6043/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
 					</div>
 					<div class="sub_btn">
+						<b>幫我按個</b>
 						<div class="fb-like" data-href="https://www.facebook.com/nctuplus/" data-layout="button_count" data-action="like"></div>
 						<button type="button" class="btn btn-warning" onClick="window.location.reload()">重新載入</button>
 					</div>

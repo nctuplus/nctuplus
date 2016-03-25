@@ -45,7 +45,7 @@
 						<%= f.file_field "cover",class:"hidden",accept:"image/*" %>
 						<div id="image-container" onclick="$('#event_cover').click();" class="text-center clickable-hover" style="border:1px #eeeeee solid; min-height:170px;width:100%;">
 							<% if @event.new_record? %>
-								點選以上傳,建議1000x400以達最佳效果(需小於2MB)
+								點選以上傳,建議800x400以達最佳效果(需小於2MB)
 							<% else %>	
 								<%=image_tag(@event.cover.url, :style => "max-height:170px")%>
 							<% end %>

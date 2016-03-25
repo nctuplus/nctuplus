@@ -7,11 +7,12 @@ class Event < ActiveRecord::Base
 	has_many :followers, :through=> :event_follows, :class_name=>"User"
 	has_attached_file :cover,
 		:url=>"/file_upload/event_covers/:id_partition/:filename",
-		:default_url => "/images/:style/missing.png",
+		:default_url => "events/banner_logo_transparent.png",
 		:path => ":rails_root/public/file_upload/event_covers/:id_partition/:filename"
 	validates_attachment :cover, 
 		:content_type => { :content_type => /\Aimage\/.*\Z/ },
 		:size => { :less_than => 2.megabytes }
+		
 	def self.typeSel
 		return ["校友週","講座","表演","擺攤","比賽","其他"]
 		#return ["梅竹","講座","表演","擺攤","比賽","其他"]
