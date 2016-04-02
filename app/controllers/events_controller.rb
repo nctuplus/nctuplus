@@ -36,7 +36,10 @@ class EventsController < ApplicationController
 	end
 	def update
 		@event=current_user.events.find(params[:id])
-		@event.update_attributes(event_params)
+		if @event.update_attributes(event_params)
+			# update successfully
+			InformMailer.event_update(@event).deliver
+		end
 		redirect_to event_url(@event)
 	end
 	def show_image

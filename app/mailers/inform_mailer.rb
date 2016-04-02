@@ -9,4 +9,18 @@ class InformMailer < ActionMailer::Base
 		@discuss=@sub_discuss.discuss
 		mail(to: @discuss.user.email, subject: "NCTU+文章回應通知:#{@discuss.title}")
 	end
+	def event_update(event)
+		@event=event
+
+		@event.followers.each do |user|
+			mail(to: user.email, subject: "NCTU+[已關注]活動更新通知:#{@event.title}")
+		end
+		
+		@event.attendees.each do |user|
+			mail(to: user.email, subject: "NCTU+[已參加]活動更新通知:#{@event.title}")
+		end
+		
+		mail(to: @event.user.email, subject: "NCTU+[主辦方]活動更新通知: #{@event.title}")
+				
+	end
 end
