@@ -12,15 +12,11 @@ class InformMailer < ActionMailer::Base
 	def event_update(event)
 		@event=event
 
-		@event.followers.each do |user|
-			mail(to: user.email, subject: "NCTU+[已關注]活動更新通知:#{@event.title}")
-		end
-		
 		@event.attendees.each do |user|
-			mail(to: user.email, subject: "NCTU+[已參加]活動更新通知:#{@event.title}")
+			mail(to: user.email, subject: "NCTU+活動更新通知:#{@event.title}")
 		end
 		
-		mail(to: @event.user.email, subject: "NCTU+[主辦方]活動更新通知: #{@event.title}")
+		mail(to: @event.user.email, subject: "NCTU+活動更新通知: #{@event.title}")
 				
 	end
 end
