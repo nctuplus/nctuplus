@@ -2,9 +2,9 @@ class Event < ActiveRecord::Base
 	
 	belongs_to :user
 	has_many :attendances
-	has_many :attendees, :through=> :attendances, :class_name=>"User"
+	has_many :attendees, :through=> :attendances, :source =>:user
 	has_many :event_follows
-	has_many :followers, :through=> :event_follows, :class_name=>"User"
+	has_many :followers, :through=> :event_follows, :source =>:user
 	has_attached_file :cover,
 		:url=>"/file_upload/event_covers/:id_partition/:filename",
 		:default_url => "events/banner_logo_transparent.png",
