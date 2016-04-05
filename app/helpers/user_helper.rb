@@ -1,6 +1,4 @@
 module UserHelper
-
-	
 	
 	def grade_on_user(user, semester)	#for user/share & user/collections
 	  dy = semester.year - user.year

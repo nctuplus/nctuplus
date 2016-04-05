@@ -30,7 +30,7 @@
 						<tr class="row">
 							<td class="">連絡方式</td>
 							<td class="">
-								<%=@sale_book.contact_way==0 ? @sale_book.user.email : link_to("Facebook","https://facebook.com/#{@sale_book.user.uid}") %>
+								<%=contact_way(@sale_book) %>
 							</td>
 						</tr>
 						<tr class="row">

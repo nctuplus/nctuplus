@@ -17,11 +17,11 @@
 			<div class="col-md-1">
 			<% if discuss.is_anonymous %>
 				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:"匿名" %>
-			<% elsif !discuss.user.hasFb? %>
+			<% elsif !discuss.user.hasSocialAuth? %>
 				<%= image_tag asset_path("anonymous.jpg"), size: "50x50", style:"margin-top:10px;", alt:"Anonymous", title:discuss.owner_name %>
 			<% else %>
-				<a href="https://www.facebook.com/<%=discuss.user_uid%>" target="_blank" class="masterTooltip" title="<%=discuss.owner_name%>">
-					<%= image_tag "http://graph.facebook.com/#{discuss.try(:user).try(:uid)}/picture", size: "50x50", class:"", style:"margin-top:10px;"  %>
+				<a href="<%=discuss.user.social_webpage_url%>" target="_blank" class="masterTooltip" title="<%=discuss.owner_name%>">
+					<%= image_tag discuss.user.avatar_url, size: "50x50", style:"margin-top:10px;"  %>
 				</a>
 			<% end %>
 			
@@ -51,20 +51,19 @@
 				<div class="sub-discussion col-md-offset-1 col-md-11" >
 					<div class="col-md-1">
 						
-						<% if !sub_d.user.hasFb? %>
+						<% if !sub_d.user.hasSocialAuth? %>
 							<%= image_tag asset_path("anonymous.jpg"), size: "45x45", style:"margin-top:10px;", alt:"Anonymous", title:sub_d.owner_name %>
 						<% else %>
-							<a href="https://www.facebook.com/<%=sub_d.try(:user).try(:uid)%>" target="_blank" class="masterTooltip" title="<%=sub_d.owner_name%>">
-								<%= image_tag "http://graph.facebook.com/#{sub_d.try(:user).try(:uid)}/picture", size: "45x45", class:"", style:"margin-top:10px;"  %>
+							<a href="<%=discuss.user.social_webpage_url%>" target="_blank" class="masterTooltip" title="<%=sub_d.owner_name%>">
+								<%= image_tag discuss.user.avatar_url, size: "45x45", class:"", style:"margin-top:10px;"  %>
 							</a>
 						<% end %>
 						<br>
 					</div>
-						<div class="col-md-8 " id="sub_content_<%=sub_d.id%>">
-							<p><%=sub_d.created_at.strftime("%Y/%m/%d %H:%M")%></p>
-							<textcontent id="sub_content_<%=sub_d.id%>"><%=sub_d.content%></textcontent>
-						</div>
-
+          <div class="col-md-8 " id="sub_content_<%=sub_d.id%>">
+            <p><%=sub_d.created_at.strftime("%Y/%m/%d %H:%M")%></p>
+            <textcontent id="sub_content_<%=sub_d.id%>"><%=sub_d.content%></textcontent>
+          </div>
 				</div>
 			<% end %>
 			<div id="sub_form_<%=discuss.id%>" class="sub-form row no-margin-left"></div>

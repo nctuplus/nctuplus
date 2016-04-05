@@ -2,10 +2,10 @@
 	<div class="panel-heading row no-margin-left no-margin-right" style="padding-bottom:0px;">
 	
 		<div class="col-md-1 col-xs-2">
-			{% if(o.is_anonymous||!o.uid){ %}
+			{% if(o.is_anonymous || !o.hasSocial){ %}
 				<%=image_tag asset_path("anonymous.jpg"),size:"50x50",style:"margin-top:10px;" %>
 			{% } else { %}
-				<a href="https://www.facebook.com/{%=o.uid%}" target="_blank">
+				<a href="{%=o.webpage%}" target="_blank">
 					<img alt="Picture" class="" height="50" src="{%=o.imgsrc%}" style="margin-top:10px;" width="50">
 				</a>
 			{% } %}
@@ -59,10 +59,11 @@
 </script>
 <script type="text/x-tmpl" id="sub_d-content">
 	<div class="col-md-1 col-xs-2" style="padding-left:30px;">
-		{%if(o.is_anonymous||!o.uid){ %}
-			<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
+    {% console.log(o.is_anonymous); %}
+		{%if( o.is_anonymous || !o.hasSocial ){ %}
+			<%=image_tag asset_path("anonymous.jpg"),size:"50x50",style:"margin-top:10px;" %>
 		{% }else{ %}
-			<a href="https://www.facebook.com/{%=o.uid%}" target="_blank">
+			<a href="{%=o.webpage%}" target="_blank">
 				<img alt="Picture" class="" height="45" width="45" src="{%=o.imgsrc%}" style="margin-top:10px;" >
 			</a>
 		{% } %}
@@ -112,6 +113,6 @@
 		$container=$obj.parent().parent().parent().parent();
 		console.log($container);
 		$container.find('#anonymous-avatar').toggleClass('hidden');
-		$container.find('#fb-avatar').toggleClass('hidden');
+		$container.find('#social-avatar').toggleClass('hidden');
 	}
 </script>

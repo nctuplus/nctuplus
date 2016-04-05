@@ -39,7 +39,9 @@ class BookTradeInfo < ActiveRecord::Base
 	def incViewTimes!
 		update_attributes(:view_times=>self.view_times+1)
 	end
-	
+  
+# no use?  
+=begin	
 	def user_avatar
 		if self.contact_way==0
 			url=ActionController::Base.helpers.asset_path("mail.png")
@@ -48,6 +50,7 @@ class BookTradeInfo < ActiveRecord::Base
 		end
 		return image_tag(url,size:"25x25", style:"border-radius:3px;")
 	end
+  
 	def user_name_with_tip
 		if self.contact_way==0
 			return "<span data-toggle='tooltip' title='#{self.user.email}'>#{self.user.name}</span>".html_safe
@@ -55,6 +58,7 @@ class BookTradeInfo < ActiveRecord::Base
 			return link_to(self.user.name,"http://www.facebook.com/#{self.user.uid}",target:"_blank")
 		end
 	end
+=end
 
 	def cover_image(zoom=1)
 		if self.cover_file_name

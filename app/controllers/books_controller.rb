@@ -51,7 +51,7 @@ class BooksController < ApplicationController
   end
   
   def show
-    @sale_book=BookTradeInfo.find(params[:id])
+    @sale_book=BookTradeInfo.find(params[:id])    
 		if @sale_book.status != 1
       @sale_book.incViewTimes! 
     end

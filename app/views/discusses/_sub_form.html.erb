@@ -1,9 +1,7 @@
 <%= form_for SubDiscuss.new, url:{action: "create"}, :class=>"sub-discussion ", :remote=>"true" do |f| %>
 	<div class="col-md-1" style="padding-left:30px;">
-		<% if current_user.try(:hasFb?) %>
-			<%= image_tag "http://graph.facebook.com/#{session[:auth_facebook][:uid]}/picture", size: "45x45", id:"fb-avatar", style:"margin-top:10px;"  %>
-		<% end %>
-			<%= image_tag asset_path("anonymous.jpg"), size: "45x45", id:"anonymous-avatar",class:"hidden", style:"margin-top:10px;"%>
+		<%=sub_disucss_avatar("social-avatar")%>
+		<%= image_tag asset_path("anonymous.jpg"), size: "45x45", id:"anonymous-avatar",class:"hidden", style:"margin-top:10px;"%>
 		
 		<br>
 	</div>

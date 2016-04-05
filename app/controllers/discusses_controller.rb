@@ -37,7 +37,7 @@ class DiscussesController < ApplicationController
 		if params[:ct_id].present?
 			@ct=CourseTeachership.find(params[:ct_id])
 		end
-		@imgsrc=current_user.hasFb? ? "http://graph.facebook.com/#{current_user.uid}/picture" : ActionController::Base.helpers.asset_path("anonymous.jpg")
+	#	@imgsrc=current_user.avatar_url
 		render "main_form"
 	end
 	
@@ -46,7 +46,7 @@ class DiscussesController < ApplicationController
 		@discuss=current_user.discusses.find(params[:id])
 		@q=CourseTeachership.search(params[:q])
 		@ct=@discuss.course_teachership
-		@imgsrc=current_user.hasFb? ? "http://graph.facebook.com/#{current_user.uid}/picture" : ActionController::Base.helpers.asset_path("anonymous.jpg")
+		@imgsrc=current_user.avatar_url
 		render "main_form"
 	end
 	

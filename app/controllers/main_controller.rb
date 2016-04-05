@@ -6,7 +6,7 @@ class MainController < ApplicationController
 
 	def test
 		#@courses=BookTradeInfo.search({:colleges_id_eq=>0}).result(:distinct=>true)
-		@courses=PastExam.search({:colleges_id_eq=>2}).result(:distinct=>true)
+		#@courses=PastExam.search({:colleges_id_eq=>2}).result(:distinct=>true)
 	end
 
  	def index

@@ -17,20 +17,21 @@ class SubDiscuss < ActiveRecord::Base
 		}
 	end
 	def show_obj(current_user_id)
-		if self.is_anonymous || !self.user.hasFb?
+		if self.is_anonymous 
 			src=ActionController::Base.helpers.asset_path("anonymous.jpg")
 		else
-			src="https://graph.facebook.com/#{self.user.uid}/picture"
+			src=self.user.avatar_url
 		end
 		return {
 			:id=>self.id,
-			:uid=>self.user.try(:uid),
+			:hasSocial=>self.user.hasSocialAuth?,
 			:is_anonymous=>self.is_anonymous,
 			:editable=>self.user_id==current_user_id,
 			:user_name=>self.owner_name,
 			:content=>self.content,
 			:time=>self.updated_at.strftime("%Y/%m/%d %H:%M"),
 			:imgsrc=> src,
+      :webpage=> self.user.social_webpage_url,
 		}
 	end
 end

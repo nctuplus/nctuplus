@@ -2,12 +2,14 @@ class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
 	include ActionView::Helpers # for avatar
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
-         :omniauthable, :omniauth_providers => [:facebook, :E3]
+  devise :database_authenticatable, # :registerable, :recoverable,
+         :rememberable, :trackable, # :validatable,
+         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :E3],
+         :authentication_keys => [:id]
   belongs_to :department
   has_one :auth_facebook
   has_one :auth_e3
+  has_one :auth_google
   
   delegate :ch_name, :to=> :department, :prefix=>true
   delegate :degree, :to=> :department
@@ -48,17 +50,38 @@ class User < ActiveRecord::Base
 
 
   #validates :email, uniqueness: true
-  validates :name, :uniqueness=>true, :length=> { :maximum=> 16, :message=>"姓名過長(max:16)" }, :on => :update
+  validates :name, :length=> { :maximum=> 16, :message=>"姓名過長(max:16)" }, :on => :update #:uniqueness=>true,
+ 
+# The :validatable parameter is removed. So we can have custom validation configs
+  validates_format_of :email, :with  => Devise.email_regexp, :allow_blank => false
+
+  # [Reserved]
+#  validates_presence_of    :password, :on=>:create
+#  validates_confirmation_of    :password, :on=>:create
+#  validates_length_of    :password, :within => Devise.password_length, :allow_blank => true
+  
   validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update
   validates :year, :numericality=> { :greater_than=>0, :message=>"請填寫入學年度"}, :on => :update
+
   
-  def avatar(width,height)
+  def avatar_url
     if self.hasFb?
-      src="https://graph.facebook.com/#{self.uid}/picture"
-      src+="?type=large" if width>=100
-      return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='#{src}'>".html_safe
+      return "https://graph.facebook.com/#{self.auth_facebook.uid}/picture"  
+    elsif self.hasGoogle?
+      return self.auth_google.image_url
     else
-      return "<img alt='#{self.name}' height='#{height}' width='#{width}' src='#{ActionController::Base.helpers.asset_path("anonymous.jpg")}'>".html_safe
+      return ActionController::Base.helpers.asset_path("anonymous.jpg")
+    end
+  end
+  
+  def social_webpage_url
+    if self.hasFb?
+      return "https://www.facebook.com/#{self.auth_facebook.uid}"  
+    elsif self.hasGoogle?
+      return "https://www.plus.google.com/#{self.auth_google.uid}"  
+    else
+      return nil
+      #raise "[ERROR] The user does not have soical auth."
     end
   end
   
@@ -70,7 +93,6 @@ class User < ActiveRecord::Base
   def canShare?
     return self.agree_share
   end
-
 
   def encrypt_id
     ENCRYTIONOBJ.encode(self.id)
@@ -92,7 +114,8 @@ class User < ActiveRecord::Base
 
 
   def merge_child_to_newuser(new_user)  #for 綁定功能,將所有user有的東西的user_id改到新的user id
-    table_to_be_moved=User.reflect_on_all_associations(:has_many).map { |assoc| assoc.name} - ["normal_scores","agree_scores"]
+    table_to_be_moved=User.reflect_on_all_associations(:has_many)
+        .map { |assoc| assoc.name} - [ :normal_scores , :agree_scores, :attend_events, :follow_events ]
     table_to_be_moved.each do |table_name|
       self.send(table_name).update_all(:user_id=>new_user.id)
     end
@@ -102,15 +125,23 @@ class User < ActiveRecord::Base
   def has_imported?
     return self.agree
   end
-  
+
+## social auth   
   def hasFb?
     return self.auth_facebook.present?
+  end
+  
+  def hasGoogle?
+    return self.auth_google.present?
+  end
+  
+  def hasSocialAuth?
+    return (self.hasFb? || self.hasGoogle?)
   end
   
   def hasE3?
     return self.auth_e3.present?
   end
-  
 ## role func
   def isAdmin?
     return self.role==0
@@ -172,9 +203,9 @@ class User < ActiveRecord::Base
   def self.create_from_auth(hash)  
     user = self.new
     user.name = hash[:name]
-    user.email = (User.where(:email=>hash[:email]).present?) ? "#{Devise.friendly_token[0,8]}@please.change.me" : hash[:email] 
-    user.password = hash[:password] 
-    user.save!#(:validate => false)
+    user.email = hash[:email]
+    user.password = Devise.friendly_token[0,20] # random
+    user.save!
     return user
   end
 

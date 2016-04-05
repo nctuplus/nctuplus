@@ -21,15 +21,25 @@
   border: 2px solid #dddddd;
  
 }
+.btn-sm {
+    padding: 3px 8px;
+    font-size: 1px;
+    line-height: 1;
+    border-radius: 20px;
+}
 </style>
 <%=render "link_bar" %>
 
 <div class="row">
 	<div class="col-md-6">
 		<div class="row no-margin-right">
-			<div class="col-md-3"><%=@user.avatar(120,120)%></div>
+			<div class="col-md-3">
+        <%=user_avatar(current_user.name, current_user.avatar_url, 120, 120)%>
+      </div>
 			<div class="col-md-9 bg-white border-thick-gray" style="display:inline-block;min-height:120px;">
+      <% if current_user.hasE3? %>
 				學號: <%=@user.student_id%> <br>
+      <% end %>  
 				信箱: <%=@user.email%> <br>
 				學系: <%=@user.try(:department).try(:ch_name)||"未填寫" %>
         		入學年度:
@@ -40,12 +50,27 @@
           <% end %>
     	<br>
 			身份:
-				<% if @user.hasFb? %>
-					Facebook
-				<% end %>
-    		  	<% if @user.hasE3? %>
+        <% if @user.hasE3? %>
 					E3
 				<% end %>
+				<% if @user.hasFb? %>
+					Facebook
+        <% else %>
+          <% if @user.hasE3? %>
+            <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
+              綁定<%=fa_icon("facebook")%>acebook
+            <% end %>    
+          <% end %>
+				<% end %>
+        <% if @user.hasGoogle? %>
+					Google
+        <% else %>
+          <% if @user.hasE3? %>
+            <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-primary" do%>
+              綁定<%=fa_icon("google")%>oogle
+            <% end %>
+          <% end %>  
+				<% end %>    		
 			<br>
 				分享課表: <%=@user.canShare? ? "ON" : "OFF" %><br>
 				<%=link_to fa_icon("pencil")+"編輯資訊", "/user/edit",class:"" %>

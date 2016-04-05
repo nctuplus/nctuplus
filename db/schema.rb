@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160227134520) do
+ActiveRecord::Schema.define(version: 20160327114601) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -47,6 +47,21 @@ ActiveRecord::Schema.define(version: 20160227134520) do
     t.string   "name"
     t.string   "email"
     t.string   "uid"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "auth_googles", force: true do |t|
+    t.integer  "user_id"
+    t.string   "uid"
+    t.string   "email"
+    t.string   "name"
+    t.string   "image_url"
+    t.string   "gender"
+    t.date     "birthday"
+    t.string   "location"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
     t.datetime "created_at"
@@ -98,6 +113,14 @@ ActiveRecord::Schema.define(version: 20160227134520) do
 
   add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
 
+  create_table "brief_bullentins", force: true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.boolean  "is_public"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "bulletins", force: true do |t|
     t.integer  "user_id"
     t.string   "title"
@@ -105,11 +128,8 @@ ActiveRecord::Schema.define(version: 20160227134520) do
     t.boolean  "article_type"
     t.datetime "created_at"
     t.datetime "updated_at"
-<<<<<<< HEAD
     t.string   "update_user"
     t.boolean  "hidden_type",  default: false, null: false
-=======
->>>>>>> 863169c68f53652be711b4027a8db7d5682d3f3e
   end
 
   create_table "cf_credits", force: true do |t|
@@ -352,6 +372,25 @@ ActiveRecord::Schema.define(version: 20160227134520) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
+  create_table "event1s", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "is_public"
+    t.integer  "capacity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+  end
+
+  create_table "event2_7s", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "is_public"
+    t.integer  "capacity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "event_follows", force: true do |t|
     t.integer  "user_id"
     t.integer  "event_id"
@@ -394,6 +433,16 @@ ActiveRecord::Schema.define(version: 20160227134520) do
     t.datetime "updated_at"
   end
 
+  create_table "mytests", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "is_public"
+    t.integer  "capacity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
+  end
+
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
     t.integer "course_detail_id", default: 0,  null: false
@@ -425,10 +474,25 @@ ActiveRecord::Schema.define(version: 20160227134520) do
   add_index "past_exams", ["semester_id"], name: "index_past_exams_on_semester_id", using: :btree
   add_index "past_exams", ["user_id"], name: "index_past_exams_on_user_id", using: :btree
 
+  create_table "people", force: true do |t|
+    t.string   "name"
+    t.text     "bio"
+    t.date     "birthday"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "semesters", force: true do |t|
     t.string  "name"
     t.integer "year"
     t.integer "half"
+  end
+
+  create_table "simple_bullentins", force: true do |t|
+    t.string   "time"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sub_discusses", force: true do |t|
@@ -449,6 +513,16 @@ ActiveRecord::Schema.define(version: 20160227134520) do
     t.boolean  "is_deleted"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "tests", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.boolean  "is_public"
+    t.integer  "capacity"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "status"
   end
 
   create_table "user_collections", force: true do |t|

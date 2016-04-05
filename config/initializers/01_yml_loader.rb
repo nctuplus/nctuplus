@@ -1,9 +1,13 @@
 FB_CONFIG = YAML.load_file(Rails.root.join("config/social_network.yml"))
 
-module Facebook
-	
+module Facebook	
   APP_ID = FB_CONFIG["facebook"]['app_id']
   SECRET = FB_CONFIG["facebook"]['secret']
+end
+
+module Google	
+  APP_ID = FB_CONFIG["google"]['client_id']
+  SECRET = FB_CONFIG["google"]['client_secret']
 end
 
 E3_CONFIG = YAML.load_file(Rails.root.join("config/E3.yml"))
