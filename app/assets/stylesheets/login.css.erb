@@ -866,6 +866,25 @@ body {
 	
 }
 
+.btn-width-google
+{
+	margin-top:10px;
+	width:130px;
+	background-color:#dd4b39;
+	border:none;
+	height:40px;
+	border-radius:4px;
+	color:#fff;
+	transition:.3s background-color;
+	
+}
+
+.btn-width-google:hover
+{
+	background-color:#b52f1f;
+	
+}
+
 .btn-width-e3
 {
 	margin-top:14px;
@@ -899,4 +918,38 @@ body {
 {
 	border-radius:4px;
 	overflow:hidden;
+}
+
+
+.strike {
+    width:260px;
+    display: block;
+    text-align: center;
+    overflow: hidden;
+    white-space: nowrap; 
+}
+
+.strike > span {
+    position: relative;
+    display: inline-block;
+}
+
+.strike > span:before,
+.strike > span:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 9999px;
+    height: 1px;
+    background: #D3D7D9;
+}
+
+.strike > span:before {
+    right: 100%;
+    margin-right: 15px;
+}
+
+.strike > span:after {
+    left: 100%;
+    margin-left: 15px;
 }

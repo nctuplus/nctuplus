@@ -58,7 +58,7 @@
         <% else %>
           <% if @user.hasE3? %>
             <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
-              綁定<%=fa_icon("facebook")%>acebook
+              綁定Facebook
             <% end %>    
           <% end %>
 				<% end %>
@@ -66,8 +66,8 @@
 					Google
         <% else %>
           <% if @user.hasE3? %>
-            <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-primary" do%>
-              綁定<%=fa_icon("google")%>oogle
+            <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-danger" do%>
+              綁定Google
             <% end %>
           <% end %>  
 				<% end %>    		

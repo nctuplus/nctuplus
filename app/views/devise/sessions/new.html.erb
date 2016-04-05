@@ -7,39 +7,43 @@
 		<div class="row vertical-center">
 		<div class="col-md-12 col-sm-12 col-xs-12 header-content-inner">
 			<h1>NCTU+</h1>
-			<div >
-				<h5>請以 <b>E3</b> 或 <b>Facebook</b> 或 <b>Google</b> 帳號登入!</h5>
+			<div>
+				<h6>是交大學生嗎？請用E3登入享用完整功能。</h6>
 			</div>
 			<div class="form1">
-				<%=form_tag(user_omniauth_callback_path(:E3), :id=>"login-form") do %>
-				
-				<table style="margin:auto">
-					<tr>
-						<td class="input-table">
-						<i class="fa fa-2x fa-user input-icon upper-coner"></i></td>
-						<td>
-							<%=text_field_tag :username,"", placeholder: "E3 Account", class: "input1", required: "true" %>
-						</td>
-					</tr>
-					<tr>
-						<td class="input-table">
-							<i class="fa fa-2x fa-lock input-icon down-coner" ></i>	
-						</td>
-						<td>
-							<%=password_field_tag :password,"", placeholder: "Password", class: "input2", required: "true" %>
-						</td>
-					</tr>
-				</table>
-				<%=submit_tag "E3帳號登入", class:"btn-width-e3" %><br>
-				<%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:facebook)}');") do %>
-          <%=fa_icon "facebook"%>acebook登入
+				<%=form_tag(user_omniauth_callback_path(:E3), :id=>"login-form") do %>				
+          <table style="margin:auto">
+            <tr>
+              <td class="input-table">
+              <i class="fa fa-2x fa-user input-icon upper-coner"></i></td>
+              <td>
+                <%=text_field_tag :username,"", placeholder: "E3 Account", class: "input1", required: "true" %>
+              </td>
+            </tr>
+            <tr>
+              <td class="input-table">
+                <i class="fa fa-2x fa-lock input-icon down-coner" ></i>	
+              </td>
+              <td>
+                <%=password_field_tag :password,"", placeholder: "Password", class: "input2", required: "true" %>
+              </td>
+            </tr>
+          </table>
+          <%=submit_tag "E3帳號登入", class:"btn-width-e3" %>
+          <div style="margin-top: 7px;">or</div>
+<!--         
+          <div class="strike">
+            <span>or</span>
+          </div>
+-->          
+          <%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:facebook)}');") do %>
+            Facebook登入
+          <% end %>     
+          <%=button_tag(type: "submit", class: "btn-width-google", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:google_oauth2)}');") do %>
+            Google登入
+          <% end %>
         <% end %>
-        
-        <%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:google_oauth2)}');") do %>
-          <%=fa_icon "google"%>oogle登入
-        <% end %>
-        <% end %>
-			</div>							
+			</div>	
 		</div>
 		</div>
 	</div>
