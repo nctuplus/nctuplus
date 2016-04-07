@@ -5,11 +5,11 @@
  * 
  * Course timetable template for course simulation, course share, personal table. 
  *  
- * Updated at 2016/2/14
+ * Updated at 2016/4/8
  */
 
 /* Library options:
- * 	deletable(T/F): enable the delete icon for the cell that has course
+ * 	deletable(T/F): enable the delete action on the table(enable the delete icon for the cell that has course)
  *	selectable(T/F): enable the empty cell to be selected
  *	downloadable(T/F): enable a download icon on left top td cell (This option will conflict with collapsible option. Priority: collapsible > downloadable)
  *	collapsible(T/F): enable a expand icon on left top td cell that is used for show/hide the hidden row (see hideEmpty option)
@@ -78,12 +78,12 @@
 		
 		_generateDownloadButton: function(sem_id){
 		  var $group = $('<div>').addClass('btn-group');
-		  
-		  var $button = $('<button>').addClass('btn btn-circle btn-success dropdown-toggle')
-		                .attr('data-toggle', 'dropdown').attr('aria-expanded', false);
-		  var $icon = $('<i>').addClass('fa fa-download');
-		  $button.html($icon);
-		  
+
+      var $button = $('<i>').addClass('fa fa-download text-color-green clickable-hover')
+		                .addClass("dropdown-toggle").attr('data-toggle', 'dropdown')
+                    .attr('aria-expanded', false).css("margin-top", "9px")
+                    .attr("title","Download");
+  
 		  var $lists = $('<lu>').addClass('dropdown-menu').attr('role', 'menu');  
 	    var $excel_link = $('<a>').attr('href', '/courses/export_timetable.xls?sem_id='+sem_id).html('Excel');
 		  var $image_link = $('<a>').attr('href', '#').html('Image');
@@ -134,13 +134,13 @@
      // var $global_modal_header = $('#global-modal .modal-header'); 
 			
 			// hide the item that we don't want to see in the picture	
-			_this.$element.find('.btn-group').hide() ;	
+		//	_this.$element.find('.btn-group').hide() ;	
 		
 		  html2canvas( _this.$element.get(0), {
         height: 1500 ,
         onrendered: function(canvas) {
           //recover the hidden items
-					_this.$element.find('.btn-group').show();
+			//		_this.$element.find('.btn-group').show();
 
           var dataUrl = canvas.toDataURL("image/png");
 					if (flag=="window"){
@@ -268,15 +268,17 @@
 							{
 								var $button = Table.defaults.$cancel_but.clone(false);
 								$button.click({cd_id: course.cd_id}, Table.defaults.cancelButtonFunc );
-								//only deletable cell need to record which course (point to this.course element)
+				//only deletable cell need to record which course (point to this.course element)
 								$cell.append($button).extend({course: course});							 
-							//	logDebug($cell);
+				//	logDebug($cell);
+        /*   temporary remove the cancel button. 
 								$cell.mouseover(function(){
 									$(this).find('div').show();					
 								}).mouseleave(function(){
 									$(this).find('div').hide();
 								});
-								//$cell.selectable = false ;
+				*/
+            //$cell.selectable = false ;
 								this._setCellSelectFunc($cell);
 							}
 							if(this.config.popover)
