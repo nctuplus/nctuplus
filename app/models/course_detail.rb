@@ -12,6 +12,7 @@ class CourseDetail < ActiveRecord::Base
 	belongs_to :department
 	delegate :ch_name, :to=>:department, :prefix=>true, allow_nil: true
 
+	has_many :normal_scores, :dependent => :destroy
 
 	
 	def self.search_by_q_and_text(q,text)

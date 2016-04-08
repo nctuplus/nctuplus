@@ -43,6 +43,12 @@ class AdminController < ApplicationController
 	end
 	
 	def ee105
+=begin
+		NormalScore.all.includes(:course_detail).each do |n|
+			n.destroy if n.course_detail.nil?
+		end
+		146565
+=end		
 		if request.format=="json"
 			year=101
 			department_id=272

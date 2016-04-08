@@ -80,7 +80,7 @@ class User < ActiveRecord::Base
     elsif self.hasGoogle?
       return "https://www.plus.google.com/#{self.auth_google.uid}"  
     else
-      return nil
+      return ""
       #raise "[ERROR] The user does not have soical auth."
     end
   end

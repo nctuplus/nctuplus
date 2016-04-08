@@ -1,20 +1,22 @@
 <tr class="row">
 	<td>
-		<% if user.auth_facebook%>
-			<%= image_tag "https://graph.facebook.com/"<<user.auth_facebook.uid<<"/picture", size: "25x25" %>
-			<%= link_to user.name, "https://www.facebook.com/"<<user.auth_facebook.uid, target:"_blank" %>
+		<% if user.hasFb? || user.hasGoogle? %>
+			<%= image_tag user.avatar_url, size: "25x25" %>
+			<%= link_to user.name, user.social_webpage_url, target:"_blank" %>
 		<% else %>
 			<%=user.student_id||"error"	%>
 		<% end%>	
 	</td>
 	<td>
-	  <% if user.uid and user.student_id %>
-	  E3+FB
-	  <% elsif user.uid %>
-	  FB
-	  <% else %>
+	<% if user.hasGoogle? %>
+	  Google 
+	<% end %>
+	<% if user.hasFb? %>
+	  FB 
+	<% end %>
+	<% if user.hasE3? %>
 	  E3
-	  <% end %>
+	<% end %>
 	</td>
 
 	<td class="text-center ">
