@@ -51,10 +51,11 @@ end
 
 #---------- admin page -----------
 	
-    get "admin/user_statistics"
+  get "admin/user_statistics"
 	get "admin/ee105"
 	get "admin/users"
 	post "admin/change_role"
+	post "admin/change_dept"
 	get "admin/course_maps" #, to: "course_maps#admin_index"
 	
 #---------- user ----------------

@@ -57,8 +57,24 @@
 		});
 		initDeptChart();
 	});
+	function updateDept($obj){
+		var uid = $obj.attr('data-uid');
+		var dept_id = $obj.val();
+		$.ajax({
+			url: "/admin/change_dept",
+			type: "POST",
+			data :{uid: uid, dept_id: dept_id},
+			success: function(){
+				toastr["success"]("更新成功!");
+			},
+			error: function(){
+				toastr["error"]('更新失敗!');
+			}
+		});
+		return false ;
+	}
 	function updateRole($obj){
-		var uid = $obj.attr('user_id');
+		var uid = $obj.attr('data-uid');
 		var role = $obj.val();
 		$.ajax({
 			url: "/admin/change_role",

@@ -16,26 +16,21 @@
 	  E3
 	  <% end %>
 	</td>
-	<% if !user.department.nil? %>
-		<td class="text-center ">
-			<%=user.department_ch_name%>
-		</td>
-	<% else %>
-		<td class="text-center ">尚未填寫</td>
-	<% end %>
+
+	<td class="text-center ">
+		<%=select_tag 'dept', options_from_collection_for_select(@dept_sels, :id, :ch_name, user.department_id), prompt: "請選擇", class:'form-control', "data-uid"=>user.id, :onchange=>"updateDept($(this));" %>
+	</td>
+
 	
 	<td><%= user.year==0 ? '--' : user.year %></td>
 	
 	<td>
 		<%=link_to user.total_credit, "/user?uid=#{user.id}" %>
 	</td>
-	<td>
-	<% cm_id=user.course_maps.first.nil? ? 0 :user.course_maps.first.id %>  
-		<%=select_tag "course_map", options_from_collection_for_select(@course_map, :id, :name, cm_id), prompt:"none", class:"course_map form-control", id:user.id%>
-	</td>
+
 	
 	<td>
-		<%=select_tag :role, options_for_select(@role_sel, user.role), :class=>'form-control admin-user-role', :user_id=>user.id, :onchange=>"updateRole($(this));", :disabled=> !user.try(:department) %>
+		<%=select_tag :role, options_for_select(@role_sel, user.role), :class=>'form-control admin-user-role', "data-uid"=>user.id, :onchange=>"updateRole($(this));", :disabled=> !user.try(:department) %>
 	</td>
 
 </tr>

@@ -1,6 +1,6 @@
 class AdminController < ApplicationController
 	#include CourseMapsHelper
-	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role, :discusses,:discuss_verify, :user_statistics]
+	before_filter :checkTopManager,:only=>[:users, :ee104, :change_role, :change_dept, :discusses,:discuss_verify, :user_statistics]
 	before_filter :checkCourseMapPermission,:only=>[:course_maps] #:checkTopManager
 
 	def discuss_verify
@@ -27,7 +27,7 @@ class AdminController < ApplicationController
 		end
 		@users = @users.includes(:department, :course_maps).page(params[:page]).per(20)
 		@course_map = CourseMap.all
-		
+		@dept_sels=Department.select(:ch_name, :id).where(:majorable=>true)
 		# for chart
 		unless request.xhr?
 			@data = User.all.joins(:department).group(:ch_name).count
@@ -35,11 +35,11 @@ class AdminController < ApplicationController
   end
   
   def change_role
-		user = User.find(params[:uid])
-		user.role = params[:role].to_i
-		user.save!
-		
-		render :nothing=> true, :status=>200
+		render :nothing=> true, :status=>User.find(params[:uid]).update(:role => params[:role].to_i) ? 200 : 500
+	end
+	
+	def change_dept
+		render :nothing=> true, :status=>User.find(params[:uid]).update(:department_id => params[:dept_id].to_i) ? 200 : 500
 	end
 	
 	def ee105
