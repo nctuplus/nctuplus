@@ -29,7 +29,7 @@ Devise.setup do |config|
   # session. If you need permissions, you should implement that in a before filter.
   # You can also supply a hash where the value is a boolean determining whether
   # or not authentication should be aborted when the value is not present.
-  # config.authentication_keys = [ :email ]
+  # config.authentication_keys = [ :email ] # WE DEFINE IN USER MODEL
 
   # Configure parameters from the request object used for authentication. Each entry
   # given should be a request method and it will automatically be passed to the
@@ -233,12 +233,15 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
     config.omniauth :facebook, Facebook::APP_ID, Facebook::SECRET #, :scope => 'email,manage_notifications'
-		
+		config.omniauth :google_oauth2, Google::APP_ID, Google::SECRET, {
+    #    :scope =>'https://www.googleapis.com/auth/calendar',  #determine what we want user to provide (default are email and profile)
+         :skip_jwt => true
+      }
     config.omniauth :E3
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
-  #
+  # 
   # config.warden do |manager|
   #   manager.intercept_401 = false
   #   manager.default_strategies(scope: :user).unshift :some_external_strategy

@@ -9,7 +9,7 @@ class AuthE3 < ActiveRecord::Base
   
   def self.from_omniauth(student_id, password, current_user)
     if !student_id or !password
-      return {:auth=>false, :message=>"帳號或密碼不可留白"}
+      return {:auth=>false, :msg=>"帳號或密碼不可留白"}
     end
     data = E3Service.login(student_id, password)
     if data[:auth]
@@ -25,9 +25,9 @@ class AuthE3 < ActiveRecord::Base
         end 
         e.save!#(:validate => false)
       end
-      return {:auth=>true, :user=>auth_e3.user}     
+      return {:auth=>true, :user=>auth_e3.user, :msg=>"成功登入"}     
     else
-      return {:auth=>false, :message=>"帳號或密碼錯誤"}
+      return {:auth=>false, :msg=>"帳號或密碼錯誤"}
     end
   end
   

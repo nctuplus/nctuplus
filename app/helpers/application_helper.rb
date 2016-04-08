@@ -1,4 +1,9 @@
 module ApplicationHelper
+  
+  def user_avatar(name, url, h, w)
+    return "<img alt='#{name}' height='#{h}' width='#{w}' src='#{url}'>".html_safe
+  end
+
 	def loading_img
 		html="<p class='text-center'>#{fa_icon("refresh spin 2x")}</p>"
 		return html.html_safe

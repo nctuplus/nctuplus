@@ -79,12 +79,9 @@
 				</li>
 				
 				<% if current_user %>
-
 					<li class="dropdown" >		
 						<%= link_to  "/user", class: "dropdown-toggle disabled", 'data-toggle'=> "dropdown",'data-no-turbolink'=>"true" do %>
-							<% if current_user.hasFb? %>
-								<%= image_tag "https://graph.facebook.com/"<<session[:auth_facebook][:uid]<<"/picture", size: "25x25" %>
-							<% end %>
+							<%=user_avatar(current_user.name, current_user.avatar_url, 25, 25) %>
 							<%=current_user.name%>
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">

@@ -30,9 +30,6 @@
 				}		
 				if (from=="cart")
 					$("#shopping_cart_courses").load("/courses/show_cart");
-			<% if current_user.try(:canShare?) %>		
-				$('#schedule_table').CourseTable('renderImg', 'upload') ;	
-			<% end %>	
 			}	
 		});
 	}

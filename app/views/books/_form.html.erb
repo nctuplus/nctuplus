@@ -80,8 +80,13 @@
 								<%= f.radio_button :contact_way, "1" %> Facebook
 								</label>
 							</div>
-						<% else %>
-							至<%=link_to "編輯個人資訊","/user/edit"%> 結合facebook以利用fb連絡
+            <% end %>
+            <% if current_user.hasGoogle? %>
+							<div class="radio">
+								<label>
+								<%= f.radio_button :contact_way, "2" %> Google
+								</label>
+							</div>
             <% end %>
 						<div class="radio">
 							<label>
