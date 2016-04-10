@@ -484,6 +484,6 @@ function parseCfToCourse(cf){
 }
 function initFbComment(dept_id){
 	$('#fb-root').html('<div class="fb-comments" data-href="" data-numposts="5" width="100%" data-colorscheme="light"></div>');
-	$('.fb-comments').attr('data-href',"http://plus.nctu.edu.tw/course_maps/dept_id="+dept_id);
+	$('.fb-comments').attr('data-href',"http://plus.nctu.edu.tw/course_maps/?dept_id="+dept_id);
 }
 	
