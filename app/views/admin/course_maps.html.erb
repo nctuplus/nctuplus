@@ -4,12 +4,12 @@
 		<th>標題</th>
 		<th>適用之系所</th>
 		<th>適用之入學年度</th>
-		<th>建立者</th>
+		<th class="text-center">建立者</th>
 		<th>功能</th>
 	</tr>
 <% @course_maps.each do |cm| %>
   <tr> 
-  	<td><%= link_to cm.name, edit_course_map_path(cm),"no-turbolink"=>true %></td>
+  	<td><%= link_to cm.name, edit_course_map_path(cm),"data-no-turbolink"=>true %></td>
   	<td>
   		<% if cm.department_id != 0%>
   		<%=cm.department.ch_name%>	
@@ -18,7 +18,9 @@
   		<% end %>
   	</td>
   	<td><%= cm.year.to_s%></td>
-  	<td><%= cm.try(:user).try(:name)%></td>
+  	<td class="text-center">
+			<%=select_tag :owner, options_from_collection_for_select(@user_sel, :id, :name, cm.user_id), :class=>'form-control owner', "data-id"=>cm.id, :onchange=>"updateOnwer($(this));" %>
+		</td>
 		
   	<td>
 			<%= link_to '刪除', course_map_path(cm), method: :delete, data: { confirm: 'Are you sure?' }  %>
@@ -28,3 +30,21 @@
 <% end %>
 </table>
 
+<script>
+	function updateOnwer($obj){
+		var map_id = $obj.attr('data-id');
+		var user_id = $obj.val();
+		$.ajax({
+			url: "/course_maps/change_owner",
+			type: "POST",
+			data :{map_id: map_id, uid: user_id},
+			success: function(){
+				toastr["success"]("更新成功!");
+			},
+			error: function(){
+				toastr["error"]('更新失敗!');
+			}
+		});
+		return false ;
+	}
+</script>	

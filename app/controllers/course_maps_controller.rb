@@ -1,8 +1,8 @@
 class CourseMapsController < ApplicationController
 	#include CourseMapsHelper
 
-	before_filter :checkCourseMapPermission, :only=>[:edit, :destroy, :update, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action, :notify_user] #:checkTopManager
-	before_filter :checkLogin, :only=>[:cm_public_comment_action]
+	before_filter :checkCourseMapPermission, :except=>[:public, :index, :show]#, :only=>[:edit, :destroy, :update, :course_action, :action_new, :action_update, :action_delete, :action_fchange, :course_group_action, :update_cm_head, :credit_action, :notify_user] #:checkTopManager
+	#before_filter :checkLogin, :only=>[:cm_public_comment_action]
 ##### resource controller
 
 	def public #return json for index
@@ -30,21 +30,21 @@ class CourseMapsController < ApplicationController
 	
 	def index
 	
-		
-		if params[:dept_id].present?
+		if params[:dept_id].present? && params[:year].present?
 			course_map=CourseMap.where(:department_id=>params[:dept_id], :year=>params[:year]).take
-			if course_map.nil?
-				redirect_to "/course_maps?not_found=true"
-			else
+			#if course_map.nil?
+			#	redirect_to "/course_maps?not_found=true&dept_id=#{params[:dept_id]}"
+			if course_map
 				redirect_to "/course_maps/#{course_map.id}"
 			end
+		end
 			#return
-		else
+		#else
 			@college_sel=College.includes(:departments).where("id NOT IN (8,10)").map{|college|college.name}
 			@dept_sel=CourseMap.all.includes(:department).group(:department_id).map{|cm|[cm.department_ch_name,cm.department_id]}
 			@year_sel=Semester::YEARS#.map{|sem|[sem.year,sem.year]}
 			@depts=CourseMap.all.group(:department_id).map{|cm|cm.department}
-		end
+		#end
 		
 	end
 	
@@ -65,12 +65,11 @@ class CourseMapsController < ApplicationController
 	end
 
 	def new
-		@res={}
 		@cm = CourseMap.all.order('name desc')
+		@res={}
 		@cm.each do |c|
 			@res[c.id]={:year=>c.year, :dept_id=>c.department_id}
 		end
-		
 		@course_map=CourseMap.new
 		render "_form"
 	end
@@ -573,7 +572,14 @@ class CourseMapsController < ApplicationController
 		end
 		render :nothing => true, :status => 200, :content_type => 'text/html'
 	end
+	
+	def change_owner
+		render :nothing=> true, :status=>CourseMap.find(params[:map_id]).update(:user_id => params[:uid].to_i) ? 200 : 500
+	end
+	
 private
+	
+	
 	def course_map_params
     params.require(:course_map).permit(:title, :department_id, :name, :desc, :year)
   end

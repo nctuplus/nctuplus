@@ -140,6 +140,7 @@ end
 			post "update_cm_head"
 			post "cm_public_comment_action"
 			post "notify_user"
+			post "change_owner"
 	  end
 	end
 

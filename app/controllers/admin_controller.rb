@@ -14,7 +14,12 @@ class AdminController < ApplicationController
 		@discusses=Discuss.where("created_at BETWEEN ? AND ?",@begin_time,@end_time).includes(:course_teachership, :user, :course)
 	end
 	def course_maps
-		@course_maps=CourseMap.all.order('name asc')
+		if current_user.role==2
+			@course_maps=CourseMap.where(:department_id=>current_user.department_id)
+		elsif current_user.role==0
+			@user_sel=User.select(:name, :id).where(:role=>[0,2])
+			@course_maps=CourseMap.all.order('name asc')
+		end
   end
 	
 	def users

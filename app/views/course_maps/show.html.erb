@@ -1,5 +1,5 @@
 <%= javascript_include_tag "course_maps/public", "data-turbolinks-track" => true %>
-	<%=@user_courses%>
+	
 	<div id="central-view" class="containe">
 		<%=form_tag "/course_maps",method:"GET" do %>
 			<div class="row" id="">
@@ -72,9 +72,8 @@
 	}(document, 'script', 'facebook-jssdk'));
 	
 	$(document).ready(function(){
-		initFbComment(<%=params[:id]%>);
-
 		var dept_id=<%=@dept_id%>;
+		initFbComment("<%=@dept_id%>");
 		var year=<%=@year%>;
 		if(dept_id!=0){
 		
