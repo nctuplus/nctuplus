@@ -1,18 +1,28 @@
+<style>
+.input-group-btn{
+	vertical-align: top;
+}
+
+</style>
+
 <%= javascript_include_tag "courses/content", "data-turbolinks-track" => false %>
+
 <br>
-<div id="dept-stat-chart" class="container hidden" style="min-width:1024px;" ></div>
+<div id="dept-stat-chart" class="container hidden" style="min-width;"></div>
 </br>
+
 <div class="row">
-	<div class="col-md-offset-2 col-md-4">
+<div class="col-md-4">
+	<div class="input-group">
 		<%=text_field_tag :search, params[:search], :class=>"form-control", :placeholder=>"搜尋使用者"%>
-	</div>
-	<div class="col-md-2">
-		<button class="btn btn-info" id="submit-search" >Search</button>
-	</div>
-	<div class="col-md-2">
-		<button class="btn btn-success" onclick="showDeptChart();">顯示系級統計</button>
+		<span class="input-group-btn">     
+			<button class="btn btn-default" id="submit-search">搜尋</button>
+		</span>
 	</div>
 </div>
+<button class="btn btn-success col-md-2" onclick="showDeptChart();">顯示系級統計</button>
+</div>
+
 <hr>
 <table class="table" id="dataTables-paginate">
 	<thead>
@@ -22,7 +32,6 @@
 			<th class="text-center col-md-3">系所</th>	
 			<th class="col-md-1">年級</th>			
 			<th class="col-md-1">學分數</th>
-			<th class="text-center col-md-2">課程地圖</th>		
 			<th class="text-center col-md-2">身份</th>
 		</tr>
 	</thead>
