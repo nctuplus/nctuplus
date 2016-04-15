@@ -79,11 +79,17 @@ class AdminController < ApplicationController
 
 	end
     
-  def user_statistics
+  def statistics
     @user_stat = DataStatistics.user_signup
     @import_cnt = DataStatistics.import_course_count
     @user_type = DataStatistics.user_signin_protocol # [E3, FB, E3&FB]
     @discuss_stat = [Comment.maximum(:id), Discuss.maximum(:id)]   
+    
+    @book_new = BookTradeInfo.pluck('DATE_FORMAT(created_at, "%Y/%m")')
+                .group_by(&:capitalize).map {|k,v| [k, v.length]}
+    @book_sale = BookTradeInfo.where(:status=>1).pluck('DATE_FORMAT(created_at, "%Y/%m")')     
+                .group_by(&:capitalize).map {|k,v| [k, v.length]}
+
   end
 	
 end

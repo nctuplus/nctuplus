@@ -7,12 +7,68 @@
 <hr>
 <div id="user-stat" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
 <hr>
+<div id="book-stat" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
+<hr>
 <div id="discuss-stat" style="min-width: 310px; height: 400px; max-width: 1000px; margin: 0 auto"></div>
 <hr>
 <%=javascript_include_tag "admin_statistics/index", "data-turbolinks-track" => true %>
 <script>
 
 $(function () {
+  $(function(){
+    var book_new = <%=raw @book_new%> ;
+    var book_sale = <%=raw @book_sale%> ;
+    var category  = _.map(book_new, function(h){ return h[0]; });
+    
+    var book_sale_cnt = [];
+    _.each(category, function(c, idx){
+      if(!book_sale[idx]){
+        book_sale_cnt.push(0);
+        return ;
+      }     
+      if(book_sale[idx][0]==c)
+        book_sale_cnt.push(book_sale[idx][1])
+      else
+        book_sale_cnt.push(0);
+    });
+    
+    $('#book-stat').highcharts({
+      chart: {
+              type: 'column'
+          },
+      title: {
+          text: '二手書統計'
+      },
+      subtitle: {
+          text: '新增/售出'
+      },
+      xAxis: {
+          categories: category,
+          crosshair: true
+      },
+      yAxis: {
+          title: {
+              text: '數量'
+          },
+          min: 0
+      },
+      tooltip: {
+          headerFormat: '<b>{series.name}</b> ',
+          pointFormat: '{point.y} 本'
+      },
+
+      series: [{
+          name: '新增',
+          data: _.map(book_new, function(h){ return h[1]; })
+      }, {
+          name: '售出',
+          data: book_sale_cnt
+      } ]
+    });
+    
+  });
+  
+
   $('#user-stat').highcharts({
     chart: {
       type: 'column'

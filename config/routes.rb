@@ -51,7 +51,7 @@ end
 
 #---------- admin page -----------
 	
-  get "admin/user_statistics"
+  get "admin/statistics"
 	get "admin/ee105"
 	get "admin/users"
 	post "admin/change_role"
