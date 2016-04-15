@@ -17,20 +17,34 @@
 $(function () {
   $(function(){
     var book_new = <%=raw @book_new%> ;
-    var book_sale = <%=raw @book_sale%> ;
-    var category  = _.map(book_new, function(h){ return h[0]; });
+    var book_sale = <%=raw @book_sale%> ;   
+
+    var get_full_category = function(){
+      
+      var tmp_category = [];
+      
+      var start_yy = book_new[0][0].split("/")[0];
+      var start_mm = parseInt(book_new[0][0].split("/")[1]);
+      var today = new Date();
+      var now_yy = today.getFullYear();
+      var now_mm = today.getMonth()+1;
+      
+      var tmp_yy=start_yy, tmp_mm=start_mm ;
+      for(var tmp1=start_yy; tmp1!=now_yy; tmp1++)
+      {
+        for(var tmp2=start_mm; tmp2<=12; tmp2++)
+        {
+          tmp_category.push(tmp1+"/"+tmp2);
+        }
+      }
+      
+      for(var tmp2=1; tmp2<=now_mm ; tmp2++)
+        tmp_category.push(now_yy+"/"+tmp2);
+      
+      return tmp_category;
+    };
     
-    var book_sale_cnt = [];
-    _.each(category, function(c, idx){
-      if(!book_sale[idx]){
-        book_sale_cnt.push(0);
-        return ;
-      }     
-      if(book_sale[idx][0]==c)
-        book_sale_cnt.push(book_sale[idx][1])
-      else
-        book_sale_cnt.push(0);
-    });
+    var category = get_full_category();
     
     $('#book-stat').highcharts({
       chart: {
@@ -40,7 +54,7 @@ $(function () {
           text: '二手書統計'
       },
       subtitle: {
-          text: '新增/售出'
+          text: '當月新增/當月售出'
       },
       xAxis: {
           categories: category,
@@ -59,10 +73,22 @@ $(function () {
 
       series: [{
           name: '新增',
-          data: _.map(book_new, function(h){ return h[1]; })
+          data: _.map(category, function(c){ 
+            var getNum = _.find(book_new, function(bn){return (bn[0]==c) ;}) ;
+            if(getNum)
+              return getNum;
+            else
+              return 0 ;
+          })
       }, {
           name: '售出',
-          data: book_sale_cnt
+          data: _.map(category, function(c){ 
+            var getNum = _.find(book_sale, function(bn){return (bn[0]==c) ;}) ;
+            if(getNum)
+              return getNum;
+            else
+              return 0 ;
+          })
       } ]
     });
     

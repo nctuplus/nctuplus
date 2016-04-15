@@ -85,9 +85,9 @@ class AdminController < ApplicationController
     @user_type = DataStatistics.user_signin_protocol # [E3, FB, E3&FB]
     @discuss_stat = [Comment.maximum(:id), Discuss.maximum(:id)]   
     
-    @book_new = BookTradeInfo.pluck('DATE_FORMAT(created_at, "%Y/%m")')
+    @book_new = BookTradeInfo.pluck('DATE_FORMAT(created_at, "%Y/%c")')
                 .group_by(&:capitalize).map {|k,v| [k, v.length]}
-    @book_sale = BookTradeInfo.where(:status=>1).pluck('DATE_FORMAT(created_at, "%Y/%m")')     
+    @book_sale = BookTradeInfo.where(:status=>1).pluck('DATE_FORMAT(updated_at, "%Y/%c")')     
                 .group_by(&:capitalize).map {|k,v| [k, v.length]}
 
   end
