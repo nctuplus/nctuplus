@@ -7,36 +7,34 @@
 
 <%= javascript_include_tag "courses/content", "data-turbolinks-track" => false %>
 
-<br>
-<div id="dept-stat-chart" class="container hidden" style="min-width;"></div>
 </br>
-<hr>
-<div>
-asdasdsadasd
-</div >
+
 <div class="row">
 <div class="col-md-4">
 	<div class="input-group">
 		<%=text_field_tag :search, params[:search], :class=>"form-control", :placeholder=>"搜尋使用者"%>
 		<span class="input-group-btn">     
-			<button class="btn btn-default" id="submit-search">搜尋</button>
+			<button class="btn btn-primary" id="submit-search">搜尋</button>
 		</span>
 	</div>
 </div>
-<button class="btn btn-success col-md-2" onclick="showDeptChart();">顯示系級統計</button>
+<button class="btn btn-success col-md-1" onclick="showDeptChart();">系級統計</button>
 </div>
 
-<hr>
+</br>
+<div id="dept-stat-chart" class="container hidden" style="min-width;"></div>
+</br>
+
 <table class="table" id="dataTables-paginate">
 	<thead>
 		<tr class="row">
-			<th class="col-md-2">Name</th>
-			<th class="col-md-1">帳號類型</th>
+			<th class="text-center col-md-2">姓名</th>
+			<th class="col-md-2">帳號類型</th>
 			<th class="text-center col-md-3">系所</th>	
 			<th class="col-md-1">年級</th>			
 			<th class="col-md-1">學分數</th>
 			<th class="text-center col-md-2">身份</th>
-      <th class="text-center col-md-2">asdasd</th>
+			<th class="col-md-1"></th>	
 		</tr>
 	</thead>
 	<tbody id="body">
