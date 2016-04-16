@@ -1,5 +1,5 @@
 class EventsController < ApplicationController
-	
+
 	before_filter :checkLogin, :only=>[:attend, :new, :create, :edit, :update, :destroy]
 	
 	def index

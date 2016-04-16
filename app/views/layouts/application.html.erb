@@ -24,7 +24,9 @@
 	<link rel="apple-touch-icon" sizes="152x152" href="<%=asset_path("touch-icon/ipad-retina.png")%>" />
 	
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" />
-	<% if @fb_share_meta %>
+	<% if content_for? :fb_head %>
+    <%= yield :fb_head %>
+	<% elsif @fb_share_meta %>
 	  <meta property="og:title" content="NCTU+分享課表" ></meta>
     <meta property="og:description" content="<%=@user.name%> <%=@user.department.ch_name%> <%=@semester.name%>" ></meta>
     <meta property="og:url" content="<%=root_url%>shares/<%=params[:id]%>" ></meta>
