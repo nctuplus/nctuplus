@@ -6,10 +6,14 @@
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content=<%=@event.url%> />
 	<meta property="og:image" content=<%=@event.cover.url%> />
-	<meta property="og:description" content="NCTU+ 活動吧" />
+	<meta property="og:description" 
+			content="時間: <strong><%=@event.begin_time%> ~ <%=@event.end_time%> 
+								地點: <%=@event.location%>
+							 主辦單位: <%=@event.organization%> 
+							 NCTU+ 活動吧" />
+	<meta property="og:image:width" content="800" />
+	<meta property="og:image:height" content="400" />
 	<!--meta property="og:image:type" content="image/jpg" /-->
-	<!--meta property="og:image:width" content="190" /-->
-	<!--meta property="og:image:height" content="190" /-->
 <% end %>
 
 <div id="content-container" class="">
