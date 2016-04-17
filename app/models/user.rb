@@ -66,7 +66,7 @@ class User < ActiveRecord::Base
   
   def avatar_url
     if self.hasFb?
-      return "https://graph.facebook.com/#{self.auth_facebook.uid}/picture"  
+      return "https://graph.facebook.com/#{self.auth_facebook.uid}/picture?type=large&redirect=true&width=140&height=140" 
     elsif self.hasGoogle?
       return self.auth_google.image_url
     else

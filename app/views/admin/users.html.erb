@@ -2,13 +2,10 @@
 .input-group-btn{
 	vertical-align: top;
 }
-
 </style>
 
 <%= javascript_include_tag "courses/content", "data-turbolinks-track" => false %>
 
-</br>
-<div id="dept-stat-chart" class="container hidden" style="min-width;"></div>
 </br>
 <div class="row">
 <div class="col-md-offset-3 col-md-4">
@@ -21,7 +18,12 @@
 </div>
 <button class="btn btn-success col-md-1" onclick="showDeptChart();">系級統計</button>
 </div>
+
+<!--系級統計圖表-->
 </br>
+<div id="dept-stat-chart" class="container hidden" style="min-width;"></div>
+</br>
+<!--系級統計圖表-->
 
 <table class="table" id="dataTables-paginate">
 	<thead>

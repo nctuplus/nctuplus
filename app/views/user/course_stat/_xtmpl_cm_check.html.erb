@@ -12,7 +12,7 @@
 				$.getJSON("/user/statistics?uid="+user_id, function (data) {
 					$("#cosmap_check_div").html(tmpl("cosmap_check",data));
 				});
-				obj.parent().parent().append("<span id='' class='fader text-success'>選擇成功!</span>");
+				obj.parent().parent().append("<span id='' class='fader text-success'>選擇成功！</span>");
 				$(".fader").fadeOut(3000,function(){
 					$(this).remove();
 					obj.parent().toggleClass("hidden");
@@ -50,8 +50,7 @@
 	
 </table>
 <p>
-※計算錯誤的原因可能為<br>
-1.系統缺少部分抵免/免修課程<br>
-2.使用者未選擇該課所屬學程/領域
+註：計算錯誤可能原因<br>
+(1)系統缺少抵免/免修課程 (2)使用者未選擇該課所屬學程/領域
 </p>
 </script>

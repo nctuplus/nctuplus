@@ -1,36 +1,38 @@
 <style>
 	#link-bar{
 		font-size:16px;
-		padding-top:8px;
+		padding-top:10px;
 		padding-bottom:10px;
-		margin-bottom:10px;
+		margin-bottom:20px;
 		margin-top:20px;
 	}
 	.link-with-border{
-		padding-right:15px;
-		padding-bottom:6px;
-		padding-left:15px;
+		padding-right:10px;
+		padding-bottom:10px;
+		padding-left:10px;
 	}
 	#link-bar > a{
 		color:#333333;
 	}
 	#link-bar > .active{
-		border-bottom:4px solid #00A6FF;
+		border-bottom:3px solid #00A6FF;
+		font-weight: bold;
 	}
 	
 </style>
 
 <div class="row no-margin-left no-margin-right">
 	<div id="link-bar" class="col-md-12 bg-white " style="">
-		<a class="link-with-border" href="/user<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>" style="">基本資料</a>
-		<a class="link-with-border" href="/user/courses<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>" style="">歷年課程</a>
-		<a class="link-with-border" href="/user/collections<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>" style="">課表收藏</a>
+		<a class="link-with-border" href="/user<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> 個人檔案</a>
+		<a class="link-with-border" href="/user/courses<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>"><span class="glyphicon glyphicon-time" aria-hidden="true"></span> 歷年課程</a>
+		<a class="link-with-border" href="/user/collections<%=params[:uid].blank? ? "" : "?uid=#{params[:uid]}"%>"><span class="glyphicon glyphicon-heart" aria-hidden="true"></span> 收藏課表</a>
 	</div>
 </div>
 
 <script>
 	$(function(){
 		//console.log(window.location);
-		$("#link-bar").find("a[href='"+window.location.pathname+window.location.search+"']").addClass("active");	//add bottom blue border
+		$("#link-bar").find("a[href='"+window.location.pathname+window.location.search+"']").addClass("active");	
+		//add bottom blue border
 	});
 </script>

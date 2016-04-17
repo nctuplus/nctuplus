@@ -1,17 +1,14 @@
 <%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
 <style>
-	.border-thick-gray{
-		border: 5px solid #cccccc;
-	}
-	.inner-grid{
-		margin-bottom:10px;
-		border-right:1px solid #ddd;
-	}
-	.strong{
-		font-weight:700;
-		font-size:24px;
-	}
+.inner-grid{
+	margin-bottom:10px;
+	border-right:1px solid #ddd;
+}
+.strong{
+	font-weight:600;
+	font-size:21px;
+}
 .table-bordered > thead > tr > th,
 .table-bordered > tbody > tr > th,
 .table-bordered > tfoot > tr > th,
@@ -19,7 +16,6 @@
 .table-bordered > tbody > tr > td,
 .table-bordered > tfoot > tr > td {
   border: 2px solid #dddddd;
- 
 }
 .btn-sm {
     padding: 3px 8px;
@@ -27,65 +23,85 @@
     line-height: 1;
     border-radius: 20px;
 }
+.img-circle{
+	margin-bottom: 17px;
+	margin-top: 8px;
+	text-align: center;
+}
+
 </style>
+
 <%=render "link_bar" %>
 
-<div class="row">
-	<div class="col-md-6">
-		<div class="row no-margin-right">
-			<div class="col-md-3">
-        <%=user_avatar(current_user.name, current_user.avatar_url, 120, 120)%>
-      </div>
-			<div class="col-md-9 bg-white border-thick-gray" style="display:inline-block;min-height:120px;">
-      <% if current_user.hasE3? %>
-				學號: <%=@user.student_id%> <br>
-      <% end %>  
-				信箱: <%=@user.email%> <br>
-				學系: <%=@user.try(:department).try(:ch_name)||"未填寫" %>
-        		入學年度:
-          <% if @user.year==0 %>
-            未填寫
-          <% else %>
-            <%=@user.year%> 
-          <% end %>
-    	<br>
-			身份:
-        <% if @user.hasE3? %>
-					E3
-				<% end %>
-				<% if @user.hasFb? %>
-					Facebook
-        <% else %>
-          <% if @user.hasE3? %>
-            <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
-              綁定Facebook
-            <% end %>    
-          <% end %>
-				<% end %>
-        <% if @user.hasGoogle? %>
-					Google
-        <% else %>
-          <% if @user.hasE3? %>
-            <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-danger" do%>
-              綁定Google
-            <% end %>
-          <% end %>  
-				<% end %>    		
+<div class="col-md-6">
+	<div class="row no-margin-right">
+		<div class="col-md-4" style="  text-align: center;">
+    		<img class="img-circle" src="<%= current_user.avatar_url %>">
+    		<p style="margin-top:5px;font-size:20px;"><b><%=@user.name%></b></p>
+  		</div>
+		<div class="col-md-8 bg-white">
 			<br>
-				分享課表: <%=@user.canShare? ? "ON" : "OFF" %><br>
-				<%=link_to fa_icon("pencil")+"編輯資訊", "/user/edit",class:"" %>
-				<%=link_to fa_icon("refresh")+"匯入成績", "/scores/import",class:"" %>
+			系級：<%=@user.try(:department).try(:ch_name)||"未填寫" %>
+			<% if @user.year==0 %>
+				未編輯入學年度
+			<% else %>
+			 	<%=@user.year+4%> 級 
+			<% end %>
+		<br>
+		<% if current_user.hasE3? %>
+			學號：<%=@user.student_id%><br>
+		<% end %>
+		信箱：<%=@user.email%><br>
+		身份：
+		<% if @user.hasE3? %>
+			E3
+		<% end %>
+		<% if @user.hasFb? %>
+			Facebook
+		<% else %>
+		  <% if @user.hasE3? %>
+		    <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
+		      &nbsp; 綁定Facebook
+		    <% end %>    
+		  <% end %>
+		<% end %>
+		<% if @user.hasGoogle? %>
+			Google
+		<% else %>
+		  <% if @user.hasE3? %>
+		    <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-danger" do%>
+		      &nbsp; 綁定Google
+		    <% end %>
+		  <% end %>  
+		<% end %>
+		<br>   		
+		分享課表：<%=@user.canShare? ? "On" : "Off" %>
+		<br>
+		註冊日期：<%=@user.created_at.strftime("%Y-%m-%d") %>
+		<br>
+		<hr>
+			<div>
+				<%=link_to fa_icon("pencil")+"  編輯檔案", "/user/edit", class:"btn btn-primary btn-xs" %>
+				&nbsp;
+				<%=link_to fa_icon("refresh")+"  匯入成績", "/scores/import", class:"btn btn-warning btn-xs" %>
+				&nbsp;
+				<%=link_to fa_icon("check")+"  GPA 計算機", "/scores/gpa", class:"btn btn-warning btn-xs" %>
+				<p>&nbsp;</p>
 			</div>
 		</div>
+		
 		<br>
-		<div id="stat-num-grid" class="row no-margin-right bg-white border-thick-gray" >
+		</div>
+		
+		<br>
+		<div id="stat-num-grid" class="row no-margin-right bg-white" >
 			<div class="col-md-12" style="padding-top:10px;">
 				<div class="text-center col-md-4 inner-grid" >
-					歷年平均
+					歷年平均分數
 					<h4 class ="strong" id="totalAvg">N/A</h4>
 				</div>
 				<div class="text-center col-md-4 inner-grid">
-					名次
+					總排名
 					<h4 class="strong">Not Yet</h4>
 				</div>
 				<div class="text-center col-md-4 ">
@@ -96,7 +112,7 @@
 						<% year_offset=2 %>
 					<% end %>
 					<% dist=(Time.new(@user.year+1911+year_offset,6,8)-Time.now).to_i%>
-					離畢業還有
+					距離畢業
 					<h4 class="strong" >
 					<% if dist >= 0 %>
 						<%= dist/(3600*24) %>天	
@@ -124,26 +140,25 @@
 		<br>
 		<!--<div id="common-check-div"></div>-->
 
-		<div class="row no-margin-right bg-white border-thick-gray">
+		<div class="row no-margin-right bg-white">
 			<div class="col-md-12" id="common_check_div" style="padding-top:10px;"></div>
 			<div class="col-md-12" id="cosmap_check_div" style="padding-top:5px;"></div>
 		</div>
+		<br>
+		<br>
 	</div>
-	<div class="col-md-offset- col-md-6 bg-white border-thick-gray">
 
+	<div class="col-md-6 bg-white">
 		<br>
 		<div id="time-table-header"></div>
-		<hr>
+		<br>
 		<div id="time-table-body"></div>
-
 	</div>
-	
-</div>
-<br>
+
 
 <script type="text/x-tmpl" id="common-tmpl">
 	{% var result=commonCheck(o); %}
-	<div class="row no-margin-right bg-white border-thick-gray" >
+	<div class="row no-margin-right bg-white" >
 		<div class="col-md-12" style="padding-top:10px;">
 			<div class="text-center col-md-4 inner-grid" >
 				服務學習

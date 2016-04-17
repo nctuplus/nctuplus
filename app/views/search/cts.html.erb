@@ -3,18 +3,19 @@
 		<label class="col-sm-2 control-label">適用課程</label>
 		<div class="col-md-10">
 			<div class="input-group ">			
-				<%=f.search_field :course_ch_name_cont,value:@ct.try(:course_ch_name), class:"form-control",placeholder:"課名",required:"true"%>
+				<%=f.search_field :course_ch_name_cont,value:@ct.try(:course_ch_name), class:"form-control",placeholder:"搜尋課名（交大專用）", required:"true"%>
 				<%=hidden_field_tag :last_search%>
 				<div class="input-group-btn">
-				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-success"%>
+				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-default"%>
 				</div>
 				<%=hidden_field_tag :multi, params[:multi]%>
 			</div>
 		</div>
 	</div>
 <% end %>
+
 <div class="modal fade" id="cts-modal" tabindex="-1" role="dialog" aria-hidden="true" >
-	<div class="modal-dialog" >
+	<div class="modal-dialog">
 		<div class="modal-content" >
 			<div class="modal-header" >
 				<h4 class="modal-title"></h4>
@@ -25,7 +26,7 @@
 </div>
 
 <script>
-	
+
 	$("#course_teachership_search").submit(function(event){	
 		$lastSearch=$(this).find("#last_search");
 		$nowSearch=$(this).find("#q_course_ch_name_cont");

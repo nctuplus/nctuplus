@@ -1,10 +1,11 @@
+
+<%=render "link_bar" %>
+
 <div class="container bg-white" >
+<br>
+<br>
 	<%= form_for current_user,url: "/user/update",html:{class:"form-horizontal"} do |f| %>  <!-- user_update_path -->
-		<div class="form-group">
-			<div class="col-md-offset-1 col-md-10">
-			<h2>更改個人資訊</h2>
-			</div>
-		</div>
+	
     <% if current_user.hasE3? %>
 		<div class="form-group">
 			<h4><%=label_tag '分享課表',"分享課表",class:"col-sm-2 control-label"%></h4>
@@ -13,45 +14,48 @@
 			</div>
 		</div>
     <% end %>
-		<div class="form-group">
-			<h4><%=label_tag 'Name',"Name",class:"col-sm-2 control-label"%></h4>
-			<div class="col-md-9">
-				<%=f.text_field :name, :class=>"form-control", :maxlength=>16 %>
-			</div>
+	<div class="form-group">
+		<h4><%=label_tag 'Name', "姓名", class:"col-sm-2 control-label"%></h4>
+		<div class="col-md-9">
+			<%=f.text_field :name, :class=>"form-control", :maxlength=>16 %>
 		</div>
+	</div>
     <% if current_user.hasE3? %>
 		<div class="form-group "> 
-			<h4><%=label_tag 'Email',"Email",class:"col-sm-2 control-label" %></h4>
+			<h4><%=label_tag 'Email', "信箱", class:"col-sm-2 control-label" %></h4>
 			<div class="col-md-9">
 				<%=email_field_tag "user[email]",current_user.email.include?("please.change.me") ? "" : current_user.email, :class=>"form-control", :required=>true, :maxlength=>32 %>
 			</div>
 		</div>
     <% end %>
-		<div class="form-group">
-			<h4><%=label_tag '系級',"系級",class:"col-sm-2 control-label" %></h4>
-			<div class="col-md-10">
-				<div class="col-md-2 no-padding-left">
-				<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],current_user.department.nil? ? 3 :current_user.degree), class:'form-control', onChange:"change_degree($(this).val());"%>
-				<%=f.hidden_field :department_id %>
+
+	<div class="form-group">
+		<h4><%=label_tag '入學年度', "入學年度", class:"col-sm-2 control-label"%></h4>
+		<div class="col-md-1">
+			<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{:include_blank => '請選擇'}, class:'form-control'%>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<h4><%=label_tag '系所', "系所", class:"col-sm-2 control-label" %></h4>
+		<div class="col-md-10">
+			<div class="col-md-2 no-padding-left">
+			<%=select_tag 'degree_select', options_for_select([['大學部','3'],['研究所','2']],current_user.department.nil? ? 3 :current_user.degree), class:'form-control', onChange:"change_degree($(this).val());"%>
+			<%=f.hidden_field :department_id %>
 			</div>
 			<div class="col-md-5 no-padding-left">
 				<%=select_tag 'dept_under_grad', options_from_collection_for_select(@dept_undergrad, :id, :ch_name, current_user.department_id), prompt: "請選擇", class:'form-control', onChange: "$('#user_department_id').val($(this).val());" %>
 				<%=select_tag 'dept_grad', options_from_collection_for_select(@dept_grad, :id, :ch_name, current_user.department_id), prompt: "請選擇", class:'form-control', onChange: "$('#user_department_id').val($(this).val());" %>
 			</div>
-			<div class="col-md-5 no-padding-left">
-				<div class="col-md-4"><h4 style="margin-top:8px;">入學年度</h4></div>
-				<div class="col-md-6">
-					<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{:include_blank => '請選擇'}, class:'form-control'%>
-				</div>
-			</div>
-			</div>
 		</div>
-		<div class="form-group " >
-			<div class="col-md-1 col-md-offset-10 ">
-			<%=submit_tag "送出", class: "btn btn-success pull-right" %>
-			</div>
+	</div>
+	
+	<div class="form-group " >
+		<div class="col-md-1 col-md-offset-10 ">
+		<%=submit_tag "送出", class: "btn btn-primary pull-right" %>
 		</div>
-	<% end %>
+	</div>
+<% end %>
 
 </div>
 
