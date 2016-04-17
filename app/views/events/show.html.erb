@@ -1,7 +1,7 @@
 <%= stylesheet_link_tag "events_show", media: "all", "data-turbolinks-track" => true %>
 
 <!-- facebook og tags-->
-<% content_for :fb_head do %>
+<% content_for :cus_fb_head do %>
 	<meta property="og:title" content=<%=@event.title%> />
 	<meta property="og:type" content="website" />
 	<meta property="og:url" content=<%=@event.url%> />

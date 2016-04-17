@@ -1,3 +1,10 @@
+<% content_for :cus_fb_head do %>
+  <meta property="og:title" content="<%=@user.department.ch_name%> <%=@semester.name%>" ></meta>
+  <meta property="og:description" content="NCTU+分享課表" ></meta>
+  <meta property="og:url" content="<%=root_url%>shares/<%=params[:id]%>" ></meta>
+  <meta property="og:image" content="<%=root_url%>course_table_shares/<%=@file_name%>"/>
+<% end %>
+
 <% canAddCollection = can_add_to_collection?(current_user, @user, @semester)%>
 <div class="well" style="background-color:white;">  
   <h4 class="text-center">
