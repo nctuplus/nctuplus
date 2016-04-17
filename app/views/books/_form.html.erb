@@ -6,7 +6,7 @@
     <div class="col-md-6 col-md-offset-3">
 	<h2><b><span class="glyphicon glyphicon-tree-deciduous" aria-hidden="true"></span> 我要賣書</b></h2>
 	<hr>
-      <%= form_for @sale_book, :url => { :controller => 'books', :action => @sale_book.new_record? ? 'create' : "update" }, :html=>{class: "form-horizontal",multipart: true,id:"book_trade_info-form"} do |f| %>
+      <%= form_for @sale_book, :url => { :controller => 'books', :action => @sale_book.new_record? ? 'create' : "update" }, :html=>{class: "form-horizontal",multipart: true, id:"book_trade_info-form"} do |f| %>
         <div class="form-group">
 			<%=hidden_field_tag :cts_id_list %>
           <label class="col-sm-2 control-label">書籍名稱</label>
@@ -106,6 +106,8 @@
 			<% end %>
 
 			<h4><span class="text-center" id="ct-id" data="<%=@ct.try(:id)%>"><%=@ct.try(:course_ch_name)%> <%=@ct.try(:teacher_name)%></span></h4>
+			<% end %>
+			<!--form inside form so 提早結束-->
 			<div id="cts-search-form"></div>
 			<div class="row">
 				<div class="col-md-10">
@@ -114,12 +116,8 @@
 				</div>
 			</div>
 		<hr>
-		<div>
-			<%= f.submit "立即刊登", class: "btn btn-primary pull-right" %>
-		</div>
-      <% end %>
+		<button onclick="Submit();" class ="btn btn-primary pull-right">立即刊登</button>
     </div>
-    
   </div>
   </br>
 </div>
@@ -177,4 +175,10 @@
 		<% end %>
 	}
 
+</script>
+
+<script>
+function Submit() {
+　$("#book_trade_info-form").submit();
+}
 </script>

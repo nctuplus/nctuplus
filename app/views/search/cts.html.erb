@@ -1,3 +1,4 @@
+
 <%= search_form_for @q, url:"/search/cts", class:"form-horizontal", remote:"true" do |f| %>
 	<div class="form-group">
 		<label class="col-sm-2 control-label">適用課程</label>
@@ -5,14 +6,15 @@
 			<div class="input-group ">			
 				<%=f.search_field :course_ch_name_cont,value:@ct.try(:course_ch_name), class:"form-control",placeholder:"搜尋課名（交大專用）", required:"true"%>
 				<%=hidden_field_tag :last_search%>
-				<div class="input-group-btn">
-				<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-default"%>
-				</div>
-				<%=hidden_field_tag :multi, params[:multi]%>
+				<span class="input-group-btn">
+					<%=f.submit "搜尋",id:"search-ct-btn", class:"btn btn-default"%>
+				</span>
 			</div>
+			<%=hidden_field_tag :multi, params[:multi]%>
 		</div>
 	</div>
 <% end %>
+
 
 <div class="modal fade" id="cts-modal" tabindex="-1" role="dialog" aria-hidden="true" >
 	<div class="modal-dialog">
@@ -86,6 +88,4 @@
 		$("#cts-modal").modal("hide");
 	}
 <% end %>
-	
-	
 </script>
