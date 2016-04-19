@@ -89,7 +89,7 @@ function bind_credit_list_button(){
 		}else{		
 			memo_tag.html('<input type="text" value="'+memo_tag.text()+'" class="form-control">');
 			credit_tag.html('<input type="text" value="'+credit_tag.text()+'" class="form-control">');
-			$(this).html('<i class="fa fa-check"></i>').switchClass('btn-warning','btn-success');
+			$(this).html('<i class="fa fa-check"></i>').toggleClass('btn-warning btn-success');
 			$(this).addClass('edit') ;			
 		}
 		
@@ -189,7 +189,7 @@ function bind_header_button(header_node){
 			//	credit_tag.html('<input type="text" value="'+header_node.credit_need+'" class="form-control">');
 			if(field_tag)
 				field_tag.html('<input type="text" value="'+header_node.field_need+'" class="form-control">');			
-			$(this).html('<i class="fa fa-check"></i>').switchClass('btn-warning','btn-success');
+			$(this).html('<i class="fa fa-check"></i>').toggleClass('btn-warning btn-success');
 			$(this).addClass('edit') ;			
 		}
 		
@@ -236,7 +236,7 @@ function bind_course_group_but(){  // for course group
   			},
 			success: function(){
 				$('.update-gtype').attr('gtype', gtype).html(but_text);
-				$('.update-gtype').switchClass(but_color[org_gtype], but_color[gtype]);
+				$('.update-gtype').removeClass(but_color[org_gtype]).addClass(but_color[gtype]);
 			},error: function(){
 				alert('update course group failed..');
 			}
@@ -365,8 +365,8 @@ function bind_course_list_button(){
 					}
 			
 					icon.attr('rtype', rtype) ;
-					icon.switchClass(change_table1[rtype], change_table1[(rtype+1)%2]);
-					icon.switchClass(change_table2[rtype], change_table2[(rtype+1)%2]);
+					icon.removeClass(change_table1[rtype]).addClass(change_table1[(rtype+1)%2]);
+					icon.removeClass(change_table2[rtype]).addClass(change_table2[(rtype+1)%2]);
 				
   			},	
   			error: function(){

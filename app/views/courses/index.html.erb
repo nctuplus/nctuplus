@@ -111,11 +111,11 @@
 				var type=$(this).attr("data");
 				if(type=="add"){
 					$(this).attr("data","delete");
-					$(this).switchClass("fa-square-o","fa-check-square-o");
+					$(this).toggleClass("fa-square-o fa-check-square-o");
 				}
 				else{
 					$(this).attr("data","add");
-					$(this).switchClass("fa-check-square-o","fa-square-o");
+					$(this).toggleClass("fa-check-square-o fa-square-o");
 				}
 			}
 		});
