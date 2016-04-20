@@ -4,6 +4,7 @@
 .row{
 	margin-top: 15px;	
 }
+
 </style>
 
 <div class="row" style="">
@@ -12,10 +13,14 @@
 			<div class="panel-heading bg-fb">
 				<h4 class="text-center">
 					<span class="pull-left">
-						<button id="has-select-btn" class="btn btn-info btn-sm pop-over" onclick="showHasSelected()" style="margin-top: -5px;">已排課程</button>
-						<button id="shopping-cart" class="btn btn-info btn-sm pop-over" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add&add_to_cart=0');" style="margin-top: -5px;">我的收藏</button>
+						<button id="has-select-btn" class="btn btn-circle btn-info pop-over" data-content="已選課程" onclick="showHasSelected()" style="margin-top: -5px;">
+							<%=fa_icon "check"%>
+						</button>
+						<button id="shopping-cart" class="btn btn-circle btn-info pop-over" data-content="收藏課程" onclick="$('.scrollable').load('/courses/show_cart?view_type=simulation&use_type=add&add_to_cart=0');" style="margin-top: -5px;">
+							<%=fa_icon "star"%>
+						</button>
 					</span>
-					&nbsp;
+					課程查詢
 					<span class="pull-right">
 						<button id="show-tips" class="btn btn-circle btn-info pop-over" data-content="使用提示" onclick="showTip();" style="margin-top: -5px;">
 							<%=fa_icon "question"%>
@@ -24,10 +29,17 @@
 				</h4>
 			</div>
 			<div class="panel-body">
-				<div id="search_div" class="row schedule-search-bar">
-					<%= render "/courses/search/mini_form" %>
-					<div class="scrollable"></div>
+				<div class="row">
+					<div class="col-md-3 text-right no-padding-right" >
+						<%= render "suggest_btns" %>
+					</div>
+					<div class="col-md-9" >
+						<div id="search_div" class=" schedule-search-bar">
+							<%= render "/courses/search/mini_form" %>
+						</div>
+					</div>
 				</div>
+				<div class="scrollable"></div>
 			</div>
 		</div>
 	</div>
@@ -59,6 +71,7 @@
 			<table class="table table-bordered" id="schedule_table"></table>
 		</div>	
 	</div>
+	
 </div>
 <ol id="joyRideTipContent">
 	<li data-text="Next" class="">

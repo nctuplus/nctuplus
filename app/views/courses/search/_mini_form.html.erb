@@ -1,34 +1,23 @@
+
 <%= search_form_for @q, url:"/courses/search_mini", class:"form-inline", remote: true do |f| %>
-	<div class="row">
-		<div class="col-md-12 text-center" >
-			<%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
-			<%=hidden_field_tag :dimension_search,"" %>
-			<%=hidden_field_tag :timeslot_search,"" %>
-			<td> 
-				<button id="sel-time-btn" data-content="空堂" class="btn btn-default pop-over" onclick="searchTimeSlot();">
-					<%=fa_icon "calendar"%>
-				</button>
-			</td>
-			<td>
-				<button id="dimension-btn" data-content="向度" class="btn btn-default pop-over" onclick="searchLackDimension();" style="padding:6px 7px;">
-					<%=fa_icon "graduation-cap"%>
-				</button>
-			</td>
-			<div class="input-group" style="display:inline-table;">
-					<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>		
-					<div class="input-group-btn">					
-						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>   
-					</div><!-- /btn-group -->
-			</div><!-- /input-group -->
-			&nbsp;&nbsp;&nbsp;&nbsp;
-			<div class="checkbox">
-				<label style="font-size:16px;">
-					<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
-					進階搜尋
-				</label>
-			</div>
-		</div>
+	<%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
+	<%=hidden_field_tag :dimension_search,"" %>
+	<%=hidden_field_tag :timeslot_search,"" %>
+
+	<div class="input-group" style="display:inline-table;">
+			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>		
+			<div class="input-group-btn">					
+				<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>   
+			</div><!-- /btn-group -->
+	</div><!-- /input-group -->
+	&nbsp;&nbsp;&nbsp;&nbsp;
+	<div class="checkbox">
+		<label style="font-size:16px;">
+			<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
+			進階搜尋
+		</label>
 	</div>
+
 	<div class="hidden row" id="adv-search">
 		<div class="col-md-12 text-center">
 			<div style="width:120px;display:inline-block;">
@@ -41,7 +30,7 @@
 	</div>
 <% end %>
 <br>
-<br>
+
 
 <script>
 	function searchLackDimension(){

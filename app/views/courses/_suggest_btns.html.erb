@@ -1,7 +1,15 @@
-<style>
-</style>
-<table class="col-sm-offset-5">
-<tr>
+
+<button id="sel-time-btn" data-content="空堂" class="btn btn-default pop-over" onclick="searchTimeSlot();">
+	<%=fa_icon "calendar"%>
+</button>
+
+<button id="dimension-btn" data-content="向度" class="btn btn-default pop-over" onclick="searchLackDimension();" style="padding:6px 7px;">
+	<%=fa_icon "graduation-cap"%>
+</button>
+
+<!--
+<table class="tabl col-md-offset-3" style="border:1px solid #ccc;">
+<tr class="" style="">
 	<td> 
 		<button id="sel-time-btn" data-content="空堂" class="btn btn-default pop-over" onclick="searchTimeSlot();">
 			<%=fa_icon "calendar 2x"%>
@@ -12,7 +20,6 @@
 			<%=fa_icon "graduation-cap 2x"%>
 		</button>
 	</td>
-	<!--
 	<td>
 		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "heart-o 2x"%>
@@ -45,10 +52,11 @@
 		<button data-content="尚未開放" class="btn btn-default pop-over">
 			<%=fa_icon "cogs 2x"%>
 		</button>
-	</td>-->
+	</td>
 </tr>
 </table>
-
+<br>
+-->
 <script>
 	function searchLackDimension(){
 		<% if !current_user.has_imported? %>
