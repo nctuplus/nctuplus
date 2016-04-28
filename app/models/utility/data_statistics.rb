@@ -10,7 +10,8 @@ class DataStatistics
 	def self.user_signin_protocol
 		e3 = AuthE3.pluck(:user_id)
 		fb = AuthFacebook.pluck(:user_id)
-		return [(e3-fb).count, (fb-e3).count, (e3&fb).count]
+		google = AuthGoogle.pluck(:user_id)
+		return [(e3-fb-google).count, (fb-e3-google).count, (google-fb-e3).count, (e3&fb).count, (e3&google).count, (e3&fb&google).count]
 	end
 
 	def self.import_course_count

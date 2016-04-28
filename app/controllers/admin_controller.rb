@@ -82,7 +82,7 @@ class AdminController < ApplicationController
   def statistics
     @user_stat = DataStatistics.user_signup
     @import_cnt = DataStatistics.import_course_count
-    @user_type = DataStatistics.user_signin_protocol # [E3, FB, E3&FB]
+    @user_type = DataStatistics.user_signin_protocol # [E3, FB, Google, E3&FB, E3&Google, E3&FB&Google]
     @discuss_stat = [Comment.maximum(:id), Discuss.maximum(:id)]   
     
     @book_new = BookTradeInfo.pluck('DATE_FORMAT(created_at, "%Y/%c")')
