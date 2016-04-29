@@ -11,7 +11,7 @@ class DataStatistics
 		e3 = AuthE3.pluck(:user_id)
 		fb = AuthFacebook.pluck(:user_id)
 		google = AuthGoogle.pluck(:user_id)
-		return [(e3-fb-google).count, (fb-e3-google).count, (google-fb-e3).count, (e3&fb).count, (e3&google).count, (e3&fb&google).count]
+		return [(e3-fb-google).count, (fb-e3).count, (google-e3).count, (e3&fb).count, (e3&google).count, (e3&fb&google).count]
 	end
 
 	def self.import_course_count
