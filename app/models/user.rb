@@ -63,7 +63,6 @@ class User < ActiveRecord::Base
   validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update
   validates :year, :numericality=> { :greater_than=>0, :message=>"請填寫入學年度"}, :on => :update
 
-  
   def avatar_url
     if self.hasFb?
       return "https://graph.facebook.com/#{self.auth_facebook.uid}/picture?type=large&redirect=true&width=140&height=140" 
@@ -208,6 +207,4 @@ class User < ActiveRecord::Base
     user.save!
     return user
   end
-
-  
 end
