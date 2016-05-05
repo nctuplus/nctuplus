@@ -2,7 +2,7 @@ Nctuplus::Application.routes.draw do
 
 	root :to => "main#index"
 	
-#--------- [devise] user account concerned --------------	
+#----------- [devise] user account concerned -----------	
 	devise_for :users, :skip=>[:registrations, :confirmations, :passwords],
              :controllers => { :omniauth_callbacks => "callbacks" },
              :path=>"/",
@@ -10,18 +10,20 @@ Nctuplus::Application.routes.draw do
               :sign_in  => 'login',
               :sign_out => 'logout' }
 
-	
+#--------- bulletin -----------
 	resources :bulletin
 
-	get "scores/gpa"
-#--------- events --------------	
+#--------- lab -----------
+	resources :lab
+
+#--------- events -----------
 	resources :events do
 		collection do
 			post "attend"
 		end
 	end
 	
-#--------- for share course table page -----
+#--------- for share course table page -----------
 	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
 	# update user share and return json hash id 
 	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
@@ -32,7 +34,7 @@ Nctuplus::Application.routes.draw do
 	# show user collections lists
 	get "user/collections"
 	get "user/courses"
-#--------- for other usage --------------
+#----------- for other usage -----------
 
 	get "main/index"
 	get "main/policy_page"
@@ -41,24 +43,24 @@ Nctuplus::Application.routes.draw do
 	get "main/fb"
 	post "main/fb"
 
-#--------- for search -------------------		
+#----------- for search -----------	
 	get "search/cts"
 	
-#--------- for development test -------------------	
+#----------- for development test -----------
 if Rails.env.development?	
 	get "main/test"
 end
 
 #---------- admin page -----------
 	
-  get "admin/statistics"
+ 	get "admin/statistics"
 	get "admin/ee105"
 	get "admin/users"
 	post "admin/change_role"
 	post "admin/change_dept"
 	get "admin/course_maps" #, to: "course_maps#admin_index"
 	
-#---------- user ----------------
+#---------- user -----------
 	get "user", to: "user#show"	#user personal page
 	get "user/this_sem"
 	get "user/statistics"
@@ -75,12 +77,13 @@ end
 	get "user/select_cm"
 	post "user/select_cm"
 	
-#---------- scores ----------------	
+#---------- scores -----------
 	post "scores/import"
 	get "scores/import"
 	get "scores/import_confirm"
+	get "scores/gpa"
 	
-#--------- course_content -------------
+#----------- course_content -----------
 	post "course_content/raider"
 	get "course_content/raider"	
 	get "course_content/raider_list_like"
@@ -90,7 +93,7 @@ end
 	get "course_content/get_course_info"
 	post "course_content/course_action"
 	
-#----------for discusses---------------
+#----------- for discusses -----------
 	resources :discusses do
 		collection do
 			get "list_by_ct"
@@ -98,7 +101,7 @@ end
 		end
 	end
 
-#----------for past_exams---------------
+#---------- for past_exams -----------
   resources :past_exams, :except=>[:edit] do
 		collection do
 			get "course_page"
@@ -152,19 +155,18 @@ end
 	
 #---------- book page ----------- 
 	post "books/google_book"
-  resources :books
+  	resources :books
 	
 	resources :departments, :except=>[:show, :destroy]
 
-
-	#----------for chrome extension---------------
+#---------- for chrome extension -----------
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
 	post "api/import_course"
 	post "api/login"
 
-  #----------for files---------------
-  resources :past_exams, :except=>[:update] do
+#---------- for files -----------
+	resources :past_exams, :except=>[:update] do
 		collection do
 			get "list_by_ct"
 			get "edit"
@@ -173,5 +175,4 @@ end
     
 	post "sessions/save_lack_course"
     
-
 end
