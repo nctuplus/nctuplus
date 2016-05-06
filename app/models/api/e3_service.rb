@@ -10,7 +10,7 @@ class E3Service
 		if res=='"OK"'
 			return {:auth=>true, :uid=>username}
 		else
-			return {:auth=>false}	
+			return {:auth=>false, :msg=> (res.size>100) ? "E3伺服器無回應或錯誤，請暫時改用其他方式登入" : "帳號或密碼錯誤" }	
 		end
 	end
 
@@ -34,7 +34,7 @@ private
 	
 	def self._getJsonData(url,parameter)
 		begin 
-			return JSON.parse(_getRawData(url,parameter))
+			return JSON.parse(_getRawData(url,parameter)  )
 		rescue JSON::ParserError => e
 			InformMailer.course_import("Error Occurred on E3 API!<br> Source:#{url}").deliver
 			raise "E3 API Error"

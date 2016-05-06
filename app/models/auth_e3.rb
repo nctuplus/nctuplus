@@ -27,7 +27,7 @@ class AuthE3 < ActiveRecord::Base
       end
       return {:auth=>true, :user=>auth_e3.user, :msg=>"成功登入"}     
     else
-      return {:auth=>false, :msg=>"帳號或密碼錯誤"}
+      return {:auth=>false, :msg=>data[:msg]}
     end
   end
   
