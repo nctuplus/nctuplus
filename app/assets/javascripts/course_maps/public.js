@@ -14,7 +14,7 @@
 function labelTakedCourses(user_courses,cf){
 	if(cf.cf_type<=2){
 		for(var i=0,course;course=cf.courses[i];i++){
-			if(isUserCourseMatch(user_courses,course)){
+			if(FindUserCourse(user_courses,course)){
 				
 			}
 		}
@@ -26,11 +26,7 @@ function labelTakedCourses(user_courses,cf){
 }*/
 var takedColor="#AAAAAA";
 function genCourseGrid(user_courses,category,course){
-	if(user_courses&&isUserCourseMatch(user_courses,course)){												
-		var color=takedColor;
-		var taked=true;
-	}
-	else{
+	if(user_courses==null||user_courses.length==0){
 		for(var i=0; i< category.length; i++){
 			if(course.cf.cf_name==category[i].cf_name||(course.parent_cf!=null&&course.parent_cf.cf_name==category[i].cf_name)){
 				var color=category[i].color;
@@ -38,6 +34,13 @@ function genCourseGrid(user_courses,category,course){
 			}
 		}
 		var taked=false;
+	}
+	else{
+		var foundCourse=FindUserCourse(user_courses,course);
+		if(foundCourse&&checkPass(foundCourse.pass_score,foundCourse.score)){
+			var color=takedColor;
+			var taked=true;
+		}
 	}
 	
 	var res='<div class="btn-course " style="background:';

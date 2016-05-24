@@ -10,7 +10,7 @@ class CourseMapsController < ApplicationController
 			year=params[:year].blank? ? Semester::CURRENT.year : params[:year]
 			course_map=CourseMap.where(:department_id=>params[:dept_id], :year=>year).take
 			if course_map==current_user.try(:course_maps).try(:first)
-				user_courses=current_user.courses_json#current_user.courses_agreed.map{|cs|cs.to_basic_json}+current_user.courses_taked.map{|cs|cs.to_basic_json}
+				user_courses=current_user.courses_stat_table_json#current_user.courses_agreed.map{|cs|cs.to_basic_json}+current_user.courses_taked.map{|cs|cs.to_basic_json}
 			end
 			@res={
 				:dept_name=>Department.where(:id=>params[:dept_id]).take.try(:ch_name),
