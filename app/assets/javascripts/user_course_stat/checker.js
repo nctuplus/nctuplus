@@ -148,13 +148,13 @@ function _getCourseCf(res,parent_cf,cf,course){
 	}
 }
 
-function isUserCourseMatch(user_courses, course){
+function FindUserCourse(user_courses, course){
 	
 	for(var j=0, user_course;user_course=user_courses[j];j++){
 		if(course.id==user_course.cos_id)
-			return true;
+			return user_course;
 	}
-	return false;
+	return null;
 }
 
 // for bottom node, check match
@@ -165,7 +165,7 @@ function _doCheck(user_courses, cf){
 	var joined_courses=joinCfCourses(cf,user_courses);
 	for(var i = 0,cf_course;cf_course=cf.courses[i];i++){ // for each cf course
 		
-		if(isUserCourseMatch(joined_courses, cf_course)){
+		if(FindUserCourse(joined_courses, cf_course)){
 			match_credit += cf_course.credit ;
 		}else{
 			c_match = false ;
@@ -177,7 +177,7 @@ function _doCheck(user_courses, cf){
 		for(var i = 0,course_group;course_group=cf.course_groups[i];i++){ // for each cg
 			var local_match = false ;
 			for(var j=0, cg_course; cg_course=course_group.courses[j];j++){
-				if(isUserCourseMatch(joined_courses, cg_course)){
+				if(FindUserCourse(joined_courses, cg_course)){
 					match_credit += cg_course.credit ;
 					local_match = true ;
 					break ;

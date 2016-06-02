@@ -2,7 +2,7 @@ class InformMailer < ActionMailer::Base
   default from: "NCTU+@plus.nctu.edu.tw"
 	def course_import(mesg)
 		@mesg=mesg
-		mail(to: "abc1199281@gmail.com", subject: "#{Time.now} 課程匯入通知")
+		mail(to: "chc71340@gmail.com", subject: "#{Time.now} 課程匯入通知")
 	end
 	def discuss_reply(sub_discuss)
 		@sub_discuss=sub_discuss
