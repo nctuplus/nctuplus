@@ -27,7 +27,9 @@ class AdminController < ApplicationController
 		if params[:search].nil?
 			@users= User.all
 		else
-      user_ids = [AuthFacebook.ransack(:name_cont=>params[:search]).result.pluck(:user_id), AuthE3.ransack(:student_id_cont=>params[:search]).result.pluck(:user_id)].flatten                                  
+      user_ids = [AuthFacebook.ransack(:name_cont=>params[:search]).result.pluck(:user_id), 
+                  AuthE3.ransack(:student_id_cont=>params[:search]).result.pluck(:user_id),
+                  AuthGoogle.ransack(:name_cont=>params[:search]).result.pluck(:user_id)].flatten                                  
 			@users = User.where(:id=>user_ids)
 		end
 		@users = @users.includes(:department, :course_maps).page(params[:page]).per(20)
