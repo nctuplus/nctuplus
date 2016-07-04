@@ -94,3 +94,7 @@ gem 'zeroclipboard-rails'
 gem "d3-rails"
 
 gem 'underscore-rails'
+
+group :development do
+	gem "rspec-rails"
+end

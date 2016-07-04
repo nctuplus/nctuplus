@@ -36,11 +36,11 @@ class User < ActiveRecord::Base
   has_many :admin_cms, :class_name=> "CourseMap"
   
   
-  has_many :agreed_scores, :dependent=> :destroy
-  has_many :normal_scores, :dependent=> :destroy
+  has_many :agreed_scores#, :dependent=> :destroy
+  has_many :normal_scores#, :dependent=> :destroy
 
   #timetable collection
-  has_many :user_collections, :dependent=> :destroy
+  has_many :user_collections#, :dependent=> :destroy
   
   has_many :bulletins
 # for admin user search (no use now)
@@ -113,12 +113,13 @@ class User < ActiveRecord::Base
 
 
   def merge_child_to_newuser(new_user)  #for 綁定功能,將所有user有的東西的user_id改到新的user id
-    table_to_be_moved=User.reflect_on_all_associations(:has_many)
-        .map { |assoc| assoc.name} - [ :normal_scores , :agree_scores, :attend_events, :follow_events ]
+		table_to_be_moved=User.reflect_on_all_associations(:has_many)
+        .map { |assoc| assoc.name} - [:attend_events, :follow_events ] #- [ :normal_scores , :agree_scores#, :attend_events, :follow_events ]
     table_to_be_moved.each do |table_name|
+			puts table_name
       self.send(table_name).update_all(:user_id=>new_user.id)
     end
-    self.destroy
+    self.destroy!
   end
 
   def has_imported?
