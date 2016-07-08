@@ -27,7 +27,6 @@ function commonCheck(pass_courses){
 	}; 
 
 	for(var i = 0,course;course=pass_courses[i];i++){ 
-console.log(course);
 		if(course.name.search("服務學習")!=-1){ 
 			if(course.name.search("一")!=-1){ 
 				result['service_1']=true; 
