@@ -36,11 +36,11 @@ class User < ActiveRecord::Base
   has_many :admin_cms, :class_name=> "CourseMap"
   
   
-  has_many :agreed_scores, :dependent=> :destroy
-  has_many :normal_scores, :dependent=> :destroy
+  has_many :agreed_scores#, :dependent=> :destroy
+  has_many :normal_scores#, :dependent=> :destroy
 
   #timetable collection
-  has_many :user_collections, :dependent=> :destroy
+  has_many :user_collections#, :dependent=> :destroy
   
   has_many :bulletins
 # for admin user search (no use now)
@@ -63,7 +63,6 @@ class User < ActiveRecord::Base
   validates :department_id, :presence=> { message: "請填寫系所"}, :on => :update
   validates :year, :numericality=> { :greater_than=>0, :message=>"請填寫入學年度"}, :on => :update
 
-  
   def avatar_url
     if self.hasFb?
       return "https://graph.facebook.com/#{self.auth_facebook.uid}/picture?type=large&redirect=true&width=140&height=140" 
@@ -114,12 +113,13 @@ class User < ActiveRecord::Base
 
 
   def merge_child_to_newuser(new_user)  #for 綁定功能,將所有user有的東西的user_id改到新的user id
-    table_to_be_moved=User.reflect_on_all_associations(:has_many)
-        .map { |assoc| assoc.name} - [ :normal_scores , :agree_scores, :attend_events, :follow_events ]
+		table_to_be_moved=User.reflect_on_all_associations(:has_many)
+        .map { |assoc| assoc.name} - [:attend_events, :follow_events ] #- [ :normal_scores , :agree_scores#, :attend_events, :follow_events ]
     table_to_be_moved.each do |table_name|
+			puts table_name
       self.send(table_name).update_all(:user_id=>new_user.id)
     end
-    self.destroy
+    self.destroy!
   end
 
   def has_imported?
@@ -208,6 +208,4 @@ class User < ActiveRecord::Base
     user.save!
     return user
   end
-
-  
 end

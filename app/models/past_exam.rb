@@ -15,7 +15,7 @@ class PastExam < ActiveRecord::Base
   validates_presence_of :user_id, :semester_id, :course_teachership_id
 
 	has_attached_file :upload,  
-		:path => ":rails_root/file_upload/:ct_id/:user_id/:filename",
+		:path => ":rails_root/past_exams/:id/:filename",
 		:url => "/past_exams/:id"
 
 	do_not_validate_attachment_file_type :upload

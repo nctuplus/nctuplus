@@ -35,7 +35,7 @@ class Course < ActiveRecord::Base
 			:id=>self.id,
 			:credit=>self.credit,
 			#:dept=>self.department ? self.department.ch_name : "",
-			:real_id=>self.real_id,
+			:real_id=>self.real_id
 		}
 	end	
 	
