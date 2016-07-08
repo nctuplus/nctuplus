@@ -83,7 +83,6 @@
 <script>
 	$(document).ready(function(){
 		$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
-			console.log(data);
 			$("#course-list2").html(tmpl("course-list-tmpl",data));
 		});
 	});
