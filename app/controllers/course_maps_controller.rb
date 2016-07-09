@@ -80,52 +80,7 @@ class CourseMapsController < ApplicationController
 		@course_map.save
 # handle copy 		
 		if params[:copy].to_i != 0
-			copy_from = CourseMap.find(params[:copy])
-			@course_map.update_attributes(:total_credit=>copy_from.total_credit)
-			if @course_map.desc.empty?
-				@course_map.update_attributes(:desc=>copy_from.desc)
-			end
-			#Rails.logger.debug "[debug] in1 "+copy_from.course_fields.count.to_s
-			copy_from.course_fields.each do |cf|
-				#Rails.logger.debug "[debug] cfcfcf"
-				new_cf = CourseField.create(
-					:user_id=>current_user.id,
-					:name=>cf.name,
-					:color=>cf.color,
-					:field_type=>cf.field_type
-				) 
-				
-				cmcfship = CmCfship.create(:course_map_id=>@course_map.id, :course_field_id=>new_cf.id)
-				
-				if cf.field_type==3 #copy cf_field_needs
-					cffneed = CfFieldNeed.create(:course_field_id=>new_cf.id, :field_need=>cf.field_need)
-					
-				end
-				
-				#copy cf_credits
-				
-				
-				trace_cm(new_cf, cf, :_copy_cfl_and_credit)
-			end
-			
-			copy_from.course_groups.each do |cg|
-				new_cg = CourseGroup.create(
-					:user_id=>current_user.id,
-					:course_map_id=>@course_map.id,
-					:gtype => cg.gtype 
-				)
-				
-				cg.course_group_lists.each do |cgl|
-					new_cgl = CourseGroupList.create(
-						:user_id=>current_user.id,
-						:course_group_id=>new_cg.id,
-						:course_id=>cgl.course_id,
-						:lead =>  cgl.lead
-					)
-					
-				end
-			end
-			
+      @course_map.copy_content_from_current(params[:copy])
 		end
 		redirect_to "/admin/course_maps"
 	end
@@ -578,8 +533,7 @@ class CourseMapsController < ApplicationController
 	end
 	
 private
-	
-	
+		
 	def course_map_params
     params.require(:course_map).permit(:title, :department_id, :name, :desc, :year)
   end
@@ -602,50 +556,5 @@ private
 		end
 		return res
 	end
-	
-  def trace_cm(target, cf, funcA)
-	#if cf.field_type < 3
-			send(funcA, target.id, cf)	
-	#else 	
-		cf.child_cfs.each do |sub|
-			new_cf = CourseField.create(
-				:user_id=>current_user.id,
-				:name=> sub.name,
-				:credit_need=>sub.credit_need,
-				:color=>sub.color,
-				:field_type=>sub.field_type
-			)
-			cfship = CourseFieldSelfship.create(:parent_id=>target.id, :child_id=>new_cf.id)
-			if new_cf.field_type==3
-				cffneed = CfFieldNeed.create(:course_field_id=>new_cf.id, :field_need=>0)
-			end
-			trace_cm(new_cf, sub, funcA)
-		end
-	#end
-	return
-  end
-
-  def _copy_cfl_and_credit(target_id, cf)
-		cf.course_field_lists.each do |cfl|
-			CourseFieldList.create(
-				:user_id=>current_user.id, 
-				:course_field_id=>target_id,
-				:course_id=>cfl.course_id,
-				:record_type=>cfl.record_type,
-				:course_group_id=>cfl.course_group_id,
-				:grade=>cfl.grade,
-				:half=>cfl.half
-			)
-			
-		end
-		cf.cf_credits.each do |credit|
-			CfCredit.create(
-				:course_field_id=>target_id,
-				:index=>credit.index,
-				:memo=>credit.memo,
-				:credit_need=>credit.credit_need
-			)
-		end
-  end
 	
 end
