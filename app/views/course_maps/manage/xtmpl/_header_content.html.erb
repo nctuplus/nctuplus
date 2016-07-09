@@ -4,21 +4,21 @@
 		<h4 class="col-md-5 field-header-name">{%= o.head_node.text %}</h4>
 		<div class="hidden" id="cf_id">{%=o.head_node.cf_id%}</div>
 		<div class="col-md-5">
-			{% if(o.head_node.type >= 2){ %}	
-				<button type="button" class="btn btn-circle btn-success add_credit_list">
-					<%=fa_icon "plus"%>
-				</button>
-			{% } %}
-				<button type="button" class="btn btn-circle btn-info update">
+				<button type="button" data-toggle="popover" data-content="修改" class="btn btn-circle btn-info update">
 					<%=fa_icon "pencil"%>
 				</button>
-				<button type="button" class="btn btn-circle btn-danger delete" >
+				<button type="button" data-toggle="popover" data-content="刪除" class="btn btn-circle btn-danger delete" >
 					<%=fa_icon "trash-o"%>
 				</button>
 			{% if(o.head_node.type < 3){ %}
-				<button type="button" class="btn btn-circle btn-sucess change-type" ftype="{%=o.head_node.type%}">
+				<button data-toggle="popover" data-content="必選/X選Y互換" type="button" class="btn btn-circle btn-warning change-type" ftype="{%=o.head_node.type%}" >
 					<%=fa_icon "arrows-h"%>
 				</button>			
+			{% } %}
+			{% if(o.head_node.type >= 2){ %}	
+				<button type="button" data-toggle="popover" title="新增規則" data-content="假設有多種滿足條件(通常用不到)" class="btn btn-circle btn-success add_credit_list">
+					<%=fa_icon "plus"%>
+				</button>
 			{% } %}
 		</div>
 	</div>

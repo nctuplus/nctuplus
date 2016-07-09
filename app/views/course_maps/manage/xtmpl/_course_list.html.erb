@@ -22,14 +22,13 @@
 <table class="table course-table">
 	<thead>
 		<tr class="row">
-			<th class="col-md-1"></th>
 			<th class="col-md-2">課名</th>
-			<th class="col-md-2">開課系所</th>
 			<th class="col-md-2">永久課號</th>
+			<th class="col-md-2">開課系所</th>
 			<th class="col-md-1">學分</th>
-			<th class="col-md-1">學期</th>
-			<th class="col-md-1">採計學分</th>
-			<th class="col-md-2">動作</th>
+			<th class="col-md-2">建議學期</th>
+			<th class="col-md-1">是否採計學分</th>
+			<th class="col-md-1">動作</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -41,16 +40,15 @@
 				{% }else{ %}
 					<tr class="row" list_id="{%=list.id%}" >
 				{% } %}
-					<td class="col-md-1 clickable-hover" onclick="toggleGroup($(this),{%=list.id%});" >
-					{% if(list.groups){ %}
-						
-						<%=fa_icon 'plus'%>
-
-					{% } %}
+					<td class="">
+						{% if(list.groups){ %}
+							<%=fa_icon 'plus',:class=>"text-color-green clickable-hover",:onclick=>"toggleGroup($(this),{%=list.id%});"%>
+							&nbsp;
+						{% } %}
+						{%=list.course_name %}
 					</td>
-					<td class="">{%=list.course_name %}</td>
-					<td class="">{%=list.dep %}</td>
 					<td class="">{%=list.real_id %}</td>
+					<td class="">{%=list.dept_name %}</td>
 					<td class="">{%=list.credit %}</td>
 					<td class="">
 						<select class="grade-select">
@@ -84,12 +82,15 @@
 				{% if(list.groups){ %}
 					{% for(var j=0 ; j<list.groups.length ; j++){ %}
 						{% var group = list.groups[j] ; %}
-						<tr class="row group-{%= list.id%} " style="display:none;" >
-							<td class=""><%=fa_icon "angle-right"%></td>
-							<td class="">{%=group.course_name %}</td>	
-							<td class="">{%=group.dep %}</td>
+						<tr class="row group-{%= list.id%} " style="display:none;background-color:#99FFFF;" >
+							<td class="">
+								<%=fa_icon "angle-right"%>&nbsp;
+								{%=group.course_name %}
+							</td>
 							<td class="">{%=group.real_id %}</td>
+							<td class="">{%=group.dept_name %}</td>
 							<td class="">{%=group.credit %}</td>
+							<td class=""></td>
 							<td class=""></td>
 							<td class=""></td>
 						</tr>
@@ -97,12 +98,12 @@
 				{% } %}
 			{% } %}	
 		{% }else{ %}
-	</tbody>	
+	
 		<tr class="row">
 			<td colspan="3"><p class="text-right">嘗試從左側搜尋加入課程</p></td>
 		</tr>
 		{% } %}
-
+	</tbody>
 </table>
 
 </script>

@@ -9,7 +9,9 @@ class ApplicationController < ActionController::Base
 	helper_method :current_user
 
 
-
+	def set_content_full_width
+		@full_width=true
+	end
 	
   def record_not_found
 		alertmesg("info",'Sorry',"無此欄位!")

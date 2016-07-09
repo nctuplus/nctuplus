@@ -62,6 +62,7 @@ class CourseMapsController < ApplicationController
 	
 	def edit
 		@course_map=CourseMap.find(params[:id])
+		set_content_full_width
 	end
 
 	def new
@@ -146,7 +147,7 @@ class CourseMapsController < ApplicationController
 	
 	def content
 		@course_map = CourseMap.find(params[:map_id])
-		render :layout=>false		
+		render "/course_maps/manage/content", :layout=>false		
 	end
 	
 	def search_course
@@ -169,6 +170,7 @@ class CourseMapsController < ApplicationController
 			:id=>c.id,
 			:name=>c.ch_name,
 			:cd_id=>c.is_virtual ? 0 : c.course_details.last.id,
+			:real_id=>c.real_id,
 			:credit=>c.credit,
 			:dept_name=>c.is_virtual ? c.real_id : c.dept_name,
 			:cos_type=>c.is_virtual ? "抵免" : c.course_details.last.cos_type
@@ -319,7 +321,7 @@ class CourseMapsController < ApplicationController
 						c = cgl.course
 						tmp2 = {
 							:course_name=>c.ch_name,
-							:dep=> c.try(:department).try(:ch_name),
+							:dept_name=> c.dept_name,#try(:department).try(:ch_name),
 							:credit=> c.credit,
 							:real_id=>c.real_id
 						}
@@ -336,7 +338,7 @@ class CourseMapsController < ApplicationController
 				:id=>list.id, 
 				:course_id=>course.id ,
 				:course_name=>course.ch_name,
-				:dep=>course.try(:department).try(:ch_name),
+				:dept_name=>course.dept_name,#try(:department).try(:ch_name),
 				:real_id=>course.real_id,
 				:credit=>course.credit,
 				:record_type=>list.record_type,
@@ -362,7 +364,7 @@ class CourseMapsController < ApplicationController
 			:course_id=>l.course_id,
 			:course_name=>l.course.ch_name,
 			:real_id=>l.course.real_id,
-			:dep=>l.course.try(:department).try(:ch_name),
+			:dept_name=>l.course.dept_name,#try(:department).try(:ch_name),
 			:credit=>l.course.credit,
 			:leader=>(l.lead==0) ? false : true 
 		}}

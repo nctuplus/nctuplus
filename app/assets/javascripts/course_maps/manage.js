@@ -123,7 +123,7 @@ function bind_header_button(header_node){
 	});
 	// header action : delete
 	$('#header_content_div .delete').click(function(){
-		if(!confirm('確定要刪除嗎？'))
+		if(!confirm('確定要刪除嗎?(此操作不可逆!!)'))
 			return false ;
 		$.ajax({
 			type: "POST",
@@ -189,7 +189,7 @@ function bind_header_button(header_node){
 			//	credit_tag.html('<input type="text" value="'+header_node.credit_need+'" class="form-control">');
 			if(field_tag)
 				field_tag.html('<input type="text" value="'+header_node.field_need+'" class="form-control">');			
-			$(this).html('<i class="fa fa-check"></i>').toggleClass('btn-warning btn-success');
+			$(this).html('<i class="fa fa-check"></i>').removeClass("btn-info").addClass('btn-success');
 			$(this).addClass('edit') ;			
 		}
 		
@@ -407,10 +407,13 @@ function genCreditList(data){
 
 function load_header_content(data){
 	$("#header_content_div").html(tmpl("header-content-format", data));
-	
+	$("[data-toggle='popover']").popover({
+		trigger:"hover",
+		placement:"bottom",
+		html:true
+	});
 	if(data.head_node.type>=1){
 		$.getJSON("/course_maps/get_credit_list?id="+data.head_node.cf_id, function (data) {		
-			
 			genCreditList(data);
 		});
 	}

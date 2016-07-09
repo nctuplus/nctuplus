@@ -1,12 +1,12 @@
 <div style="margin-left:10px;" >
 	<div class="row">
 		<div class="col-md-3 well" id="search_div" />
-		<div class="col-md-6 well">
+		<div class="col-md-7 well">
 			<div class="row" id="new_form_div" />
 			<div class="row" id="header_content_div" />
 			<div class="row" id="course_content" />
 		</div>
-		<div class="col-md-3 col-sm-5 well">			
+		<div class="col-md-2 col-sm-5 well">			
 			<ul id="myTab" class="nav nav-tabs" role="tablist">
 				<li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">課程總覽</a></li>
 				<li role="presentation" class=""><a href="#group" role="tab" id="group-tab" data-toggle="tab" aria-controls="group" aria-expanded="false">課程群組</a></li>
@@ -25,11 +25,11 @@
 </div>
 
 
-<%=render "xtmpl_header_content" %>
-<%=render "xtmpl_new_form" %>
-<%=render "xtmpl_course_list" %>
-<%=render "xtmpl_course_group_list" %>
-<%=render "xtmpl_credit_list" %>
+<%=render "/course_maps/manage/xtmpl/header_content" %>
+<%=render "/course_maps/manage/xtmpl/new_form" %>
+<%=render "/course_maps/manage/xtmpl/course_list" %>
+<%=render "/course_maps/manage/xtmpl/course_group_list" %>
+<%=render "/course_maps/manage/xtmpl/credit_list" %>
 
 <script>
 var cf_show_id = null ;
@@ -56,19 +56,20 @@ $(document).ready(function(){
 	$('#course_tree').on('nodeSelected', function(event, node) {
 		reset_data(); // reset new-form & header-content
 		cf_show_id = null ; // reset course table target id
-	//	console.log(node.cf_id) ;
+		//console.log(node.cf_id) ;
 		if(node.type > 0){
 			load_header_content({head_node: node}) ;
 			if(node.type < 3){ // 1: 必修, 2: x選y
-    			cf_show_id = node.cf_id ;  			
-      			load_course_list(cf_show_id);  			
-      		}			   		
+				cf_show_id = node.cf_id ;  			
+				load_course_list(cf_show_id);  			
+			}			   		
 		}else{ // new form 
-	//		console.log("[course_tree select] " + node.type);
+			//console.log("[course_tree select] " + node.type);
 			load_new_form({
-						level : node.type, 
-						header_name: '新增類別',
-         			    parent_id: node.parent_id}); 
+				level : node.type, 
+				header_name: '新增類別',
+				parent_id: node.parent_id
+			}); 
 		}
 		
 		if(node.type<0){ // new something
@@ -77,7 +78,7 @@ $(document).ready(function(){
 		}else if(node.type!=0){
 			$('#course_content').empty();		
 		}	
-    	return false ;
+		return false ;
 	});
 
 	// group_tree onSelect
