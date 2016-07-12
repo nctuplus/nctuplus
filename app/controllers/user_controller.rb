@@ -50,7 +50,7 @@ class UserController < ApplicationController
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
 						},
-						:semesters=> (@user.year==0) ? [] : Semester.where("year >= ? AND half != 3", @user.year).map{|s| {:id=>s.id, :name=>s.name}},
+						:semesters=> (@user.year==0) ? [] : Semester.where("year >= ?", @user.year).map{|s| {:id=>s.id, :name=>s.name}},
 						:semester_name => semester.name, # for 歷年課表 modal header 
 						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
 					}	
