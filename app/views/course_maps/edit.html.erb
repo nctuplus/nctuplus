@@ -3,9 +3,9 @@
 <div class="well" style="padding-top:5px;">
 <h3>課程地圖 - <%=@course_map.name%>
 	<small>
-		<button class="btn btn-sm btn-info" onClick="editCm($(this));">編輯</button>
-		<button class="btn btn-sm btn-warning" id="notify-user">套用課程修改</button>
-		<%=link_to '預覽', course_map_path(@course_map), :class=>'',:target=>"blank"%>
+		<button class="btn btn-sm btn-primary" onClick="editCm($(this));">編輯</button>
+		<button class="btn btn-sm btn-warning" id="notify-user" onClick="updateUserCflId($(this));">套用課程修改</button>
+		<%=link_to '預覽', course_map_path(@course_map), :class=>'btn btn-sm btn-info',:target=>"blank"%>
 	</small>
 </h3>
 <table class="table table-bordered">
@@ -115,31 +115,7 @@ $(document).ready(function(){
 	
 	
 
-	$("#notify-user").click(function(){
-		if(!confirm("使用此地圖的使用者將會重新計算學分\n"
-				+"請務必做完所有修改後再送出通知。\n\n"
-				+"您確定要送出嗎?")){
-			return false ;
-		}
-		$.ajax({
-				type: "POST",
-				url: "/course_maps/notify_user" ,
-				data:{
-					map_id: map_id,
-				},	
-				success: function(res){					
-					$(this).attr("disabled", true);
-					toastr["success"]("更新成功");
-					setTimeout(function(){
-						$(this).attr("disabled", false);
-					}.bind(this), 5000);
-				}.bind(this),	
-				error: function(){
-					alert("internal server error.");
-				}
-			});
-		return true ;
-	});
+
 	
 });
 

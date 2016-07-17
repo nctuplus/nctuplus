@@ -1,19 +1,18 @@
-
 <script type="text/x-tmpl" id="normal-course-table-tmpl">
-	{% if(o.length > 0){ %}
-		{% for(var i=0 ; i<o.length ; i++){ %}
-			{% var list = o[i] ;%}
-				<table class="table single-table no-margin-bottom">
-					{% include("single-course-row-tmpl",list); %}
-				</table>
-		{% } %}
-	{% }else{ %}
-		<table>
-			<tr class="row">
-				<td colspan="3"><p class="text-right">嘗試從左側搜尋加入課程</p></td>
-			</tr>
+{% if(o.length > 0){ %}
+	{% for(var i=0,list ; list=o[i]; i++){ %}
+		<table class="table single-table no-margin-bottom">
+			{% include("single-course-row-tmpl",list); %}
 		</table>
 	{% } %}
+	{% showTips(); %}	
+{% }else{ %}
+	<table>
+		<tr class="row">
+			<td colspan="3"><p class="text-right">嘗試從左側搜尋加入課程</p></td>
+		</tr>
+	</table>
+{% } %}
 </script>
 
 <script type="text/x-tmpl" id="cg-single-tbl-tmpl">
@@ -27,6 +26,7 @@
 	{% for(var i=0,list ; list=o[i] ; i++){ %}
 		{% include("cg-single-tbl-tmpl",list);%}
 	{% } %}
+	{% showTips(); %}
 {% } %}
 </script>
 <script type="text/x-tmpl" id="single-course-row-tmpl">

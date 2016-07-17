@@ -501,36 +501,16 @@ function load_header_content(data){
 	bind_header_button(data.head_node);
 }
 
-function load_single_cg(cg_id){
-	if(!cg_id)
-		return false;
-	$.getJSON("/course_maps/get_single_cg.json?cg_id="+target_id, function (data) {
-	//	console.log(data);
-		$("table[cg-id='"+cg_id+"']").html(tmpl("cg-rows-tmpl", data));	
-		//bind_course_list_button();
-		//bind_course_group_but();
-		$("[data-toggle='popover']").popover({
-			trigger:"hover",
-			placement:"bottom",
-			html:true
-		});
-	});
-	return true;
-}
-
 function load_course_list(target_id){
 	if(!target_id)
 		return false;
 	$.getJSON("/course_maps/get_course_group?cf_id="+target_id, function (data) {
-		//console.log(data);
 		$("#cg-div").html(tmpl("cg-table-tmpl", data));			
 		showTips();
 	});	
 	
 	$.getJSON("/course_maps/get_course_list?cf_id="+target_id, function (data) {
-		//console.log(data);
 		$("#course-list-div").html(tmpl("normal-course-table-tmpl", data));	
-		
 		showTips();
 	});
 	
@@ -541,5 +521,124 @@ function showTips(){
 		trigger:"hover",
 		placement:"bottom",
 		html:true
+	});
+}
+
+
+function addCourse(c_ids){ //action="add"
+	var target=$("#add-target").text();
+	
+	if(target=="cf"){
+		var cf_id=$("#cf-id").text();
+		if(cf_id=="0"){
+			toastr["warning"]("請先選擇一個 [必修] 或 [多選多] 類別");
+			return false ;	
+		}
+		$('#alert-msg').removeClass().html('<%=j fa_icon "spinner spin"%>');	
+		$.ajax({
+			type: "POST",
+			url: "/course_maps/course_action" ,
+			data:{
+				type: 'create_cfl',
+				cf_id : cf_id,
+				c_ids : c_ids,
+				map_id : map_id,
+			},	
+			success: function(data){ 
+				var res = $.parseJSON(data);
+				$("#course-list-div").append(tmpl("normal-course-table-tmpl",res.cfl));
+				//console.log(res);
+				if(res.cfl_same_cnt > 0 ){
+					toastr["warning"]("有 "+res.cfl_same_cnt+"門一般課程重複了!");	
+				}
+				if(res.cgl_same_cnt > 0){
+					toastr["warning"]("有 "+res.cgl_same_cnt+"門課程群組中的課程重複了!");	
+				}
+				$('#alert-msg').html('新增成功').removeClass().addClass('text-color-green').show().fadeOut(3000);
+				if(res.new_credit!=0){
+					$(".credit-need").text(res.new_credit);
+				}
+			},
+			error: function(){
+				$('#alert-msg').html('新增失敗').removeClass().addClass('text-color-red').show().fadeOut(3000);	
+				alert("Add course failed..");
+			}
+		});	
+	}
+	else if(target=="cg"){
+		var cg_id=$("#cg-id").text();
+		if(cg_id=="0"){
+			toastr["warning"]('請先選擇一個群組!');
+			return false;
+		}
+		$.ajax({
+				type: "POST",
+					url: "/course_maps/course_action" ,
+					data:{
+						type: 'create_cgl',				
+						cg_id : cg_id,
+						c_ids : c_ids
+					},	
+					success: function(data){
+						$tbl_body=$("table[cg_id='"+cg_id+"']").find("tbody");
+						var res = $.parseJSON(data);		
+						if(res.cfl_same_cnt > 0 ){
+							toastr["warning"]("有 "+res.cfl_same_cnt+"門一般課程重複了!");	
+						}
+						if(res.cgl_same_cnt > 0){
+							toastr["warning"]("有 "+res.cgl_same_cnt+"門課程群組中的課程重複了!");	
+						}
+						for(var i=0,cgl;cgl=res.cgl[i];i++){
+							cgl["show"]=true;
+							$tbl_body.append(tmpl("cg-sub-row-tmpl",cgl));
+						}
+						showAllCgl($tbl_body);
+						$('#alert-msg').html('新增成功').show().fadeOut(3000);
+					},
+					error: function(){
+						alert("Add course failed..");
+					}
+			});	
+	}
+	else{
+		alert("Error!!!");
+	}
+	return false ;
+}
+function addAllCourses(){
+	//if(!check_field_selected())return;
+	var arr=[];
+	$("tr.course").each(
+	function(){
+		//console.log($(this).attr('id'));
+		arr.push($(this).attr('id'));
+	});
+	if(confirm("確定加入共"+arr.length+"課程?")){
+		addCourse(arr);
+	}
+}
+
+function updateUserCflId($obj){
+	if(!confirm("使用此地圖的使用者將會重新計算學分\n"
+			+"請務必做完所有修改後再送出通知。\n\n"
+			+"您確定要送出嗎?")){
+		return false ;
+	}
+	$obj.attr("disabled", true);
+	$.ajax({
+		type: "POST",
+		url: "/course_maps/notify_user" ,
+		data:{
+			map_id: $("#cm-id").text(),
+		},	
+		success: function(res){								
+			toastr["success"]("更新成功");
+			setTimeout(function(){
+				$obj.attr("disabled", false);
+			}.bind(this), 5000);
+		}.bind(this),	
+		error: function(){
+			alert("internal server error.");
+		}
 	});
 }

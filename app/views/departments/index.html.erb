@@ -10,9 +10,8 @@
 	</tr>
 <% @departments.includes(:college).each do |dept| %>
   <tr class="row">
-		<td><%= link_to dept.ch_name, department_path(dept) %></td>
+		<td><%=dept.ch_name%></td>
 		<td><%=dept.degree%></td>
-		
 		<td><%=dept.college.try(:name)%></td>
 		<td><%=dept.has_courses%></td>
 		<td><%=dept.majorable%></td>
