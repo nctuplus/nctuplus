@@ -18,8 +18,13 @@
   		<% end %>
   	</td>
   	<td><%= cm.year.to_s%></td>
+		
   	<td class="text-center">
-			<%=select_tag :owner, options_from_collection_for_select(@user_sel, :id, :name, cm.user_id), :class=>'form-control owner', "data-id"=>cm.id, :onchange=>"updateOnwer($(this));" %>
+			<% if current_user.role==0 %>
+				<%=select_tag :owner, options_from_collection_for_select(@user_sel, :id, :name, cm.user_id), :class=>'form-control owner', "data-id"=>cm.id, :onchange=>"updateOnwer($(this));" %>
+			<% else %>
+				<%=cm.user_name%>
+			<% end %>
 		</td>
 		
   	<td>

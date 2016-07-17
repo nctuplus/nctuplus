@@ -1,79 +1,88 @@
 <script>
-	function checkFieldSelected(){
-		if(!cf_show_id){
-			alert("請先選擇一個 [必修] 或 [多選多] 類別");
-			return false ;	
-		}
-		return true;
-	}
-	function addCourse(c_ids){ //action="add"
-	<% if params[:hide_group]=="true"%>
-		// In course tree
-		if(!checkFieldSelected())
-			return false ;	
-		$('#alert-msg').removeClass().html('<%=j fa_icon "spinner spin"%>');	
-		$.ajax({
-				type: "POST",
-					url: "/course_maps/course_action" ,
-					data:{
-						type: 'add_course',
-						cf_id : cf_show_id,
-						c_ids : c_ids,
-						map_id : map_id,
-					},	
-					success: function(data){ 
-						var res = $.parseJSON(data);
-						console.log(res.success);			
-						if(res.fail > 0 ){
-							if(res.success>0)
-								alert("共加入了 "+res.success+" 門課程，另外有 "+res.fail+" 門課程重複。");
-							else
-								alert("課程重複了！");		
-						}else if(res.success > 1)
-							alert("共加入了 "+res.success+" 門課程");		
-						load_course_list(cf_show_id) ;
-						if(res.success>0)
-							$('#alert-msg').html('新增成功').removeClass().addClass('text-color-green').show().fadeOut(3000);
-						if(res.new_credit){
-							$(".credit-need").text(res.new_credit);
-						}
-						
-					},
-					error: function(){
-						$('#alert-msg').html('新增失敗').removeClass().addClass('text-color-red').show().fadeOut(3000);	
-						alert("Add course failed..");
-					}
-			});	
-	<% else %>
-		// In course group tree
-		//console.log('In add course group	'+cf_group_show_id);
-		if(!cg_show_id){
-			alert('請先選擇一個群組');
-			return false;
-		}
-		$.ajax({
-				type: "POST",
-					url: "/course_maps/course_action" ,
-					data:{
-						type: 'add_group',				
-						cg_id : cg_show_id,
-						c_ids : c_ids,
-					},	
-					success: function(data){ 
-						var res = $.parseJSON(data);		
-						if(res.fail > 0 )
-							alert("有 "+res.fail+" 課程重複了");
-						console.log(cg_show_id);	
-						load_group_treeview(cg_show_id, map_id);
-						$('#alert-msg').html('新增成功').show().fadeOut(3000);
-					},
-					error: function(){
-						alert("Add course failed..");
-					}
-			});	
-		return false;
 
-	<% end %>  		
+	function addCourse(c_ids){ //action="add"
+		var target=$("#add-target").text();
+		
+		if(target=="cf"){
+			var cf_id=$("#cf-id").text();
+			if(cf_id=="0"){
+				toastr["warning"]("請先選擇一個 [必修] 或 [多選多] 類別");
+				return false ;	
+			}
+			$('#alert-msg').removeClass().html('<%=j fa_icon "spinner spin"%>');	
+			$.ajax({
+				type: "POST",
+				url: "/course_maps/course_action" ,
+				data:{
+					type: 'create_cfl',
+					cf_id : cf_id,
+					c_ids : c_ids,
+					map_id : map_id,
+				},	
+				success: function(data){ 
+					var res = $.parseJSON(data);
+					$("#course-list-div").append(tmpl("normal-course-table-tmpl",res.cfl));
+					console.log(res);			
+					if(res.cfl_same_cnt > 0 ){
+						toastr["warning"]("有 "+res.cfl_same_cnt+"門一般課程重複了!");	
+					}
+					if(res.cgl_same_cnt > 0){
+						toastr["warning"]("有 "+res.cgl_same_cnt+"門課程群組中的課程重複了!");	
+					}
+					//load_course_list(cf_id);
+					
+						$('#alert-msg').html('新增成功').removeClass().addClass('text-color-green').show().fadeOut(3000);
+					if(res.new_credit!=0){
+						$(".credit-need").text(res.new_credit);
+					}
+					
+				},
+				error: function(){
+					$('#alert-msg').html('新增失敗').removeClass().addClass('text-color-red').show().fadeOut(3000);	
+					alert("Add course failed..");
+				}
+			});	
+		}
+		else if(target=="cg"){
+			//var first_add=$("#first-group")=="1";
+			var cg_id=$("#cg-id").text();
+			/*if(target_id=="0"){
+				alert('請先選擇一個群組');
+				return false;
+			}*/
+			$.ajax({
+					type: "POST",
+						url: "/course_maps/course_action" ,
+						data:{
+							type: 'add_group',				
+							cg_id : cg_id,
+							c_ids : c_ids
+						},	
+						success: function(data){
+							$tbl_body=$("table[cg_id='"+cg_id+"']").find("tbody");
+							
+							console.log(data);
+							var res = $.parseJSON(data);		
+							if(res.fail > 0 )
+								toastr["warning"]("有 "+res.fail+" 課程重複了");
+							for(var i=0,cgl;cgl=res.cgl[i];i++){
+								cgl["show"]=true;
+								$tbl_body.append(tmpl("cg-sub-row-tmpl",cgl));
+							}
+							showAllCgl($tbl_body);
+							//load_course_list($("#cf-id").text());
+							//console.log(target_id);	
+							//load_group_treeview(target_id, map_id);
+							$('#alert-msg').html('新增成功').show().fadeOut(3000);
+						},
+						error: function(){
+							alert("Add course failed..");
+						}
+				});	
+		}
+		else{
+			alert("Error!!!");
+		}
 		return false ;
 	}
 	function addAllCourses(){

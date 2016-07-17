@@ -2,21 +2,11 @@
 
 function load_treeview(target_id, map_id){
 	$.getJSON( "/course_maps/get_course_tree.json?map_id="+map_id, function(res){
-		console.log('load course tree success');
+		//console.log('load course tree success');
 		$('#course_tree').treeview({data: res, map_id: map_id});
 		if (target_id!=0){
 			$('#course_tree').treeview('activateNode', ['cf_id', target_id]);
 		}
-	});
-	return ;
-}
-
-function load_group_treeview(target_id, map_id){
-	$.getJSON( "/course_maps/get_group_tree.json?map_id="+map_id, function(res){
-		console.log('load group tree success');
-		$('#group_tree').treeview({data: res, map_id: map_id});
-		if (target_id!=0)
-			$('#group_tree').treeview('activateNode', ['cg_id', target_id]);
 	});
 	return ;
 }
@@ -45,11 +35,11 @@ function reset_data(){
 	// reset new form;
 	$('#new_form_div').empty();
 	// reset header content
-	cg_show_id = null ;cf_show_id = null ;
+	//cg_show_id = null ;cf_show_id = null ;
 	$('#header_content_div').empty();
 	// reset course list content
-	$('#course_content').empty();
-	return ;
+	//$('#course_content').empty();
+
 }
 
 
@@ -219,184 +209,279 @@ function bind_header_button(header_node){
 	
 }
 
-function bind_course_group_but(){  // for course group
-	$('.update-gtype').click(function(){
-		var org_gtype = $('.update-gtype').attr('gtype') ;
-		var gtype = (org_gtype==0) ? 1 : 0 ;
-		var but_color = ['btn-warning', 'btn-info'];
-		var but_text = (gtype==0) ? '代表' : '抵免' ;
-		$.ajax({
-			type: "POST",
-  			url: "/course_maps/course_group_action" ,
-  			data:{
-  				type: 'update',
-				target: 'gtype',
-				gtype: gtype ,
-  				cg_id : $('.list-header').attr('cg_id')
-  			},
-			success: function(){
-				$('.update-gtype').attr('gtype', gtype).html(but_text);
-				$('.update-gtype').removeClass(but_color[org_gtype]).addClass(but_color[gtype]);
-			},error: function(){
-				alert('update course group failed..');
-			}
-		});	
-	});
-	$('.update-leader').click(function(){
-		var cg_id = $('.list-header').attr('cg_id') ;
-		var list_id = $(this).parent('td').parent('tr').attr('list_id');
-		$.ajax({
-			type: "POST",
-  			url: "/course_maps/course_group_action" ,
-  			data:{
-  				type: 'update',
+//Course Group Functions start
+
+function setToLeadCourse($obj){
+	var $tr = $obj.parent('td').parent('tr');
+	var cg_id = $tr.parent('tbody').parent('table').attr('cg_id') ;
+	var cgl_id = $tr.attr('cgl_id');
+	$.ajax({
+		type: "POST",
+			url: "/course_maps/course_group_action" ,
+			data:{
+				type: 'update',
 				target: 'leader',
-  				cg_id : cg_id,
-				list_id: list_id 
-  			},
-			success: function(){
-				load_group_treeview(cg_id, map_id);
-			},error: function(){
-				alert('update course leader failed..');
+				cg_id : cg_id,
+				cgl_id: cgl_id 
+			},
+		success: function(data){
+			//console.log(data);
+			var res=$.parseJSON(data);
+			if(res.new_credit!=0){
+				$(".credit-need").text(res.new_credit);
 			}
-		});	
-	});
+			var $table_body = $tr.parent();
+			$table_body.html(tmpl("cg-rows-tmpl",res.cg)).promise().done(function(){
+				showAllCgl(cg_id);
+				//alert("!!!!");
+				//$(this).find(".toggle-group").click();
+			});
+			
+		},error: function(){
+			alert('update course leader failed..');
+		}
+	});	
+}
+
+
+
+function toggleGroup(cg_id){
+	$tbl_body=$("table[cg_id='"+cg_id+"']").find("tbody");
+	$but=$tbl_body.find(".toggle-group");
+	if($but.hasClass("fa-plus")){
+		showAllCgl(cg_id);
+	}
+	else{
+		hideAllCgl(cg_id);
+	}
+}
+function showAllCgl(cg_id){
+	$tbl_body=$("table[cg_id='"+cg_id+"']").find("tbody");
+	$but=$tbl_body.find(".toggle-group");
+	$but.removeClass("fa-plus").addClass("fa-minus");
+	$rows=$tbl_body.find(".sub_tr");
+	$rows.show();
+}
+function hideAllCgl(cg_id){
+	$tbl_body=$("table[cg_id='"+cg_id+"']").find("tbody");
+	$but=$tbl_body.find(".toggle-group");
+	$but.removeClass("fa-minus").addClass("fa-plus");
+	$rows=$tbl_body.find(".sub_tr");
+	$rows.hide();
+}
+function selectCg($obj){
+	var $list_tr = $obj.parent('td').parent('tr') ;
+	var $table = $list_tr.parent('tbody').parent('table') ;
+	var course_name = $list_tr.find(".course_name").text();
+	var cg_id=$table.attr("cg_id");
+	$("#tips-area").text("從左側加入課程至: "+course_name);
+	$("#add-target").text("cg");
+	showAllCgl(cg_id);
+	$("#dis-select-cg").show();
+	$("#cg-id").text(cg_id);
+		
+}
+
+function disSelectCg(){
+	$("#add-target").text("cf");	//set target to course field
+	$("#cg-id").text("0");	//reset cg-id
+	$("#tips-area").text("");
+	$("#dis-select-cg").hide();
 	
-	$('.delete-group').click(function(){
-		if(!confirm('確定刪除嗎?'))
-			return false ;
-		$.ajax({
-			type: "POST",
-  			url: "/course_maps/course_group_action" ,
-  			data:{
-  				type: 'delete',
-				target: 'cg',
-  				cg_id : $('.list-header').attr('cg_id')
-  			},
-			success: function(){
-				load_group_treeview(0, map_id);
-				$('#course_content').empty();
-			},error: function(){
-				alert('delete course group failed..');
-			}
-		});	
-	});
-	
-	
-	
-	$('.course-delete').click(function(){
-		//console.log("delete");
-		var list_tr = $(this).parent('td').parent('tr') ;
-		var cg_id = $('.list-header').attr('cg_id') ;
-		var list_id = list_tr.attr('list_id');
-		$.ajax({
-			type: "POST",
-  			url: "/course_maps/course_group_action" ,
-  			data:{
-  				type: 'delete',
-					target: 'cgl',
-  				list_id : list_id,
-					cg_id: cg_id
-  			},
-			success: function(){
-				//list_tr.remove();
-				load_group_treeview(cg_id, map_id);
-				
-			},error: function(){
-				alert('delete course group list failed..');
-			}
-		});	
+}
+
+function deleteCgl($obj){
+	var $list_tr = $obj.parent('td').parent('tr') ;
+	var cg_id = $list_tr.attr('cg_id') ;
+	var cgl_id = $list_tr.attr('cgl_id');
+	$.ajax({
+		type: "POST",
+			url: "/course_maps/course_group_action" ,
+			data:{
+				type: 'delete',
+				target: 'cgl',
+				cgl_id : cgl_id,
+				cg_id: cg_id
+			},
+		success: function(){
+			toastr["info"]("刪除成功");
+			$list_tr.remove();
+			//load_group_treeview(cg_id, map_id);
+			
+		},error: function(){
+			alert('delete course group list failed..');
+		}
 	});
 }
 
-function bind_course_list_button(){
-	//course delete
-	$('.course-table .course-delete').click(function(){
-		var target_tr = $(this).parent('td').parent('tr') ;
-		var list_id = target_tr.attr('list_id') ;
-		//console.log(list_id);
-		$.ajax({
-			type: "POST",
+function deleteCg($obj){
+	var $list_tr = $obj.parent('td').parent('tr');
+	var $table = $list_tr.parent().parent();
+	var cg_id = $table.attr('cg_id');
+	var cf_id = $('#cf-id').text();
+
+	if(!confirm('將會刪除整個課程群組,確定嗎?'))
+		return false ;
+	$.ajax({
+		type: "POST",
+			url: "/course_maps/course_group_action" ,
+			data:{
+				type: 'delete',
+				target: 'cg',
+				cg_id: cg_id,
+				cf_id: cf_id
+			},
+		success: function(data){
+			toastr["info"]("刪除群組: " +$list_tr.find(".course_name").text()+ "成功!");
+			if($("#cg-id").text()==cg_id){//if cg_id is selecting
+				disSelectCg();
+			}
+			$("table[cg_id='"+cg_id+"']").remove();
+			var res=$.parseJSON(data);
+			if(res.new_credit!=0){
+				$(".credit-need").text(res.new_credit);
+			}
+		},error: function(){
+			alert('delete course group failed..');
+		}
+	});	
+
+}
+function switchCgType($obj){
+	var $list_tr = $obj.parent('td').parent('tr') ;
+	var cg_id = $list_tr.attr('cg_id');
+	var org_gtype = $list_tr.attr('gtype') ;
+	var new_gtype = (org_gtype==0) ? 1 : 0 ;	//switch 
+	//var but_color = ['btn-warning', 'btn-info'];
+	var new_text = (new_gtype==0) ? '[代]' : '[抵]' ;
+	var full_text = (new_gtype==0) ? '代表' : '抵免' ;
+	var course_name = $list_tr.find(".course_name").text();
+	$.ajax({
+		type: "POST",
+			url: "/course_maps/course_group_action" ,
+			data:{
+				type: 'update',
+				target: 'gtype',
+				gtype: new_gtype ,
+				cg_id : cg_id
+			},
+		success: function(){
+			toastr["info"]("成功更新 "+course_name+"為: "+full_text);
+			$list_tr.find("span[class='gtype']").text(new_text);
+			$list_tr.attr("gtype",new_gtype);
+		},error: function(){
+			alert('update course group failed..');
+		}
+	});	
+}
+function createCg($obj){
+	if(!confirm('建立課程群組,確定嗎?'))
+		return false ;
+	var $list_tr = $obj.parent('td').parent('tr');
+	var cfl_id= $list_tr.attr("cfl_id");
+	var cm_id = $("#cm-id").text();
+	$.ajax({
+		type: "POST",
+			url: "/course_maps/course_group_action" ,
+			data:{
+				type: 'new',
+				cm_id: cm_id,
+				cfl_id: cfl_id
+			},
+		success: function(data){
+			_data=$.parseJSON(data);
+			$("#cg-div").prepend(tmpl("cg-single-tbl-tmpl",_data)).promise().done(function(){
+				$("table[cfl_id='"+cfl_id+"']").find("#select-cg-but").click();
+				//alert("!!!");
+			});
+			$list_tr.parent().parent().remove();
+			toastr["info"]("新增課程群組: "+_data.courses[0].course_name);
+			//$list_tr.find("span[class='gtype']").text(new_text);
+			//$list_tr.attr("gtype",new_gtype);
+		},error: function(){
+			alert('update course group failed..');
+		}
+	});	
+	
+}
+function toggleCflRtype($obj){
+	var $target_tr=$obj.parent().parent();
+	var new_rtype = $target_tr.attr('rtype')=="1" ? 0 : 1 ; // change credit-take
+	
+	var class_table = ['fa-check text-color-green', 'fa-times text-color-red'] ;
+	var tips_table = ['採計學分', '不採計學分'] ;
+	$.ajax({
+		type: "POST",
 			url: "/course_maps/course_action" ,
 			data:{
-				cf_id: cf_show_id,
-				target_id : list_id,
-				type : 'delete'
+				cfl_id : $target_tr.attr('cfl_id'),
+				target: "record_type",
+				rtype : new_rtype,
+				type : 'update'
 			},	
 			success: function(data){
-				//console.log(data);
-				//target_tr.remove();
 				res=JSON.parse(data);
 				if(res.new_credit){
 					$(".credit-need").text(res.new_credit);
 				}
-				$('.course-table [list_id='+list_id+']').remove();
+				$target_tr.attr('rtype', new_rtype) ;
+				$obj.removeClass(class_table[(new_rtype+1)%2]).addClass(class_table[(new_rtype)]);
+				$obj.attr("data-content",tips_table[new_rtype]);
+			
 			},	
 			error: function(){
-				alert('delete course failed.');
+				alert('update course failed.');
 			}
-		});
-			
 	});
 
-	//course update
-	$('.course-table .course-update').click(function(){
-		var target_tr = $(this).parent('td').parent('tr') ;
-		//console.log($(this).attr('rtype'));
-		var rtype = ($(this).attr('rtype')==1) ? 0 : 1 ; // change credit-take
-
-		var icon = $(this) ;
-		var change_table1 = ['fa-check', 'fa-times'] ;
-		var change_table2 = ['text-color-green', 'text-color-red'] ;
-		$.ajax({
-			type: "POST",
-  			url: "/course_maps/course_action" ,
-  			data:{
-  				target_id : target_tr.attr('list_id'),
-  				rtype : rtype,
-  				type : 'update'
-  			},	
-  			success: function(data){
-					
-  				//console.log('course update success');
-					res=JSON.parse(data);
-					if(res.new_credit){
-						$(".credit-need").text(res.new_credit);
-					}
-			
-					icon.attr('rtype', rtype) ;
-					icon.removeClass(change_table1[rtype]).addClass(change_table1[(rtype+1)%2]);
-					icon.removeClass(change_table2[rtype]).addClass(change_table2[(rtype+1)%2]);
-				
-  			},	
-  			error: function(){
-  				alert('update course failed.');
-  			}
-  		});
-	});
-	// course grade & half update
-	$('.grade-select, .half-select').change(function(){
-		var target_tr = $(this).parent('td').parent('tr') ;
-		var target = ($(this).attr('class')=="grade-select") ? "grade" : "half" ;
-		var value = $(this).val();
-		//console.log(target_tr.attr('list_id'));
-		//return false ;
-		$.ajax({
-			type: "POST",
-  		url: "/course_maps/course_action" ,
-  		data:{
-  				target_id : target_tr.attr('list_id'),
-					type : 'update',
-  				rtype : 2,
-  				target : target,
-					value: value
-				},
-			error: function(){
-  				alert('update grade, half failed.');
-  		}
-		});			
-	});
 	
+}
+
+function deleteCfl($obj){
+	var $list_tr = $obj.parent('td').parent('tr') ;
+	var cfl_id = $list_tr.attr('cfl_id') ;
+	//console.log(list_id);
+	$.ajax({
+		type: "POST",
+		url: "/course_maps/course_action" ,
+		data:{
+			type : 'delete',
+			cfl_id : cfl_id
+		},	
+		success: function(data){
+			res=JSON.parse(data);
+			if(res.new_credit){
+				$(".credit-need").text(res.new_credit);
+			}
+			$list_tr.parent().parent().remove();
+			//$('.course-table [list_id='+list_id+']').remove();
+		},	
+		error: function(){
+			alert('delete course failed.');
+		}
+	});
+}
+function changeGradeHalf($obj,target){
+	var $target_tr = $obj.parent('td').parent('tr') ;
+	var $table=$target_tr.parent().parent();
+	var cfl_id=$table.attr("cfl_id");
+	var value = $obj.val();
+	$.ajax({
+		type: "POST",
+		url: "/course_maps/course_action" ,
+		data:{
+				cfl_id : cfl_id,
+				type : 'update',
+				target : target,
+				value: value
+		},
+		success:function(){
+			toastr["info"]("更新成功");
+		},
+		error: function(){
+				alert('update grade, half failed.');
+		}
+	});
 }
 
 function genCreditList(data){
@@ -407,11 +492,7 @@ function genCreditList(data){
 
 function load_header_content(data){
 	$("#header_content_div").html(tmpl("header-content-format", data));
-	$("[data-toggle='popover']").popover({
-		trigger:"hover",
-		placement:"bottom",
-		html:true
-	});
+	showTips();
 	if(data.head_node.type>=1){
 		$.getJSON("/course_maps/get_credit_list?id="+data.head_node.cf_id, function (data) {		
 			genCreditList(data);
@@ -420,14 +501,45 @@ function load_header_content(data){
 	bind_header_button(data.head_node);
 }
 
+function load_single_cg(cg_id){
+	if(!cg_id)
+		return false;
+	$.getJSON("/course_maps/get_single_cg.json?cg_id="+target_id, function (data) {
+	//	console.log(data);
+		$("table[cg-id='"+cg_id+"']").html(tmpl("cg-rows-tmpl", data));	
+		//bind_course_list_button();
+		//bind_course_group_but();
+		$("[data-toggle='popover']").popover({
+			trigger:"hover",
+			placement:"bottom",
+			html:true
+		});
+	});
+	return true;
+}
+
 function load_course_list(target_id){
 	if(!target_id)
 		return false;
-	$.getJSON("/course_maps/show_course_list.json?target_id="+target_id, function (data) {
-	//	console.log(data);
-		$("#course_content").html(tmpl("table-format", data));	
-		bind_course_list_button();
+	$.getJSON("/course_maps/get_course_group?cf_id="+target_id, function (data) {
+		//console.log(data);
+		$("#cg-div").html(tmpl("cg-table-tmpl", data));			
+		showTips();
+	});	
+	
+	$.getJSON("/course_maps/get_course_list?cf_id="+target_id, function (data) {
+		//console.log(data);
+		$("#course-list-div").html(tmpl("normal-course-table-tmpl", data));	
+		
+		showTips();
 	});
 	
 	return true;
+}
+function showTips(){
+	$("[data-toggle='popover']").popover({
+		trigger:"hover",
+		placement:"bottom",
+		html:true
+	});
 }

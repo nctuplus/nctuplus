@@ -19,6 +19,7 @@ class CourseField < ActiveRecord::Base
 	has_many :cf_credits, :dependent => :destroy
 	
 	has_many :course_groups, :through =>:course_field_lists
+	has_many :course_group_lists, :through =>:course_groups
 
 	def cfl_to_json
 		
@@ -68,9 +69,9 @@ class CourseField < ActiveRecord::Base
 	end
 
 	def update_credit
+		credit=0
 		if self.field_type==1
 			self.reload
-			credit=0
 			self.course_field_lists.each do |cfl|
 				if cfl.record_type==true
 					if cfl.course
@@ -80,9 +81,9 @@ class CourseField < ActiveRecord::Base
 					end
 				end
 			end
-			
 			self.cf_credits.first.update_attributes(:credit_need=>credit)
 		end
+		return credit
 	end
 	
 	def get_bottom_node

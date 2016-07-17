@@ -4,23 +4,25 @@
 		<div class="col-md-7 well">
 			<div class="row" id="new_form_div" />
 			<div class="row" id="header_content_div" />
-			<div class="row" id="course_content" />
+			<div class="row" id="course_content">
+				
+				<table class="table course-table no-margin-bottom">
+					<tr class="row">
+						<th class="col-md-1"></th>
+						<th class="col-md-2">課名</th>
+						<th class="col-md-1">永久課號</th>
+						<th class="col-md-2">開課系所</th>
+						<th class="col-md-1">學分</th>
+						<th class="col-md-2">建議學期</th>
+						<th class="col-md-3">動作</th>
+					</tr>
+				</table>
+				
+				<div id="cg-div"></div>
+				<div id="course-list-div"></div>
+			</div>
 		</div>
-		<div class="col-md-2 col-sm-5 well">			
-			<ul id="myTab" class="nav nav-tabs" role="tablist">
-				<li role="presentation" class="active"><a href="#home" id="home-tab" role="tab" data-toggle="tab" aria-controls="home" aria-expanded="true">課程總覽</a></li>
-				<li role="presentation" class=""><a href="#group" role="tab" id="group-tab" data-toggle="tab" aria-controls="group" aria-expanded="false">課程群組</a></li>
-				<small id="alert-msg" />    
-		  </ul>
-			<div id="myTabContent" class="tab-content">
-				<div role="tabpanel" class="tab-pane fade active in" id="home" aria-labelledby="home-tab">
-					<div id="course_tree" />
-				</div>
-				<div role="tabpanel" class="tab-pane fade" id="group" aria-labelledby="group-tab">
-					<div id="group_tree" />
-				</div>		      
-			</div>				
-		</div>
+		<div id="course_tree" class="col-md-2 col-sm-5 well"></div>
 	</div>
 </div>
 
@@ -32,7 +34,7 @@
 <%=render "/course_maps/manage/xtmpl/credit_list" %>
 
 <script>
-var cf_show_id = null ;
+//var cf_show_id = null ;
 var cg_show_id = null ;
 var map_id = <%=@course_map.id%> ;
 $(document).ready(function(){
@@ -40,7 +42,7 @@ $(document).ready(function(){
 	// init in home-tab
 	$('#search_div').load("/course_maps/search_course?hide_group=true&map_id="+map_id) ;		
 	load_treeview(0, map_id);
-	load_group_treeview(0, map_id);
+	//load_group_treeview(0, map_id);
 	
 	// change tab, change search cond
 	$('#group-tab').click(function(){
@@ -50,18 +52,20 @@ $(document).ready(function(){
 	$('#home-tab').click(function(){
 		$('#search_div').load("/course_maps/search_course?hide_group=true&map_id="+map_id) ;
 		reset_data();
+		//$("#add-target").text("cf");
 	});
 	
 	// course_tree onSelect
 	$('#course_tree').on('nodeSelected', function(event, node) {
 		reset_data(); // reset new-form & header-content
-		cf_show_id = null ; // reset course table target id
+		//cf_show_id = null ; // reset course table target id
 		//console.log(node.cf_id) ;
 		if(node.type > 0){
 			load_header_content({head_node: node}) ;
 			if(node.type < 3){ // 1: 必修, 2: x選y
-				cf_show_id = node.cf_id ;  			
-				load_course_list(cf_show_id);  			
+				var cf_show_id = node.cf_id ;  			
+				load_course_list(cf_show_id);
+				$("#cf-id").text(cf_show_id);
 			}			   		
 		}else{ // new form 
 			//console.log("[course_tree select] " + node.type);
@@ -76,7 +80,7 @@ $(document).ready(function(){
 			$('#header_content').hide() ;
 			$('#course_content').empty();	
 		}else if(node.type!=0){
-			$('#course_content').empty();		
+			//$('#course_content').empty();		
 		}	
 		return false ;
 	});
@@ -99,15 +103,8 @@ $(document).ready(function(){
 					alert('new course group failed..');
 				}
 			});
-		}else{ // group content
-			cg_show_id = node.cg_id ;
-			$.getJSON("/course_maps/show_course_group_list.json?target_id="+node.cg_id, function (data) {
-				//console.log(data);
-				data.push({name: node.text, gtype: node.gtype, cg_id: node.cg_id}); // store header info
-				$("#course_content").html(tmpl("group-table-format", data));	
-				bind_course_group_but();
-			});
 		}
+
 	});
 	
 }); // end of document ready

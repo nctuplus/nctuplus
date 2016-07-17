@@ -15,7 +15,7 @@ class AdminController < ApplicationController
 	end
 	def course_maps
 		if current_user.role==2
-			@course_maps=CourseMap.where(:department_id=>current_user.department_id)
+			@course_maps=CourseMap.where(:user_id=>current_user.id)
 		elsif current_user.role==0
 			@user_sel=User.select(:name, :id).where(:role=>[0,2])
 			@course_maps=CourseMap.all.order('name asc')

@@ -9,7 +9,7 @@ class CourseMap < ActiveRecord::Base
 	belongs_to :department
 	delegate :ch_name, :to=>:department, :prefix=>true
 	belongs_to :user
-	
+	delegate :name, :to=>:user, :prefix=>true
 	def to_public_json
 		{
 			:id => self.id,
