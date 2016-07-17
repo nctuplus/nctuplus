@@ -392,6 +392,7 @@ function createCg($obj){
 			_data=$.parseJSON(data);
 			$("#cg-div").prepend(tmpl("cg-single-tbl-tmpl",_data)).promise().done(function(){
 				$("table[cfl_id='"+cfl_id+"']").find("#select-cg-but").click();
+				showTips();
 				//alert("!!!");
 			});
 			$list_tr.parent().parent().remove();
@@ -586,7 +587,7 @@ function addCourse(c_ids){ //action="add"
 							toastr["warning"]("有 "+res.cfl_same_cnt+"門一般課程重複了!");	
 						}
 						if(res.cgl_same_cnt > 0){
-							toastr["warning"]("有 "+res.cgl_same_cnt+"門課程群組中的課程重複了!");	
+							toastr["error"]("有 "+res.cgl_same_cnt+"門課程群組中的課程重複了!");	
 						}
 						for(var i=0,cgl;cgl=res.cgl[i];i++){
 							cgl["show"]=true;

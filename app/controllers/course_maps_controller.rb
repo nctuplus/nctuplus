@@ -265,86 +265,7 @@ class CourseMapsController < ApplicationController
    	 	format.json {render :json=> data}
     end
 	end
-	def show_course_list	
-		
-		cf = CourseField.find(params[:target_id])
-		data = []
-		cf.course_field_lists.order("updated_at DESC").includes(:course).each do |list|
-			course = 0
-			if list.course_group_id  # it is a group header
-				cg = list.course_group
-				if not cg # TODO: should not go here (the cg delete proc should have deleted the related cfl)
-					next 
-				end
-			#	leader = cg.lead_group_list
-				groups = {
-					:gtype=>cg.gtype,
-					:courses=>[]
-				}
-				cg.course_group_lists.order("updated_at DESC").includes(:course).each do |cgl|				
-					if cgl.lead == 1
-						course = cgl.course
-					else
-						c = cgl.course
-						tmp2 = {
-							:id=>cgl.id,
-							:cg_id=>cg.id,
-							:course_name=>c.ch_name,
-							:dept_name=> c.dept_name,#try(:department).try(:ch_name),
-							:credit=> c.credit,
-							:real_id=>c.real_id
-						}
-						groups[:courses].push(tmp2)
-					end
-				end
-				
-			else
-				groups = nil
-				course = list.course	
-			end		
-			
-			tmp = {
-				:id=>list.id, 
-				:course_id=>course.id ,
-				:course_name=>course.ch_name,
-				:dept_name=>course.dept_name,#try(:department).try(:ch_name),
-				:real_id=>course.real_id,
-				:credit=>course.credit,
-				:record_type=>list.record_type,
-				:grade=> list.grade,
-				:half=> list.half,
-				:cg_id=>list.course_group_id,
-				:group=> groups 
-			 }
-			
-			data.push(tmp)	
-		end
-		
-	#	Rails.logger.debug "[debug] " + data.to_s
-		respond_to do |format|
-   	 	format.json {render :json=> data}
-    end
-
-	end
 	
-	
-	
-	def show_course_group_list
-		cg = CourseGroup.find(params[:target_id])
-		data=cg.course_group_lists.order("updated_at DESC").includes(:course).map{|l|{
-			:id=>l.id,
-			:course_id=>l.course_id,
-			:course_name=>l.course.ch_name,
-			:real_id=>l.course.real_id,
-			:dept_name=>l.course.dept_name,#try(:department).try(:ch_name),
-			:credit=>l.course.credit,
-			:leader=>(l.lead==0) ? false : true 
-		}}
-		
-		respond_to do |format|
-   	 	format.json {render :json=> data}
-    end
-	end
 	
 	def course_action # ajax 
 		data = {}
@@ -366,13 +287,13 @@ class CourseMapsController < ApplicationController
 					)
 					data[:cfl].push(cfl.to_cm_mange_json)
 				end
-		
-				
 			when 'create_cgl'			
 				cg = CourseGroup.find(params[:cg_id])
-				c_ids = params[:c_ids]
+				c_ids = params[:c_ids].map{|c_id|c_id.to_i}
 				cfl_same_cnt=cg.course_field.course_field_lists.where(:course_id=>c_ids).count
-				cgl_same_cnt=cg.course_group_lists.where(:course_id=>c_ids).count
+				same_c_ids=cg.course_group_lists.where(:course_id=>c_ids).pluck(:course_id)	#get duplicated course_id list
+				cgl_same_cnt=same_c_ids.length	
+				c_ids = c_ids - same_c_ids	#remove duplicated course_id
 				data[:cfl_same_cnt], data[:cgl_same_cnt] = cfl_same_cnt, cgl_same_cnt
 				data[:cgl]=[]
 				c_ids.each do |c_id|
