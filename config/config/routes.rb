@@ -4,7 +4,7 @@ Nctuplus::Application.routes.draw do
 	
 #----------- [devise] user account concerned -----------	
 	devise_for :users, #:skip=>[:registrations, :confirmations, :passwords],
-             :controllers => { :omniauth_callbacks => "callbacks"},
+             :controllers => { :omniauth_callbacks => "callbacks", :sessions => "devise_sessions" },
              :path=>"/",
              :path_names => {
               :sign_in  => 'login',

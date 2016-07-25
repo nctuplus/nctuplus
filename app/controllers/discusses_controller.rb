@@ -53,6 +53,23 @@ class DiscussesController < ApplicationController
 	def create        
 		if params[:type].blank?
 			@discuss=current_user.discusses.create(main_discuss_params)
+			
+			#涼度 params["discuss"]["cold_degree"]			
+			CourseTeacherRating.find_or_create_by(
+				user_id: current_user.id, 
+				course_teachership_id: main_discuss_params["course_teachership_id"],
+				rating_type: 1,
+				score: params["discuss"]["cold_degree"]
+				)
+
+			#甜度 params["discuss"]["sweet_degree"]
+			CourseTeacherRating.find_or_create_by(
+				user_id: current_user.id, 
+				course_teachership_id: main_discuss_params["course_teachership_id"],
+				rating_type: 2,
+				score: params["discuss"]["sweet_degree"]
+				)
+
 		elsif params[:type]=="sub"
 			@discuss=current_user.sub_discusses.create(sub_discuss_params)
 			if  @discuss.discuss.user_id != current_user.id
