@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160718103818) do
+ActiveRecord::Schema.define(version: 20160725094327) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -448,10 +448,34 @@ ActiveRecord::Schema.define(version: 20160718103818) do
     t.datetime "updated_at"
   end
 
+  create_table "qandas", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "question"
+    t.text     "answer"
+    t.boolean  "is_public"
+    t.string   "update_user"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "semesters", force: true do |t|
     t.string  "name"
     t.integer "year"
     t.integer "half"
+  end
+
+  create_table "simple_bullentins", force: true do |t|
+    t.string   "time"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "slogans", force: true do |t|
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "sub_discusses", force: true do |t|

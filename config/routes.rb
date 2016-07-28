@@ -13,6 +13,9 @@ Nctuplus::Application.routes.draw do
 #--------- bulletin -----------
 	resources :bulletin
 
+#--------- slogan -----------
+	resources :slogan
+
 #--------- lab -----------
 	resources :lab
 
