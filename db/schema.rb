@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160327114601) do
+ActiveRecord::Schema.define(version: 20160725094327) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -112,14 +112,6 @@ ActiveRecord::Schema.define(version: 20160327114601) do
   end
 
   add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
-
-  create_table "brief_bullentins", force: true do |t|
-    t.string   "title"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "bulletins", force: true do |t|
     t.integer  "user_id"
@@ -372,25 +364,6 @@ ActiveRecord::Schema.define(version: 20160327114601) do
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
 
-  create_table "event1s", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
-  end
-
-  create_table "event2_7s", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "event_follows", force: true do |t|
     t.integer  "user_id"
     t.integer  "event_id"
@@ -413,8 +386,8 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.datetime "end_time",                                               null: false
     t.integer  "user_id",                                                null: false
     t.integer  "view_times",                             default: 0,     null: false
-    t.integer  "event_follows_count",                    default: 0
     t.integer  "attendances_count",                      default: 0
+    t.integer  "event_follows_count",                    default: 0
     t.boolean  "banner",                                 default: false
     t.string   "cover_file_name"
     t.string   "cover_content_type"
@@ -431,16 +404,6 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "mytests", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
   end
 
   create_table "normal_scores", force: true do |t|
@@ -474,10 +437,24 @@ ActiveRecord::Schema.define(version: 20160327114601) do
   add_index "past_exams", ["semester_id"], name: "index_past_exams_on_semester_id", using: :btree
   add_index "past_exams", ["user_id"], name: "index_past_exams_on_user_id", using: :btree
 
-  create_table "people", force: true do |t|
-    t.string   "name"
-    t.text     "bio"
-    t.date     "birthday"
+  create_table "qandas", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "question"
+    t.text     "answer"
+    t.boolean  "is_public"
+    t.string   "update_user"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "qandas", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "question"
+    t.text     "answer"
+    t.boolean  "is_public"
+    t.string   "update_user"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -491,6 +468,12 @@ ActiveRecord::Schema.define(version: 20160327114601) do
   create_table "simple_bullentins", force: true do |t|
     t.string   "time"
     t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "slogans", force: true do |t|
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -513,16 +496,6 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.boolean  "is_deleted"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "tests", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
   end
 
   create_table "user_collections", force: true do |t|

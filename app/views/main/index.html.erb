@@ -90,7 +90,10 @@ td.date{
 			</div>
 
 			<div class="header-right ">
-				<h2 id="brief-intro">
+                                <h2>
+                                  <% @slogans.each do |t| %>
+                                  <%= sanitize(t.description) %>
+                                  <% end %>
 				</h2>
 				<br><br>
 				<% if !current_user %>
@@ -198,7 +201,7 @@ $(document).ready(function(){
 		maxFontSize: '65px'
 	});
 	var brief_intro =["即將畢業，給自己一個安心，<br>快登入使用算學分功能！","機會是留給有準備的人，<br>快登入使用模擬排課！","手邊有用不到的教科書嗎？<br>快登入使用二手書平台！","想宣傳精彩的活動嗎？<br>快登入使用活動 BAR！"];
-	$("#brief-intro").html(brief_intro[Math.floor(Math.random()*brief_intro.length)]);
+	//$("#brief-intro").html(brief_intro[Math.floor(Math.random()*brief_intro.length)]);
 	var bgs = ['url(<%=asset_path "new-index/bg1.jpg"%>)','url(<%=asset_path "new-index/bg2.jpg"%>)','url(<%=asset_path "new-index/bg3.jpg"%>)'];
 	var t1=0;
 	$('.bg-image').css('background-image', bgs[t1]);
