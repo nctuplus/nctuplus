@@ -74,8 +74,7 @@ private
     if current_user.present?
     # user tends to bind
       if _check_can_binding(auth_type) && _check_can_be_binded(auth_record)
-      # process binding flow
-        
+      # process binding flow        
         if _bind_auth(auth_record)          
           return {:status=> true, :user=> current_user, :action=>"bind", :msg=> "綁定成功"}
         end         
@@ -113,7 +112,7 @@ private
     if record.user_id.nil?
       new_user = User.create_from_auth({
             :name=>record.name,
-            :email=>record.email
+            :email=>record.email || "#{Devise.friendly_token[0,7]}@auth.no.email"
           })
       record.update_attributes!(:user_id=> new_user.id)    
     end
