@@ -54,20 +54,31 @@ class DiscussesController < ApplicationController
 		if params[:type].blank?
 			@discuss=current_user.discusses.create(main_discuss_params)
 			
-			#涼度 params["discuss"]["cold_degree"]			
+			puts "我我我"
+			puts params["discuss"]
+
+			#涼度 params["discuss"]["cold_rating"]			
 			CourseTeacherRating.find_or_create_by(
 				user_id: current_user.id, 
 				course_teachership_id: main_discuss_params["course_teachership_id"],
 				rating_type: 1,
-				score: params["discuss"]["cold_degree"]
+				score: params["discuss"]["cold_rating"].to_i
 				)
 
-			#甜度 params["discuss"]["sweet_degree"]
+			#甜度 params["discuss"]["sweety_rating"]
 			CourseTeacherRating.find_or_create_by(
 				user_id: current_user.id, 
 				course_teachership_id: main_discuss_params["course_teachership_id"],
 				rating_type: 2,
-				score: params["discuss"]["sweet_degree"]
+				score: params["discuss"]["sweety_rating"].to_i
+				)
+
+			#深度 params["discuss"]["hardness_rating"]
+			CourseTeacherRating.find_or_create_by(
+				user_id: current_user.id, 
+				course_teachership_id: main_discuss_params["course_teachership_id"],
+				rating_type: 3,
+				score: params["discuss"]["hardness_rating"].to_i
 				)
 
 		elsif params[:type]=="sub"

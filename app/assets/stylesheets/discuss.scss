@@ -14,7 +14,10 @@
 //    left: 10px;
 //    color: gold;
 // }
-@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+
+.rating-bar {
+  margin-top: 13px;
+}
 
 fieldset, label { margin: 0; padding: 0; }
 .rating { 
@@ -28,26 +31,24 @@ fieldset, label { margin: 0; padding: 0; }
   font-size: 1.25em;
   font-family: FontAwesome;
   display: inline-block;
-  content: "\f005";
-}
-
-.rating > .half:before { 
-  content: "\f089";
-  position: absolute;
 }
 
 .rating > label { 
   color: #ddd; 
- float: right; 
+  float: right;
+  background-color: #BBCEFB;
+  width: 40px;
+  height: 10px;
+  margin: 0px 2px 0px 0px;
 }
 
 /***** CSS Magic to Highlight Stars on Hover *****/
 
 .rating > input:checked ~ label, /* show gold star when clicked */
 .rating:not(:checked) > label:hover, /* hover current star */
-.rating:not(:checked) > label:hover ~ label { color: #FFD700;  } /* hover previous stars in list */
+.rating:not(:checked) > label:hover ~ label { background-color: #23527c;  } /* hover previous stars in list */
 
 .rating > input:checked + label:hover, /* hover current star when changing rating */
 .rating > input:checked ~ label:hover,
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
-.rating > input:checked ~ label:hover ~ label { color: #FFED85;  } 
+.rating > input:checked ~ label:hover ~ label { background-color: #23527c;  } 
