@@ -53,9 +53,6 @@ class DiscussesController < ApplicationController
 	def create        
 		if params[:type].blank?
 			@discuss=current_user.discusses.create(main_discuss_params)
-			
-			puts "我我我"
-			puts params["discuss"]
 
 			#涼度 params["discuss"]["cold_rating"]			
 			CourseTeacherRating.find_or_create_by(
