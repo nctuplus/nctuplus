@@ -24,6 +24,8 @@ gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 
+gem 'mysql2'
+
 # for user auth
 gem 'devise'
 gem 'omniauth'
@@ -80,9 +82,4 @@ end
 
 group :development, :test do
   gem 'rspec-rails'
-  gem 'sqlite3'
-end
-
-group :production do
-  gem 'mysql2'
 end
