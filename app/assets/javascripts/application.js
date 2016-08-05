@@ -15,7 +15,6 @@
 //= require bootstrap-sprockets
 //= require turbolinks
 
-//= require jquery.ui.datepicker
 //= require underscore
 
 //= require toastr.min
