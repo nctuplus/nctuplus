@@ -33,3 +33,5 @@
 # ignore database
 config/database.yml
 
+# ignore .env
+.env

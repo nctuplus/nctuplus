@@ -74,6 +74,8 @@ group :development do
   gem 'brakeman', require: false
   gem 'rails_best_practices', require: false
   gem 'rails-erd'
+
+  gem 'dotenv-rails'
 end
 
 group :development, :test do
