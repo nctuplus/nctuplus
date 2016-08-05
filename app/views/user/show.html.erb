@@ -45,7 +45,7 @@
 			<% if @user.year==0 %>
 				未編輯入學年度
 			<% else %>
-			 	<%=@user.year+4%> 級 
+			 	<%=@user.year+4%> 級
 			<% end %>
 		<br>
 		<% if current_user.hasE3? %>
@@ -60,21 +60,21 @@
 			Facebook
 		<% else %>
 		  <% if @user.hasE3? %>
-		    <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
+		    <%= link_to omniauth_authorize_path(:facebook), :class=>"btn btn-sm btn-primary" do %>
 		      &nbsp; 綁定Facebook
-		    <% end %>    
+		    <% end %>
 		  <% end %>
 		<% end %>
 		<% if @user.hasGoogle? %>
 			Google
 		<% else %>
 		  <% if @user.hasE3? %>
-		    <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-danger" do%>
+		    <%= link_to omniauth_authorize_path(:google_oauth2), :class=>"btn btn-sm btn-danger" do %>
 		      &nbsp; 綁定Google
 		    <% end %>
-		  <% end %>  
+		  <% end %>
 		<% end %>
-		<br>   		
+		<br>
 		分享課表：<%=@user.canShare? ? "On" : "Off" %>
 		<br>
 		註冊日期：<%=@user.created_at.strftime("%Y-%m-%d") %>
@@ -89,10 +89,10 @@
 				<p>&nbsp;</p>
 			</div>
 		</div>
-		
+
 		<br>
 		</div>
-		
+
 		<br>
 		<div id="stat-num-grid" class="row no-margin-right bg-white" >
 			<div class="col-md-12" style="padding-top:10px;">
@@ -105,7 +105,7 @@
 					<h4 class="strong">Not Yet</h4>
 				</div>
 				<div class="text-center col-md-4 ">
-					
+
 					<%if @user.is_undergrad? %>
 						<% year_offset=4 %>
 					<% else %>
@@ -115,11 +115,11 @@
 					距離畢業
 					<h4 class="strong" >
 					<% if dist >= 0 %>
-						<%= dist/(3600*24) %>天	
+						<%= dist/(3600*24) %>天
 					<% else %>
 						已畢業
 					<% end %>
-					</h4>			
+					</h4>
 				</div>
 			</div>
 			<div class="col-md-12" style="border-top:1px solid #ddd;padding-top:10px;">
@@ -205,8 +205,8 @@
 					downloadable: true,
 					hideEmpty: false,
 					semester_id: semester_id
-				};     
-				$table.CourseTable(data) ;			
+				};
+				$table.CourseTable(data) ;
 
 				$select = $('<select>').addClass("form-control") ;
 				for(var i=0, sem; sem=data.semesters[i]; ++i){
@@ -218,22 +218,22 @@
 					//show_timetable_on_modal($(this).val(), true);
 					genTable($(this).val());
 				});
-				
+
 				var $title = $('<div>').addClass('row');
-				
-				if(data.hash_share && data.courses.length>0 ){		
-					$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));		
+
+				if(data.hash_share && data.courses.length>0 ){
+					$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
 				}else
 					$title.append($('<div>').addClass('col-md-3 col-sm-3 col-xs-3').html($select));
 
 				$("#time-table-header").html($title);
 				$("#time-table-body").html($table);
-				
-				if(data.courses.length>0){		
+
+				if(data.courses.length>0){
 					setTimeout(function(){ //wait for the modal show
 					if(data.hash_share){
 						$table.CourseTable("renderImg", "upload") ;
-            $title.append(genShareButton(data.hash_share));     
+            $title.append(genShareButton(data.hash_share));
 					}
 						return false ;
 					}, 600);
@@ -244,10 +244,10 @@
 
   function genShareButton(url){
     var $but = $("<button>").addClass("btn btn-info")
-               .html('<%=fa_icon "share-square-o"%>') 
+               .html('<%=fa_icon "share-square-o"%>')
                .attr("title", "分享課表")
                .attr("data-clipboard-text", "<%=j root_url %>shares/"+url);
-    var client = new ZeroClipboard( $but ); //set up click-copy event  
+    var client = new ZeroClipboard( $but ); //set up click-copy event
     client.on( "ready", function( readyEvent ) {
       client.on( "aftercopy", function( event ) {
         // `this` === `client`
@@ -256,8 +256,8 @@
         //alert("Copied text to clipboard: " + event.data["text/plain"] );
         toastr["success"]('已複製連結至剪貼簿');
       });
-    });  
-    return $but ;           
+    });
+    return $but ;
   }
 
 	function calcAvgScore(courses,pass_score,last_sem_name){
@@ -266,28 +266,28 @@
 		var credit_pass_with_agree=0;
 		var credit_taked=0;
 		var credit_this_sem=0;
-		
+
 		for(var i=0,course;course=courses[i];i++){
 			var tmp_score=parseInt(course.score);
 			if(course.score!="修習中"&&!isNaN(tmp_score)){
-				
+
 				score+=tmp_score*course.credit;
 				if(checkPass(pass_score,tmp_score)){
-					
+
 					credit_pass+=course.credit;
 					if(course.sem_name==last_sem_name){
 						credit_this_sem+=course.credit;
 					}
 					//console.log(credit_taked);
 				}
-				credit_taked+=course.credit;	
+				credit_taked+=course.credit;
 			}
 			if(checkPass(pass_score,course.score)){
 				credit_pass_with_agree+=course.credit;
 			}
-			
+
 		}
-		
+
 		//console.log(score/credit_taked);
 		$("#credit-all-taked").text(credit_pass_with_agree);
 		$("#credit-taking").text(credit_this_sem);
@@ -304,14 +304,14 @@
 				var pass_courses=getPassCourses(checkPass,data.pass_score,data.user_courses);
 				//$("#common-check-div").html(tmpl("common-tmpl",pass_courses));
 				$("#common_check_div").html(tmpl("common_check",pass_courses));
-			<% end %>		
+			<% end %>
 			if(data["course_map"]){
 				$("#cosmap_check_div").html(tmpl("cosmap_check",data));
 				//$("#course_list").html(tmpl("list_by_cosmap",data));
 			}else{ //no mapping course_map
 				//$("#course_list").html("喔唷! \n沒有找到對應的課程地圖。\n請確認您的系級是否填寫有誤，或聯絡我們為您服務。");
 			}
-			
+
 		});
 	});
 </script>
