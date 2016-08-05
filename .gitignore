@@ -29,3 +29,7 @@
 
 # except for the files
 !/config/locales/zh-TW.yml
+
+# ignore database
+config/database.yml
+
