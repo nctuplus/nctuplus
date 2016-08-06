@@ -1,12 +1,10 @@
-@import "jquery.ui.core"; // you always want that stylesheet
-@import "jquery.ui.theme";
-@import "jquery.ui.datepicker"; // import all the modules you need
+//= require jquery-ui
+//= require bootstrap3-switch
 
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "bg-color";
 @import "book";
-@import "bootstrap-switch.min";
 @import "bootstrap-treeview";
 @import "course";
 @import "course_maps";
