@@ -4,8 +4,6 @@ ruby '2.3.1'
 
 gem 'therubyracer'
 
-gem 'google-api-client'
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.7'
 
@@ -23,7 +21,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.5'
 
 gem 'mysql2'
 
@@ -52,10 +50,6 @@ gem 'whenever', require: false
 
 # for chrome extension cross domain support
 gem 'rack-jsonp-middleware', require: 'rack/jsonp'
-gem 'koala', '~> 2.2'
-
-gem 'eventmachine'
-gem 'em-resolv-replace', require: false
 
 # for events
 gem 'tinymce-rails'
