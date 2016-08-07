@@ -1,1 +1,0 @@
-Nctuplus::Application.config.secret_key_base = 'a4b574aca75cad6ac46d608286918674ed86dcb1e271f2ab501e98f22c7c8bd09c45b08521646f4335687db40376c784c77585e95b4a1ddbb03e36bb181cab50'
