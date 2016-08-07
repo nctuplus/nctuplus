@@ -34,4 +34,8 @@ $('.navbar-collapse ul li a').click(function() {
   }
 });
 
-
+$(function() {
+    if( window.innerWidth <= 800){
+            document.getElementById("NCTUMAP").src="/assets/newcomer/map.jpg";
+        }
+});
