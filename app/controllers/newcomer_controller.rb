@@ -38,4 +38,7 @@ class NewcomerController < ApplicationController
 	def stunionIntro
 		@title = "學聯會介紹 | 網路新生包"
 	end
+	def essentialShopping
+		@title = "小七精美用品預購 | 網路新生包"
+	end
 end
