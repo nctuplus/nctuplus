@@ -16,7 +16,7 @@
 /lib/tasks/
 
 /config/initializers/secret_token.rb
-*.yml
+/config/*.yml
 /config/initializers/smtp.rb
 /public/
 /past_exams/
@@ -29,3 +29,10 @@
 
 # except for the files
 !/config/locales/zh-TW.yml
+
+# ignore database
+/config/database.yml
+
+# ignore .env
+.env
+

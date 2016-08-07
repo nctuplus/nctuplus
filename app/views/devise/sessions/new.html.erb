@@ -11,7 +11,7 @@
 				<h6>是交大學生嗎？請用E3登入享用完整功能。</h6>
 			</div>
 			<div class="form1">
-				<%=form_tag(user_omniauth_callback_path(:E3), :id=>"login-form") do %>				
+				<%= form_tag(omniauth_callback_path(:user, :E3), :id=>"login-form") do %>
           <table style="margin:auto">
             <tr>
               <td class="input-table">
@@ -22,7 +22,7 @@
             </tr>
             <tr>
               <td class="input-table">
-                <i class="fa fa-2x fa-lock input-icon down-coner" ></i>	
+                <i class="fa fa-2x fa-lock input-icon down-coner" ></i>
               </td>
               <td>
                 <%=password_field_tag :password,"", placeholder: "Password", class: "input2", required: "true" %>
@@ -31,19 +31,19 @@
           </table>
           <%=submit_tag "E3帳號登入", class:"btn-width-e3" %>
           <div style="margin-top: 7px;">or</div>
-<!--         
+<!--
           <div class="strike">
             <span>or</span>
           </div>
--->          
-          <%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:facebook)}');") do %>
+-->
+          <%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{omniauth_authorize_path(:user, :facebook)}');") do %>
             Facebook登入
-          <% end %>     
-          <%=button_tag(type: "submit", class: "btn-width-google", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:google_oauth2)}');") do %>
+          <% end %>
+          <%=button_tag(type: "submit", class: "btn-width-google", onclick:"event.preventDefault();goToHref('#{omniauth_authorize_path(:user, :google_oauth2)}');") do %>
             Google登入
           <% end %>
         <% end %>
-			</div>	
+			</div>
 		</div>
 		</div>
 	</div>
