@@ -4,13 +4,13 @@
 @import "font-awesome";
 @font-face {
   font-family: 'NotoSans';
-  src: url('NotoSans-Regular.ttf') format('truetype');
+  src: font-url('NotoSans-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
 @font-face {
   font-family: '谷歌黑體';
-  src: url('cwTeXHei.ttf') format('truetype');
+  src: font-url('cwTeXHei.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
 }
