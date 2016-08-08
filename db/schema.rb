@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160807090153) do
+ActiveRecord::Schema.define(version: 20160808153851) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -468,19 +468,6 @@ ActiveRecord::Schema.define(version: 20160807090153) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "status"
-  end
-
-  create_table "newcomer_clubs", force: true do |t|
-    t.string   "category"
-    t.string   "name"
-    t.string   "pdf"
-    t.string   "web"
-    t.string   "fb"
-    t.string   "img"
-    t.string   "group"
-    t.string   "color"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "normal_scores", force: true do |t|
