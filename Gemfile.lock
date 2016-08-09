@@ -58,6 +58,9 @@ GEM
       autoprefixer-rails (>= 5.0.0.1)
       sass (>= 3.2.19)
     bootstrap-switch-rails (3.3.2)
+    bourbon (4.2.7)
+      sass (~> 3.4)
+      thor (~> 0.19)
     brakeman (3.0.3)
       erubis (~> 2.6)
       fastercsv (~> 1.5)
@@ -131,6 +134,8 @@ GEM
     jbuilder (1.5.3)
       activesupport (>= 3.0.0)
       multi_json (>= 1.2.0)
+    jquery-easing-rails (0.0.2)
+      railties (>= 3.1.0)
     jquery-fileupload-rails (0.4.1)
       actionpack (>= 3.1)
       railties (>= 3.1)
@@ -321,6 +326,7 @@ PLATFORMS
 DEPENDENCIES
   bootstrap-sass (~> 3.3.5)
   bootstrap-switch-rails
+  bourbon (= 4.2.7)
   brakeman
   coffee-rails (~> 4.0.0)
   curb
@@ -333,6 +339,7 @@ DEPENDENCIES
   googlebooks
   hashids
   jbuilder (~> 1.2)
+  jquery-easing-rails
   jquery-fileupload-rails
   jquery-rails
   jquery-raty-rails!

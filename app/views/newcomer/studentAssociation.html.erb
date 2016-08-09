@@ -1,0 +1,13 @@
+<%= stylesheet_link_tag 'newcomer/curricular' %>
+<div class="spacing"></div>
+<section class="curricular">
+	<span><h3>系學會列表</h3></span>
+	<%= render 'club', :category => 'studentAssociation', :datas => @data %>
+	<div class="row important">
+		<div class="row col-sm-12">
+			<h4 style="padding: 0 20px 0 20px;">(註：系學會資料陸續增加中！該欄空白代表該系學會並未提供該項資料。此表並非所有系學會，僅為有提供資料之系學會)
+				<p>以上資料由各系學會提供，並不代表學聯會立場</p>
+			</h4>
+		</div>
+	</div>
+</section>
