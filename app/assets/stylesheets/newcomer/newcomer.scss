@@ -337,6 +337,9 @@ a {
 .btn-3{
     @include custom-btn(#f7f7f7,#0f345b,#0f345b);
 }
+.btn-4{
+    @include custom-btn(#009933,#f7f7f7,#FFF);
+}
 @media screen and (max-width: 414px){
     #banner{
     display:table;
@@ -378,5 +381,16 @@ a {
     padding:80px 20px 80px 20px;
     text-align:center;
     background-color:#10608c;
+}
+
+.buy-it{
+    padding:80px 20px 80px 20px;
+    text-align:center;
+    background-color:#5aa8dd;
+}
+.buy-it-7-11{
+    padding:80px 20px 80px 20px;
+    text-align:center;
+    background-color:#00d4a4;
 }
 
