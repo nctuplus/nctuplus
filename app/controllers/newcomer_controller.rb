@@ -157,6 +157,15 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "交通大學機車研究社",
+				pdf: nil,
+				group: "https://www.facebook.com/groups/nctumotor/",
+				fb: nil,
+				img: "交通大學機車研究社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "社會企業創思社",
 				pdf: nil,
 				web: nil,
