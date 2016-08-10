@@ -103,33 +103,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "諮商中心",
-				pdf: nil,
-				web: "http://counsel.adm.nctu.edu.tw",
-				fb: "https://www.facebook.com/counseingcenter",
-				img: "諮商中心.jpg",
-				color: "grey"
-			},
-			{
-				category: "curricular",
-				name: "證券研習社",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/nctusrs",
-				img: "證研社.jpg",
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "崇德青年志工社",
-				pdf: nil,
-				group: "https://www.facebook.com/groups/758146294242897/",
-				fb: "https://www.facebook.com/NCTUCDYoungVolunteers",
-				img: "崇德青年志工社.jpg",
-				color: "white"
-			},
-			{
-				category: "curricular",
 				name: "星聲社",
 				pdf: nil,
 				group: "https://www.facebook.com/groups/540839232683099/",
@@ -382,15 +355,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "及人服務團",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/pages/及人服務團/167637766652407",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "花輪社",
 				pdf: nil,
 				web: nil,
@@ -449,6 +413,15 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: "http://www.nctumun.org/",
 				fb: "https://www.facebook.com/nctumun",
+				img: nil,
+				color: "default"
+			},			
+			{
+				category: "curricular",
+				name: "崇德青年志工社",
+				pdf: nil,
+				group: "https://www.facebook.com/groups/758146294242897/",
+				fb: "https://www.facebook.com/NCTUCDYoungVolunteers",
 				img: nil,
 				color: "default"
 			}
@@ -724,24 +697,7 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "alumnian",
-				name: "成功景美校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "alumnian",
-				name: "蘭友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
-				name: "彰化校友會",
+				name: "宜蘭校友會",
 				pdf: nil,
 				web: nil,
 				fb: nil,
@@ -765,31 +721,7 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "alumnian",
-				name: "金門校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
-				name: "松山校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
 				name: "內湖高中校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
-				name: "中和高中校友會",
 				pdf: nil,
 				web: nil,
 				fb: nil,
