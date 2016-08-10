@@ -436,6 +436,15 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "設計與思考社",
+				pdf: nil,
+				web:"https://www.facebook.com/NCTUDT/",
+				group: nil ,
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "模擬聯合國社",
 				pdf: nil,
 				web: "http://www.nctumun.org/",
@@ -601,10 +610,11 @@ class NewcomerController < ApplicationController
 			{
 				category: "studentAssociation",
 				name: "外國語文學系",
-				pdf: nil,
+				pdf: "外國語文學系-系學會新生通知.pdf",
 				web: nil,
 				fb: "https://www.facebook.com/NCTUFL",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/1140809822609032/"
 			},
 			{
 				category: "studentAssociation",
