@@ -15,7 +15,7 @@ class NewcomerController < ApplicationController
 				category: "curricular",
 				name: "網絡安全策進會",
 				pdf: "網安.pdf",
-				web: "https://bamboofox.torchpad.com/",
+				web: "https://bamboofox.github.io/",
 				fb: "https://www.facebook.com/NCTUCSC",
 				img: "網安.jpg",
 				color: "default"
