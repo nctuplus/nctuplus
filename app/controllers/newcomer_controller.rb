@@ -373,15 +373,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "AIESEC",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/AIESECNCTU",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "烏克麗麗社",
 				pdf: nil,
 				group: "https://www.facebook.com/groups/327026434028600/",
@@ -409,6 +400,15 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "AIESEC",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/AIESECNCTU",
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "模擬聯合國社",
 				pdf: nil,
 				web: "http://www.nctumun.org/",
@@ -420,7 +420,6 @@ class NewcomerController < ApplicationController
 				category: "curricular",
 				name: "崇德青年志工社",
 				pdf: nil,
-				group: "https://www.facebook.com/groups/758146294242897/",
 				fb: "https://www.facebook.com/NCTUCDYoungVolunteers",
 				img: nil,
 				color: "default"
