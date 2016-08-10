@@ -473,7 +473,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: nil,
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/1245254812158317/",
 			},
 			{
 				category: "studentAssociation",
@@ -481,7 +482,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/pages/%E7%AC%AC%E5%9B%9B%E5%B1%86-%E4%BA%A4%E5%A4%A7%E9%9B%BB%E6%A9%9F%E7%B3%BB%E7%B3%BB%E5%AD%B8%E6%9C%83/1427829697481421",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/183222062072883/",
 			},
 			{
 				category: "studentAssociation",
@@ -497,7 +499,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/pages/%E4%BA%A4%E5%A4%A7%E8%B3%87%E5%B7%A5%E7%B3%BB%E5%AD%B8%E6%9C%83/177647505627076",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/NCTUCS109/"
 			},
 			{
 				category: "studentAssociation",
@@ -505,7 +508,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/msenctu",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/949067228547342/"
 			},
 			{
 				category: "studentAssociation",
@@ -513,7 +517,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/NCTUME",
-				img: nil
+				img: nil,
+				group:"https://www.facebook.com/groups/1717691548519926/"
 			},
 			{
 				category: "studentAssociation",
@@ -529,7 +534,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/NCTU.epstudentorganization",
-				img: nil
+				img: nil,
+				group:"https://www.facebook.com/groups/1027416187344417/"
 			},
 			{
 				category: "studentAssociation",
@@ -545,7 +551,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/nctuamsa04",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/617667181721722/617669978388109/?ref=notif&notif_t=group_activity_unconfirmed&notif_id=1463481657931672&hc_location=ufi",
 			},
 			{
 				category: "studentAssociation",
@@ -554,7 +561,7 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/nctudbtsu/",
 				img: nil,
-				group: "https://www.facebook.com/groups/1546915355611613/?notif_t=group_added_to_group&notif_id=1468848653896584"
+				group: "https://www.facebook.com/groups/1546915355611613/"
 			},
 			{
 				category: "studentAssociation",
@@ -570,7 +577,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: "https://sites.google.com/a/ms.nctu.edu.tw/msstudent/home",
 				fb: "https://www.facebook.com/NCTU.MS",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/1725936697674250/"
 			},
 			{
 				category: "studentAssociation",
@@ -587,7 +595,8 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/IEMhome",
 				img: "工業工程與管理學系.jpg",
-				color: "grey"
+				color: "grey",
+				group: "https://www.facebook.com/groups/1724898754415038/"
 			},
 			{
 				category: "studentAssociation",
@@ -611,7 +620,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/pages/%E4%BA%A4%E5%A4%A7%E4%BA%BA%E7%A4%BE%E7%B3%BB%E7%B3%BB%E5%AD%B8%E6%9C%83/370527856323364",
-				img: nil
+				img: nil,
+				group:"https://www.facebook.com/groups/1594468117530437/"
 			}
 		]
 	end
