@@ -148,20 +148,20 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "散打搏擊社",
-				pdf: "散打搏擊社.pdf",
-				group: "https://www.facebook.com/groups/130432718550/",
-				fb: nil,
-				img: "散打搏擊社.jpg",
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "交通大學機車研究社",
 				pdf: nil,
 				group: "https://www.facebook.com/groups/nctumotor/",
 				fb: nil,
 				img: "交通大學機車研究社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "散打搏擊社",
+				pdf: "散打搏擊社.pdf",
+				group: "https://www.facebook.com/groups/130432718550/",
+				fb: nil,
+				img: "散打搏擊社.jpg",
 				color: "default"
 			},
 			{
