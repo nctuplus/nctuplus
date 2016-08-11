@@ -93,6 +93,14 @@ span.header p{
 .seven-items{
     font-size: 1.3em;
 }
+ul.important-note {
+    list-style-type: none;
+    font-size:1.18em;
+    text-align:left;
+    li{
+        margin:2px;
+    }
+}
 .get{
     list-style: none;
     font-size:1.5em;

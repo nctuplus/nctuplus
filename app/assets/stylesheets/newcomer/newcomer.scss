@@ -340,6 +340,9 @@ a {
 .btn-4{
     @include custom-btn(#009933,#f7f7f7,#FFF);
 }
+.btn-5{
+    @include custom-btn(#281270,#f7f7f7,#FFF);
+}
 @media screen and (max-width: 414px){
     #banner{
     display:table;
@@ -396,7 +399,11 @@ a {
     background-color:#00d4a4;
 }
 
-
+.curricular-footer{
+    padding:80px 20px 80px 20px;
+    text-align:center;
+    background-color:#251e7b;
+}
 @media (max-width: 992px) {
 	.navbar-header {
 		float: none;

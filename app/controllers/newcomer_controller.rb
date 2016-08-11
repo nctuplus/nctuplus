@@ -15,7 +15,7 @@ class NewcomerController < ApplicationController
 				category: "curricular",
 				name: "網絡安全策進會",
 				pdf: "網安.pdf",
-				web: "https://bamboofox.torchpad.com/",
+				web: "https://bamboofox.github.io/",
 				fb: "https://www.facebook.com/NCTUCSC",
 				img: "網安.jpg",
 				color: "default"
@@ -103,33 +103,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "諮商中心",
-				pdf: nil,
-				web: "http://counsel.adm.nctu.edu.tw",
-				fb: "https://www.facebook.com/counseingcenter",
-				img: "諮商中心.jpg",
-				color: "grey"
-			},
-			{
-				category: "curricular",
-				name: "證券研習社",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/nctusrs",
-				img: "證研社.jpg",
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "崇德青年志工社",
-				pdf: nil,
-				group: "https://www.facebook.com/groups/758146294242897/",
-				fb: "https://www.facebook.com/NCTUCDYoungVolunteers",
-				img: "崇德青年志工社.jpg",
-				color: "white"
-			},
-			{
-				category: "curricular",
 				name: "星聲社",
 				pdf: nil,
 				group: "https://www.facebook.com/groups/540839232683099/",
@@ -175,11 +148,29 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "交通大學機車研究社",
+				pdf: nil,
+				group: "https://www.facebook.com/groups/nctumotor/",
+				fb: nil,
+				img: "交通大學機車研究社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "散打搏擊社",
 				pdf: "散打搏擊社.pdf",
 				group: "https://www.facebook.com/groups/130432718550/",
 				fb: nil,
 				img: "散打搏擊社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "創客俱樂部",
+				pdf: "創客俱樂部.pdf",
+				group: "https://www.facebook.com/groups/722749624403809/",
+				fb: "https://www.facebook.com/Makereal.Labs/",
+				img: "創客俱樂部.jpg",
 				color: "default"
 			},
 			{
@@ -382,15 +373,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "及人服務團",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/pages/及人服務團/167637766652407",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "花輪社",
 				pdf: nil,
 				web: nil,
@@ -404,15 +386,6 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/pages/%E4%BA%A4%E5%A4%A7%E5%90%89%E4%BB%96%E7%A4%BE/138414562871595",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "AIESEC",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/AIESECNCTU",
 				img: nil,
 				color: "default"
 			},
@@ -436,13 +409,58 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "設計與思考社",
+				pdf: nil,
+				fb:"https://www.facebook.com/NCTUDT/",
+				group: nil ,
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "AIESEC",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/AIESECNCTU",
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "模擬聯合國社",
 				pdf: nil,
 				web: "http://www.nctumun.org/",
 				fb: "https://www.facebook.com/nctumun",
 				img: nil,
 				color: "default"
+			},			
+			{
+				category: "curricular",
+				name: "崇德青年志工社",
+				pdf: nil,
+				fb: "https://www.facebook.com/NCTUCDYoungVolunteers",
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "創新創業社",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/NCTUIEC/",
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "網路福利社",
+				pdf: nil,
+				web: nil,
+				group: "https://www.facebook.com/groups/169489583068057/",
+				img: nil,
+				color: "default"
 			}
+
 		]
 	end
 
@@ -473,7 +491,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: nil,
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/1245254812158317/"
 			},
 			{
 				category: "studentAssociation",
@@ -489,15 +508,17 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/pages/%E4%BA%A4%E5%A4%A7%E5%85%89%E9%9B%BBNCTU_EO/201908786557647",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/183222062072883/"
 			},
 			{
 				category: "studentAssociation",
 				name: "資訊工程學系",
 				pdf: nil,
-				web: nil,
+				web: "https://www.nctucs.tw/",
 				fb: "https://www.facebook.com/pages/%E4%BA%A4%E5%A4%A7%E8%B3%87%E5%B7%A5%E7%B3%BB%E5%AD%B8%E6%9C%83/177647505627076",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/NCTUCS109/"
 			},
 			{
 				category: "studentAssociation",
@@ -505,7 +526,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/msenctu",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/949067228547342/"
 			},
 			{
 				category: "studentAssociation",
@@ -513,7 +535,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/NCTUME",
-				img: nil
+				img: nil,
+				group:"https://www.facebook.com/groups/1717691548519926/"
 			},
 			{
 				category: "studentAssociation",
@@ -529,7 +552,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/NCTU.epstudentorganization",
-				img: nil
+				img: nil,
+				group:"https://www.facebook.com/groups/1027416187344417/"
 			},
 			{
 				category: "studentAssociation",
@@ -545,7 +569,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/nctuamsa04",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/617667181721722/617669978388109/?ref=notif&notif_t=group_activity_unconfirmed&notif_id=1463481657931672&hc_location=ufi",
 			},
 			{
 				category: "studentAssociation",
@@ -554,7 +579,7 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/nctudbtsu/",
 				img: nil,
-				group: "https://www.facebook.com/groups/1546915355611613/?notif_t=group_added_to_group&notif_id=1468848653896584"
+				group: "https://www.facebook.com/groups/1546915355611613/"
 			},
 			{
 				category: "studentAssociation",
@@ -570,7 +595,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: "https://sites.google.com/a/ms.nctu.edu.tw/msstudent/home",
 				fb: "https://www.facebook.com/NCTU.MS",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/1725936697674250/"
 			},
 			{
 				category: "studentAssociation",
@@ -587,15 +613,17 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/IEMhome",
 				img: "工業工程與管理學系.jpg",
-				color: "grey"
+				color: "grey",
+				group: "https://www.facebook.com/groups/1724898754415038/"
 			},
 			{
 				category: "studentAssociation",
 				name: "外國語文學系",
-				pdf: nil,
+				pdf: "外國語文學系-系學會新生通知.pdf",
 				web: nil,
 				fb: "https://www.facebook.com/NCTUFL",
-				img: nil
+				img: nil,
+				group: "https://www.facebook.com/groups/1140809822609032/"
 			},
 			{
 				category: "studentAssociation",
@@ -611,7 +639,8 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/pages/%E4%BA%A4%E5%A4%A7%E4%BA%BA%E7%A4%BE%E7%B3%BB%E7%B3%BB%E5%AD%B8%E6%9C%83/370527856323364",
-				img: nil
+				img: nil,
+				group:"https://www.facebook.com/groups/1594468117530437/"
 			}
 		]
 	end
@@ -673,7 +702,8 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: nil,
 				img: nil,
-				color: "default"
+				color: "default",
+				group: "https://www.facebook.com/groups/981152421998748/"
 			},
 			{
 				category: "alumnian",
@@ -700,32 +730,17 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: nil,
 				img: nil,
-				color: "white"
+				color: "white",
+				group: "https://www.facebook.com/groups/981152421998748/"
 			},
 			{
 				category: "alumnian",
-				name: "成功景美校友會",
+				name: "宜蘭校友會(蘭友會)",
 				pdf: nil,
 				web: nil,
 				fb: nil,
 				img: nil,
-				color: "default"
-			},
-			{
-				category: "alumnian",
-				name: "蘭友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
-				name: "彰化校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
+				group: "https://www.facebook.com/groups/189918927715923/"
 			},
 			{
 				category: "alumnian",
@@ -745,31 +760,7 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "alumnian",
-				name: "金門校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
-				name: "松山校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
 				name: "內湖高中校友會",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil
-			},
-			{
-				category: "alumnian",
-				name: "中和高中校友會",
 				pdf: nil,
 				web: nil,
 				fb: nil,
