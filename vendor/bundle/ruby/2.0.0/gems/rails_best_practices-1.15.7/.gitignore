@@ -1,0 +1,12 @@
+.DS_STORE
+.*.swp
+Gemfile.lock
+pkg/**
+*.gem
+.bundle
+rdoc/**
+doc/**
+.yardoc/**
+rails_best_practices_output.*
+coverage/
+.coveralls.yml

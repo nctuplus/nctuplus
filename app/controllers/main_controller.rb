@@ -16,8 +16,8 @@ class MainController < ApplicationController
 		end
     @news = Bulletin.where("article_type = true").order("created_at DESC")
     @updates = Bulletin.where("article_type = false").order("created_at DESC")
-    @slogans = Slogan.limit(1).order("rand()")
-
+    @slogan = Slogan.order("rand()").first
+    @backgrounds = Background.all
   end
 
 	def get_specified_classroom_schedule

@@ -1,0 +1,40 @@
+= em-resolv-replace
+
+EventMachine-aware DNS lookup for Ruby.
+
+Ruby's stock DNS resolution, by default, blocks the entire Ruby VM from processing while
+the lookup is happening, because it calls out to the native libc resolver code.  A slow 
+DNS server can cause your entire Ruby process to grind to a halt.  Ruby comes with a pure
+Ruby replacement that is not loaded by default:
+
+    require 'resolv'
+    require 'resolv-replace'
+
+'resolv' is the pure Ruby DNS resolver.  'resolv-replace' monkeypatches the various Ruby
+Socket objects to use resolv.  This gem monkeypatches the monkeypatch so that the Socket
+classes will use an EventMachine-aware resolver, em-dns-resolver.
+
+== Requirements
+
+em-resolv-replace requires Ruby 1.9.
+
+== Installation
+
+    gem install em-resolv-replace
+
+== Usage
+
+Just require em-resolv-replace when initializing your application:
+
+    require 'em-resolv-replace'
+
+The code will use the EM-aware resolver if EventMachine is running.
+
+== Credits
+
+em-dns-resolver.rb is taken from the em-dns project, with a connection bugfix applied by myself,
+and was written by Aman Gupta and Stephan Maka.
+
+== Author
+
+Mike Perham, @mperham, mperham AT gmail.com, http://github.com/mperham

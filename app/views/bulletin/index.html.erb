@@ -31,6 +31,7 @@
 			<li><a href="/bulletin?q[article_type_eq]=true">最新消息</a></li>
 			<li><a href="/bulletin?q[article_type_eq]=false">網站改版</a></li>
                         <li><a href="/slogan">首頁標語</a></li>
+                        <li><a href="/backgrounds">首頁背景</a></li>
 	   	 </ul>
 	</div>
 
@@ -60,7 +61,7 @@
 		            <tr>
 		              <td class="col_1"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;<%= t.title %></td>
 		         	  <td class="col_2"><font color="gray" valign="bottom">
-						20<%= t.created_at.strftime("%y/%m/%d %H:%M") %><br><%= t.user.name %></font></td>
+						20<%= t.created_at.strftime("%y/%m/%d %H:%M") %><br><%= t.user.name if t.user %></font></td>
 		              <td class="col_3"><font color="gray" valign="bottom">
 		              	20<%= t.updated_at.strftime("%y/%m/%d %H:%M") %><br><%= t.update_user %></font></td>
 		              <td class="col_4"><%= link_to "編輯", edit_bulletin_path(t) %>&nbsp;&nbsp;

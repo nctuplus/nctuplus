@@ -1,0 +1,7 @@
+.DS_Store
+.rvmrc
+*.gem
+.bundle
+Gemfile.lock
+pkg/*
+.idea

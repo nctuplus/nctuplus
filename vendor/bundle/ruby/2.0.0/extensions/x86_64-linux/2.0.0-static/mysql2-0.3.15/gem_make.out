@@ -1,0 +1,30 @@
+/usr/local/bin/ruby -r ./siteconf20160729-1611-8va89e.rb extconf.rb
+checking for ruby/thread.h... yes
+checking for rb_thread_call_without_gvl() in ruby/thread.h... yes
+checking for rb_thread_blocking_region()... yes
+checking for rb_wait_for_single_fd()... yes
+checking for rb_hash_dup()... yes
+checking for rb_intern3()... yes
+-----
+Using mysql_config at /usr/bin/mysql_config
+-----
+checking for mysql.h... yes
+checking for errmsg.h... yes
+checking for mysqld_error.h... yes
+-----
+Setting libpath to /usr/lib/x86_64-linux-gnu
+-----
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling infile.c
+compiling result.c
+compiling mysql2_ext.c
+compiling client.c
+linking shared-object mysql2/mysql2.so
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 mysql2.so ./.gem.20160729-1611-7cjo49/mysql2
+installing default mysql2 libraries

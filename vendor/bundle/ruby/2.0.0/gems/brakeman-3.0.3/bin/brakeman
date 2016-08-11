@@ -1,0 +1,88 @@
+#!/usr/bin/env ruby
+#Adjust path in case called directly and not through gem
+$:.unshift "#{File.expand_path(File.dirname(__FILE__))}/../lib"
+
+require 'brakeman'
+require 'brakeman/options'
+require 'brakeman/version'
+
+#Parse options
+begin
+  options, parser = Brakeman::Options.parse! ARGV
+rescue OptionParser::ParseError => e
+  $stderr.puts e.message.capitalize
+  $stderr.puts "Please see `brakeman --help` for valid options"
+  exit -1
+end
+
+#Exit early for these options
+if options[:list_checks] or options[:list_optional_checks]
+  Brakeman.list_checks options
+  exit
+elsif options[:create_config]
+  Brakeman.dump_config options
+  exit
+elsif options[:show_help]
+  puts parser
+  exit
+elsif options[:show_version]
+  puts "brakeman #{Brakeman::Version}"
+  exit
+elsif options[:install_rake_task]
+  Brakeman.install_rake_task
+  exit
+end
+
+#Set application path according to the commandline arguments
+unless options[:app_path]
+  if ARGV[-1].nil?
+    options[:app_path] = "."
+  else
+    options[:app_path] = ARGV[-1]
+  end
+end
+
+trap("INT") do
+  $stderr.puts "\nInterrupted - exiting."
+
+  if options[:debug]
+    $stderr.puts caller
+  end
+
+  exit!
+end
+
+if options[:quiet].nil?
+  options[:quiet] = :command_line
+end
+
+begin
+  if options[:previous_results_json]
+    vulns = Brakeman.compare options.merge(:quiet => options[:quiet])
+
+    if options[:comparison_output_file]
+      File.open options[:comparison_output_file], "w" do |f|
+        f.puts MultiJson.dump(vulns, :pretty => true)
+      end
+
+      Brakeman.notify "Comparison saved in '#{options[:comparison_output_file]}'"
+    else
+      puts MultiJson.dump(vulns, :pretty => true)
+    end
+
+    if options[:exit_on_warn] && vulns[:new].count > 0
+      exit Brakeman::Warnings_Found_Exit_Code
+    end
+  else
+    #Run scan and output a report
+    tracker = Brakeman.run options.merge(:print_report => true, :quiet => options[:quiet])
+
+    #Return error code if --exit-on-warn is used and warnings were found
+    if options[:exit_on_warn] and not tracker.filtered_warnings.empty?
+      exit Brakeman::Warnings_Found_Exit_Code
+    end
+  end
+rescue Brakeman::NoApplication => e
+  $stderr.puts e.message
+  exit 1
+end

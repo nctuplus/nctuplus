@@ -1,0 +1,12 @@
+/usr/local/bin/ruby -r ./siteconf20160729-1611-bgm1jh.rb extconf.rb
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling parser.c
+linking shared-object json/ext/parser.so
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 parser.so ./.gem.20160729-1611-wjt1oo/json/ext
+installing default parser libraries
