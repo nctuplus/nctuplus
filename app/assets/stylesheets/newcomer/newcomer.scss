@@ -242,9 +242,7 @@ a {
     }
 }
 #qna{
-    height:30%;
-    padding-top:5%;
-    padding-bottom:20%;
+    padding: 90px 0 0 0;
     background:#c3e8f1;
     .container{
         background:#c3e8f1;
@@ -256,6 +254,30 @@ a {
             color:#22356a;
         }
     }
+    .bottom {
+        height: 240px; /*this will work like some padding bottom missing  at section */
+        border-width: 0 0 180px 100vw;
+        border-style: solid;
+        border-color:  transparent  transparent #00f0ed #c3e8f1;
+    }
+}
+#download{
+    height:30%;
+    padding-top:5%;
+    padding-bottom:20%;
+    background: #00f0ed;
+    .container{
+        background: #00f0ed;
+        p{
+            text-align:center;
+        }
+        h2{
+            padding:5% 0 5% 0;
+            text-align:center;
+            color:#1e6262;
+        }
+    }
+
 }
 .footer-custom{
     text-align:left;
@@ -342,6 +364,9 @@ a {
 }
 .btn-5{
     @include custom-btn(#281270,#f7f7f7,#FFF);
+}
+.btn-8{
+    @include custom-btn(#00dcd8,#1e6262,#1e6262);
 }
 @media screen and (max-width: 414px){
     #banner{
