@@ -7,21 +7,24 @@
 	{% var grouped=groupBy(o,function(item){return item.cos_type;}); %}
 	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
 		<tr class="row">
-			<th class="{%=cos_type_class(courses[0].cos_type)%}">
+			<th class="col-md-12 {%=cos_type_class(courses[0].cos_type)%}" colspan="2">
 				{%=courses[0].cos_type%}
 			</th>
 		</tr>
 		{% for(var j=0,course;course=courses[j];j++){ %}
 			<tr id="{%=course.id%}" class="row course">
-				<td class="">
+				<td class="col-md-10">
 					<p id="" class="text-left">
 						<a href="/courses/{%=course.cd_id%}" class="course_name" target="_blank">{%=course.name%}</a> |
+						<strong>{%=course.real_id%}</strong>｜
 						<%=fa_icon "graduation-cap" %> <strong>{%=course.credit%}</strong>｜
 						{%=course.dept_name%}
-						<button class="btn btn-success btn-circle pull-right" onclick="addCourse([{%=course.id%}])">
-							<span class="glyphicon glyphicon-plus"></span>
-						</button>
 					</p>
+				</td>
+				<td class="col-md-1">
+					<button class="btn btn-success btn-circle" onclick="addCourse([{%=course.id%}])">
+						<span class="glyphicon glyphicon-plus"></span>
+					</button>
 				</td>
 			</tr>
 		{% } %}

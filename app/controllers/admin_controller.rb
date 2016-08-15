@@ -15,7 +15,7 @@ class AdminController < ApplicationController
 	end
 	def course_maps
 		if current_user.role==2
-			@course_maps=CourseMap.where(:department_id=>current_user.department_id)
+			@course_maps=CourseMap.where(:user_id=>current_user.id)
 		elsif current_user.role==0
 			@user_sel=User.select(:name, :id).where(:role=>[0,2])
 			@course_maps=CourseMap.all.order('name asc')
@@ -27,7 +27,9 @@ class AdminController < ApplicationController
 		if params[:search].nil?
 			@users= User.all
 		else
-      user_ids = [AuthFacebook.ransack(:name_cont=>params[:search]).result.pluck(:user_id), AuthE3.ransack(:student_id_cont=>params[:search]).result.pluck(:user_id)].flatten                                  
+      user_ids = [AuthFacebook.ransack(:name_cont=>params[:search]).result.pluck(:user_id), 
+                  AuthE3.ransack(:student_id_cont=>params[:search]).result.pluck(:user_id),
+                  AuthGoogle.ransack(:name_cont=>params[:search]).result.pluck(:user_id)].flatten                                  
 			@users = User.where(:id=>user_ids)
 		end
 		@users = @users.includes(:department, :course_maps).page(params[:page]).per(20)

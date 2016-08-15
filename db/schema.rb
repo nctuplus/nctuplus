@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160327114601) do
+ActiveRecord::Schema.define(version: 20160808153851) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.string   "student_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "user_key"
   end
 
   create_table "auth_facebooks", force: true do |t|
@@ -64,6 +65,15 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.string   "location"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "backgrounds", force: true do |t|
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -413,8 +423,8 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.datetime "end_time",                                               null: false
     t.integer  "user_id",                                                null: false
     t.integer  "view_times",                             default: 0,     null: false
-    t.integer  "event_follows_count",                    default: 0
     t.integer  "attendances_count",                      default: 0
+    t.integer  "event_follows_count",                    default: 0
     t.boolean  "banner",                                 default: false
     t.string   "cover_file_name"
     t.string   "cover_content_type"
@@ -431,6 +441,23 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "members", force: true do |t|
+    t.string   "name"
+    t.string   "nickname"
+    t.string   "job"
+    t.string   "department"
+    t.string   "motivation"
+    t.string   "others"
+    t.string   "fb"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "member_image_file_name"
+    t.string   "member_image_content_type"
+    t.integer  "member_image_file_size"
+    t.datetime "member_image_updated_at"
   end
 
   create_table "mytests", force: true do |t|
@@ -482,6 +509,17 @@ ActiveRecord::Schema.define(version: 20160327114601) do
     t.datetime "updated_at"
   end
 
+  create_table "qandas", force: true do |t|
+    t.integer  "user_id"
+    t.string   "title"
+    t.text     "question"
+    t.text     "answer"
+    t.boolean  "is_public"
+    t.string   "update_user"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "semesters", force: true do |t|
     t.string  "name"
     t.integer "year"
@@ -491,6 +529,12 @@ ActiveRecord::Schema.define(version: 20160327114601) do
   create_table "simple_bullentins", force: true do |t|
     t.string   "time"
     t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "slogans", force: true do |t|
+    t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -547,23 +591,25 @@ ActiveRecord::Schema.define(version: 20160327114601) do
 
   create_table "users", force: true do |t|
     t.string   "name"
-    t.integer  "year",                   default: 0
+    t.integer  "year",                             default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "department_id"
-    t.boolean  "agree",                  default: false
-    t.boolean  "agree_share",            default: true
-    t.integer  "role",                   default: 1
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.boolean  "agree",                            default: false
+    t.boolean  "agree_share",                      default: true
+    t.integer  "role",                             default: 1
+    t.string   "email",                            default: ""
+    t.string   "encrypted_password",               default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",                    default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
+    t.string   "account"
+    t.integer  "account_type",           limit: 1, default: 1
   end
 
   add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree

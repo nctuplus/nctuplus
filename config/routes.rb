@@ -3,8 +3,8 @@ Nctuplus::Application.routes.draw do
 	root :to => "main#index"
 	
 #----------- [devise] user account concerned -----------	
-	devise_for :users, :skip=>[:registrations, :confirmations, :passwords],
-             :controllers => { :omniauth_callbacks => "callbacks" },
+	devise_for :users, #:skip=>[:registrations, :confirmations, :passwords],
+             :controllers => { :omniauth_callbacks => "callbacks"},
              :path=>"/",
              :path_names => {
               :sign_in  => 'login',
@@ -12,6 +12,9 @@ Nctuplus::Application.routes.draw do
 
 #--------- bulletin -----------
 	resources :bulletin
+
+#--------- slogan -----------
+	resources :slogan
 
 #--------- lab -----------
 	resources :lab
@@ -128,9 +131,8 @@ end
 			get "public"
 			get "content"	
 			get "get_course_tree"
-			get "get_group_tree"
-			get "show_course_list" 
-			get "show_course_group_list"
+			get "get_course_group"
+			get "get_course_list"
 			get "get_credit_list"
 			get "search_course"
 			post "credit_action"
@@ -159,6 +161,28 @@ end
 	
 	resources :departments, :except=>[:show, :destroy]
 
+#---------- for newcomer page ----------
+	get 'newcomer/', to: "newcomer#main" 
+	get 'newcomer/procedure'
+	get 'newcomer/qna'
+
+	get 'newcomer/d2setup'
+	get 'newcomer/map'
+	get 'newcomer/chooseClass'
+
+	# all newcomer buying in NCTU
+	get 'newcomer/shopping'
+	get 'newcomer/newtonA'
+	get 'newcomer/essentialShopping'
+	# all association in NCTU
+	get 'newcomer/curricular'
+	get 'newcomer/studentAssociation'
+	get 'newcomer/alumnian'
+
+	#footer content
+	get 'newcomer/stunionIntro'
+
+
 #---------- for chrome extension -----------
 	post "api/query_from_time_table"
 	post "api/query_from_cos_adm"
@@ -172,7 +196,7 @@ end
 			get "edit"
 		end
 	end
-    
+
 	post "sessions/save_lack_course"
-    
+
 end

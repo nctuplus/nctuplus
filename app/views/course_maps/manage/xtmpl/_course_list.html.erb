@@ -1,0 +1,131 @@
+<script type="text/x-tmpl" id="normal-course-table-tmpl">
+{% if(o.length > 0){ %}
+	{% for(var i=0,list ; list=o[i]; i++){ %}
+		<table class="table single-table no-margin-bottom">
+			{% include("single-course-row-tmpl",list); %}
+		</table>
+	{% } %}
+	{% showTips(); %}	
+{% }else{ %}
+	<table>
+		<tr class="row">
+			<td colspan="3"><p class="text-right">嘗試從左側搜尋加入課程</p></td>
+		</tr>
+	</table>
+{% } %}
+</script>
+
+<script type="text/x-tmpl" id="cg-single-tbl-tmpl">
+	<table class="table cg-table no-margin-bottom" cfl_id="{%=o.cfl_id%}" gtype="{%=o.gtype%}" cg_id="{%=o.cg_id%}">
+		{% include("cg-rows-tmpl",o); %}
+	</table>
+</script>
+
+<script type="text/x-tmpl" id="cg-table-tmpl">
+{% if(o.length > 0){ %}
+	{% for(var i=0,list ; list=o[i] ; i++){ %}
+		{% include("cg-single-tbl-tmpl",list);%}
+	{% } %}
+	{% showTips(); %}
+{% } %}
+</script>
+<script type="text/x-tmpl" id="single-course-row-tmpl">
+	<tr class="row" cfl_id="{%=o.cfl_id%}" rtype="{%=o.record_type ? 1 : 0%}" >
+		<td class="col-md-1">
+		</td>
+		<td class="col-md-2 course_name">
+			{%=o.course_name %}
+		</td>
+		<td class="col-md-1">{%=o.real_id %}</td>
+		<td class="col-md-2">{%=o.dept_name %}</td>
+		<td class="col-md-1">{%=o.credit %}</td>
+		<td class="col-md-2">
+			{% include("grade-select-tmpl",o); %}
+		</td>
+		<td class="col-md-3">
+			{% include("toggle-rtype-but-tmpl",o); %}
+			<i class="fa fa-trash-o text-color-red clickable-hover" data-content="刪除" data-toggle="popover" onclick="deleteCfl($(this));"></i>
+			<i class="fa fa-cubes text-color-green clickable-hover" data-content="建立群組" data-toggle="popover" onclick="createCg($(this));"></i>
+		</td>
+	</tr>
+</script>
+<script type="text/x-tmpl" id="cg-rows-tmpl">
+	{% var list=o; %}
+	{% var lead_course=list.courses[0];%}
+	<tr class="row zopl" cfl_id="{%=list.cfl_id%}" rtype="{%=list.record_type ? 1 : 0%}" gtype="{%=list.gtype%}" cg_id="{%=list.cg_id%}" style="//background-color:#BBFFEE;"  >
+		<td class="col-md-1">
+			<span class="gtype">{%= list.gtype == 0 ? "[代]" : "[抵]" %}</span>
+			<%=fa_icon 'plus',:class=>"text-color-green clickable-hover toggle-group",:onclick=>"toggleGroup({%=list.cg_id%});"%>
+		</td>
+		<td class="col-md-2 course_name">
+			{%=lead_course.course_name %}
+		</td>
+		<td class="col-md-1">{%=lead_course.real_id %}</td>
+		<td class="col-md-2">{%=lead_course.dept_name %}</td>
+		<td class="col-md-1">{%=lead_course.credit %}</td>
+		<td class="col-md-2">
+			{% include("grade-select-tmpl",o); %}
+		</td>
+		<td class="col-md-3">
+			{% include("toggle-rtype-but-tmpl",o); %}
+			<i class="fa fa-trash-o text-color-red clickable-hover cg-list-item-delete" data-content="刪除" data-toggle="popover" onclick="deleteCg($(this));"></i>
+			<i id="select-cg-but" class="fa fa-share-alt text-color-green clickable-hover" data-content="加入群組課程" data-toggle="popover" onclick="selectCg($(this));"></i>
+			<i class="fa fa-arrows-h text-color-blue clickable-hover switch-gtype" data-content="代表/抵免" data-toggle="popover" onclick="switchCgType($(this));"></i>
+		</td>
+	</tr>
+	{% for(var j=1 ; j<list.courses.length ; j++){ %}
+		{% var group_item = list.courses[j]; %}
+		{% include("cg-sub-row-tmpl",group_item); %}
+	{% } %}
+
+</script>
+
+<script type="text/x-tmpl" id="toggle-rtype-but-tmpl">
+{% if(o.record_type==false){ %}
+	<i class="fa fa-check text-color-green clickable-hover" data-content="採計學分" data-toggle="popover" onclick="toggleCflRtype($(this));"></i>
+{% }else{ %}
+	<i class="fa fa-times text-color-red clickable-hover" data-content="不採計學分" data-toggle="popover" onclick="toggleCflRtype($(this));"></i>
+{% } %}			
+</script>
+
+<script type="text/x-tmpl" id="grade-select-tmpl">
+	{% grades = [["*","*"], [1,"大一"], [2,"大二"], [3,"大三"], [4,"大四"]] ; %}
+	{% halfs = [["*","*"], [1,"上"], [2,"下"]] ; %}
+	<select class="grade-select" onChange="changeGradeHalf($(this),'grade');">
+	{% for(var j=0; j<grades.length; ++j){ %}
+		{% grade = grades[j] ;%}
+		<option value="{%=grade[0]%}" {% if(o.grade==grade[0]){ %}selected="selected"{% } %}>
+		{%=grade[1]%}
+		</option>
+	{% } %}
+	</select>
+	<select class="half-select" onChange="changeGradeHalf($(this),'half');">
+	{% for(var j=0; j<halfs.length; ++j){ %}
+		{% half = halfs[j] ;%}
+		<option value="{%=half[0]%}" {% if(o.half==half[0]){ %}selected="selected"{% } %}>
+		{%=half[1]%}
+		</option>
+	{% } %}		
+	</select>
+</script>
+
+<script type="text/x-tmpl" id="cg-sub-row-tmpl">
+	{% var group_item=o;console.log(group_item);%}
+	<tr class="row sub_tr" cgl_id="{%=group_item.cgl_id%}" style="{%=group_item.show ? "" : "display:none;"%}" >
+		<td class="">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<%=fa_icon "angle-right"%>
+		</td>
+		<td class="">
+			{%=group_item.course_name %}
+		</td>
+		<td class="">{%=group_item.real_id %}</td>
+		<td class="">{%=group_item.dept_name %}</td>
+		<td class="">{%=group_item.credit %}</td>
+		<td class=""></td>
+		<td class="">
+			<i class="fa fa-trash-o text-color-red clickable-hover cg-list-item-delete" data-content="刪除" data-toggle="popover" onclick="deleteCgl($(this));"></i>
+			<i class="fa fa-flag text-color-blue clickable-hover cg-list-item-to-head" data-content="設為代表" data-toggle="popover" onclick="setToLeadCourse($(this));"></i>
+		</td>
+	</tr>
+</script>

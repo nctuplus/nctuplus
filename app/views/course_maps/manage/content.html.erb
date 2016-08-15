@@ -1,0 +1,112 @@
+<div style="margin-left:10px;" >
+	<div class="row">
+		<div class="col-md-3 well" id="search_div" />
+		<div class="col-md-7 well">
+			<div class="row" id="new_form_div" />
+			<div class="row" id="header_content_div" />
+			<div class="row" id="course_content">
+				
+				<table class="table course-table no-margin-bottom">
+					<tr class="row">
+						<th class="col-md-1"></th>
+						<th class="col-md-2">課名</th>
+						<th class="col-md-1">永久課號</th>
+						<th class="col-md-2">開課系所</th>
+						<th class="col-md-1">學分</th>
+						<th class="col-md-2">建議學期</th>
+						<th class="col-md-3">動作</th>
+					</tr>
+				</table>
+				
+				<div id="cg-div"></div>
+				<div id="course-list-div"></div>
+			</div>
+		</div>
+		<div id="course_tree" class="col-md-2 col-sm-5 well"></div>
+	</div>
+</div>
+
+
+<%=render "/course_maps/manage/xtmpl/header_content" %>
+<%=render "/course_maps/manage/xtmpl/new_form" %>
+<%=render "/course_maps/manage/xtmpl/course_list" %>
+<%=render "/course_maps/manage/xtmpl/course_group_list" %>
+<%=render "/course_maps/manage/xtmpl/credit_list" %>
+
+<script>
+//var cf_show_id = null ;
+var cg_show_id = null ;
+var map_id = <%=@course_map.id%> ;
+$(document).ready(function(){
+
+	// init in home-tab
+	$('#search_div').load("/course_maps/search_course?hide_group=true&map_id="+map_id) ;		
+	load_treeview(0, map_id);
+	//load_group_treeview(0, map_id);
+	
+	// change tab, change search cond
+	$('#group-tab').click(function(){
+		$('#search_div').load("/course_maps/search_course?hide_group=false") ;
+		reset_data();
+	});
+	$('#home-tab').click(function(){
+		$('#search_div').load("/course_maps/search_course?hide_group=true&map_id="+map_id) ;
+		reset_data();
+		//$("#add-target").text("cf");
+	});
+	
+	// course_tree onSelect
+	$('#course_tree').on('nodeSelected', function(event, node) {
+		reset_data(); // reset new-form & header-content
+		//cf_show_id = null ; // reset course table target id
+		//console.log(node.cf_id) ;
+		if(node.type > 0){
+			load_header_content({head_node: node}) ;
+			if(node.type < 3){ // 1: 必修, 2: x選y
+				var cf_show_id = node.cf_id ;  			
+				load_course_list(cf_show_id);
+				$("#cf-id").text(cf_show_id);
+			}			   		
+		}else{ // new form 
+			//console.log("[course_tree select] " + node.type);
+			load_new_form({
+				level : node.type, 
+				header_name: '新增類別',
+				parent_id: node.parent_id
+			}); 
+		}
+		
+		if(node.type<0){ // new something
+			$('#header_content').hide() ;
+			$('#course_content').empty();	
+		}else if(node.type!=0){
+			//$('#course_content').empty();		
+		}	
+		return false ;
+	});
+
+	// group_tree onSelect
+	$('#group_tree').on('nodeSelected', function(event, node) {
+		reset_data(); // reset new-form & header-content
+		if(node.type==-1){ // new group
+			$.ajax({
+				type: "POST",
+				url: "/course_maps/course_group_action" ,
+				data:{
+					type: "new",
+					map_id : map_id
+				},	
+				success: function(data){
+					load_group_treeview(data, map_id);
+				},	
+				error: function(){
+					alert('new course group failed..');
+				}
+			});
+		}
+
+	});
+	
+}); // end of document ready
+
+</script>

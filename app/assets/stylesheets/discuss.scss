@@ -1,0 +1,54 @@
+// Place all the styles related to the discuss controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+// .rating{
+//   line-height: 238%;
+// }
+// .rating > span {
+//   font-size: 1.5em;
+// }
+// .rating > span:hover:before,
+// .rating > span:hover ~ span:before {
+//    content: "\2605";
+//    position: absolute;
+//    left: 10px;
+//    color: gold;
+// }
+
+.rating-bar {
+  margin-top: 13px;
+}
+
+fieldset, label { margin: 0; padding: 0; }
+.rating { 
+  border: none;
+  float: left;
+}
+
+.rating > input { display: none; } 
+.rating > label:before { 
+  margin: 5px;
+  font-size: 1.25em;
+  font-family: FontAwesome;
+  display: inline-block;
+}
+
+.rating > label { 
+  color: #ddd; 
+  float: right;
+  background-color: #BBCEFB;
+  width: 40px;
+  height: 10px;
+  margin: 0px 2px 0px 0px;
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { background-color: #23527c;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { background-color: #23527c;  } 

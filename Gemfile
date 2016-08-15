@@ -94,3 +94,12 @@ gem 'zeroclipboard-rails'
 gem "d3-rails"
 
 gem 'underscore-rails'
+
+group :development do
+	gem "rspec-rails"
+end
+
+# for newcomer page
+gem 'jquery-easing-rails'
+gem 'bourbon', '4.2.7'
+

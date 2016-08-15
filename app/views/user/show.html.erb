@@ -36,7 +36,7 @@
 <div class="col-md-6">
 	<div class="row no-margin-right">
 		<div class="col-md-4" style="  text-align: center;">
-    		<img class="img-circle" src="<%= current_user.avatar_url %>">
+    		<img class="img-circle" src="<%= @user.avatar_url %>">
     		<p style="margin-top:5px;font-size:20px;"><b><%=@user.name%></b></p>
   		</div>
 		<div class="col-md-8 bg-white">
@@ -275,7 +275,6 @@
 				if(checkPass(pass_score,tmp_score)){
 					
 					credit_pass+=course.credit;
-					console.log(course.name+' '+tmp_score+' '+credit_pass);
 					if(course.sem_name==last_sem_name){
 						credit_this_sem+=course.credit;
 					}
@@ -293,14 +292,10 @@
 		$("#credit-all-taked").text(credit_pass_with_agree);
 		$("#credit-taking").text(credit_this_sem);
 		$("#totalAvg").text(roundToDec(score/credit_taked,1));
-		console.log("學分pass:"+credit_pass);
-		console.log("學分taked:"+credit_taked);
-		console.log("學分(含免修):"+credit_pass_with_agree);
 	}
 	$(document).ready(function(){
 		genTable(<%=Semester::CURRENT.id%>);
 		$.getJSON("/user/statistics?uid=<%=params[:uid] %>", function (data) {
-			console.log(data);
 			//$("#course-list2").html(tmpl("course-list-tmpl",data));
 			calcAvgScore(data.user_courses,data.pass_score,data.last_sem);
       if(data["course_map"])

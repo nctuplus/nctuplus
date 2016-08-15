@@ -146,6 +146,7 @@ Devise.setup do |config|
   # one (and only one) @ exists in the given string. This is mainly
   # to give user feedback and not to assert the e-mail validity.
   # config.email_regexp = /\A[^@]+@[^@]+\z/
+  config.email_regexp = /\A[^@\s]+@[^@\s]+\z/
 
   # ==> Configuration for :timeoutable
   # The time you want to timeout the user session without activity. After this
@@ -206,6 +207,7 @@ Devise.setup do |config|
   # "users/sessions/new". It's turned off by default because it's slower if you
   # are using only default views.
   # config.scoped_views = false
+  config.scoped_views = true
 
   # Configure the default scope given to Warden. By default it's the first
   # devise role declared in your routes (usually :user).
@@ -232,12 +234,12 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-    config.omniauth :facebook, Facebook::APP_ID, Facebook::SECRET #, :scope => 'email,manage_notifications'
-		config.omniauth :google_oauth2, Google::APP_ID, Google::SECRET, {
+  config.omniauth :facebook, Facebook::APP_ID, Facebook::SECRET #, :scope => 'email,manage_notifications'
+  config.omniauth :google_oauth2, Google::APP_ID, Google::SECRET, {
     #    :scope =>'https://www.googleapis.com/auth/calendar',  #determine what we want user to provide (default are email and profile)
          :skip_jwt => true
-      }
-    config.omniauth :E3
+  }
+  config.omniauth :E3
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.
@@ -259,14 +261,14 @@ Devise.setup do |config|
   #
   # When using omniauth, Devise cannot automatically set Omniauth path,
   # so you need to do it manually. For the users scope, it would be:
-   config.omniauth_path_prefix = '/auth'
+  config.omniauth_path_prefix = '/auth'
 end
 
 
 # handle omniauth failure
 OmniAuth.config.on_failure = Proc.new do |env|
   env['devise.mapping'] = Devise.mappings[:user]
-#  env['devise.mapping'] = Devise::Mapping.find_by_path!(env['PATH_INFO'], :path)
+  #  env['devise.mapping'] = Devise::Mapping.find_by_path!(env['PATH_INFO'], :path)
   controller_name  = ActiveSupport::Inflector.camelize(env['devise.mapping'].controllers[:omniauth_callbacks])
   controller_klass = ActiveSupport::Inflector.constantize("#{controller_name}Controller")
   controller_klass.action(:failure).call(env)

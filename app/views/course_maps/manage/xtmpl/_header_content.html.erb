@@ -1,0 +1,36 @@
+<script type="text/x-tmpl" id="header-content-format">
+	<div class="row">
+		<h4 class="col-md-2 header-type" style="display: none;"></h4> 
+		<h4 class="col-md-5 field-header-name">{%= o.head_node.text %}</h4>
+		<div class="hidden" id="cf_id">{%=o.head_node.cf_id%}</div>
+		<div class="col-md-5">
+				<button type="button" data-toggle="popover" data-content="修改" class="btn btn-circle btn-info update">
+					<%=fa_icon "pencil"%>
+				</button>
+				<button type="button" data-toggle="popover" data-content="刪除" class="btn btn-circle btn-danger delete" >
+					<%=fa_icon "trash-o"%>
+				</button>
+			{% if(o.head_node.type < 3){ %}
+				<button data-toggle="popover" data-content="必選/X選Y互換" type="button" class="btn btn-circle btn-warning change-type" ftype="{%=o.head_node.type%}" >
+					<%=fa_icon "arrows-h"%>
+				</button>			
+			{% } %}
+			{% if(o.head_node.type >= 2){ %}	
+				<button type="button" data-toggle="popover" title="新增規則" data-content="假設有多種滿足條件(通常用不到)" class="btn btn-circle btn-success add_credit_list">
+					<%=fa_icon "plus"%>
+				</button>
+			{% } %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-1"></div>
+		{% if(o.head_node.type == 3 ){ %}	
+			<div class="col-md-5 cfg">至少子領域數</div>
+			<div class="col-md-4 cfg field-need">{%=o.head_node.field_need %}</div>	
+		{% } %}		
+	</div>
+	</br>
+	<div id="credit_list"></div>
+	<hr>
+
+</script>

@@ -1,11 +1,11 @@
 <%= javascript_include_tag "course_maps/manage", "data-turbolinks-track" => true %>
 
-<h3>課程地圖 - <%=@course_map.name%></h3>  
-
-<div class="well">
-<h3>課程介紹
+<div class="well" style="padding-top:5px;">
+<h3>課程地圖 - <%=@course_map.name%>
 	<small>
-		<%=link_to '編輯', 'javascript:void(0);', :class=>'cm-edit-head'%>
+		<button class="btn btn-sm btn-primary" onClick="editCm($(this));">編輯</button>
+		<button class="btn btn-sm btn-warning" id="notify-user" onClick="updateUserCflId($(this));">套用課程修改</button>
+		<%=link_to '預覽', course_map_path(@course_map), :class=>'btn btn-sm btn-info',:target=>"blank"%>
 	</small>
 </h3>
 <table class="table table-bordered">
@@ -18,27 +18,41 @@
 		<td id='cm-head-grade'><%=@course_map.total_credit%></td>
 	<tr>
 	<tr>
-		<td colspan="6"><p>說明：</p>
-			<p id='cm-head-desc'><%=@course_map.desc%></p>
+		<td colspan="6"><p>說明： <small><a href="javascript:void(0);" onClick="showCmDesc();" id="toggle-cm-desc-but">顯示</a></small></p>
+			<p id='cm-head-desc' style="display:none;"><%=@course_map.desc%></p>
 		</td>
 	</tr>	
 </table>
 
-<hr>
-<h3>
-課程內容
-<button class="btn btn-sm btn-warning pull-right" id="notify-user">Notify Update</button>
-</h3>
+<div class="col-md-12 text-center" style="margin-bottom:5px;">
+	<div id="global-var" class="hidden" >
+		<span id="add-target">cf</span>
+		<span id="cf-id">0</span>
+		<span id="cg-id">0</span>
+		<span id="cm-id"><%=@course_map.id%></span>
+	</div>
+	<h4 id="tips-area" style="display:inline;"></h4>
+	<a href="javascript:void(0);" id="dis-select-cg" style="display:none;" onClick="disSelectCg();">取消選擇</a>
+	
+</div>
+
 <div id="course-map-content"></div>
 </div>
 
 <script>
-
-$(document).ready(function(){
-	var map_id = <%=@course_map.id %> ;
-	$('#course-map-content').load('/course_maps/content?map_id='+map_id);
-	
-	$('.cm-edit-head').click(function(){
+function showCmDesc(){
+	var $text_obj=$('#cm-head-desc');
+	var $but=$("#toggle-cm-desc-but");
+	if($text_obj.is(":visible")==false){
+		$text_obj.show();
+		$but.text("隱藏");
+	}
+	else{
+		$text_obj.hide();
+		$but.text("顯示");
+	}
+}
+function editCm($obj){
 		var $cm_dep = $('#cm-head-dep') ;
 		var $cm_year = $('#cm-head-year') ;
 		var $cm_grade = $('#cm-head-grade') ;
@@ -49,7 +63,8 @@ $(document).ready(function(){
 			desc: $cm_desc.text() 
 		};
 
-		if($(this).html()=='編輯'){
+		if($obj.text()=='編輯'){
+			showCmDesc();
 			$cm_dep.html('<%=j select_tag :dep, options_from_collection_for_select(Department.majorable.order("degree DESC"),"id","ch_name"), :prompt=>"不指定"  %>');
 			$cm_year.html('<%=j select_tag :year, options_for_select(Semester::YEARS.map{ |y| [y, y] }), :prompt=>"不指定" %>');
 			$cm_grade.html('<%=j text_field_tag :grade, @course_map.total_credit%>');
@@ -61,7 +76,7 @@ $(document).ready(function(){
 			$("#year option:contains(" + cm_head_info['year'] + ")").attr('selected', 'selected');
 			$cm_desc.html('<%=j text_area_tag "desc", '', {class: "form-control", rows: 10 }  %>');
 			$('#desc').html(cm_head_info['desc']);
-			$(this).html('<%=fa_icon "check",:class=>"btn btn-circle btn-success" %>');
+			$obj.text('確認');
 		}else{//post 
 			var dep = ($('#dep').val()) ? $('#dep').val() : 0 ;
 			var year = ($('#year').val()) ? $('#year').val() : 0 ;		
@@ -89,36 +104,18 @@ $(document).ready(function(){
 					alert('internal server error.');
 				}
 			});
-			$(this).html('編輯');
+			$obj.html('編輯');
 			
 		}
-	});
+}
+	
+$(document).ready(function(){
+	var map_id = <%=@course_map.id %> ;
+	$('#course-map-content').load('/course_maps/content?map_id='+map_id);
+	
+	
 
-	$("#notify-user").click(function(){
-		if(!confirm("使用此地圖的使用者將會重新計算學分\n"
-				+"請務必做完所有修改後再送出通知。\n\n"
-				+"您確定要送出嗎?")){
-			return false ;
-		}
-		$.ajax({
-				type: "POST",
-				url: "/course_maps/notify_user" ,
-				data:{
-					map_id: map_id,
-				},	
-				success: function(res){					
-					$(this).attr("disabled", true);
-					toastr["success"]("更新成功");
-					setTimeout(function(){
-						$(this).attr("disabled", false);
-					}.bind(this), 5000);
-				}.bind(this),	
-				error: function(){
-					alert("internal server error.");
-				}
-			});
-		return true ;
-	});
+
 	
 });
 

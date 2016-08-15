@@ -119,7 +119,11 @@
 			//console.log($(this).find("a"));
 		});
 		$(".clickable-row").click(function() {
+      <% if current_user.try(:hasE3?) %>
 			goToHref($(this).attr("href"),true);
+      <% else %>
+      toastr['warning']("必須有E3身分才可下載喔!");
+      <% end %>
 		});
 		
 	});

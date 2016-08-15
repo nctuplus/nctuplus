@@ -68,10 +68,10 @@
 <!-- layouts/header end -->
 
 
-<% if current_page?('/')||current_page?('/main/index')||current_page?('/login')%>
+<% if current_page?('/')||current_page?('/login')%>
 	<%= yield %>
 <% else %>
-	<div id="content-container" class="container" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
+	<div id="content-container" class="container<%=@full_width ? "-fluid" : ""%>" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
 		<%= yield %>
 	</div>
 <% end %>

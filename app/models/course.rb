@@ -25,7 +25,7 @@ class Course < ActiveRecord::Base
 	end
 	
 	def dept_name
-		self.departments.pluck("DISTINCT  ch_name").join(",")
+		self.departments.pluck("DISTINCT ch_name").join(",")
 	end
 	
 	def to_json_for_stat
