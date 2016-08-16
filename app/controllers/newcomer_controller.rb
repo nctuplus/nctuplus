@@ -171,12 +171,30 @@ class NewcomerController < ApplicationController
 				group: "https://www.facebook.com/groups/722749624403809/",
 				fb: "https://www.facebook.com/Makereal.Labs/",
 				img: "創客俱樂部.jpg",
+				color: "default",
+			},
+			{
+				category: "curricular",
+				name: "設計與思考社",
+				pdf: nil,
+				web:"https://www.facebook.com/NCTUDT/",
+				group: nil ,
+				img: "設計與思考社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "咖啡社",
+				pdf: nil,
+				group: "https://www.facebook.com/groups/nctucoffeeclub/",
+				fb: "https://www.facebook.com/NCTUcoffee",
+				img: "咖啡社.jpg",
 				color: "default"
 			},
 			{
 				category: "curricular",
 				name: "烏克麗麗社",
-				pdf: "烏克麗麗社.pdf",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NdDUtUHJnUFl2c1E/view",
 				group: "https://www.facebook.com/groups/327026434028600/",
 				fb: "https://www.facebook.com/NCTUXNTHUUkuleleClub?fref=nf&pnref=story",
 				img: nil,
@@ -279,15 +297,6 @@ class NewcomerController < ApplicationController
 				group: "https://www.facebook.com/groups/nctu.tzuchi/",
 				fb: "https://www.facebook.com/nctuclubtzuchi",
 				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "咖啡社",
-				pdf: nil,
-				group: "https://www.facebook.com/groups/nctucoffeeclub/",
-				fb: "https://www.facebook.com/NCTUcoffee",
-				img: "咖啡社.jpg",
 				color: "default"
 			},
 			{
@@ -404,15 +413,6 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				group: "https://www.facebook.com/groups/NCTUJUDO",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "設計與思考社",
-				pdf: nil,
-				fb:"https://www.facebook.com/NCTUDT/",
-				group: nil ,
 				img: nil,
 				color: "default"
 			},

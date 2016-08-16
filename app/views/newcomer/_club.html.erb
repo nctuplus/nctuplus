@@ -1,3 +1,5 @@
+<% require 'uri' # provide the function to check whether pdf path string is a URL %>
+
 <% datas.each_with_index do |club, counter| %>
 	<% if club[:img] != nil %>
 		<% if counter%2 == 0 %>
