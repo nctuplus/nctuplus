@@ -294,7 +294,7 @@
 							{
 							  $cell.addClass("clickable-hover");
 							  $cell.click({cd_id: course.cd_id}, function(args){
-							    window.open("http://"+window.location.host+"/courses/"+args.data.cd_id);
+							    window.open(window.location.protocol+"//"+window.location.host+"/courses/"+args.data.cd_id);
 							    return true ;
 							  });
 							}
