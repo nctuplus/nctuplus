@@ -175,6 +175,15 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "烏克麗麗社",
+				pdf: "烏克麗麗社.pdf",
+				group: "https://www.facebook.com/groups/327026434028600/",
+				fb: "https://www.facebook.com/NCTUXNTHUUkuleleClub?fref=nf&pnref=story",
+				img: nil,
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "社會企業創思社",
 				pdf: nil,
 				web: nil,
@@ -276,9 +285,9 @@ class NewcomerController < ApplicationController
 				category: "curricular",
 				name: "咖啡社",
 				pdf: nil,
-				web: nil,
+				group: "https://www.facebook.com/groups/nctucoffeeclub/",
 				fb: "https://www.facebook.com/NCTUcoffee",
-				img: nil,
+				img: "咖啡社.jpg",
 				color: "default"
 			},
 			{
@@ -391,15 +400,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "烏克麗麗社",
-				pdf: nil,
-				group: "https://www.facebook.com/groups/327026434028600/",
-				fb: "https://www.facebook.com/NCTUXNTHUUkuleleClub?fref=nf&pnref=story",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "柔道社",
 				pdf: nil,
 				web: nil,
@@ -433,7 +433,7 @@ class NewcomerController < ApplicationController
 				fb: "https://www.facebook.com/nctumun",
 				img: nil,
 				color: "default"
-			},			
+			},
 			{
 				category: "curricular",
 				name: "崇德青年志工社",
@@ -648,7 +648,7 @@ class NewcomerController < ApplicationController
 
 
 	def alumnian
-		@title = "友會列表 ｜ 網路新生包"   
+		@title = "友會列表 ｜ 網路新生包"
 		@data = [
 			{
 				category: "alumnian",
@@ -782,7 +782,7 @@ class NewcomerController < ApplicationController
 	def main
 		@title = "首頁 | 網路新生包"
 	end
-	def procedure 
+	def procedure
 		@title = "重要程序 | 網路新生包"
 	end
 	def qna
@@ -799,7 +799,7 @@ class NewcomerController < ApplicationController
 	end
 	def shopping
 		@title = "新生團購 | 網路新生包"
-	end 
+	end
 	def newtonA
 		@title = "金牛頓學生特價 | 網路新生包"
 	end
