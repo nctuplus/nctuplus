@@ -578,7 +578,7 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/nctudbtsu/",
-				img: nil,
+				img: "生物科技.jpg",
 				group: "https://www.facebook.com/groups/1546915355611613/"
 			},
 			{
