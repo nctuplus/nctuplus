@@ -149,7 +149,7 @@ class NewcomerController < ApplicationController
 			{
 				category: "curricular",
 				name: "交通大學機車研究社",
-				pdf: nil,
+				pdf: "交大機車研究社.pdf",
 				group: "https://www.facebook.com/groups/nctumotor/",
 				fb: nil,
 				img: "交通大學機車研究社.jpg",
@@ -189,6 +189,15 @@ class NewcomerController < ApplicationController
 				group: "https://www.facebook.com/groups/nctucoffeeclub/",
 				fb: "https://www.facebook.com/NCTUcoffee",
 				img: "咖啡社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "梅竹後援會",
+				pdf: "國立交通大學梅竹後援會_社團介紹.pdf",
+				group: "https://www.facebook.com/groups/560188640835522/",
+				fb: "https://www.facebook.com/nctu.meichu/",
+				img: "梅竹後援會.jpg",
 				color: "default"
 			},
 			{
