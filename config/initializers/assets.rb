@@ -1,5 +1,5 @@
 # Remember to update this file when you add or delete custom js files in app/assets/javascripts
-# Modified at 2015/11/17
+# Modified at 2016/08/09
 
 Rails.application.config.assets.precompile +=[
 	'tmpl.min.js',
@@ -25,6 +25,9 @@ Rails.application.config.assets.precompile +=[
 	'jquery-ui-timepicker-addon.js',
 	'event_create.js',
 	'jquery.counterup.js',
-	'waypoints.min.js'
+	'waypoints.min.js',
+	'newcomer/*.js',
+	'newcomer/*.css',
+	'NotoSans-Regular-ttf'
 
 ]

@@ -1,0 +1,143 @@
+
+.spacing{
+  padding-top: 100px;
+}
+.curricular{
+  color:#272822;
+}
+.important{
+  margin-top:80px;
+  text-align: center;
+  color:#353535;
+}
+table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+table caption {
+  font-size: 1.5em;
+  margin: .25em 0 .75em;
+}
+table tr {
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: .35em;
+}
+table th,
+table td {
+  padding: .625em;
+  text-align: center;
+}
+table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+table td img {
+  text-align: center;
+}
+@media screen and (max-width: 600px) {
+  table {
+    border: 0;
+  }
+  table caption {
+    font-size: 1.3em;
+  }
+  table thead {
+    display: none;
+  }
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+  table td:before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  table td:last-child {
+    border-bottom: 0;
+  }
+}
+span{
+  text-align:center;
+  padding: auto;
+  margin: auto;
+}
+.pic-col{
+  height:400px;
+  padding-top:0;
+  margin-top:0;
+  background-color:#040308;
+  z-index:1;
+  img {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height:100%;
+  }
+}
+.text-col{
+  min-width: 450px;
+  height:400px;
+  padding-top:120px;
+  text-align:center;
+  z-index:3;
+  hr{
+    width:80px;
+    border-width: 2px;
+    border-color: #353535;
+  }
+  section.icons{
+      margin:auto;
+      p{
+        display: inline-block;
+        margin: 0 20px 0 20px;
+        padding-top:8px;
+        background-color:#00aee9;
+        border-radius:25px;
+        width:50px;
+        height:50px;
+      }    
+  }
+}
+@media screen and (max-width: 600px) {
+  .pic-col{
+     img{
+      width:100%;
+      height:auto;
+    }
+  }
+  .text-col{
+    min-width:300px;
+    z-index:3;
+  }
+}
+.minor-1{
+  background-color:#ffffff!important; 
+}
+.minor-2{
+  background-color:#ede9da!important; 
+}
+.minor-3{
+  background-color: #eeeeee!important;
+}
+.curricular-footer{
+    padding:80px 20px 80px 20px;
+    text-align:center;
+    background-color:#4121ab;
+}
