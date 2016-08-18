@@ -26,5 +26,25 @@ module UserHelper
 	def generate_share_hashid(user_id, sem_id)
 	  return Hashid.user_share_encode [user_id, sem_id]
 	end
-	
+
+# user/show
+  def import_course_link
+    btn_text = fa_icon("refresh")+"  匯入成績"
+    url = (current_user.hasE3?) ? "/scores/import" : "javascript:void(0);"
+    options = {:class=>"btn btn-warning btn-xs"}
+    if !current_user.hasE3?
+      options[:onclick] = 'toastr["warning"]("綁定E3以開啟此功能!");'
+    end
+    return link_to(btn_text, url, options)
+  end
+  
+  def gpa_link
+    btn_text = fa_icon("check")+"  GPA 計算機"
+    url = (current_user.hasE3?) ? "/scores/gpa" : "javascript:void(0);"
+    options = {:class=>"btn btn-warning btn-xs"}
+    if !current_user.hasE3?
+      options[:onclick] = 'toastr["warning"]("綁定E3以開啟此功能!");'
+    end
+    return link_to(btn_text, url, options)
+  end
 end

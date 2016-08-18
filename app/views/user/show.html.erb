@@ -83,9 +83,9 @@
 			<div>
 				<%=link_to fa_icon("pencil")+"  編輯檔案", "/user/edit", class:"btn btn-primary btn-xs" %>
 				&nbsp;
-				<%=link_to fa_icon("refresh")+"  匯入成績", "/scores/import", class:"btn btn-warning btn-xs" %>
+				<%=import_course_link%>
 				&nbsp;
-				<%=link_to fa_icon("check")+"  GPA 計算機", "/scores/gpa", class:"btn btn-warning btn-xs",'data-no-turbolink'=>"true" %>
+        <%=gpa_link%>
 				<p>&nbsp;</p>
 			</div>
 		</div>
