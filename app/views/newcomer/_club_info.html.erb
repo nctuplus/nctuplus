@@ -23,8 +23,14 @@
 			<% end %>
 		<% end %>
 		<% if club[:pdf] != nil %>
-			<%= link_to "/pdf/newcomer/#{category}/#{club[:pdf]}", :target => '_blank' do %>
-				<p><i class="fa fa-file-pdf-o"></i></p>
+			<% if club[:pdf] =~ /\A#{URI::regexp}\z/ # is a URL %>
+				<%= link_to club[:pdf], :target => '_blank' do %>
+					<p><i class="fa fa-file-pdf-o"></i></p>
+				<% end %>
+			<% else %>
+				<%= link_to "/pdf/newcomer/#{category}/#{club[:pdf]}", :target => '_blank' do %>
+					<p><i class="fa fa-file-pdf-o"></i></p>
+				<% end %>
 			<% end %>
 		<% end %>
 	</section>
