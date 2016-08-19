@@ -194,7 +194,7 @@ class NewcomerController < ApplicationController
 			{
 				category: "curricular",
 				name: "梅竹後援會",
-				pdf: "國立交通大學梅竹後援會_社團介紹.pdf",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NdFFnTHYxb3B0Sk0/view?usp=sharing",
 				group: "https://www.facebook.com/groups/560188640835522/",
 				fb: "https://www.facebook.com/nctu.meichu/",
 				img: "梅竹後援會.jpg",
@@ -223,7 +223,7 @@ class NewcomerController < ApplicationController
 				name: "陶藝社",
 				pdf: nil,
 				web: nil,
-				fb: "https://www.facebook.com/nctu.strong.2013",
+				fb: "https://www.facebook.com/nctuceramic/?hc_ref=SEARCH&fref=nf",
 				img: "陶藝社網路新生包.jpg",
 				color: "default"
 			},
@@ -234,6 +234,15 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/nctupdcfans",
 				img: "交大布袋戲社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "OPENHOUSE｜交大校園企業徵才組",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NY2pXeUtJSVQtV3c/view?pref=2&pli=1",
+				web: "https://www.youtube.com/watch?v=ivOgVBmP9MA",
+				fb: "https://www.facebook.com/NCTU.OH/",
+				img: "OPENHOUSE.jpg",
 				color: "default"
 			},
 			{
@@ -489,6 +498,25 @@ class NewcomerController < ApplicationController
 		@data = [
 			{
 				category: "studentAssociation",
+				name: "工業工程與管理學系",
+				pdf: "工業工程與管理學系-系學會新生通知.pdf",
+				web: nil,
+				fb: "https://www.facebook.com/IEMhome",
+				img: "工業工程與管理學系.jpg",
+				color: "grey",
+				group: "https://www.facebook.com/groups/1724898754415038/"
+			},
+			{
+				category: "studentAssociation",
+				name: "生物科技學系",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/nctudbtsu/",
+				img: "生物科技.jpg",
+				group: "https://www.facebook.com/groups/1546915355611613/"
+			},
+			{
+				category: "studentAssociation",
 				name: "電機資訊學士班",
 				pdf: nil,
 				web: nil,
@@ -589,16 +617,7 @@ class NewcomerController < ApplicationController
 				fb: "https://www.facebook.com/nctuamsa04",
 				img: nil,
 				group: "https://www.facebook.com/groups/617667181721722/617669978388109/?ref=notif&notif_t=group_activity_unconfirmed&notif_id=1463481657931672&hc_location=ufi",
-			},
-			{
-				category: "studentAssociation",
-				name: "生物科技學系",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/nctudbtsu/",
-				img: "生物科技.jpg",
-				group: "https://www.facebook.com/groups/1546915355611613/"
-			},
+			},	
 			{
 				category: "studentAssociation",
 				name: "資訊管理與財務金融學系",
@@ -623,16 +642,6 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/NCTUTLM",
 				img: nil
-			},
-			{
-				category: "studentAssociation",
-				name: "工業工程與管理學系",
-				pdf: "工業工程與管理學系-系學會新生通知.pdf",
-				web: nil,
-				fb: "https://www.facebook.com/IEMhome",
-				img: "工業工程與管理學系.jpg",
-				color: "grey",
-				group: "https://www.facebook.com/groups/1724898754415038/"
 			},
 			{
 				category: "studentAssociation",
@@ -700,7 +709,7 @@ class NewcomerController < ApplicationController
 				name: "嘉義雲林校友會(雲嘉會)",
 				pdf: nil,
 				web: nil,
-				fb: "https://www.facebook.com/groups/606891969472726/",
+				group: "https://www.facebook.com/groups/606891969472726/",
 				img: "雲嘉友會.jpg",
 				color: "default"
 			},
