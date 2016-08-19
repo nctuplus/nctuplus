@@ -148,8 +148,8 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "交通大學機車研究社",
-				pdf: "交大機車研究社.pdf",
+				name: "機車研究社",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NWGJkNS15S3duMjg/view?usp=sharing",
 				group: "https://www.facebook.com/groups/nctumotor/",
 				fb: nil,
 				img: "交通大學機車研究社.jpg",
@@ -176,7 +176,7 @@ class NewcomerController < ApplicationController
 			{
 				category: "curricular",
 				name: "設計與思考社",
-				pdf: nil,
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NdS1pNzFCMnQ0eHM/view?pref=2&pli=1",
 				web:"https://www.facebook.com/NCTUDT/",
 				group: nil ,
 				img: "設計與思考社.jpg",
@@ -202,11 +202,38 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "烏克麗麗社",
-				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NdDUtUHJnUFl2c1E/view",
+				name: "清交大烏克麗麗社",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NdDUtUHJnUFl2c1E/view?pref=2&pli=1",
 				group: "https://www.facebook.com/groups/327026434028600/",
 				fb: "https://www.facebook.com/NCTUXNTHUUkuleleClub?fref=nf&pnref=story",
-				img: nil,
+				img: "清交大烏克麗麗社.jpg",
+				color: "white"
+			},
+			{
+				category: "curricular",
+				name: "焦點POP社",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NZlNoQkJCcElCQ1U/view?pref=2&pli=1",
+				web: nil,
+				fb: "https://www.facebook.com/focuspopclub",
+				img: "焦點POP社網宣.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "陶藝社",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/nctu.strong.2013",
+				img: "陶藝社網路新生包.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
+				name: "布袋戲社",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NV21iRWpXTG44bWc/view?pref=2&pli=1",
+				web: nil,
+				fb: "https://www.facebook.com/nctupdcfans",
+				img: "交大布袋戲社.jpg",
 				color: "default"
 			},
 			{
@@ -283,15 +310,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "焦點POP社",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/focuspopclub",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "文化服務團",
 				pdf: nil,
 				web: nil,
@@ -305,15 +323,6 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				group: "https://www.facebook.com/groups/nctu.tzuchi/",
 				fb: "https://www.facebook.com/nctuclubtzuchi",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "布袋戲社",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/nctupdcfans",
 				img: nil,
 				color: "default"
 			},
@@ -670,11 +679,20 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "alumnian",
-				name: "台南地區校友會(南友會)",
+				name: "竹苗地區校友會(竹友會)",
+				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NRTR6Wm0wc3RlYzA/view?pref=2&pli=1",
+				web: nil,
+				fb: "https://www.facebook.com/2012chuyo/",
+				img: "竹友新生包.jpg",
+				color: "white"
+			},
+			{
+				category: "alumnian",
+				name: "桃園地區同鄉會(桃友會)",
 				pdf: nil,
 				web: nil,
-				fb: "https://www.facebook.com/NCTU.TN",
-				img: nil,
+				fb: "https://www.facebook.com/NCTUTaoYoAssociation/?fref=ts",
+				img: "桃友會.jpg",
 				color: "default"
 			},
 			{
@@ -682,7 +700,16 @@ class NewcomerController < ApplicationController
 				name: "嘉義雲林校友會(雲嘉會)",
 				pdf: nil,
 				web: nil,
-				fb: nil,
+				fb: "https://www.facebook.com/groups/606891969472726/",
+				img: "雲嘉友會.jpg",
+				color: "default"
+			},
+			{
+				category: "alumnian",
+				name: "台南地區校友會(南友會)",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/NCTU.TN",
 				img: nil,
 				color: "default"
 			},
@@ -693,26 +720,6 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: nil,
 				img: nil,
-				color: "white"
-			},
-			{
-				category: "alumnian",
-				name: "竹苗地區校友會(竹友會)",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil,
-				color: "white"
-			},
-			{
-				category: "alumnian",
-				name: "桃園地區同鄉會(桃友會)",
-				pdf: nil,
-				web: nil,
-				fb: nil,
-				img: nil,
-				color: "default",
-				group: "https://www.facebook.com/groups/981152421998748/"
 			},
 			{
 				category: "alumnian",
