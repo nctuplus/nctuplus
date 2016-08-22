@@ -247,6 +247,15 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "文化服務團",
+				pdf: nil,
+				web: nil,
+				fb: "https://www.facebook.com/JiaoDaWenFuGeiNiSuoYou",
+				img: "文化服務團.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "社會企業創思社",
 				pdf: nil,
 				web: nil,
@@ -314,15 +323,6 @@ class NewcomerController < ApplicationController
 				pdf: "竹韻口琴社.pdf",
 				web: nil,
 				fb: "https://www.facebook.com/nctubmhc",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "文化服務團",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/JiaoDaWenFuGeiNiSuoYou",
 				img: nil,
 				color: "default"
 			},
