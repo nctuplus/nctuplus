@@ -545,7 +545,7 @@ class NewcomerController < ApplicationController
 				name: "電機工程學系",
 				pdf: nil,
 				web: nil,
-				fb: "https://www.facebook.com/pages/%E7%AC%AC%E5%9B%9B%E5%B1%86-%E4%BA%A4%E5%A4%A7%E9%9B%BB%E6%A9%9F%E7%B3%BB%E7%B3%BB%E5%AD%B8%E6%9C%83/1427829697481421",
+				fb: "https://www.facebook.com/nctuECEStudentAssociation",
 				img: nil
 			},
 			{
