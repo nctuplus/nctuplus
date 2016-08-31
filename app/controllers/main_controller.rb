@@ -17,6 +17,7 @@ class MainController < ApplicationController
     @news = Bulletin.where("article_type = true").order("created_at DESC")
     @updates = Bulletin.where("article_type = false").order("created_at DESC")
     @slogans = Slogan.limit(1).order("rand()")
+    @backgrounds = Background.all
 
   end
 

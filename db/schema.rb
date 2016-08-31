@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160808153851) do
+ActiveRecord::Schema.define(version: 20160831094556) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -377,6 +377,11 @@ ActiveRecord::Schema.define(version: 20160808153851) do
     t.boolean  "is_anonymous",          default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "year"
+    t.text     "teach_content"
+    t.text     "course_style"
+    t.text     "grade"
+    t.text     "suitable_for"
   end
 
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
