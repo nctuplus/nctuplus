@@ -48,18 +48,18 @@
 			 	<%=@user.year+4%> 級 
 			<% end %>
 		<br>
-		<% if current_user.hasE3? %>
+		<% if current_user.hasNctu? %>
 			學號：<%=@user.student_id%><br>
 		<% end %>
 		信箱：<%=@user.email%><br>
 		身份：
-		<% if @user.hasE3? %>
-			E3
+		<% if @user.hasNctu? %>
+			NCTU
 		<% end %>
 		<% if @user.hasFb? %>
 			Facebook
 		<% else %>
-		  <% if @user.hasE3? %>
+		  <% if @user.hasNctu? %>
 		    <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
 		      &nbsp; 綁定Facebook
 		    <% end %>    
@@ -68,7 +68,7 @@
 		<% if @user.hasGoogle? %>
 			Google
 		<% else %>
-		  <% if @user.hasE3? %>
+		  <% if @user.hasNctu? %>
 		    <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-danger" do%>
 		      &nbsp; 綁定Google
 		    <% end %>
