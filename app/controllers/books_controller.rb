@@ -1,7 +1,7 @@
 class BooksController < ApplicationController
   #before_filter :checkTopManager
 	before_filter :checkLogin, :only=>[:new, :create, :edit, :update]
-	#before_filter :checkE3Login
+	#before_filter :checkNCTULogin
 
 	def index
 		if current_user && params[:mine]=="true"

@@ -4,9 +4,10 @@ class User < ActiveRecord::Base
 	include ActionView::Helpers # for avatar
   devise :database_authenticatable, # :registerable, :recoverable,
          :rememberable, :trackable, # :validatable,
-         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :E3],
+         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :NCTU],
          :authentication_keys => [:id]
   belongs_to :department
+  has_one :auth_nctu
   has_one :auth_facebook
   has_one :auth_e3
   has_one :auth_google
@@ -43,10 +44,6 @@ class User < ActiveRecord::Base
   has_many :user_collections#, :dependent=> :destroy
   
   has_many :bulletins
-# for admin user search (no use now)
-  ransacker :studentId do |user|
-  Arel.sql('auth_e3s.student_id')
-  end
 
 
   #validates :email, uniqueness: true
@@ -104,7 +101,7 @@ class User < ActiveRecord::Base
   
 
   def student_id
-    self.try(:auth_e3).try(:student_id)
+    self.try(:auth_nctu).try(:student_id) || self.try(:auth_e3).try(:student_id)
   end
   
   def uid
@@ -141,6 +138,10 @@ class User < ActiveRecord::Base
   
   def hasE3?
     return self.auth_e3.present?
+  end
+
+  def hasNctu?
+    return self.auth_nctu.present? || self.hasE3?
   end
 ## role func
   def isAdmin?

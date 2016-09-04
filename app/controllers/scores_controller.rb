@@ -1,7 +1,7 @@
 class ScoresController < ApplicationController
 	include ScoresHelper
 	include CourseMapsHelper
-	before_filter :checkE3Login, :only=>[:import_confirm, :import, :gpa]
+	before_filter :checkNCTULogin, :only=>[:import_confirm, :import, :gpa]
 	
 
 	def import
