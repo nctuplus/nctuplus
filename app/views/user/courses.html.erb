@@ -49,15 +49,7 @@
 						{% } %}
 					</td>
 					<td class="text-center">{%=course.credit%}</td>
-                                        {% if(withdrawal(course.score)||!checkPassTaking(o.pass_score,course.score)){
-                                          if(!checkPassTaking(o.pass_score,course.score)){
-						if(isInt(course.score)){
-							score_sum+=parseInt(course.score)*course.credit;
-							credit_taked_sum+=course.credit;
-						}
-						credit_sum+=course.credit;
-                                          }
-                                        %}
+					{% if(withdrawal(course.score)||!checkPassTaking(o.pass_score,course.score)){ %}
 						<td class="text-center" style="color:red;">
 					{% } else {
 						if(isInt(course.score)){
