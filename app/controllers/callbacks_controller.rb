@@ -143,7 +143,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
   def _additional_session(user)
     store_location_for(:user, session[:last_url])	#for devise usage, redirect to last page after sign in
     session[:auth_nctu] = user.try(:auth_nctu).try(:to_session_json)
-    session[:auth_e3] = user.try(:auth_e3).try(:to_session_json)
+    #session[:auth_e3] = user.try(:auth_e3).try(:to_json)
     session[:auth_facebook] = user.try(:auth_facebook).try(:to_json)
     session[:auth_google] = user.try(:auth_google).try(:to_json)		
   end

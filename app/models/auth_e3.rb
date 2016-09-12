@@ -1,7 +1,7 @@
 class AuthE3 < ActiveRecord::Base
   belongs_to :user
   
-  def to_session_json
+  def to_json
     {
       :student_id=> self.student_id
     }
