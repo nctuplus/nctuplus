@@ -53,9 +53,8 @@
 						if(!checkPassTaking(o.pass_score,course.score)){
 							if(isInt(course.score)){
 								score_sum+=parseInt(course.score)*course.credit;
-								credit_taked_sum+=course.credit;
+							        credit_taked_sum+=course.credit;
 							}
-							credit_sum+=course.credit;
 						}
 					%}
 						<td class="text-center" style="color:red;">
