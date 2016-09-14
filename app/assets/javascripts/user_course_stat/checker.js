@@ -44,10 +44,10 @@ function commonCheck(pass_courses){
 			/*if(course.sem_id>=7){ 
 				++result['art_after102']; 
 			} */
-			if(course.name.search("一")!=-1 || course.sem_name.search("上")!=-1){ 
+			if(course.name.search("一")!=-1/* || course.sem_name.search("上")!=-1*/){ 
 				result['art_1']=true; 
 			}
-			else if(course.name.search("二")!=-1 || course.sem_name.search("下")!=-1){ 
+			else if(course.name.search("二")!=-1/* || course.sem_name.search("下")!=-1*/){ 
 				result['art_2']=true; 
 			}
 			else{//因為在102學年度後的藝文賞析沒有一或二
