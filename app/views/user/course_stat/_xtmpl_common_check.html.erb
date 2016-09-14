@@ -37,7 +37,7 @@
 			{% } %}
 		</td>
 		<td class="col-md-" colspan="3">
-			{% if(result['art_2']||result['art_after102']>=2){ %}
+                        {% if(result['art_2']||result['art_after102']>=2||(result['art_1']&&result['art_after102']>=1)){ %}
 				<p class="text-center no-margin-bottom">
 					{% print(green_check(),true); %}
 				</p>
