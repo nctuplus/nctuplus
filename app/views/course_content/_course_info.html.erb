@@ -9,7 +9,7 @@
 			<td>時間</td>
 			<td>教室</td>
 			<td>年級</td>					
-			<td class="col-md-4">備註</td>
+			<td class="md-col-4">備註</td>
     	</tr>
 		<% @data[:related_cds].select{|cd| cd.semester_id==Semester::LAST.id}.each do |cd| %>  
 		<tr>
