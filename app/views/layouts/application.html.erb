@@ -36,65 +36,68 @@
     <!-- default fb header -->
 	<% end %>
 
-  <script>
-    <% if Rails.env.production? %>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-    ga('create', 'UA-54567036-1', 'auto');
-    ga('send', 'pageview');
-    <% end %>
-  </script>
 
 </head>
 
 <body id="page-top" style="background-color:#e9eaed;">
 
-<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
-	<div class="modal-dialog" >
-		<div class="modal-content" >
-			<div class="modal-header" >
-				<h4 class="modal-title"></h4>
+	<% if Rails.env.production? %>
+		<!-- Google Tag Manager -->
+		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-WFLZTQ"
+		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-WFLZTQ');</script>
+		<!-- End Google Tag Manager -->
+	<% end %>
+
+	<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
+		<div class="modal-dialog" >
+			<div class="modal-content" >
+				<div class="modal-header" >
+					<h4 class="modal-title"></h4>
+				</div>
+				<div class="modal-body" ></div>
 			</div>
-			<div class="modal-body" ></div>
 		</div>
 	</div>
-</div>
 
 <!-- layouts/header start -->
 	<%= render 'layouts/header' %>
 <!-- layouts/header end -->
 
 
-<% if current_page?('/')||current_page?('/login')%>
-	<%= yield %>
-<% else %>
-	<div id="content-container" class="container<%=@full_width ? "-fluid" : ""%>" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
+	<% if current_page?('/')||current_page?('/login')%>
 		<%= yield %>
-	</div>
-<% end %>
-<%= render "layouts/footer" %>
+	<% else %>
+		<div id="content-container" class="container<%=@full_width ? "-fluid" : ""%>" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
+			<%= yield %>
+		</div>
+	<% end %>
+	<%= render "layouts/footer" %>
 
 
+
+	
+	<script>
+		$(document).ready(function() {
+
+			initHeader();
+			$(window).bind("load resize",function() {
+				initHeader();
+			});
+			<% if flash[:notice] %>
+				<% if flash[:notice].kind_of? String%>
+					toastr.warning("<%= flash[:notice] %>");
+				<% else %>
+					toastr.warning("<%= flash[:notice][:message] %>");
+				<% end %>
+			<% end %>		
+		});
+	</script>
 </body>
 
-<script>
-	$(document).ready(function() {
-
-		initHeader();
-		$(window).bind("load resize",function() {
-			initHeader();
-		});
-		<% if flash[:notice] %>
-		  <% if flash[:notice].kind_of? String%>
-		    toastr.warning("<%= flash[:notice] %>");
-		  <% else %>
-			  toastr.warning("<%= flash[:notice][:message] %>");
-		  <% end %>
-		<% end %>		
-	});
-</script>
-	
 </html>
