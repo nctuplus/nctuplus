@@ -14,20 +14,18 @@
   <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
   <%= csrf_meta_tags %>
 
-	<% if params[:controller]!="main"%>
-		<meta name="robots" content="noindex">	
-	<% end %>
 	<!-- for touch-icon -->
 	<link rel="apple-touch-icon" href="<%=asset_path("touch-icon/iphone.png")%>" /> 
 	<link rel="apple-touch-icon" sizes="76x76" href="<%=asset_path("touch-icon/ipad.png")%>" /> 
 	<link rel="apple-touch-icon" sizes="120x120" href="<%=asset_path("touch-icon/iphone-retina.png")%>" />
 	<link rel="apple-touch-icon" sizes="152x152" href="<%=asset_path("touch-icon/ipad-retina.png")%>" />
-	
-  
+	<!-- touch-icon end -->
+
+	<!-- Facebook META info -->
 	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" /> 
 	<% if content_for? :cus_fb_head %>
     <%= yield :cus_fb_head %>  
-    <!-- custon fb header -->
+    <!-- custom fb header -->
   <% else %> 
 		<meta property="og:url"           content="<%=root_url%>" />
 		<meta property="og:type"          content="website" />
@@ -35,25 +33,30 @@
     <meta property="og:description" content="NCTU+ 交大智慧校園系統">
     <!-- default fb header -->
 	<% end %>
-
-
-
+	<!-- Facebook META info end -->
+	
+	<% if Rails.env.production? %>
+		<!-- Google Tag Manager -->
+		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+		})(window,document,'script','dataLayer','GTM-MK26KK');</script>
+		<!-- End Google Tag Manager -->
+	<% end %>
+	
 </head>
 
 <body id="page-top" style="background-color:#e9eaed;">
 
 	<% if Rails.env.production? %>
-		<!-- Google Tag Manager -->
-		<noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-WFLZTQ"
+		<!-- Google Tag Manager (noscript) -->
+		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MK26KK"
 		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-WFLZTQ');</script>
-		<!-- End Google Tag Manager -->
+		<!-- End Google Tag Manager (noscript) -->
 	<% end %>
 
+	<!-- global-modal, please don't remove!! --> 
 	<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
 		<div class="modal-dialog" >
 			<div class="modal-content" >
@@ -64,11 +67,11 @@
 			</div>
 		</div>
 	</div>
-
-<!-- layouts/header start -->
-	<%= render 'layouts/header' %>
-<!-- layouts/header end -->
-
+	<!-- global-modal end --> 
+	
+	<!-- layouts/header start -->
+		<%= render 'layouts/header' %>
+	<!-- layouts/header end -->
 
 	<% if current_page?('/')||current_page?('/login')%>
 		<%= yield %>
@@ -80,11 +83,9 @@
 	<%= render "layouts/footer" %>
 
 
-
-	
 	<script>
-		$(document).ready(function() {
-
+		$(document).ready(function() 
+		{
 			initHeader();
 			$(window).bind("load resize",function() {
 				initHeader();
