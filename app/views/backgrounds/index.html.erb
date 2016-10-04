@@ -10,17 +10,17 @@
 	margin-bottom: 20px;
 	text-align: right;
 }
+
 .col_1{
 	width: 300px;	
 }
 
 .modal-dialog{
     position: relative;
-    display: table; //This is important 
+    display: table;
     overflow-y: auto;    
     overflow-x: auto;
     width: auto;
-    min-width: 300px;   
 }
 </style>
 
@@ -46,11 +46,33 @@
 	<div class ="col-sm-10">
 		<div class = "form-inline">
 	    	<%= form_for Background.new , :url => { :controller => 'backgrounds', :action => 'create' } do |f| %>
-                  <strong>背景：</strong>
 	          <div class = "form-group">
-		    <%= f.file_field :image %>
-	          </div>
-	            <%= f.submit "直接刊登", class: "btn btn-warning", :data => { :confirm => "確定要刊登嗎？" }  %>
+                    <strong>背景：</strong>
+                  </div>
+	          <div class = "form-group">
+                    <%= f.file_field :image %>
+                  </div>
+	          <div class = "form-group">
+		    <!-- Button trigger modal -->
+		    <button id="btn-demo" type="button" class="btn btn-primary" data-toggle="modal" data-target="#demoModal">
+		      預覽圖片
+		    </button>
+		    <!-- Modal -->
+		    <div class="modal fade" id="demoModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		      <div class="modal-dialog">
+			<div class="modal-content">
+			  <div class="modal-header">
+			    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+			    <h4 class="modal-title" id="myModalLabel" style="text-align:left;">預覽圖片</h4>
+			  </div>
+			  <div class="modal-body">
+			    <img id="demo" src="#" alt="your image" class="img-responsive">
+			  </div>
+			</div>
+		      </div>
+		    </div>
+                    <%= f.submit "準備刊登", class: "btn btn-warning"  %>
+                  </div>
                 <% end %>
 		</div>
 		<table class="table table-bordered table-striped">
@@ -109,5 +131,24 @@ $('ul.nav a').filter(function() {
 
 </script>
 
+<script>
+document.getElementById('btn-demo').style.visibility = 'hidden';
+function readURL(input) {
+
+  if (input.files && input.files[0]) {
+    var reader = new FileReader();
+  
+    reader.onload = function (e) {
+      $('#demo').attr('src', e.target.result);
+    }
+    reader.readAsDataURL(input.files[0]);
+  }
+}
+
+$("#background_image").change(function(){
+  readURL(this);
+  document.getElementById('btn-demo').style.visibility = 'visible';
+});
+</script>
 </body>
 </html>

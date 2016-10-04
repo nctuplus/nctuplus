@@ -1,5 +1,5 @@
 class BackgroundsController < ApplicationController
-
+  before_filter :checkTopManager
   before_action :set_background, :only => [ :show, :edit, :update, :destroy]
   
   def index
@@ -9,11 +9,12 @@ class BackgroundsController < ApplicationController
   def create
     @background = Background.new(background_params)
     if @background.save 
-      redirect_to backgrounds_path
+      redirect_to root_path(bid: Background.last.id)
     else
-      redirect_to root_path
+      redirect_to backgrounds_path
     end
   end
+
 
   def show
   end
@@ -41,6 +42,8 @@ class BackgroundsController < ApplicationController
     end
 
     def background_params
-      params.require(:background).permit(:image)  
+      if params[:background].present?
+        params.require(:background).permit(:image)  
+      end
     end
 end
