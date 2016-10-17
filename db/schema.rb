@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160831094556) do
+ActiveRecord::Schema.define(version: 20160927105608) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -40,7 +40,6 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.string   "student_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "user_key"
   end
 
   create_table "auth_facebooks", force: true do |t|
@@ -63,6 +62,16 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.string   "gender"
     t.date     "birthday"
     t.string   "location"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "auth_nctus", force: true do |t|
+    t.integer  "user_id"
+    t.string   "student_id"
+    t.string   "email"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
     t.datetime "created_at"
@@ -123,14 +132,6 @@ ActiveRecord::Schema.define(version: 20160831094556) do
 
   add_index "books", ["user_id"], name: "index_books_on_user_id", using: :btree
 
-  create_table "brief_bullentins", force: true do |t|
-    t.string   "title"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "bulletins", force: true do |t|
     t.integer  "user_id"
     t.string   "title"
@@ -140,6 +141,8 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.datetime "updated_at"
     t.string   "update_user"
     t.boolean  "hidden_type",  default: false, null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
   end
 
   create_table "cf_credits", force: true do |t|
@@ -377,34 +380,10 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.boolean  "is_anonymous",          default: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "year"
-    t.text     "teach_content"
-    t.text     "course_style"
-    t.text     "grade"
-    t.text     "suitable_for"
   end
 
   add_index "discusses", ["course_teachership_id"], name: "index_discusses_on_course_teachership_id", using: :btree
   add_index "discusses", ["user_id"], name: "index_discusses_on_user_id", using: :btree
-
-  create_table "event1s", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
-  end
-
-  create_table "event2_7s", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "event_follows", force: true do |t|
     t.integer  "user_id"
@@ -448,6 +427,15 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.datetime "updated_at"
   end
 
+  create_table "meetings", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "members", force: true do |t|
     t.string   "name"
     t.string   "nickname"
@@ -463,16 +451,6 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.string   "member_image_content_type"
     t.integer  "member_image_file_size"
     t.datetime "member_image_updated_at"
-  end
-
-  create_table "mytests", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
   end
 
   create_table "normal_scores", force: true do |t|
@@ -506,36 +484,10 @@ ActiveRecord::Schema.define(version: 20160831094556) do
   add_index "past_exams", ["semester_id"], name: "index_past_exams_on_semester_id", using: :btree
   add_index "past_exams", ["user_id"], name: "index_past_exams_on_user_id", using: :btree
 
-  create_table "people", force: true do |t|
-    t.string   "name"
-    t.text     "bio"
-    t.date     "birthday"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "qandas", force: true do |t|
-    t.integer  "user_id"
-    t.string   "title"
-    t.text     "question"
-    t.text     "answer"
-    t.boolean  "is_public"
-    t.string   "update_user"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "semesters", force: true do |t|
     t.string  "name"
     t.integer "year"
     t.integer "half"
-  end
-
-  create_table "simple_bullentins", force: true do |t|
-    t.string   "time"
-    t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
   end
 
   create_table "slogans", force: true do |t|
@@ -564,16 +516,6 @@ ActiveRecord::Schema.define(version: 20160831094556) do
     t.datetime "updated_at"
   end
 
-  create_table "tests", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.boolean  "is_public"
-    t.integer  "capacity"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "status"
-  end
-
   create_table "user_collections", force: true do |t|
     t.integer  "user_id"
     t.integer  "target_id"
@@ -594,27 +536,34 @@ ActiveRecord::Schema.define(version: 20160831094556) do
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
 
+  create_table "user_events", force: true do |t|
+    t.string   "name"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "users", force: true do |t|
     t.string   "name"
-    t.integer  "year",                             default: 0
+    t.integer  "year",                   default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "department_id"
-    t.boolean  "agree",                            default: false
-    t.boolean  "agree_share",                      default: true
-    t.integer  "role",                             default: 1
-    t.string   "email",                            default: ""
-    t.string   "encrypted_password",               default: "",    null: false
+    t.boolean  "agree",                  default: false
+    t.boolean  "agree_share",            default: true
+    t.integer  "role",                   default: 1
+    t.string   "email",                  default: "",    null: false
+    t.string   "encrypted_password",     default: "",    null: false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                    default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,     null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
-    t.string   "account"
-    t.integer  "account_type",           limit: 1, default: 1
   end
 
   add_index "users", ["department_id"], name: "index_users_on_department_id", using: :btree
