@@ -53,6 +53,10 @@
 						</a>
 						{%= cd.dept_name %}
 						{%= cd.teacher_name %}
+            {% if(o.highest_score_ct && o.highest_score_ct.indexOf(cd.ct_id) != -1) { %}
+              {% o.highest_score_ct.splice(o.highest_score_ct.indexOf(cd.ct_id), 1); %}
+            高分
+            {% } %}
 						<span class="pull-right">
 						{% if(o.add_to_cart){ %}
 								<button title="新增至課程收藏" data-toggle="tooltip" class="btn btn-info btn-circle" onclick="add_to_cart({%=cd.id%},'add')">

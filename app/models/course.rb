@@ -12,6 +12,7 @@ class Course < ActiveRecord::Base
 	has_many :semesters, :through => :course_details
 	has_many :departments, :through => :course_details
 	has_many :colleges, :through => :departments
+	has_many :course_group_lists
 	def self.create_from_import_fail(data)
 		
 		arr=data.split('/')
@@ -95,5 +96,20 @@ class Course < ActiveRecord::Base
 		end
 	end
 
-	
+  def to_require_search
+    #return the highest score's course_teachership_id
+    cts_id = self.course_details.where(:semester_id=>Semester::LAST.id).pluck(:course_teachership_id)
+    cds = CourseDetail.where(:course_teachership_id=>cts_id).order(:semester_id).reverse.select {|cd| cd.semester_id != Semester::LAST.id }.uniq{|cd| cd.course_teachership_id}
+    course_teachership_id = 0
+    highest_score = 0
+    cds.each do |cd|
+      score = cd.normal_scores.where.not(:score=>"修習中").average(:score).to_i
+      if score > highest_score
+        hightest_score = score
+        course_teachership_id = cd.course_teachership_id
+      end
+    end
+    return course_teachership_id
+	end
+
 end
