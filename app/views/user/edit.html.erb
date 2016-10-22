@@ -31,7 +31,7 @@
 
 	<div class="form-group">
 		<h4><%=label_tag '入學年度', "入學年度", class:"col-sm-2 control-label"%></h4>
-		<div class="col-md-1">
+		<div class="col-md-2">
 			<%=f.select :year, options_from_collection_for_select(Semester.all.group(:year).order(:id),:year,:year, current_user.year),{:include_blank => '請選擇'}, class:'form-control'%>
 		</div>
 	</div>
