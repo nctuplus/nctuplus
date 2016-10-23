@@ -123,6 +123,7 @@ end
 			get "export_timetable"
 			get "add_to_cart"
 			get "show_cart"
+			get "tutorial"
 		end
 	end
 	
