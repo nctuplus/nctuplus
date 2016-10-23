@@ -25,9 +25,6 @@ Rails.application.config.assets.precompile +=[
 	'jquery-ui-timepicker-addon.js',
 	'event_create.js',
 	'jquery.counterup.js',
-	'waypoints.min.js',
-	'newcomer/*.js',
-	'newcomer/*.css',
-	'NotoSans-Regular-ttf'
+	'waypoints.min.js'
 
 ]
