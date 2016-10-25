@@ -123,6 +123,7 @@ end
 			get "export_timetable"
 			get "add_to_cart"
 			get "show_cart"
+			get "tutorial"
 		end
 	end
 	
@@ -160,27 +161,6 @@ end
   	resources :books
 	
 	resources :departments, :except=>[:show, :destroy]
-
-#---------- for newcomer page ----------
-	get 'newcomer/', to: "newcomer#main" 
-	get 'newcomer/procedure'
-	get 'newcomer/qna'
-
-	get 'newcomer/d2setup'
-	get 'newcomer/map'
-	get 'newcomer/chooseClass'
-
-	# all newcomer buying in NCTU
-	get 'newcomer/shopping'
-	get 'newcomer/newtonA'
-	get 'newcomer/essentialShopping'
-	# all association in NCTU
-	get 'newcomer/curricular'
-	get 'newcomer/studentAssociation'
-	get 'newcomer/alumnian'
-
-	#footer content
-	get 'newcomer/stunionIntro'
 
 
 #---------- for chrome extension -----------
