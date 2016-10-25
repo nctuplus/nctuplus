@@ -7,7 +7,7 @@ class CoursesController < ApplicationController
 		@sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
 		if params[:custom_search].present? || params[:q].present?	#if query something
 			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
-		elsif current_user.try(:department_id)#.present?
+		elsif current_user.try(:department_id) && current_user.department.has_courses # e.x 資工系資工組/網多/資電
 			@q = CourseDetail.search({:department_id_eq=>current_user.department_id})
 		else	
 			@q = CourseDetail.search({})
