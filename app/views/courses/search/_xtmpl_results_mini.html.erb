@@ -53,9 +53,8 @@
 						</a>
 						{%= cd.dept_name %}
 						{%= cd.teacher_name %}
-            {% if(o.highest_score_ct && o.highest_score_ct.indexOf(cd.ct_id) != -1) { %}
-              {% o.highest_score_ct.splice(o.highest_score_ct.indexOf(cd.ct_id), 1); %}
-            高分
+            {% if(o.highest_score_ct && o.highest_score_ct.indexOf(cd.id) != -1) { %}
+            <!-- highest score -->
             {% } %}
 						<span class="pull-right">
 						{% if(o.add_to_cart){ %}

@@ -97,19 +97,20 @@ class Course < ActiveRecord::Base
 	end
 
   def to_require_search
-    #return the highest score's course_teachership_id
+    #return the highest score's course_detail_id
     cts_id = self.course_details.where(:semester_id=>Semester::LAST.id).pluck(:course_teachership_id)
     cds = CourseDetail.where(:course_teachership_id=>cts_id).order(:semester_id).reverse.select {|cd| cd.semester_id != Semester::LAST.id }.uniq{|cd| cd.course_teachership_id}
-    course_teachership_id = 0
+    return 0 if cds.size == 1
+    cd_id = 0
     highest_score = 0
     cds.each do |cd|
       score = cd.normal_scores.where.not(:score=>"修習中").average(:score).to_i
       if score > highest_score
         hightest_score = score
-        course_teachership_id = cd.course_teachership_id
+        cd_id = cd.course_teachership.course_details.order(semester_id: :desc).pluck(:id).first
       end
     end
-    return course_teachership_id
+    return cd_id
 	end
 
 end
