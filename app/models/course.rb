@@ -12,7 +12,6 @@ class Course < ActiveRecord::Base
 	has_many :semesters, :through => :course_details
 	has_many :departments, :through => :course_details
 	has_many :colleges, :through => :departments
-	has_many :course_group_lists
 	def self.create_from_import_fail(data)
 		
 		arr=data.split('/')
