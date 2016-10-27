@@ -3,6 +3,7 @@
 	<%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
 	<%=hidden_field_tag :dimension_search,"" %>
 	<%=hidden_field_tag :timeslot_search,"" %>
+  <%=hidden_field_tag :required_search,"" %>
 
 	<div class="input-group" style="display:inline-table;">
 			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>		

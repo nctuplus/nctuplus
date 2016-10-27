@@ -23,6 +23,10 @@ class CoursesController < ApplicationController
 			@q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>Semester::LAST.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
 		elsif !params[:custom_search].blank? #search by text
 			@q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
+		elsif !params[:required_search].blank? #search required courses
+      c_ids = find_required_courses_id
+      highest_score_ct = Course.where(:id=>c_ids).map{|c| c.to_require_search}.select {|i| i != 0}
+      @q = CourseDetail.search(:semester_id_eq=>Semester::LAST.id, :course_id_in=>c_ids)
 		else
 			if params[:q].blank?
 				@q=CourseDetail.search({:id_in=>[0]})
@@ -30,7 +34,7 @@ class CoursesController < ApplicationController
 				@q=CourseDetail.search(params[:q])				
 			end
 		end
-		cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
+    cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
 		@result={
 			:view_type=>"simulation",
 			:use_type=>"add",
@@ -39,6 +43,7 @@ class CoursesController < ApplicationController
 				cd.to_search_result
 			}
 		}
+		@result[:highest_score_ct] = highest_score_ct if !params[:required_search].blank? 
 		render "courses/search/mini", :layout=>false
 	end
 	
@@ -164,5 +169,14 @@ class CoursesController < ApplicationController
 		params.require(:course).permit(:ch_name, :eng_name, :department_id)
   end
   
+  def find_required_courses_id
+    grade = (Semester::LAST.year - current_user.year + 1).to_s
+    half = Semester::LAST.half.to_s
+    cf_ids = CmCfship.where(:course_map_id => current_user.course_map_ids).distinct.pluck(:course_field_id)
+    c_ids, cg_ids = CourseFieldList.includes(:course_field).where(:grade => grade, :half => half, :course_fields => {:id => cf_ids, :field_type => 1 }).distinct.pluck(:course_id, :course_group_id).transpose
+    c_ids = [] if c_ids.nil?
+    c_ids += CourseGroupList.includes(:course_group).where(:course_group_id => cg_ids ).distinct.pluck(:course_id) << 0 #防止cid裡沒有資料
+    return c_ids
+  end
   
 end

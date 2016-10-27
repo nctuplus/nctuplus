@@ -1,3 +1,6 @@
+<button id="required-btn" data-content="推薦選課" class="btn btn-default pop-over" onclick="searchRequired();">
+  <%=fa_icon "book"%>
+</button>
 
 <button id="sel-time-btn" data-content="空堂" class="btn btn-default pop-over" onclick="searchTimeSlot();">
 	<%=fa_icon "calendar"%>
@@ -103,4 +106,10 @@
 		else
 			toastr["warning"]("請先在右方課表選取時間");
 	}
+
+  function searchRequired(){
+    $(".scrollable").html("<%=j loading_img%>");
+    $("#required_search").val(1);
+    $("form").submit();
+  }
 </script>
