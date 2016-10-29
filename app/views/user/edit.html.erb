@@ -24,7 +24,7 @@
 		<div class="form-group "> 
 			<h4><%=label_tag 'Email', "信箱", class:"col-sm-2 control-label" %></h4>
 			<div class="col-md-9">
-				<%=email_field_tag "user[email]",current_user.email.include?("please.change.me") ? "" : current_user.email, :class=>"form-control", :required=>true, :maxlength=>32 %>
+				<%=email_field_tag "user[email]",current_user.email.include?("please.change.me") ? "" : current_user.email, :class=>"form-control", :required=>true, :maxlength=>64 %>
 			</div>
 		</div>
     <% end %>
