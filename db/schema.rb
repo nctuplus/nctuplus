@@ -67,6 +67,16 @@ ActiveRecord::Schema.define(version: 20160903072145) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+  
+  create_table "auth_nctus", force: true do |t|
+    t.integer  "user_id"
+    t.string   "student_id"
+    t.string   "email"
+    t.string   "oauth_token"
+    t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "backgrounds", force: true do |t|
     t.string   "image_file_name"
@@ -131,8 +141,6 @@ ActiveRecord::Schema.define(version: 20160903072145) do
     t.datetime "updated_at"
     t.string   "update_user"
     t.boolean  "hidden_type",  default: false, null: false
-    t.datetime "start_time"
-    t.datetime "end_time"
   end
 
   create_table "cf_credits", force: true do |t|
@@ -499,15 +507,6 @@ ActiveRecord::Schema.define(version: 20160903072145) do
 
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
-
-  create_table "user_events", force: true do |t|
-    t.string   "name"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", force: true do |t|
     t.string   "name"
