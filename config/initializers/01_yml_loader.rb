@@ -10,13 +10,21 @@ module Google
   SECRET = FB_CONFIG["google"]['client_secret']
 end
 
-E3_CONFIG = YAML.load_file(Rails.root.join("config/E3.yml"))
+NCTU_CONFIG = YAML.load_file(Rails.root.join("config/nctu.yml"))
 
 module E3
-	
-  URL = E3_CONFIG["prefix_url"]
-  
+  URL = NCTU_CONFIG["E3"]["prefix_url"]
 end
+
+module NCTUOAUTH
+  APP_ID = NCTU_CONFIG["OAUTH"]['client_id']
+  SECRET = NCTU_CONFIG["OAUTH"]['secret']
+  SITE = NCTU_CONFIG["OAUTH"]['site']
+  AUTH_URL = NCTU_CONFIG["OAUTH"]['authorize_url']
+  GET_TOKEN_URL = NCTU_CONFIG["OAUTH"]['get_token_url']
+  API_PROFILE_URL = NCTU_CONFIG["OAUTH"]['api_profile_url']
+end
+
 
 APP_CONFIG = YAML.load_file(Rails.root.join("config/app.yml"))
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160927105608) do
+ActiveRecord::Schema.define(version: 20160903072145) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -62,16 +62,6 @@ ActiveRecord::Schema.define(version: 20160927105608) do
     t.string   "gender"
     t.date     "birthday"
     t.string   "location"
-    t.string   "oauth_token"
-    t.datetime "oauth_expires_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "auth_nctus", force: true do |t|
-    t.integer  "user_id"
-    t.string   "student_id"
-    t.string   "email"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
     t.datetime "created_at"
@@ -425,32 +415,6 @@ ActiveRecord::Schema.define(version: 20160927105608) do
     t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "meetings", force: true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "members", force: true do |t|
-    t.string   "name"
-    t.string   "nickname"
-    t.string   "job"
-    t.string   "department"
-    t.string   "motivation"
-    t.string   "others"
-    t.string   "fb"
-    t.string   "email"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "member_image_file_name"
-    t.string   "member_image_content_type"
-    t.integer  "member_image_file_size"
-    t.datetime "member_image_updated_at"
   end
 
   create_table "normal_scores", force: true do |t|

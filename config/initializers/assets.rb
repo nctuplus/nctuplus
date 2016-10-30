@@ -26,8 +26,6 @@ Rails.application.config.assets.precompile +=[
 	'event_create.js',
 	'jquery.counterup.js',
 	'waypoints.min.js',
-	'newcomer/*.js',
-	'newcomer/*.css',
-	'NotoSans-Regular-ttf'
+	'courses-tutorial.css'
 
 ]

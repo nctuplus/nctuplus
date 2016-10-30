@@ -535,6 +535,27 @@
 		line-height:25px;
 	}
 
+        @media only screen and (max-width : 1000px){
+          body{
+            overflow-x: hidden;
+          }
+          .blue-menu{
+            display: none;
+          }
+          #single-compare{
+            display: none;
+          } 
+          .course-info{
+            overflow-x: scroll;
+          }
+        }    
+
+        @media only screen and (min-width: 768px and max-width:995){
+          #scroll-title{
+            margin-top: 150px;
+          }
+        }
+
 	</style>
 
 <div class="row">
@@ -542,15 +563,15 @@
 		<%= render "/course_content/scroll_sidebar"%>
 	</div>
 	
-	<div class="col-md-10 scroll-content col-md-offset-2" >
+	<div class="container-fluid scroll-content col-md-offset-2" id="first-row">
 		<div class="row" id="tc" >
 			<div class="col-md-10">
 				<h1 class="scroll-title" data-offset="100">	
 					<%= @data[:course_name] %>－<%=@data[:course_teachers]%>
-					<small style="font-size: 37%" title="E3課程資料同步時間">
+                                </h1>
+                                  <small style="font-size: 37%" title="E3課程資料同步時間">
 						最後同步時間 <%=@data[:updated_at].strftime("%F %R")%>
 					</small>
-				</h1>
 			</div>
 			<div class="col-md-2" id="teacher-name">
 				<br>
@@ -592,11 +613,12 @@
 							</td>
 						</tr>
 					</table>
-			</h4>
-			<div class="panel-heading course-info">
+                        </h4>
+
+                        <div class="panel-heading course-info">
 				<%=render "/course_content/course_info" %>
-			</div>
-			
+                        </div>
+
 			<div class="separation-line"></div>
 			<div id="course-tips" class="panel-heading" >
 				<h2 class="panel-title">
