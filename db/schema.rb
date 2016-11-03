@@ -67,13 +67,22 @@ ActiveRecord::Schema.define(version: 20160903072145) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-
+  
   create_table "auth_nctus", force: true do |t|
     t.integer  "user_id"
     t.string   "student_id"
     t.string   "email"
     t.string   "oauth_token"
     t.datetime "oauth_expires_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "backgrounds", force: true do |t|
+    t.string   "image_file_name"
+    t.string   "image_content_type"
+    t.integer  "image_file_size"
+    t.datetime "image_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
