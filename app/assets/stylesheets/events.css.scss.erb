@@ -76,9 +76,9 @@
 ------------------------*/
 
 .events-block{
-	@extend .container;
 	@extend .center-block;
-	margin: 20px auto;
+	margin-bottom: 20px;
+	background-image: url(<%=asset_path("events/bg_symphony.png")%>);
 }
 
 #event-block1{
@@ -118,9 +118,8 @@
 	attributes
 ------------------------*/
 .event-block-wrapper{
-	@extend .col-md-3, .col-sm-6, .col-xs-12;
-	margin: 10px 0px;
-	padding: 0px;
+	margin-bottom: 15px;
+	padding: 3px;
 }
 
 .event-block{
@@ -175,16 +174,16 @@
 	@extend .text-right;
 	//@extend .flag;
 	position: absolute;
-	pagging: 2px 2px;
+	padding: 2px 2px;
 	height: 15%;
-	top: 0px;
+	top: 3px;
 	bottom: auto;
 	right: 5%;
 	font-size: 16px;
 	font-weight: bold;
 }
 .event-date__theme--today{
-	color: #ff3838;
+	color: #5BA1DC;
 	//background: #f8d4d4;
 }
 .event-date__theme--past {
