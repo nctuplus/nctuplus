@@ -4,8 +4,9 @@ class UserController < ApplicationController
 	include CourseMapsHelper 
 
 	before_filter :checkLogin, :only=>[:this_sem, :add_course,  :show, :courses, :select_dept,
-	             :statistics_table, :edit, :update, :add_user_collection, :upload_share_image, :collections]
-  	before_filter :checkDepYear, :only=>[:show]
+																		 :statistics_table, :edit, :update, :add_user_collection,
+																		 :upload_share_image, :collections]
+  before_filter :checkDepYear, :only=>[:show]
 	layout false, :only => [:statistics_table]#, :all_courses2]
 
 
@@ -70,14 +71,22 @@ class UserController < ApplicationController
 	
 	def show
 		
-		@user=getUserByIdForManager(params[:uid])
-		if @user.course_maps.empty?  
+		@user = getUserByIdForManager(params[:uid])
+		user_cmship = @user.user_coursemapships.take			
+		if user_cmship.nil?
 			cm=CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
 			if cm
 				@user.user_coursemapships.create(:course_map_id=>cm.id)
 				update_cs_cfids(cm,@user)
 			end
+		elsif user_cmship.need_update == 1	#If course_field has added or removed courses (Click apply in course_map manage page)
+			update_cs_cfids(user_cmship.course_map,@user)
+
+			alertmesg("info",'哈囉',"你的課程地圖有更新,麻煩重新選擇課程所屬學程!!")
+			redirect_to "/scores/select_cf"
 		end
+		
+		
 	end
 	
 	def all_courses
@@ -142,10 +151,14 @@ class UserController < ApplicationController
 			dept=params[:dept_under_select].to_i
 		end
 		current_user.update_attributes(:year=>grade,:department_id=>dept)
-		
+		# Remove course_map
 		UserCoursemapship.where(:user_id=>current_user.id).destroy_all
+		# Clean all cf_ids
+		current_user.normal_scores.update_attributes(:course_field_id=>0)
+		current_user.agreed_scores.update_attributes(:course_field_id=>0)
 		
-		cm=CourseMap.where(:department_id=>current_user.department_id, :year=>grade).take
+		# Create new course_map for new department
+		cm = CourseMap.where(:department_id=>current_user.department_id, :year=>grade).take
 		if cm
 			UserCoursemapship.create(:course_map_id=>cm.id, :user_id=>current_user.id)
 			update_cs_cfids(cm,current_user)
@@ -155,8 +168,7 @@ class UserController < ApplicationController
 	end
  
   def select_cm
-		
-		
+=begin TODO: remove this
 		user=User.find(params[:uid])
 		#user.course_mapships.destroy_all
 		UserCoursemapship.where(:user_id=>params[:uid]).destroy_all
@@ -168,6 +180,7 @@ class UserController < ApplicationController
 		else
 			render :nothing => true, :status => 200, :content_type => 'text/html'
 		end
+=end
   end
 
   

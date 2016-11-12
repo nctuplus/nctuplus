@@ -1,7 +1,7 @@
 class ScoresController < ApplicationController
 	include ScoresHelper
 	include CourseMapsHelper
-	before_filter :checkNCTULogin, :only=>[:import_confirm, :import, :gpa]
+	before_filter :checkNCTULogin#, :only=>[:select_cf, :import, :gpa] (ALL need) 
 	
 
 	def import
@@ -28,14 +28,7 @@ class ScoresController < ApplicationController
 				redirect_to :back
 				return
 			end
-			
-			has_added=0
-			@success_added=0
-			@fail_added=0
 
-			@no_pass=0
-			@pass=0
-			
 			if normal.length > 0				
 				current_user.normal_scores.destroy_all
 				current_user.agreed_scores.destroy_all
@@ -44,7 +37,9 @@ class ScoresController < ApplicationController
 				redirect_to :back
 				return
 			end	
-
+			
+			@success_added 	= 0	#成功匯入
+			
 			agree.each do |a|
 				course=Course.where(:real_id=>a[:real_id]).take
 				if course.nil?
@@ -59,10 +54,17 @@ class ScoresController < ApplicationController
 				AgreedScore.create_form_import(current_user.id,course.id,a)
 				@success_added+=1
 			end
-			@now_taking=0
+
+			@pass 					= 0	#過
+			@drop 					= 0	#退選
+			@no_pass 				= 0	#沒過
+			@fail_added 		= 0	#匯入失敗
+			@now_taking 		= 0 #正在修
 			normal.each do |n|
-				if n['score']=="通過" || n['score'].to_i>=current_user.pass_score
+				if n['score'] == "通過" || n['score'].to_i>=current_user.pass_score
 					@pass+=1
+				elsif n['score'] == 'W'
+					@drop+=1
 				elsif n['score']==""
 					@now_taking+=1
 				else
@@ -85,11 +87,12 @@ class ScoresController < ApplicationController
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
 			update_cs_cfids(cm,current_user)
 			
-			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 未通過:#{@no_pass} 修習中:#{@now_taking}"
-			redirect_to :action=>"import_confirm", :msg=>msg
+			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 退選:#{@drop} 未通過:#{@no_pass} 修習中:#{@now_taking}"
+			redirect_to :action=>:select_cf, :msg=>msg
 		end
 	end
-	def import_confirm	#import step2 choose cm, view only
+	
+	def select_cf
 	end
 
 	def gpa

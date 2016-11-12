@@ -59,12 +59,12 @@ end
 
 #---------- admin page -----------
 	
- 	get "admin/statistics"
-	get "admin/ee105"
-	get "admin/users"
-	post "admin/change_role"
-	post "admin/change_dept"
-	get "admin/course_maps" #, to: "course_maps#admin_index"
+ 	get 	"admin/statistics"
+	get 	"admin/ee105"
+	get 	"admin/users"
+	post 	"admin/change_role"
+	post 	"admin/change_dept"
+	get 	"admin/course_maps" #, to: "course_maps#admin_index"
 	
 #---------- user -----------
 	get "user", to: "user#show"	#user personal page
@@ -86,7 +86,7 @@ end
 #---------- scores -----------
 	post "scores/import"
 	get "scores/import"
-	get "scores/import_confirm"
+	get "scores/select_cf"
 	get "scores/gpa"
 	
 #----------- course_content -----------

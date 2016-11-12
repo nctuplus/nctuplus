@@ -16,7 +16,7 @@
 					<%= fa_icon "graduation-cap", class:"credit-count" %> <strong>{%=course.credit==0 ? "0" : course.credit%}</strong> | 
 					{%=course.score %}				
 					<div class="" style="width:250px;display:inline-block;">
-						<select id="{%=course.cs_id%}" class="form-control" onchange="select_cf({%=course.sem_name=="抵免"%},{%=o.user_id%},$(this));">
+						<select id="{%=course.id%}" class="form-control" onchange="select_cf({%=course.sem_name=="抵免"%},{%=o.user_id%},$(this));">
 						{% for(var j = 0,cf ;cf=cfs[j];j++){ %}
 							<option value="{%=cf.id%}" {%= cf.id==course.cf_id ? "selected":""%}>{%=cf.name%}</option>
 						{% } %}

@@ -75,12 +75,18 @@ class CourseMapsController < ApplicationController
 		render "/course_maps/manage/_form"
 	end
 
-	def create	
-		@course_map = CourseMap.new(course_map_params)
-		@course_map.user_id=current_user.id
-		@course_map.save
-		if params[:copy].to_i != 0
-			@course_map.copy_content_from_current(params[:copy])	# handle copy
+	def create
+		if CourseMap.where(:department_id=>course_map_params[:department_id],:year=>course_map_params[:year]).take
+			# Avoid duplicated
+			alertmesg("danger",'Sorry',"新增失敗!!已存在此系/學年度的課程地圖")
+			#redirect_to "/admin/course_maps"
+		else
+			@course_map = CourseMap.new(course_map_params)
+			@course_map.user_id=current_user.id
+			@course_map.save
+			if params[:copy].to_i != 0
+				@course_map.copy_content_from_current(params[:copy])	# handle copy
+			end
 		end
 		redirect_to "/admin/course_maps"
 	end
