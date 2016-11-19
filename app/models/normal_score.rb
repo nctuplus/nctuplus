@@ -33,6 +33,7 @@ class NormalScore < ActiveRecord::Base
 		{
 			:name=>self.ch_name,	
 			:cos_id=>self.course.id,
+      :real_id=>self.course.real_id,
 			:cd_id=>self.course_detail_id,
 			:sem_name=>self.semester_name,
 			:t_name=>self.course_detail.teacher_name,

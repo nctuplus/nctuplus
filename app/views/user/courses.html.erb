@@ -39,7 +39,11 @@
 				{% } %}
 				
 				<tr>
-					<td>
+          {% if(course.real_id){ %}
+					<td title="{%=course.real_id%}">
+          {% }else{ %}
+          <td>
+          {% } %}
 						{%=course.name%}
 						{% if(course.brief!=""){ %}
 							| {%=course.brief%}
