@@ -115,6 +115,51 @@
 			<% end %>  
 		</div>
 		
+		
+		<div class="row">
+
+			<!-- Arts Center Activities -->
+			<div class="events-block col-xs-12">
+				<h1>藝文中心</h1>
+					
+				<!-- past events -->
+				<% @art_center_events.each do |event| %>
+					<div class="event-block-wrapper col-md-3 col-sm-6 col-xs-12">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<div class="event-title">
+									<strong><%= event.title %></strong>
+								</div>
+								<div class="event-info">
+									<div class="info-item">
+										<small>單位:&nbsp;<%= event.organization%></small>
+									</div>
+									<div class="info-item">
+										<small>地點:&nbsp;<%= event.location %></small>
+									</div>
+									<% if event.user_id==current_user.try(:id)%>
+										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<% end %>
+								</div>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- past events End -->
+				
+				<!-- end of list all events -->
+					
+			</div>
+			<!-- End of Arts Center Activities -->
+
+		</div>
+		
 		<div class="row">
 
 			<!-- Focus Activities -->
