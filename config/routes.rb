@@ -127,6 +127,7 @@ end
 			get "add_to_cart"
 			get "show_cart"
 			get "tutorial"
+			delete "destroy_cart" 
 		end
 	end
 	

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160903072145) do
+ActiveRecord::Schema.define(version: 20161129064245) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(version: 20160903072145) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
-  
+
   create_table "auth_nctus", force: true do |t|
     t.integer  "user_id"
     t.string   "student_id"
@@ -425,6 +425,15 @@ ActiveRecord::Schema.define(version: 20160903072145) do
     t.datetime "updated_at"
   end
 
+  create_table "meetings", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
     t.integer "course_detail_id", default: 0,  null: false
@@ -493,6 +502,13 @@ ActiveRecord::Schema.define(version: 20160903072145) do
     t.integer  "target_id"
     t.integer  "semester_id"
     t.string   "name",        default: ""
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_course_detailships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "course_detail_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
