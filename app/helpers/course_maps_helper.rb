@@ -4,7 +4,7 @@ module CourseMapsHelper
 	def update_cs_cfids(course_map,user)
 		return if course_map.nil?
 		
-		cmship = UserCoursemapship.where(:user_id=>user.id, :course_map_id=>course_map.id).last
+		cmship = UserCoursemapship.where(:user_id=>user.id, :course_map_id=>course_map.id).take
 		cmship.update_attributes!(:need_update=>0)
 		
 		taked=user.normal_scores.includes(:course_detail, :course)
