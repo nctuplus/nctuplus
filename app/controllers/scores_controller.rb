@@ -6,19 +6,22 @@ class ScoresController < ApplicationController
 	
 	def import_json
           spreadsheet = open_spreadsheet(params[:json])
+          alertmesg('info', 'warning', spreadsheet)
+=begin
           header = spreadsheet.row(1)
+          init = Array.new(header.count){Array.new()}
+          row = Hash[[header, init].transpose]
           (2..spreadsheet.last_row).each do |i|
-            row = Hash[[header, spreadsheet.row(i)].transpose]
+            row.merge!(Hash[[header, spreadsheet.row(i)].transpose]) { |key, first, second| first.push(second)}
             alertmesg("info",'warning', row)
           end
+=end
           redirect_to :back
 	end
 
         def open_spreadsheet(file)
           case File.extname(file.original_filename)
-          when ".csv" then Roo::CSV.new(file.path, options={})
-          when ".xls" then Roo::Excel.new(file.path, options={})
-          when ".xlsx" then Roo::Excelx.new(file.path, options={})
+          when ".csv" then CSV.read(file.path, :encoding => 'utf-8:utf-8') # Roo::CSV.new(file.path, options{})
           else raise "Unknown file type: #{file.original_filename}"
           end
         end
