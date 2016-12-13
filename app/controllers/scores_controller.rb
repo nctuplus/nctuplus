@@ -21,7 +21,7 @@ class ScoresController < ApplicationController
 
         def open_spreadsheet(file)
           case File.extname(file.original_filename)
-          when ".csv" then CSV.read(file.path, :encoding => 'utf-8:utf-8') # Roo::CSV.new(file.path, options{})
+          when ".csv" then CSV.read(file.path, :encoding => 'big5:utf-8') # Roo::CSV.new(file.path, options{})
           else raise "Unknown file type: #{file.original_filename}"
           end
         end
