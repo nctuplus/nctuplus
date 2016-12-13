@@ -1,5 +1,9 @@
 source 'https://rubygems.org'
 
+gem 'roo-xls'
+gem 'roo'
+gem 'spreadsheet'
+
 gem 'therubyracer'
 
 gem 'google-api-client'

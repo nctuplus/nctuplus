@@ -160,11 +160,14 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
+    mini_portile2 (2.1.0)
     minitest (4.7.5)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     mysql2 (0.3.15)
+    nokogiri (1.6.8.1)
+      mini_portile2 (~> 2.1.0)
     oauth2 (1.0.0)
       faraday (>= 0.8, < 0.10)
       jwt (~> 1.0)
@@ -236,6 +239,13 @@ GEM
     responders (1.1.2)
       railties (>= 3.2, < 4.2)
     retriable (1.4.1)
+    roo (2.5.1)
+      nokogiri (~> 1)
+      rubyzip (~> 1.1, < 2.0.0)
+    roo-xls (1.0.0)
+      nokogiri
+      roo (>= 2.0.0beta1, < 3)
+      spreadsheet (> 0.9.0)
     rspec-core (3.5.0)
       rspec-support (~> 3.5.0)
     rspec-expectations (3.5.0)
@@ -254,12 +264,14 @@ GEM
       rspec-support (~> 3.5.0)
     rspec-support (3.5.0)
     ruby-graphviz (1.0.9)
+    ruby-ole (1.2.12)
     ruby-progressbar (1.7.5)
     ruby2ruby (2.1.4)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.0)
     ruby_parser (3.6.6)
       sexp_processor (~> 4.1)
+    rubyzip (1.2.0)
     sass (3.4.18)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -277,6 +289,8 @@ GEM
       faraday (~> 0.9)
       jwt (~> 1.0)
       multi_json (~> 1.10)
+    spreadsheet (1.1.4)
+      ruby-ole (>= 1.0)
     sprockets (2.12.4)
       hike (~> 1.2)
       multi_json (~> 1.0)
@@ -349,10 +363,13 @@ DEPENDENCIES
   rails-erd
   rails_best_practices
   ransack!
+  roo
+  roo-xls
   rspec-rails
   sass (~> 3.4.18)
   sass-rails (~> 5.0.1)
   sdoc
+  spreadsheet
   therubyracer
   tinymce-rails
   tinymce-rails-langs

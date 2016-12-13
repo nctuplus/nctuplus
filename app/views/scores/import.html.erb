@@ -29,6 +29,13 @@
 	</p>
 	
 	</div>
+
+        <div>
+          <%= form_tag({action: :import_json}, multipart: true) do %>
+            <%= file_field_tag "json" %>
+            <%= submit_tag "上傳" %>
+          <% end %>
+        </div>
 	<div>
 		<%= form_tag '/scores/import', :role=>"form", :class=>"paste-form" do %>
 		<%= text_area "course","score" , class:"form-control", rows:"10", placeholder:"請將複製內容貼於此...", required:"true" %>

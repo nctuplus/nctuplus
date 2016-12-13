@@ -2,7 +2,26 @@ class ScoresController < ApplicationController
 	include ScoresHelper
 	include CourseMapsHelper
 	before_filter :checkNCTULogin#, :only=>[:select_cf, :import, :gpa] (ALL need) 
+	require 'spreadsheet'
 	
+	def import_json
+          spreadsheet = open_spreadsheet(params[:json])
+          header = spreadsheet.row(1)
+          (2..spreadsheet.last_row).each do |i|
+            row = Hash[[header, spreadsheet.row(i)].transpose]
+            alertmesg("info",'warning', row)
+          end
+          redirect_to :back
+	end
+
+        def open_spreadsheet(file)
+          case File.extname(file.original_filename)
+          when ".csv" then Roo::CSV.new(file.path, options={})
+          when ".xls" then Roo::Excel.new(file.path, options={})
+          when ".xlsx" then Roo::Excelx.new(file.path, options={})
+          else raise "Unknown file type: #{file.original_filename}"
+          end
+        end
 
 	def import
 		if current_user.department.nil?
