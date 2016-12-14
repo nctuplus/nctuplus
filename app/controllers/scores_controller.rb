@@ -6,7 +6,16 @@ class ScoresController < ApplicationController
 	
 	def import_json
           spreadsheet = open_spreadsheet(params[:json])
-          alertmesg('info', 'warning', spreadsheet)
+          data = Hash.new()
+          spreadsheet.each do |row|
+            if data[row[0]].nil?
+              data[row[0]] = Hash.new()
+            end
+            data[row[0]].merge!(Hash[row[2], row[3]])
+          end
+          alertmesg("info",'warning', data)
+
+
 =begin
           header = spreadsheet.row(1)
           init = Array.new(header.count){Array.new()}
