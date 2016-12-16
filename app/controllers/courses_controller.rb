@@ -116,8 +116,8 @@ class CoursesController < ApplicationController
         end
       end
     else
-      if cd_ids.include?(cd_id)
-        cd_ids.delete(cd_id) 
+      if current_user.course_details.include?(cd_to_add)
+        current_user.course_details.delete(cd_to_add)
         alt_class="success"
         mesg="刪除成功!"
       else
@@ -132,12 +132,6 @@ class CoursesController < ApplicationController
     end
   end
 
-  def destroy_cart
-    current_user.user_course_detailships.destroy_all
-    redirect_to "/courses/simulation"
-  end
-
-
   def show_cart
     @result={
       :view_type=>params[:view_type],
@@ -145,7 +139,7 @@ class CoursesController < ApplicationController
       :add_to_cart=>params[:add_to_cart]=='1',
       :courses=>current_user.course_details.map{|cd|
       cd.to_search_result
-      }
+    }
     }
     render :layout=>false
   end

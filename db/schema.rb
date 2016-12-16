@@ -425,15 +425,6 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.datetime "updated_at"
   end
 
-  create_table "meetings", force: true do |t|
-    t.string   "name"
-    t.string   "description"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
     t.integer "course_detail_id", default: 0,  null: false

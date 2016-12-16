@@ -1,8 +1,5 @@
 <div id="cart_result"></div>
 <%=render "/courses/search/xtmpl_results_mini" %>
-<div align='right'>
-<%= button_to "一鍵刪除", {action: "destroy_cart"}, method: :delete, class: "btn btn-warning", data: { confirm: "確定要刪嗎？會通通不見 OAO" } %>
-</div>
 <script>
 	$("#cart_result").html(tmpl("search_result",<%=@result.to_json.html_safe%>));
 </script>
