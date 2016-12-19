@@ -203,7 +203,6 @@ class UserController < ApplicationController
 				user_info = nil
 			end
 		end
-		
 		respond_to do |format|
 			format.html { }
 			format.json { render :text => {:user_info=>user_info, :course_map=>data1, :user_courses=>data2 }.to_json}

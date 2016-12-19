@@ -6,25 +6,50 @@ class ScoresController < ApplicationController
 	
 	def import_json
           spreadsheet = open_spreadsheet(params[:json])
-          data = Hash.new()
+          spreadsheet.delete_at(0)
+          res = Hash.new()
+          user_info = Hash.new()
+
           spreadsheet.each do |row|
-            if data[row[0]].nil?
-              data[row[0]] = Hash.new()
+            if user_info[row[0]].nil?
+              user_info[row[0]] = {
+                :year=>row[3],
+                :year_now=>Semester::CURRENT.year,
+                :half_now=>Semester::CURRENT.half,
+                :degree=>3,
+                :student_id=>row[0]
+              }
             end
-            data[row[0]].merge!(Hash[row[2], row[3]])
+            if res[row[0]].nil? then res[row[0]] = [] end
+            sem_name = row[4];
+            if row[5] == "1" then sem_name += "上" else sem_name += "下" end
+            cf_id = Course.find_by(:real_id=>row[9]).course_field_lists.last.try(:course_field_id)
+            if cf_id.nil? then cf_name = nil else cf_name = CourseField.find(cf_id).name end
+            res[row[0]].append({
+              :name=>row[8],
+              :cos_id=>row[6],
+              :read_id=>row[9],
+              :cd_id=>'',
+              :sem_name=>sem_name,
+              :t_name=>'',
+              :temp_cos_id=>'',
+              :brief=>'',
+              :score=>row[15],
+              :credit=>'',
+              :cos_type=>row[11],
+              :id=>'',
+              :cf_id=>cf_id,
+              :cf_name=>cf_name,
+              :pass_score=>60,
+              :memo=>''
+            })
           end
-          alertmesg("info",'warning', data)
 
-
-=begin
-          header = spreadsheet.row(1)
-          init = Array.new(header.count){Array.new()}
-          row = Hash[[header, init].transpose]
-          (2..spreadsheet.last_row).each do |i|
-            row.merge!(Hash[[header, spreadsheet.row(i)].transpose]) { |key, first, second| first.push(second)}
-            alertmesg("info",'warning', row)
-          end
-=end
+          course_map = CourseMap.find(156)
+          map = (course_map.presence) ? course_map.to_tree_json : nil
+          alertmesg('info','warning', user_info['777777'])
+          # alertmesg('info','warning', res['777777'])
+          # redirect_to user_statistics_table_path(user_info: user_info['777777'], data1: map, data2: res['777777'])
           redirect_to :back
 	end
 
