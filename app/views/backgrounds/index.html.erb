@@ -103,8 +103,8 @@
 						<%= t.created_at.strftime("20%y/%m/%d %H:%M") %></font></td>
 		              <td class="col_3"><font color="gray" valign="bottom">
 		              	<%= t.updated_at.strftime("20%y/%m/%d %H:%M") %></font></td>
-		              <td class="col_4"><%= link_to "編輯", edit_background_path(t) %>&nbsp;&nbsp;
-		              <%= link_to '刪除', t, :method => :delete%></td>
+		              <td class="col_4"><!--<%= link_to "編輯", edit_background_path(t) %>&nbsp;&nbsp;-->
+		              <%= button_to '刪除', t, :class=>"btn btn-danger", :method => :delete, :data => { :confirm => "確定要刪除此背景嗎？" } %></td>
 		            </tr>
 		          <%end%>
 		      </tbody>
