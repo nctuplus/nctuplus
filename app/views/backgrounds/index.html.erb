@@ -24,12 +24,6 @@
 }
 </style>
 
-<!DOCTYPE html>
-<html>
-<head>
-
-</head>
-<body>
 
 <div class="container">
 	<div class ="row">
@@ -106,11 +100,11 @@
 				</div>
 			      </td>
 		         	  <td class="col_2"><font color="gray" valign="bottom">
-						20<%= t.created_at.strftime("%y/%m/%d %H:%M") %></font></td>
+						<%= t.created_at.strftime("20%y/%m/%d %H:%M") %></font></td>
 		              <td class="col_3"><font color="gray" valign="bottom">
-		              	20<%= t.updated_at.strftime("%y/%m/%d %H:%M") %></font></td>
+		              	<%= t.updated_at.strftime("20%y/%m/%d %H:%M") %></font></td>
 		              <td class="col_4"><%= link_to "編輯", edit_background_path(t) %>&nbsp;&nbsp;
-		              <%= link_to '刪除', t, :method => :delete, :data => { :confirm => "確定要刪除此背景嗎？" } %></td>
+		              <%= link_to '刪除', t, :method => :delete%></td>
 		            </tr>
 		          <%end%>
 		      </tbody>
@@ -150,5 +144,4 @@ $("#background_image").change(function(){
   document.getElementById('btn-demo').style.visibility = 'visible';
 });
 </script>
-</body>
-</html>
+
