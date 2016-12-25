@@ -85,6 +85,7 @@ end
 	
 #---------- scores -----------
 	post "scores/import"
+	post "scores/import_json"
 	get "scores/import"
 	get "scores/select_cf"
 	get "scores/gpa"
