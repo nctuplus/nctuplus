@@ -7,7 +7,7 @@ namespace :course do
 		inform_mesg << updateDepartmentList
 		inform_mesg << updateTeacherList
 		
-		Semester.where(:id => [17,19]).each do |sem|			
+		Semester.where(:id => [19,20]).each do |sem|			
 			datas=E3Service.getCourse(sem) #get course
 			inform_mesg << "#{sem.name} : <br>"
 			inform_mesg << "[Course Detail] Got : #{datas.length} courses from E3.<br>"
