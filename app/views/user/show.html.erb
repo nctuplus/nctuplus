@@ -80,13 +80,17 @@
 		註冊日期：<%=@user.created_at.strftime("%Y-%m-%d") %>
 		<br>
 		<hr>
-			<div>
+			<div id="small_button">
 				<%=link_to fa_icon("pencil")+"  編輯檔案", "/user/edit", class:"btn btn-primary btn-xs" %>
 				&nbsp;
 				<%=import_course_link%>
 				&nbsp;
-        <%=gpa_link%>
+                                <%=gpa_link%>
+                                &nbsp;
+                                <%=course_map_link%>
 				<p>&nbsp;</p>
+				
+				
 			</div>
 		</div>
 		
@@ -305,8 +309,10 @@
 				//$("#common-check-div").html(tmpl("common-tmpl",pass_courses));
 				$("#common_check_div").html(tmpl("common_check",pass_courses));
 			<% end %>		
-			if(data["course_map"]){
+			if(data["course_map"]){ 
 				$("#cosmap_check_div").html(tmpl("cosmap_check",data));
+				
+				console.log(tmpl("cosmap_check",data));
 				//$("#course_list").html(tmpl("list_by_cosmap",data));
 			}else{ //no mapping course_map
 				//$("#course_list").html("喔唷! \n沒有找到對應的課程地圖。\n請確認您的系級是否填寫有誤，或聯絡我們為您服務。");
