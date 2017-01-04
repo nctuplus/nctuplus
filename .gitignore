@@ -13,8 +13,6 @@
 /db/*.sqlite3-journal
 /db/schema.rb
 
-/lib/tasks/
-
 /config/initializers/secret_token.rb
 *.yml
 /config/initializers/smtp.rb
