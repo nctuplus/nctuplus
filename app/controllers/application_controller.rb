@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   end
 
   def getUserByIdForManager(uid)
-    return ( (uid.present? and checkTopManagerNoReDirect) ? User.find(uid) : current_user )
+    return ( (uid.present? && checkTopManagerNoReDirect) ? User.find(uid) : current_user )
   end
 
   def checkDepYear

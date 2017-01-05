@@ -19,7 +19,8 @@ class UserController < ApplicationController
 	
 	def get_courses
 		@user=getUserByIdForManager(params[:uid])
-		#if request.format=="json"
+    result = {}
+		if @user
 			case params[:type]
 				when "list"
 					if params[:sem_id].blank?					
@@ -54,11 +55,9 @@ class UserController < ApplicationController
 						:semesters=> (@user.year==0) ? [] : Semester.where("year >= ?", @user.year).map{|s| {:id=>s.id, :name=>s.name}},
 						:semester_name => semester.name, # for 歷年課表 modal header 
 						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
-					}	
-				else
-					result={}
+					}				
 			end
-		#end
+		end
 		respond_to do |format|
 			format.json{render json:result}
 		end
