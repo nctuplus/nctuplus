@@ -1,4 +1,4 @@
-class UserCourseDetailship < ActiveRecord::Base
+class UserFavoriteCourse < ActiveRecord::Base
   belongs_to :user
   belongs_to :course_detail    
 

@@ -46,8 +46,8 @@ class User < ActiveRecord::Base
   has_many :bulletins
 
   #favorite couser
-  has_many :user_course_detailships#, :dependent=> :destroy
-  has_many :course_details, :through => :user_course_detailships
+  has_many :user_favorite_courses, :dependent=> :destroy
+  has_many :course_details, :through => :user_favorite_courses
 
 
   #validates :email, uniqueness: true

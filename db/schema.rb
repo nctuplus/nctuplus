@@ -497,13 +497,6 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.datetime "updated_at"
   end
 
-  create_table "user_course_detailships", force: true do |t|
-    t.integer  "user_id"
-    t.integer  "course_detail_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "user_coursemapships", force: true do |t|
     t.integer  "course_map_id"
     t.integer  "user_id"
@@ -514,6 +507,22 @@ ActiveRecord::Schema.define(version: 20161129064245) do
 
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
+
+  create_table "user_events", force: true do |t|
+    t.string   "name"
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_favorite_courses", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "course_detail_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", force: true do |t|
     t.string   "name"

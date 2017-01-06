@@ -4,7 +4,7 @@ RSpec.describe CoursesController, type: :controller do
   before(:all) do
     ActiveRecord::Base.connection.execute("TRUNCATE users")        
     ActiveRecord::Base.connection.execute("TRUNCATE course_details")
-    ActiveRecord::Base.connection.execute("TRUNCATE user_course_detailships")
+    ActiveRecord::Base.connection.execute("TRUNCATE user_favorite_courses")
     ActiveRecord::Base.connection.execute("TRUNCATE auth_e3s")
   end
 
@@ -26,7 +26,7 @@ RSpec.describe CoursesController, type: :controller do
         else
           msg= "您已加入此課程"
         end
-      }.to change(UserCourseDetailship ,:count).by 1
+      }.to change(UserFavoriteCourse ,:count).by 1
     end
 
     it "deletes record" do
@@ -37,7 +37,7 @@ RSpec.describe CoursesController, type: :controller do
         else
           msg= "你未加入此課程!"
         end
-      }.to change(UserCourseDetailship ,:count).by -1
+      }.to change(UserFavoriteCourse ,:count).by -1
     end
   end
 

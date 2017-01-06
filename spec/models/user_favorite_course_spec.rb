@@ -1,10 +1,10 @@
 require 'rails_helper'
 
-RSpec.describe UserCourseDetailship, type: :model do
+RSpec.describe UserFavoriteCourse, type: :model do
   before(:all) do
     ActiveRecord::Base.connection.execute("TRUNCATE users")
     ActiveRecord::Base.connection.execute("TRUNCATE course_details")
-    ActiveRecord::Base.connection.execute("TRUNCATE user_course_detailships")
+    #ActiveRecord::Base.connection.execute("TRUNCATE user_favorite_courses")
     ActiveRecord::Base.connection.execute("TRUNCATE auth_e3s")
     @user=create_e3_user
     @cd=CourseDetail.create(
@@ -21,16 +21,16 @@ RSpec.describe UserCourseDetailship, type: :model do
     CourseDetail.delete(@cd)
   end
 
-  it "should create a UserCourseDetailship when user add a favorite course" do
+  it "should create a UserFavoriteCourse when user add a favorite course" do
     @user.course_details << @cd
-    u_cd=UserCourseDetailship.find_by(course_detail_id: @cd.id)
-    expect(@user.user_course_detailships).to include(u_cd) 
+    u_cd=UserFavoriteCourse.find_by(course_detail_id: @cd.id)
+    expect(@user.user_favorite_courses).to include(u_cd) 
   end
 
-  it "should delete a UserCourseDetailship when user delete a favorite course" do
+  it "should delete a UserFavoriteCourse when user delete a favorite course" do
     @user.course_details.delete(@cd)
-    u_cd=UserCourseDetailship.find_by(course_detail_id: @cd.id)
-    expect(@user.user_course_detailships).not_to include(u_cd) 
+    u_cd=UserFavoriteCourse.find_by(course_detail_id: @cd.id)
+    expect(@user.user_favorite_courses).not_to include(u_cd) 
   end
 
   def create_e3_user
