@@ -125,7 +125,7 @@
 .event-block{
 	background: rgba(255, 255, 255, 0.7);
 	margin: 1px 3px;
-	padding: 20px 10px 10px;
+	padding: 24px 10px 10px;
 	font-size: 16px;
 }
 
@@ -147,10 +147,26 @@
 }
 
 .event-block__top{
-	padding: 3px 3px;
+	background: rgba(30, 30, 30, 0.5);
+    border-radius: 3px;
+	display: inline-block;
+	position: relative;
 	overflow: hidden;
+	width: 100%;
+}
+.event-block__top:after {
+	padding-top: 50%;
+	/* 2:1 ratio */
+	display: block;
+	content: '';
 }
 .event-image{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
 }
 
 .event-block__bottom{
