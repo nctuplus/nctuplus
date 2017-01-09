@@ -45,6 +45,10 @@ class User < ActiveRecord::Base
   
   has_many :bulletins
 
+  #favorite couser
+  has_many :user_favorite_courses, :dependent=> :destroy
+  has_many :course_details, :through => :user_favorite_courses
+
 
   #validates :email, uniqueness: true
   validates :name, :length=> { :maximum=> 16, :message=>"姓名過長(max:16)" }, :on => :update #:uniqueness=>true,

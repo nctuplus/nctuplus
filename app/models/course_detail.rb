@@ -14,6 +14,9 @@ class CourseDetail < ActiveRecord::Base
 
 	has_many :normal_scores, :dependent => :destroy
 
+        #user's favorite course
+        has_many :user_favorite_courses, :dependent=> :destroy
+        has_many :users, :through => :user_favorite_courses
 	
 	def self.search_by_q_and_text(q,text)
 		search(q).result(distinct: true).search({
