@@ -49,15 +49,19 @@ module UserHelper
   end
   
   def course_map_link
-    btn_text = fa_icon("book")+"  課程地圖"
-    url = course_map_path(current_user.course_maps[0].id)
-   # url = (current_user.hasNctu?) ? ("/course_maps/" + data["course_map"]["id"] + "\"") : "javascript:void(0);"
-    options = {:class=>"btn btn-warning btn-xs"}
-    options['data-no-turbolink'] = true
-    if !current_user.hasNctu?
-      options[:onclick] = 'toastr["warning"]("登入NCTU帳號以開啟此功能!");'
-    end
-    return link_to(btn_text, url, options)
+		if @cm.nil?
+			return ""
+		else
+			btn_text = fa_icon("book")+"  課程地圖"
+			url = course_map_path(@cm)
+		 # url = (current_user.hasNctu?) ? ("/course_maps/" + data["course_map"]["id"] + "\"") : "javascript:void(0);"
+			options = {:class=>"btn btn-warning btn-xs"}
+			options['data-no-turbolink'] = true
+			if !current_user.hasNctu?
+				options[:onclick] = 'toastr["warning"]("登入NCTU帳號以開啟此功能!");'
+			end
+			return link_to(btn_text, url, options)
+		end
   end
 
 end

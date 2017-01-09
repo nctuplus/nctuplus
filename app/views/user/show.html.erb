@@ -80,18 +80,16 @@
 		註冊日期：<%=@user.created_at.strftime("%Y-%m-%d") %>
 		<br>
 		<hr>
-			<div id="small_button">
-				<%=link_to fa_icon("pencil")+"  編輯檔案", "/user/edit", class:"btn btn-primary btn-xs" %>
-				&nbsp;
-				<%=import_course_link%>
-				&nbsp;
-                                <%=gpa_link%>
-                                &nbsp;
-                                <%=course_map_link%>
-				<p>&nbsp;</p>
-				
-				
-			</div>
+		<div id="small_button">
+			<%=link_to fa_icon("pencil")+"  編輯檔案", "/user/edit", class:"btn btn-primary btn-xs" %>
+			&nbsp;
+			<%=import_course_link%>
+			&nbsp;
+			<%=gpa_link%>
+			&nbsp;
+			<%=course_map_link%>
+			<p>&nbsp;</p>
+		</div>
 		</div>
 		
 		<br>
@@ -145,8 +143,12 @@
 		<!--<div id="common-check-div"></div>-->
 
 		<div class="row no-margin-right bg-white">
+		<% if @user.is_undergrad? %>
 			<div class="col-md-12" id="common_check_div" style="padding-top:10px;"></div>
+		<% end %>
+		<% if @cm.present? %>
 			<div class="col-md-12" id="cosmap_check_div" style="padding-top:5px;"></div>
+		<% end %>	
 		</div>
 		<br>
 		<br>

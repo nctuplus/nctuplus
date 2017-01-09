@@ -71,18 +71,20 @@ class UserController < ApplicationController
 	def show
 		
 		@user = getUserByIdForManager(params[:uid])
-		user_cmship = @user.user_coursemapships.take			
+		user_cmship = @user.user_coursemapships.take #need to get user_cmship rather than course_map, since we need need_update here
 		if user_cmship.nil?
-			cm=CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
-			if cm
-				@user.user_coursemapships.create(:course_map_id=>cm.id)
-				update_cs_cfids(cm,@user)
+			@cm = CourseMap.where(:department_id=>@user.department_id, :year=>@user.year).take
+			if @cm
+				@user.user_coursemapships.create(:course_map_id=>@cm.id)
+				update_cs_cfids(@cm,@user)
 			end
-		elsif user_cmship.need_update == 1	#If course_field has added or removed courses (Click apply in course_map manage page)
-			update_cs_cfids(user_cmship.course_map,@user)
-
-			alertmesg("info",'哈囉',"你的課程地圖有更新,麻煩重新選擇課程所屬學程!!")
-			redirect_to "/scores/select_cf"
+		else
+			@cm = user_cmship.course_map
+			if user_cmship.need_update == 1	#If course_field has added or removed courses (Click apply in course_map manage page)
+				update_cs_cfids(@cm ,@user)
+				alertmesg("info",'哈囉',"你的課程地圖有更新,麻煩重新選擇課程所屬學程!!")
+				redirect_to "/scores/select_cf"
+			end
 		end
 		
 		
