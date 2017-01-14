@@ -1,7 +1,8 @@
 class CoursesController < ApplicationController
 
 
-  before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course]
+  before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course, :check_login]
+
 
   def index
     @sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
@@ -142,6 +143,10 @@ class CoursesController < ApplicationController
     }
     }
     render :layout=>false
+  end
+
+  def check_login
+    redirect_to root_path 
   end
 
 

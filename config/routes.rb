@@ -128,6 +128,7 @@ end
 			get "add_to_cart"
 			get "show_cart"
 			get "tutorial"
+			get "check_login"
 		end
 	end
 	
