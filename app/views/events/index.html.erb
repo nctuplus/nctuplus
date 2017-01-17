@@ -187,14 +187,12 @@
 								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-<<<<<<< HEAD
 								<small class="event-title text-right"><%= event.organization%></small>
 								<strong><%= event.title %></strong>
 								<small class="event-location"><%= event.location %></small>
 								<% if event.user_id==current_user.try(:id)%>
 									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
-=======
 								<div class="event-title">
 									<strong><%= event.title %></strong>
 								</div>
@@ -209,7 +207,6 @@
 										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 									<% end %>
 								</div>
->>>>>>> 55664a6... Rearrange title & info text
 							</div>
 						</div>
 					</div>
@@ -227,14 +224,12 @@
 								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-<<<<<<< HEAD
 								<small class="event-title text-right"><%= event.organization%></small>
 								<strong><%= event.title %></strong>
 								<small class="event-location"><%= event.location %></small>
 								<% if event.user_id==current_user.try(:id)%>
 									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
-=======
 								<div class="event-title">
 									<strong><%= event.title %></strong>
 								</div>
@@ -249,7 +244,6 @@
 										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 									<% end %>
 								</div>
->>>>>>> 55664a6... Rearrange title & info text
 							</div>
 						</div>
 					</div>
