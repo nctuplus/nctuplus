@@ -187,9 +187,6 @@
 								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-								<small class="event-title text-right"><%= event.organization%></small>
-								<strong><%= event.title %></strong>
-								<small class="event-location"><%= event.location %></small>
 								<% if event.user_id==current_user.try(:id)%>
 									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
@@ -224,9 +221,6 @@
 								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-								<small class="event-title text-right"><%= event.organization%></small>
-								<strong><%= event.title %></strong>
-								<small class="event-location"><%= event.location %></small>
 								<% if event.user_id==current_user.try(:id)%>
 									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
