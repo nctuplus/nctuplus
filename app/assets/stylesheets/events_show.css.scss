@@ -11,16 +11,15 @@
 }
 
 @media screen and (min-width: 768px){
-	.banner_image{
-		max-height: 400px;
-		min-height: 400px;
+	.banner-wrapper{
+		max-height: 555px;
+		overflow: hidden;
 	}
 }
-
 @media screen and (max-width: 768px){ 
-	.banner_image{
-		max-height: 200px;
-		min-height: 200px;
+	.banner-wrapper{
+		max-height: 360px;
+		overflow: hidden;
 	}
 }
 
