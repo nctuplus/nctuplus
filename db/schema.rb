@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161129064245) do
+ActiveRecord::Schema.define(version: 20170130090318) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -140,7 +140,9 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "update_user"
-    t.boolean  "hidden_type",  default: false, null: false
+    t.boolean  "hidden_type",  default: false,                 null: false
+    t.datetime "begin_time",   default: '1990-11-17 00:00:00'
+    t.datetime "end_time",     default: '4000-12-31 00:00:00'
   end
 
   create_table "cf_credits", force: true do |t|
@@ -425,6 +427,23 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.datetime "updated_at"
   end
 
+  create_table "members", force: true do |t|
+    t.string   "name"
+    t.string   "nickname"
+    t.string   "job"
+    t.string   "department"
+    t.string   "motivation"
+    t.string   "others"
+    t.string   "fb"
+    t.string   "email"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "member_image_file_name"
+    t.string   "member_image_content_type"
+    t.integer  "member_image_file_size"
+    t.datetime "member_image_updated_at"
+  end
+
   create_table "normal_scores", force: true do |t|
     t.integer "user_id",          default: 0,  null: false
     t.integer "course_detail_id", default: 0,  null: false
@@ -466,6 +485,7 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "hidden_type", default: false, null: false
   end
 
   create_table "sub_discusses", force: true do |t|

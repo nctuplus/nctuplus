@@ -1,0 +1,7 @@
+<%= form_for @slogan, :url => { :controller => 'slogan', :action => 'create' } do |f| %>
+  <%= render :partial => 'form', :locals => { :f => f } %>
+  <div align="center">
+    <%= f.submit "新增", class: "btn btn-warning", :data => { :confirm => "確認要新增嗎？" } %>
+    <%= link_to "返回", :back, class: "btn btn-primary" %>
+  </div>
+<% end %>

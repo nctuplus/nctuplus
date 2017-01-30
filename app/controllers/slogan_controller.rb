@@ -37,7 +37,7 @@ class SloganController < ApplicationController
 
     private
     def slogan_params
-        params.require(:slogan).permit(:description)
+        params.require(:slogan).permit(:description, :hidden_type)
     end
 
     def set_slogan
