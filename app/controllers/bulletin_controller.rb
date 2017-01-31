@@ -44,7 +44,7 @@ class BulletinController < ApplicationController
 
 	private
 	def bulletin_params
-	  params.require(:bulletin).permit(:title, :article, :article_type, :user_id)
+          params.require(:bulletin).permit(:title, :article, :article_type, :user_id, :begin_time, :end_time, :hidden_type)
 	end
 
 end

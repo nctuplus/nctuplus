@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170130090318) do
+ActiveRecord::Schema.define(version: 20170131153409) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -141,8 +141,9 @@ ActiveRecord::Schema.define(version: 20170130090318) do
     t.datetime "updated_at"
     t.string   "update_user"
     t.boolean  "hidden_type",  default: false,                 null: false
-    t.datetime "begin_time",   default: '1990-11-17 00:00:00'
-    t.datetime "end_time",     default: '4000-12-31 00:00:00'
+    t.boolean  "schedule",     default: false,                 null: false
+    t.datetime "begin_time",   default: '2017-01-01 00:00:00'
+    t.datetime "end_time",     default: '2017-01-01 00:00:00'
   end
 
   create_table "cf_credits", force: true do |t|
