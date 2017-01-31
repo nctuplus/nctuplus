@@ -14,9 +14,10 @@ class MainController < ApplicationController
 			alertmesg('info','warning', "請填寫系級" )
 			redirect_to "/user/edit"
 		end
-    @news = Bulletin.where("article_type = true").order("created_at DESC")
-    @updates = Bulletin.where("article_type = false").order("created_at DESC")
-    @slogans = Slogan.where("hidden_type = false").limit(1).order("rand()")
+    time = Time.now.utc
+    @news = Bulletin.where("article_type AND (!hidden_type OR (hidden_type AND \"#{time}\" > begin_time AND \"#{time}\" < end_time))").reverse_order()
+    @updates = Bulletin.where("!article_type AND (!hidden_type OR (hidden_type AND \"#{time}\" > begin_time AND \"#{time}\" < end_time))").reverse_order()
+    @slogans = Slogan.where("!hidden_type").limit(1).order("rand()")
     if !params[:bid].nil?
       @backgrounds = Array(Background.find(params[:bid]))
     else
