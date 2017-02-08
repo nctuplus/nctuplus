@@ -3,18 +3,34 @@
     <%= f.select :article_type, [['最新消息', true], ['網站改版', false]], {}, {class: "form-control"} %>
   </div>
   <div class="form-group">
-    <%= f.text_area :title, class: "form-control", :rows => "2", :cols => "25", :placeholder => "超過此欄寬度首頁公告會跳行..." %>
+    <%= f.text_area :title, class: "form-control", :rows => "2" %>
   </div>
   <div class="form-group">
     <%= f.label :online, "排程發佈" %>
-    <%= f.check_box :hidden_type %>
+    <%= f.check_box :hidden_type, :onclick => "showDatePicker()" %>
   </div>
-  <div class="form-group">
-    <%= f.label :begin_time, "上線時間" %><br>
-    <%= f.datetime_select :begin_time %>
-  </div>
-  <div class="form-group">
-    <%= f.label :end_time, "下線時間" %><br>
-    <%= f.datetime_select :end_time %>
+  <div id="datepicker">
+    <div class="form-group">
+      <%= f.label :begin_time, "上線時間" %><br>
+      <%= f.datetime_select :begin_time %>
+    </div>
+    <div class="form-group">
+      <%= f.label :end_time, "下線時間" %><br>
+      <%= f.datetime_select :end_time %>
+    </div>
   </div>
 </div>
+
+<script>
+var v = document.getElementById("datepicker")
+<% if @bulletin.hidden_type %>
+  v.style.display = '';
+<% else %>
+  v.style.display = 'none';
+<% end %>
+  function showDatePicker() {
+    var o = document.getElementById("datepicker")
+      if (o.style.display == '') o.style.display = 'none';
+      else o.style.display = '';
+  }
+</script>

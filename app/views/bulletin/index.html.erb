@@ -51,7 +51,9 @@
 		      <tbody>
 		          <% @bulletins.each do |t| %>
 		            <tr>
-		              <td class="col_1"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;<%= t.title %></td>
+                              <td class="col_1"><span class="glyphicon glyphicon-chevron-right"></span>
+                                &nbsp;&nbsp;<% if t.time_out %><span style="color: red;">已過期</span><% end %>
+                                <%= t.title %></td>
 		         	  <td class="col_2"><font color="gray" valign="bottom">
 						<%= t.hidden_type ? t.begin_time.strftime("%Y/%m/%d %H:%M") : "常駐不下線" %><br><%= t.update_user %></font></td>
 		              <td class="col_3"><font color="gray" valign="bottom">
