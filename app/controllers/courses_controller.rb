@@ -64,13 +64,46 @@ class CoursesController < ApplicationController
     end
   end	
 
+  def count_times(cd_id, array )
+    count_hash = {}
+    array.each do |key|
+      if count = count_hash[key]
+        count_hash[key] = count + 1
+      else
+        count_hash[key] = 1
+      end
+    end
+    count_hash[cd_id] = 0 #should not pick this course itself
+    return count_hash
+  end
 
+  def extract_keys_with_largest_n_values(hash, n)
+    n = hash.length if n > hash.length
+    min = hash.values.sort[-n]
+    results = []
+    i = 0
+    hash.each{|k, v| (results.push(k) and i += 1) if i < n and v >= min}
+    return results
+  end
 
-
+  def get_recommend_courses(cd_id, students)
+    courses_they_take = []
+    students.each do |s|
+      courses_they_take << s.normal_scores.pluck("course_detail_id")
+    end
+    courses_they_take = courses_they_take.flatten
+    count_hash = count_times(cd_id, courses_they_take)
+    cd_ids = extract_keys_with_largest_n_values( count_hash, 5)
+    results = []
+    cd_ids.each do |cd_id|
+      results << { "id"=>cd_id, "name"=>CourseDetail.find(cd_id).course_ch_name}
+    end
+    return results
+  end
 
 
   def show
-    cd=CourseDetail.includes(:course_teachership, :course, :semester, :department).find(params[:id])	
+    cd=CourseDetail.includes(:course_teachership, :course, :semester, :department, :normal_scores).find(params[:id])	
     incViewTime(cd)
     @list_type=[["[考試]",1],["[作業]",2],["[上課]",3],["[其他]",4]]
     @data = {
@@ -86,7 +119,8 @@ class CoursesController < ApplicationController
       :course_credit=>cd.course.credit,
       :open_on_latest=>(cd.course_teachership.course_details.last.semester_id==Semester::LAST.id) ? true : false ,
       :related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC"),
-      :updated_at=>cd.updated_at
+      :updated_at=>cd.updated_at,
+      :recommend_courses=>get_recommend_courses(cd.id, User.find( cd.normal_scores.pluck("user_id" ) ))
     }
     #render "/course_content/show"
   end
