@@ -590,6 +590,7 @@
 		<br><br>
 		<div class="separation-line"></div>
 		<br><br>	
+                        <div class="panel-heading course-info">
 			<h4 style="padding-left:15px;">
 				<p><h3><i class="fa fa-book"></i><strong> 課程資訊</strong></h3><br></p>
 					<table class="table-invisible" >
@@ -615,9 +616,22 @@
 					</table>
                         </h4>
 
-                        <div class="panel-heading course-info">
 				<%=render "/course_content/course_info" %>
                         </div>
+
+			<div class="separation-line"></div>
+			<div id="course-recommend" class="panel-heading" >
+			<h4 style="padding-left:15px;">
+                          <p><h3><%=fa_icon "cube"%></i><strong> 修了這堂課的人，也修了...</strong></h3><br></p>
+                                <% if not @data[:recommend_courses]%>
+                                  找不到OAO
+                                <% else %>
+                                  <% @data[:recommend_courses].each do |c| %>
+                                    <a href="/courses/<%=c["id"]%>"><%= c["name"] %></a>&emsp;
+                                  <% end %>
+                                <% end %>
+                        </div>
+
 
 			<div class="separation-line"></div>
 			<div id="course-tips" class="panel-heading" >
