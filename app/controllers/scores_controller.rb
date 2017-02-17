@@ -30,7 +30,13 @@ class ScoresController < ApplicationController
 			end
 
 			if normal.length > 0				
-				current_user.normal_scores.destroy_all
+			        current_user.normal_scores(:course_detail).each do |course|
+                                  if course.semester_id != Semester::LAST.id
+                                    course.destroy
+                                  elsif course.score != "修習中"
+                                    course.destroy
+                                  end
+                                end
 				current_user.agreed_scores.destroy_all
 			else
 				alertmesg("error",'',"匯入失敗!")
@@ -60,6 +66,16 @@ class ScoresController < ApplicationController
 			@no_pass 				= 0	#沒過
 			@fail_added 		= 0	#匯入失敗
 			@now_taking 		= 0 #正在修
+
+                        normal.each do |n|
+                          sem=n['sem']
+                          sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
+                          if sem.id == Semester::LAST.id
+                            current_user.normal_scores.destroy_all
+                            break
+                          end
+                        end
+
 			normal.each do |n|
 				if n['score'] == "通過" || n['score'].to_i>=current_user.pass_score
 					@pass+=1
