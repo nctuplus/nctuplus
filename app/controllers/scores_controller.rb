@@ -67,13 +67,16 @@ class ScoresController < ApplicationController
 			@fail_added 		= 0	#匯入失敗
 			@now_taking 		= 0 #正在修
 
-                        normal.each do |n|
-                          sem=n['sem']
-                          sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
-                          if sem.id == Semester::LAST.id
-                            current_user.normal_scores.destroy_all
-                            break
-                          end
+                        # Prevent the import of course will lead to the deletion of simulation
+                        # Check the last import course is the last semester or not
+                        # ex: LAST:105下 CURRENT:105上
+                        # => 模擬排課是放105上的內容，而成績只會匯入到104下的部分，所以會保留105上的模擬排課
+                        # ex: LAST=CURRENT=105下
+                        # => 匯入的成績包含105下，代表模擬排課的內容無須再保留，可刪除依最新教務系統上的選課為主
+                        sem = normal.last['sem']
+                        sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
+                        if sem.id = Semester::LAST.id
+                          current_user.normal_scores.destroy_all
                         end
 
 			normal.each do |n|
