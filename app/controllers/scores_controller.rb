@@ -75,7 +75,7 @@ class ScoresController < ApplicationController
                         # => 匯入的成績包含105下，代表模擬排課的內容無須再保留，可刪除依最新教務系統上的選課為主
                         sem = normal.last['sem']
                         sem=Semester.where(:year=>sem[0..sem.length-2].to_i, :half=>sem[sem.length-1].to_i).take
-                        if sem.id = Semester::LAST.id
+                        if sem.id == Semester::LAST.id
                           current_user.normal_scores.destroy_all
                         end
 
