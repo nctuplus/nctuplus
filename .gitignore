@@ -27,3 +27,6 @@
 
 # except for the files
 !/config/locales/zh-TW.yml
+
+# Ignore vim swap
+*.swp

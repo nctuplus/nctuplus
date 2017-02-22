@@ -1,82 +1,76 @@
-
 <%= search_form_for @q, url:"/courses/search_mini", class:"form-inline", remote: true do |f| %>
-	<%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
-	<%=hidden_field_tag :dimension_search,"" %>
-	<%=hidden_field_tag :timeslot_search,"" %>
+  <%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
+  <%=hidden_field_tag :dimension_search,"" %>
+  <%=hidden_field_tag :timeslot_search,"" %>
   <%=hidden_field_tag :required_search,"" %>
 
-	<div class="input-group" style="display:inline-table;">
-			<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>		
-			<div class="input-group-btn">					
-				<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>   
-			</div><!-- /btn-group -->
-	</div><!-- /input-group -->
-	&nbsp;&nbsp;&nbsp;&nbsp;
-	<div class="checkbox">
-		<label style="font-size:16px;">
-			<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
-			進階搜尋
-		</label>
-	</div>
+  <div class="input-group" style="display:inline-table;">
+      <%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度" %>		
+      <div class="input-group-btn">					
+        <button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>   
+      </div><!-- /btn-group -->
+  </div><!-- /input-group -->
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <div class="checkbox">
+    <label style="font-size:16px;">
+      <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
+      進階搜尋
+    </label>
+  </div>
 
-	<div class="hidden row" id="adv-search">
-		<div class="col-md-12 text-center">
-			<div style="width:120px;display:inline-block;">
-				<%= select_tag "degree" ,options_for_select(Department.degreeSel,params[:degree]), class: "form-control",:onchange=>"change_degree($(this))" %>		
-			</div>	
-			<div style="width:280px;display:inline-block;">				
-				<%= f.select :department_id_eq,render("courses/search/undergrad_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
-			</div>
-		</div>	
-	</div>
+  <div class="hidden row" id="adv-search">
+    <div class="col-md-12 text-center">
+      <div style="width:120px;display:inline-block;">
+        <%= select_tag "degree" ,options_for_select(Department.degreeSel,params[:degree]), class: "form-control",:onchange=>"change_degree($(this))" %>		
+      </div>	
+      <div style="width:280px;display:inline-block;">				
+        <%= f.select :department_id_in_string, render("courses/search/undergrad_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
+      </div>
+    </div>	
+  </div>
 <% end %>
 <br>
 
-
 <script>
-	function searchLackDimension(){
-		<% if !current_user.has_imported? %>
-			$(".scrollable").html("<h4 class='text-center'>請先匯入成績!</h4>");
-		<% elsif current_user.is_undergrad? %>
-			$(".scrollable").html("<%=j loading_img%>");
-			$.getJSON("/user/statistics", function (data) {
-				var pass_courses=getPassCourses(checkPassTaking,data.pass_score,data.user_courses);
-				var result=commonCheck(pass_courses);
-				var arr="[";
-				for(var dimension in result['common']){
-					if (result['common'][dimension]==0){ 
-						arr+='"'+dimension+'",';
-					}
-				}
-				if(arr.length==1){
-					$(".scrollable .text-center").text("你已經(順利的話)修完了喔^_^");
-				}
-				else{
-					arr=arr.substr(0,arr.length-1);
-					arr+=']';					
-					$("#dimension_search").val(arr);
-					$("form").submit();
-				}
-			});
-		<% else %>
-			$(".scrollable").html("<h4 class='text-center'>你不需要修通識喔^_^</h4>");
-		<% end %>
-	}
-	
-	function searchTimeSlot(){
-		var selected = $('#schedule_table').CourseTable('getSelectedSlot');
-		if(selected.length>0){
-			var arr_str = '[';
-			for(var i=0, ele;ele=selected[i]; ++i)
-				arr_str+= '"'+ele+'",';
-			arr_str=arr_str.substr(0,arr_str.length-1);
-			arr_str+=']';
-			$('#timeslot_search').val(arr_str);
-			$(".scrollable").html("<%=j loading_img%>");
-			$("form").submit();
-			$(".schd-grid-selected").removeClass("schd-grid-selected");
-		}
-		else
-			toastr["warning"]("請先在右方課表選取時間");
-	}
+  function searchLackDimension(){ <% if !current_user.has_imported? %> $(".scrollable").html("<h4 class='text-center'>請先匯入成績!</h4>"); <% elsif current_user.is_undergrad? %> $(".scrollable").html("<%=j loading_img%>");
+      $.getJSON("/user/statistics", function (data) {
+        var pass_courses=getPassCourses(checkPassTaking,data.pass_score,data.user_courses);
+        var result=commonCheck(pass_courses);
+        var arr="[";
+        for(var dimension in result['common']){
+          if (result['common'][dimension]==0){ 
+            arr+='"'+dimension+'",';
+          }
+        }
+        if(arr.length==1){
+          $(".scrollable .text-center").text("你已經(順利的話)修完了喔^_^");
+        }
+        else{
+          arr=arr.substr(0,arr.length-1);
+          arr+=']';					
+          $("#dimension_search").val(arr);
+          $("form").submit();
+        }
+      });
+    <% else %>
+      $(".scrollable").html("<h4 class='text-center'>你不需要修通識喔^_^</h4>");
+    <% end %>
+  }
+
+  function searchTimeSlot(){
+    var selected = $('#schedule_table').CourseTable('getSelectedSlot');
+    if(selected.length>0){
+      var arr_str = '[';
+      for(var i=0, ele;ele=selected[i]; ++i)
+        arr_str+= '"'+ele+'",';
+      arr_str=arr_str.substr(0,arr_str.length-1);
+      arr_str+=']';
+      $('#timeslot_search').val(arr_str);
+      $(".scrollable").html("<%=j loading_img%>");
+      $("form").submit();
+      $(".schd-grid-selected").removeClass("schd-grid-selected");
+    }
+    else
+      toastr["warning"]("請先在右方課表選取時間");
+  }
 </script>

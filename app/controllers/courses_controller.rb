@@ -1,6 +1,5 @@
 class CoursesController < ApplicationController
 
-
   before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 
   def index
@@ -40,8 +39,8 @@ class CoursesController < ApplicationController
       :use_type=>"add",
       :add_to_cart=>true,
       :courses=>cds.map{|cd|
-      cd.to_search_result
-    }
+        cd.to_search_result
+      }
     }
     @result[:highest_score_ct] = highest_score_ct if !params[:required_search].blank? 
     render "courses/search/mini", :layout=>false
@@ -138,8 +137,8 @@ class CoursesController < ApplicationController
       :use_type=>params[:use_type],#"delete",
       :add_to_cart=>params[:add_to_cart]=='1',
       :courses=>current_user.course_details.map{|cd|
-      cd.to_search_result
-    }
+        cd.to_search_result
+      }
     }
     render :layout=>false
   end
@@ -172,3 +171,4 @@ class CoursesController < ApplicationController
   end
 
 end
+
