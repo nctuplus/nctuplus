@@ -74,7 +74,7 @@ class CoursesController < ApplicationController
       end
     end
     count_hash[ch_name] = 0 #should not pick this course itself
-    trivial_courses = ['導師時間','服務學習','服務學習(一)','服務學習(二)','程式設計','計算機概論（一）','計算機概論（二）','計算機概論','計算機概論與程式設計','微積分甲（一）','微積分甲（二）','微積分乙（一）','微積分乙（二）','微積分丙（一）','微積分丙（二）','微積分A（一）','微積分A（二）','微積分B（一）','微積分B（二）','物理(一)','物理(二)','化學(一)','化學(二)','大一英文（一）','大一英文（二）','大一體育','藝文賞析教育']
+    trivial_courses = ['導師時間','服務學習','服務學習(一)','服務學習(二)','基礎程式設計','程式設計','計算機概論（一）','計算機概論（二）','計算機概論','計算機概論與程式設計','微積分甲（一）','微積分甲（二）','微積分乙（一）','微積分乙（二）','微積分丙（一）','微積分丙（二）','微積分A（一）','微積分A（二）','微積分B（一）','微積分B（二）','物理(一)','物理(二)','化學(一)','化學(二)','大一英文（一）','大一英文（二）','大一體育','藝文賞析教育']
     trivial_courses.each do |t|
       count_hash[t] = 0
     end
@@ -92,19 +92,14 @@ class CoursesController < ApplicationController
 
   def get_recommend_courses(ch_name, students)
     courses_they_take = []
-    scores = NormalScore.includes(:course).where( :user_id => students )
+    scores = NormalScore.where( :user_id => students )
     scores.each do |s|
       courses_they_take << s.course.ch_name
     end
-    #students.each do |s|
-      #courses_they_take << s.normal_scores.pluck("course_detail_id")
-    #end
-    #courses_they_take = courses_they_take.flatten
     count_hash = count_times(ch_name, courses_they_take)
     ch_names = extract_keys_with_largest_n_values( count_hash, 5)
     results = []
     ch_names.each do |ch_name|
-      #results << { "id"=>cd_id, "name"=>CourseDetail.find(cd_id).course_ch_name}
       results << { "id"=>Course.find_by_ch_name(ch_name).course_details.sort_by{|s| -s[:semester_id]}.first.id, "name"=>ch_name }
     end
     return results
@@ -129,7 +124,6 @@ class CoursesController < ApplicationController
       :open_on_latest=>(cd.course_teachership.course_details.last.semester_id==Semester::LAST.id) ? true : false ,
       :related_cds=>cd.course_teachership.course_details.includes(:semester,:department).order("semester_id DESC"),
       :updated_at=>cd.updated_at,
-      #:recommend_courses=>get_recommend_courses(cd.id, User.find( cd.normal_scores.pluck("user_id" )))
       :recommend_courses=>get_recommend_courses(cd.course.ch_name, cd.normal_scores.pluck("user_id" ))
     }
     #render "/course_content/show"
