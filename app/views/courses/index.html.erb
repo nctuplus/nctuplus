@@ -2,130 +2,129 @@
 <%=render 'courses/search/search_js' %>
 
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
-	<div class="row">	
-		<div class="col-md-12 col-sm-12 col-xs-12 text-center">
-			<div class="input-group" style="/*display:table-cell;*/" >
-				<%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度",style:"/*width:350px;*/" %>
-				<span class="input-group-btn">
-					<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-				</span><!-- /btn-group -->
-			</div><!-- /input-group -->
-			<div class="hidden-xs checkbox">
-				<label style="font-size:16px;">
-					<%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
-					進階搜尋
-				</label>
-			</div>
-		</div>
-	</div>
-	<div class="hidden row hidden-xs" id="adv-search">
-		<br>
-		<div class="col-md-12 col-sm-12 col-xs-12 text-center">
-			<div class="col-group" style="/*width:108px;*/display:inline-block;">
-				<%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : 0),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
-			</div>
-			<div class="col-group" style="/*width:120px;*/display:inline-block;">
-				<%= select_tag "degree" ,options_for_select(Department.degreeSel,params[:degree]), class: "form-control",:onchange=>"change_degree($(this))" %>		
-			</div>	
-			<div class="col-group" style="/*width:260px;*/display:inline-block;">				
-				<%= f.select :department_id_eq,render("courses/search/common_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
-			</div>
-		</div>	
-	</div>
+  <div class="row">	
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+      <div class="input-group" style="/*display:table-cell;*/" >
+        <%=text_field_tag :custom_search,params[:custom_search], class: "form-control", placeholder:"課名/老師/時間/向度",style:"/*width:350px;*/" %>
+        <span class="input-group-btn">
+          <button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
+        </span><!-- /btn-group -->
+      </div><!-- /input-group -->
+      <div class="hidden-xs checkbox">
+        <label style="font-size:16px;">
+          <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
+          進階搜尋
+        </label>
+      </div>
+    </div>
+  </div>
+  <div class="hidden row hidden-xs" id="adv-search">
+    <br>
+    <div class="col-md-12 col-sm-12 col-xs-12 text-center">
+      <div class="col-group" style="/*width:108px;*/display:inline-block;">
+        <%= f.select :semester_id_eq, options_for_select(@sem_sel,params[:q] ? params[:q][:semester_id_eq] : 0),{:prompt=> "所有學期"},{ :class=> "form-control"} %>				
+      </div>
+      <div class="col-group" style="/*width:120px;*/display:inline-block;">
+        <%= select_tag "degree" ,options_for_select(Department.degreeSel,params[:degree]), class: "form-control",:onchange=>"change_degree($(this))" %>		
+      </div>	
+      <div class="col-group" style="/*width:260px;*/display:inline-block;">				
+        <%= f.select :department_id_in_string, render("courses/search/common_options"),{:prompt=> "系所"},{ :class=> "form-control"} %>
+      </div>
+    </div>	
+  </div>
 <% end %>
 <br>
 
 <table class="table table-hover" id="course_table" style="background-color:white;" >
-	<tr class="row">
-		<th class="hidden-xs">學期</th>
-		<th class="hidden-xs">系所/摘要</th>
-		<th class="">課名</th>
-		<th class="">老師</th>
-		<th class="">學分</th>
-		<th class="">時間</th>
-		<th class="">年級</th>
-		<th class="hidden-xs">收藏</th>
-	</tr>
-	<tbody>
-	<% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
-	<% if !@cds.empty? %>
-		<% @cds.each do |cd| %>
-				<tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
-					<td class="hidden-xs">
-						<%=cd.semester_name%>
-					</td>
-					<td class="hidden-xs">
-						<%="#{cd.department_ch_name} #{cd.brief}"%>
-					</td>
-					<td class=""><%= cd.course_ch_name %></td>
-					<td class=""><%= cd.teacher_name %></td>
-					<td class=""><%= cd.course_credit %></td>
-					<td class=""><%= cd.time %></td>
-					<td class="">
-						<%=cd.grade%>
-					</td>
-					<td class="hidden-xs" onclick="">
-						<% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
-						<%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
-						
-					</td>
-				</tr>
-		<% end %>
-	<% else %>
-		<tr class="row">
-			<td colspan="7" class="text-center">
-				查無結果!
-			</td>
-		</tr>		
-	<% end %>
-	</tbody>
+  <tr class="row">
+    <th class="hidden-xs">學期</th>
+    <th class="hidden-xs">系所/摘要</th>
+    <th class="">課名</th>
+    <th class="">老師</th>
+    <th class="">學分</th>
+    <th class="">時間</th>
+    <th class="">年級</th>
+    <th class="hidden-xs">收藏</th>
+  </tr>
+  <tbody>
+  <% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
+  <% if !@cds.empty? %>
+    <% @cds.each do |cd| %>
+        <tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
+          <td class="hidden-xs">
+            <%=cd.semester_name%>
+          </td>
+          <td class="hidden-xs">
+            <%="#{cd.department_ch_name} #{cd.brief}"%>
+          </td>
+          <td class=""><%= cd.course_ch_name %></td>
+          <td class=""><%= cd.teacher_name %></td>
+          <td class=""><%= cd.course_credit %></td>
+          <td class=""><%= cd.time %></td>
+          <td class="">
+            <%=cd.grade%>
+          </td>
+          <td class="hidden-xs" onclick="">
+            <% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
+            <%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
+            
+          </td>
+        </tr>
+    <% end %>
+  <% else %>
+    <tr class="row">
+      <td colspan="7" class="text-center">
+        查無結果!
+      </td>
+    </tr>		
+  <% end %>
+  </tbody>
 </table>	
 
 <%= paginate @cds, :window=>2 %>
 
-
 <script>
-	$(function(){
-		
-		change_degree($("#degree"));
-		$("#q_department_id_eq").val('<%=@q.department_id_eq%>');
-	
-		if($("#adv_toggle").prop("checked"))
-			$("#adv-search").removeClass("hidden");
-		$(".clickable-row").click(function() {
-			goToHref($(this).attr("href"),false);
-		});
-		
-		//bind cart button 
-		$(".cart-control").bind({
-			mouseover:function(){// avoid go to course page
-				$(this).parent().parent().off("click");
-			},
-			mouseleave:function(){// resume go to course page
-				$(this).parent().parent().click(function(){
-					goToHref($(this).attr("href"),false);
-				});
-			},
-			click:function(){	//add or delete cart
-				add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
-				var type=$(this).attr("data");
-				if(type=="add"){
-					$(this).attr("data","delete");
-					$(this).toggleClass("fa-square-o fa-check-square-o");
-				}
-				else{
-					$(this).attr("data","add");
-					$(this).toggleClass("fa-check-square-o fa-square-o");
-				}
-			}
-		});
-		//toastr["success"]("已更新暑修課程囉，請利用進階搜尋查詢~");
-		<% if !current_user %>
+  $(function(){
+    
+    change_degree($("#degree"));
+    $("#q_department_id_eq").val('<%=@q.department_id_eq%>');
 
-		//	toastr["info"]("登入並選擇系級,系統即可為您推薦課程!!");
-		<% elsif !current_user.has_imported? %>
-		//	toastr["success"]("<%=j link_to "匯入成績","/user/import_course",style:"color:blue;"%>後系統即可為您推薦課程!!");
-		<% end %>
-	});
+    if($("#adv_toggle").prop("checked"))
+      $("#adv-search").removeClass("hidden");
+    $(".clickable-row").click(function() {
+      goToHref($(this).attr("href"),false);
+    });
+    
+    //bind cart button 
+    $(".cart-control").bind({
+      mouseover:function(){// avoid go to course page
+        $(this).parent().parent().off("click");
+      },
+      mouseleave:function(){// resume go to course page
+        $(this).parent().parent().click(function(){
+          goToHref($(this).attr("href"),false);
+        });
+      },
+      click:function(){	//add or delete cart
+        add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
+        var type=$(this).attr("data");
+        if(type=="add"){
+          $(this).attr("data","delete");
+          $(this).toggleClass("fa-square-o fa-check-square-o");
+        }
+        else{
+          $(this).attr("data","add");
+          $(this).toggleClass("fa-check-square-o fa-square-o");
+        }
+      }
+    });
+    //toastr["success"]("已更新暑修課程囉，請利用進階搜尋查詢~");
+    <% if !current_user %>
+
+    //	toastr["info"]("登入並選擇系級,系統即可為您推薦課程!!");
+    <% elsif !current_user.has_imported? %>
+    //	toastr["success"]("<%=j link_to "匯入成績","/user/import_course",style:"color:blue;"%>後系統即可為您推薦課程!!");
+    <% end %>
+  });
 
 </script>

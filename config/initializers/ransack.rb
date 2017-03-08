@@ -7,5 +7,11 @@ Ransack.configure do |config|
   # Raise errors if a query contains an unknown predicate or attribute.
   # Default is true (do not raise error on unknown conditions).
   #config.ignore_unknown_conditions = false
+  
+  config.add_predicate 'in_string',
+    arel_predicate: 'in',
+    formatter: proc { |v| v.split },
+    validator: proc { |v| v.present? },
+    type: :string
 
 end

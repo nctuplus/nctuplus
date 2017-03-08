@@ -97,5 +97,6 @@ gem 'underscore-rails'
 
 group :development do
 	gem "rspec-rails"
+	gem "byebug"
 end
 
