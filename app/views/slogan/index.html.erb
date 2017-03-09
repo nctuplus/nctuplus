@@ -37,20 +37,16 @@
 
 	<div class ="col-sm-10">
 		<div class = "form-inline">
-	    	<%= form_for Slogan.new , :url => { :controller => 'slogan', :action => 'create' } do |f| %>
-	        <div class = "form-group">
-                  <strong>標語：&nbsp;</strong><%= f.text_area :description, class: "form-control", :rows => "2", :cols => "25" %>
-	        </div>
-	            <%= f.submit "直接刊登", class: "btn btn-warning", :data => { :confirm => "確定要刊登嗎？" }  %>
-	        <% end %>
-		</div>
+                  <%= link_to '新增標語', new_slogan_path, class:"btn btn-warning" %>
+                </div>
 		<table class="table table-bordered table-striped">
 		      <thead>
 		        <tr>
 		          <th class="col_1">標語</th>
 		          <th class="col_2">建立時間</th>
 		          <th class="col_3">修改時間</th>
-		          <th class="col_4"></th>
+                          <th class="col_4">狀態</th>
+                          <th class="col_5"></th>
 		        </tr>
 		      </thead>
 		      <tbody>
@@ -60,8 +56,11 @@
 		         	  <td class="col_2"><font color="gray" valign="bottom">
 						20<%= t.created_at.strftime("%y/%m/%d %H:%M") %></font></td>
 		              <td class="col_3"><font color="gray" valign="bottom">
-		              	20<%= t.updated_at.strftime("%y/%m/%d %H:%M") %></font></td>
-		              <td class="col_4"><%= link_to "編輯", edit_slogan_path(t) %>&nbsp;&nbsp;
+                                  20<%= t.updated_at.strftime("%y/%m/%d %H:%M") %></font></td>
+                              <td class="col_4"><font color="gray" valign="bottom">
+                                  <%= t.hidden_type ? "隱藏" : "顯示" %></font>
+                              </td>
+		              <td class="col_5"><%= link_to "編輯", edit_slogan_path(t) %>&nbsp;&nbsp;
 		              <%= link_to '刪除', slogan_path(t), :method => :delete, :data => { :confirm => "確定要刪除此標語嗎？" } %></td>
 		            </tr>
 		          <%end%>
@@ -70,6 +69,7 @@
 	</div>
 </div>
 </div>
+
 
 <script>
 var url = window.location;
@@ -81,7 +81,4 @@ $('ul.nav a').filter(function() {
     return this.href == url;
 }).parent().addClass('active');
 </script>
-
-</body>
-</html>
 

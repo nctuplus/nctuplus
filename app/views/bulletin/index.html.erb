@@ -37,33 +37,27 @@
 
 	<div class ="col-sm-10">
 		<div class = "form-inline">
-	    	<%= form_for Bulletin.new , :url => { :controller => 'bulletin', :action => 'create' } do |f| %>
-	        <div class = "form-group">
-	            <%= f.select :article_type, [['最新消息', true], ['網站改版', false]], {}, {class: "form-control"} %>
-	        </div>
-	        <div class = "form-group">
-	            <strong>&nbsp;&nbsp;標題：&nbsp;</strong><%= f.text_area :title, class: "form-control", :rows => "1", :cols => "25", :placeholder => "超過此欄寬度首頁公告會跳行..." %>
-	        </div>
-	            <%= f.submit "直接刊登", class: "btn btn-warning", :data => { :confirm => "確定要刊登嗎？" }  %>
-	        <% end %>
-		</div>
+                  <%= link_to "新增公告", new_bulletin_path, class: "btn btn-warning" %>
+                </div>
 		<table class="table table-bordered table-striped">
 		      <thead>
 		        <tr>
 		          <th class="col_1">標題</th>
-		          <th class="col_2">建立時間</th>
-		          <th class="col_3">修改時間</th>
+		          <th class="col_2">上線時間</th>
+		          <th class="col_3">下線時間</th>
 		          <th class="col_4"></th>
 		        </tr>
 		      </thead>
 		      <tbody>
 		          <% @bulletins.each do |t| %>
 		            <tr>
-		              <td class="col_1"><span class="glyphicon glyphicon-chevron-right"></span>&nbsp;&nbsp;<%= t.title %></td>
+                              <td class="col_1"><span class="glyphicon glyphicon-chevron-right"></span>
+                                &nbsp;&nbsp;<% if t.time_out %><span style="color: red;">已過期</span><% end %>
+                                <%= t.title %></td>
 		         	  <td class="col_2"><font color="gray" valign="bottom">
-						20<%= t.created_at.strftime("%y/%m/%d %H:%M") %><br><%= t.user.name %></font></td>
+						<%= t.hidden_type ? t.begin_time.strftime("%Y/%m/%d %H:%M") : "常駐不下線" %><br><%= t.update_user %></font></td>
 		              <td class="col_3"><font color="gray" valign="bottom">
-		              	20<%= t.updated_at.strftime("%y/%m/%d %H:%M") %><br><%= t.update_user %></font></td>
+                                  <%= t.hidden_type ? t.end_time.strftime("%Y/%m/%d %H:%M") : "常駐不下線" %><br><%= t.update_user %></font></td>
 		              <td class="col_4"><%= link_to "編輯", edit_bulletin_path(t) %>&nbsp;&nbsp;
 		              <%= link_to '刪除', bulletin_path(t), :method => :delete, :data => { :confirm => "確定要刪除此公布嗎？" } %></td>
 		            </tr>

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161129064245) do
+ActiveRecord::Schema.define(version: 20170131153409) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -140,7 +140,10 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "update_user"
-    t.boolean  "hidden_type",  default: false, null: false
+    t.boolean  "hidden_type",  default: false,                 null: false
+    t.boolean  "schedule",     default: false,                 null: false
+    t.datetime "begin_time",   default: '2017-01-01 00:00:00'
+    t.datetime "end_time",     default: '2017-01-01 00:00:00'
   end
 
   create_table "cf_credits", force: true do |t|
@@ -466,6 +469,7 @@ ActiveRecord::Schema.define(version: 20161129064245) do
     t.text     "description"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "hidden_type", default: false, null: false
   end
 
   create_table "sub_discusses", force: true do |t|
