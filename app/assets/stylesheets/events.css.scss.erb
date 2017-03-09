@@ -60,26 +60,14 @@
 ------------------------*/
 
 .form-wrapper{
-	margin: 40px auto;
-    padding: 30px 3px;
-    height: 100px;
+    padding: 10px;
+    height: auto;
 	background-color: rgba(100, 100, 100, 0.7);
 }
 
-@media screen and (max-width: 768px){ 
-	.form-wrapper{
-		height: 130px;
-	}
-}
-
-.form-button-wrapper{
-	@extend  .col-xs-6, .col-sm-2, .col-md-2;
-	padding: 3px auto;
-}
-
-.form-text-wrapper{
-	@extend .col-xs-12, .col-sm-6, .col-md-8;
-	padding: 3px auto;
+.control-wrapper{
+	padding-bottom: 10px;
+	padding-top: 10px;
 }
 
 /*------------------------
@@ -88,9 +76,9 @@
 ------------------------*/
 
 .events-block{
-	@extend .container;
 	@extend .center-block;
-	margin: 20px auto;
+	margin-bottom: 20px;
+	background-image: url(<%=asset_path("events/bg_symphony.png")%>);
 }
 
 #event-block1{
@@ -130,16 +118,14 @@
 	attributes
 ------------------------*/
 .event-block-wrapper{
-	@extend .col-md-3, .col-sm-6, .col-xs-12;
-	margin: 10px 0px;
-	padding: 0px;
+	margin-bottom: 15px;
+	padding: 3px;
 }
 
 .event-block{
 	background: rgba(255, 255, 255, 0.7);
-	height: 200px;
 	margin: 1px 3px;
-	padding: 20px 10px;
+	padding: 24px 10px 10px;
 	font-size: 16px;
 }
 
@@ -149,13 +135,11 @@
 	background: rgba(255, 255, 255, 0.7);
 	border:0px solid #f8d4d4;
 }
-
 .event-block__theme--past{
 	//border:2px solid #d1d1e0;
 	background: rgba(209, 209, 224, 0.4);
 	border:0px solid #d1d1e0;
 }
-
 .event-block__theme--future{
 	//border:2px solid #c1eaff;
 	background: rgba(193, 234, 255, 0.4);
@@ -163,10 +147,86 @@
 }
 
 .event-block__top{
-	padding: 3px 3px;
+	background: rgba(30, 30, 30, 0.5);
+    border-radius: 3px;
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	width: 100%;
 }
+.event-block__top:after {
+	padding-top: 50%;
+	/* 2:1 ratio */
+	display: block;
+	content: '';
+}
+.event-image{
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	margin: auto;
+}
+
 .event-block__bottom{
 	border: 2px 0 0 0 solid #c1eaff;
+}
+
+.event-title {
+	border-bottom: 1px solid #ccc;
+	font-size: 18px;
+	height: 3.5em;
+	margin: 0 0 5px 0; 
+	overflow: hidden;
+	padding: 7px 0;
+}
+
+.event-info {
+	color: #555;
+	height: 4em;
+	overflow: hidden;
+}
+
+.info-item {
+    padding-left: 2.5em;
+    text-indent:-2.1em;
+}
+
+.event-date{
+	@extend .text-right;
+	//@extend .flag;
+	position: absolute;
+	padding: 2px 2px;
+	height: 15%;
+	top: 3px;
+	bottom: auto;
+	right: 5%;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.event-date__theme--today{
+	color: #E53F3F;
+	//background: #f8d4d4;
+}
+.event-date__theme--past {
+	color: gray;
+	//background: #d1d1e0;
+}
+.event-date__theme--future{
+	color: #5BA1DC;
+	//background: #ccf1ff; 
+}
+
+.event-type{
+	//@extend .text-right;
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	font-size: 16px
 }
 
 .flag {  /* origin from css-tricks.com, via Zoe Rooney */
@@ -183,56 +243,7 @@
 	border-left: 30px solid transparent; 
 	border-right: 30px solid transparent; 
 }
-.event-date{
-	@extend .text-right;
-	//@extend .flag;
-	position: absolute;
-	pagging: 2px 2px;
-	height: 15%;
-	top: 0px;
-	bottom: auto;
-	right: 5%;
-	font-size: 16px;
-	font-weight: bold;
-}
-.event-date__theme--today{
-	color: #ff3838;
-	//background: #f8d4d4;
-}
-.event-date__theme--past {
-	color: gray;
-	//background: #d1d1e0;
-}
-.event-date__theme--future{
-	color: #5BA1DC;
-	//background: #ccf1ff; 
-}
-.event-type{
-	//@extend .text-right;
-	width: 100%;
-	height: 100%;
-	position: absolute;
-	top: 0;
-	left: 0;
-	font-size: 16px
-}
+
 .wrapper{
 	vertical-align: middle;
-}
-
-.event-title{
-	display: inline-block;
-}
-.event-location{
-	//@extend .pull-right;
-	position: absolute;
-	display: overflow;
-	bottom: 10px;
-	right: 20px;
-}
-.event-image{
-	@extend .img-responsive;
-	@extend .img-rounded;
-	height: 120px;
-	width: 250px;
 }

@@ -7,8 +7,19 @@ class EventsController < ApplicationController
 		@event_banner= Event.where(:banner=>true).where('end_time >= ?', Time.now)
 							.where.not(:cover_file_name => nil)
     
-		@events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search])
-            .result.order("end_time DESC")
+		@art_center_events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
+					.where('organization = ?', '交大藝文中心')
+					.where('end_time >= ?', (Date.today.to_date + 1.day))
+					.order("begin_time")
+    
+		@sa_events=Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
+					.where('organization = ?', '國立交通大學學生聯合會')
+					.where('end_time >= ?', (Date.today.to_date + 1.day))
+					.order("begin_time")
+		
+		@past_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
+					.where('end_time < ?', Time.now)
+					.order('end_time DESC')
 		
 		@past_events= Event.ransack(:title_or_organization_or_location_cont=>params[:custom_search]).result
 					.where('end_time < ?', Time.now)

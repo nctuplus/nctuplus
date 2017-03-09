@@ -5,10 +5,8 @@
 		$('.carousel').carousel({
 			interval: 5000
 		});
-		$("#content-container").attr("class","container-fluid");
-		
+		$("#content-container").attr("class","container-fluid");		
 		$('#banner-0').addClass('active');
-		
 		$('#myActivities').click( function(){
 			<% if current_user %>
 			$(this).toggleClass("active");
@@ -51,6 +49,7 @@
 	{
 		document.getElementById('leftdiv').height()=right;
 	}*/
+	
 </script>
 
 	
@@ -73,7 +72,7 @@
 					<div class="banner__inner clickable-hover" href="/events/<%=banner.id%>" onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
 						<%=image_tag(banner.cover.url, :class => "banner__image", :alt=> "banner", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 						<div class="banner__caption">
-							<strong><%= truncate(banner.title, length: 20) %></strong>
+							<strong><%= banner.title %></strong>
 						</div>
 					</div>
 				</div>
@@ -93,63 +92,73 @@
 	<!-- End of banner -->
 	
 	<!--- form group --->
-	<div class="row">
-		<div class="form-wrapper">
-			<div class="container">
-        <%=form_tag "/events", {class:"form-horizontal form-group center-block", role:"form", method:"GET"} do %>
-					<div class="form-button-wrapper">
-						<%=link_to "新增活動",new_event_path,class:"btn btn-info btn-block","data-no-turbolink"=>true%>
-					</div>
-					<div class="form-button-wrapper">
-						<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
-					</div>
-					<div class="form-text-wrapper">
-						<div class="input-group">
-							<%=text_field_tag :custom_search, params[:custom_search], class:"form-control", placeholder:"輸入活動名稱/地點/組織" %>
-              <span class="input-group-btn">
-								<button type="submit" class="btn btn-primary" id="search"><i class="fa fa-search"></i></button>        
-							</span>
+	<div class="container">
+		<div class="row">
+			<%=form_tag "/events", {class:"form-wrapper form-horizontal center-block col-xs-12", role:"form", method:"GET"} do %>
+				
+					<div class="row">
+						<div class="control-wrapper col-xs-6 col-sm-3 col-md-2">
+								<%=link_to "新增活動",new_event_path,class:"btn btn-info btn-block","data-no-turbolink"=>true%>
+						</div>
+						<div class="control-wrapper col-xs-6 col-sm-3 col-md-2">
+								<button id="myActivities" type="button" class="btn btn-success btn-block" data-toggle="toggle" aria-pressed="false" >我的活動</button>
+						</div>
+						<div class="control-wrapper col-xs-12 col-sm-6 col-md-8">
+							<div class="input-group">
+								<%=text_field_tag :custom_search, params[:custom_search], class:"form-control", placeholder:"輸入活動名稱/地點/組織" %>
+								<span class="input-group-btn">
+									<button type="submit" class="btn btn-primary" id="search"><i class="fa fa-search"></i></button>        
+								</span>
+							</div>
 						</div>
 					</div>
-        <% end %>  
+			<% end %>  
+		</div>
+				
+		<div class="row">
+
+			<!-- Focus Activities -->
+			<!--
+			<div id="event-block2" class="events-block">
+				<h1>主題活動</h1>
 			</div>
-		</div>
-	</div>
-
-	<div class="row">
-
-		<!-- Focus Activities -->
-		<!--
-		<div id="event-block2" class="events-block">
-			<h1>主題活動</h1>
-		</div>
-		-->
-		<!-- End of Focus Activities -->
+			-->
+			<!-- End of Focus Activities -->
 
 
-		<!-- Current Activities -->
-		<div id="event-block1" class="events-block">
-			<h1>近期活動</h1>
-			<div id="events-container1" class="events-container" style="">
+			<!-- Current Activities -->
+			<div class="events-block col-xs-12">
+				<h1>近期活動</h1>
 				<!-- list all events -->
 				
 				<!-- current events -->
 				<% @current_events.each do |event| %>
-					<div class="event-block-wrapper">
+					<div class="event-block-wrapper col-md-3 col-sm-6 col-xs-12">
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
 							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
 							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
 									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
-								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-								<small class="event-title text-right"><%= truncate(event.organization, length: 7)%></small>
-								<strong><%= truncate(event.title, length: 20) %></strong>
-								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
 								<% if event.user_id==current_user.try(:id)%>
 									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
+								<div class="event-title">
+									<strong><%= event.title %></strong>
+								</div>
+								<div class="event-info">
+									<div class="info-item">
+										<small>單位:&nbsp;<%= event.organization%></small>
+									</div>
+									<div class="info-item">
+										<small>地點:&nbsp;<%= event.location %></small>
+									</div>
+									<% if event.user_id==current_user.try(:id)%>
+										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<% end %>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -158,44 +167,77 @@
 
 				<!-- future events -->
 				<% @future_events.each do |event| %>
-					<div class="event-block-wrapper">
+					<div class="event-block-wrapper col-md-3 col-sm-6 col-xs-12">
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
 							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
 							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
 									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
-								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-								<small class="event-title text-right"><%= truncate(event.organization, length: 7)%></small>
-								<strong><%= truncate(event.title, length: 20) %></strong>
-								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
 								<% if event.user_id==current_user.try(:id)%>
 									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
 								<% end %>
+								<div class="event-title">
+									<strong><%= event.title %></strong>
+								</div>
+								<div class="event-info">
+									<div class="info-item">
+										<small>單位:&nbsp;<%= event.organization%></small>
+									</div>
+									<div class="info-item">
+										<small>地點:&nbsp;<%= event.location %></small>
+									</div>
+									<% if event.user_id==current_user.try(:id)%>
+										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<% end %>
+								</div>
 							</div>
 						</div>
 					</div>
 				<% end %>
 				<!-- future events End -->
+				
+				<!-- end of list all events -->
+					
+			</div>
+			<!-- End of Current Activities -->
 
+		</div>
+		
+		<% if not @art_center_events.empty? %>
+		<div class="row">
+
+			<!-- Arts Center Activities -->
+			<div class="events-block col-xs-12">
+				<h1>藝文中心</h1>
+					
 				<!-- past events -->
-				<% @past_events.each do |event| %>
-					<div class="event-block-wrapper">
+				<% @art_center_events.each do |event| %>
+					<div class="event-block-wrapper col-md-3 col-sm-6 col-xs-12">
 						<div class="event-block <%=event.get_block_theme%>">
 							<!-- small class="event-type"><%=event.event_type%></small -->
 							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
 							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
 									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
-								<%=image_tag(event.cover.url, :class => "event-image", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
 							</div>
 							<div class="event-block__bottom">
-								<small class="event-title text-right"><%= truncate(event.organization, length: 7)%></small>
-								<strong><%= truncate(event.title, length: 20) %></strong>
-								<small class="event-location"><%= truncate(event.location, length: 10) %></small>
-								<% if event.user_id==current_user.try(:id)%>
-									<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
-								<% end %>
+								<div class="event-title">
+									<strong><%= event.title %></strong>
+								</div>
+								<div class="event-info">
+									<div class="info-item">
+										<small>單位:&nbsp;<%= event.organization%></small>
+									</div>
+									<div class="info-item">
+										<small>地點:&nbsp;<%= event.location %></small>
+									</div>
+									<% if event.user_id==current_user.try(:id)%>
+										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<% end %>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -203,12 +245,105 @@
 				<!-- past events End -->
 				
 				<!-- end of list all events -->
-				
+					
 			</div>
-		</div>
-		<!-- End of Current Activities -->
+			<!-- End of Arts Center Activities -->
 
+		</div>
+		<% end %>
+		
+		<% if not @sa_events.empty? %>
+		<div class="row">
+
+			<!-- Students Association Activities -->
+			<div class="events-block col-xs-12">
+				<h1>學聯會</h1>
+					
+				<!-- past events -->
+				<% @sa_events.each do |event| %>
+					<div class="event-block-wrapper col-md-3 col-sm-6 col-xs-12">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<div class="event-title">
+									<strong><%= event.title %></strong>
+								</div>
+								<div class="event-info">
+									<div class="info-item">
+										<small>單位:&nbsp;<%= event.organization%></small>
+									</div>
+									<div class="info-item">
+										<small>地點:&nbsp;<%= event.location %></small>
+									</div>
+									<% if event.user_id==current_user.try(:id)%>
+										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<% end %>
+								</div>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- past events End -->
+				
+				<!-- end of list all events -->
+					
+			</div>
+			<!-- End of Students Association Activities -->
+		</div>
+		<% end %>
+		
+		
+		<div class="row">
+
+			<!-- Past Activities -->
+			<div class="events-block col-xs-12">
+				<h1>已結束活動</h1>
+					
+				<!-- past events -->
+				<% @past_events.each do |event| %>
+					<div class="event-block-wrapper col-md-3 col-sm-6 col-xs-12">
+						<div class="event-block <%=event.get_block_theme%>">
+							<!-- small class="event-type"><%=event.event_type%></small -->
+							<div class="event-date <%=event.get_time_css%> "><%=event.get_time%></div>
+							<div id="event-<%=event.id%>" href="/events/<%=event.id%>" class="event-block__top clickable-hover" 
+									onmouseover="$(this).addClass('mouse-on')" onmouseleave="$(this).removeClass('mouse-on')">
+								<%=image_tag(event.cover.url, :class => "event-image img-responsive", :alt=> "poster", :onclick=>"goToHref($(this).parent().attr('href'), true)") %>
+							</div>
+							<div class="event-block__bottom">
+								<div class="event-title">
+									<strong><%= event.title %></strong>
+								</div>
+								<div class="event-info">
+									<div class="info-item">
+										<small>單位:&nbsp;<%= event.organization%></small>
+									</div>
+									<div class="info-item">
+										<small>地點:&nbsp;<%= event.location %></small>
+									</div>
+									<% if event.user_id==current_user.try(:id)%>
+										<%link_to fa_icon("pencil-square lg"), edit_event_path(event),"data-no-turbolink"=>true%>
+									<% end %>
+								</div>
+							</div>
+						</div>
+					</div>
+				<% end %>
+				<!-- past events End -->
+				
+				<!-- end of list all events -->
+					
+			</div>
+			<!-- End of Past Activities -->
+
+		</div>
+		
 	</div>
+
 	
 	<nav class="cbp-spmenu cbp-spmenu-horizontal cbp-spmenu-bottom" id="menuBottom">
 		<h3>我的活動</h3>
