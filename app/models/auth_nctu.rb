@@ -11,7 +11,7 @@ class AuthNctu < ActiveRecord::Base
   def self.from_omniauth(auth)
     auth_nctu = where(student_id: auth.extra.profile.username).first_or_initialize.tap do |n|
       n.student_id  = auth.extra.profile.username
-      n.email       = auth.extra.profile.d2_email
+      n.email       = auth.extra.profile.email
       n.oauth_token = auth.credentials.token
       n.oauth_expires_at = Time.now.since(10.hour)
       if n.user_id.nil?
@@ -21,7 +21,7 @@ class AuthNctu < ActiveRecord::Base
         else
           n.user_id = User.create_from_auth({
             :name=>auth.extra.profile.username,
-            :email=>auth.extra.profile.d2_email
+            :email=>auth.extra.profile.email
           }).id
         end  
       end
