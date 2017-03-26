@@ -191,7 +191,10 @@
 			success:function(){
 				$("#book-"+id).find("#control-bar").remove();
 				$("#book-"+id).find("img.hidden").removeClass("hidden");
-			}
+			},
+      error: function(){
+        toastr["warning"]('update fail.');
+      },
 			
 		});
 		
