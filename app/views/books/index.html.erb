@@ -1,203 +1,202 @@
 <style>
-	.mouse-on{
-		height:auto !importan;
-		border-color: #66afe9;
-		box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
-		
-	}
-	.supplemental-info{
-		background: #f8f8f8;
-		//margin: 15px 0 0;
-		padding: 10px;
-		margin-top: 12px;
-		border-top: 1px solid #ccc;
-		margin-left: -4px;
-		margin-right: -4px;
-		cursor :default;
-	}
-	.img-soldout {
-		position:absolute;
-		z-index:10;
-		top: 70px;
-		left: 8px;
-	}
-	
-	.filter-group .active{
-		background-color: #337ab7 !important;
-		color: #fff !important;	//for sort link
-	}
-	.filter-group .active > a{
-		color: #fff !important;
-	}
-	
-	.sort_link{
-		color: #337ab7 !important;
-	}
-	
-	
+  .mouse-on{
+    height:auto !important;
+    border-color: #66afe9;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+  }
+  .supplemental-info{
+    background: #f8f8f8;
+    //margin: 15px 0 0;
+    padding: 10px;
+    margin-top: 12px;
+    border-top: 1px solid #ccc;
+    margin-left: -4px;
+    margin-right: -4px;
+    cursor :default;
+  }
+  .img-soldout {
+    position:absolute;
+    z-index:10;
+    top: 70px;
+    left: 8px;
+  }
+
+  .filter-group .active{
+    background-color: #337ab7 !important;
+    color: #fff !important; //for sort link
+  }
+  .filter-group .active > a{
+    color: #fff !important;
+  }
+
+  .sort_link{
+    color: #337ab7 !important;
+  }
+
+
 </style>
 
-		
+
 <div class="col-md-3 well">
-	<%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
-		<div class="row">	
-			<div class="col-md-12 text-center">
-				<div class="input-group">
-					<%=f.search_field :book_name_or_book_authors_or_courses_ch_name_cont, class: "form-control", placeholder:"書名/作者/課名" %>
-					<span class="input-group-btn">			
-						<button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>        
-					</span><!-- /btn-group -->
-					
-				</div><!-- /input-group -->
-			</div>
-		</div>			
-	<% end %>
-	</br>
-	<div class="row">
-		<table id="link-group" class="table table-bordered text-center" style="" >
-			<tr>
-				<td>
-					<%=link_to "新增商品", new_book_path, class:"btn btn-success", style:"font-size:14px;" %>					
-				</td>
-				<td>
-					<% if current_user %>
-						<%=link_to "我的商品", "/books/?mine=true", class:"btn btn-info", style:"font-size:14px;" %>
-					<% else %>
-						<%=link_to "我的商品", "javascript:void(0);", class:"btn btn-info", style:"font-size:14px;", disabled:true %>
-					<% end %>
-				</td>
-			</tr>
-		</table>
-	</div>
-	<h4 class="text-center" style="margin-top:-5px">排序</h4>
-	<div class="row text-center">
-		<div id="sort-group" class="btn-group filter-group" role="group" aria-label="">
-			<%= sort_link(@q, :price,"價錢") %>
-			<%= sort_link(@q, :created_at,"日期") %>
-		</div>
-	</div>
-			
-	<h4 class="text-center hidden-xs" style="/*margin-top:-5px*/">分類</h4>
-	<div class="row hidden-xs">
-		<table id="college-table" class="table table-bordered bg-white filter-group">
-			<tr class="list-grou text-center">		
-				<td class="col-md-2 clickable-hover" id="departments_id_eq_8"><%=link_to "通識","?q[departments_id_eq]=8",class:"list-group-ite"%></td>
-				<td class="col-md-2 clickable-hover" id="departments_id_eq_9"><%=link_to "外文","?q[departments_id_eq]=9",class:"list-group-ite"%></td>
-				
-			</tr>
-			<tr class="list-grou text-center">
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_3"><%=link_to "資訊學院","?q[colleges_id_eq]=3",class:"list-group-ite"%></td>
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_5"><%=link_to "電機學院","?q[colleges_id_eq]=5",class:"list-group-ite"%></td>
+  <%= search_form_for @q, url:"/books/", class:"form-inline" do |f| %>
+    <div class="row">
+      <div class="col-md-12 text-center">
+        <div class="input-group">
+          <%=f.search_field :book_name_or_book_authors_or_courses_ch_name_cont, class: "form-control", placeholder:"書名/作者/課名" %>
+          <span class="input-group-btn">
+            <button type="submit" class="btn btn-primary" id="search"><%=fa_icon "search"%></button>
+          </span><!-- /btn-group -->
 
-			</tr>
-			<tr class="list-grou text-center">
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_4"><%=link_to "工學院","?q[colleges_id_eq]=4",class:"list-group-ite"%></td>						
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_9"><%=link_to "理學院","?q[colleges_id_eq]=9",class:"list-group-ite"%></td>
+        </div><!-- /input-group -->
+      </div>
+    </div>
+  <% end %>
+  </br>
+  <div class="row">
+    <table id="link-group" class="table table-bordered text-center" style="" >
+      <tr>
+        <td>
+          <%=link_to "新增商品", new_book_path, class:"btn btn-success", style:"font-size:14px;" %>
+        </td>
+        <td>
+          <% if current_user %>
+            <%=link_to "我的商品", "/books/?mine=true", class:"btn btn-info", style:"font-size:14px;" %>
+          <% else %>
+            <%=link_to "我的商品", "javascript:void(0);", class:"btn btn-info", style:"font-size:14px;", disabled:true %>
+          <% end %>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <h4 class="text-center" style="margin-top:-5px">排序</h4>
+  <div class="row text-center">
+    <div id="sort-group" class="btn-group filter-group" role="group" aria-label="">
+      <%= sort_link(@q, :price,"價錢") %>
+      <%= sort_link(@q, :created_at,"日期") %>
+    </div>
+  </div>
 
-			</tr>
-			<tr class="list-grou text-center">
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_8"><%=link_to "光電學院","?q[colleges_id_eq]=8",class:"list-group-ite"%></td>					
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_2"><%=link_to "生科學院","?q[colleges_id_eq]=2",class:"list-group-ite"%></td>
+  <h4 class="text-center hidden-xs" style="/*margin-top:-5px*/">分類</h4>
+  <div class="row hidden-xs">
+    <table id="college-table" class="table table-bordered bg-white filter-group">
+      <tr class="list-grou text-center">
+        <td class="col-md-2 clickable-hover" id="departments_id_eq_8"><%=link_to "通識","?q[departments_id_eq]=8",class:"list-group-ite"%></td>
+        <td class="col-md-2 clickable-hover" id="departments_id_eq_9"><%=link_to "外文","?q[departments_id_eq]=9",class:"list-group-ite"%></td>
 
-			</tr>
-			<tr class="list-grou text-center">
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_7"><%=link_to "管理學院","?q[colleges_id_eq]=7",class:"list-group-ite"%></td>					
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_1"><%=link_to "人社學院","?q[colleges_id_eq]=1",class:"list-group-ite"%></td>
+      </tr>
+      <tr class="list-grou text-center">
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_3"><%=link_to "資訊學院","?q[colleges_id_eq]=3",class:"list-group-ite"%></td>
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_5"><%=link_to "電機學院","?q[colleges_id_eq]=5",class:"list-group-ite"%></td>
 
-			</tr>
-			<tr class="list-grou text-center">
-				<td class="col-md-2 clickable-hover" id="colleges_id_eq_6"><%=link_to "客家文化學院","?q[colleges_id_eq]=6",class:"list-group-ite"%></td>						
-				<td class="col-md-2 clickable-hover" id="cts_exists_false_1"><%=link_to "無分類","?q[cts_exists_false]=1",class:"list-group-ite"%></td>					
-			</tr>
-		</table>
-	</div>
-	<h4 class="text-center hidden-xs" style="margin-top:-5px">最新動態</h4>
-	<div class="row hidden-xs">
-		<ul class="list-group">
-			<% @recent.each do |stat| %>
-				<li class="list-group-item 
-					list-group-item-<%=(stat[:status]=="sold") ? "success" : "" %>
-					<% if stat[:status]=="new" %>
-						clickable-hover clickable-row
-					<% end %>
-					"
-					<% if stat[:status]=="new" %>
-						href="<%="/books/"+stat[:id].to_s%>"
-					<% end %>
-					>							
-					<%=distance_of_time_in_words(Time.now, stat[:time])%>	
-					<%=(stat[:status]=="sold") ? "售出了" : "新增了"%>
-					<%=stat[:name]%>  
-				</li>
-			<% end %>
-		</ul>
-	</div>
+      </tr>
+      <tr class="list-grou text-center">
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_4"><%=link_to "工學院","?q[colleges_id_eq]=4",class:"list-group-ite"%></td>
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_9"><%=link_to "理學院","?q[colleges_id_eq]=9",class:"list-group-ite"%></td>
+
+      </tr>
+      <tr class="list-grou text-center">
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_8"><%=link_to "光電學院","?q[colleges_id_eq]=8",class:"list-group-ite"%></td>
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_2"><%=link_to "生科學院","?q[colleges_id_eq]=2",class:"list-group-ite"%></td>
+
+      </tr>
+      <tr class="list-grou text-center">
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_7"><%=link_to "管理學院","?q[colleges_id_eq]=7",class:"list-group-ite"%></td>
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_1"><%=link_to "人社學院","?q[colleges_id_eq]=1",class:"list-group-ite"%></td>
+
+      </tr>
+      <tr class="list-grou text-center">
+        <td class="col-md-2 clickable-hover" id="colleges_id_eq_6"><%=link_to "客家文化學院","?q[colleges_id_eq]=6",class:"list-group-ite"%></td>
+        <td class="col-md-2 clickable-hover" id="cts_exists_false_1"><%=link_to "無分類","?q[cts_exists_false]=1",class:"list-group-ite"%></td>
+      </tr>
+    </table>
+  </div>
+  <h4 class="text-center hidden-xs" style="margin-top:-5px">最新動態</h4>
+  <div class="row hidden-xs">
+    <ul class="list-group">
+      <% @recent.each do |stat| %>
+        <li class="list-group-item
+          list-group-item-<%=(stat[:status]=="sold") ? "success" : "" %>
+          <% if stat[:status]=="new" %>
+            clickable-hover clickable-row
+          <% end %>
+          "
+          <% if stat[:status]=="new" %>
+            href="<%="/books/"+stat[:id].to_s%>"
+          <% end %>
+          >
+          <%=distance_of_time_in_words(Time.now, stat[:time])%>
+          <%=(stat[:status]=="sold") ? "售出了" : "新增了"%>
+          <%=stat[:name]%>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 </div>
 <div class="col-md-9 ">
-	<div class="row">
-		<% if @sale_books.count==0 %> 
-			<h3 class="text-center">尚無二手書 :目</h3>
-		<% end %>
-		<% @sale_books.each do |book| %>
-			<div class="col-md-4 col-sm-6">
-				<%=render "index_book_grid", :sale_book=>book %>
-			</div>
-		<% end %>		
-	</div>
-	<div class="row">
-		<%= paginate @sale_books, :window=>2 %>
-	</div>
+  <div class="row">
+    <% if @sale_books.count==0 %>
+      <h3 class="text-center">尚無二手書 :目</h3>
+    <% end %>
+    <% @sale_books.each do |book| %>
+      <div class="col-md-4 col-sm-6">
+        <%=render "index_book_grid", :sale_book=>book %>
+      </div>
+    <% end %>
+  </div>
+  <div class="row">
+    <%= paginate @sale_books, :window=>2 %>
+  </div>
 </div>
 
 <script>
-	$(function () {
-		<% if params[:q].present? %>
-			<% params[:q].each do |key,value| %>
-				$("#<%="#{key}_#{value}"%>").addClass("active");
-			<% end %>
-		<% end %>	
-		$("#sort-group").find("a").addClass("btn btn-default"); 
-		$("#sort-group").find(".asc").addClass("active");
-		$("#sort-group").find(".desc").addClass("active");
-		$("#college-table").find("td").click(function(){
-			$(this).find("a")[0].click();
-			//console.log($(this).find("a"));
-		});
-		$("[data-toggle='popover']").popover({
-			trigger:"hover",
-			placement:"bottom",
-			html:true
-		});
+  $(function () {
+    <% if params[:q].present? %>
+      <% params[:q].each do |key,value| %>
+        $("#<%="#{key}_#{value}"%>").addClass("active");
+      <% end %>
+    <% end %>
+    $("#sort-group").find("a").addClass("btn btn-default");
+    $("#sort-group").find(".asc").addClass("active");
+    $("#sort-group").find(".desc").addClass("active");
+    $("#college-table").find("td").click(function(){
+      $(this).find("a")[0].click();
+      //console.log($(this).find("a"));
+    });
+    $("[data-toggle='popover']").popover({
+      trigger:"hover",
+      placement:"bottom",
+      html:true
+    });
 
-		$(".category-a").click(function(){
-			$(".category-a").removeClass("active");
-			$(this).addClass("active");
-		});
-		
-		$(".clickable-row").click(function() {
-			goToHref($(this).attr("href"),true);
-		});
-	
-	});
-	function setBookSaled(id){
-		if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))
-			return false;
-		$.ajax({
-			type:"POST",
-			url:"/books/"+id,
-			data:{
-			  _method: "PATCH",
-				"book_trade_info[status]":1
-			},
-			success:function(){
-				$("#book-"+id).find("#control-bar").remove();
-				$("#book-"+id).find("img.hidden").removeClass("hidden");
-			},
+    $(".category-a").click(function(){
+      $(".category-a").removeClass("active");
+      $(this).addClass("active");
+    });
+
+    $(".clickable-row").click(function() {
+      goToHref($(this).attr("href"),true);
+    });
+
+  });
+  function setBookSaled(id){
+    if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))
+      return false;
+    $.ajax({
+      type:"POST",
+      url:"/books/"+id,
+      data:{
+        _method: "PATCH",
+        "book_trade_info[status]":1
+      },
+      success:function(){
+        $("#book-"+id).find("#control-bar").remove();
+        $("#book-"+id).find("img.hidden").removeClass("hidden");
+      },
       error: function(){
         toastr["warning"]('update fail.');
       },
-			
-		});
-		
-	}
+
+    });
+
+  }
 </script>
