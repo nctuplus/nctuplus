@@ -183,9 +183,10 @@
 		if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))
 			return false;
 		$.ajax({
-			type:"PATCH",
+			type:"POST",
 			url:"/books/"+id,
 			data:{
+			  _method: "PATCH",
 				"book_trade_info[status]":1
 			},
 			success:function(){
