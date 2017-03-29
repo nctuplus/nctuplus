@@ -1,0 +1,18 @@
+<% if sale_book.user==current_user && sale_book.status==0%>
+  <div class="modal fade" id="modal-<%=sale_book.id%>" role="dialog">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">您確定將此本書設為已售出嗎?(設定完不可再做變更)</h4>
+        </div>
+        <div class="modal-body">
+          <p>您確定將此本書設為已售出嗎?(設定完不可再做變更)</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">否</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" onclick="setBookSaled(<%=sale_book.id%>);" title="設成已賣出">是</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>
