@@ -139,6 +139,7 @@
     <% end %>
     <% @sale_books.each do |book| %>
       <div class="col-md-4 col-sm-6">
+      	<%=render "modal", :sale_book=>book %>
         <%=render "index_book_grid", :sale_book=>book %>
       </div>
     <% end %>
@@ -179,8 +180,7 @@
 
   });
   function setBookSaled(id){
-    if(!confirm("您確定將此本書設為已售出嗎?(設定完不可再做變更)"))
-      return false;
+		closeModal(id);
     $.ajax({
       type:"POST",
       url:"/books/"+id,
@@ -198,5 +198,8 @@
 
     });
 
+  }
+  function closeModal(id){
+  	$("#modal-" + id).modal("hide");
   }
 </script>

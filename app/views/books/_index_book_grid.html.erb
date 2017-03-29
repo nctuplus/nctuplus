@@ -2,12 +2,12 @@
 	<div id="control-bar" style="width:100%;position: absolute;" onmouseover="$(this).parent().attr('onclick','')" onmouseleave="$(this).parent().attr('onclick','goToHref($(this).attr(\'href\'));')">
 		<% if sale_book.user==current_user && sale_book.status==0%>
 			<%=link_to fa_icon("pencil"), edit_book_path(sale_book),class:"btn btn-sm btn-warning" %>
-			<%=button_tag fa_icon("check"), class:"btn btn-sm btn-success",onclick:"setBookSaled(#{sale_book.id});", title:"設成已賣出" %>
+      <%=button_tag fa_icon("check"), class:"btn btn-sm btn-success", "data-toggle" => "modal", "data-target" => "#modal-#{sale_book.id}", type: "button" %>
 		<% end %>
 	</div>
 	<%=sale_book.cover_image%>
 	
-		<%=image_tag asset_path("soldout.png"), :class=>"img-soldout #{sale_book.status==0 ? 'hidden' : ''}" %>
+	<%=image_tag asset_path("soldout.png"), :class=>"img-soldout #{sale_book.status==0 ? 'hidden' : ''}" %>
 	
 	<div style="min-height:50px;margin-top:3px;padding-left:4px;" >
 		<div class="text-center" >
