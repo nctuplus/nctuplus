@@ -234,10 +234,13 @@ Devise.setup do |config|
   # ==> OmniAuth
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
-  config.omniauth :facebook, Facebook::APP_ID, Facebook::SECRET #, :scope => 'email,manage_notifications'
+  config.omniauth :facebook, Facebook::APP_ID, Facebook::SECRET, #, :scope => 'email,manage_notifications'
+  {
+    :token_params => { parse: :json }
+  }
   config.omniauth :google_oauth2, Google::APP_ID, Google::SECRET, {
     #    :scope =>'https://www.googleapis.com/auth/calendar',  #determine what we want user to provide (default are email and profile)
-         :skip_jwt => true
+    :skip_jwt => true
   }
   config.omniauth :NCTU, NCTUOAUTH::APP_ID, NCTUOAUTH::SECRET
   # ==> Warden configuration
