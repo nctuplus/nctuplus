@@ -141,7 +141,6 @@ ActiveRecord::Schema.define(version: 20170131153409) do
     t.datetime "updated_at"
     t.string   "update_user"
     t.boolean  "hidden_type",  default: false,                 null: false
-    t.boolean  "schedule",     default: false,                 null: false
     t.datetime "begin_time",   default: '2017-01-01 00:00:00'
     t.datetime "end_time",     default: '2017-01-01 00:00:00'
   end
@@ -421,6 +420,20 @@ ActiveRecord::Schema.define(version: 20170131153409) do
 
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
+  create_table "file_infos", force: true do |t|
+    t.integer  "owner_id"
+    t.integer  "course_teachership_id"
+    t.integer  "semester_id"
+    t.string   "description"
+    t.integer  "download_times"
+    t.string   "upload_file_name"
+    t.string   "upload_content_type"
+    t.integer  "upload_file_size"
+    t.datetime "upload_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "global_variables", force: true do |t|
     t.string   "data"
     t.string   "desc"
@@ -511,15 +524,6 @@ ActiveRecord::Schema.define(version: 20170131153409) do
 
   add_index "user_coursemapships", ["course_map_id"], name: "index_user_coursemapships_on_course_map_id", using: :btree
   add_index "user_coursemapships", ["user_id"], name: "index_user_coursemapships_on_user_id", using: :btree
-
-  create_table "user_events", force: true do |t|
-    t.string   "name"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.integer  "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "user_favorite_courses", force: true do |t|
     t.integer  "user_id"
