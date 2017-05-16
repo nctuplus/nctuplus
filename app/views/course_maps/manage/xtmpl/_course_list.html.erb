@@ -1,7 +1,7 @@
 <script type="text/x-tmpl" id="normal-course-table-tmpl">
 {% if(o.length > 0){ %}
 	{% for(var i=0,list ; list=o[i]; i++){ %}
-		<table class="table single-table no-margin-bottom">
+    <table class="table single-table no-margin-bottom" cfl_id="{%=o[i].cfl_id%}">
 			{% include("single-course-row-tmpl",list); %}
 		</table>
 	{% } %}
