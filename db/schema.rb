@@ -420,23 +420,18 @@ ActiveRecord::Schema.define(version: 20170131153409) do
 
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
-  create_table "file_infos", force: true do |t|
-    t.integer  "owner_id"
-    t.integer  "course_teachership_id"
-    t.integer  "semester_id"
-    t.string   "description"
-    t.integer  "download_times"
-    t.string   "upload_file_name"
-    t.string   "upload_content_type"
-    t.integer  "upload_file_size"
-    t.datetime "upload_updated_at"
+  create_table "global_variables", force: true do |t|
+    t.string   "data"
+    t.string   "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "global_variables", force: true do |t|
-    t.string   "data"
-    t.string   "desc"
+  create_table "meetings", force: true do |t|
+    t.string   "name"
+    t.string   "description"
+    t.datetime "start_time"
+    t.datetime "end_time"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -510,6 +505,13 @@ ActiveRecord::Schema.define(version: 20170131153409) do
     t.integer  "target_id"
     t.integer  "semester_id"
     t.string   "name",        default: ""
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "user_course_detailships", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "course_detail_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
