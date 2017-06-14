@@ -21,4 +21,10 @@ function showHasSelected(){
 		//console.log(data);
 		$(".scrollable").html(tmpl("search_result", data));
 	});
+
 }
+
+function hideGeneralCourseError() {
+        $(".com-cour-error").fadeOut("slow");
+}
+

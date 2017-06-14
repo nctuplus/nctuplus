@@ -420,20 +420,6 @@ ActiveRecord::Schema.define(version: 20170131153409) do
 
   add_index "events", ["user_id"], name: "index_events_on_user_id", using: :btree
 
-  create_table "file_infos", force: true do |t|
-    t.integer  "owner_id"
-    t.integer  "course_teachership_id"
-    t.integer  "semester_id"
-    t.string   "description"
-    t.integer  "download_times"
-    t.string   "upload_file_name"
-    t.string   "upload_content_type"
-    t.integer  "upload_file_size"
-    t.datetime "upload_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "global_variables", force: true do |t|
     t.string   "data"
     t.string   "desc"
