@@ -1,0 +1,169 @@
+
+
+.ans{
+  padding: 0px 3% 0px 3%;
+}
+
+.cover{
+  #background: #FFFFFF;
+  min-width: 100%;
+  padding: 10px 3% 10px 1%;
+  #margin: 20px 25px 0 10px;
+}
+
+.col-left{
+  background-color: #333333;
+  padding: 160px 0 30px 0;
+  height: 1500px;
+  width: 252px;
+  
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 1px 0 1px;
+  position: fixed;
+  top: -5px;
+}
+
+.col-right{
+  #background-color: #F5F5F5;
+  margin-left: 252px;
+}
+
+
+h5{
+  line-height: 175%;
+  color: #4B5150;
+  font-size: 16px;
+}
+
+h2{
+  font-weight: bold;
+}
+
+h1{
+  font-size: 28px;
+}
+
+
+li div{
+    display: block;
+    color: #CCC;
+    text-decoration: none;
+	-ms-user-select: none;
+	-webkit-user-select: none; 
+	-moz-user-select: none; 
+}
+
+li div.active {
+	font-weight: bold;
+    color: #008AC3;
+	-ms-user-select: none;
+	-webkit-user-select: none; 
+	-moz-user-select: none; 
+}
+
+li div:hover:not(.active) {
+   # background-color: #555;
+    color: #FFF;
+	cursor: pointer;
+	-ms-user-select: none;
+	-webkit-user-select: none; 
+	-moz-user-select: none; 
+}
+
+.ques-and-ans{
+  background: #FFFFFF;
+  min-width: 100%;
+  padding: 10px 20px 20px 20px;
+  margin: 20px 25px 0 10px;
+  border-style: outset;
+  border-width: 1px;
+  border-color: #F5F5F5;
+}
+
+.ques{
+  padding: 0px 0px 2px 0.5%;
+}
+
+.row{
+  background-color: #F5F5F5;
+  position: relative;
+  top: -5px;
+  margin-top: -30px;
+  
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 1px 0 1px;
+}
+
+.selection{
+  background: #333333;
+  padding: 5px 0 5px 0;
+  margin: 20px 35px 0 0;
+  border-color: #FFF;
+  border-style: solid;
+  border-width: 0 0 1px 0;
+  
+  color: #FFF;
+  text-align: center;
+  font-size: 18px;
+  
+}
+
+.topic{
+  padding: 0px 5px 5px 5px;
+  margin-top: 60px;
+  text-align: center;
+}
+
+ul {
+    list-style-type: none;
+}
+
+@media(min-width: 1024px){
+  .course{
+    max-width:800px;
+  }
+}
+
+@media(max-width: 800px){
+	
+	
+
+  .col-left{
+     width: 150px;
+	 padding: 80px 0 30px 0;
+  }
+  .selection{
+	  background: #333333;
+	  padding: 5px 0 5px 0;
+	  margin: 20px 0px 0 -40px;
+	  text-align: center;
+	  font-size: 14px;
+	  border-width: 0 0 0 0;
+  }
+  .col-right{
+	margin-left: 150px;
+  }
+}
+
+@media(max-width: 480px){
+	  
+  .col-left{
+    display:none;
+  }
+  .col-right{
+	margin-left: 0px;
+	margin-top: -30px;
+  }
+  .row{
+	display:hidden;
+	background-color: transparent;
+	top: -5px;
+	border-width: 0 0 0 0;
+  }
+  .cover{
+	  padding: 10px 3% 10px 0;
+	  margin: 0 0 0 -6px;
+  }
+}

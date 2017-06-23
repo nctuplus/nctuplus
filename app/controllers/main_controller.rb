@@ -45,5 +45,10 @@ class MainController < ApplicationController
   def allow_iframe
     response.headers.except! 'X-Frame-Options'
   end
+  
+  def faq
+  end
+
+
 
 end

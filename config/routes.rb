@@ -1,114 +1,114 @@
 Nctuplus::Application.routes.draw do
 
-  root :to => "main#index"
+	root :to => "main#index"
+	
+#----------- [devise] user account concerned -----------	
+	devise_for :users, #:skip=>[:registrations, :confirmations, :passwords],
+             :controllers => { :omniauth_callbacks => "callbacks"},
+             :path=>"/",
+             :path_names => {
+              :sign_in  => 'login',
+              :sign_out => 'logout' }
 
-  #----------- [devise] user account concerned -----------
-  devise_for :users, #:skip=>[:registrations, :confirmations, :passwords],
-    :controllers => { :omniauth_callbacks => "callbacks"},
-    :path=>"/",
-    :path_names => {
-    :sign_in  => 'login',
-    :sign_out => 'logout' }
+#--------- bulletin -----------
+	resources :bulletin
 
-  #--------- bulletin -----------
-  resources :bulletin
+#--------- slogan -----------
+	resources :slogan
 
-  #--------- slogan -----------
-  resources :slogan
+#--------- backgrounds -----------
+	resources :backgrounds
 
-  #--------- backgrounds -----------
-  resources :backgrounds
+#--------- lab -----------
+	resources :lab
 
-  #--------- lab -----------
-  resources :lab
+#--------- events -----------
+	resources :events do
+		collection do
+			post "attend"
+		end
+	end
+	
+#--------- for share course table page -----------
+	get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
+	# update user share and return json hash id 
+	post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
+	# update share course table image
+	post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
+	# add to user collection
+	post "user/update", to: "user#user_collection_action", :constraints => lambda{ |req| req.params[:type].include? "collection"}
+	# show user collections lists
+	get "user/collections"
+	get "user/courses"
+#----------- for other usage -----------
 
-  #--------- events -----------
-  resources :events do
-    collection do
-      post "attend"
-    end
-  end
+	get "main/index"
+	get "main/policy_page"
+	get "main/member_intro"	
+	post "/main/get_specified_classroom_schedule" # for ems curl
+	get "main/fb"
+	post "main/fb"
+  get "main/faq"
+        
+#----------- for search -----------	
+	get "search/cts"
+	
+#----------- for development test -----------
+if Rails.env.development?	
+	get "main/test"
+end
 
-  #--------- for share course table page -----------
-  get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
-  # update user share and return json hash id 
-  post "user/update", to: "user#update_user_share", :constraints => lambda{ |req| req.params[:type]=="share"}
-  # update share course table image
-  post "user/update", to: "user#upload_share_image", :constraints => lambda{ |req| req.params[:type]=="upload_share_image" and req.params[:semester_id] =~ /\d/ } 
-  # add to user collection
-  post "user/update", to: "user#user_collection_action", :constraints => lambda{ |req| req.params[:type].include? "collection"}
-  # show user collections lists
-  get "user/collections"
-  get "user/courses"
-  #----------- for other usage -----------
+#---------- admin page -----------
+	
+ 	get 	"admin/statistics"
+	get 	"admin/ee105"
+	get 	"admin/users"
+	post 	"admin/change_role"
+	post 	"admin/change_dept"
+	get 	"admin/course_maps" #, to: "course_maps#admin_index"
+	
+#---------- user -----------
+	get "user", to: "user#show"	#user personal page
+	get "user/this_sem"
+	get "user/statistics"
+	get "user/statistics_table"
+	
+	get "user/add_course"
+	get "user/delete_course"
+	get "user/get_courses"
+	get "user/all_courses"
+	
+	get "user/edit"
+	patch "user/update"	
+	get "user/select_cs_cf"
+	get "user/select_cm"
+	post "user/select_cm"
+	
+#---------- scores -----------
+	post "scores/import"
+	get "scores/import"
+	get "scores/select_cf"
+	get "scores/gpa"
+	
+#----------- course_content -----------
+	post "course_content/raider"
+	get "course_content/raider"	
+	get "course_content/raider_list_like"
+	get "course_content/rate_cts"
+	get "course_content/get_compare"	
+	get "course_content/single_compare"	
+	get "course_content/get_course_info"
+	post "course_content/course_action"
+	
+#----------- for discusses -----------
+	resources :discusses do
+		collection do
+			get "list_by_ct"
+			get "like"
+		end
+	end
 
-  get "main/index"
-  get "main/policy_page"
-  get "main/member_intro"	
-  post "/main/get_specified_classroom_schedule" # for ems curl
-  get "main/fb"
-  post "main/fb"
-
-  #----------- for search -----------	
-  get "search/cts"
-
-  #----------- for development test -----------
-  if Rails.env.development?	
-    get "main/test"
-  end
-
-  #---------- admin page -----------
-
-  get 	"admin/statistics"
-  get 	"admin/ee105"
-  get 	"admin/users"
-  post 	"admin/change_role"
-  post 	"admin/change_dept"
-  get 	"admin/course_maps" #, to: "course_maps#admin_index"
-
-  #---------- user -----------
-  get "user", to: "user#show"	#user personal page
-  get "user/this_sem"
-  get "user/statistics"
-  get "user/statistics_table"
-
-  get "user/add_course"
-  get "user/delete_course"
-  get "user/get_courses"
-  get "user/all_courses"
-
-  get "user/edit"
-  patch "user/update"	
-  get "user/select_cs_cf"
-  get "user/select_cm"
-  post "user/select_cm"
-
-  #---------- scores -----------
-  post "scores/import"
-  post "scores/import_json"
-  get "scores/import"
-  get "scores/select_cf"
-  get "scores/gpa"
-
-  #----------- course_content -----------
-  post "course_content/raider"
-  get "course_content/raider"	
-  get "course_content/raider_list_like"
-  get "course_content/rate_cts"
-  get "course_content/get_compare"	
-  get "course_content/single_compare"	
-  get "course_content/get_course_info"
-  post "course_content/course_action"
-
-  #----------- for discusses -----------
-  resources :discusses do
-    collection do
-      get "list_by_ct"
-      get "like"
-    end
-  end
-
-  #---------- for past_exams -----------
+#---------- for past_exams -----------
   resources :past_exams, :except=>[:edit] do
     collection do
       get "course_page"

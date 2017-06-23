@@ -1,0 +1,267 @@
+<%= stylesheet_link_tag 'faq' %>
+
+<script>
+$(function(){
+	
+	$(window).scroll(function () {
+		
+		var NowScroll = $(this).scrollTop()+60;
+		var Now1 = (NowScroll >= 0) && (NowScroll < $('#2').offset().top);
+		var Now2 = (NowScroll >= $('#2').offset().top) && (NowScroll < $('#3').offset().top);
+		var Now3 = (NowScroll >= $('#3').offset().top) && (NowScroll < $('#3').offset().top+190);
+		
+		var goto1Data = document.getElementById("goto1");
+		var goto2Data = document.getElementById("goto2");
+		var goto3Data = document.getElementById("goto3");
+		var goto4Data = document.getElementById("goto4");
+		
+		goto1Data.className ="";
+		goto2Data.className ="";
+		goto3Data.className ="";
+		goto4Data.className ="";
+		
+		if(Now1) goto1Data.className ="active";
+		else if(Now2) goto2Data.className ="active";
+		else if(Now3) goto3Data.className ="active";
+		else  goto4Data.className ="active";
+		
+	});
+
+	
+	$('#goto1').click(function(){
+		$('html,body').animate({scrollTop:$('#1').offset().top}, 500); 
+	});
+	$('#goto2').click(function(){
+		$('html,body').animate({scrollTop:$('#2').offset().top}, 500); 
+	});
+	$('#goto3').click(function(){
+		$('html,body').animate({scrollTop:$('#3').offset().top}, 500); 
+	});
+	$('#goto4').click(function(){
+		$('html,body').animate({scrollTop:$('#4').offset().top}, 500); 
+	});
+});
+
+</script>
+
+<body>
+
+<div class="container">
+<div class="row">
+	<nav class="col-left">
+	<ul>
+		<li class="selection">
+			<div id="goto1" class="active">登入問題</div>
+		</li>
+		
+		<li class="selection">
+			<div id="goto2">課表/排課/選課</div>
+		</li>
+		
+		<li class="selection">
+			<div id="goto3">匯入成績</div>
+		</li>
+		
+		<li class="selection">
+			<div id="goto4">其他問題</div>
+		</li>
+		
+		
+	</ul>
+	</nav>
+	
+	
+	
+	
+	<div class="col-right">
+		<div class="cover" id="1">
+			<div class="topic">
+				<h2>
+					登入問題
+				</h2>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>登入後出現<br></h1>
+					<h3>「The change you wanted was rejected. Maybe you tried to change something you didn't have access to.」<h3>
+				</div>
+				<div class="ans">
+					<h5>
+					這部分為工程問題，請將學號回報給<a href="https://www.facebook.com/nctuplus">粉絲專頁</a>。
+					<br>
+					
+					
+					</h5>
+				</div>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>無法使用交大單一窗口登入</h1>
+				</div>
+				<div class="ans">
+					<h5>如果是第一次使用的話，記得先申請授權。如果還是不行，請回報<a href="https://www.facebook.com/nctuplus">粉絲專頁</a>。
+					</h5>
+					
+				</div>
+			</div>
+			
+			
+			
+		</div>
+	</div>
+	
+	
+	<div class="col-right">
+		<div class="cover" id="2">
+			<div class="topic">
+				<h2>
+					課表/排課/選課
+				</h2>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>課表資訊有誤怎麼辦？</h1>
+				</div>
+				<div class="ans">
+					<h5>
+					這部分請回報<a href="https://www.facebook.com/nctuplus">粉絲專頁</a>，我們將幫你做修正。
+					
+					</h5>
+				</div>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>之前課表填錯，現在還能修正嗎？</h1>
+				</div>
+				<div class="ans">
+					<h5>可以。只要匯入成績就可以更新正確課表。
+					</h5>
+					
+				</div>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>是否有功能查詢各系各年級各學期必修課表？</h1>
+				</div>
+				<div class="ans">
+					<h5>
+					有。在「模擬排課」可以看到此功能。
+					
+					</h5>
+				</div>
+			</div>
+			
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>什麼是推薦選課功能？</h1>
+				</div>
+				<div class="ans">
+					<h5>
+					這是根據登入填的系級資訊所做出對應的推薦課程資訊。
+
+					
+					</h5>
+				</div>
+			</div>
+			
+			
+			
+		</div>
+	</div>
+	
+	
+	<div class="col-right">
+		<div class="cover" id="3">
+			<div class="topic">
+				<h2>
+					匯入成績
+				</h2>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>點選匯入成績跑出「登入NCTU帳號以開啟此功能」</h1>
+				</div>
+				<div class="ans">
+					<h5>
+					目前使用的應該是facebook或google帳號登入，如果要使用匯入成績功能的話，要使用交大單一入口登入。
+					
+					</h5>
+				</div>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>登入之後顯示「請匯入自己的成績，謝謝！」</h1>
+				</div>
+				<div class="ans">
+					<h5>請改用校園登入試試看。					
+					</h5>
+					
+				</div>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>之前沒用使用NCTU+，可以補傳修課資料和分數做GPA計算嗎？</h1>
+				</div>
+				<div class="ans">
+					<h5>可以。					
+					</h5>
+				</div>
+			</div>
+			
+		</div>
+	</div>
+	
+	
+	<div class="col-right">
+		<div class="cover" id="4">
+			<div class="topic">
+				<h2>
+					其他問題
+				</h2>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>活動吧填入資訊送出後顯示「大學WAF阻擋通知」</h1>
+				</div>
+				<div class="ans">
+					<h5>
+					有些格式貼上去會被學校視為攻擊，麻煩請先用純文字代替，如果還是不行請回報<a href="https://www.facebook.com/nctuplus">粉絲專頁</a>。
+					
+					</h5>
+				</div>
+			</div>
+			
+			<div class="ques-and-ans">
+				<div class="ques">
+					<h1>我想提供一些使用上的建議</h1>
+				</div>
+				<div class="ans">
+					<h5>可以將你的想法寄到我們的信箱（nctuplus@gmail.com）或是<a href="https://www.facebook.com/nctuplus">粉絲專頁</a>，一起讓NCTU+越來越好吧！
+
+					</h5>
+					
+				</div>
+			</div>
+			
+						
+		</div>
+	</div>
+	
+	
+	
+	
+</div>
+</div>
+
+
+</body>
