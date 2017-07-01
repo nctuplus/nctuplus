@@ -1,6 +1,9 @@
 class MainController < ApplicationController
  after_action :allow_iframe, only: :fb
 
+  def calendar
+  end
+
   def fb
   end
 
