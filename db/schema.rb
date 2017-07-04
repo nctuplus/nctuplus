@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170131153409) do
+ActiveRecord::Schema.define(version: 20170704160235) do
 
   create_table "agreed_scores", force: true do |t|
     t.integer "user_id",         default: 0,    null: false
@@ -245,6 +245,7 @@ ActiveRecord::Schema.define(version: 20170131153409) do
     t.integer  "view_times",            default: 0, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "brief_new"
   end
 
   add_index "course_details", ["course_teachership_id"], name: "index_new_course_details_on_course_teachership_id", using: :btree
