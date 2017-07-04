@@ -54,8 +54,8 @@
 						<% if !sub_d.user.hasSocialAuth? %>
 							<%= image_tag asset_path("anonymous.jpg"), size: "45x45", style:"margin-top:10px;", alt:"Anonymous", title:sub_d.owner_name %>
 						<% else %>
-							<a href="<%=discuss.user.social_webpage_url%>" target="_blank" class="masterTooltip" title="<%=sub_d.owner_name%>">
-								<%= image_tag discuss.user.avatar_url, size: "45x45", class:"", style:"margin-top:10px;"  %>
+							<a href="<%=sub_d.user.social_webpage_url%>" target="_blank" class="masterTooltip" title="<%=sub_d.owner_name%>">
+								<%= image_tag sub_d.user.avatar_url, size: "45x45", class:"", style:"margin-top:10px;"  %>
 							</a>
 						<% end %>
 						<br>
