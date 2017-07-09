@@ -1,11 +1,15 @@
 class MainController < ApplicationController
  after_action :allow_iframe, only: :fb
 
-  def calendar
-  end
+    def calendar
+    end
+    
+    def calendar_api
+       render file: "main/test.json", layout: false, content_type: 'application/json' 
+    end
 
-  def fb
-  end
+    def fb
+    end
 
 	def test
 		#@courses=BookTradeInfo.search({:colleges_id_eq=>0}).result(:distinct=>true)
@@ -16,19 +20,19 @@ class MainController < ApplicationController
 		if current_user && (current_user.year==0 || current_user.department.nil?)
 			alertmesg('info','warning', "請填寫系級" )
 			redirect_to "/user/edit"
-		end
-    time = Time.now.utc
-    @news = Bulletin.where("article_type AND (!hidden_type OR (hidden_type AND \"#{time}\" > begin_time AND \"#{time}\" < end_time))").reverse_order()
-    @updates = Bulletin.where("!article_type AND (!hidden_type OR (hidden_type AND \"#{time}\" > begin_time AND \"#{time}\" < end_time))").reverse_order()
-    @slogans = Slogan.where("!hidden_type").limit(1).order("rand()")
-    if !params[:bid].nil?
-      @backgrounds = Array(Background.find(params[:bid]))
-    else
-      @backgrounds = Background.all
-    end
-    @checkimg = (!params[:bid].nil?  && current_user && !current_user.isNormal?)
+        end
+        time = Time.now.utc
+        @news = Bulletin.where("article_type AND (!hidden_type OR (hidden_type AND \"#{time}\" > begin_time AND \"#{time}\" < end_time))").reverse_order()
+        @updates = Bulletin.where("!article_type AND (!hidden_type OR (hidden_type AND \"#{time}\" > begin_time AND \"#{time}\" < end_time))").reverse_order()
+        @slogans = Slogan.where("!hidden_type").limit(1).order("rand()")
+        if !params[:bid].nil?
+          @backgrounds = Array(Background.find(params[:bid]))
+        else
+          @backgrounds = Background.all
+        end
+        @checkimg = (!params[:bid].nil?  && current_user && !current_user.isNormal?)
 
-  end
+    end
 
 	def get_specified_classroom_schedule
   	if params[:token_id]=="ems5566"

@@ -49,6 +49,7 @@ Nctuplus::Application.routes.draw do
   get "main/fb"
   post "main/fb"
   get "main/calendar"
+  get "main/calendar_api"
 
   #----------- for search -----------	
   get "search/cts"
