@@ -1,0 +1,60 @@
+[
+	{
+		"MaterialType": "announcement",
+		"CrsYear": 105,
+		"CrsSemester": 2,
+		"CourseNo": "0311",
+		"CourseName": "微積分甲（二）",
+		"Title": "Firstterm(Mar31)",
+		"TimeStart": "\/Date(1489334400000)\/",
+		"TimeEnd": "\/Date(1489334400000)\/"
+	},
+	
+	{
+		"MaterialType": "announcement",
+		"CrsYear": 105,
+		"CrsSemester": 2,
+		"CourseNo": "0312",
+		"CourseName": "這是課名",
+		"Title": "這是七月五日的公告",
+		"TimeStart": "\/Date(1499184000000)\/",
+		"TimeEnd": "\/Date(1499184000000)\/"
+	},
+	
+	{
+		"MaterialType": "homework",
+		"CrsYear": 105,
+		"CrsSemester": 2,
+		"CourseNo": "0312",
+		"CourseName": "這是課名",
+		"Title": "這是七月五日開始七月六日Deadline的作業",
+		"TimeStart": "\/Date(1489334400000)\/",
+		"TimeEnd": "\/Date(1499270400000)\/"
+	},
+	
+	{
+		"MaterialType": "announcement",
+		"CrsYear": 105,
+		"CrsSemester": 2,
+		"CourseNo": "0311",
+		"CourseName": "微積分甲（二）",
+		"Title": "這是7月8日的公告",
+		"TimeStart": "\/Date(1499443200000)\/",
+		"TimeEnd": "\/Date(1499443200000)\/"
+	},
+	
+	{
+		"MaterialType": "event",
+		"CrsYear": 105,
+		"CrsSemester": 2,
+		"CourseNo": "0311",
+		"CourseName": "微積分甲（二）",
+		"Title": "這是7月5日的活動!",
+		"TimeStart": "\/Date(1499184000000)\/",
+		"TimeEnd": "\/Date(1499184000000)\/"
+	}
+	
+	
+
+
+]
