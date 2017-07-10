@@ -1,13 +1,6 @@
 class MainController < ApplicationController
  after_action :allow_iframe, only: :fb
 
-    def calendar
-    end
-    
-    def calendar_api
-       render file: "main/test.json", layout: false, content_type: 'application/json' 
-    end
-
     def fb
     end
 

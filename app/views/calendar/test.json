@@ -45,16 +45,9 @@
 	
 	{
 		"MaterialType": "event",
-		"CrsYear": 105,
-		"CrsSemester": 2,
-		"CourseNo": "0311",
-		"CourseName": "微積分甲（二）",
 		"Title": "這是7月5日的活動!",
 		"TimeStart": "\/Date(1499184000000)\/",
 		"TimeEnd": "\/Date(1499184000000)\/"
 	}
-	
-	
-
 
 ]
