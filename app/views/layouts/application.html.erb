@@ -14,6 +14,12 @@
   <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
   <%= csrf_meta_tags %>
 
+  <!-- custom js/css for different page -->
+  <% if content_for? :custom_assets %>
+    <%= yield :custom_assets %> 
+  <% end %>
+  <!-- custom js/css end -->
+
 	<!-- for touch-icon -->
 	<link rel="apple-touch-icon" href="<%=asset_path("touch-icon/iphone.png")%>" /> 
 	<link rel="apple-touch-icon" sizes="76x76" href="<%=asset_path("touch-icon/ipad.png")%>" /> 
