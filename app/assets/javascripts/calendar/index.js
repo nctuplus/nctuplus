@@ -1,3 +1,16 @@
+//
+// index.js 
+//  
+// Jobs:
+// Effects on page initialization
+// Install event callback
+// Controll how all js in this page work together
+//
+// Js import directive for RoR:
+//= require calendar/render.js
+//= require calendar/callback.js
+//
+alert('index!');
 var currentdate = new Date(); 
 var cyear = currentdate.getFullYear();
 var cmonth = currentdate.getMonth();
