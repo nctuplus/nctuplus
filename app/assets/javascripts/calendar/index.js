@@ -37,6 +37,10 @@ $(document).ready(function(){
   $("#bar4").click(callback.bar4_click);
   $("#bar5").click(callback.bar5_click);
 
+  var btns = $('#cal-month .btn-month');
+  $(btns[0]).click(calendar.preMonth);
+  $(btns[1]).click(calendar.nxtMonth);
+  $('.tag-bell .today').click(calendar.thisMonth);
 /*
   $('.content').popover({
         content: $(".content").html(),

@@ -11,14 +11,9 @@
   height: 40px;
   margin: -5px 0 0 0;
   border-width: 0;
-
 }
 
-.btn-month:hover:not(.active) {
-  background: #689FCF;
-  cursor: pointer;
-}
-
+.btn-month:hover:not(.active),
 .btn-month:active {
   background: #689FCF;
   cursor: pointer;
@@ -30,8 +25,12 @@
   width: 14.28%;
   margin: 0 0 0 0;
   border-width: 0;
-
   float:left;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+  font-size: 30px;
 }
 
 .sel-month{

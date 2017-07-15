@@ -9,12 +9,12 @@
   <div class="row big-row">
     <div class="col-md-9 col-xs-12 calendar">
       <div class="row" id="cal-month">
-        <div class="btn-month" onclick="preMonth()"></div>
+        <div class="btn-month"><</div>
         <div class="sel-month">
           <h2>>.0   
           </h2>
         </div>
-        <div class="btn-month" onclick="nxtMonth()"></div>
+        <div class="btn-month">></div>
       </div>
 
       <div class="weekdays">
@@ -575,7 +575,7 @@
 
 
       <div class="tag-bell">
-        <div class="today" onclick="thisMonth()"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
+        <div class="today"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
         <div class="e3">
           <div class="title-bar" id="bar1">e3 公告</div>
           <div class="thing"><div class="rec"></div><div class="content">[資料庫系統概論] HW4 - DB分組</div></div>
