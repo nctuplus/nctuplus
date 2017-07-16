@@ -39,20 +39,23 @@ var callback = {
   bar1_click: function() {
     $("#bar1").nextAll().toggle("fast");
   },
-
   bar2_click: function() {
     $("#bar2").nextAll().toggle("fast");
   },
-
   bar3_click: function() {
     $("#bar3").nextAll().toggle("fast");
   },
-
   bar4_click: function() {
     $("#bar4").nextAll().toggle("fast");
   },
-
   bar5_click: function() {
     $("#bar5").nextAll().toggle("fast");
   },
+
+  dateBox_click: function(event) {
+
+    var date = event.data;
+    calendar.selectDate(date);
+
+  }
 }
