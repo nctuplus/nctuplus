@@ -78,13 +78,9 @@ var calendar = {
   draw: function(year, month) {
 
     // 計算開始日期
-    var date;
-    date = new Date(year, month-1, 1);
+    var date = new Date(year, month-1, 1);
     var dayOfFirst = date.getDay();
-    date = new Date(year, month, 0);
-    var dateOfLast = date.getDate();
-    date = new Date(year, month-1, -dayOfFirst+1);
-    var dateOfFirstSunday = date.getDate();
+    date = new Date(year, month-1, -dayOfFirst+1); // date of first Sunday
 
     // 修改月曆標題時間
     $('#cal-month').find('.sel-month').html(`<h2>${month}月 ${year}</h2>`);
@@ -93,53 +89,36 @@ var calendar = {
     for (var i = 0; i < 6; i++) {
       var week = $('<div class="week"></div>').appendTo('#cal-date');
       for (var j = 0; j < 7; j++) {
-        var dateBox = $('<div class="date-box"></div>').appendTo(week);
-        var date = dateBox.append('<div class="date"></div>');
+        var curMon = date.getMonth()+1, curDate = date.getDate();
+        var dateBox = $(`<div class="date-box" id="db_${curMon}_${curDate}"></div>`).appendTo(week);
+        var dateTxt = $(`<div class="date">${curDate}</div>`).appendTo(dateBox);
+
+        if (curMon != month) // 設定非當月class
+          dateBox.addClass('not-this-month');
+        dateBox.click(new Date(date), callback.dateBox_click);
+        date.setDate(date.getDate()+1);
       }
     }
 
-    // 寫上日期、非當月的date-box設定class: not-this-month
-    var index, boxes = $('#cal-date').find('.date-box');
-    // 上月
-    var prevMonth = (month-1+11)%12+1;
-    for (index=0, date=dateOfFirstSunday; index<dayOfFirst; index++,date++) {
-      $(boxes[index]).find('.date').text(date);
-      $(boxes[index]).attr('id', `db_${prevMonth}_${date}`);
-      $(boxes[index]).addClass('not-this-month');
-    }
-    // 本月
-    for (date=1; date<=dateOfLast; index++,date++) {
-      $(boxes[index]).find('.date').text(date);
-      $(boxes[index]).attr('id', `db_${month}_${date}`);
-    }
-    // 下月
-    var nextMonth = (month+1+11)%12+1;
-    for (date=1; index<42; index++,date++) {
-      $(boxes[index]).find('.date').text(date);
-      $(boxes[index]).attr('id', `db_${nextMonth}_${date}`);
-      $(boxes[index]).addClass('not-this-month');
-    }
   },
 
   /**
-   * 繪製指定月份的HTML。
+   * 在日曆選擇日期。
    * @param {Date} toDate - 要選擇的時間
-   * @return {boolean} 是否成功選取(ex.選擇的日期不在現在的日曆中，回傳false)
+   * @return {boolean} 選取日期是否在目前顯示的月曆範圍內
    */
   selectDate: function(toDate) {
+    $('.date-box').removeClass('box-today');
+    calendar.status.selectedDate = toDate;
+
     var prevMonthTime = new Date(calendar.status.year, (calendar.status.month-1)-1, 1);
     var nextMonthTime = new Date(calendar.status.year, (calendar.status.month-1)+1, 28);
     if( toDate<prevMonthTime || toDate>nextMonthTime )
       return false;
     var month = toDate.getMonth()+1;
     var date = toDate.getDate();
-    var dateBox = $(`#db_${month}_${date}`);
-    if (dateBox.length == 0) 
-      return false;
-    $('.date-box').removeClass('box-today');
-    $(dateBox[0]).addClass('box-today');
-    calendar.status.selectedDate = toDate;
-    return true;
+    var dateBox = $(`#db_${month}_${date}`).addClass('box-today');
+    return (dateBox.length != 0);
   }
 
 }
