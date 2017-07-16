@@ -31,6 +31,7 @@ Nctuplus::Application.routes.draw do
   #--------- calendar ---------
   resources :calendar, :only => [:index] do
     collection do 
+      post "get_event"
       get "get_event"
     end
   end  

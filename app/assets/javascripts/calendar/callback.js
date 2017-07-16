@@ -57,5 +57,9 @@ var callback = {
     var date = event.data;
     calendar.selectDate(date);
 
-  }
+  },
+
+  getEvent_success: function(data) {
+    console.log(data);
+  } 
 }

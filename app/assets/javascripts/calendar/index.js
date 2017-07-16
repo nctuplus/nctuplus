@@ -19,6 +19,13 @@ var pageInitialization = function() {
   $(".tag-cale").hide();
   $(".tag-info").hide();
   $("#btn-bell").addClass("selected");
+
+  $.ajax({
+    url: '/calendar/get_event',
+    type: 'POST',
+    data: {},
+    success: callback.getEvent_success
+  });
 }
 
 
