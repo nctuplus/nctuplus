@@ -2,10 +2,7 @@
 // callback.js 
 //  
 // Jobs:
-// Handle reactions for different events
-//
-// Js import directive for RoR:
-//= require calendar/render.js
+// Handle reactions for different event
 //
 
 var callback = {

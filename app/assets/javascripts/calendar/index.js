@@ -7,7 +7,9 @@
 // Controll how all js in this page work together
 //
 // Js import directive for RoR:
-//= require calendar/render.js
+//= require calendar/calendar.js
+//= require calendar/info-bar.js
+//= require calendar/event-loader.js
 //= require calendar/callback.js
 //
 
