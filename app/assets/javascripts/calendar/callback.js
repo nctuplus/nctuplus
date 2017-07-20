@@ -56,7 +56,7 @@ var callback = {
 
   },
 
-  getEvent_success: function(data) {
+  getEvent_callback: function(data) {
     console.log(data);
   } 
 }
