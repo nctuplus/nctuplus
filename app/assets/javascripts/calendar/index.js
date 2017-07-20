@@ -22,12 +22,10 @@ var pageInitialization = function() {
   $(".tag-info").hide();
   $("#btn-bell").addClass("selected");
 
-  $.ajax({
-    url: '/calendar/get_event',
-    type: 'POST',
-    data: {},
-    success: callback.getEvent_success
-  });
+  var s = new Date(), e = new Date();
+  s.setMonth(s.getMonth()-4);
+  e.setMonth(e.getMonth()+2);
+  eventLoader.getEvent(s, e, callback.getEvent_callback);
 }
 
 
