@@ -6,8 +6,29 @@
 //
 // Js import directive for RoR:
 //= require calendar/event-loader.js
+//= require calendar/callback.js
 //
 var calendar = {
+  /**
+   * 儲存每個日期的jquery物件
+   * ex: dateBox = {
+   *       2016: {
+   *         11: { // Date.getMonth從0開始
+   *           29: $('#db_12_29'),
+   *           30: $('#db_12_30'),
+   *           31: $('#db_12_31')
+   *         } 
+   *       },
+   *       2017: {
+   *         0: {
+   *           1: $('#db_1_1'),
+   *           2: $('#db_1_2'),
+   *           3: $('#db_1_3')
+   *         } 
+   *       },
+   *     }
+   */
+  dateBox: {}, 
   status: {
     selectedDate: new Date(),
     year: new Date().getFullYear(),
@@ -20,6 +41,7 @@ var calendar = {
    */
   clear: function() {
     $('#cal-date').children().remove();
+    calendar.dateBox = {};
   },
 
   /**
@@ -98,8 +120,17 @@ var calendar = {
 
         if (curMon != month) // 設定非當月class
           dateBox.addClass('not-this-month');
-        dateBox.click(new Date(date), callback.dateBox_click);
-        date.setDate(date.getDate()+1);
+        dateBox.click(new Date(date), callback.dateBox_click); // 綁定點擊事件
+
+        // 儲存dateBox物件到calendar.dateBox
+        var year = date.getFullYear(), month = date.getMonth(), d = date.getDate();
+        if (calendar.dateBox[year] === undefined)
+          calendar.dateBox[year] = {};
+        if (calendar.dateBox[year][month] === undefined)
+          calendar.dateBox[year][month] = {};
+        calendar.dateBox[year][month][d] = dateBox;
+
+        date.setDate(date.getDate()+1); // 下一天
       }
     }
 
@@ -118,10 +149,13 @@ var calendar = {
     var nextMonthTime = new Date(calendar.status.year, (calendar.status.month-1)+1, 28);
     if( toDate<prevMonthTime || toDate>nextMonthTime )
       return false;
-    var month = toDate.getMonth()+1;
-    var date = toDate.getDate();
+    var month = toDate.getMonth(), date = toDate.getDate();
     var dateBox = $(`#db_${month}_${date}`).addClass('box-today');
     return (dateBox.length != 0);
+  },
+
+  addEvent: function(event) {
+
   }
 
 }

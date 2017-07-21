@@ -21,11 +21,6 @@ var pageInitialization = function() {
   $(".tag-cale").hide();
   $(".tag-info").hide();
   $("#btn-bell").addClass("selected");
-
-  var s = new Date(), e = new Date();
-  s.setMonth(s.getMonth()-4);
-  e.setMonth(e.getMonth()+2);
-  eventLoader.getEvent(s, e, callback.getEvent_callback);
 }
 
 
