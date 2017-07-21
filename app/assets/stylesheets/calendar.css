@@ -280,16 +280,16 @@ h2{
   margin: 0 0 0 0;
 }
 
-.rec-blue{
+.rec-blue .rec{
   background: #00C8F5;
 }
-.rec-darkblue{
+.rec-darkblue .rec{
   background: #0092E0;
 }
-.rec-red{
+.rec-red .rec{
   background: #F53900;
 }
-.rec-yellow{
+.rec-yellow .rec{
   background: #FFDF29;
 }
 
