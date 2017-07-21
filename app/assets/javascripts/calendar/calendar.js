@@ -92,7 +92,8 @@ var calendar = {
     calendar.draw(year, month);
     // 選擇日期
     calendar.selectDate(calendar.status.selectedDate);
-
+    // 載入事件
+    eventLoader.getEventByMonth(year, month, callback.calendar_getEventCB);
   },
 
   /**
@@ -123,12 +124,12 @@ var calendar = {
         dateBox.click(new Date(date), callback.dateBox_click); // 綁定點擊事件
 
         // 儲存dateBox物件到calendar.dateBox
-        var year = date.getFullYear(), month = date.getMonth(), d = date.getDate();
-        if (calendar.dateBox[year] === undefined)
-          calendar.dateBox[year] = {};
-        if (calendar.dateBox[year][month] === undefined)
-          calendar.dateBox[year][month] = {};
-        calendar.dateBox[year][month][d] = dateBox;
+        var y = date.getFullYear(), m = date.getMonth(), d = date.getDate();
+        if (calendar.dateBox[y] === undefined)
+          calendar.dateBox[y] = {};
+        if (calendar.dateBox[y][m] === undefined)
+          calendar.dateBox[y][m] = {};
+        calendar.dateBox[y][m][d] = dateBox;
 
         date.setDate(date.getDate()+1); // 下一天
       }
@@ -150,12 +151,46 @@ var calendar = {
     if( toDate<prevMonthTime || toDate>nextMonthTime )
       return false;
     var month = toDate.getMonth(), date = toDate.getDate();
-    var dateBox = $(`#db_${month}_${date}`).addClass('box-today');
+    var dateBox = calendar.getDateBox(toDate).addClass('box-today');
     return (dateBox.length != 0);
   },
 
+  /**
+   * 在日曆上新增事件。
+   * @param {Event} event - 要新增的事件
+   * @return {boolean} 事件時間是否在日曆範圍內，新增成功回傳true，否則回傳false
+   */
   addEvent: function(event) {
 
+    var dateBox = calendar.getDateBox(event.EventTime);
+    if (dateBox.length == 0)
+      return false;
+    var e = $(`<div class="event">
+                 <div class="rec"></div>
+                 <div class="content">${event.Title}</div>
+               </div>`).appendTo(dateBox);
+    switch (event.MaterialType) {
+      case 'announcement':
+        e.addClass('rec-yellow'); break;
+      case 'homework':
+        e.addClass('rec-red'); break;
+      case 'event':
+        e.addClass('rec-darkblue'); break;
+    }
+    return true;
+  },
+
+  /**
+   * 取得DateBox jquery物件。
+   * @param {Date} time - 時間
+   * @return {object} 回傳找到的object，沒找到則回傳空物件
+   */
+  getDateBox: function(time) {
+    try {
+      var year = time.getFullYear(), month = time.getMonth(), d = time.getDate();
+      var dateBox = calendar.dateBox[year][month][d];
+    } catch (e) {}
+    return $(dateBox);
   }
 
 }

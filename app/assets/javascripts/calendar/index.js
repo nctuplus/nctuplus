@@ -12,6 +12,8 @@
 //= require calendar/info-bar.js
 //= require calendar/callback.js
 //
+var d = new Date();
+eventLoader.getEventByMonth(d.getFullYear(), d.getMonth()+1);
 
 var pageInitialization = function() {
   $("#cal-date").hide().fadeIn(500);
