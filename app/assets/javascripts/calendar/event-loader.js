@@ -8,6 +8,14 @@
 // 
 var eventLoader = {
 
+  /**
+   * 儲存每個月份的所有事件
+   * ex: events = {
+   *       201612: [event1, event2, event3],
+   *       201701: [event1],
+   *       201705: [event1, event2]
+   *     }
+   */
   events: {},
 
   /**
@@ -149,9 +157,9 @@ var eventLoader = {
         // 將時間從Unix Timestamp轉換成Date型態
         data[i].TimeStart = new Date(data[i].TimeStart);
         data[i].TimeEnd = new Date(data[i].TimeEnd);
+        data[i].EventTime = (data[i].MaterialType == 'event')? data[i].TimeStart: data[i].TimeEnd;
         // 依照事件類型決定用開始時間或結束時間
-        var time = (data[i].MaterialType == 'event')? data[i].TimeStart: data[i].TimeEnd;
-        var index = eventLoader.timeToIndex(time);
+        var index = eventLoader.timeToIndex(data[i].EventTime);
         eventLoader.events[index].push(data[i]);
       }
       // 判斷最新的getEventID跟傳入的一樣才呼叫callback
