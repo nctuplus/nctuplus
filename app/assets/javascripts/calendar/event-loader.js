@@ -29,14 +29,14 @@ var eventLoader = {
    * 取得指定月份外加前後半個月的資料，功課公告以結束時間作為時間判斷標準，
    * 活動以開始時間作為時間判斷標準，取得後呼叫callback函數。
    * @param {Date} year - 要取得的年
-   * @param {Date} month - 要取得得月
+   * @param {Date} month - 要取得的月(1~12)
    * @param {getEventCallback} callback - 取得的資料要傳入的函數
    * @param {object} param - 要傳入callback的參數
    */
   getEventByMonth: function(year, month, callback, param) {
-    var start = new Date(year, month-1, 15);
-    var end = new Date(year, month+1, 15);
-    return eventLoader.getEvent(year, month, callback, param);
+    var start = new Date(year, (month-1)-1, 15);
+    var end = new Date(year, (month-1)+1, 15);
+    return eventLoader.getEvent(start, end, callback, param);
   },
 
   /**
@@ -158,6 +158,9 @@ var eventLoader = {
         data[i].TimeStart = new Date(data[i].TimeStart);
         data[i].TimeEnd = new Date(data[i].TimeEnd);
         data[i].EventTime = (data[i].MaterialType == 'event')? data[i].TimeStart: data[i].TimeEnd;
+        // hotfix for static json
+        if ( data[i].EventTime < start || data[i].EventTime > end )
+          continue;
         // 依照事件類型決定用開始時間或結束時間
         var index = eventLoader.timeToIndex(data[i].EventTime);
         eventLoader.events[index].push(data[i]);
