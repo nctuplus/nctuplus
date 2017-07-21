@@ -56,7 +56,9 @@ var callback = {
 
   },
 
-  getEvent_callback: function(data) {
-    console.log(data);
-  } 
+  calendar_getEventCB: function(data) {
+    for (var i = 0; i < data.length; i++) {
+      calendar.addEvent(data[i]);
+    }
+  }
 }

@@ -66,8 +66,8 @@ var eventLoader = {
     if (notLoadedList.length > 0) {
       start = Math.min.apply(null, notLoadedList); // ex.201703
       end = Math.max.apply(null, notLoadedList); // ex.201708
-      start = new Date(start/100, start%100, 1);
-      end = new Date(end/100, end%100, 1);
+      start = new Date(start/100, start%100-1, 1);
+      end = new Date(end/100, end%100-1 + 1, 0);
       eventLoader.getEventFromServer(start, end, (callbackDone)? null: callback, param);
     }
     return callbackDone;
