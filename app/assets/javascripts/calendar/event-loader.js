@@ -11,20 +11,26 @@ var eventLoader = {
   events: {},
 
   /**
-   * 轉換Date型態到包含此時間範圍的Event Index
-   * @param {Date} time - 時間
-   */
-  timeToIndex: function(time) {
-    return time.getFullYear()*100 + time.getMonth()+1; // ex: 2017/5 => 201705
-  },
-
-  /**
    * getEvent函數的回調函數
    *
    * @callback getEventCallback
    * @param {Array} data - 範圍內的資料的陣列
    * @param {object} param - 呼叫getEvent時的自定義參數
    */
+  /**
+   * 取得指定月份外加前後半個月的資料，功課公告以結束時間作為時間判斷標準，
+   * 活動以開始時間作為時間判斷標準，取得後呼叫callback函數。
+   * @param {Date} year - 要取得的年
+   * @param {Date} month - 要取得得月
+   * @param {getEventCallback} callback - 取得的資料要傳入的函數
+   * @param {object} param - 要傳入callback的參數
+   */
+  getEventByMonth: function(year, month, callback, param) {
+    var start = new Date(year, month-1, 15);
+    var end = new Date(year, month+1, 15);
+    return eventLoader.getEvent(year, month, callback, param);
+  },
+
   /**
    * 取得指定時間範圍的資料，功課公告以結束時間作為時間判斷標準，
    * 活動以開始時間作為時間判斷標準，取得後呼叫callback函數。
@@ -85,6 +91,14 @@ var eventLoader = {
       error: eventLoader._makeGetEvent_error(start, end, callback, param, eventLoader._latestGetEventID),
     });
     return;
+  },
+
+  /**
+   * 轉換Date型態到包含此時間範圍的Event Index
+   * @param {Date} time - 時間
+   */
+  timeToIndex: function(time) {
+    return time.getFullYear()*100 + time.getMonth()+1; // ex: 2017/5 => 201705
   },
 
   /**
