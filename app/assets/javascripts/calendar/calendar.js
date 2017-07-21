@@ -4,6 +4,9 @@
 // Jobs:
 // create/delete calendar html/css from input data
 //
+// Js import directive for RoR:
+//= require calendar/event-loader.js
+//
 var calendar = {
   status: {
     selectedDate: new Date(),

@@ -22,7 +22,7 @@ var eventLoader = {
    * getEvent函數的回調函數
    *
    * @callback getEventCallback
-   * @param {Array.} data - 範圍內的資料的陣列
+   * @param {Array} data - 範圍內的資料的陣列
    * @param {object} param - 呼叫getEvent時的自定義參數
    */
   /**
@@ -34,14 +34,29 @@ var eventLoader = {
    * @param {object} param - 要傳入callback的參數
    */
   getEvent: function(start, end, callback, param) {
-    
-    if (eventLoader.isLoaded(start,end)) {
+    var callbackDone = false;
+
+    // 檢查是否可以不向Server發送請求就回傳資料
+    var notLoadedList = eventLoader.checkEventLoaded(start,end);
+    if (notLoadedList.length == 0) {
       if (typeof(callback) == 'function')
         callback(eventLoader._filterEvent(start,end), param);
-      return true;
+      callbackDone = true;
     }
-    eventLoader.getEventFromServer(start, end, callback, param);
-    return false;
+    // 增加範圍，預載入資料
+    start.setMonth(start.getMonth()-2);
+    end.setMonth(end.getMonth()+2);
+    notLoadedList = eventLoader.checkEventLoaded(start,end);
+
+    // 如果有還沒下載的部分就執行下載
+    if (notLoadedList.length > 0) {
+      start = Math.min.apply(null, notLoadedList); // ex.201703
+      end = Math.max.apply(null, notLoadedList); // ex.201708
+      start = new Date(start/100, start%100, 1);
+      end = new Date(end/100, end%100, 1);
+      eventLoader.getEventFromServer(start, end, (callbackDone)? null: callback, param);
+    }
+    return callbackDone;
   },
 
   /**
@@ -65,7 +80,7 @@ var eventLoader = {
     $.ajax({
       url: '/calendar/get_event',
       type: 'POST',
-      data: {start:s.getTime(), end: e.getTime()},
+      data: {start: s.getTime(), end: e.getTime()},
       success: eventLoader._makeGetEvent_success(start, end, callback, param, eventLoader._latestGetEventID),
       error: eventLoader._makeGetEvent_error(start, end, callback, param, eventLoader._latestGetEventID),
     });
@@ -92,19 +107,20 @@ var eventLoader = {
    * 判斷指定時間範圍的資料是否都已下載過
    * @param {Date} start - 開始時間
    * @param {Date} end - 結束時間
-   * @return {boolean} true代表已完全下載，false代表有未下載的部分
+   * @return {Array} 所有還未下載的月份，Ex.[201702,201703,201706]
    */
-  isLoaded: function(start, end) {
+  checkEventLoaded: function(start, end) {
+    var retList = [];
     for (var year = start.getFullYear(); year <= end.getFullYear(); year++) {
       var month = (year==start.getFullYear())? start.getMonth(): 0;
       var stopMonth = (year==end.getFullYear())? end.getMonth(): 11;
       for (; month <= stopMonth; month++) {
         var index = year*100 + month+1; // ex: 2017/5 => 201705
         if (eventLoader.events[index] === undefined)
-          return false;
+          retList.push(index);
       }
     }
-    return true;
+    return retList;
   },
 
 
