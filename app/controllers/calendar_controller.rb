@@ -1,9 +1,28 @@
 class CalendarController < ApplicationController
-    def index
+  def index
+  end
+
+  def get_event
+    require 'date'
+
+    taked_id = []
+    taked_courses = current_user.courses_taked.search_by_sem_id(Semester::LAST.id).map{|cs|cs.to_basic_json}
+    taked_courses.each do |course|
+      taked_id.push(course[:temp_cos_id])
     end
 
-    def get_event
-        render file: "calendar/test.json", layout: false, content_type: 'application/json' 
+    events = []
+    materials = E3Service.getMaterialInfo
+    materials.each do |material|
+      if taked_id.include? material["CourseNo"]
+        event = material
+        event["TimeStart"] = DateTime.parse(event["TimeStart"]).utc.to_i * 1000
+        event["TimeEnd"] = DateTime.parse(event["TimeEnd"]).utc.to_i * 1000
+        events.push(event)
+      end
     end
+    render :json=>events
+    # render file: "calendar/test.json", layout: false, content_type: 'application/json' 
+  end
 
 end
