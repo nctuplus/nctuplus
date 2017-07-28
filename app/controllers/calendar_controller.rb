@@ -14,11 +14,13 @@ class CalendarController < ApplicationController
     events = []
     materials = E3Service.getMaterialInfo
     materials.each do |material|
-      if taked_id.include? material["CourseNo"]
-        event = material
-        event["TimeStart"] = DateTime.parse(event["TimeStart"]).utc.to_i * 1000
-        event["TimeEnd"] = DateTime.parse(event["TimeEnd"]).utc.to_i * 1000
-        events.push(event)
+      event = material
+      event["TimeStart"] = DateTime.parse(event["TimeStart"]).utc.to_i * 1000
+      event["TimeEnd"] = DateTime.parse(event["TimeEnd"]).utc.to_i * 1000
+      if event["TimeStart"] >= params[:start].to_i and event["TimeEnd"] < params[:end].to_i
+        if taked_id.include? event["CourseNo"]
+          events.push(event)
+        end
       end
     end
     render :json=>events
