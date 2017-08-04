@@ -1,0 +1,39 @@
+.setup-container{
+	margin-top:80px;
+	span.setup-header{
+		text-align:center;
+		h2{
+			color:#272853;
+			padding:8px;
+		}
+		h4{
+			color:#c32525;
+			padding:8px;	
+		}
+	}
+	li,h3,h4,p{
+		font-weight:500;
+		font-size:1.21em;
+		padding:8px;
+	}
+	img.resize-img{
+		width:100%;
+		height:100%;
+	}
+	.steps-header{
+		color:#353535;
+		a{
+			text-transform:lowercase;
+		}
+	}
+	.reminder,span.header{
+		padding:40px 20px 40px 20px;
+		background-color:#f2b910;
+		color:#353535;
+		text-align:center;
+	}
+	li,p{
+		font-size:1.25em;
+		color:#353535;
+	}
+}

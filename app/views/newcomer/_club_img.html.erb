@@ -1,0 +1,24 @@
+<% if pull %>
+	<% if club[:color] == "white" %> 
+		<div class="col-sm-6 col-sm-pull-6 pic-col minor-1">
+	<% elsif club[:color] == "milk" %> 
+		<div class="col-sm-6 col-sm-pull-6 pic-col minor-2">
+	<% elsif club[:color] == "grey" %> 
+		<div class="col-sm-6 col-sm-pull-6 pic-col minor-3">
+	<% else %>
+		<div class="col-sm-6 col-sm-pull-6 pic-col">
+	<% end %>
+<% else %>
+	<% if club[:color] == "white" %> 
+		<div class="col-sm-6 pic-col minor-1">
+	<% elsif club[:color] == "milk" %> 
+		<div class="col-sm-6 pic-col minor-2">
+	<% elsif club[:color] == "grey" %> 
+		<div class="col-sm-6 pic-col minor-3">
+	<% else %>
+		<div class="col-sm-6 pic-col">
+	<% end %>
+<% end %>
+	<%= image_tag 'newcomer/'+club[:category]+'/'+club[:img] %>
+</div>
+

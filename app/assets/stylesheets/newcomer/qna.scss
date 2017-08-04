@@ -1,0 +1,226 @@
+/* 
+  accordion source code : Alex Begin CSS+HTML only accordion , http://codepen.io/abergin/pen/ihlDf 
+  modified by theblackcat102 
+*/
+
+* {
+  margin: 0;
+  padding: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Open Sans', Arial, Helvetica, Sans-serif, Verdana, Tahoma;
+}
+
+ul { list-style-type: none; }
+
+a {
+  color: #b63b4d;
+  text-decoration: none;
+}
+
+/** =======================
+ * Contenedor Principal
+ ===========================*/
+
+h3 {
+  color: #353535;
+  font-size: 1.15em;
+  text-align: left;
+}
+
+$white: rgba(254,255,250,1);
+$grey: rgba(220,231,235,1);
+  
+.transition{
+  transition: all 0.25s ease-in-out;
+}
+
+.flipIn{
+  animation: flipdown 0.5s ease both;
+}
+    
+.no-select{
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+  
+
+
+p{
+  color:#354454;
+  font-size: 17px;
+  line-height: 26px;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+  max-height: 800px;
+  @extend .transition;
+  opacity: 1;
+  transform: translate( 0 , 0 );
+  margin: 14px 3em 14px 3em;
+  z-index: 2;
+}
+.accordion {
+  width: 100%;
+  max-width: 900px;
+  min-width:300px;
+  margin: 30px auto 20px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  h1{
+    color: #364555;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+    margin-top: 102px;
+  }
+  ul{
+    list-style: none;
+    perspective: 900;
+    padding: 0 0 5px 0;
+    margin: 0;
+    background:#fff; 
+    border-radius:7px;   
+    li{
+      position: relative;
+      padding: 0;
+      margin: 0;
+      border-radius:7px;
+      border-top: 1px dotted $grey;
+      @extend .flipIn;
+        
+      &:nth-of-type(1){
+        animation-delay: 0.5s;
+      }
+      
+      &:nth-of-type(2){
+        animation-delay: 0.6s;
+      }
+          
+      &:nth-of-type(3){
+        animation-delay: 0.7s;
+      }
+
+      &:nth-of-type(4){
+        animation-delay: 0.8s;
+      }
+
+      &:nth-of-type(5){
+        animation-delay: 0.9s;
+      }
+
+      &:nth-of-type(6){
+        animation-delay: 1.0s;
+      }
+
+      &:nth-of-type(7){
+        animation-delay: 1.1s;
+      }
+
+      &:nth-of-type(8){
+        animation-delay: 1.2s;
+      }
+
+      &:last-of-type{
+        padding-bottom: 0;
+      }
+        
+      i{
+        position: absolute;
+        transform: translate( -6px , 0 );
+        margin-top: 25px;
+        right: 25px;
+        
+        &:before , &:after{
+          content: "";
+          @extend .transition;
+          position: absolute;
+          background-color: #b63b4d;
+          width: 4px;
+          height: 10px;
+          }
+        &:before{
+          transform: translate( -2px , 0 ) rotate( 45deg );
+        }
+            
+        &:after{
+          transform: translate( 2px , 0 ) rotate( -45deg );
+        }
+      }
+      h3{
+        cursor: pointer;
+        display: block;
+        margin:4px 30px 4px 0;
+        padding: 25px 15px 0px 42px;
+        color: #4D4D4D;
+        font-size: 14px;
+        font-weight: 700;
+        position: relative;
+      }
+      input[type=checkbox]{
+        position: absolute;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        opacity: 0;
+      
+        &:checked{
+          &~p{
+            margin-top: 0;
+            max-height: 0;
+            opacity: 0;
+            transform: translate( 0 , 50% );
+            border-bottom: 2px solid #CCC;
+            &:after{
+              padding:50px;
+            }
+          }
+              
+          &~i{
+            &:before{
+              transform: translate( 2px , 0 ) rotate( 45deg );
+            }
+            
+            &:after{
+              transform: translate( -2px , 0 ) rotate( -45deg );
+            }
+          }
+        }
+      }
+    }
+  }
+}
+@keyframes flipdown{
+  0%{
+    opacity: 0;
+    transform-origin: top center;
+    transform: rotateX(-90deg);
+  }
+  5%{
+    opacity: 1;
+  }
+  80%{
+    transform: rotateX(8deg);
+  }
+  83%{
+    transform: rotateX(6deg);
+  }
+  92%{
+    transform: rotateX(-3deg);
+  }
+  100%{
+    transform-origin: top center;
+    transform: rotateX(0deg); 
+  }
+}

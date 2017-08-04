@@ -1,0 +1,19 @@
+<%= stylesheet_link_tag 'newcomer/curricular' %>
+<div class="spacing"></div>
+<section class="curricular">
+	<span><h3>友會列表</h3></span>
+
+	<%= render 'club', :category => 'alumnian', :datas => @data %>
+
+	<div class="row important">
+		<div class="col-sm-12">
+			<h4 style="padding: 0 20px 0 20px;">(註：友會資料陸續增加中！該欄空白代表該友會並未提供該項資料。此表並非所有友會，僅為有提供資料之友會)
+				<p>以上資料由各友會提供，並不代表學聯會立場</p>
+			</h4>
+		</div>
+	</div>
+</section>
+<section class="curricular-footer">
+	<h2>查看完整友會清單</h2>
+	<a href="http://activity.sa.nctu.edu.tw/?page_id=718" target="_blank"><button class="btn-5">課外活動組社團總覽</button></a>
+</section>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="NCTU 網路新生包">
+        <meta name="keywords" content="NCTU網路新生包,交大網路新生包,網路新生包,交大新生包,NCTU新生包,新生包,交大新生,NCTU新生,交大學聯會,NCTU,交大">
+        <meta name="author" content="交通大學學聯會資訊部,NCTU+">
+        <meta name="robots" content="index,follow">
+        <meta property = "og:site_name" content="交通大學網路新生包">
+        <%#<meta property = "og:image" content = "assets/fb-image.png">%>
+        <meta property = "og:image" content = "https://stunion.nctu.edu.tw/blog/wp-content/uploads/2016/08/fb-image.png">
+        <meta property = "og:url" content="https://www.nctuplus.com">
+        <meta property = "og:type" content="website">
+        <meta property = "og:description" content="交大新生絕對不能錯過的網路新生包">
+        <meta property = "og:title" content="交通大學網路新生包">
+
+        <title><%= @title %></title>
+
+        <%= stylesheet_link_tag    'newcomer/application', media: 'all', 'data-turbolinks-track' => true %>
+        <%= stylesheet_link_tag 'newcomer/newcomer-2' %>
+        <%= stylesheet_link_tag 'newcomer/newcomer' %>
+        <%= javascript_include_tag 'newcomer/application', 'data-turbolinks-track' => true %>
+        <%= csrf_meta_tags %>
+
+        <%#<link rel="shortcut icon" href="assets/logo.png">%>
+    </head>
+    <body>
+        <%= render "layouts/newcomer_header" %>
+        <%= yield %>
+        <%= render "layouts/newcomer_footer" %>
+
+        <script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-81683881-2', 'auto');
+  ga('send', 'pageview');
+
+</script>
+        <%= javascript_include_tag 'newcomer/newcomer' %>
+    </body>
+</html>
