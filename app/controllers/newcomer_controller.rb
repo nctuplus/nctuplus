@@ -71,7 +71,7 @@ class NewcomerController < ApplicationController
 				pdf: "友聲社.pdf",
 				web: "http://nctuyschorus.weebly.com/",
 				fb: "https://www.facebook.com/nctuchorus/?fref=ts",
-				img: "友聲社.png",
+				img: "you-shang.png",
 				color: "default"
 			},
 			{
@@ -179,7 +179,7 @@ class NewcomerController < ApplicationController
 				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NdS1pNzFCMnQ0eHM/view?pref=2&pli=1",
 				web:"https://www.facebook.com/NCTUDT/",
 				group: nil ,
-				img: "設計與思考社.jpg",
+				img: "design_think.png",
 				color: "default"
 			},
 			{
