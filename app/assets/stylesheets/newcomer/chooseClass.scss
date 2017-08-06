@@ -1,10 +1,10 @@
 .cover {
-    background: #181063; 
+    background: #E8EAED; 
     min-width: 100%;
 }
 
 .course {
-    background: #EFEFEF;
+    background: #FDFDFD;
 }
 
 @media (min-width: 1024px) {
@@ -18,7 +18,8 @@
 }
 
 .group {
-    background: #5A63FF;
+    text-align: center;
+    background: #3959b9;
     font-size: 24px;
     font-weight: bold;
     padding: 0.8em;
@@ -36,21 +37,18 @@
 }
 
 .step .title-blk {
-    background: #ADADAD;
+    background: #83a7ec;
     font-size: 18px;
     padding: 1.5em 0 0.3em 0;
     position: relative;
 }
 .step .num {
 
-    background: -moz-linear-gradient(left,  rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.6) 71%, rgba(0,0,0,0) 100%); /* FF3.6-15 */
-    background: -webkit-linear-gradient(left,  rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.6) 71%,rgba(0,0,0,0) 100%); /* Chrome10-25,Safari5.1-6 */
-    background: linear-gradient(to right,  rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.6) 71%,rgba(0,0,0,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bf000000', endColorstr='#00000000',GradientType=1 ); /* IE6-9 */
     display: inline-block;
-    font-size: 22px;
+    font-size: 24px;
+    font-weight: bold;
     height: 100%;
-    padding-left: 0.5em;
+    padding-left: 1em;
     padding-right: 1em;
     position: absolute;
     top: 0;
@@ -64,9 +62,10 @@
     top: 50%;
 }
 .step .text {
-    color: #222; 
+    color: #FFF; 
+    font-weight: bold;
     display: inline-block;
-    margin-left: 4em;
+    margin-left: 3em;
 }
 .step .content {
     color: #333;
