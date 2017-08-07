@@ -29,6 +29,7 @@ html {
     overflow-x:hidden;
 }
 
+
 h1,
 h2,
 h3,
@@ -147,15 +148,16 @@ a {
     display:table;
     width:100%;
     height:100%;
-    background:image-url("newcomer/background.jpg") no-repeat bottom center scroll;
+    background:image-url("newcomer/background2.jpg") no-repeat bottom center scroll;
     background-size:cover;
     -webkit-background-size:cover;
     -moz-background-size:cover;
     -o-background-size:cover;
     .cover-pic{
+        opacity: 0.9;
         height:100%;
         width:100%;
-        background:image-url("newcomer/cover-pic.svg") no-repeat bottom center scroll;
+        background:image-url("newcomer/cover-pic2.svg") no-repeat bottom center scroll;
         background-size:cover;
         -webkit-background-size:cover;
         -moz-background-size:cover;
@@ -166,7 +168,7 @@ a {
         h2{
             padding:2.5rem 5rem 2.5rem 5rem;
             margin: 0 28% 0 5%;
-            background-color:#10608c;
+            background-color: #e0a56b;
         }
     }
     .text-box-2{
@@ -174,15 +176,15 @@ a {
         h2{
             padding:2.5rem 5rem 2.5rem 5rem;
             margin:0 14% 0 5%;
-            background-color:#10608c;
+            background-color: #e0a56b;
         }
     }
 }
 #explore{
     padding: 90px 0px 0px 0px; 
-    background: #f2b910;
+    background: #35281b;
     .container{
-        background: #f2b910;
+        background: #35281b;
         text-align:center;
         p{
             text-align:center;
@@ -196,15 +198,15 @@ a {
         height: 240px; /*this will work like some padding bottom missing  at section */
         border-width: 0 0 180px 100vw;
         border-style: solid;
-        border-color:  transparent  transparent #0f345b #f2b910;
-        background:#0f345b;
+        border-color:  transparent  transparent #e0a56b #35281b;
+        background:#e0a56b;
     }
 }
 #procedure{
     padding: 90px 0 0 0;
-    background: #0f345b;
+    background: #e0a56b;
     .container{
-        background: #0f345b;
+        background: #e0a56b;
         p{
             padding-left:-10%;
             text-align:center;
@@ -218,14 +220,14 @@ a {
         height: 240px; /*this will work like some padding bottom missing  at section */
         border-width: 0 0 180px 100vw;
         border-style: solid;
-        border-color:  transparent  transparent #5aa8dd #0f345b;
+        border-color:  transparent  transparent #35281b #e0a56b;
     }
 }
 #shopping{
     padding: 90px 0 0 0;
-    background: #5aa8dd;
+    background: #35281b;
     .container{
-        background: #5aa8dd;
+        background: #35281b;
         p{
             text-align:center;
         }
@@ -237,42 +239,42 @@ a {
         height: 240px; /*this will work like some padding bottom missing  at section */
         border-width: 0 0 180px 100vw;
         border-style: solid;
-        border-color:  transparent  transparent #c3e8f1 #5aa8dd;
+        border-color:  transparent  transparent #f1ebe4 #35281b;
     }
 }
 #qna{
     padding: 90px 0 0 0;
-    background:#c3e8f1;
+    background:#f1ebe4;
     .container{
-        background:#c3e8f1;
+        background:#f1ebe4;
         p{
             text-align:center;
         }
         h2{
             text-align:center;
-            color:#22356a;
+            color:#de8b15;
         }
     }
     .bottom {
         height: 240px; /*this will work like some padding bottom missing  at section */
         border-width: 0 0 180px 100vw;
         border-style: solid;
-        border-color:  transparent  transparent #00f0ed #c3e8f1;
+        border-color:  transparent  transparent #252f2f #f1ebe4;
     }
 }
 #download{
     height:30%;
     padding-top:5%;
     padding-bottom:20%;
-    background: #00f0ed;
+    background: #252f2f;
     .container{
-        background: #00f0ed;
+        background: #252f2f;
         p{
             text-align:center;
         }
         h2{
             text-align:center;
-            color:#1e6262;
+            color:#efb973;
         }
     }
 
@@ -293,8 +295,8 @@ a {
             padding:0;
         }
         li.footer-header{
-            color:#dc4b5e;
-            font-weight:500%;
+            color: #d48a2b;
+            font-weight: 600;
             font-size:2rem;
             margin:5px;
             padding:5px;
@@ -340,22 +342,23 @@ a {
     height: 12px;
     width:100%;
     z-index: 5;
-    background: linear-gradient(90deg, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%, $bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
-    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, $bottom-color-bar1), color-stop(25%, $bottom-color-bar1), color-stop(25%, $bottom-color-bar2), color-stop(50%, $bottom-color-bar2), color-stop(50%, $bottom-color-bar3), color-stop(75%, $bottom-color-bar3), color-stop(75%, $bottom-color-bar4), color-stop(100%, $bottom-color-bar4));
-    background-image: -webkit-linear-gradient(left, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%, $bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
-    background-image: -moz-linear-gradient(left, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%, $bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
-    background-image: -o-linear-gradient(left, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%,$bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
-    background-image: linear-gradient(left, $bottom-color-bar1 0%,$bottom-color-bar1 25%, $bottom-color-bar2 25%,$bottom-color-bar2 50%,$bottom-color-bar3 50%,$bottom-color-bar3 75%,$bottom-color-bar4 75%,$bottom-color-bar4 100%);
+    background: #bb8b4d;
+#    background: linear-gradient(90deg, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%, $bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
+#    background-image: -webkit-gradient(linear, 0% 50%, 100% 50%, color-stop(0%, $bottom-color-bar1), color-stop(25%, $bottom-color-bar1), color-stop(25%, $bottom-color-bar2), color-stop(50%, $bottom-color-bar2), color-stop(50%, $bottom-color-bar3), color-stop(75%, $bottom-color-bar3), color-stop(75%, $bottom-color-bar4), color-stop(100%, $bottom-color-bar4));
+#    background-image: -webkit-linear-gradient(left, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%, $bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
+#    background-image: -moz-linear-gradient(left, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%, $bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
+#    background-image: -o-linear-gradient(left, $bottom-color-bar1 0%, $bottom-color-bar1 25%, $bottom-color-bar2 25%, $bottom-color-bar2 50%, $bottom-color-bar3 50%,$bottom-color-bar3 75%, $bottom-color-bar4 75%, $bottom-color-bar4 100%);
+#    background-image: linear-gradient(left, $bottom-color-bar1 0%,$bottom-color-bar1 25%, $bottom-color-bar2 25%,$bottom-color-bar2 50%,$bottom-color-bar3 50%,$bottom-color-bar3 75%,$bottom-color-bar4 75%,$bottom-color-bar4 100%);
 }
 
 .btn-1{
-    @include custom-btn(#5bcaff,#f7f7f7,#FFF); //$hover-background,$border,$hover-color
+    @include custom-btn(#906438,#f7f7f7,#FFF); //$hover-background,$border,$hover-color
 }
 .btn-2{
-    @include custom-btn(#0f345b,#f7f7f7,#FFF);
+    @include custom-btn(#e0a56b,#f7f7f7,#FFF);
 }
 .btn-3{
-    @include custom-btn(#f7f7f7,#0f345b,#0f345b);
+    @include custom-btn(#d6d4d1,#de8b15,#de8b15);
 }
 .btn-4{
     @include custom-btn(#009933,#f7f7f7,#FFF);
@@ -364,7 +367,7 @@ a {
     @include custom-btn(#281270,#f7f7f7,#FFF);
 }
 .btn-8{
-    @include custom-btn(#00dcd8,#1e6262,#1e6262);
+    @include custom-btn(#846c4e,#efb973,#efb973);
 }
 @media screen and (max-width: 414px){
     #banner{
@@ -408,13 +411,13 @@ a {
 .end-qna{
     padding:80px 20px 80px 20px;
     text-align:center;
-    background-color:#10608c;
+    background-color: #e0a56b;
 }
 
 .buy-it{
     padding:80px 20px 80px 20px;
     text-align:center;
-    background-color:#5aa8dd;
+    background-color:#35281b;
 }
 .buy-it-7-11{
     padding:80px 20px 80px 20px;

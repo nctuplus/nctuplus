@@ -13,6 +13,7 @@
 
 body {
   font-family: 'Open Sans', Arial, Helvetica, Sans-serif, Verdana, Tahoma;
+
 }
 
 ul { list-style-type: none; }
@@ -69,7 +70,9 @@ p{
   margin: 14px 3em 14px 3em;
   z-index: 2;
 }
+
 .accordion {
+
   width: 100%;
   max-width: 900px;
   min-width:300px;
@@ -78,9 +81,9 @@ p{
   -moz-border-radius: 4px;
   border-radius: 4px;
   h1{
-    color: #364555;
+    color: #e4a758;
     font-size: 24px;
-    font-weight: 400;
+    font-weight: 700;
     text-align: center;
     margin-top: 102px;
   }
