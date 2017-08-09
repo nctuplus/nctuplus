@@ -17,9 +17,9 @@
     margin-bottom: 0;
     border-bottom: 1px solid rgba(white, 0.3);
     text-transform: uppercase;
-    font-family: 'NotoSans';
+    font-family: 'Noto Sans', 'Noto Sans CJK TC';
     font-size: 1.18em;
-    font-weight:500;
+    font-weight:300;
     background-color: #f3faf5;
     background-color: #fff;
     background-image: none!important;
@@ -116,7 +116,7 @@
 #map{
     width:103%;
     padding:8% 0 20px 0;
-    background-color:#f0edcf;
+    background-color:#2b2e2e;
     position:relative;
     section.map{
         img{
@@ -127,6 +127,11 @@
     }
 }
 @media screen and (max-width: 625px) {
+
+    #map{
+        padding:20% 0 0px 0;
+    }
+
     img{
         width:100%;
     }   
