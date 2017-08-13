@@ -1,3 +1,15 @@
+#process{
+  background: #212020;
+}
+
+h1{
+  color: #DDD;
+}
+
+h4{
+  color: #FFF;
+}
+
 #timeline{
   text-align: center;
   padding-top: 170px;
@@ -80,8 +92,8 @@
 .timeline > li > .timeline-panel {
   width: 46%;
   float: left;
-  background-color: #fbfbfb;
-  border: 1px solid #d4d4d4;
+  background-color: #c38e63;
+  border: 1px solid #bbab9f;
   border-radius: 2px;
   padding: 20px;
   position: relative;
@@ -107,8 +119,8 @@
   right: -14px;
   display: inline-block;
   border-top: 14px solid transparent;
-  border-left: 14px solid #fff;
-  border-right: 0 solid #fff;
+  border-left: 14px solid #c38e63;
+  border-right: 0 solid #c38e63;
   border-bottom: 14px solid transparent;
   content: " ";
 }
@@ -172,16 +184,17 @@
 
 .timeline-title {
   margin-top: 0;
-  color: inherit;
 }
 
 .timeline-body > p,
 .timeline-body > ul {
   margin-bottom: 0;
+  color: #FFF;
 }
 
 .timeline-body > p + p {
   margin-top: 5px;
+  color: #FFF;
 }
 @media screen and (max-width:725px){
   .timeline:before {

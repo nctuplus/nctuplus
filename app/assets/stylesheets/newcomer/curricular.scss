@@ -1,9 +1,11 @@
 
 .spacing{
   padding-top: 100px;
+  background: #111;
 }
 .curricular{
-  color:#272822;
+  color:#ffaa62;
+  background: #111;
 }
 .important{
   margin-top:80px;
@@ -108,7 +110,7 @@ span{
         display: inline-block;
         margin: 0 20px 0 20px;
         padding-top:8px;
-        background-color:#00aee9;
+        background-color:#cfeadf;
         border-radius:25px;
         width:50px;
         height:50px;
@@ -139,5 +141,4 @@ span{
 .curricular-footer{
     padding:80px 20px 80px 20px;
     text-align:center;
-    background-color:#4121ab;
 }
