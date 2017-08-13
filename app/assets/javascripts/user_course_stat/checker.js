@@ -15,7 +15,7 @@ function commonCheck(pass_courses){
 		phe_optional: 0, 
 		foreign_basic: 0, 
 		foreign_advance: 0,
-		common_total:0,
+		common_total: 0,
 		common: {		
 			'通識': 0, 
 			'公民': 0, 
@@ -23,7 +23,17 @@ function commonCheck(pass_courses){
 			'歷史': 0, 
 			'文化': 0, 
 			'自然': 0
-		}
+		},
+    new_common_total: 0,
+    new_common: {
+      '核心': {
+        '人文': 0,
+        '社會': 0,
+        '自然': 0
+      },
+      '跨院基本素養': 0,
+      '校基本素養': 0
+    }
 	}; 
 
 	for(var i = 0,course;course=pass_courses[i];i++){ 
