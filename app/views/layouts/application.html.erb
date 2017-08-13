@@ -1,104 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="">
-	<meta name="author" content="">
-	
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  
   <title>NCTU+</title>
   <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
   <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-	<link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
   <%= csrf_meta_tags %>
 
-	<!-- for touch-icon -->
-	<link rel="apple-touch-icon" href="<%=asset_path("touch-icon/iphone.png")%>" /> 
-	<link rel="apple-touch-icon" sizes="76x76" href="<%=asset_path("touch-icon/ipad.png")%>" /> 
-	<link rel="apple-touch-icon" sizes="120x120" href="<%=asset_path("touch-icon/iphone-retina.png")%>" />
-	<link rel="apple-touch-icon" sizes="152x152" href="<%=asset_path("touch-icon/ipad-retina.png")%>" />
-	<!-- touch-icon end -->
+  <!-- custom js/css for different page -->
+  <% if content_for? :custom_assets %>
+    <%= yield :custom_assets %> 
+  <% end %>
+  <!-- custom js/css end -->
 
-	<!-- Facebook META info -->
-	<meta property="fb:app_id" content="<%=Facebook::APP_ID%>" /> 
-	<% if content_for? :cus_fb_head %>
+  <!-- for touch-icon -->
+  <link rel="apple-touch-icon" href="<%=asset_path("touch-icon/iphone.png")%>" /> 
+  <link rel="apple-touch-icon" sizes="76x76" href="<%=asset_path("touch-icon/ipad.png")%>" /> 
+  <link rel="apple-touch-icon" sizes="120x120" href="<%=asset_path("touch-icon/iphone-retina.png")%>" />
+  <link rel="apple-touch-icon" sizes="152x152" href="<%=asset_path("touch-icon/ipad-retina.png")%>" />
+  <!-- touch-icon end -->
+
+  <!-- Facebook META info -->
+  <meta property="fb:app_id" content="<%=Facebook::APP_ID%>" /> 
+  <% if content_for? :cus_fb_head %>
     <%= yield :cus_fb_head %>  
     <!-- custom fb header -->
   <% else %> 
-		<meta property="og:url"           content="<%=root_url%>" />
-		<meta property="og:type"          content="website" />
-		<meta property="og:title"         content="NCTU+" />
+    <meta property="og:url"           content="<%=root_url%>" />
+    <meta property="og:type"          content="website" />
+    <meta property="og:title"         content="NCTU+" />
     <meta property="og:description" content="NCTU+ 交大智慧校園系統">
     <!-- default fb header -->
-	<% end %>
-	<!-- Facebook META info end -->
-	
-	<% if Rails.env.production? %>
-		<!-- Google Tag Manager -->
-		<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-		new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-		j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-		'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-		})(window,document,'script','dataLayer','GTM-MK26KK');</script>
-		<!-- End Google Tag Manager -->
-	<% end %>
-	
+  <% end %>
+  <!-- Facebook META info end -->
+  
+  <% if Rails.env.production? %>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-MK26KK');</script>
+    <!-- End Google Tag Manager -->
+  <% end %>
+  
 </head>
 
 <body id="page-top" style="background-color:#e9eaed;">
 
-	<% if Rails.env.production? %>
-		<!-- Google Tag Manager (noscript) -->
-		<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MK26KK"
-		height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-		<!-- End Google Tag Manager (noscript) -->
-	<% end %>
+  <% if Rails.env.production? %>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MK26KK"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+  <% end %>
 
-	<!-- global-modal, please don't remove!! --> 
-	<div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
-		<div class="modal-dialog" >
-			<div class="modal-content" >
-				<div class="modal-header" >
-					<h4 class="modal-title"></h4>
-				</div>
-				<div class="modal-body" ></div>
-			</div>
-		</div>
-	</div>
-	<!-- global-modal end --> 
-	
-	<!-- layouts/header start -->
-		<%= render 'layouts/header' %>
-	<!-- layouts/header end -->
+  <!-- global-modal, please don't remove!! --> 
+  <div class="modal fade" id="global-modal" tabindex="-1" role="dialog" aria-hidden="true" >
+    <div class="modal-dialog" >
+      <div class="modal-content" >
+        <div class="modal-header" >
+          <h4 class="modal-title"></h4>
+        </div>
+        <div class="modal-body" ></div>
+      </div>
+    </div>
+  </div>
+  <!-- global-modal end --> 
+  
+  <!-- layouts/header start -->
+    <%= render 'layouts/header' %>
+  <!-- layouts/header end -->
 
-	<% if current_page?('/')||current_page?('/login')%>
-		<%= yield %>
-	<% else %>
-		<div id="content-container" class="container<%=@full_width ? "-fluid" : ""%>" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
-			<%= yield %>
-		</div>
-	<% end %>
-	<%= render "layouts/footer" %>
+  <% if current_page?('/')||current_page?('/login')%>
+    <%= yield %>
+  <% else %>
+    <div id="content-container" class="container<%=@full_width ? "-fluid" : ""%>" style="margin-top:60px; margin-bottom:50px;min-height:100vh;" >
+      <%= yield %>
+    </div>
+  <% end %>
+  <%= render "layouts/footer" %>
 
 
-	<script>
-		$(document).ready(function() 
-		{
-			initHeader();
-			$(window).bind("load resize",function() {
-				initHeader();
-			});
-			<% if flash[:notice] %>
-				<% if flash[:notice].kind_of? String%>
-					toastr.warning("<%= flash[:notice] %>");
-				<% else %>
-					toastr.warning("<%= flash[:notice][:message] %>");
-				<% end %>
-			<% end %>		
-		});
-	</script>
+  <script>
+    $(document).ready(function() 
+    {
+      initHeader();
+      $(window).bind("load resize",function() {
+        initHeader();
+      });
+      <% if flash[:notice] %>
+        <% if flash[:notice].kind_of? String%>
+          toastr.warning("<%= flash[:notice] %>");
+        <% else %>
+          toastr.warning("<%= flash[:notice][:message] %>");
+        <% end %>
+      <% end %>
+    });
+  </script>
 </body>
 
 </html>

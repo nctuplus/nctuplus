@@ -28,6 +28,13 @@ Nctuplus::Application.routes.draw do
       post "attend"
     end
   end
+  #--------- calendar ---------
+  resources :calendar, :only => [:index] do
+    collection do 
+      post "get_event"
+      get "get_event"
+    end
+  end  
 
   #--------- for share course table page -----------
   get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
