@@ -85,7 +85,10 @@ function commonCheck(pass_courses){
 			if(dimension.length==2)
 			result['common'][dimension]+=parseInt(course.credit);
 			result['common_total']+=parseInt(course.credit);
-		} 
+		}else if(course.brief_new.search("校基本素養")!=-1){
+	    result['new_common']['校基本素養']+=parseInt(course.credit);
+	    result['new_common_total']+=parseInt(course.credit);
+    }
 	}
 	return result;
 }
