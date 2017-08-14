@@ -2,12 +2,11 @@
 @import 'mixins';
 //@import "font-awesome-sprockets";
 //@import "font-awesome";
-@import url(http://fonts.googleapis.com/earlyaccess/notosans.css);
 @import url(http://fonts.googleapis.com/earlyaccess/notosanstc.css);
 body {
     max-width: 100%;
     height: 100%;
-    font-family: 'Noto Sans', 'Noto Sans CJK TC';
+    font-family: 'Noto Sans', 'Noto Sans TC';
     color: white;
     background-color: #f3faf5;
     -webkit-tap-highlight-color: rgba(white, 0.2);
@@ -38,7 +37,7 @@ h5,
 h6 {
     margin: 0 0 35px;
     text-transform: uppercase;
-    font-family: 'Noto Sans', 'Noto Sans CJK TC';
+    font-family: 'Noto Sans', 'Noto Sans TC';
     font-weight: 500;
     letter-spacing: 1px;
 }
@@ -76,7 +75,7 @@ a {
     margin-bottom: 0;
     border-bottom: 1px solid rgba(white, 0.3);
     text-transform: uppercase;
-    font-family: 'Noto Sans', 'Noto Sans CJK TC';
+    font-family: 'Noto Sans', 'Noto Sans TC';
     font-size: 1.18em;
     font-weight:300;
     background-color: #f3faf5;
@@ -284,7 +283,7 @@ a {
 .footer-custom{
     text-align:left;
     padding: 3% 0 3% 0;
-    font-family: 'Noto Sans', 'Noto Sans CJK TC';
+    font-family: 'Noto Sans', 'Noto Sans TC';
     .footer-lower-bar{
         color:$footer;
     }
