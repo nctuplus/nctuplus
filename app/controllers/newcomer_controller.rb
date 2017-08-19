@@ -121,15 +121,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "佛朗明哥舞蹈社",
-				pdf: "佛朗明哥舞蹈社.pdf",
-				web: nil,
-				fb: "https://www.facebook.com/nctuflamenco/",
-				img: "佛朗明哥社.jpg",
-				color: "white"
-			},
-			{
-				category: "curricular",
 				name: "管樂團",
 				pdf: "管樂團網路新生包.pdf",
 				web: nil,
@@ -211,15 +202,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "焦點POP社",
-				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NZlNoQkJCcElCQ1U/view?pref=2&pli=1",
-				web: nil,
-				fb: "https://www.facebook.com/focuspopclub",
-				img: "焦點POP社網宣.jpg",
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "陶藝社",
 				pdf: nil,
 				web: nil,
@@ -234,15 +216,6 @@ class NewcomerController < ApplicationController
 				web: nil,
 				fb: "https://www.facebook.com/nctupdcfans",
 				img: "交大布袋戲社.jpg",
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "OPENHOUSE｜交大校園企業徵才組",
-				pdf: "https://drive.google.com/file/d/0B1AOhZTA1x1NY2pXeUtJSVQtV3c/view?pref=2&pli=1",
-				web: "https://www.youtube.com/watch?v=ivOgVBmP9MA",
-				fb: "https://www.facebook.com/NCTU.OH/",
-				img: "OPENHOUSE.jpg",
 				color: "default"
 			},
 			{
@@ -337,15 +310,6 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
-				name: "高爾夫球社",
-				pdf: nil,
-				web: nil,
-				fb: "https://www.facebook.com/NCTUgolf",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
 				name: "鋼琴社",
 				pdf: nil,
 				web: nil,
@@ -413,15 +377,6 @@ class NewcomerController < ApplicationController
 				pdf: nil,
 				group: "https://www.facebook.com/groups/183634768487887/",
 				fb: "https://www.facebook.com/nctuEC",
-				img: nil,
-				color: "default"
-			},
-			{
-				category: "curricular",
-				name: "花輪社",
-				pdf: nil,
-				web: nil,
-				group: "https://www.facebook.com/groups/296378307040482/",
 				img: nil,
 				color: "default"
 			},
