@@ -652,7 +652,7 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "alumnian",
-				name: "桃園地區同鄉會(桃友會)",
+				name: "桃園地區友好會(桃友會)",
 				pdf: nil,
 				web: nil,
 				fb: "https://www.facebook.com/NCTUTaoYoAssociation/?fref=ts",
