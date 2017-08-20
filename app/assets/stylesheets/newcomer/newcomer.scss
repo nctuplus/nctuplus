@@ -357,6 +357,8 @@ a {
 }
 .btn-2{
     @include custom-btn(#e0a56b,#f7f7f7,#FFF);
+    width: auto;
+    min-width: 120px;
 }
 .btn-3{
     @include custom-btn(#d6d4d1,#de8b15,#de8b15);
