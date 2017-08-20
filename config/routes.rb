@@ -193,6 +193,7 @@ Nctuplus::Application.routes.draw do
 
   #footer content
   get 'newcomer/stunionIntro'
+  get "newcomer/pdf"
 
   #---------- for chrome extension -----------
   post "api/query_from_time_table"

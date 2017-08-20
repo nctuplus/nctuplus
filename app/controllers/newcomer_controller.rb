@@ -789,4 +789,12 @@ class NewcomerController < ApplicationController
 	def essentialShopping
 		@title = "小七精美用品預購 | 網路新生包"
 	end
+    def pdf
+        send_file(
+          "#{Rails.root}/public/2017newcomer.pdf",
+          filename: "2017學聯新生包手冊.pdf",
+          type: "application/pdf"
+        )
+    end
+
 end
