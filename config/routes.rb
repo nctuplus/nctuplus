@@ -28,6 +28,13 @@ Nctuplus::Application.routes.draw do
       post "attend"
     end
   end
+  #--------- calendar ---------
+  resources :calendar, :only => [:index] do
+    collection do 
+      post "get_event"
+      get "get_event"
+    end
+  end  
 
   #--------- for share course table page -----------
   get "shares/:id" , to: "user#share", :constraints => {:id => /.{#{Hashid.user_sharecode_length}}/}
@@ -166,6 +173,27 @@ Nctuplus::Application.routes.draw do
 
   resources :departments, :except=>[:show, :destroy]
 
+  #---------- for newcomer page---------
+  get 'newcomer/', to: "newcomer#main" 
+  get 'newcomer/procedure'
+  get 'newcomer/qna'
+
+  get 'newcomer/d2setup'
+  get 'newcomer/map'
+  get 'newcomer/chooseClass'
+
+  # all newcomer buying in NCTU
+  get 'newcomer/shopping'
+  get 'newcomer/newtonA'
+  get 'newcomer/essentialShopping'
+  # all association in NCTU
+  get 'newcomer/curricular'
+  get 'newcomer/studentAssociation'
+  get 'newcomer/alumnian'
+
+  #footer content
+  get 'newcomer/stunionIntro'
+  get "newcomer/pdf"
 
   #---------- for chrome extension -----------
   post "api/query_from_time_table"

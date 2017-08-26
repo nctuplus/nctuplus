@@ -1,0 +1,41 @@
+<footer class="footer-custom">
+	<div class="row footer-upper-bar">
+		<div class="col-lg-2 col-lg-offset-1 col-sm-3">
+			<ul>
+				<li class="footer-header">關於</li>
+				<li><a href="https://plus.nctu.edu.tw" target="_blank">關於NCTU+</a></li>
+				<li><a href="https://stunion.nctu.edu.tw/blog/" target="_blank">關於學聯會</a></li>
+				<li><a href="http://stunion.nctu.edu.tw/question/" target="_blank">新生提問平台</a></li>
+				<li><%= link_to "學聯會徵才", newcomer_stunionIntro_path %></li>
+			</ul>
+		</div>
+		<div class="col-lg-2 col-sm-3">
+			<ul>
+				<li class="footer-header">團購</li>
+				<li><%= link_to "小七團購", newcomer_essentialShopping_path %></li>
+				<li><%= link_to "金牛頓團購", newcomer_newtonA_path %></li>
+				<li><%= link_to "計算機團購", newcomer_shopping_path(anchor: "calculator") %></li>
+				<li><%= link_to "桌燈團購", newcomer_shopping_path(anchor: "lamp") %></li>
+			</ul>
+		</div>
+		<div class="col-lg-2 col-sm-3">
+			<ul>
+				<li class="footer-header">網路新生包</li>
+				<li><%= link_to "D2宿網申請", newcomer_d2setup_path %></li>
+				<li><%= link_to "選課教學", newcomer_chooseClass_path %></li>
+				<li><%= link_to "社團介紹", newcomer_curricular_path %></li>
+				<li><%= link_to "系學會", newcomer_studentAssociation_path %></li>
+				<li><%= link_to "友會介紹", newcomer_alumnian_path %></li>
+			</ul>
+		</div>
+		<div class="col-lg-4 col-lg-offset-1 col-sm-3">
+			<a href="https://stunion.nctu.edu.tw/blog/" target="_blank"><%= image_tag 'newcomer/stunion.png', :class => 'footer-logo' %></a>
+			<a href="https://plus.nctu.edu.tw" target="_blank"><%= image_tag 'newcomer/nctuplus.png', :class => 'footer-logo' %></a>
+			<div class="footer-lower-bar">
+				<span>© Copy Rights 2016 交大學聯會資訊部、NCTU+ </span>
+			</div>
+		</div>
+	</div>
+</footer>
+<div class="ribbon-top"></div>
+

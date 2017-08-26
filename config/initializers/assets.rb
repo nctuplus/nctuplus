@@ -4,7 +4,8 @@
 Rails.application.config.assets.precompile +=[
 	'tmpl.min.js',
 	#'bootstrap-treeview.js',
-	'courses/content.js',
+	'calendar/index.js',
+    'courses/content.js',
 	'courses/chart.js',	
 	'courses/html2canvas.js',
 	'courses/table.js',
@@ -26,6 +27,10 @@ Rails.application.config.assets.precompile +=[
 	'event_create.js',
 	'jquery.counterup.js',
 	'waypoints.min.js',
-	'courses-tutorial.css'
+	'courses-tutorial.css',
+     'waypoints.min.js',
+     'newcomer/*.js',
+     'newcomer/*.css',
+     'NotoSans-Regular-ttf'
 
 ]

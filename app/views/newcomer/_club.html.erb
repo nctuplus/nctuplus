@@ -1,0 +1,19 @@
+<% require 'uri' # provide the function to check whether pdf path string is a URL %>
+
+<% datas.each_with_index do |club, counter| %>
+	<% if club[:img] != nil %>
+		<% if counter%2 == 0 %>
+			<% # image left %>
+			<%= render 'club_info', :club => club, :category => category, :push => true %>
+			<%= render 'club_img', :club => club, :category => category, :pull => true %>
+		<% else %>
+			<% # image right %>
+			<%= render 'club_info', :club => club, :category => category, :push => false %>
+			<%= render 'club_img', :club => club, :category => category, :pull => false %>
+		<% end %>
+	<% else %>
+		<% # only render info %>
+		<%= render 'club_info', :club => club, :category => category, :push => false %>
+	<% end %>
+<% end %>
+
