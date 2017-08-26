@@ -301,6 +301,15 @@ class NewcomerController < ApplicationController
 			},
 			{
 				category: "curricular",
+				name: "撞球社",
+				pdf: nil,
+				web: nil,
+				fb: nil,
+				img: "撞球社.jpg",
+				color: "default"
+			},
+			{
+				category: "curricular",
 				name: "社會企業創思社",
 				pdf: nil,
 				web: nil,
