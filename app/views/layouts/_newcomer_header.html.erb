@@ -1,0 +1,50 @@
+<nav class="navbar <%= action_name == 'main' ? 'navbar-custom' : 'navbar-custom2' %> navbar-fixed-top" role="navigation" id="top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-main-collapse">
+				<i class="fa fa-bars"></i>
+			</button>
+			<span class="navbar-brand"><%= link_to "網路新生包", newcomer_path %></span>
+		</div>
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse navbar-main-collapse">
+			<ul class="nav navbar-nav">
+				<!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+				<li class="hidden">
+					<a href="#page-top"></a>
+				</li>
+				<li> 
+					<%= link_to "初入交大", newcomer_procedure_path %>
+				</li> 
+				<li> 
+					<%= link_to "精選問答", newcomer_qna_path %>
+				</li> 
+				<li class="dropdown"> 
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">團購 <span class="caret"></span></a> 
+					<ul class="dropdown-menu"> 
+						<li><%= link_to "新生團購", newcomer_shopping_path %></li>
+						<li><%= link_to "Newton'sA 學生特價", newcomer_newtonA_path %></li>
+						<li><%= link_to "小七精美用品促銷", newcomer_essentialShopping_path %></li>
+					</ul>
+				</li> 
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">學生社團資訊 <span class="caret"></span></a> 
+					<ul class="dropdown-menu">
+						<li><%= link_to "社團資訊", newcomer_curricular_path %></li>
+						<li><%= link_to "系學會資訊", newcomer_studentAssociation_path %></li>
+						<li><%= link_to "友會資訊", newcomer_alumnian_path %></li>
+					</ul> 
+				</li> 
+				<li> 
+					<%= link_to "交大地圖", newcomer_map_path %>
+				</li> 
+				<li><%= link_to "D2帳號申請", "http://www.it.nctu.edu.tw/?page_id=2569", target: "_blank" %></li> 
+				<li><%= link_to "選課教學", newcomer_chooseClass_path %></li> 
+				<li><%= link_to "NCTU+", "https://plus.nctu.edu.tw/" , target: "_blank" %></li>
+				<li><%= link_to "學聯會", "https://stunion.nctu.edu.tw/blog/", target: "_blank" %></li>
+			</ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container -->
+</nav>

@@ -1,0 +1,76 @@
+.cover {
+    background: #E8EAED; 
+    min-width: 100%;
+}
+
+.course {
+    background: #FDFDFD;
+}
+
+@media (min-width: 1024px) {
+    .course {
+        max-width: 800px;
+}
+}
+
+.spacing {
+    padding-top: 50px;
+}
+
+.group {
+    text-align: center;
+    background: #3959b9;
+    font-size: 24px;
+    font-weight: bold;
+    padding: 0.8em;
+}
+
+.img-responsive {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.step {
+    display: block;
+    margin-bottom: 25px;
+}
+
+.step .title-blk {
+    background: #83a7ec;
+    font-size: 18px;
+    padding: 1.5em 0 0.3em 0;
+    position: relative;
+}
+.step .num {
+
+    display: inline-block;
+    font-size: 24px;
+    font-weight: bold;
+    height: 100%;
+    padding-left: 1em;
+    padding-right: 1em;
+    position: absolute;
+    top: 0;
+    left: 0 ;
+    width: 3em;
+
+}
+.step .mid-fix {
+    position: absolute;
+    margin-top: -0.4em;
+    top: 50%;
+}
+.step .text {
+    color: #FFF; 
+    font-weight: bold;
+    display: inline-block;
+    margin-left: 3em;
+}
+.step .content {
+    color: #333;
+    font-size: 14px;
+    margin-left: 3%;
+    margin-right: 3%;
+    line-height: 30px;
+}

@@ -1,0 +1,125 @@
+<%= stylesheet_link_tag 'newcomer/setup' %>
+
+<div class="setup-container">
+	<section class="d2setup">
+		<span class="setup-header"><h2>宿舍網路申請與設定教學</h2><h4><i class="fa fa-warning fa-lg"></i> 注意：自動開通需要等到新生訓練期間的註冊完畢後才能使用，若還沒註冊請避免先申請帳號</h4></span>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><h4>步驟1: 請連線到 <a href="https://d2.nctu.edu.tw/">https://d2.nctu.edu.tw/</a>，點選『申請D2帳號』。</h4></span>
+			</div>
+			<div class="col-sm-6" >
+				<%= image_tag 'newcomer/d2setup/step1.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><h4>步驟2: 詳閱申請流程後請點選『開始申請』。</h4></span>
+			</div>
+			<div class="col-sm-6">
+				<%= image_tag 'newcomer/d2setup/step2.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><h4>步驟3: 詳閱使用規範後請點選『我同意遵守使用者規範』。</h4></span>
+			</div>
+			<div class="col-sm-6">
+				<%= image_tag 'newcomer/d2setup/step3.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><h4>步驟4: 請務必確實填寫所有欄位的資料，之後點選『送出申請表』，約三十分鐘後，帳戶即可自動開通。</h4></span>
+			</div>
+			<div class="col-sm-3 col-sm-offset-1">
+				<%= image_tag 'newcomer/d2setup/step4.png', :class => 'resize-img' %>
+			</div>
+		</div>
+	</section>
+	<section>
+		<div class="header-banner">
+			<span class="setup-header"><h3>宿舍網路設定教學（Windows）</h3></span>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<ul>
+					<li>每個房間皆有對應的A,B,C,D 四個網路線(RJ-45)孔位。</li>
+					<li>選擇一個孔位插上網絡線，並將網絡線另一端接上電腦或設備。</li>
+					<li>此時若開啟瀏覽器時可跳出宿網登入畫面，即可跳過網絡連線設定。</li>
+				</ul>
+			</div>
+			<div class="col-sm-6">
+				<%= image_tag 'newcomer/d2setup/rj45.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<span class="header" id="network_setting"><h3>網路連線設定</h3></span>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><h4>首先請開啟『開始』→『控制台』並點選『網路和共用中心』或類似選項。</h4></span>
+			</div>
+			<div class="col-sm-6">
+				<%= image_tag 'newcomer/d2setup/window_setting.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><h4>請點選『變更介面卡設定』。</h4></span>
+			</div>
+			<div class="col-sm-6 ">
+				<%= image_tag 'newcomer/d2setup/window_setting2.png', :class => 'resize-img' %>
+			</div>
+
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header"><p>一般而言大多只會有一到兩個有線網路卡設定，請找到對應的有線網路卡，並對其按右鍵選取內容。</p><p>注意不要改到無線網絡Wi-Fi的設定，通常有線網卡設定會命名為乙太網絡或區域網絡。 </p></span>
+			</div>
+			<div class="col-sm-6 ">
+				<%= image_tag 'newcomer/d2setup/window_setting3.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header">
+					<p> 請對『網際網路通訊協定第4版(TCP/IPv4)』點擊兩下左鍵。</p>
+				</span>
+			</div>
+			<div class="col-sm-3 col-sm-offset-1" >
+				<%= image_tag 'newcomer/d2setup/window_setting4.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header">
+					<p>請點選『自動取得IP位址』及『自動取得DNS伺服器位址』並點選確定儲存，之後即可開啟瀏覽器進入登入畫面。</p>
+					<p>若自行設定IP，可能會導致無法上網的狀況（宿網系統將自行分配門上所標示之IP給您）</p>
+				</span>
+			</div>
+			<div class="col-sm-3 col-sm-offset-1">
+				<%= image_tag 'newcomer/d2setup/window_setting5.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row">
+			<div class="col-sm-4 col-sm-offset-1">
+				<span class="steps-header">
+					<p>請使用事先申請好的D2信箱帳戶登入⼊</p>
+					<p>請務必使用本人帳號，同個帳號一次只能在一個孔位登入⼊</p>
+					<p>誤用他人帳號將會可能導致其在被登出之前無法上網</p>	
+					<p> 註：若想使用command line interface 進行 login，可以使⽤</p>
+					<p><a href="https://github.com/Microsheep/D2-command-line-login" >https://github.com/Microsheep/D2-command-line-login</a></p>
+				</span>
+			</div>
+			<div class="col-sm-3 col-sm-offset-1">
+				<%= image_tag 'newcomer/d2setup/window_setting6.png', :class => 'resize-img' %>
+			</div>
+		</div>
+		<div class="steps row reminder">
+			<p>感謝學長姐的努力及校方資訊技術服務中心的勞心管理，目前宿網並沒有流量限制！<br/>
+			對於這得來不易的自由，盼望大家謹慎使用網路資源，不破壞他人自由及網路安全！  不架設非教育性質的服務！<br/>
+			不超量下載大容量內容！<br/>
+			不超量下載大容量內容！</p>
+		</div>
+	</section>
+</div>

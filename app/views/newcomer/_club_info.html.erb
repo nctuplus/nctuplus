@@ -1,0 +1,38 @@
+<% if push %>
+	<div class="col-sm-6 col-sm-push-6 text-col">
+<% else %>
+	<div class="col-sm-6 text-col">
+<% end %>
+	<h3><%= club[:name] %></h3>
+	<hr>
+	<section class="icons">
+		<% if club[:fb] != nil %>
+			<%= link_to club[:fb], :target => '_blank' do %>
+				<p><i class="fa fa-facebook-square fa-lg"></i></p>
+			<% end %>
+		<% end %>
+		<% if club[:group] != nil %>
+			<%= link_to club[:group], :target => '_blank' do %>
+				<p><i class="fa fa-users"></i></p>
+			<% end %>
+		<% end %>
+
+		<% if club[:web] != nil %>
+			<%= link_to club[:web], :target => '_blank' do %>
+				<p><i class="fa fa-globe fa-lg"></i></p>
+			<% end %>
+		<% end %>
+		<% if club[:pdf] != nil %>
+			<% if club[:pdf] =~ /\A#{URI::regexp}\z/ # is a URL %>
+				<%= link_to club[:pdf], :target => '_blank' do %>
+					<p><i class="fa fa-file-pdf-o"></i></p>
+				<% end %>
+			<% else %>
+				<%= link_to "/pdf/newcomer/#{category}/#{club[:pdf]}", :target => '_blank' do %>
+					<p><i class="fa fa-file-pdf-o"></i></p>
+				<% end %>
+			<% end %>
+		<% end %>
+	</section>
+</div>
+

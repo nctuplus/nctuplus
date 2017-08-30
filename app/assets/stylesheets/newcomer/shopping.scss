@@ -1,0 +1,164 @@
+.glyphicon { margin-right:5px; }
+.thumbnail
+{
+    margin-bottom: 20px;
+    padding: 13px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+.navbar-custom{
+    background-color: #fff;
+}
+.item.list-group-item
+{
+    float: none;
+    width: 100%;
+    background-color: #fff;
+    margin-bottom: 10px;
+}
+.item.list-group-item:nth-of-type(odd):hover,.item.list-group-item:hover
+{
+    background: #428bca;
+}
+
+.item.list-group-item .list-group-image
+{
+    margin-right: 10px;
+}
+.item.list-group-item .thumbnail
+{
+    margin-bottom: 0px;
+}
+.item.list-group-item .caption
+{
+    padding: 9px 9px 0px 9px;
+}
+.item.list-group-item:nth-of-type(odd)
+{
+    background: #eeeeee;
+}
+
+.item.list-group-item:before, .item.list-group-item:after
+{
+    display: table;
+    content: " ";
+}
+
+.item.list-group-item img.group
+{
+    position: absolute;
+    background: blue;
+    transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+}
+.item.list-group-item:after
+{
+    clear: both;
+}
+.list-group-item-text
+{
+    margin: 0 0 11px;
+}
+.list-group-image {
+    animation: slide-in 0.5s forwards;
+    -webkit-animation: slide-in 0.5s forwards;
+}
+    
+@keyframes list-group-image {
+    100% { transform: translateX(0%); }
+}
+
+@-webkit-keyframes list-group-image {
+    100% { -webkit-transform: translateX(0%); }
+}
+span.header{
+    text-align:center;
+}
+span.header p{
+    margin-top:80px;
+    color:#353535;
+    font-weight: 600;
+    font-size:2.3em;
+}
+
+/* 7-11 shopping list*/
+.seven-header{
+    margin-top: 100px;
+    color:#353535;
+}
+.seven-spacing{
+    margin-top: 100px;
+}
+.seven-items{
+    font-size: 1.3em;
+}
+ul.important-note {
+    list-style-type: none;
+    font-size:1.18em;
+    text-align:left;
+    li{
+        margin:2px;
+    }
+}
+.get{
+    list-style: none;
+    font-size:1.5em;
+}
+.banner-text{
+    text-align:center;
+}
+li,h3{
+    color:#353535;
+}
+/* PROGRESS TRACKER */
+
+.progress-tracker {
+    display: block;
+    counter-reset: item;
+    list-style-type: none;
+    overflow: auto;
+    position: relative;
+    width: 100%;
+}
+.progress-tracker .step:before {
+    background: #458be3;
+    border-radius: 40px;
+    color: #FFFFFF;
+    content: "";
+    display: list-item;
+    font-size: 18px;
+    line-height: 1.8em;
+    padding: 1px 0 0 13px;
+    position: absolute;
+    width: 36px;
+    height: 36px;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+    content: counter(item) "  "; 
+    counter-increment: item;
+}
+.progress-tracker .step {
+    display: block;
+    float: left;
+    list-style-position: inside;
+    width: 20%;
+}
+.progress-tracker .step .step-name{
+    border-top: 7px solid #aaa;
+    display: block;
+    margin: 15px 0;
+    padding: 20px 0;
+}
+/*last step*/
+.progress-tracker .step:last-child { width: auto;}
+.progress-tracker .step:last-child .step-name{ border-color: transparent;}
+
+/*active step*/
+.progress-tracker .step.active .step-name {color: #666;}
+.progress-tracker .step.active:before {background: #458be3;}
+.form{
+    min-width:100%;
+    height:500px;
+}
