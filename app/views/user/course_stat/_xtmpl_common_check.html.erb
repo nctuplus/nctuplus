@@ -133,6 +133,70 @@
 			</div>
 		</td>
 	</tr>
+
+
+	<tr class="">
+		<td rowspan="5" style="vertical-align:middle">
+			<p class="text-center no-margin-bottom" style="line-">新制通識</p>
+		</td>
+		
+	</tr>
+
+	<tr class="">
+		<td colspan="6">
+			<div class="progress no-margin-bottom">
+				{% var progresswidth=  9  *100/22 > 80 ? 80 :   9  *100/22; %}
+				<div class="progress-bar progress-bar-success" role="progressbar" style="width: {%= progresswidth %}%;">		
+					{% var spanclass=  9  ==0?"sr-only":""; %}
+					<span class="{%=spanclass%}">全部 <strong>{%=   9   %}/22</strong></span>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr class="">
+		<td colspan="6">
+			<div class="progress no-margin-bottom">
+				{% var progresswidth=  2  *100/6 > 100 ? 100 :   2  *100/6; %}
+				<div class="progress-bar" role="progressbar" style="width: {%= progresswidth %}%;">		
+					{% var spanclass=  2  ==0?"sr-only":""; %}
+					<span class="{%=spanclass%}">核心 <strong>{%=   2   %}/6</strong></span>
+				</div>
+			</div>
+
+			<div class="progress no-margin-bottom">
+				{% var progresswidth=  2  *100/6 > 100 ? 100 :   2  *100/6; %}
+				<div class="progress-bar dimension-world" role="progressbar" style="width: {%= progresswidth %}%;">		
+					{% var spanclass=  2  ==0?"sr-only":""; %}
+					<span class="{%=spanclass%}"> 自然 <strong>{%=   2   %}/6</strong></span>
+				</div>
+			</div>
+		</td>
+	</tr>
+
+	<tr class="">
+		<td colspan="6">
+			<div class="progress no-margin-bottom">
+				{% var progresswidth=  4  *100/6 > 100 ? 100 :   4  *100/6; %}
+				<div class="progress-bar" role="progressbar" style="width: {%= progresswidth %}%;">		
+					{% var spanclass=  4  ==0?"sr-only":""; %}
+					<span class="{%=spanclass%}">跨院 <strong>{%=   4   %}/6</strong></span>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr class="">
+		<td colspan="6">
+			<div class="progress no-margin-bottom">
+				{% var progresswidth=  3  *100/6 > 100 ? 100 :   3  *100/6; %}
+				<div class="progress-bar" role="progressbar" style="width: {%= progresswidth %}%;">		
+					{% var spanclass=  3  ==0?"sr-only":""; %}
+					<span class="{%=spanclass%}">校基本 <strong>{%=   3   %}/6</strong></span>
+				</div>
+			</div>
+		</td>
+	</tr>
+
+
 </table>
 <p>
 註：外語學分目前不會計算第二外語及進修英文(因無法得知是否通過中高級初試)<br>
