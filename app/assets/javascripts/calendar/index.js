@@ -11,6 +11,7 @@
 //= require calendar/calendar.js
 //= require calendar/info-bar.js
 //= require calendar/callback.js
+//= require calendar/tag-cale.js
 //
 var d = new Date();
 eventLoader.getEventByMonth(d.getFullYear(), d.getMonth()+1);
@@ -31,7 +32,7 @@ $(document).ready(function(){
   pageInitialization();
 
   // Install callbacks
-  $("#btn-cale").click(callback.cale_click);
+  $("#btn-cale").click(callback.cale_click_direct);
   $("#btn-info").click(callback.info_click);
   $("#btn-bell").click(callback.bell_click);
 

@@ -20,9 +20,32 @@
     "TimeStart": 1499184000000,
     "TimeEnd": 1499184000000
   },
+
+  {
+    "MaterialType": "announcement",
+    "CrsYear": 105,
+    "CrsSemester": 2,
+    "CourseNo": "0312",
+    "CourseName": "哇哇哇",
+    "Title": "這是七月五日的公告",
+    "TimeStart": 1499184000000,
+    "TimeEnd": 1499184000000
+  },
+
   
   {
-    "MaterialType": "homework",
+    "MaterialType": "announcement",
+    "CrsYear": 105,
+    "CrsSemester": 2,
+    "CourseNo": "0312",
+    "CourseName": "哇哇哇",
+    "Title": "這是七月五日的公告",
+    "TimeStart": 1499184000000,
+    "TimeEnd": 1499184000000
+  },
+  
+  {
+    "MaterialType": "assignment",
     "CrsYear": 105,
     "CrsSemester": 2,
     "CourseNo": "0312",
