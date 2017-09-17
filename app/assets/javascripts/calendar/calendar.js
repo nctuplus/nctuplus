@@ -35,6 +35,8 @@ var calendar = {
     month: new Date().getMonth()+1,
   },
 
+  savedEvents: {},
+
 
   /**
    * 清除月曆中所有日期的HTML。
@@ -77,6 +79,9 @@ var calendar = {
    */
   setup: function(year, month) {
 
+
+    calendar.savedEvents = [];
+
     // 預設Input
     year = (year === undefined)? calendar.status.year: year;
     month = (month === undefined)? calendar.status.month: month;
@@ -94,6 +99,8 @@ var calendar = {
     calendar.selectDate(calendar.status.selectedDate);
     // 載入事件
     eventLoader.getEventByMonth(year, month, callback.calendar_getEventCB);
+
+    console.log(calendar.savedEvents);
   },
 
   /**
@@ -162,20 +169,36 @@ var calendar = {
    */
   addEvent: function(event) {
 
+
+
     var dateBox = calendar.getDateBox(event.EventTime);
     if (dateBox.length == 0)
       return false;
-    var e = $(`<div class="event">
-                 <div class="rec"></div>
-                 <div class="content">${event.Title}</div>
-               </div>`).appendTo(dateBox);
-    switch (event.MaterialType) {
-      case 'announcement':
-        e.addClass('rec-yellow'); break;
-      case 'homework':
-        e.addClass('rec-red'); break;
-      case 'event':
-        e.addClass('rec-darkblue'); break;
+
+    calendar.savedEvents.push(event);
+
+    var count = $(dateBox).find('.event').length;
+
+    
+    if(count > 2){
+      // do nothing
+    }else if(count == 2){
+      var e = $(` <div class="event event-omit">...</div>`).appendTo(dateBox);
+
+    }else{
+      var e = $(`<div class="event">
+                   <div class="rec"></div>
+                   <div class="content"><b>${event.CourseName}</b><br>${event.Title}</div>
+                 </div>`).appendTo(dateBox);
+      switch (event.MaterialType) {
+        case 'announcement':
+          e.addClass('rec-darkblue'); break;
+        case 'assignment':
+          e.addClass('rec-red'); break;
+        case 'event':
+          e.addClass('rec-yellow'); break;
+      }
+
     }
     return true;
   },
