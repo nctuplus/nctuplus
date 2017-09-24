@@ -19,7 +19,7 @@ function commonCheck(pass_courses){
 		common: {		
 			'通識': 0, 
 			'公民': 0, 
-			'群已': 0, 
+			'群己': 0, 
 			'歷史': 0, 
 			'文化': 0, 
 			'自然': 0
@@ -72,8 +72,8 @@ function commonCheck(pass_courses){
 		} 
 		else if(course.cos_type.search("通識")!=-1){
 			var dimension=course.brief.substr(0,2);
-			if(dimension.length==2)
-			result['common'][dimension]+=parseInt(course.credit);
+			if(dimension == '群已') dimension = '群己';
+			if(dimension.length==2) result['common'][dimension]+=parseInt(course.credit);
 			result['common_total']+=parseInt(course.credit);
 		} 
 	}
