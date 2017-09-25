@@ -72,7 +72,7 @@ function commonCheck(pass_courses){
 		} 
 		else if(course.cos_type.search("通識")!=-1){
 			var dimension=course.brief.substr(0,2);
-			if(dimension == '群已') dimension = '群己';
+			if(dimension == '群已') dimension = '群己'; //修正前端顯示bug, 待db修正後可移掉
 			if(dimension.length==2) result['common'][dimension]+=parseInt(course.credit);
 			result['common_total']+=parseInt(course.credit);
 		} 
