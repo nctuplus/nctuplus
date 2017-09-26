@@ -157,7 +157,7 @@ var eventLoader = {
         // 將時間從Unix Timestamp轉換成Date型態
         data[i].TimeStart = new Date(data[i].TimeStart);
         data[i].TimeEnd = new Date(data[i].TimeEnd);
-        data[i].EventTime = (data[i].MaterialType == 'event')? data[i].TimeStart: data[i].TimeEnd;
+        data[i].EventTime = (data[i].MaterialType != 'assignment')? data[i].TimeStart: data[i].TimeEnd;
         // hotfix for static json
         if ( data[i].EventTime < start || data[i].EventTime > end )
           continue;

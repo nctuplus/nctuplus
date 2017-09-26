@@ -99,8 +99,6 @@ var calendar = {
     calendar.selectDate(calendar.status.selectedDate);
     // 載入事件
     eventLoader.getEventByMonth(year, month, callback.calendar_getEventCB);
-
-    console.log(calendar.savedEvents);
   },
 
   /**
