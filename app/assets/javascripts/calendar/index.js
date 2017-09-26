@@ -12,6 +12,7 @@
 //= require calendar/info-bar.js
 //= require calendar/callback.js
 //= require calendar/tag-cale.js
+//= require calendar/tag-bell.js
 //
 var d = new Date();
 eventLoader.getEventByMonth(d.getFullYear(), d.getMonth()+1);
@@ -24,6 +25,7 @@ var pageInitialization = function() {
   $(".tag-cale").hide();
   $(".tag-info").hide();
   $("#btn-bell").addClass("selected");
+  tagBell.setTagBell();
 }
 
 

@@ -12,7 +12,7 @@ var tagCale = {
 
       
   /**
-   * 清除月曆中所有日期的HTML。
+   * 清除tag-cale中所有HTML。
    */
   clear: function() {
     $('.thing-cale').remove();
