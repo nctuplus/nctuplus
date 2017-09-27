@@ -113,7 +113,7 @@ var tagCale = {
 
     //直接搜遍所有event 找到符合該日期的event則丟入addEvent()
     var savedEvents = eventLoader.events[Nyear*100+Nmonth+1];
-    for(var i=0; i<savedEvents.length; i++){
+    for(var i=0; (savedEvents!==undefined && i<savedEvents.length); i++){
       var tmp = savedEvents[i];
       var year = tmp.EventTime.getFullYear(), month = tmp.EventTime.getMonth(), d = tmp.EventTime.getDate();
       if(Nyear == year && Nmonth == month && Nd == d){
