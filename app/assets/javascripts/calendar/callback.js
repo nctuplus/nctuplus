@@ -23,6 +23,7 @@ var callback = {
     $("#btn-info").removeClass("selected");
     $("#btn-bell").addClass("selected");
     calendar.selectDate(new Date());
+    tagBell.setTagBell(new Date());
   },
 
   cale_click_direct: function(){
@@ -35,15 +36,15 @@ var callback = {
     calendar.selectDate(new Date());
     tagCale.setTagCale(new Date());
   },
-  cale_click: function(Todate) {
+  cale_click: function(toDate) {
     $(".tag-cale").hide().fadeIn();
     $(".tag-info").fadeOut();
     $(".tag-bell").fadeOut();
     $("#btn-cale").addClass("selected");
     $("#btn-info").removeClass("selected");
     $("#btn-bell").removeClass("selected");
-    calendar.selectDate(Todate);
-    tagCale.setTagCale(Todate);
+    calendar.selectDate(toDate);
+    tagCale.setTagCale(toDate);
   },
 
   bar1_click: function() {
@@ -70,5 +71,7 @@ var callback = {
     for (var i = 0; i < data.length; i++) {
       calendar.addEvent(data[i]);
     }
+    
+    tagBell.setTagBell(new Date());
   }
 }

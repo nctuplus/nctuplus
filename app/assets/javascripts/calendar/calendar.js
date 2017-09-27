@@ -35,8 +35,6 @@ var calendar = {
     month: new Date().getMonth()+1,
   },
 
-  savedEvents: {},
-
 
   /**
    * 清除月曆中所有日期的HTML。
@@ -80,8 +78,6 @@ var calendar = {
   setup: function(year, month) {
 
 
-    calendar.savedEvents = [];
-
     // 預設Input
     year = (year === undefined)? calendar.status.year: year;
     month = (month === undefined)? calendar.status.month: month;
@@ -99,6 +95,7 @@ var calendar = {
     calendar.selectDate(calendar.status.selectedDate);
     // 載入事件
     eventLoader.getEventByMonth(year, month, callback.calendar_getEventCB);
+
   },
 
   /**
@@ -172,8 +169,6 @@ var calendar = {
     var dateBox = calendar.getDateBox(event.EventTime);
     if (dateBox.length == 0)
       return false;
-
-    calendar.savedEvents.push(event);
 
     var count = $(dateBox).find('.event').length;
 
