@@ -30,7 +30,11 @@ var tagBell = {
   },
 
   
-    //傳入event物件繪製出來
+    /**
+     * 傳入event物件繪製出來 
+     * @param {number} index - 這一天第幾個事件(從0開始)
+     * @param {string} dayCount - 倒數幾天
+     */
   addEvent: function(event, index, dayCount) {
     var title;
     var eventTime;
@@ -79,10 +83,6 @@ var tagBell = {
 
   },
 
-// <div class="count-down">
-//           <div class="title-bar" id="bar2">今天</div>
-//           <div class="thing"><div class="rec"></div><div class="content"><b>資料庫系統概論</b><br> HW4 - DB分組</div></div>
-//           <div class="thing"><div class="rec"></div><div class="content"><b>資料庫系統概論</b><br> HW4 - DB分組</div></div>
   
   //決定要抓哪幾天的event
   addEventWannaDate: function(toDate) {
@@ -138,8 +138,11 @@ var tagBell = {
   },
 
 
-
-  //傳入日期抓該日的event
+  /**
+   * 傳入日期抓該日的event  
+   * @param {Date} toDate - 傳入的日期
+   * @param {String} dayCount - 倒數幾天
+   */
   addEventToDate: function(toDate, dayCount) {
 
     var Nyear = toDate.getFullYear(), Nmonth = toDate.getMonth(), Nd = toDate.getDate();
@@ -148,7 +151,7 @@ var tagBell = {
     //直接搜遍所有event 找到符合該日期的event則丟入addEvent()
     var savedEvents = eventLoader.events[Nyear*100+Nmonth+1];
     var index = 0;//記錄這一天有幾個event
-    for(var i=0; i<savedEvents.length; i++){
+    for(var i=0; (savedEvents!==undefined && i<savedEvents.length); i++){
       var tmp = savedEvents[i];
       var year = tmp.EventTime.getFullYear(), month = tmp.EventTime.getMonth(), d = tmp.EventTime.getDate();
 
