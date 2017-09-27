@@ -6,11 +6,22 @@
 //
 // Js import directive for RoR:
 //= require calendar/calendar.js
+//= require calendar/event-loader.js
 
 
 var tagCale = {
 
       
+  /**
+   * 按下月曆中日期後全部的動作。
+   */
+  setTagCale: function(toDate) {
+    tagCale.setDate(toDate);
+    tagCale.clear();
+
+    tagCale.addEventToDate(toDate);
+  },
+
   /**
    * 清除tag-cale中所有HTML。
    */
@@ -42,28 +53,10 @@ var tagCale = {
     $('.today-sel').html(`<h2>[ ${month}月${date}日 ${EngWday} ]</h2>`);
 
 
-/*
-    $(`<div class="thing-cale"><div class="content"><b>資料庫系統概論</b><br>
-          <span class="glyphicon glyphicon-time"></span> 2017-05-23 - 23:59:59<br>
-            HW4 - DB分組asdfsdfsdfaasdfasdf</div></div>`);*/
   },
 
 
-  /**
-   * 繪製指定日期的HTML。
-   */
-  draw: function(toDate) {/*
-    var month = toDate.getMonth()+1;
-    var date = toDate.getDate();
 
-    var dateBox = calendar.getDateBox(toDate);
-    if (dateBox.length == 0)
-      return false;
-
-    $(`<div class="thing-cale"><div class="content"><b>${event.CourseName}</b><br>
-      <span class="glyphicon glyphicon-time"></span> 2017-05-23 - 23:59:59<br>
-        ${event.Title}</div></div>`).appendTo('.tag-cale');*/
-  },
 
   //傳入event物件繪製出來
   addEvent: function(event) {
@@ -118,8 +111,9 @@ var tagCale = {
     var hasEvent = false;
 
     //直接搜遍所有event 找到符合該日期的event則丟入addEvent()
-    for(var i=0; i<calendar.savedEvents.length; i++){
-      var tmp = calendar.savedEvents[i];
+    var savedEvents = eventLoader.events[Nyear*100+Nmonth+1];
+    for(var i=0; i<savedEvents.length; i++){
+      var tmp = savedEvents[i];
       var year = tmp.EventTime.getFullYear(), month = tmp.EventTime.getMonth(), d = tmp.EventTime.getDate();
       if(Nyear == year && Nmonth == month && Nd == d){
         tagCale.addEvent(tmp);
@@ -130,18 +124,8 @@ var tagCale = {
     if(!hasEvent) $(`<div class="thing-cale"><div class="content">(無事件)</div></div>`).appendTo('.tag-cale');
 
 
-  },
-
-  /**
-   * 按下月曆中日期後全部的動作。
-   */
-  setTagCale: function(toDate) {
-    tagCale.setDate(toDate);
-    tagCale.clear();
-    tagCale.draw(toDate);
-
-    tagCale.addEventToDate(toDate);
   }
+
 
 
 }

@@ -25,13 +25,13 @@ var pageInitialization = function() {
   $(".tag-cale").hide();
   $(".tag-info").hide();
   $("#btn-bell").addClass("selected");
-  tagBell.setTagBell();
 }
 
 
 $(document).ready(function(){
 
   pageInitialization();
+
 
   // Install callbacks
   $("#btn-cale").click(callback.cale_click_direct);
@@ -48,6 +48,7 @@ $(document).ready(function(){
   $(btns[0]).click(calendar.preMonth);
   $(btns[1]).click(calendar.nxtMonth);
   $('.tag-bell .today').click(calendar.thisMonth);
+  ;
 /*
   $('.content').popover({
         content: $(".content").html(),

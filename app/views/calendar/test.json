@@ -96,6 +96,74 @@
     "TimeEnd":   1506156233491
 
   },
+  {
+    "MaterialType": "assignment",
+    "CrsYear": 106,
+    "CrsSemester": 1,
+    "CourseNo": "0312",
+    "CourseName": "這是課名",
+    "Title": "九月25日死限的作業",
+    "TimeStart": 1499184000000,
+    "TimeEnd":   1506329033491
+
+  },
+  {
+    "MaterialType": "assignment",
+    "CrsYear": 106,
+    "CrsSemester": 1,
+    "CourseNo": "0312",
+    "CourseName": "這是課名",
+    "Title": "九月26日死限的作業",
+    "TimeStart": 1499184000000,
+    "TimeEnd":   1506415433491
+
+  },
+  {
+    "MaterialType": "assignment",
+    "CrsYear": 106,
+    "CrsSemester": 1,
+    "CourseNo": "0312",
+    "CourseName": "這是課名",
+    "Title": "九月27日死限的作業",
+    "TimeStart": 1499184000000,
+    "TimeEnd":   1506501833491
+
+  },
+  {
+    "MaterialType": "assignment",
+    "CrsYear": 106,
+    "CrsSemester": 1,
+    "CourseNo": "0312",
+    "CourseName": "這是課名",
+    "Title": "九月28日死限的作業",
+    "TimeStart": 1499184000000,
+    "TimeEnd":   1506588233491
+
+  },
+  {
+    "MaterialType": "assignment",
+    "CrsYear": 106,
+    "CrsSemester": 1,
+    "CourseNo": "0312",
+    "CourseName": "這是課名",
+    "Title": "九月29日死限的作業",
+    "TimeStart": 1499184000000,
+    "TimeEnd":   1506674633491
+
+  },
+  {
+    "MaterialType": "assignment",
+    "CrsYear": 106,
+    "CrsSemester": 1,
+    "CourseNo": "0312",
+    "CourseName": "這是課名",
+    "Title": "九月30日死限的作業",
+    "TimeStart": 1499184000000,
+    "TimeEnd":   1506761033491
+
+  },
+
+
 
 
   {
