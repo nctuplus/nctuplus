@@ -418,6 +418,49 @@ h2{
 }
 
 
+.thing-info{
+  background: #FFFDFA;
+  width: 100%;
+
+  padding: 0 0 0 0;
+
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 1px 1px 0;
+}
+
+
+.thing-info .content{
+  color: #666;
+  background: #FFFDFA;
+
+  float: left;
+  height: auto;
+  width: 100%;
+
+  margin: 0 0 1px 0;
+  padding: 9px 18px 15px 15px;
+
+  font-size: 1em;
+  font-family: 'Noto Sans TC';
+  font-weight: 300;
+
+  border-width: 0 0 0 5px;  
+  border-style: solid;
+
+  transition: background 0.3s;
+  transition-timing-function: ease;
+}
+
+
+.thing-info .content:hover{
+  color: #EEE;
+  background: #666;
+
+  cursor: default;
+}
+
+
 .border-blue{
   border-color: #00C8F5;
 }
@@ -465,7 +508,6 @@ h2{
 
 .tag-info{
   position:absolute;
-  background: #FAFAFA;
   z-index: 100;
   width: 100%;
   height: 888px;
@@ -497,29 +539,6 @@ h2{
   padding: 11px 0 0 0;
 }
 
-.info-time{
-  width: 100%;
-  height: 30px;
-  text-align: right;
-  color: #AAA;
-
-  font-size: 1em;
-
-  margin: 0 0 0 0;
-  padding: 9px 10px 0 0;
-}
-
-.info-content{
-  width: 100%;
-  color: #666;
-  
-  font-size: 1.2em;
-  font-family: 'Noto Sans TC';
-  white-space: pre-wrap;
-
-  margin: 0 0 0 0;
-  padding: 10px 20px 20px 20px;
-}
 
 
 

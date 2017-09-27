@@ -13,6 +13,7 @@ var callback = {
     $("#btn-cale").removeClass("selected");
     $("#btn-info").addClass("selected");
     $("#btn-bell").removeClass("selected");
+    tagInfo.setTagInfo(new Date());
   },
 
   bell_click: function() {
