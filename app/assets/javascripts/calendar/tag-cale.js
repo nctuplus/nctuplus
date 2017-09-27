@@ -67,14 +67,15 @@ var tagCale = {
     var yy = event.EventTime.getFullYear(), mn = event.EventTime.getMonth()+1, dd = event.EventTime.getDate();
     var hh = event.EventTime.getHours(), mm = event.EventTime.getMinutes(), ss = event.EventTime.getSeconds();
 
-    eventTime = ' ' + yy + '-' + mn + '-' + dd + ' ' + (hh<10?'0':'')+hh + ':' + (mm<10?'0':'')+mm + ':' + (ss<10?'0':'')+ss ;
 
     //判斷event屬性, 以選擇用EventTime或者TimeStart/TimeEnd
     if(event.MaterialType == 'announcement'){
       title = event.CourseName;
+      eventTime = ' ' + yy + '-' + mn + '-' + dd;
       content = event.Title;
     }else if(event.MaterialType == 'event'){
       title = event.Title;
+      eventTime = ' ' + yy + '-' + mn + '-' + dd + ' ' + (hh<10?'0':'')+hh + ':' + (mm<10?'0':'')+mm + ':' + (ss<10?'0':'')+ss ;
       content = '';
     }else if(event.MaterialType == 'assignment'){
       title = event.CourseName;

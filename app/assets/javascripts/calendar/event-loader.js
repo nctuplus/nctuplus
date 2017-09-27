@@ -91,6 +91,7 @@ var eventLoader = {
     var e = new Date(end.getFullYear(), 
                      end.getMonth()+1,
                      0, 23, 59, 59, 999);
+
     $.ajax({
       url: '/calendar/get_event',
       type: 'POST',
@@ -150,6 +151,7 @@ var eventLoader = {
   _latestGetEventID: 0,
   _makeGetEvent_success: function(start, end, callback, param, getEventID) {
     return function(data) {
+
       eventLoader.initEventMonth(start,end);
 
       // 將所有資料依月份放入events中
@@ -157,6 +159,11 @@ var eventLoader = {
         // 將時間從Unix Timestamp轉換成Date型態
         data[i].TimeStart = new Date(data[i].TimeStart);
         data[i].TimeEnd = new Date(data[i].TimeEnd);
+
+        //fix timezone bug, 不確定是不是Unix Timestamp轉換過來的問題, 總之把8小時減掉才是對的
+        data[i].TimeStart.setTime(data[i].TimeStart-1000*60*60*8);
+        data[i].TimeEnd.setTime(data[i].TimeEnd-1000*60*60*8);
+
         data[i].EventTime = (data[i].MaterialType != 'assignment')? data[i].TimeStart: data[i].TimeEnd;
         // hotfix for static json
         if ( data[i].EventTime < start || data[i].EventTime > end )
