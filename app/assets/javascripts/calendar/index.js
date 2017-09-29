@@ -14,6 +14,7 @@
 //= require calendar/tag-cale.js
 //= require calendar/tag-bell.js
 //= require calendar/tag-info.js
+//= require page-tour-custom
 //
 var d = new Date();
 eventLoader.getEventByMonth(d.getFullYear(), d.getMonth()+1);
@@ -49,4 +50,14 @@ $(document).ready(function(){
   $(btns[0]).click(calendar.preMonth);
   $(btns[1]).click(calendar.nxtMonth);
   $('.tag-bell .today').click(calendar.thisMonth);
+
+
+  $('#joyRideTipContent').joyride({
+    autoStart : true,
+    cookieMonster: true,           
+    cookieName: '_CalendarTip', 
+    modal:true,
+    expose: true
+  });
+
 });
