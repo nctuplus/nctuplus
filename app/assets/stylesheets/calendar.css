@@ -105,7 +105,7 @@ h2{
 .row{
   background-color: transparent;
   top: -5px;
-  margin-top: -5px;
+  margin-top: 0px;
 
   border-color: #E3E3E3;
   border-style: solid;
@@ -508,7 +508,7 @@ h2{
 
 .tag-info{
   position:absolute;
-  z-index: 100;
+  z-index: 1;
   width: 100%;
   height: 888px;
   overflow: scroll;
@@ -516,7 +516,7 @@ h2{
 
 .tag-bell{
   position:absolute;
-  z-index: 200;
+  z-index: 2;
   width: 100%;
   height: 888px;
   overflow-y: scroll;

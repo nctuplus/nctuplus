@@ -9,12 +9,12 @@
   <div class="row big-row">
     <div class="col-md-9 col-xs-12 calendar">
       <div class="row" id="cal-month">
-        <div class="btn-month"><</div>
+        <div class="btn-month" id="pre-month"><</div>
         <div class="sel-month">
           <h2>>.0   
           </h2>
         </div>
-        <div class="btn-month">></div>
+        <div class="btn-month" id="next-month">></div>
       </div>
 
       <div class="weekdays">
@@ -212,4 +212,57 @@
 
     </div>
   </div>
+
+  <ol id="joyRideTipContent">
+    <li data-text="Next">
+      <h2>Tips</h2>
+      <p>
+      請使用Enter鍵或滑鼠點擊灰色處觀看 
+      </p>
+    </li>
+    <li data-id="pre-month" data-button="Next" data-options="tipLocation:bottom">
+      <h4>上個月</h4>
+      <p>按這個可以跳到上個月!</p>
+    </li>
+    <li data-id="next-month" data-button="Next" data-options="tipLocation:bottom">
+      <h4>下個月</h4>
+      <p>按這個可以跳到下個月!</p>
+    </li>
+    <li data-class="btn-bar" data-button="Next" data-options="tipLocation:bottom">
+      <h4>資訊標籤</h4>
+      <p>點擊不同的標籤可以觀看不同的事件資訊</p>
+    </li>
+    <li data-class="tag-bell" data-button="Next" data-options="tipLocation:left">
+      <h4>近期活動提醒</h4>
+      <p>在這裡可以看到最近的活動
+        <br>還有<font color="red">作業Deadline</font>的倒數
+        <br>不怕作業逾期忘了交!!
+      </p>
+    </li>
+    <li data-id="btn-info" data-button="Next" data-options="tipLocation:bottom">
+      <h4>e3公告</h4>
+      <p>e3的最新公告也可以在這裡瀏覽囉!
+        <br>不過在此僅提供公告標題，不提供內容
+        <br>造成不便，十分抱歉!!
+      </p>
+    </li>
+    <li data-class="box-today" data-button="Next" data-options="tipLocation:top">
+      <h4>今天</h4>
+      <p>淡藍色框顯示今天的日期</p>
+    </li>
+    <li data-id="btn-cale" data-button="Next" data-options="tipLocation:bottom">
+      <h4>當日所有事件檢視</h4>
+      <p>在月曆點擊一個日期就能觀看當日的所有事件!</p>
+    </li>
+
+    <li data-text data-button="搶先使用!">
+      <h4>測試版本</h4>
+      <p>目前尚在測試版本，
+        <br>僅有e3公告及作業死線的提醒功能，
+        <br>其他更方便的功能敬請期待!!
+      </p>
+    </li>
+  </ol>
+
+
 </body>
