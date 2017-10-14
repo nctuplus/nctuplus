@@ -50,6 +50,14 @@
   float: left;
 }
 
+#help-btn{
+  font-size: 16px;
+  color: #c8d8ec;
+}
+#help-btn:hover{
+  color: #EEE;
+  cursor: pointer;
+}
 
 
 #cal-date{

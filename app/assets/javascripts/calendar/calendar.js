@@ -7,7 +7,8 @@
 // Js import directive for RoR:
 //= require calendar/event-loader.js
 //= require calendar/callback.js
-//
+//= require page-tour-custom
+
 var calendar = {
   /**
    * 儲存每個日期的jquery物件
@@ -111,7 +112,10 @@ var calendar = {
     date = new Date(year, month-1, -dayOfFirst+1); // date of first Sunday
 
     // 修改月曆標題時間
-    $('#cal-month').find('.sel-month').html(`<h2>${month}月 ${year}</h2>`);
+    $('#cal-month').find('.sel-month').html(`<h2>${month}月 ${year} 
+        <span class="glyphicon glyphicon-question-sign pop-over" id="help-btn" data-content="快速說明"></span>
+      </h2>`);
+
 
     // 建立 6 週的date-box們
     for (var i = 0; i < 6; i++) {
@@ -207,6 +211,14 @@ var calendar = {
       var dateBox = calendar.dateBox[year][month][d];
     } catch (e) {}
     return $(dateBox);
-  }
+  },
 
+
+  help_click: function() {
+    $('#joyRideTipContent').joyride("destroy");
+    $('#joyRideTipContent').joyride({
+      autoStart : true,
+      cookieMonster: false
+    });
+  },
 }

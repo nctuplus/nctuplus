@@ -68,6 +68,7 @@ var callback = {
     callback.cale_click(event.data);//switch to tag-cale
   },
 
+
   calendar_getEventCB: function(data) {
     for (var i = 0; i < data.length; i++) {
       calendar.addEvent(data[i]);
