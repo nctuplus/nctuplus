@@ -175,6 +175,7 @@
     </div>
 
     <div class="col-md-3 col-xs-12 infor-bar">
+      <div class="today pop-over" data-content="選擇今天"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
       <div class="btn-bar">
         <div class="bttn" id="btn-cale"><span class="glyphicon glyphicon-calendar"></span></div>
         <div class="bttn" id="btn-info"><span class="glyphicon glyphicon-info-sign"></span></div>
@@ -202,9 +203,8 @@
         <div class="info-title">e3公告</div>
       </div>
 
-
       <div class="tag-bell">
-        <div class="today"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
+        
         
       </div>
 
@@ -252,6 +252,11 @@
     <li data-id="btn-cale" data-button="Next" data-options="tipLocation:bottom">
       <h4>當日所有事件檢視</h4>
       <p>在左方月曆點擊一個日期就能觀看<font color="yellow">當日的所有事件</font>!</p>
+    </li>
+    </li>
+    <li data-class="today" data-button="Next" data-options="tipLocation:bottom">
+      <h4>選擇今日</h4>
+      <p>點此即可將日期快速跳轉到今天!</p>
     </li>
 
     <li data-text data-button="搶先使用!">
