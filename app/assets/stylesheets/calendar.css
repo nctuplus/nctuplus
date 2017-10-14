@@ -333,8 +333,7 @@ h2{
 }
 
 .event .content:hover{
-  color: #EEE;
-  background: #666;
+  background: #e6e8e8;
   cursor: default;
 
   width: 40%;
@@ -380,13 +379,12 @@ h2{
   border-width: 0 0 0 5px;  
   border-style: solid;
 
-  transition: background 0.3s;
+  transition: background 0.1s;
   transition-timing-function: ease;
 }
 
 .thing .content:hover{
-  color: #EEE;
-  background: #666;
+  background: #e6e8e8;
   cursor: default;
 }
 
@@ -421,7 +419,7 @@ h2{
   border-width: 0 0 0 5px;  
   border-style: solid;
 
-  transition: background 0.3s;
+  transition: background 0.1s;
   transition-timing-function: ease;
 }
 
@@ -456,14 +454,13 @@ h2{
   border-width: 0 0 0 5px;  
   border-style: solid;
 
-  transition: background 0.3s;
+  transition: background 0.1s;
   transition-timing-function: ease;
 }
 
 
 .thing-info .content:hover{
-  color: #EEE;
-  background: #666;
+  background: #e6e8e8;
 
   cursor: default;
 }
@@ -485,8 +482,7 @@ h2{
 
 
 .thing-cale .content:hover{
-  color: #EEE;
-  background: #666;
+  background: #e6e8e8;
 
   cursor: default;
 }
