@@ -30,6 +30,7 @@ var pageInitialization = function() {
 }
 
 
+
 $(document).ready(function(){
 
   pageInitialization();
@@ -51,6 +52,13 @@ $(document).ready(function(){
   $(btns[1]).click(calendar.nxtMonth);
   $('.tag-bell .today').click(calendar.thisMonth);
 
+
+  $('#help-btn').click(calendar.help_click);
+  $('.pop-over').popover({
+    trigger :"hover",
+    container :"body",
+    placement : "bottom"
+  });
 
   $('#joyRideTipContent').joyride({
     autoStart : true,
