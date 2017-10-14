@@ -178,7 +178,7 @@ var calendar = {
   addEvent: function(event) {
 
 
-    while(event === undefined) return false;
+    if(event === undefined) return false;
     var dateBox = calendar.getDateBox(event.EventTime);
     if (dateBox.length == 0)
       return false;
