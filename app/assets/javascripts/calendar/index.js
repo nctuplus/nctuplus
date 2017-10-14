@@ -50,14 +50,13 @@ $(document).ready(function(){
   var btns = $('#cal-month .btn-month');
   $(btns[0]).click(calendar.preMonth);
   $(btns[1]).click(calendar.nxtMonth);
-  $('.tag-bell .today').click(calendar.thisMonth);
+  $('.today').click(calendar.gotoToday);
 
 
-  $('#help-btn').click(calendar.help_click);
   $('.pop-over').popover({
     trigger :"hover",
     container :"body",
-    placement : "bottom"
+    placement : "right"
   });
 
   $('#joyRideTipContent').joyride({

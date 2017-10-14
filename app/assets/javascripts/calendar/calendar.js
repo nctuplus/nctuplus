@@ -71,6 +71,15 @@ var calendar = {
     calendar.setup(year, month);
   },
 
+  //在月曆上選擇今天
+  gotoToday: function(){
+    calendar.thisMonth();
+    calendar.selectDate(new Date());
+    $(".tag-cale").hide();
+    $(".tag-info").hide();
+    callback.bell_click();
+  },
+
   /**
    * 建立指定月份的月曆。
    * @param {number} year - 要建立月曆的年份
@@ -113,7 +122,7 @@ var calendar = {
 
     // 修改月曆標題時間
     $('#cal-month').find('.sel-month').html(`<h2>${month}月 ${year} 
-        <span class="glyphicon glyphicon-question-sign pop-over" id="help-btn" data-content="快速說明"></span>
+        <span class="glyphicon glyphicon-question-sign pop-over" id="help-btn" data-content="快速說明" onclick="calendar.help_click();"></span>
       </h2>`);
 
 
@@ -213,7 +222,7 @@ var calendar = {
     return $(dateBox);
   },
 
-
+  //開啟joyride說明
   help_click: function() {
     $('#joyRideTipContent').joyride("destroy");
     $('#joyRideTipContent').joyride({
