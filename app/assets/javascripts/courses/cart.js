@@ -17,8 +17,11 @@ function add_to_cart(id,type){
 		},
 		success : function(data){
 			toastr[data.class](data.text);
+			if(data.class == 'success')
+				window.setTimeout( function(){location.replace(location.href);} , 500 );
 		}
 	});
+
 }
 function showCart(){
 	$.get("/courses/show_cart",
