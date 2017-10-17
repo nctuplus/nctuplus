@@ -9,7 +9,6 @@
 // Js import directive for RoR:
 //= require calendar/event-loader.js
 //= require calendar/calendar.js
-//= require calendar/info-bar.js
 //= require calendar/callback.js
 //= require calendar/tag-cale.js
 //= require calendar/tag-bell.js
@@ -50,7 +49,7 @@ $(document).ready(function(){
   var btns = $('#cal-month .btn-month');
   $(btns[0]).click(calendar.preMonth);
   $(btns[1]).click(calendar.nxtMonth);
-  $('.today').click(calendar.gotoToday);
+  $('#exact-today').click(calendar.gotoToday);
 
 
   $('.pop-over').popover({

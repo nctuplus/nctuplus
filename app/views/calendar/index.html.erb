@@ -9,11 +9,11 @@
   <div class="row big-row">
     <div class="col-md-9 col-xs-12 calendar">
       <div class="row" id="cal-month">
-        <div class="btn-month" id="pre-month"><</div>
+        <div class="btn-month" id="pre-month">&lt;</div>
         <div class="sel-month">
           <h2>1月 1970</h2>
         </div>
-        <div class="btn-month" id="next-month">></div>
+        <div class="btn-month" id="next-month">&gt;</div>
       </div>
 
       <div class="weekdays">
@@ -26,156 +26,11 @@
         <div class="wkday">星期六</div>
       </div>
 
-      <div id="cal-date">
-        <div class="week">
-          <div class="date-box not-this-month">
-            <div class="date">27</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">28</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">29</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">30</div>
-          </div>
-          <div class="date-box">
-            <div class="date">1999</div>
-          </div>
-          <div class="date-box">
-            <div class="date">2</div>
-          </div>
-          <div class="date-box">
-            <div class="date">3</div>
-          </div>
-        </div>
-        <div class="week">
-          <div class="date-box">
-            <div class="date">4</div>
-          </div>
-          <div class="date-box">
-            <div class="date">5</div>
-          </div>
-          <div class="date-box">
-            <div class="date">6</div>
-            <div class="event"><div class="rec"></div>
-              <div class="content">紐約來的Pizza博士</div>
-            </div>
-          </div>
-          <div class="date-box">
-            <div class="date">7</div>
-          </div>
-          <div class="date-box">
-            <div class="date">8</div>
-          </div>
-          <div class="date-box">
-            <div class="date">9</div>
-          </div>
-          <div class="date-box">
-            <div class="date">10</div>
-          </div>
-        </div>
-        <div class="week">
-          <div class="date-box">
-            <div class="date">11</div>
-          </div>
-          <div class="date-box">
-            <div class="date">12</div>
-          </div>
-          <div class="date-box">
-            <div class="date">13</div>
-          </div>
-          <div class="date-box">
-            <div class="date">14</div>
-          </div>
-          <div class="date-box">
-            <div class="date">15</div>
-          </div>
-          <div class="date-box">
-            <div class="date">16</div>
-          </div>
-          <div class="date-box">
-            <div class="date">17</div>
-          </div>
-        </div>
-        <div class="week">
-          <div class="date-box">
-            <div class="date">18</div>
-          </div>
-          <div class="date-box">
-            <div class="date">19</div>
-          </div>
-          <div class="date-box">
-            <div class="date">20</div>
-          </div>
-          <div class="date-box">
-            <div class="date">21</div>
-          </div>
-          <div class="date-box">
-            <div class="date">22</div>
-          </div>
-          <div class="date-box">
-            <div class="date">23</div>
-          </div>
-          <div class="date-box">
-            <div class="date">24</div>
-          </div>
-        </div>
-        <div class="week">
-          <div class="date-box">
-            <div class="date">25</div>
-          </div>
-          <div class="date-box">
-            <div class="date">26</div>
-          </div>
-          <div class="date-box">
-            <div class="date">27</div>
-            
-          </div>
-          <div class="date-box">
-            <div class="date">28</div>
-            
-          </div>
-          <div class="date-box">
-            <div class="date">29</div>
-          </div>
-          <div class="date-box">
-            <div class="date">30</div>
-          </div>
-          <div class="date-box">
-            <div class="date">31</div>
-          </div>
-        </div>
-        <div class="week">
-          <div class="date-box not-this-month">
-            <div class="date">1</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">2</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">3</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">4</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">5</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">6</div>
-          </div>
-          <div class="date-box not-this-month">
-            <div class="date">7</div>
-          </div>
-        </div>
-        
-      </div>
+      <div id="cal-date"></div>
     </div>
 
     <div class="col-md-3 col-xs-12 infor-bar">
-      <div class="today pop-over" data-content="選擇今天"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
+      <div class="today pop-over" id="exact-today" data-content="選擇今天"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
       <div class="btn-bar">
         <div class="bttn" id="btn-cale"><span class="glyphicon glyphicon-calendar"></span></div>
         <div class="bttn" id="btn-info"><span class="glyphicon glyphicon-info-sign"></span></div>
@@ -185,31 +40,13 @@
 
       <div class="tag-cale">
         <div class="today today-sel"><h2><%= Time.now.strftime("%-m月%-d日 %^a") %></h2></div>
-        <div class="thing-cale"><div class="rec"></div><div class="content"><b>資料庫系統概論</b><br>
-          <span class="glyphicon glyphicon-time"></span> 2017-05-23 - 23:59:59<br>
-            HW4 - DB分組asdfsdfsdfaasdfasdf</div></div>
-        <div class="thing-cale"><div class="rec"></div><div class="content"><b>資料庫系統概論</b><br>
-          <span class="glyphicon glyphicon-time"></span> 2017-05-23 - 23:59:59<br>
-            HW4 - DB分組sdfasdfasdfsdfasdfasdfasdf</div></div>
-        <div class="thing-cale"><div class="rec"></div><div class="content"><b>資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論</b><br>
-          <span class="glyphicon glyphicon-time"></span> 2017-05-23 - 23:59:59<br>
-            HW4 - DB分組asdfasdfasdfadfdfdfdfdfdffffff資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫系統概論資料庫</div></div>
-        <div class="thing-cale"><div class="rec"></div><div class="content"><b>資料庫系統概論asdf</b><br>
-          <span class="glyphicon glyphicon-time"></span> 2017-05-23 - 23:59:59<br>
-            HW4 - DB分組sadfasdfasdf</div></div>
-
       </div>
       <div class="tag-info">
         <div class="info-title">e3公告</div>
       </div>
-
-      <div class="tag-bell">
-        
-        
-      </div>
-
-
+      <div class="tag-bell"></div>
     </div>
+
   </div>
 
   <ol id="joyRideTipContent">

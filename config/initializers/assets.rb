@@ -5,7 +5,7 @@ Rails.application.config.assets.precompile +=[
 	'tmpl.min.js',
 	#'bootstrap-treeview.js',
 	'calendar/index.js',
-    'courses/content.js',
+	'courses/content.js',
 	'courses/chart.js',	
 	'courses/html2canvas.js',
 	'courses/table.js',
