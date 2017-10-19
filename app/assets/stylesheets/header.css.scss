@@ -86,6 +86,23 @@
     background-color: #00A6FF;
 }
 
+.beta-box{
+    position: absolute;
+    right: 3px;
+    top: 3px;
+
+    background: #fa3e3e;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+
+    width: 30px;
+    height: 17px;
+    border-radius: 2px;
+    opacity: 0.9;
+}
+
+
 @media(min-width:768px) {
     .navbar-default {
         border-color: rgba(255,255,255,.3);

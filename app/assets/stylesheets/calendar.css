@@ -1,0 +1,587 @@
+@import url(//fonts.googleapis.com/earlyaccess/notosanstc.css);
+
+
+.calendar{
+  background: #FEFEFE;
+  padding: 0 0 0 0;
+}
+
+#cal-month{
+  background: #337ab7;
+  height: 40px;
+  margin: -5px 0 0 0;
+  border-width: 0;
+}
+
+.btn-month:hover:not(.active),
+.btn-month:active {
+  background: #689FCF;
+  cursor: pointer;
+}
+
+.btn-month{
+  background: #326C9F;
+  height: 100%;
+  width: 14.28%;
+  margin: 0 0 0 0;
+  border-width: 0;
+  float:left;
+  color: #fff;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 40px;
+  font-size: 30px;
+
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.sel-month{
+  background: #337ab7;
+  height: 100%;
+  width: 71.44%;
+  text-align: center;
+  margin: 0 0 0 0;
+  padding: 10px 0 0 0;
+  border-width: 0;
+  
+
+  float: left;
+}
+
+#help-btn{
+  font-size: 16px;
+  color: #c8d8ec;
+}
+#help-btn:hover{
+  color: #EEE;
+  cursor: pointer;
+}
+
+
+#cal-date{
+  width: 100%;
+  height: 720px;
+  padding: 0;
+  border-width: 0;
+}
+
+
+.weekdays{
+  background: #93CCFB;
+  height: 24px;
+  text-align: left;
+  margin-left: 0;
+  margin-right: 0;
+  border-width: 0;
+}
+
+.wkday{
+  float: left;
+  background: #93CCFB;
+  width: 14.285%;
+  height: 24px;
+  text-align: left;
+
+  font-size: 12px;
+  color: #4F72AB;
+
+  padding: 3px 4px 3px 5px;
+
+  margin-left: 0;
+  margin-right: 0;
+  border-width: 0;
+}
+
+h2{
+  color: #FFF;
+  font-weight: bold;
+  font-size: 20px;
+
+  margin: 0 0 0 0;
+}
+
+.infor-bar{
+  background: #DDD;
+  height: 100vh;
+
+
+  padding: 0 0 0 0;
+}
+
+.row{
+  background-color: transparent;
+  top: -5px;
+  margin-top: 0px;
+
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 0px 0 1px;
+}
+
+.week{
+  width: 100%;
+  position: center;
+  height: 20%;
+}
+
+
+.date-box{
+  float: left;
+  width: 14.285%;
+  height: 100%;
+  background: #f8f8f8;
+
+  border-color: #F0F0F0; 
+  border-style: solid;
+  border-width: 0px 1px 1px 0px;
+}
+
+.box-today{
+  border-color: #42BAFF; 
+  border-style: solid;
+  border-width: 2px 2px 2px 2px;
+}
+
+
+.box-focus{
+    border-color: rgba(82,168,236,.8);
+  border-width: 1px 1px 1px 1px;
+    -webkit-box-shadow: 0 0 8px rgba(82,168,236,.6);
+    box-shadow: 0 0 1px rgba(82,168,236,.6);
+}
+
+
+
+.date{
+  padding: 3px 4px 3px 5px;
+
+  width: 100%;
+  height: 24px;
+  background: transparent;
+
+  font-size: 10px;
+  color: #888;
+}
+
+.box-today .date{
+  background: #42BAFF;
+  color: #EEE;
+  font-weight: bold; 
+}
+
+.event{
+  float: left;
+  width: 100%;
+  height: 48px;
+  background: #F2F2F2;
+}
+
+
+
+
+.btn-bar{
+  width: 100%;
+  height: 40px;
+  background: transparent;
+
+}
+
+.bttn{
+  float: left;
+
+  width: 33.333%;
+  height: 100%;
+  background: #F4F4F4;
+
+  border-color: #EAEAEA; 
+  border-width: 1px 1px 1px 1px;
+  border-style: solid;
+
+  text-align: center;
+  padding: 11px 8px 8px 8px;
+}
+
+.bttn:hover:not(.active) {
+  background: #DDD;
+  border-color: #DADADA; 
+  cursor: pointer;
+}
+
+.bttn:active {
+  background: #BEBEBE;
+  border-color: #DADADA; 
+  cursor: pointer;
+}
+
+.selected{
+  background: #DDD;
+  border-color: #DADADA; 
+}
+
+
+.today{
+  background: #337ab7;
+  width: 100%;
+  height: 40px;
+  text-align: center;
+
+  margin: -5px 0 0 0;
+  padding: 11px 0 0 0;
+}
+
+.today:hover{
+  background: #649FD3;
+  cursor: pointer;
+}
+
+.today-sel{
+  background: #42baff;
+}
+
+.e3{
+  background: #FFF;
+  width: 100%;
+}
+
+.count-down{
+  background: #FFF;
+  width: 100%;
+}
+
+.title-bar{
+  background: #93CCFB;
+  width: 100%;
+  height: 30px;
+  padding: 5px 5px 5px 10px;
+
+
+  font-size: 1em;
+  font-family: 'Noto Sans TC';
+
+}
+
+.e3 .title-bar{
+  background: #58B0F9;
+}
+
+.thing{
+  background: #FFFDFA;
+  width: 100%;
+  height: 85px;
+
+  padding: 0 0 0 0;
+
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 1px 1px 0;
+}
+
+
+.rec{
+  float: left;
+
+  width: 4px;
+  height: 100%;
+
+  background: #FFDF29;
+
+  #border-color: #E3E3E3; 
+  #border-width: 0 0 1px 0;
+  #border-style: solid;
+  padding: 0 0 1px 0;
+  margin: 0 0 0 0;
+}
+
+.rec-blue .rec{
+  background: #00C8F5;
+}
+.rec-darkblue .rec{
+  background: #0092E0;
+}
+.rec-red .rec{
+  background: #F53900;
+}
+.rec-yellow .rec{
+  background: #FFDF29;
+}
+
+
+.event .content{
+  margin-left: 4px;
+  padding: 3px 4px 3px 5px;
+  width: 13.4%;
+  height: 48px;
+  position: absolute;
+
+
+  background: #F2F2F2;
+
+  white-space: nowrap;
+  overflow : hidden;
+  text-overflow: ellipsis;
+  font-size: 0.8em;
+  font-family: 'Noto Sans TC';
+  color: #666;
+
+  transition: background 0.3s, width 0.3s;
+  transition-timing-function: ease;
+  z-index: 1;
+}
+
+.event .content:hover{
+  background: #e6e8e8;
+  cursor: default;
+
+  width: 40%;
+  height: 48px;
+  position: absolute;
+  z-index: 1000;
+}
+
+.event-omit{
+
+  float: left;
+  width: 100%;
+  height: 20px;
+
+
+  background: #dcdcdc;
+  color: #676767;
+  cursor: default;
+
+  text-align: center;
+  font-weight: bold;
+}
+
+.thing .content{
+  color: #666;
+  background: #FFFDFA;
+
+  float: left;
+  height: 85px;
+  width: 100%;
+
+  margin: 0 0 1px 0;
+  padding: 9px 18px 15px 15px;
+
+  font-size: 1em;
+  font-family: 'Noto Sans TC';
+  font-weight: 300;
+
+  white-space: nowrap;
+  overflow : hidden;
+  text-overflow: ellipsis;
+
+  border-width: 0 0 0 5px;  
+  border-style: solid;
+
+  transition: background 0.1s;
+  transition-timing-function: ease;
+}
+
+.thing .content:hover{
+  background: #e6e8e8;
+  cursor: default;
+}
+
+
+.thing-cale{
+  background: #FFFDFA;
+  width: 100%;
+
+  padding: 0 0 0 0;
+
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 1px 1px 0;
+}
+
+
+.thing-cale .content{
+  color: #666;
+  background: #FFFDFA;
+
+  float: left;
+  height: auto;
+  width: 100%;
+
+  margin: 0 0 1px 0;
+  padding: 9px 18px 15px 15px;
+
+  font-size: 1em;
+  font-family: 'Noto Sans TC';
+  font-weight: 300;
+
+  border-width: 0 0 0 5px;  
+  border-style: solid;
+
+  transition: background 0.1s;
+  transition-timing-function: ease;
+}
+
+
+.thing-info{
+  background: #FFFDFA;
+  width: 100%;
+
+  padding: 0 0 0 0;
+
+  border-color: #E3E3E3;
+  border-style: solid;
+  border-width: 0 1px 1px 0;
+}
+
+
+.thing-info .content{
+  color: #666;
+  background: #FFFDFA;
+
+  float: left;
+  height: auto;
+  width: 100%;
+
+  margin: 0 0 1px 0;
+  padding: 9px 18px 15px 15px;
+
+  font-size: 1em;
+  font-family: 'Noto Sans TC';
+  font-weight: 300;
+
+  border-width: 0 0 0 5px;  
+  border-style: solid;
+
+  transition: background 0.1s;
+  transition-timing-function: ease;
+}
+
+
+.thing-info .content:hover{
+  background: #e6e8e8;
+
+  cursor: default;
+}
+
+
+.border-blue{
+  border-color: #00C8F5;
+}
+.border-darkblue{
+  border-color: #0092E0;
+}
+.border-red{
+  border-color: #F53900;
+}
+.border-yellow{
+  border-color: #FFDF29;
+}
+
+
+
+.thing-cale .content:hover{
+  background: #e6e8e8;
+
+  cursor: default;
+}
+
+
+.not-this-month{
+  opacity: 0.3;
+  background: #CCC;
+}
+
+
+.not-this-month .event .content{
+  opacity: 0.5;
+  width: 13.4%;
+}
+
+
+
+
+.tag-cale{
+  position:absolute;
+  z-index: 0;
+  width: 100%;
+  height: 888px;
+  overflow: scroll;
+}
+
+.tag-info{
+  position:absolute;
+  z-index: 1;
+  width: 100%;
+  height: 888px;
+  overflow: scroll;
+}
+
+.tag-bell{
+  position:absolute;
+  z-index: 2;
+  width: 100%;
+  height: 888px;
+  overflow-y: scroll;
+}
+
+::-webkit-scrollbar { 
+    display: none; 
+}
+
+.info-title{
+  background: #337ab7;
+  width: 100%;
+  height: 42px;
+  text-align: center;
+
+  color: #FFF;
+  font-size: 1.2em;
+  font-family: 'Noto Sans TC';
+  margin: 0 0 0 0;
+  padding: 11px 0 0 0;
+}
+
+
+
+
+@media(max-width: 480px){
+  .not-this-month{
+    display: none;
+  }
+  .weekdays{
+    display: none;
+  }
+  .week{
+    height: auto;
+  }
+  .date-box{
+    width: 100%;
+  }
+  .event .content{
+    width: 97%;
+    height: 48px;
+  }
+  .event .content:hover{
+    width: 97%;
+  }
+
+
+  .infor-bar{
+    margin-top: 7px;
+  }
+  #cal-date{
+    height: auto;
+  }
+  .tag-cale{
+    height: 90%;
+  }
+  .tag-info{
+    height: 90%;
+  }
+  .tag-bell{
+    height: 90%;
+  }
+  .infor-bar{
+    height: 75vh;
+  }
+}
