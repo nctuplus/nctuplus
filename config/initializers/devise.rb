@@ -242,7 +242,7 @@ Devise.setup do |config|
     #    :scope =>'https://www.googleapis.com/auth/calendar',  #determine what we want user to provide (default are email and profile)
     :skip_jwt => true
   }
-  config.omniauth :NCTU, NCTUOAUTH::APP_ID, NCTUOAUTH::SECRET
+  config.omniauth :nctu, NCTUOAUTH::APP_ID, NCTUOAUTH::SECRET
   # ==> Warden configuration
   # If you want to use other strategies, that are not supported by Devise, or
   # change the failure app, you can configure them inside the config.warden block.

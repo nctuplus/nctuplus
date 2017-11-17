@@ -13,7 +13,7 @@ class AuthFacebook < ActiveRecord::Base
   end
   
   def self.from_omniauth(auth)
-    auth_facebook = where(auth.slice(:uid)).first_or_initialize.tap do |f|
+    where(uid: auth.uid).first_or_initialize.tap do |f|
       f.uid = auth.uid
       f.name = auth.info.name
       f.oauth_token = auth.credentials.token
@@ -22,7 +22,6 @@ class AuthFacebook < ActiveRecord::Base
           
       f.save!
     end
-    return auth_facebook
   end
   
 end

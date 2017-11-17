@@ -67,7 +67,7 @@
 			Facebook
 		<% else %>
 		  <% if @user.hasNctu? %>
-		    <%=link_to user_omniauth_authorize_path('facebook'), :class=>"btn btn-sm btn-primary" do%>
+		    <%=link_to user_facebook_omniauth_authorize_path, :class=>"btn btn-sm btn-primary" do%>
 		      &nbsp; 綁定Facebook
 		    <% end %>    
 		  <% end %>
@@ -76,7 +76,7 @@
 			Google
 		<% else %>
 		  <% if @user.hasNctu? %>
-		    <%=link_to user_omniauth_authorize_path('google_oauth2'), :class=>"btn btn-sm btn-danger" do%>
+		    <%=link_to user_google_oauth2_omniauth_authorize_path, :class=>"btn btn-sm btn-danger" do%>
 		      &nbsp; 綁定Google
 		    <% end %>
 		  <% end %>  

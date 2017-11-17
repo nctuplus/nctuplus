@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
 	include ActionView::Helpers # for avatar
   devise :database_authenticatable, # :registerable, :recoverable,
          :rememberable, :trackable, # :validatable,
-         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :NCTU],
+         :omniauthable, :omniauth_providers => [:facebook, :google_oauth2, :nctu],
          :authentication_keys => [:id]
   belongs_to :department
   has_one :auth_nctu

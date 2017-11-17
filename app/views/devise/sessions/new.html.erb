@@ -11,14 +11,14 @@
           <h6>是交大學生嗎？請用單一入口登入享用完整功能。</h6>
         </div>
         <div class="form1">
-          <%=button_tag(type: "submit", class: "btn-width-e3", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:NCTU)}');") do %>
+          <%=button_tag(type: "submit", class: "btn-width-e3", onclick:"event.preventDefault();goToHref('#{user_nctu_omniauth_authorize_path}');") do %>
             交大單一入口登入
           <% end %>     
           <div style="margin-top: 7px;">or</div>
-          <%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:facebook)}');") do %>
+          <%=button_tag(type: "submit", class: "btn-width-fb", onclick:"event.preventDefault();goToHref('#{user_facebook_omniauth_authorize_path}');") do %>
             Facebook登入
           <% end %>     
-          <%=button_tag(type: "submit", class: "btn-width-google", onclick:"event.preventDefault();goToHref('#{user_omniauth_authorize_path(:google_oauth2)}');") do %>
+          <%=button_tag(type: "submit", class: "btn-width-google", onclick:"event.preventDefault();goToHref('#{user_google_oauth2_omniauth_authorize_path}');") do %>
             Google登入
           <% end %>
         </div>	

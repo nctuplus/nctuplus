@@ -67,7 +67,7 @@ class CallbacksController < Devise::OmniauthCallbacksController
     end	
   end
 
-  def NCTU
+  def nctu
     auth = env['omniauth.auth']
     auth_record = AuthNctu.from_omniauth(env['omniauth.auth'])
     _additional_session(auth_record.user)

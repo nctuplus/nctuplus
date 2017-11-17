@@ -5,12 +5,12 @@ gem 'therubyracer'
 gem 'google-api-client'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.1'
+gem 'rails', '4.2'
 
 
 # Use sqlite3 as the database for Active Record
 #gem 'sqlite3'
-gem 'mysql2'
+gem 'mysql2', '0.3.18'
 
 
 
@@ -31,7 +31,7 @@ gem 'jquery-rails'
 gem 'jquery-ui-sass-rails'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+gem 'turbolinks', '~> 2.5.3'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
@@ -43,6 +43,7 @@ gem 'devise'
 gem 'omniauth'
 gem 'omniauth-facebook'
 gem "omniauth-google-oauth2"
+gem 'omniauth-nctu'
 
 gem "paperclip"
 
@@ -58,7 +59,7 @@ group :doc do
 end
 
 # search
-gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4.1'
+gem 'ransack', github: 'activerecord-hackery/ransack', branch: 'rails-4.2'
 # paginate
 gem 'kaminari'
 
@@ -84,6 +85,7 @@ group :development do
   gem 'brakeman', :require => false
   gem 'rails_best_practices', :require => false
   gem "rails-erd"
+  gem 'web-console', '~> 2.0'
 end
 
 gem "googlebooks"

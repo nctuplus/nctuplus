@@ -13,7 +13,7 @@ class AuthGoogle < ActiveRecord::Base
   end
   
   def self.from_omniauth(auth) 
-    auth_google = where(auth.slice(:uid)).first_or_initialize.tap do |f|
+    where(uid: auth.uid).first_or_initialize.tap do |f|
       f.uid = auth.uid
       f.name = auth.info.name
       f.email = auth.info.email
@@ -27,7 +27,6 @@ class AuthGoogle < ActiveRecord::Base
       
       f.save!
     end
-    return auth_google 
   end
   
 end

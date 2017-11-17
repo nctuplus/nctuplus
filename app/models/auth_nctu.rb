@@ -9,19 +9,19 @@ class AuthNctu < ActiveRecord::Base
   end
 
   def self.from_omniauth(auth)
-    auth_nctu = where(student_id: auth.extra.profile.username).first_or_initialize.tap do |n|
-      n.student_id  = auth.extra.profile.username
-      n.email       = auth.extra.profile.email
+    auth_nctu = where(student_id: auth.extra.raw_info.username).first_or_initialize.tap do |n|
+      n.student_id  = auth.extra.raw_info.username
+      n.email       = auth.extra.raw_info.email
       n.oauth_token = auth.credentials.token
       n.oauth_expires_at = Time.now.since(10.hour)
       if n.user_id.nil?
-        authE3 = AuthE3.where(student_id: auth.extra.profile.username).first
+        authE3 = AuthE3.where(student_id: auth.extra.raw_info.username).first
         if authE3.present?
           n.user_id = authE3.user_id
         else
           n.user_id = User.create_from_auth({
-            :name=>auth.extra.profile.username,
-            :email=>auth.extra.profile.email
+            :name=>auth.extra.raw_info.username,
+            :email=>auth.extra.raw_info.email
           }).id
         end  
       end
