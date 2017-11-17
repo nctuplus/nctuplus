@@ -105,3 +105,8 @@ end
 # for newcomer page
 gem 'jquery-easing-rails'
 gem 'bourbon', '4.2.7'
+
+# puma server
+group :production do
+  gem 'puma'
+end
