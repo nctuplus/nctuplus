@@ -27,6 +27,7 @@ vendor
 
 # except for the files
 !/config/locales/zh-TW.yml
+!docker-compose.yml
 
 # Ignore vim swap
 *.swp
