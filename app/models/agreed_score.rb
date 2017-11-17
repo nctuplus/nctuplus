@@ -1,4 +1,4 @@
-class AgreedScore < ActiveRecord::Base
+class AgreedScore < ApplicationRecord
 	belongs_to :course
 	delegate :credit, :ch_name, :to=>:course
 	belongs_to :course_field

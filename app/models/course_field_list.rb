@@ -1,4 +1,4 @@
-class CourseFieldList < ActiveRecord::Base
+class CourseFieldList < ApplicationRecord
 	belongs_to :course
 	belongs_to :user
 	belongs_to :course_group

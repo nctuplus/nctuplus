@@ -1,4 +1,4 @@
-class NormalScore < ActiveRecord::Base
+class NormalScore < ApplicationRecord
 	belongs_to :course_detail
 	delegate :semester_id,:temp_cos_id,:brief,:course_teachership_id, :to=>:course_detail
 	

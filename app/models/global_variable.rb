@@ -1,4 +1,4 @@
-class GlobalVariable < ActiveRecord::Base
+class GlobalVariable < ApplicationRecord
 	
 	def self.settings
 		@@settings = {

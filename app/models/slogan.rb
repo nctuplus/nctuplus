@@ -1,3 +1,3 @@
-class Slogan < ActiveRecord::Base
+class Slogan < ApplicationRecord
   validates_presence_of :description
 end

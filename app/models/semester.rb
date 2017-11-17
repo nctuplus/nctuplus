@@ -1,4 +1,4 @@
-class Semester < ActiveRecord::Base
+class Semester < ApplicationRecord
 	#Use Constant for domain data 不會變的資料可以用常數在Rails啟動時就放到記憶體。
 	CURRENT = self.find(GlobalVariable.settings[:current_semester_id])  #self.find(17)	
 	LAST = self.last	#如果有新的課程可以匯入了,(如:103下的6月已開104上的課),需要開一個新的學期去存 此時LAST!=CURRENT

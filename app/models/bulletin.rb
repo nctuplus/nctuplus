@@ -1,4 +1,4 @@
-class Bulletin < ActiveRecord::Base
+class Bulletin < ApplicationRecord
 	
 	belongs_to :user
 

@@ -1,4 +1,4 @@
-class BookTradeInfo < ActiveRecord::Base
+class BookTradeInfo < ApplicationRecord
 	include ActionView::Helpers
 
   belongs_to :user

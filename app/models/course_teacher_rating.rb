@@ -1,4 +1,4 @@
-class CourseTeacherRating < ActiveRecord::Base
+class CourseTeacherRating < ApplicationRecord
 	def to_json_obj
 		{
 			:course_teachership_id=>self.course_teachership_id,

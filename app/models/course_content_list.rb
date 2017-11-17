@@ -1,4 +1,4 @@
-class CourseContentList < ActiveRecord::Base
+class CourseContentList < ApplicationRecord
 	belongs_to :course_teachership
 	belongs_to :user
 	has_many :content_list_ranks, :dependent => :destroy

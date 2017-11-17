@@ -1,4 +1,4 @@
-class AuthFacebook < ActiveRecord::Base
+class AuthFacebook < ApplicationRecord
   belongs_to :user
   
   # for session[:auth_facebook] 

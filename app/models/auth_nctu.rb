@@ -1,4 +1,4 @@
-class AuthNctu < ActiveRecord::Base
+class AuthNctu < ApplicationRecord
   belongs_to :user
 
   def to_session_json

@@ -1,4 +1,4 @@
-class CourseMap < ActiveRecord::Base
+class CourseMap < ApplicationRecord
 	#has_many :course_field_groups, :dependent => :destroy
 	
 	has_many :course_fields, :through => :cm_cfships

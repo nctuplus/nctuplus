@@ -1,4 +1,4 @@
-class AuthGoogle < ActiveRecord::Base
+class AuthGoogle < ApplicationRecord
   belongs_to :user
   
   # for session[:auth_google] 

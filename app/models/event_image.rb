@@ -1,4 +1,4 @@
-class EventImage < ActiveRecord::Base
+class EventImage < ApplicationRecord
 	has_attached_file :img,
 		:default_style => :medium,
 		:default_url   => "/images/:style/missing.png",

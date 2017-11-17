@@ -1,4 +1,4 @@
-class SubDiscuss < ActiveRecord::Base
+class SubDiscuss < ApplicationRecord
 	belongs_to :discuss
 	belongs_to :user
 	has_many :discuss_likes, :dependent => :destroy

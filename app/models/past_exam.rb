@@ -1,4 +1,4 @@
-class PastExam < ActiveRecord::Base
+class PastExam < ApplicationRecord
   
   belongs_to :user
   belongs_to :course_teachership

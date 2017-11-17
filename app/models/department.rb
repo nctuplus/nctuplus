@@ -1,4 +1,4 @@
-class Department < ActiveRecord::Base
+class Department < ApplicationRecord
 	has_many :course_details
   has_many :courses, :through=> :course_details
 	has_many :users

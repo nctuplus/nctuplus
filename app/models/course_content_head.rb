@@ -1,4 +1,4 @@
-class CourseContentHead < ActiveRecord::Base
+class CourseContentHead < ApplicationRecord
 	belongs_to :course_teachership
 	
 	def to_hash

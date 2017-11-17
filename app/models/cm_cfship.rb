@@ -1,4 +1,4 @@
-class CmCfship < ActiveRecord::Base
+class CmCfship < ApplicationRecord
 
 	
 	after_destroy :destroy_cf

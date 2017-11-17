@@ -1,3 +1,3 @@
-class College < ActiveRecord::Base
+class College < ApplicationRecord
   has_many :departments
 end

@@ -1,4 +1,4 @@
-class Course < ActiveRecord::Base
+class Course < ApplicationRecord
 	belongs_to :grade
 	#belongs_to :department#, :class_name=>"NewDepartment"
 	belongs_to :user

@@ -1,4 +1,4 @@
-class Background < ActiveRecord::Base
+class Background < ApplicationRecord
   validates_presence_of :image
   has_attached_file :image,
 		:default_style => :medium,

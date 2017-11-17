@@ -1,4 +1,4 @@
-class InformMailer < ActionMailer::Base
+class InformMailer < ApplicationMailer
   default from: "NCTU+@plus.nctu.edu.tw"
 	def course_import(mesg)
 		@mesg=mesg

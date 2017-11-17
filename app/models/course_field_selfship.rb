@@ -1,4 +1,4 @@
-class CourseFieldSelfship < ActiveRecord::Base
+class CourseFieldSelfship < ApplicationRecord
 	
 	before_destroy :destroy_child_cf
 	

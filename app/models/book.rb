@@ -1,4 +1,4 @@
-class Book < ActiveRecord::Base
+class Book < ApplicationRecord
   has_many :book_trade_infos
 
 	belongs_to :user

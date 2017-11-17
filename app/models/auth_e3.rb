@@ -1,4 +1,4 @@
-class AuthE3 < ActiveRecord::Base
+class AuthE3 < ApplicationRecord
   belongs_to :user
   
   def to_session_json

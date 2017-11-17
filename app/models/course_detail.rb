@@ -1,4 +1,4 @@
-class CourseDetail < ActiveRecord::Base
+class CourseDetail < ApplicationRecord
   belongs_to :course_teachership
   delegate :teacher_name, :to=>:course_teachership
   has_many :past_exams, :through=>:course_teachership

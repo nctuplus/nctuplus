@@ -1,4 +1,4 @@
-class CourseField < ActiveRecord::Base
+class CourseField < ApplicationRecord
 	belongs_to :course_field_selfship
 	belongs_to :user
 	

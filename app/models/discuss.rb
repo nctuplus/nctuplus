@@ -1,4 +1,4 @@
-class Discuss < ActiveRecord::Base
+class Discuss < ApplicationRecord
 	belongs_to :course_teachership
 	belongs_to :user
 	has_one :course, :through=>:course_teachership

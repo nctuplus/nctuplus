@@ -1,4 +1,4 @@
-class Teacher < ActiveRecord::Base
+class Teacher < ApplicationRecord
   belongs_to :department
 
 	has_many :course_teacherships#, ->(teacher){ where "course_teacherships.teacher_id REGEXP ?","'[[.[.]|[.,.] ]#{teacher.id}[[.].]|[.,.]]" }
