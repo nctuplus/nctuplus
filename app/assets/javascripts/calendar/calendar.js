@@ -121,9 +121,8 @@ var calendar = {
     date = new Date(year, month-1, -dayOfFirst+1); // date of first Sunday
 
     // 修改月曆標題時間
-    $('#cal-month').find('.sel-month').html(`<h2>${month}月 ${year} 
-        <span class="glyphicon glyphicon-question-sign pop-over" id="help-btn" data-content="快速說明" onclick="calendar.help_click();"></span>
-      </h2>`);
+    $('#cal-month').find('.sel-month').html('<h2>' + month + '月' + year + '<span class="glyphicon glyphicon-question-sign pop-over" id="help-btn" data-content="快速說明" onclick="calendar.help_click();"></span></h2>');
+
 
 
     // 建立 6 週的date-box們
@@ -131,8 +130,8 @@ var calendar = {
       var week = $('<div class="week"></div>').appendTo('#cal-date');
       for (var j = 0; j < 7; j++) {
         var curMon = date.getMonth()+1, curDate = date.getDate();
-        var dateBox = $(`<div class="date-box" id="db_${curMon}_${curDate}"></div>`).appendTo(week);
-        var dateTxt = $(`<div class="date">${curDate}</div>`).appendTo(dateBox);
+        var dateBox = $('<div class="date-box" id="db_' + curMon + '_' + curDate + '"></div>').appendTo(week);
+        var dateTxt = $('<div class="date">' + curDate + '</div>').appendTo(dateBox);
 
         if (curMon != month) // 設定非當月class
           dateBox.addClass('not-this-month');
@@ -189,13 +188,13 @@ var calendar = {
     if(count > 2){
       // do nothing
     }else if(count == 2){
-      var e = $(` <div class="event event-omit">...</div>`).appendTo(dateBox);
+      var e = $(' <div class="event event-omit">...</div>').appendTo(dateBox);
 
     }else{
-      var e = $(`<div class="event">
-                   <div class="rec"></div>
-                   <div class="content"><b>${event.CourseName}</b><br>${event.Title}</div>
-                 </div>`).appendTo(dateBox);
+      var e = $('<div class="event"></div>');
+      e.append('<div class="rec"></div>');
+      e.append('<div class="content"><b>' + event.CourseName + '</b><br>' + event.Title + '</div>');
+      e.appendTo(dateBox);
       switch (event.MaterialType) {
         case 'announcement':
           e.addClass('rec-darkblue'); break;

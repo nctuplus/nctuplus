@@ -17,7 +17,7 @@ var tagBell = {
   setTagBell: function(toDate){
     tagBell.clear();
 
-    $(`<div class="count-down">`).appendTo('.tag-bell');
+    $('<div class="count-down">').appendTo('.tag-bell');
     tagBell.addEventWannaDate(toDate);
   },
 
