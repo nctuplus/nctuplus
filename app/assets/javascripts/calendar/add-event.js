@@ -48,22 +48,21 @@ var forAddEvent = {
 
 		var e;
 		if(tagType == 'bell'){
-			if(index == 0) $(`<div class="title-bar">${dayCount}</div>`).appendTo('.count-down');
-			e = $(` <div class="thing">
-			                <div class="content"><b>${title}</b><br>
-			                <span class="glyphicon glyphicon-time"></span>${eventTime}<br>
-			                ${content}</div>
-			            </div>`).appendTo('.count-down');
+			if(index == 0) $('<div class="title-bar">' + dayCount + '</div>').appendTo('.count-down');
+			e = $( '<div class="thing"><div class="content"></div></div>');
+			e.children().append('<b>' + title + '</b><br>   <span class="glyphicon glyphicon-time"></span>' + eventTime + '<br>' + content);
+			e.appendTo('.count-down');
 
 		}else if(tagType == 'cale'){
-		    e = $(`<div class="thing-cale"><div class="content"><b>${title}</b><br>
-		      			<span class="glyphicon glyphicon-time"></span>${eventTime}<br>
-		        		${content}</div></div>`).appendTo('.tag-cale');
+		    e = $('<div class="thing-cale"><div class="content"></div></div>');
+		    e.children().append('<b>' + title + '</b><br>   <span class="glyphicon glyphicon-time"></span>' + eventTime + '<br>' +content);
+		    e.appendTo('.tag-cale');
+
 
 		}else if(tagType == 'info'){
-		    e = $(`<div class="thing-info"><div class="content border-darkblue"><b>${title}</b><br>
-						<span class="glyphicon glyphicon-time"></span>${eventTime}<br>
-						${content}</div></div>`).appendTo('.tag-info');
+		    e = $('<div class="thing-info"><div class="content border-darkblue">');
+		    e.children().append('<b>' + title + '</b><br>   <span class="glyphicon glyphicon-time"></span>' + eventTime + '<br>' +content);
+		    e.appendTo('.tag-info');
 
 		}else return false;
 
@@ -154,8 +153,8 @@ var forAddEvent = {
 
 
 		if(!hasEvent)
-			if(tagType=='cale') $(`<div class="thing-cale"><div class="content">(無事件)</div></div>`).appendTo('.tag-cale');
-			else if(tagType=='info') $(`<div class="thing-info"><div class="content">(近期並無公告)</div></div>`).appendTo('.tag-info');
+			if(tagType=='cale') $('<div class="thing-cale"><div class="content">(無事件)</div></div>').appendTo('.tag-cale');
+			else if(tagType=='info') $('<div class="thing-info"><div class="content">(近期並無公告)</div></div>').appendTo('.tag-info');
 
 
 

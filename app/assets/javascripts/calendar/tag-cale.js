@@ -51,7 +51,7 @@ var tagCale = {
 
     var EngWday = weekday[wday];
 
-    $('.today-sel').html(`<h2>[ ${month}月${date}日 ${EngWday} ]</h2>`);
+    $('.today-sel').html('<h2>[ ' + month + '月' + date + '日' + EngWday + ' ]</h2>');
 
 
   },
