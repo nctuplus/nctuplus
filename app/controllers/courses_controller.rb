@@ -2,6 +2,7 @@ class CoursesController < ApplicationController
 
   before_filter :checkLogin, :only=>[:simulation, :add_simulated_course, :del_simu_course]
 
+
   def index
     @sem_sel=Semester.all.order("id DESC").pluck(:name, :id)
     if params[:custom_search].present? || params[:q].present?	#if query something
