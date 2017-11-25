@@ -55,6 +55,7 @@ Nctuplus::Application.routes.draw do
   post "/main/get_specified_classroom_schedule" # for ems curl
   get "main/fb"
   post "main/fb"
+  get "main/faq"
 
   #----------- for search -----------	
   get "search/cts"
@@ -66,12 +67,12 @@ Nctuplus::Application.routes.draw do
 
   #---------- admin page -----------
 
-  get 	"admin/statistics"
-  get 	"admin/ee105"
-  get 	"admin/users"
-  post 	"admin/change_role"
-  post 	"admin/change_dept"
-  get 	"admin/course_maps" #, to: "course_maps#admin_index"
+  get		"admin/statistics"
+  get		"admin/ee105"
+  get		"admin/users"
+  post	"admin/change_role"
+  post	"admin/change_dept"
+  get		"admin/course_maps" #, to: "course_maps#admin_index"
 
   #---------- user -----------
   get "user", to: "user#show"	#user personal page
