@@ -31,6 +31,7 @@ Rails.application.config.assets.precompile +=[
      'waypoints.min.js',
      'newcomer/*.js',
      'newcomer/*.css',
-     'NotoSans-Regular-ttf'
+     'NotoSans-Regular-ttf',
+     'calendar.css'
 
 ]
