@@ -1,8 +1,12 @@
 Nctuplus::Application.routes.draw do
 
   root :to => "main#index"
+<<<<<<< HEAD
   
   #-----------frontEndTest-----------#
+=======
+  #--------- bulletin -----------
+>>>>>>> d4c6abd12529710d429401788a56c09f07e1b5e6
   resources :frontend
 
   #----------- [devise] user account concerned -----------

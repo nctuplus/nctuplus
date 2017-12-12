@@ -13,7 +13,7 @@
       <div class="hidden-xs checkbox">
         <label style="font-size:16px;">
           <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
-          進階搜尋
+          更進階地搜尋
         </label>
       </div>
     </div>
@@ -37,11 +37,11 @@
 
 <table class="table table-hover" id="course_table" style="background-color:white;" >
   <tr class="row">
-    <th class="hidden-xs">學期</th>
+   <th class="hidden-xs">學期</th>
     <th class="hidden-xs">系所/摘要</th>
-    <th class="">課名</th>
-    <th class="">老師</th>
-    <th class="">學分</th>
+    <th class="">超級課名</th>
+    <th class="">超級老師</th>
+    <th class="">超級學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
     <th class="hidden-xs">收藏</th>
