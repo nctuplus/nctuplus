@@ -1,6 +1,9 @@
 Nctuplus::Application.routes.draw do
 
   root :to => "main#index"
+  
+  #-----------frontEndTest-----------#
+  resources :frontend
 
   #----------- [devise] user account concerned -----------
   devise_for :users, #:skip=>[:registrations, :confirmations, :passwords],
