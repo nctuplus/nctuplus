@@ -14,7 +14,7 @@ Nctuplus::Application.routes.draw do
     :sign_out => 'logout' }
 
   #--------- bulletin -----------
-  resources :bulletin
+  resources :frontend1212
 
   #--------- slogan -----------
   resources :slogan
