@@ -58,7 +58,7 @@
             {% } %}
 						<span class="pull-right">
 						{% if(o.add_to_cart){ %}
-								<button title="新增至課程收藏" data-toggle="tooltip" class="btn btn-info btn-circle" onclick="add_to_cart({%=cd.id%},'add')">
+								<button title="新增至課程收藏" data-toggle="tooltip" class="btn btn-info btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'add')">
 									<span class="glyphicon glyphicon-star"></span>
 								</button>
 						{% } %}
@@ -74,11 +74,14 @@
 							{% } %}
 						{% }else if(o.view_type=="session"){ %}
 							{% if(o.use_type=="add"){ %}
-								<button title="新增" class="btn btn-success btn-circle" onclick="add_to_cart({%=cd.id%},'add')">
+								<button title="新增" class="btn btn-success btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'add')">
 									<span class="glyphicon glyphicon-plus"></span>
 								</button>
 							{% }else if(o.use_type=="delete"){ %}
-								<button title="刪除" class="btn btn-warning btn-circle" onclick="add_to_cart({%=cd.id%},'delete')">
+								<button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+								<button title="取消收藏課程" class="btn btn-warning btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'delete')">
 									<span class="glyphicon glyphicon-minus"></span>
 								</button>
 							{% } %}

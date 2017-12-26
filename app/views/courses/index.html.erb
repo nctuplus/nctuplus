@@ -44,7 +44,6 @@
     <th class="">學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
-    <th class="hidden-xs">收藏</th>
   </tr>
   <tbody>
   <% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
@@ -64,11 +63,7 @@
           <td class="">
             <%=cd.grade%>
           </td>
-          <td class="hidden-xs" onclick="">
-            <% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
-            <%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
-            
-          </td>
+          
         </tr>
     <% end %>
   <% else %>
