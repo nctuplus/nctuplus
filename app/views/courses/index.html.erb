@@ -90,29 +90,6 @@
       goToHref($(this).attr("href"),false);
     });
     
-    //bind cart button 
-    $(".cart-control").bind({
-      mouseover:function(){// avoid go to course page
-        $(this).parent().parent().off("click");
-      },
-      mouseleave:function(){// resume go to course page
-        $(this).parent().parent().click(function(){
-          goToHref($(this).attr("href"),false);
-        });
-      },
-      click:function(){	//add or delete cart
-        add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
-        var type=$(this).attr("data");
-        if(type=="add"){
-          $(this).attr("data","delete");
-          $(this).toggleClass("fa-square-o fa-check-square-o");
-        }
-        else{
-          $(this).attr("data","add");
-          $(this).toggleClass("fa-check-square-o fa-square-o");
-        }
-      }
-    });
     //toastr["success"]("已更新暑修課程囉，請利用進階搜尋查詢~");
     <% if !current_user %>
 
