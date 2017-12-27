@@ -20,7 +20,7 @@ function add_to_cart($this_but, id,type){
 		}
 	});
 	if (type == 'delete')
-            $this_but.parent().parent().parent().remove();
+            $this_but.parent().parent().parent().parent().remove();
 
 }
 
