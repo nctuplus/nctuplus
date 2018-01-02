@@ -9,7 +9,7 @@ class CalendarController < ApplicationController
     require 'date'
 
     taked_id = []
-    taked_courses = current_user.courses_taked.search_by_sem_id(Semester::LAST.id).map{|cs|cs.to_basic_json}
+    taked_courses = current_user.courses_taked.search_by_sem_id(Semester::CURRENT.id).map{|cs|cs.to_basic_json}
     taked_courses.each do |course|
       taked_id.push(course[:temp_cos_id])
     end
