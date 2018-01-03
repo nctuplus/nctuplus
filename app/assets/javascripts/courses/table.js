@@ -262,7 +262,7 @@
 							var idx_x = day-1 ;
 							var $cell = this.cells[idx_x][idx_y];
 							
-							$cell.html(course.name).addClass(course.class).selectable = false;
+							$cell.html("<a href=\"/courses/"+course.cd_id+"\" target=\"_blank\">"+course.name+"</a>").addClass(course.class).selectable = false;
 							
 							if(this.config.deletable)
 							{
