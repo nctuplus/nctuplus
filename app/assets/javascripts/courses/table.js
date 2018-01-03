@@ -218,7 +218,7 @@
 			{
 				for(var j=0; j<this.cells[i].length; ++j)
 				{
-					if(this.cells[i][j].selected)
+					if(this.cells[i][j].hasClass(Table.defaults.selected_class))
 					{				
 						result.push( this.cells[i][j].time );
 					}
