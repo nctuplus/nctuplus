@@ -218,7 +218,7 @@
 			{
 				for(var j=0; j<this.cells[i].length; ++j)
 				{
-					if(this.cells[i][j].selected)
+					if(this.cells[i][j].hasClass(Table.defaults.selected_class))
 					{				
 						result.push( this.cells[i][j].time );
 					}
@@ -262,7 +262,7 @@
 							var idx_x = day-1 ;
 							var $cell = this.cells[idx_x][idx_y];
 							
-							$cell.html(course.name).addClass(course.class).selectable = false;
+							$cell.html("<a href=\"/courses/"+course.cd_id+"\" target=\"_blank\">"+course.name+"</a>").addClass(course.class).selectable = false;
 							
 							if(this.config.deletable)
 							{
