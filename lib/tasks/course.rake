@@ -44,7 +44,7 @@ namespace :course do
 		teachers=E3Service.getTeacherList	
 		inform_mesg << "[Teacher] Get #{teachers.length} from E3.<br>"
 		tids=teachers.map{|t|t["TeacherId"]}
-		@deleted=Teacher.update_all({:is_deleted=>true},["real_id NOT IN (?)",tids])
+                @deleted=Teacher.where.not(real_id: tids).update_all(is_deleted: true)
 		inform_mesg << "[Teacher] Total : #{@deleted}  Deleted.<br>"
 		all_now=Teacher.all.map{|t|{"TeacherId"=>t.real_id, "Name"=>t.name}}
 		@new=teachers - all_now
