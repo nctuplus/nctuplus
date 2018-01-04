@@ -121,8 +121,18 @@
 	$(document).ready(function(){
 		//toastr["success"]("已更新到104上的課程囉!!!");
 <% if current_user.canShare? %>	
-    new ZeroClipboard( $('#copy-it-simu') );	
-		$('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
+		$('#copy-it-simu').click( function() {
+			value = $(this).data('clipboard-text');
+ 			
+			// Copy to clipboard.
+          	var $temp = $('<input>');
+			$("body").append($temp);
+			$temp.val(value).select();
+			document.execCommand("copy");
+			$temp.remove();
+ 
+            toastr["success"]('已複製到剪貼簿');
+        });
 <% end %>			
 		
 		$(".pop-over").popover({
