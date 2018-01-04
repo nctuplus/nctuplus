@@ -68,7 +68,7 @@
       $('#timeslot_search').val(arr_str);
       $(".scrollable").html("<%=j loading_img%>");
       $("form").submit();
-      $(".schd-grid-selected").removeClass("schd-grid-selected");
+      $(".schd-grid-selected").trigger('click');
     }
     else
       toastr["warning"]("請先在右方課表選取時間");
