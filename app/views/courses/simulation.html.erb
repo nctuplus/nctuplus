@@ -1,5 +1,6 @@
 <%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "courses/simulation", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "copyclipboard" %>
 <style>
 .row{
 	margin-top: 15px;	
@@ -121,18 +122,7 @@
 	$(document).ready(function(){
 		//toastr["success"]("已更新到104上的課程囉!!!");
 <% if current_user.canShare? %>	
-		$('#copy-it-simu').click( function() {
-			value = $(this).data('clipboard-text');
- 			
-			// Copy to clipboard.
-          	var $temp = $('<input>');
-			$("body").append($temp);
-			$temp.val(value).select();
-			document.execCommand("copy");
-			$temp.remove();
- 
-            toastr["success"]('已複製到剪貼簿');
-        });
+		setCopyToClipboardOnClick($('#copy-it-simu'), '已複製到剪貼簿');
 <% end %>			
 		
 		$(".pop-over").popover({

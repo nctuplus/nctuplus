@@ -1,5 +1,6 @@
 <%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
+<%= javascript_include_tag "copyclipboard", "data-turbolinks-track" => true %>
 <style>
 .inner-grid{
 	margin-bottom:10px;
@@ -253,17 +254,7 @@
                .html('<%=fa_icon "share-square-o"%>') 
                .attr("title", "分享課表")
                .attr("data-clipboard-text", "<%=j root_url %>shares/"+url);
-    $but.click(function() {
-        value = $(this).data('clipboard-text');
-
-        var $temp = $('<input>');
-        $("body").append($temp);
-        $temp.val(value).select();
-        document.execCommand("copy");
-        $temp.remove();
-
-        toastr["success"]('已複製到剪貼簿');
-    });  
+    setCopyToClipboardOnClick($but, '已複製到剪貼簿');
     return $but;
   }
 
