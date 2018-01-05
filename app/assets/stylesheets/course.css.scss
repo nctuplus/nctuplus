@@ -39,24 +39,45 @@
 //for course_list and schdule grid color
 .course-common-required{
 	background-color:#AFFFD8;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .course-common-elective{
 	background-color:#B0AFFF;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .course-general{
 	background-color:#F0AD4E;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .course-elective{
 	background-color:#AFD6FF;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .course-foreign{
 	background-color:#FEFFCD;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .course-required{
 	background-color:#AFFFB0;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 .course-conflict{
 	background-color:#FFCECD;
+  &:hover{
+    opacity: 0.9;
+  }
 }
 
 
@@ -64,6 +85,14 @@
   color:white;
 }
 .course-tag:hover {color:white;}
+
+.course-link{
+  color: #53545d;
+}
+
+.course-link:hover {
+  color: #000;
+}
 
 .tabs-below, .tabs-right, .tabs-left {
   .nav-tabs {

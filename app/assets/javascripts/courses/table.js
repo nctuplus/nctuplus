@@ -262,10 +262,10 @@
 							var idx_x = day-1 ;
 							var $cell = this.cells[idx_x][idx_y];
 							
-							var courseText = '<a href="/courses/' + course.cd_id + '" target="_blank">' + course.name + "</a>";
-                            var e = $cell.html(courseText);
-                            e.addClass(course.class);
-                            e.selectable = false;
+							var courseText = '<a class="course-link" href="/courses/' + course.cd_id + '" target="_blank">' + course.name + "</a>";
+							var e = $cell.html(courseText);
+							e.addClass(course.class);
+							e.selectable = false;
 							
 							if(this.config.deletable)
 							{
@@ -383,7 +383,7 @@
 				{
 					this.cells[j-1].push($('<td>').insertAfter($last_td)
 					//.attr('id','day_'+j+'_time_'+t)
-					.addClass('pos-relative')
+					//.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
 						selectable: this.config.selectable || false, 
