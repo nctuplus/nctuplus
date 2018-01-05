@@ -4,17 +4,30 @@
 .row{
 	margin-top: 15px;	
 }
+.simulation-alert{
+	cursor: pointer;
+}
+.simulation-alert:hover{
+	opacity: 0.8;
+}
+.position-static{
+	position: static;
+}
 
 </style>
 
 <div class="row" style="">
 	<div class="col-xs-12">
-		<div class="alert alert-warning com-cour-error" onclick="hideGeneralCourseError()">
-		<strong>Warning!</strong> 因為學校真的很煩, 很抱歉目前識別新制通識的功能正在努力趕工中, 並且106學年度暫時無法搜尋通識的一當代五向度資料, 造成不便, 敬請見諒!
+		<div class="alert alert-warning simulation-alert" onclick="hideGeneralCourseError()">
+		<strong>Important!</strong> </br>
+			</br>
+			‧ 試試看! 按下課表上的課程，為該課程 <font color="red">評個分</font> 或 <font color="red">寫些心得</font> 吧! 你的小小回饋， NCTU+ 將會感激不盡。 </br>
+			</br>
+			‧ 適應新制通識的版本尚在趕工當中，請各位再等一等! </br>
 		</div>
 	</div>
   
-      <div class="col-md-6">
+      <div class="col-md-6 position-static">
 		<div class="panel" >
 			<div class="panel-heading bg-fb">
 				<h4 class="text-center">

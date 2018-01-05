@@ -88,10 +88,13 @@
 
 .course-link{
   color: #53545d;
-}
-
-.course-link:hover {
-  color: #000;
+  text-decoration: none;
+  &:active, &:visited{
+    color: #53545d;
+  }
+  &:hover{
+    color: #6375ff;
+  }
 }
 
 .tabs-below, .tabs-right, .tabs-left {

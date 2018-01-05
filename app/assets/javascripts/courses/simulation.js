@@ -25,6 +25,6 @@ function showHasSelected(){
 }
 
 function hideGeneralCourseError() {
-        $(".com-cour-error").fadeOut("slow");
+        $(".simulation-alert").fadeOut("slow");
 }
 
