@@ -53,7 +53,9 @@ class CourseDetail < ActiveRecord::Base
       :ct_id=>self.course_teachership_id,
       :reg_num=>self.reg_num,
       :reg_limit=>self.students_limit=="9999" ? "不限" : self.students_limit,
-      :brief=>self.brief
+      :brief=>self.brief,
+      :semester=>self.semester_id,
+      :memo=>self.memo
     }
   end
 

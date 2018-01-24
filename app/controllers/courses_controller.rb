@@ -47,16 +47,21 @@ class CoursesController < ApplicationController
   end
 
   def search_api
-    if !params[:custom_search].blank? #search by text
-      @q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
+    q_param = {
+        :semester_id_eq => params[:semester]
+    }
+    if !params[:search].blank? #search by text
+      @q = CourseDetail.search_by_q_and_text(q_param, params[:search])
     else
-      if params[:q].blank?
-        @q=CourseDetail.search({:id_in=>[0]})
+      if q_param[:semester_id_wq].blank?
+        render json: []
+        return
       else
-        @q=CourseDetail.search(params[:q])        
+        @q=CourseDetail.search(q_param)        
       end
     end
     cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
+    cds=cds.order("semester_id DESC").order("department_id ASC")
     @result=cds.map{|cd|
               cd.to_search_result
             }
