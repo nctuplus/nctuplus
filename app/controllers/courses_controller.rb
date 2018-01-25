@@ -15,8 +15,8 @@ class CoursesController < ApplicationController
     @cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
   end
 
-  def search_mini	#for course simulation search & result
-    if !params[:dimension_search].blank?	#search by 向度 (推薦系統)
+  def search_mini #for course simulation search & result
+    if !params[:dimension_search].blank?  #search by 向度 (推薦系統)
       @q= CourseDetail.search({:semester_id_eq=>Semester::LAST.id, :brief_cont_any=>JSON.parse(params[:dimension_search])})
     elsif !params[:timeslot_search].blank? #search by time (推薦系統)
       @q= CourseDetail.search({:cos_type_cont_any=>["通識","外語"], :semester_id_eq=>Semester::LAST.id, :time_cont_any=>JSON.parse(params[:timeslot_search])})
@@ -30,7 +30,7 @@ class CoursesController < ApplicationController
       if params[:q].blank?
         @q=CourseDetail.search({:id_in=>[0]})
       else
-        @q=CourseDetail.search(params[:q])				
+        @q=CourseDetail.search(params[:q])        
       end
     end
     cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
@@ -44,6 +44,23 @@ class CoursesController < ApplicationController
     }
     @result[:highest_score_ct] = highest_score_ct if !params[:required_search].blank? 
     render "courses/search/mini", :layout=>false
+  end
+
+  def search_api
+    if !params[:custom_search].blank? #search by text
+      @q = CourseDetail.search_by_q_and_text(params[:q],params[:custom_search])
+    else
+      if params[:q].blank?
+        @q=CourseDetail.search({:id_in=>[0]})
+      else
+        @q=CourseDetail.search(params[:q])        
+      end
+    end
+    cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
+    @result=cds.map{|cd|
+              cd.to_search_result
+            }
+    render json: @result
   end
 
 
