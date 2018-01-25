@@ -53,7 +53,7 @@ class CoursesController < ApplicationController
     if !params[:search].blank? #search by text
       @q = CourseDetail.search_by_q_and_text(q_param, params[:search])
     else
-      if q_param[:semester_id_wq].blank?
+      if q_param[:semester_id_eq].blank?
         render json: []
         return
       else
