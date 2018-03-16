@@ -48,11 +48,13 @@ class UserController < ApplicationController
 					}
 				when "course_table"
 					semester = Semester.find(params[:sem_id])
+                    minSem = @user.normal_scores.joins(:course_detail).minimum(:semester_id)
+                    maxSem = @user.normal_scores.joins(:course_detail).maximum(:semester_id)
 					result={
 						:courses=>@user.normal_scores.includes(:course_detail).search_by_sem_id(params[:sem_id]).map{|cs|
 							cs.course_detail.to_course_table_result
 						},
-						:semesters=> (@user.year==0) ? [] : Semester.where("year >= ?", @user.year).map{|s| {:id=>s.id, :name=>s.name}},
+                        :semesters=> (@user.year==0) ? [] : Semester.where("id >= ?", minSem).where("id <= ?", maxSem).map{|s| {:id=>s.id, :name=>s.name}},
 						:semester_name => semester.name, # for 歷年課表 modal header 
 						:hash_share => (current_user.canShare?) ? Hashid.user_share_encode([current_user.id, semester.id]) : nil
 					}				
