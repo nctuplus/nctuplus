@@ -144,7 +144,8 @@
 
           var dataUrl = canvas.toDataURL("image/png");
 					if (flag=="window"){
-						window.open(dataUrl);
+						var exportTable = window.open();
+						exportTable.document.write(`<img src=${dataUrl} height='100%'>`);
 						return ;
 					}else if(flag=="url"){
 					  return dataUrl ;
