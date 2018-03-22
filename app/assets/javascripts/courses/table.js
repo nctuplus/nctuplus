@@ -144,8 +144,11 @@
 
           var dataUrl = canvas.toDataURL("image/png");
 					if (flag=="window"){
-						var exportTable = window.open();
-						exportTable.document.write(`<img src=${dataUrl} height='100%'>`);
+					        var exportTable = document.createElement('a');
+					        exportTable.href = dataUrl;
+					        exportTable.download = 'syllabus.png';
+					        blank_win = exportTable.click();
+					        blank_win.close();
 						return ;
 					}else if(flag=="url"){
 					  return dataUrl ;
