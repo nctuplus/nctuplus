@@ -10,7 +10,6 @@
     dept_sel['2']='<%=j render "courses/search/common_options" %>'
     dept_sel['3']='<%=j render "courses/search/graduate_options" %>'
     var sel_chname = {'1': '大學部', '2': '大學部共同', '3': '研究所'};
-    console.log('obj.val='+ String(obj.val()))
 
     $("#q_department_id_in_string").html(dept_sel[obj.val()]);
     $("#q_course_details_department_id_eq").html(dept_sel[obj.val()]);//if it's in course_maps/edit
