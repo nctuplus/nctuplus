@@ -12,7 +12,7 @@
       </div><!-- /input-group -->
       <div class="hidden-xs checkbox">
         <label style="font-size:16px;">
-          <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');document.getElementById('q_semester_id_eq').value='';deg=document.getElementById('degree');deg.value='0';change_degree($(deg));" %>
+          <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_semester_id_eq').val('');$('#degree').val('0');change_degree($('#degree'));" %>
           進階搜尋
         </label>
       </div>
