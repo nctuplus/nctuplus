@@ -20,8 +20,11 @@ $(document).ready(function() {
 		$('body').scrollspy({ target: '#sidebar-menu',offset:60 });
 			var sidebarMainMenu = $('#sidebar-menu .blue-menu');
 		$('.blue-menu li a').click(function(event) {
-				event.preventDefault();
-			$('body').scrollTo($(this).attr('href'),700,{offset:-60});
+            event.preventDefault();
+            //jquery:1.11.0 "scrollTo" method not working for chrome
+            let pos = $($(this).attr('href')).position().top
+            pos = Math.ceil(pos) - 60
+            $("body,html").animate({scrollTop:pos},250)
 		});
 	}
 });
