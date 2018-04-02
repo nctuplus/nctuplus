@@ -1,28 +1,31 @@
 <div id="sidebar-menu" class="scroll-sidebar blue-menu col-md-2" style="font-size:16px;position:fixed;margin-top:100px;">
-	<ul class="nav">
-	<li class="blue-btn"><a href="#tc">課程資訊</a></li>
-	<!--<ul class="nav sub-menu">-->
-		<li class="blue-btn"><a href="#course-tips">課程攻略</a></li>
-		<li class="blue-btn"><a href="#statistics">歷年統計</a></li>
-		<li class="blue-btn"><a href="#comments">留言板</a></li>
-	<!--</ul>-->
-	
-	<li class="blue-btn"><a href="#compare">教授比一比</a></li>
-	<li class="blue-btn"><a href="#discuss">課程(心得)討論區</a></li>
-	<li class="blue-btn"><a href="#files">考古題</a></li>
-	</ul>
+    <ul class="nav">
+    <li class="blue-btn"><a href="#tc">課程資訊</a></li>
+    <!--<ul class="nav sub-menu">-->
+        <li class="blue-btn"><a href="#course-tips">課程攻略</a></li>
+        <li class="blue-btn"><a href="#statistics">歷年統計</a></li>
+        <li class="blue-btn"><a href="#comments">留言板</a></li>
+    <!--</ul>-->
+    
+    <li class="blue-btn"><a href="#compare">教授比一比</a></li>
+    <li class="blue-btn"><a href="#discuss">課程(心得)討論區</a></li>
+    <li class="blue-btn"><a href="#files">考古題</a></li>
+    </ul>
 </div>
 
 
 <script>
 $(document).ready(function() {
-	if(!isMobile){
-		$('body').scrollspy({ target: '#sidebar-menu',offset:60 });
-			var sidebarMainMenu = $('#sidebar-menu .blue-menu');
-		$('.blue-menu li a').click(function(event) {
-				event.preventDefault();
-			$('body').scrollTo($(this).attr('href'),700,{offset:-60});
-		});
-	}
+    if(!isMobile){
+        $('body').scrollspy({ target: '#sidebar-menu',offset:60 });
+            var sidebarMainMenu = $('#sidebar-menu .blue-menu');
+        $('.blue-menu li a').click(function(event) {
+            event.preventDefault();
+            //jquery:1.11.0 "scrollTo" method not working for chrome
+            let pos = $($(this).attr('href')).position().top
+            pos = Math.ceil(pos) - 60
+            $("body,html").animate({scrollTop:pos},250)
+        });
+    }
 });
 </script>
