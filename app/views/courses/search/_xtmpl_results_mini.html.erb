@@ -9,7 +9,26 @@
 			$this_but.parent().parent().parent().remove();
 		}	
 		save_course(cd_id,addordel,from);		
+        compute_credits();
 	}
+
+    function compute_credits(courses){
+        var update_title = function (json_data){
+            var total = 0;
+            json_data.courses.forEach( function(course){
+                total += course.credit;
+            });
+            $('#list-panel-title').text('課程查詢 (已選: '+String(total)+'學分)');
+        }
+
+        if( typeof courses === "undefined" ){
+            $.getJSON("/user/get_courses?type=simulation&add_to_cart=1",function(data){
+                update_title(data);
+            });
+        }else{
+            update_title(courses);
+        }
+    }
 	
 	function save_course(cd_id,addordel,from){
 		$.ajax({
