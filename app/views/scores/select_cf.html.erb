@@ -1,5 +1,24 @@
 ﻿<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
+<table class="table" style="background-color:white;" >
+    <th class="">學期</th>
+    <th class="">當期課號</th>
+    <th class="">課程名稱</th>
+    <th class="">失敗原因</th>
+  <tbody>
+  <% errmsgs = params[:errmsg]%>
+  <% if not errmsgs.empty? %>
+    <% errmsgs.each do |e| %>
+        <td class=""><%= e['sem']%></td>
+        <td class=""><%= e['cos_id']%></td>
+        <td class=""><%= e['name']%></td>
+        <td class=""><%= e['msg']%></td>
+        </tr>
+    <% end %>
+  <%end%>
+  </tbody>
+</table>
+
 <div class="container panel ">
 	<div class=" bs-callout bs-callout-info well">
 		<h2><%=fa_icon "upload"%>選擇學程</h2>
