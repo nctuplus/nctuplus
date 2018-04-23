@@ -34,7 +34,7 @@
 							<%=fa_icon "star"%>
 						</button>
 					</span>
-					課程查詢
+                    <span id='list-panel-title'>課程查詢</span>
 					<span class="pull-right">
 						<button id="show-tips" class="btn btn-circle btn-info pop-over" data-content="使用提示" onclick="showTip();" style="margin-top: -5px;">
 							<%=fa_icon "question"%>
@@ -150,7 +150,6 @@
       modal:true,
       expose: true
     });
-	
 	});
 
 	function load_course_table(semester_id, selectable){
@@ -176,6 +175,7 @@
 		$.getJSON("/user/get_courses?type=simulation&add_to_cart=1",function(data){
 			//console.log(data);
 			$(".scrollable").html(tmpl("search_result", data));
+            compute_credits(data);
 		});
 	}
 
