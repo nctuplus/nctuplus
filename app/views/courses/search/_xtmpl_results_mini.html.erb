@@ -9,10 +9,12 @@
 			$this_but.parent().parent().parent().remove();
 		}	
 		save_course(cd_id,addordel,from);		
-        compute_credits();
 	}
 
     function compute_credits(courses){
+        //根據有無給予courses資料去計算已選學分數
+        //如果沒給的話就自行跟後端要求目前選取的課程並重新計算學分數
+        
         var update_title = function (json_data){
             var total = 0;
             json_data.courses.forEach( function(course){
@@ -40,6 +42,7 @@
 				from: from
 			},
 			success: function(data) {
+                compute_credits();
 			//	console.log(data);
 				if(addordel=="add")
 					$('#schedule_table').CourseTable('addCourses', [data]);
