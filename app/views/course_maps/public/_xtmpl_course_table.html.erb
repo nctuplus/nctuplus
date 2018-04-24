@@ -2,7 +2,7 @@
 	{% var cm=o.course_map; %}
 	<h3 id="title" style="line-height:160%">		
 		<b>{%= o.dept_name %} 入學年度:
-			<%=params[:year]%>
+			<%=@year%>
 		</b>
 		{% if(cm){ %}
 			<b>畢業學分:{%=cm.total_credit%}</b>
@@ -48,6 +48,13 @@
 			
 		{% var coursesbyGrade=groupBy(allCourses,function(item){return item.suggest_sem;});%}
 
+		{%
+			coursesbyGrade.sort(function(a, b) {
+				if (a[0].grade === b[0].grade)
+					return a[0].half - b[0].half;
+				return a[0].grade - b[0].grade;
+			})
+		%}
 			{%  var colors=["#0080FF","#F00078","#F75000","#00AEAE","#5A5AAD","#FF9224","	#64A600","#804040","#9900FF","#CD5C5C","#BBBB00","#000000"];
 					var color=0;
 					var category = [];

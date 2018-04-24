@@ -10,10 +10,10 @@
 					</div>
 					-->
 					<div style="width:200px;display:inline-block;">	
-						<%=select_tag "dept_id", options_for_select(@dept_sel,params[:dept_id]),prompt: "系所",class:"form-control",required:"true" %>
+						<%=select_tag "dept_id", options_for_select(@dept_sel,@dept_id),prompt: "系所",class:"form-control",required:"true" %>
 					</div>
 					<div style="width:120px;display:inline-block;">
-						<%=select_tag "year", options_for_select(@year_sel,params[:year]),prompt: "入學年度",class:"form-control",required:"true" %>
+						<%=select_tag "year", options_for_select(@year_sel,@year),prompt: "入學年度",class:"form-control",required:"true" %>
 					</div>	
 					<%=submit_tag "送出",class:"btn btn-success"%>
 				</div>	
