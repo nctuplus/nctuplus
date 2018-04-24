@@ -2,7 +2,7 @@
 	{% var cm=o.course_map; %}
 	<h3 id="title" style="line-height:160%">		
 		<b>{%= o.dept_name %} 入學年度:
-			<%=params[:year]%>
+			<%=@year%>
 		</b>
 		{% if(cm){ %}
 			<b>畢業學分:{%=cm.total_credit%}</b>
