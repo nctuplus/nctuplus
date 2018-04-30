@@ -2158,7 +2158,7 @@ _html2canvas.Parse = function (images, options) {
 
     body.removeChild(hidePseudoElements);
     return {
-      backgroundColor: background,
+      backgroundColor: '#fff', // Force to set backgroundColor to white
       stack: stack
     };
   }
@@ -2855,7 +2855,7 @@ _html2canvas.Renderer.Canvas = function(options) {
         newCanvas.width = Math.ceil(bounds.width);
         newCanvas.height = Math.ceil(bounds.height);
         ctx = newCanvas.getContext("2d");
-
+        ctx.imageSmoothingEnabled = false; // Fix for blurry screenshot
         ctx.drawImage(canvas, bounds.left, bounds.top, bounds.width, bounds.height, 0, 0, bounds.width, bounds.height);
         canvas = null;
         return newCanvas;

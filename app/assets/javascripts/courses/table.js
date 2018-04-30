@@ -137,7 +137,6 @@
 		//	_this.$element.find('.btn-group').hide() ;	
 		
 		  html2canvas( _this.$element.get(0), {
-        height: 1500 ,
         onrendered: function(canvas) {
           //recover the hidden items
 			//		_this.$element.find('.btn-group').show();
@@ -146,9 +145,9 @@
 					if (flag=="window"){
 					        var exportTable = document.createElement('a');
 					        exportTable.href = dataUrl;
-					        exportTable.download = 'syllabus.png';
-					        blank_win = exportTable.click();
-					        blank_win.close();
+					        var filename = (document.querySelectorAll('h4.text-center')[1].childNodes[0]).nodeValue.trim()+'.png';
+					        exportTable.download = filename;
+					        exportTable.click();
 						return ;
 					}else if(flag=="url"){
 					  return dataUrl ;
