@@ -1,18 +1,20 @@
 <script>
-	function addCourseSimulation($this_but, cd_id, time, addordel,from){
-		if(addordel=="add"){
-			//console.log(time);
-			var res = $('#schedule_table').CourseTable('checkConflictByTime',{time: time}) ;
-			if(res)
-				return ;
-		}else if(addordel=="delete"){
-			$this_but.parent().parent().parent().remove();
-		}	
-		save_course(cd_id,addordel,from);		
-        compute_credits();
-	}
+    function addCourseSimulation($this_but, cd_id, time, addordel,from){
+        if(addordel=="add"){
+            //console.log(time);
+            var res = $('#schedule_table').CourseTable('checkConflictByTime',{time: time}) ;
+            if(res)
+                return ;
+        }else if(addordel=="delete"){
+            $this_but.parent().parent().parent().remove();
+        }   
+        save_course(cd_id,addordel,from);       
+    }
 
     function compute_credits(courses){
+        //根據有無給予courses資料去計算已選學分數
+        //如果沒給的話就自行跟後端要求目前選取的課程並重新計算學分數
+        
         var update_title = function (json_data){
             var total = 0;
             json_data.courses.forEach( function(course){
@@ -29,102 +31,103 @@
             update_title(courses);
         }
     }
-	
-	function save_course(cd_id,addordel,from){
-		$.ajax({
-			type: "GET",
-			url: "/user/"+addordel+"_course",
-			dataType: "json",
-			data: {
-				cd_id: cd_id,
-				from: from
-			},
-			success: function(data) {
-			//	console.log(data);
-				if(addordel=="add")
-					$('#schedule_table').CourseTable('addCourses', [data]);
-				else{
-					$('#schedule_table').CourseTable('deleteCourse', cd_id);
-				//	$('#course_table').find('tr[id="cd_'+cd_id+'"]').remove();
-				}		
-				if (from=="cart")
-					$("#shopping_cart_courses").load("/courses/show_cart");
-			}	
-		});
-	}
-</script>	
+    
+    function save_course(cd_id,addordel,from){
+        $.ajax({
+            type: "GET",
+            url: "/user/"+addordel+"_course",
+            dataType: "json",
+            data: {
+                cd_id: cd_id,
+                from: from
+            },
+            success: function(data) {
+                compute_credits();
+                //console.log(data);
+                if(addordel=="add")
+                    $('#schedule_table').CourseTable('addCourses', [data]);
+                else{
+                    $('#schedule_table').CourseTable('deleteCourse', cd_id);
+                    //$('#course_table').find('tr[id="cd_'+cd_id+'"]').remove();
+                }       
+                if (from=="cart")
+                    $("#shopping_cart_courses").load("/courses/show_cart");
+            }   
+        });
+    }
+</script>   
 
 <script type="text/x-tmpl" id="search_result">
-	<table class="table table-hover courselist-hover " id="course_table" >
-	{% var grouped=groupBy(o.courses,function(item){return item.cos_type;}); %}
-	{% for (var i=0, courses; courses=grouped[i]; i++) { %}
-		<tr class="row">
-			<th class="{%=cos_type_class(courses[0].cos_type)%}">
-				{%=courses[0].cos_type%}
-			</th>
-		</tr>
-		{% for(var j=0,cd;cd=courses[j];j++){ %}
-			<tr id="cd_{%=cd.id%}" class="row" >
-				<td class="">
-					<p>
-						<a href="/courses/{%=cd.id%}" class="course_name" target="_blank">
-							{%= cd.course_name %}
-						</a>
-						{%= cd.dept_name %}
-						{%= cd.teacher_name %}
+    <table class="table table-hover courselist-hover " id="course_table" >
+    {% var grouped=groupBy(o.courses,function(item){return item.cos_type;}); %}
+    {% for (var i=0, courses; courses=grouped[i]; i++) { %}
+        <tr class="row">
+            <th class="{%=cos_type_class(courses[0].cos_type)%}">
+                {%=courses[0].cos_type%}
+            </th>
+        </tr>
+        {% for(var j=0,cd;cd=courses[j];j++){ %}
+            <tr id="cd_{%=cd.id%}" class="row" >
+                <td class="">
+                    <p>
+                        <a href="/courses/{%=cd.id%}" class="course_name" target="_blank">
+                            {%= cd.course_name %}
+                        </a>
+                        {%= cd.dept_name %}
+                        {%= cd.teacher_name %}
             {% if(o.highest_score_ct && o.highest_score_ct.indexOf(cd.id) != -1) { %}
             <!-- highest score -->
             {% } %}
-						<span class="pull-right">
-						{% if(o.add_to_cart){ %}
-								<button title="新增至課程收藏" data-toggle="tooltip" class="btn btn-info btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'add')">
-									<span class="glyphicon glyphicon-star"></span>
-								</button>
-						{% } %}
-						{% if(o.view_type=="simulation"){ %}											
-							{% if(o.use_type=="add"){ %}							
-								<button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button>
-							{% }else if(o.use_type=="delete"){ %}
-								<button title="退選" class="btn btn-warning btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}','delete','search')">
-									<span class="glyphicon glyphicon-minus"></span>
-								</button>
-							{% } %}
-						{% }else if(o.view_type=="session"){ %}
-							{% if(o.use_type=="add"){ %}
-								<button title="新增" class="btn btn-success btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'add')">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button>
-							{% }else if(o.use_type=="delete"){ %}
-								<button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
-									<span class="glyphicon glyphicon-plus"></span>
-								</button>
-								<button title="取消收藏課程" class="btn btn-warning btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'delete')">
-									<span class="glyphicon glyphicon-minus"></span>
-								</button>
-							{% } %}
-						{% } %}
-						</span>
-					</p>
-					<p class="text-right">
-						{% if(cd.cos_type=="通識"||cd.cos_type=="外語"){ %}
-							{%=cd.brief%} | 
-						{% } else{ %}
-							{%=cd.cos_type%} | 
-						{% } %}
-						年級: {%=cd.grade%} | 
-						<strong class="course_time">{%= cd.time %}/{%=cd.room%}</strong>
-						| <%=fa_icon "user" %> <strong>{%= cd.reg_num %}</strong>/<strong>{%= cd.reg_limit %}</strong>
-						| <%=fa_icon "graduation-cap" %> <strong>{%= cd.credit %}</strong>
-					</p>
-				</td>
-			</tr>
-		{% } %}
-	{% } %}
-	
-	{% if(o.courses.length==0){ %}
-		<tr class="row"><td><h4>查無結果!</h4></td></tr>
-	{% } %}
-	</table>
+                        <span class="pull-right">
+                        {% if(o.add_to_cart){ %}
+                                <button title="新增至課程收藏" data-toggle="tooltip" class="btn btn-info btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'add')">
+                                    <span class="glyphicon glyphicon-star"></span>
+                                </button>
+                        {% } %}
+                        {% if(o.view_type=="simulation"){ %}                                            
+                            {% if(o.use_type=="add"){ %}                            
+                                <button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            {% }else if(o.use_type=="delete"){ %}
+                                <button title="退選" class="btn btn-warning btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}','delete','search')">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            {% } %}
+                        {% }else if(o.view_type=="session"){ %}
+                            {% if(o.use_type=="add"){ %}
+                                <button title="新增" class="btn btn-success btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'add')">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            {% }else if(o.use_type=="delete"){ %}
+                                <button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                                <button title="取消收藏課程" class="btn btn-warning btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'delete')">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </button>
+                            {% } %}
+                        {% } %}
+                        </span>
+                    </p>
+                    <p class="text-right">
+                        {% if(cd.cos_type=="通識"||cd.cos_type=="外語"){ %}
+                            {%=cd.brief%} | 
+                        {% } else{ %}
+                            {%=cd.cos_type%} | 
+                        {% } %}
+                        年級: {%=cd.grade%} | 
+                        <strong class="course_time">{%= cd.time %}/{%=cd.room%}</strong>
+                        | <%=fa_icon "user" %> <strong>{%= cd.reg_num %}</strong>/<strong>{%= cd.reg_limit %}</strong>
+                        | <%=fa_icon "graduation-cap" %> <strong>{%= cd.credit %}</strong>
+                    </p>
+                </td>
+            </tr>
+        {% } %}
+    {% } %}
+    
+    {% if(o.courses.length==0){ %}
+        <tr class="row"><td><h4>查無結果!</h4></td></tr>
+    {% } %}
+    </table>
 </script>
