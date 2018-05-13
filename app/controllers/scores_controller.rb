@@ -80,7 +80,7 @@ class ScoresController < ApplicationController
                         if sem.id == Semester::LAST.id
                           current_user.normal_scores.destroy_all
                         end
-            err_messages = []
+            error_msgs = []
 
 			normal.each do |n|
 				if n['score'] == "通過" || n['score'].to_i>=current_user.pass_score
@@ -101,7 +101,7 @@ class ScoresController < ApplicationController
 						@success_added+=1
 					else
 						@fail_added+=1
-                        err_messages.append(
+                        error_msgs.append(
                             {:sem=>"#{n['sem']}",
                              :cos_id=>"#{n['cos_id']}",
                              :name=>"#{n['name']}",
@@ -110,7 +110,7 @@ class ScoresController < ApplicationController
 					end
 				else
 					@fail_added+=1
-                    err_messages.append(
+                    error_msgs.append(
                         {:sem=>"#{n['sem']}",
                          :cos_id=>"#{n['cos_id']}",
                          :name=>"#{n['name']}",
@@ -120,19 +120,23 @@ class ScoresController < ApplicationController
 			end
 
             puts "ERROR MESSAGES"
-            err_messages.each do |errmsg|
+            error_msgs.each do |errmsg|
                 puts "#{errmsg[:course]}: #{errmsg[:msg]}"
             end
             
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
 			update_cs_cfids(cm,current_user)
 			
-			msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 退選:#{@drop} 未通過:#{@no_pass} 修習中:#{@now_taking}"
-            redirect_to :action=>:select_cf, :msg=>msg, :errmsg=>err_messages
+			outcome_msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 退選:#{@drop} 未通過:#{@no_pass} 修習中:#{@now_taking}"
+            session[:msg] = outcome_msg
+            session[:errmsg] = error_msgs
+            redirect_to :action=>:select_cf
 		end
 	end
 	
 	def select_cf
+        @msg = session[:msg]
+        @errmsg = session[:errmsg]
 	end
 
 	def gpa
