@@ -118,16 +118,12 @@ class ScoresController < ApplicationController
                         })
 				end
 			end
-
-            puts "ERROR MESSAGES"
-            error_msgs.each do |errmsg|
-                puts "#{errmsg[:course]}: #{errmsg[:msg]}"
-            end
             
 			cm=current_user.course_maps.includes(:course_groups, :course_fields).take
 			update_cs_cfids(cm,current_user)
 			
 			outcome_msg="匯入完成! 共新增 #{@success_added} 門課 失敗:#{@fail_added} 通過:#{@pass} 退選:#{@drop} 未通過:#{@no_pass} 修習中:#{@now_taking}"
+
             session[:msg] = outcome_msg
             session[:errmsg] = error_msgs
             redirect_to :action=>:select_cf
