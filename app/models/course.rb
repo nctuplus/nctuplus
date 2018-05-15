@@ -41,6 +41,11 @@ class Course < ActiveRecord::Base
 	
 	def to_chart(last_sem)
         # 回傳特定課程不同老師的歷史開課資料統計
+        # 回傳值範例
+        # {
+        #
+        # }
+        #
 
 		# 拿取該課程最近開過課的五個學期，分別的學期名稱跟學期id
         #  因為是歷史課程,所以排除當前學期的課程(last_sem)
@@ -56,33 +61,39 @@ class Course < ActiveRecord::Base
 		end
 
         # 拿取所有相同課程的course_detail 結果(一次要求所有出現學期的資料)
-		related_crs_dtls = self.course_details.where(:semester_id=>sem_id_list).order(:semester_id)
+		related_course_dtls = self.course_details.where(:semester_id=>sem_id_list).order(:semester_id)
         
         # 拿取所有修課生的期末成績
-		simu = NormalScore.where(:course_detail_id=>tmp.map{|ctd| ctd.id})
+		simu = NormalScore.where(:course_detail_id=>related_course_dtls.map{|ctd| ctd.id})
 
 		res = []
 		res_score = []
 		show_score = false
-        # 先將課程依據老師來分類
-		related_crs_dtls.map{ |ctd|
+
+		related_course_dtls.map{ |ctd|
             {   :teacher=>ctd.teacher_name,
                 :cdid=>ctd.id,
                 :num=>ctd.reg_num,
                 :sem=>ctd.semester_id
             }
-        }.group_by{ |t|
-            t[:teacher]
-        }.each do |k1, k2|
+        }.group_by{ |cd| # 先將課程依據老師來分類
+            cd[:teacher]
+        }.each do |teacher_name, course_dtls|
+
             # 不同開課學期的修課人數
 			tmp_num = [0,0,0,0]
 
 			tmp_score = [{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1}]
-			k2.each do |hash|
+
+            #                do cd
+			course_dtls.each do |hash|
 				tmp_num[sem_id_list.index(hash[:sem])] = hash[:num].to_i
 				score_sum = 0 
 				score_count = 0
-				simu.select{|sim| sim.semester_id==hash[:sem]&&sim.course_detail_id==hash[:cdid]}.each do |s|
+
+				simu.select{|sim|
+                    sim.semester_id==hash[:sem] && sim.course_detail_id==hash[:cdid]
+                }.each do |s|
 					if s.try(:score) =~ /[[:digit:]]/ #and s.score.to_i >=60
 						score_sum+= s.score.to_i
 						score_count+=1
@@ -93,8 +104,8 @@ class Course < ActiveRecord::Base
 				tmp_score[sem_id_list.index(hash[:sem])][:y] = (score_count==0) ? 0 : score_sum/score_count*1.0
 				tmp_score[sem_id_list.index(hash[:sem])][:nums] = score_count
 			end
-			res.push({:name=>k1, :data=>tmp_num})
-			res_score.push({:name=>k1, :data=>tmp_score})
+			res.push({:name=>teacher_name, :data=>tmp_num})
+			res_score.push({:name=>teacher_name, :data=>tmp_score})
 		end
 		return {
 			:show_reg=>(res.count > 0),
