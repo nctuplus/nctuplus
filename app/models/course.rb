@@ -40,25 +40,46 @@ class Course < ActiveRecord::Base
 	end	
 	
 	def to_chart(last_sem)
-		# take 5, for case if have latest_semester
-		sems=self.semesters.order(:id).uniq.last(5).reject{|s|s==last_sem}		
-		row_name = sems.map{|s|s.name}				
-		row_id = sems.map{|s| s.id}
-		if row_id.length ==5
-			row_id.shift
-			row_name.shift
+        # 回傳特定課程不同老師的歷史開課資料統計
+
+		# 拿取該課程最近開過課的五個學期，分別的學期名稱跟學期id
+        #  因為是歷史課程,所以排除當前學期的課程(last_sem)
+        #  e.g. [ {id:16, name:"104上", ... }, {id:19, name:"105上", ...}, ...]
+		sems=self.semesters.order(:id).uniq.last(5).reject{ |s| s==last_sem}
+
+        # 擷取學期名稱跟id
+		sem_name_list = sems.map{ |s| s.name}
+		sem_id_list = sems.map{ |s| s.id}
+		if sem_id_list.length == 5
+			sem_id_list.shift
+			sem_name_list.shift
 		end
-		tmp = self.course_details.where(:semester_id=>row_id).order(:semester_id)				
-		simu = NormalScore.where(:course_detail_id=>tmp.map{|ctd| ctd.id})  		
+
+        # 拿取所有相同課程的course_detail 結果(一次要求所有出現學期的資料)
+		related_crs_dtls = self.course_details.where(:semester_id=>sem_id_list).order(:semester_id)
+        
+        # 拿取所有修課生的期末成績
+		simu = NormalScore.where(:course_detail_id=>tmp.map{|ctd| ctd.id})
+
 		res = []
 		res_score = []
 		show_score = false
-		tmp.map{|ctd| {:teacher=>ctd.teacher_name, :cdid=>ctd.id, :num=>ctd.reg_num, :sem=>ctd.semester_id } }
-		.group_by{|t| t[:teacher]}.each do |k1, k2|
+        # 先將課程依據老師來分類
+		related_crs_dtls.map{ |ctd|
+            {   :teacher=>ctd.teacher_name,
+                :cdid=>ctd.id,
+                :num=>ctd.reg_num,
+                :sem=>ctd.semester_id
+            }
+        }.group_by{ |t|
+            t[:teacher]
+        }.each do |k1, k2|
+            # 不同開課學期的修課人數
 			tmp_num = [0,0,0,0]
+
 			tmp_score = [{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1},{:y=>0,:nums=>1}]
 			k2.each do |hash|
-				tmp_num[row_id.index(hash[:sem])] = hash[:num].to_i						
+				tmp_num[sem_id_list.index(hash[:sem])] = hash[:num].to_i
 				score_sum = 0 
 				score_count = 0
 				simu.select{|sim| sim.semester_id==hash[:sem]&&sim.course_detail_id==hash[:cdid]}.each do |s|
@@ -68,17 +89,17 @@ class Course < ActiveRecord::Base
 						show_score = true
 					end
 				end
-					#	Rails.logger.debug "[debug] "+@row_name.to_s
-				tmp_score[row_id.index(hash[:sem])][:y] = (score_count==0) ? 0 : score_sum/score_count*1.0
-				tmp_score[row_id.index(hash[:sem])][:nums] = score_count
+					#	Rails.logger.debug "[debug] "+@sem_name_list.to_s
+				tmp_score[sem_id_list.index(hash[:sem])][:y] = (score_count==0) ? 0 : score_sum/score_count*1.0
+				tmp_score[sem_id_list.index(hash[:sem])][:nums] = score_count
 			end
 			res.push({:name=>k1, :data=>tmp_num})
 			res_score.push({:name=>k1, :data=>tmp_score})
-		end			
+		end
 		return {
 			:show_reg=>(res.count > 0),
 			:show_score=>show_score,
-			:semester_name=>row_name, 
+			:semester_name=>sem_name_list, 
 			:reg_data=>res, 
 			:score_data=>res_score
 		}
