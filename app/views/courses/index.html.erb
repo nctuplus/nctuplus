@@ -5,7 +5,7 @@
 <script>
     function print_result(data){console.log(data)};
 </script>
-<button onclick="show_cart_json(print_result)">拿取收藏課程</button>
+<button onclick="fetch_user_cart(print_result)">拿取收藏課程</button>
 
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
   <div class="row">	
