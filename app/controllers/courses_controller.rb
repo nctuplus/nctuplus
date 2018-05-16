@@ -178,7 +178,11 @@ class CoursesController < ApplicationController
         cd.to_search_result
       }
     }
-    render :layout=>false
+    respond_to do |format|
+        format.json{ render :json => @result[:courses].to_json}
+        format.html{ render :layout=>false}
+    end
+    #render :layout=>false
   end
 
 

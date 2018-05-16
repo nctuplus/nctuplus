@@ -24,3 +24,17 @@ function add_to_cart($this_but, id,type){
 
 }
 
+// 拿取使用者的收藏課程(json格式)
+//  參數介紹:
+//      success(data): 成功拿取時的callback function.
+//          data: 拿到的使用者收藏課程(json)
+function show_cart_json(success){
+    $.ajax({
+        type:'GET',
+        url:'/courses/show_cart?view_type=session&use_type=delete&add_to_cart=0',
+        headers:{
+            'Content-Type':'application/json'
+        }
+    }).done(res=>success(res))
+}
+

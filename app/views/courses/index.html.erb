@@ -1,5 +1,11 @@
-<br>
+<%= javascript_include_tag "courses/cart", "data-turbolinks-track" => true %>
+
 <%=render 'courses/search/search_js' %>
+
+<script>
+    function print_result(data){console.log(data)};
+</script>
+<button onclick="show_cart_json(print_result)">拿取收藏課程</button>
 
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
   <div class="row">	
