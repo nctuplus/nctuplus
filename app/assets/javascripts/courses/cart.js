@@ -16,12 +16,9 @@ function add_to_cart($this_but, id,type){
 			type:type
 		},
 		success : function(data){
-			toastr[data.class](data.text);
+            toastr[String(data.class)]( String(data.text) );
 		}
 	});
-	if (type == 'delete')
-            $this_but.parent().parent().parent().parent().remove();
-
 }
 
 // 拿取使用者的收藏課程(json格式)

@@ -2,10 +2,6 @@
 
 <%=render 'courses/search/search_js' %>
 
-<script>
-    function print_result(data){console.log(data)};
-</script>
-<button onclick="fetch_user_cart(print_result)">拿取收藏課程</button>
 
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
   <div class="row">	
@@ -50,8 +46,9 @@
     <th class="">學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
+    <th class="hidden-xs">收藏</th>
   </tr>
-  <tbody>
+  <tbody >
   <% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
   <% if !@cds.empty? %>
     <% @cds.each do |cd| %>
@@ -66,8 +63,11 @@
           <td class=""><%= cd.teacher_name %></td>
           <td class=""><%= cd.course_credit %></td>
           <td class=""><%= cd.time %></td>
-          <td class="">
-            <%=cd.grade%>
+          <td class=""> <%=cd.grade%> </td>
+          <td class="hidden-xs" id="check-<%=cd.id%>" onclick="">
+            <% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
+            <%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
+
           </td>
           
         </tr>
@@ -85,6 +85,31 @@
 <%= paginate @cds, :window=>2 %>
 
 <script>
+    let user_course_id_cart = new Set();
+
+    function update_user_cart_set(data){
+        data.forEach(element => user_course_id_cart.add(String(element.id) ))
+    };
+    function update_check_box(){
+        let coursearray = $('tr.clickable-row').get();
+        coursearray.forEach( element =>{
+            let box = $("#check-"+element.id+" i:first-child" );
+            if( user_course_id_cart.has(element.id) ){
+                box.removeClass("fa-square-o").addClass("fa-check-square-o");
+                box.attr("data", "delete");
+            }else{
+                box.removeClass("fa-check-square-o").addClass("fa-square-o");
+                box.attr("data", "add");
+            }
+        })
+    };
+  $(document).ready( function(){
+      fetch_user_cart( data => {
+          update_user_cart_set(data);
+          update_check_box();
+      });
+  });
+
   $(function(){
     
     change_degree($("#degree"));
@@ -106,8 +131,8 @@
           goToHref($(this).attr("href"),false);
         });
       },
-      click:function(){	//add or delete cart
-        add_to_cart($(this).parent().parent().attr("id"),$(this).attr("data"));
+      click:function(){//add or delete cart
+        add_to_cart($(this), $(this).parent().parent().attr("id"),$(this).attr("data"));
         var type=$(this).attr("data");
         if(type=="add"){
           $(this).attr("data","delete");
