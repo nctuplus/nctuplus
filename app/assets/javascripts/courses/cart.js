@@ -4,21 +4,21 @@
  *
  * For courses shopping cart
  *
- * Modified at 2015/6/17
+ * Modified at 2018/5/28
  */
 
 function add_to_cart($this_but, id,type){
-	$.ajax({
-		type: "GET",
-		url : "/courses/add_to_cart",
-		data : {
-			cd_id:id,
-			type:type
-		},
-		success : function(data){
+    $.ajax({
+        type: "GET",
+        url : "/courses/add_to_cart",
+        data : {
+            cd_id:id,
+            type:type
+        },
+        success : function(data){
             toastr[String(data.class)]( String(data.text) );
-		}
-	});
+        }
+    });
 }
 
 // 拿取使用者的收藏課程(json格式)

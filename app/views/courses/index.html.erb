@@ -2,7 +2,6 @@
 
 <%=render 'courses/search/search_js' %>
 
-
 <%= search_form_for @q, url:"/courses/", class:"form-inline" do |f| %>
   <div class="row">	
     <div class="col-md-12 col-sm-12 col-xs-12 text-center">
@@ -46,7 +45,6 @@
     <th class="">學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
-
     <th class="hidden-xs">收藏</th>
   </tr>
   <tbody >
@@ -66,6 +64,7 @@
           <td class=""> <%=cd.grade%> </td>
           <td class="hidden-xs" id="check-<%=cd.id%>" onclick="">
             <%=fa_icon "square-o 2x", style:"color:lightseagreen;", data:"add",class:"cart-control"%>
+          </td>
         </tr>
     <% end %>
   <% else %>

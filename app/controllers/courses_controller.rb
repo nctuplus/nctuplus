@@ -182,7 +182,6 @@ class CoursesController < ApplicationController
         format.json{ render :json => @result[:courses].to_json}
         format.html{ render :layout=>false}
     end
-    #render :layout=>false
   end
 
 
