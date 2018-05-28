@@ -46,10 +46,10 @@
     <th class="">學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
+
     <th class="hidden-xs">收藏</th>
   </tr>
   <tbody >
-  <% cd_ids=cookies.signed[:cd].nil? ? [] : JSON.parse(cookies.signed[:cd]) %>
   <% if !@cds.empty? %>
     <% @cds.each do |cd| %>
         <tr id="<%=cd.id%>" class="row clickable-row clickable-hover" href="<%=course_path(cd.id)%>">
@@ -65,11 +65,7 @@
           <td class=""><%= cd.time %></td>
           <td class=""> <%=cd.grade%> </td>
           <td class="hidden-xs" id="check-<%=cd.id%>" onclick="">
-            <% type=cd_ids.present?&&cd_ids.include?(cd.id) ? "delete":"add" %>
-            <%=fa_icon type=="add" ? "square-o 2x" :"check-square-o 2x", style:"color:lightseagreen;", data: type,class:"cart-control"%>
-
-          </td>
-          
+            <%=fa_icon "square-o 2x", style:"color:lightseagreen;", data:"add",class:"cart-control"%>
         </tr>
     <% end %>
   <% else %>
@@ -85,32 +81,40 @@
 <%= paginate @cds, :window=>2 %>
 
 <script>
-    let user_course_id_cart = new Set();
 
-    function update_user_cart_set(data){
-        data.forEach(element => user_course_id_cart.add(String(element.id) ))
-    };
-    function update_check_box(){
-        let coursearray = $('tr.clickable-row').get();
-        coursearray.forEach( element =>{
-            let box = $("#check-"+element.id+" i:first-child" );
-            if( user_course_id_cart.has(element.id) ){
-                box.removeClass("fa-square-o").addClass("fa-check-square-o");
-                box.attr("data", "delete");
-            }else{
-                box.removeClass("fa-check-square-o").addClass("fa-square-o");
-                box.attr("data", "add");
-            }
-        })
-    };
-  $(document).ready( function(){
-      fetch_user_cart( data => {
-          update_user_cart_set(data);
-          update_check_box();
-      });
-  });
+    //更改收藏課表的icon狀態，順便向後端發出請求
+    // @new_state(boolean)
+    set_checkbox = function(course_id, new_state){
+        let checkbox = $("#check-"+course_id+" i:first-child" );
+        if(new_state === true){
+            checkbox.removeClass("fa-square-o").addClass("fa-check-square-o");
+            checkbox.attr("data", "delete");
+        }else if (new_state === false){
+            checkbox.removeClass("fa-check-square-o").addClass("fa-square-o");
+            checkbox.attr("data", "add");
+        }else{
+            console.log( "Error: new_state must be one of 'true' or 'false'");
+        }
+    }
 
   $(function(){
+
+    // 初始化收藏課程勾選狀態
+     <% if current_user  %>
+        fetch_user_cart( data => {
+            let fav_courses_set = new Set();
+            data.forEach(element => fav_courses_set.add(String(element.id)));
+
+            let course_list = $('tr.clickable-row').get();
+            course_list.forEach( element =>{
+                if( fav_courses_set.has(element.id) ){
+                    set_checkbox( element.id, true);
+                }else{
+                    set_checkbox( element.id, false);
+                }
+            })
+        });
+    <% end %>
     
     change_degree($("#degree"));
     $("#q_department_id_eq").val('<%=@q.department_id_eq%>');
@@ -132,16 +136,20 @@
         });
       },
       click:function(){//add or delete cart
-        add_to_cart($(this), $(this).parent().parent().attr("id"),$(this).attr("data"));
-        var type=$(this).attr("data");
-        if(type=="add"){
-          $(this).attr("data","delete");
-          $(this).toggleClass("fa-square-o fa-check-square-o");
-        }
-        else{
-          $(this).attr("data","add");
-          $(this).toggleClass("fa-check-square-o fa-square-o");
-        }
+        <% if current_user%>
+            add_to_cart($(this), $(this).parent().parent().attr("id"),$(this).attr("data"));
+            var type=$(this).attr("data");
+            if(type=="add"){
+              $(this).attr("data","delete");
+              $(this).toggleClass("fa-square-o fa-check-square-o");
+            }
+            else{
+              $(this).attr("data","add");
+              $(this).toggleClass("fa-check-square-o fa-square-o");
+            }
+        <% else %>
+            toastr["error"]("請先登入");
+        <%end%>
       }
     });
     //toastr["success"]("已更新暑修課程囉，請利用進階搜尋查詢~");
