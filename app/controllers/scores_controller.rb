@@ -135,20 +135,39 @@ class ScoresController < ApplicationController
         @errmsg = session[:errmsg]
 	end
 
+    # 回傳使用者已經修過的課程
     def get_courses
         @scores = Array.new()
         for score in current_user.normal_scores
+            # 將 activeRecord 紀錄轉為ruby 的 hash
+            score = score.to_basic_json
+
+            #!只有成績是數字的情況下才需要傳出
+            # :score可能是 "修習中"/"退選"
+            next if score[:score].to_i.to_s != score[:score]
+
+            score[:score] = score[:score].to_f
+
+            # 針對學期做預處理(方便排序)
+            half_sem = { "上"=>1, "下"=>2, "暑"=>3 }
+            year = score[:sem_name][0..-2].to_i
+            half = half_sem[score[:sem_name][-1]]
+            score[:sem] = year*10 + half
+
             @scores.append(
-                score.to_basic_json.slice(
+                score.slice(
+                    :sem,
                     :name,
                     :real_id,
-                    :sem_name,
                     :t_name,
                     :score,
                     :credit
                 )
             )
         end
+        # sort by semester
+        @scores.sort_by!{|s| s[:sem]}.reverse!
+        
         respond_to do |format|
           format.json { render :json => @scores}
           format.html { render :json => @scores}
@@ -156,14 +175,5 @@ class ScoresController < ApplicationController
     end
 
 	def gpa
-
-		@normal_scores = current_user.normal_scores
-		@sum = 0.0
-		@sum2 = 0.0
-		@credit = 0
-
-		@sum60 = 0.0
-		@sum6043 = 0.0
-		@credit60 = 0
 	end
 end

@@ -54,102 +54,25 @@
 	  	  <div class="header"><h1><span class="glyphicon glyphicon-ok-sign"></span>&nbsp;<b>GPA 計算機</b></h1></div>
 		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間手算，<u><b>試算前您必須確認將最新的成績匯入，可以到 <a href="/scores/import">這裡</a> 匯入。</u></b></p>
 
-
-			<!-- Overall 4.0 4.3 計算 -->
-			<% @normal_scores.each do |t| %>
-				<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
-					<% @sum += 4*t.course.credit %><% @credit += t.course.credit %>
-				<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
-					<% @sum += 3*t.course.credit %><% @credit += t.course.credit %>
-				<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
-					<% @sum += 2*t.course.credit %><% @credit += t.course.credit %>
-				<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-					<% @sum += t.course.credit %><% @credit += t.course.credit %>
-				<% elsif numeric?(t.score) && t.score.to_f >=0 && t.score.to_f <= 50 %>
-					<% @credit += t.course.credit %>
-				<% end %>
-
-				<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
-					<% @sum2 += 4.3*t.course.credit %>
-				<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
-					<% @sum2 += 4.0*t.course.credit %>
-				<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
-					<% @sum2 += 3.7*t.course.credit %>
-				<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
-					<% @sum2 += 3.3*t.course.credit %>
-				<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
-					<% @sum2 += 3.0*t.course.credit %>
-				<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
-					<% @sum2 += 2.7*t.course.credit %>
-				<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
-					<% @sum2 += 2.3*t.course.credit %>
-				<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
-					<% @sum2 += 2.0*t.course.credit %>
-				<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
-					<% @sum2 += 1.7*t.course.credit %>
-				<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-					<% @sum2 += t.course.credit %>
-				<% end %>
-			<% end %>
-
-			<!-- Last 60 Credits 4.0 4.3 計算 -->
-			<% @normal_scores.reverse.each do |t| %>
-				<% if @credit60 <= 60 %>
-					<% if t.score.to_f >=80 && t.score.to_f <= 100 %>
-						<% @sum60 += 4*t.course.credit %><% @credit60 += t.course.credit %>
-					<% elsif t.score.to_f >=70 && t.score.to_f <= 79 %>
-						<% @sum60 += 3*t.course.credit %><% @credit60 += t.course.credit %>
-					<% elsif t.score.to_f >=60 && t.score.to_f <= 69 %>
-						<% @sum60 += 2*t.course.credit %><% @credit60 += t.course.credit %>
-					<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-						<% @sum60 += t.course.credit %><% @credit60 += t.course.credit %>
-					<% elsif numeric?(t.score) && t.score.to_f >=0 && t.score.to_f <= 50 %>
-						<% @credit60 += t.course.credit %>
-					<% end %>
-
-					<% if t.score.to_f >=90 && t.score.to_f <= 100 %>
-						<% @sum6043 += 4.3*t.course.credit %>
-					<% elsif t.score.to_f >=85 && t.score.to_f <= 89 %>
-						<% @sum6043 += 4.0*t.course.credit %>
-					<% elsif t.score.to_f >=80 && t.score.to_f <= 84 %>
-						<% @sum6043 += 3.7*t.course.credit %>
-					<% elsif t.score.to_f >=77 && t.score.to_f <= 79 %>
-						<% @sum6043 += 3.3*t.course.credit %>
-					<% elsif t.score.to_f >=73 && t.score.to_f <= 76 %>
-						<% @sum6043 += 3.0*t.course.credit %>
-					<% elsif t.score.to_f >=70 && t.score.to_f <= 72 %>
-						<% @sum6043 += 2.7*t.course.credit %>
-					<% elsif t.score.to_f >=67 && t.score.to_f <= 69 %>
-						<% @sum6043 += 2.3*t.course.credit %>
-					<% elsif t.score.to_f >=63 && t.score.to_f <= 66 %>
-						<% @sum6043 += 2.0*t.course.credit %>
-					<% elsif t.score.to_f >=60 && t.score.to_f <= 62 %>
-						<% @sum6043 += 1.7*t.course.credit %>
-					<% elsif t.score.to_f >=50 && t.score.to_f <= 59 %>
-						<% @sum6043 += t.course.credit %>
-					<% end %>
-				<% end %>
-			<% end %>
-
 			<div class="row">
 				<div class="gpa1 col-sm-6">
 					<div style="background:#FAFAFA" class="jumbotron">
 						<p><b>Overall 4.0</b><p>
-						<p><span class="counter" style = "font-size: 1.7em;"><%= (@sum/@credit).round(2) %></span></p>
+						<p><span id="GPA40"class="counter" style = "font-size: 1.7em;">0</span></p>
 					</div>
 					<div style="background:#FAFAFA !important" class="jumbotron">
 					    <p><b>Last 60 Credits 4.0</b><p>
- 						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum60/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
+                        <p>&nbsp;&nbsp;<span id="GPA40-last60"class="counter" style = "font-size: 1.7em;">0</span> (<span id="GPA40-last60-credit"class="counter">0</span>)</p>
 					</div>
 				</div>
 				<div class="gpa2 col-sm-6">
 					<div style="background:#FAFAFA" class="jumbotron">
 					    <p><b>Overall 4.3</b><p>
-						<p><span class="counter" style = "font-size: 1.7em;"><%= (@sum2/@credit).round(2) %></span></p>
+						<p><span id="GPA43"class="counter" style = "font-size: 1.7em;">0</span></p>
 					</div>
 					<div style="background:#FAFAFA" class="jumbotron">
 					    <p><b>Last 60 Credits 4.3</b><p>
- 						<p>&nbsp;&nbsp;<span class="counter" style = "font-size: 1.7em;"><%= (@sum6043/@credit60).round(2) %></span> (<span class="counter"><%= @credit60 %></span>)</p>
+ 						<p>&nbsp;&nbsp;<span id="GPA43-last60"class="counter" style = "font-size: 1.7em;">0</span> (<span id="GPA43-last60-credit"class="counter">0</span>)</p>
 					</div>
 					
 					<div class="sub_btn">
@@ -160,7 +83,7 @@
 				</div>
 			</div>
 			<div class="note">
-			<p>註：此計算參考 <%=link_to "等級制與百分制及GP對照表-交通大學", asset_path("nctu_gpa.jpg"), target:"blank"%> 與 <a href="http://intra.tpml.edu.tw/study/upload/downloads/GPA.htm" target="_blank"> 美國大學四點制的算法</a>，Last 60 Credits 採由後往前計算至大於等於 60 學分為止，也就是可能超過 60 學分 (呈現於括號內)，實際成績以學校成績單為準。</p>
+			<p>註：此計算參考 <%=link_to "等級制與百分制及GP對照表-交通大學", asset_path("nctu_gpa.jpg"), target:"blank"%> 與 <a href="http://intra.tpml.edu.tw/study/upload/downloads/GPA.htm" target="_blank"> 美國大學四點制的算法</a>，Last 60 Credits 採由後往前累積至大於等於 60 學分的學期之所有成績為止，也就是可能超過 60 學分 (呈現於括號內)，實際成績以學校成績單為準。</p>
 			</div>
 		</div>
 		</div>
@@ -196,8 +119,9 @@
         let total_credit = 0;
         let cur_entry = null
         course_list.forEach( course =>{
-            let score = Number(course.score);
+            //console.log("credit: "+course.credit+", score: ",+course.score);
             gpa_table.forEach( entry =>{
+                let score = Number(course.score);
                 if( score <= entry.up && score >= entry.down ){
                     cur_entry = entry;
                 }
@@ -205,19 +129,69 @@
             total_grade += cur_entry.gpa_point * Number(course.credit);
             total_credit += Number(course.credit)
         })
-        return total_grade/total_credit; 
+        let gpa = total_grade/ total_credit;
+        result = { 'gpa':gpa, 'credit':total_credit};
+        return result
     }
-    let gpa = 0;
-    $.getJSON('/scores/get_courses', data =>{
-        console.log(data)
-        console.log("nctu43 GPA: "+ calc_gpa(nctu43_table, data));
-        console.log("US40   GPA: "+ calc_gpa(us40_table, data));
-    })
 
-$('.counter').counterUp({
-    delay: 25,
-    time: 1100
-});
+    let calc_last60gpa = function(gpa_table, course_list){
+        let total_grade = 0.0;
+        let total_credit = 0;
+        let cur_sem = 0;
+        let end_sem = 0;
+        let end = false;
+        let cur_entry = null
+        course_list.some( course =>{
+            cur_sem = course.sem;
+            if(end===true && cur_sem!=end_sem){
+                return true;
+            }
+            
+            gpa_table.forEach( entry =>{
+                let score = Number(course.score);
+                if( score <= entry.up && score >= entry.down ){
+                    cur_entry = entry;
+                }
+            });
+            total_grade += cur_entry.gpa_point * Number(course.credit);
+            total_credit += Number(course.credit)
+            if( total_credit >= 60){
+                end_sem = cur_sem;
+                end = true;
+            }
+        })
+        let gpa = total_grade/ total_credit;
+        result = { 'gpa':gpa, 'credit':total_credit};
+        return result;
+    }
+
+    $.getJSON('/scores/get_courses', data =>{
+        //console.log(data);
+
+        let overall_40 = calc_gpa(us40_table, data).gpa.toFixed(2);
+        let overall_43 = calc_gpa(nctu43_table, data).gpa.toFixed(2);
+
+        result43_60 = calc_last60gpa(nctu43_table,data);
+        result40_60 = calc_last60gpa(us40_table,data);
+
+        $("#GPA40").html(overall_40);
+        $("#GPA43").html(overall_43);
+
+        $("#GPA40-last60").html(result40_60.gpa.toFixed(2));
+        $("#GPA40-last60-credit").html(result40_60.credit);
+
+        $("#GPA43-last60").html(result43_60.gpa.toFixed(2));
+        $("#GPA43-last60-credit").html(result43_60.credit);
+
+        //console.log("nctu43 GPA: "+ overall_43);
+        //console.log("US40   GPA: "+ overall_40);
+        //console.log("nctu43 last60  GPA: "+ result.gpa +", credit:"+result.credit);
+
+        $('.counter').counterUp({
+            delay: 25,
+            time: 1100
+        });
+    });
 
 (function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
