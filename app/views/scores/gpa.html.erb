@@ -41,8 +41,10 @@
 
  <!DOCTYPE html>
 <html>
+
 <head>
 </head>
+
 <body>
 <div class="container">
   <div class ="row">
@@ -51,6 +53,7 @@
 	  	  <h2 count-up end-val="873.4"></h2>
 	  	  <div class="header"><h1><span class="glyphicon glyphicon-ok-sign"></span>&nbsp;<b>GPA 計算機</b></h1></div>
 		  <p class="lead">我們提供 Overall GPA、Last 60 Credits 的成績試算，想出國或撇一眼自己 GPA 的同學們不用再跑到中正堂列印或花時間手算，<u><b>試算前您必須確認將最新的成績匯入，可以到 <a href="/scores/import">這裡</a> 匯入。</u></b></p>
+
 
 			<!-- Overall 4.0 4.3 計算 -->
 			<% @normal_scores.each do |t| %>
@@ -166,6 +169,11 @@
 </body>
 
 <script>
+    let data_init = false;
+    $.getJSON('/scores/get_courses', data =>{
+        console.log(data)
+        data_init = true;
+    })
 
 $('.counter').counterUp({
     delay: 25,

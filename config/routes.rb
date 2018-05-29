@@ -96,6 +96,7 @@ Nctuplus::Application.routes.draw do
   get "scores/import"
   get "scores/select_cf"
   get "scores/gpa"
+  get "scores/get_courses"
 
   #----------- course_content -----------
   post "course_content/raider"
