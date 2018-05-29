@@ -150,7 +150,7 @@ class ScoresController < ApplicationController
         
         respond_to do |format|
           format.json { render :json => @scores}
-          format.html { render :json => @scores}
+          #format.html { render :json => @scores}
         end
     end
 
