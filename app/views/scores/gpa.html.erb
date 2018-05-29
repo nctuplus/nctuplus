@@ -169,10 +169,49 @@
 </body>
 
 <script>
-    let data_init = false;
+    let nctu43_table = [
+        { 'up':100,'down':90, 'gpa_point':4.3, 'grade_letter':'A+' },
+        { 'up':89, 'down':85, 'gpa_point':4.0, 'grade_letter':'A'  },
+        { 'up':84, 'down':80, 'gpa_point':3.7, 'grade_letter':'A-' },
+        { 'up':79, 'down':77, 'gpa_point':3.3, 'grade_letter':'B+' },
+        { 'up':76, 'down':73, 'gpa_point':3.0, 'grade_letter':'B'  },
+        { 'up':72, 'down':70, 'gpa_point':2.7, 'grade_letter':'B-' },
+        { 'up':69, 'down':67, 'gpa_point':2.3, 'grade_letter':'C+' },
+        { 'up':66, 'down':63, 'gpa_point':2.0, 'grade_letter':'C'  },
+        { 'up':62, 'down':60, 'gpa_point':1.7, 'grade_letter':'C-' },
+        { 'up':59, 'down':50, 'gpa_point':1.0, 'grade_letter':'D'  },
+        { 'up':49, 'down':1,  'gpa_point':0.0, 'grade_letter':'E'  },
+        { 'up':0,  'down':0,  'gpa_point':0.0, 'grade_letter':'X'  }
+    ]
+    let us40_table = [
+        { 'up':100,'down':80, 'gpa_point':4.0, 'grade_letter':'NA' },
+        { 'up':79, 'down':70, 'gpa_point':3.0, 'grade_letter':'NA'  },
+        { 'up':69, 'down':60, 'gpa_point':2.0, 'grade_letter':'NA' },
+        { 'up':59, 'down':50, 'gpa_point':1.0, 'grade_letter':'NA' },
+        { 'up':49, 'down':0,  'gpa_point':0.0, 'grade_letter':'NA'  },
+    ]
+
+    let calc_gpa = function(gpa_table, course_list){
+        let total_grade = 0.0;
+        let total_credit = 0;
+        let cur_entry = null
+        course_list.forEach( course =>{
+            let score = Number(course.score);
+            gpa_table.forEach( entry =>{
+                if( score <= entry.up && score >= entry.down ){
+                    cur_entry = entry;
+                }
+            });
+            total_grade += cur_entry.gpa_point * Number(course.credit);
+            total_credit += Number(course.credit)
+        })
+        return total_grade/total_credit; 
+    }
+    let gpa = 0;
     $.getJSON('/scores/get_courses', data =>{
         console.log(data)
-        data_init = true;
+        console.log("nctu43 GPA: "+ calc_gpa(nctu43_table, data));
+        console.log("US40   GPA: "+ calc_gpa(us40_table, data));
     })
 
 $('.counter').counterUp({
