@@ -115,7 +115,28 @@ class ScoresController < ApplicationController
 	def select_cf
 	end
 
+    def get_courses
+        @scores = Array.new()
+        for score in current_user.normal_scores
+            @scores.append(
+                score.to_basic_json.slice(
+                    :name,
+                    :real_id,
+                    :sem_name,
+                    :t_name,
+                    :score,
+                    :credit
+                )
+            )
+        end
+        respond_to do |format|
+          format.json { render :json => @scores}
+          format.html { render :json => @scores}
+        end
+    end
+
 	def gpa
+
 		@normal_scores = current_user.normal_scores
 		@sum = 0.0
 		@sum2 = 0.0
