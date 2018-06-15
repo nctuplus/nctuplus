@@ -32,6 +32,8 @@ function fetch_user_cart(success){
         headers:{
             'Content-Type':'application/json'
         }
-    }).done(res=>success(res))
+    }).done(
+        function(res){success(res);}
+    )
 }
 
