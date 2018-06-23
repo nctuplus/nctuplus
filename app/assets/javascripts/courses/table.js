@@ -137,14 +137,17 @@
 		//	_this.$element.find('.btn-group').hide() ;	
 		
 		  html2canvas( _this.$element.get(0), {
-        height: 1500 ,
         onrendered: function(canvas) {
           //recover the hidden items
 			//		_this.$element.find('.btn-group').show();
 
           var dataUrl = canvas.toDataURL("image/png");
 					if (flag=="window"){
-						window.open(dataUrl);
+					        var exportTable = document.createElement('a');
+					        exportTable.href = dataUrl;
+					        var filename = (document.querySelectorAll('h4.text-center')[1].childNodes[0]).nodeValue.trim()+'.png';
+					        exportTable.download = filename;
+					        exportTable.click();
 						return ;
 					}else if(flag=="url"){
 					  return dataUrl ;
@@ -262,7 +265,10 @@
 							var idx_x = day-1 ;
 							var $cell = this.cells[idx_x][idx_y];
 							
-							$cell.html(course.name).addClass(course.class).selectable = false;
+							var courseText = '<a class="course-link" href="/courses/' + course.cd_id + '" target="_blank">' + course.name + "</a>";
+							var e = $cell.html(courseText);
+							e.addClass(course.class);
+							e.selectable = false;
 							
 							if(this.config.deletable)
 							{
@@ -380,7 +386,7 @@
 				{
 					this.cells[j-1].push($('<td>').insertAfter($last_td)
 					//.attr('id','day_'+j+'_time_'+t)
-					.addClass('pos-relative')
+					//.addClass('pos-relative')
 					.extend({
 						time: j+Table.defaults.times[i], 
 						selectable: this.config.selectable || false, 

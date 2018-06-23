@@ -30,6 +30,13 @@
 	text-align: center;
 	max-width: 140px;
 }
+.simulation-alert{
+	cursor: pointer;
+	margin: 10px -5px 0 -5px;
+}
+.simulation-alert:hover{
+	opacity: 0.8;
+}
 </style>
 
 <%=render "link_bar" %>
@@ -158,6 +165,9 @@
 	<div class="col-md-6 bg-white">
 		<br>
 		<div id="time-table-header"></div>
+		<div class="alert alert-warning simulation-alert" onclick="hideGeneralCourseError()">
+			<strong>Important!</strong> 試試看! 按下課表上的課程，為該課程 <font color="red">評個分</font> 或 <font color="red">寫些心得</font> 吧! 你的小小回饋， NCTU+ 將會感激不盡。 </br>
+		</div>
 		<br>
 		<div id="time-table-body"></div>
 	</div>
@@ -317,6 +327,9 @@
 			
 		});
 	});
+	function hideGeneralCourseError() {
+        $(".simulation-alert").fadeOut("slow");
+	}
 </script>
 
 <% @show_report=true %>

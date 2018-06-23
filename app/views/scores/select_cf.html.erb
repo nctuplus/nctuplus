@@ -1,16 +1,37 @@
 ﻿<%= javascript_include_tag "user_course_stat/checker", "data-turbolinks-track" => true %>
 <%= javascript_include_tag "user_course_stat/cm_check-helper", "data-turbolinks-track" => true %>
-<div class="container panel ">
-	<div class=" bs-callout bs-callout-info well">
-		<h2><%=fa_icon "upload"%>選擇學程</h2>
-		<h4>
-			<%=params[:msg]%><br>
-			請選擇以下課程的所屬學程
-		</h4>	
-	</div>
+<div class="container panel">
+    <% if @msg %>
+        <h3><%= @msg %><br></h3>
+        <% if @errmsg and not @errmsg.empty? %>
+            <div class=" bs-callout bs-callout-danger well">
+                <h2>匯入失敗課程</h2>
+                <table class="table" style="background-color:white;" >
+                    <th class="">學期</th>
+                    <th class="">當期課號</th>
+                    <th class="">課程名稱</th>
+                    <th class="">失敗原因</th>
+                  <tbody>
+                    <% @errmsg.each do |e| %>
+                        <td class=""><%= e[:sem]%></td>
+                        <td class=""><%= e[:cos_id]%></td>
+                        <td class=""><%= e[:name]%></td>
+                        <td class=""><%= e[:msg]%></td>
+                        </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+            小提醒: 請幫忙回報您的錯誤訊息給<a target="_blank" href="https://www.facebook.com/nctuplus/">NCTU+團隊</a>以方便進行修復，謝謝!
+            </div>
+        <%end%>
+    <%end%>
+    <div class=" bs-callout bs-callout-info well">
+        <h2><%=fa_icon "upload"%>選擇學程</h2>
+        <h4>請選擇以下課程的所屬學程</h4>	
+        <div id="course_list" class=""></div>
+    </div>
 	<div id="common_check_div" class=""></div>
 	<div id="cosmap_check_div" class=""></div>
-	<div id="course_list" class=""></div>
 </div>
 
 <script>
@@ -36,5 +57,6 @@ $(document).ready(function(){
 <% if current_user.is_undergrad? %>
 	<%=render :partial=>"/user/course_stat/xtmpl_common_check"%>
 <% end %>
+
 <%=render :partial=>"/user/course_stat/xtmpl_cm_check"%>
 <%=render :partial=>"/user/xtmpl_select_cf"%>
