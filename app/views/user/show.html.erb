@@ -252,9 +252,12 @@
   function genShareButton(url){
     var $but = $("<button>").addClass("btn btn-info")
                .html('<%=fa_icon "share-square-o"%>') 
+               .attr("id","user_share_btn")
                .attr("title", "分享課表")
                .attr("data-clipboard-text", "<%=j root_url %>shares/"+url);
-    setCopyToClipboardOnClick($but, '已複製到剪貼簿');
+
+    new Clipboard ("#user_share_btn");
+    $('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
     return $but;
   }
 
