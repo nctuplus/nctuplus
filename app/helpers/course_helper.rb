@@ -144,6 +144,8 @@ module CourseHelper
 				type="#F0AD4E"
 			when "必修"
 				type="#AFFFB0"
+			when "體育"
+				type="#AFFFB0"
 			when "選修"
 				type="#AFD6FF"
 			when "外語"
