@@ -129,8 +129,8 @@
 	$(document).ready(function(){
 		//toastr["success"]("已更新到104上的課程囉!!!");
 <% if current_user.canShare? %>	
-    new ZeroClipboard( $('#copy-it-simu') );	
-		$('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
+    new Clipboard ('#copy-it-simu');
+        $('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
 <% end %>			
 		
 		$(".pop-over").popover({
