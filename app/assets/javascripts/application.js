@@ -27,7 +27,7 @@
 //= require courses/cart
 //= require share.min
 //= require bootstrap-switch
-//= require zeroclipboard
+//= require clipboard
 //= require global-timetable
 //= require global-modal
 

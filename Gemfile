@@ -89,7 +89,7 @@ end
 gem "googlebooks"
 
 gem "bootstrap-switch-rails"
-gem 'zeroclipboard-rails'
+gem 'clipboard-rails'
 
 gem "d3-rails"
 

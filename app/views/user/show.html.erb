@@ -262,17 +262,10 @@
     var $but = $("<button>").addClass("btn btn-info")
                .html('<%=fa_icon "share-square-o"%>') 
                .attr("title", "分享課表")
+               .attr("id","user_share_btn")
                .attr("data-clipboard-text", "<%=j root_url %>shares/"+url);
-    var client = new ZeroClipboard( $but ); //set up click-copy event  
-    client.on( "ready", function( readyEvent ) {
-      client.on( "aftercopy", function( event ) {
-        // `this` === `client`
-        // `event.target` === the element that was clicked
-        //event.target.style.display = "none";
-        //alert("Copied text to clipboard: " + event.data["text/plain"] );
-        toastr["success"]('已複製連結至剪貼簿');
-      });
-    });  
+    new Clipboard ("#user_share_btn");
+    $('#copy-it-simu').click(function(){toastr["success"]('已複製到剪貼簿');});
     return $but ;           
   }
 
