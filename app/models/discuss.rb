@@ -6,7 +6,6 @@ class Discuss < ActiveRecord::Base
 	has_many :departments, :through=>:course_details
 	has_many :colleges, :through=>:departments
 	#has_many :discuss_verifies, :dependent => :destroy
-	#has_many :discuss_likes, :dependent => :destroy
 	has_many :sub_discusses, :dependent => :destroy
 	delegate :uid, :to=>:user, :prefix=>true
 	delegate :ch_name, :to=>:course, :prefix=>true

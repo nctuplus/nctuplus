@@ -23,7 +23,7 @@
 		<% if action=="create"%>
 			<br>
 		<% else %>
-			<%= link_to '刪除', "", :method => :delete, :data => { :confirm => "確認刪除?" },class:"btn  btn-danger",id:"delte_sub_but",remote:"true" %>
+			<%= link_to '刪除', "", :method => :delete, :data => { :confirm => "確認刪除?" },class:"btn  btn-danger",id:"delete_sub_but",remote:"true" %>
 		<% end %>
 		<%= f.submit "送出", :class=>"btn btn-primary " %>
 	</div>
