@@ -108,10 +108,12 @@ class DiscussesController < ApplicationController
 	
 	def destroy
 		if params[:type].blank?
+            # 刪除心得，以及相關的留言
 			@discuss=current_user.discusses.find(params[:id])
 			@discuss.destroy!
 			redirect_to :action=> :index
 		elsif params[:type]=="sub"
+            # 單純刪除留言
 			@sub_d=current_user.sub_discusses.find(params[:id])
 			#@sub_d_id=@discuss.discuss_id
 			@sub_d.destroy!
