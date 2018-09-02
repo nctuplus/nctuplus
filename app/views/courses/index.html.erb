@@ -39,9 +39,9 @@
 <table class="table table-hover" id="course_table" style="background-color:white;" >
   <tr class="row">
     <th class="hidden-xs">學期</th>
-    <th class="hidden-xs">系所/摘要</th>
     <th class="">課名</th>
     <th class="">老師</th>
+    <th class="hidden-xs">系所/摘要</th>
     <th class="">學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
@@ -54,11 +54,35 @@
           <td class="hidden-xs">
             <%=cd.semester_name%>
           </td>
-          <td class="hidden-xs">
-            <%="#{cd.department_ch_name} #{cd.brief}"%>
-          </td>
           <td class=""><%= cd.course_ch_name %></td>
           <td class=""><%= cd.teacher_name %></td>
+          <td class="hidden-xs">
+              <%="#{cd.department_ch_name}" %>
+              <% if cd.brief %>
+                  </br>
+                  <% line_breaked = true%>
+                  <span class="label general-edu-info"><%= "#{cd.brief}" %></span>
+              <% end %>
+
+              <% if true %>
+                  <% if not line_breaked %>
+                    </br>
+                  <% end %>
+                <% text = "核心-自然(106),跨院基本素養(106),校基本素養(106)" %>
+                <% li = text.split(',') %>
+                <% li.each do |item| %>
+                    <span class="label general-edu-info"><%="#{item}"%></span>
+                <% end %>
+
+              <% end %>
+
+              <% if false %>
+                </br> 
+                <span class="label general-edu-info">公民/進階(96)</span>
+                <span class="label general-edu-info">校基本素養(106)</span>
+                <span class="label general-edu-info">跨院基本素養(106)</span>
+              <%end%>
+          </td>
           <td class=""><%= cd.course_credit %></td>
           <td class=""><%= cd.time %></td>
           <td class=""> <%=cd.grade%> </td>
@@ -81,6 +105,36 @@
 
 <script>
 
+    //移除通識課程後的年份標籤
+    remove_appended_year = function(str){
+        return  str.replace(/\(\s*\d+\s*\)/gm, "" );
+    }
+    generate_brief_name = function(str){
+        var dict = {
+            '校基本素養':'通識校基本',
+            '跨院基本素養':'通識跨院'
+        };
+        return (str in dict) ? dict[str] : str; 
+    }
+    append_brief_class_by_name = function(name){
+        var dict = {
+            "通識校基本":"label-primary",
+            "通識跨院":"label-info"
+        }
+        return (name in dict) ? dict[name] :'label-default' ; 
+    }
+    function brief_general_edu_info()
+    {
+        x=document.getElementsByClassName("general-edu-info");
+        for(var i = 0; i < x.length; i++){
+            var text = x[i].innerText;
+            text = remove_appended_year(text);
+            text = generate_brief_name(text);
+            x[i].innerText = text;
+            x[i].classList.add( append_brief_class_by_name(text)  );
+        }
+    }
+
     //更改收藏課表的icon狀態，順便向後端發出請求
     // @new_state(boolean)
     set_checkbox = function(course_id, new_state){
@@ -97,7 +151,10 @@
     }
 
   $(function(){
+    //簡化通識課程的類別摘要
+    brief_general_edu_info();
 
+    //$("#test-target").innerHTML =  remove_year( $("#test-target").innerHTML );
     // 初始化收藏課程勾選狀態
      <% if current_user  %>
         fetch_user_cart( data => {
