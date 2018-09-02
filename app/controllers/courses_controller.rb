@@ -41,7 +41,6 @@ class CoursesController < ApplicationController
         brief_str = cd.brief_new
         brief_str_array = brief_str.split(',')
         brief_str_array.each do |full_name|
-            str = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
             trimmed_name = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
             if abbrev_dict.key?(trimmed_name)
                 h = abbrev_dict[trimmed_name]
