@@ -37,6 +37,8 @@ class DiscussesController < ApplicationController
 		if params[:ct_id].present?
 			@ct=CourseTeachership.find(params[:ct_id])
 		end
+        content_titles = ["★修課年度★ ","￡教了什麼￡", "◆上課方式◆" ,"▼考試作業▼","￥其他￥", "＆誰適合修這門課＆"]
+        @default_text= content_titles.join("\n\n")
 	#	@imgsrc=current_user.avatar_url
 		render "main_form"
 	end

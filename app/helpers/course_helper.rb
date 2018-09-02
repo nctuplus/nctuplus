@@ -121,6 +121,8 @@ module CourseHelper
 				type="general"
 			when "必修"
 				type="required"
+			when "體育"
+			        type="required"
 			when "選修"
 				type="elective"
 			when "外語" 

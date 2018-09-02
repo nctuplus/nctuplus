@@ -103,7 +103,8 @@
                                 <button title="加選" class="btn btn-success btn-circle " onclick="addCourseSimulation($(this), {%=cd.id%}, '{%=cd.time%}', 'add','search')">
                                     <span class="glyphicon glyphicon-plus"></span>
                                 </button>
-                                <button title="取消收藏課程" class="btn btn-warning btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'delete')">
+                                <button title="取消收藏課程" class="btn btn-warning btn-circle" onclick="add_to_cart($(this), {%=cd.id%},'delete'); $(this).parent().parent().parent().parent().remove(); ">
+     
                                     <span class="glyphicon glyphicon-minus"></span>
                                 </button>
                             {% } %}

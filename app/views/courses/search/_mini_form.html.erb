@@ -1,3 +1,4 @@
+<%=render 'courses/search/search_js' %>
 <%= search_form_for @q, url:"/courses/search_mini", class:"form-inline", remote: true do |f| %>
   <%=f.search_field :semester_id_eq,class:"hidden", value:Semester::LAST.id %>
   <%=hidden_field_tag :dimension_search,"" %>
@@ -13,7 +14,7 @@
   &nbsp;&nbsp;&nbsp;&nbsp;
   <div class="checkbox">
     <label style="font-size:16px;">
-      <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_department_id_eq').val('');" %>
+          <%=check_box_tag "adv_toggle",params[:adv_toggle],params[:adv_toggle],onchange: "$('#adv-search').toggleClass('hidden');$('#q_semester_id_eq').val('');$('#degree').val('0');change_degree($('#degree'));" %>
       進階搜尋
     </label>
   </div>
