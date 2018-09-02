@@ -13,6 +13,50 @@ class CoursesController < ApplicationController
     end
     cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
     @cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
+
+    # 產生通識課程的課名縮寫
+    @tags_by_id= {}
+    @cds.each do |cd|
+        tags_of_a_course = []
+        
+        # 舊制通識
+        if not cd.brief.strip.empty?
+            str = cd.brief.sub(/\(\s*\d+\s*\)/,'')
+            str.strip!
+            if not str.empty?
+                tags_of_a_course.append( {:name=> str, :title=>cd.brief, :label_type=>'label-default'} )
+            end
+        end
+
+        # 針對新制通識 
+        abbrev_dict = {
+            :校基本素養 => { :name=> '通識校基本', :label_type=>'label-primary'},
+            :跨院基本素養 => { :name=> '通識跨院', :label_type=>'label-info'}
+        }
+            # 移除後綴年份別ex. "跨院基本素養(106)"-> "跨院基本素養"
+
+        # 測試用
+        test_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
+        str = test_str.sub(/\(\s*\d+\s*\)/,'')
+
+        str_array = str.split(',')
+        str_array.each do |str|
+            full_name = str.sub(/\(\s*\d+\s*\)/,'')
+            full_name = full_name.to_sym
+            puts "full name #{full_name}"
+            if abbrev_dict.key?(full_name)
+                h = abbrev_dict[full_name]
+                h[:title] = str 
+                tags_of_a_course.append(h)
+            else
+                tags_of_a_course.append( {:name=>full_name,:title=>str, :label_type=>'label-default'} )
+            end
+        end
+        if not tags_of_a_course.empty?
+            @tags_by_id[ cd.id ] = tags_of_a_course
+        end
+    end
+    
   end
 
   def search_mini	#for course simulation search & result
