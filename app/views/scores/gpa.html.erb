@@ -90,7 +90,7 @@
 </body>
 
 <script>
-    let nctu43_table = [
+    var nctu43_table = [
         { 'up':100,'down':90, 'gpa_point':4.3, 'grade_letter':'A+' },
         { 'up':89, 'down':85, 'gpa_point':4.0, 'grade_letter':'A'  },
         { 'up':84, 'down':80, 'gpa_point':3.7, 'grade_letter':'A-' },
@@ -103,19 +103,19 @@
         { 'up':59, 'down':50, 'gpa_point':1.0, 'grade_letter':'D'  },
         { 'up':49, 'down':1,  'gpa_point':0.0, 'grade_letter':'E'  },
         { 'up':0,  'down':0,  'gpa_point':0.0, 'grade_letter':'X'  }
-    ]
-    let us40_table = [
+    ];
+    var us40_table = [
         { 'up':100,'down':80, 'gpa_point':4.0, 'grade_letter':'A' },
         { 'up':79, 'down':70, 'gpa_point':3.0, 'grade_letter':'B'  },
         { 'up':69, 'down':60, 'gpa_point':2.0, 'grade_letter':'C' },
         { 'up':59, 'down':50, 'gpa_point':1.0, 'grade_letter':'D' },
         { 'up':49, 'down':0,  'gpa_point':0.0, 'grade_letter':'E'  },
-    ]
+    ];
 
-    let calc_gpa = function(gpa_table, course_list){
-        let total_grade = 0.0;
-        let total_credit = 0;
-        let cur_entry = null
+    var calc_gpa = function(gpa_table, course_list){
+        var total_grade = 0.0;
+        var total_credit = 0;
+        var cur_entry = null;
         course_list.forEach( course =>{
             //console.log("credit: "+course.credit+", score: ",+course.score);
             gpa_table.forEach( entry =>{
@@ -127,18 +127,18 @@
             total_grade += cur_entry.gpa_point * Number(course.credit);
             total_credit += Number(course.credit)
         })
-        let gpa = total_grade/ total_credit;
+        var gpa = total_grade/ total_credit;
         result = { 'gpa':gpa, 'credit':total_credit};
-        return result
+        return result;
     }
 
-    let calc_last60gpa = function(gpa_table, course_list){
-        let total_grade = 0.0;
-        let total_credit = 0;
-        let cur_sem = 0;
-        let end_sem = 0;
-        let end = false;
-        let cur_entry = null
+    var calc_last60gpa = function(gpa_table, course_list){
+        var total_grade = 0.0;
+        var total_credit = 0;
+        var cur_sem = 0;
+        var end_sem = 0;
+        var end = false;
+        var cur_entry = null;
         course_list.some( course =>{
             cur_sem = course.sem;
             if(end===true && cur_sem!=end_sem){
@@ -158,7 +158,7 @@
                 end = true;
             }
         })
-        let gpa = total_grade/ total_credit;
+        var gpa = total_grade/ total_credit;
         result = { 'gpa':gpa, 'credit':total_credit};
         return result;
     }
@@ -166,8 +166,8 @@
     $.getJSON('/scores/get_courses', data =>{
         //console.log(data);
 
-        let overall_40 = calc_gpa(us40_table, data).gpa.toFixed(2);
-        let overall_43 = calc_gpa(nctu43_table, data).gpa.toFixed(2);
+        var overall_40 = calc_gpa(us40_table, data).gpa.toFixed(2);
+        var overall_43 = calc_gpa(nctu43_table, data).gpa.toFixed(2);
 
         result43_60 = calc_last60gpa(nctu43_table,data);
         result40_60 = calc_last60gpa(us40_table,data);
