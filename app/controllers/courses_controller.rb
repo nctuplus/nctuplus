@@ -21,35 +21,35 @@ class CoursesController < ApplicationController
         
         # 舊制通識
         if not cd.brief.strip.empty?
-            str = cd.brief.sub(/\(\s*\d+\s*\)/,'')
-            str.strip!
-            if not str.empty?
-                tags_of_a_course.append( {:name=> str, :title=>cd.brief, :label_type=>'label-default'} )
+            # 移除資料後綴年份 e.g. "體育必修(87)"-> "體育必修"
+            trimmed_name = cd.brief.sub(/\(\s*\d+\s*\)/,'').strip
+            if not trimmed_name.empty?
+                tags_of_a_course.append( {:name=> trimmed_name, :title=>cd.brief, :label_type=>'label-default'} )
             end
         end
 
-        # 針對新制通識 
+        # 針對新制通識
+        #   abbrev: abbreviation
         abbrev_dict = {
             :校基本素養 => { :name=> '通識校基本', :label_type=>'label-primary'},
             :跨院基本素養 => { :name=> '通識跨院', :label_type=>'label-info'}
         }
-            # 移除後綴年份別ex. "跨院基本素養(106)"-> "跨院基本素養"
 
         # 測試用
-        test_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
-        str = test_str.sub(/\(\s*\d+\s*\)/,'')
+        brief_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
 
-        str_array = str.split(',')
-        str_array.each do |str|
-            full_name = str.sub(/\(\s*\d+\s*\)/,'')
-            full_name = full_name.to_sym
-            puts "full name #{full_name}"
-            if abbrev_dict.key?(full_name)
-                h = abbrev_dict[full_name]
-                h[:title] = str 
+        #brief_str = cd.brief_new
+        brief_str_array = brief_str.split(',')
+        brief_str_array.each do |full_name|
+            str = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
+            trimmed_name = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
+            if abbrev_dict.key?(trimmed_name)
+                h = abbrev_dict[trimmed_name]
+                h[:title] = full_name
                 tags_of_a_course.append(h)
             else
-                tags_of_a_course.append( {:name=>full_name,:title=>str, :label_type=>'label-default'} )
+                # 核心類別
+                tags_of_a_course.append( {:name=>trimmed_name,:title=>full_name, :label_type=>'label-warning'} )
             end
         end
         if not tags_of_a_course.empty?
