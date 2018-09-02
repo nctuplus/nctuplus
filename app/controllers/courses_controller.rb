@@ -36,9 +36,9 @@ class CoursesController < ApplicationController
         }
 
         # 測試用
-        brief_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
+        #brief_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
 
-        #brief_str = cd.brief_new
+        brief_str = cd.brief_new
         brief_str_array = brief_str.split(',')
         brief_str_array.each do |full_name|
             str = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
