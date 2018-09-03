@@ -38,17 +38,20 @@ class CoursesController < ApplicationController
         # 測試用
         #brief_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
 
-        brief_str = cd.brief_new
-        brief_str_array = brief_str.split(',')
-        brief_str_array.each do |full_name|
-            trimmed_name = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
-            if abbrev_dict.key?(trimmed_name)
-                h = abbrev_dict[trimmed_name]
-                h[:title] = full_name
-                tags_of_a_course.append(h)
-            else
-                # 核心類別
-                tags_of_a_course.append( {:name=>trimmed_name,:title=>full_name, :label_type=>'label-warning'} )
+        brief_str = cd.brief_new || ""
+        if not brief_str.empty?
+            puts "brief_str: #{brief_str}"
+            brief_str_array = brief_str.split(',')
+            brief_str_array.each do |full_name|
+                trimmed_name = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
+                if abbrev_dict.key?(trimmed_name)
+                    h = abbrev_dict[trimmed_name]
+                    h[:title] = full_name
+                    tags_of_a_course.append(h)
+                else
+                    # 核心類別
+                    tags_of_a_course.append( {:name=>trimmed_name,:title=>full_name, :label_type=>'label-warning'} )
+                end
             end
         end
         if not tags_of_a_course.empty?
