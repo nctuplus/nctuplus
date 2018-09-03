@@ -21,7 +21,7 @@ Resent projects:
 
 == License
 
-GPL License. Copyright 2014-2016 nctuplus.
+GPL License. Copyright 2014-2018 nctuplus.
  This file is part of nctuplus.
 
     Nctuplus is free software: you can redistribute it and/or modify
