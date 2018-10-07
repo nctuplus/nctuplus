@@ -98,6 +98,9 @@
 						<% end %>
 						<ul class="dropdown-menu" style="background: rgba(0, 0, 0, 0.6);">
 							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
+								<%= link_to  "個人資料", user_path, :style=>"color:white;" %>
+							</li>					
+							<li style="border-bottom: 1px #aaa solid;transition: linear 0.5s background;outline: none;">
 								<%= link_to  "登出", destroy_user_session_path, :method => :delete, :style=>"color:white;" %>
 							</li>					
 						</ul>
