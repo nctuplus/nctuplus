@@ -141,7 +141,7 @@ class ScoresController < ApplicationController
         # 檢查成績欄位是否已經有成績(是數字)
         #  如果沒有的話可能是 "修習中"/"退選"
         def have_score( score )
-            true if score.to_i.to_s == score
+            score.to_i.to_s == score
         end
 
         @scores = Array.new()
@@ -149,7 +149,7 @@ class ScoresController < ApplicationController
             # 將 activeRecord 紀錄轉為ruby 的 hash
             score = score.to_basic_json
 
-            next if have_score(score[:score])
+            next if not have_score(score[:score])
             score[:score] = score[:score].to_f
 
             # 針對學期做預處理(方便排序)
