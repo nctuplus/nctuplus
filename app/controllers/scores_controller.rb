@@ -149,7 +149,7 @@ class ScoresController < ApplicationController
             # 將 activeRecord 紀錄轉為ruby 的 hash
             score = score.to_basic_json
 
-            next if have_score(score[:score])
+            next if not have_score(score[:score])
             score[:score] = score[:score].to_f
 
             # 針對學期做預處理(方便排序)
