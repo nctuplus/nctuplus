@@ -39,9 +39,9 @@
 <table class="table table-hover" id="course_table" style="background-color:white;" >
   <tr class="row">
     <th class="hidden-xs">學期</th>
-    <th class="hidden-xs">系所/摘要</th>
     <th class="">課名</th>
     <th class="">老師</th>
+    <th class="hidden-xs">系所/摘要</th>
     <th class="">學分</th>
     <th class="">時間</th>
     <th class="">年級</th>
@@ -54,11 +54,19 @@
           <td class="hidden-xs">
             <%=cd.semester_name%>
           </td>
-          <td class="hidden-xs">
-            <%="#{cd.department_ch_name} #{cd.brief}"%>
-          </td>
           <td class=""><%= cd.course_ch_name %></td>
           <td class=""><%= cd.teacher_name %></td>
+          <td class="hidden-xs">
+              <%="#{cd.department_ch_name}" %>
+
+              <% if @tags_by_id.key?( cd.id )%>
+                  </br>
+                  <% info_tags = @tags_by_id[cd.id]%>
+                  <% info_tags.each do |tag| %>
+                      <span class="label <%= tag[:label_type]%> general-edu-info" data-toggle="tooltip" data-placement="bottom" title="<%=tag[:title]%>"> <%=tag[:name]%></span>
+                  <% end %>
+              <% end %>
+          </td>
           <td class=""><%= cd.course_credit %></td>
           <td class=""><%= cd.time %></td>
           <td class=""> <%=cd.grade%> </td>
@@ -80,7 +88,6 @@
 <%= paginate @cds, :window=>2 %>
 
 <script>
-
     //更改收藏課表的icon狀態，順便向後端發出請求
     // @new_state(boolean)
     set_checkbox = function(course_id, new_state){
@@ -97,7 +104,6 @@
     }
 
   $(function(){
-
     // 初始化收藏課程勾選狀態
      <% if current_user  %>
         fetch_user_cart( data => {

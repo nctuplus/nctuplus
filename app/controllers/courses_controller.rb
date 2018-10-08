@@ -13,6 +13,49 @@ class CoursesController < ApplicationController
     end
     cds=@q.result(distinct: true).includes(:course, :course_teachership, :semester, :department)
     @cds=cds.page(params[:page]).order("semester_id DESC").order("view_times DESC")
+
+    # 產生通識課程的課名縮寫
+    @tags_by_id= {}
+    @cds.each do |cd|
+        tags_of_a_course = []
+        
+        # 舊制通識
+        if not cd.brief.strip.empty?
+            # 移除資料後綴年份 e.g. "體育必修(87)"-> "體育必修"
+            trimmed_name = cd.brief.sub(/\(\s*\d+\s*\)/,'').strip
+            if not trimmed_name.empty?
+                tags_of_a_course.append( {:name=> trimmed_name, :title=>cd.brief, :label_type=>'label-default'} )
+            end
+        end
+
+        # 針對新制通識
+        #   abbrev: abbreviation
+        abbrev_dict = {
+            :校基本素養 => { :name=> '通識校基本', :label_type=>'label-primary'},
+            :跨院基本素養 => { :name=> '通識跨院', :label_type=>'label-info'}
+        }
+
+        # 測試用
+        #brief_str = "核心-自然(106),跨院基本素養(106),校基本素養(106)"
+
+        brief_str = cd.brief_new || ""
+        brief_str_array = brief_str.split(',')
+        brief_str_array.each do |full_name|
+            trimmed_name = full_name.sub(/\(\s*\d+\s*\)/,'').to_sym
+            if abbrev_dict.key?(trimmed_name)
+                h = abbrev_dict[trimmed_name]
+                h[:title] = full_name
+                tags_of_a_course.append(h)
+            else
+                # 核心類別
+                tags_of_a_course.append( {:name=>trimmed_name,:title=>full_name, :label_type=>'label-warning'} )
+            end
+        end
+        if not tags_of_a_course.empty?
+            @tags_by_id[ cd.id ] = tags_of_a_course
+        end
+    end
+    
   end
 
   def search_mini	#for course simulation search & result

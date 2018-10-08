@@ -95,6 +95,7 @@ class CourseDetail < ActiveRecord::Base
     cd.students_limit=data["num_limit"]
     cd.reg_num=data["reg_num"]
     cd.brief=data["brief"]
+    cd.brief_new = data.key?("brief_new") ? data["brief_new"] : ""
     cd.save!
     return ret
   end
