@@ -600,7 +600,7 @@
 						</tr>
 						<tr>
 							<td>
-							<%=link_to "課程綱要","https://course.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{@data[:year]}&Sem=#{@data[:half]}&CrsNo=#{@data[:temp_cos_id]}",target: "_blank"%>
+							<%=link_to "課程綱要","https://timetable.nctu.edu.tw/?r=main/crsoutline&Acy=#{@data[:year]}&Sem=#{@data[:half]}&CrsNo=#{@data[:temp_cos_id]}&lang=zh-tw",target: "_blank"%>
 							
 							<% if not @data[:open_on_latest]%>
 								(本學期無開課)
