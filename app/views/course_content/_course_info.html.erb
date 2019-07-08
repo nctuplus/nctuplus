@@ -15,7 +15,7 @@
 		<tr>
 			<td><%=cd.semester.name%></td>
 			<td><%=cd.department.ch_name%></td>
-			<td><%=link_to cd.temp_cos_id,"https://cos.adm.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
+			<td><%=link_to cd.temp_cos_id,"https://course.nctu.edu.tw/Course/CrsOutline/show.asp?Acy=#{cd.semester.year}&Sem=#{cd.semester.half}&CrsNo=#{cd.temp_cos_id}", target:"_blank"%></td>
 			<td>							
 				<% if cd.cos_type=="通識"%>
 					<%=cd.brief%>
